@@ -15,6 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using Cairo;
 using Gdk;
 using Gtk;
 
@@ -56,6 +57,18 @@ namespace Plank.Services.Drawing
 			pbuf.unref ();
 			return tmp;
 #endif
+		}
+		
+		public static void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius, double bottom_radius)
+		{
+			top_radius = Math.fmin (top_radius, Math.fmin (width / 2.0, height / 2.0));
+			bottom_radius = Math.fmin (bottom_radius, Math.fmin (width / 2.0, height / 2.0));
+			
+			cr.move_to (x + top_radius, y);
+			cr.arc (x + width - top_radius, y + top_radius, top_radius, Math.PI * 1.5, Math.PI * 2.0);
+			cr.arc (x + width - bottom_radius, y + height - bottom_radius, bottom_radius, 0, Math.PI * 0.5);
+			cr.arc (x + bottom_radius, y + height - bottom_radius, bottom_radius, Math.PI * 0.5, Math.PI);
+			cr.arc (x + top_radius, y + top_radius, top_radius, Math.PI, Math.PI * 1.5);
 		}
 	}
 }
