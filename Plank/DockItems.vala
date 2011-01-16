@@ -102,19 +102,22 @@ namespace Plank
 		
 		void add_item (DockItem item)
 		{
-			Items.insert_sorted (item, (a, b) => {
-				DockItem left = a as DockItem;
-				DockItem right = b as DockItem;
-				if (left.get_sort () == right.get_sort ())
-					return 0;
-				if (left.get_sort () < right.get_sort ())
-					return -1;
-				return 1;
-			});
+			Items.insert_sorted (item, (CompareFunc) compare_items);
 			
 			int pos = 0;
 			foreach (DockItem i in Items)
 				i.Position = pos++;
+		}
+		
+		int compare_items (DockItem a, DockItem b)
+		{
+			DockItem left = a as DockItem;
+			DockItem right = b as DockItem;
+			if (left.get_sort () == right.get_sort ())
+				return 0;
+			if (left.get_sort () < right.get_sort ())
+				return -1;
+			return 1;
 		}
 		
 		void make_launcher (string dockitem, string launcher, int sort)
