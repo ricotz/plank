@@ -69,7 +69,7 @@ namespace Plank
 				return true;
 			
 			if (event.button == 1)
-				stdout.printf("left click: %s\n", HoveredItem.get_launcher ());
+				Services.System.launch (File.new_for_path (HoveredItem.get_launcher ()), {});
 			else if (event.button == 2)
 				stdout.printf("middle click: %s\n", HoveredItem.get_launcher ());
 			else if (event.button == 3)

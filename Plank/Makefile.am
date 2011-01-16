@@ -1,6 +1,7 @@
 VALAFLAGS = \
 	--pkg gtk+-2.0 \
 	--pkg libbamf \
+	--pkg gio-unix-2.0 \
 	--vapidir .. \
 	$(NULL)
 
@@ -28,4 +29,5 @@ plank_SOURCES = \
 	Services/Matcher.vala \
 	Services/Paths.vala \
 	Services/Preferences.vala \
+	Services/System.vala \
 	$(NULL)
