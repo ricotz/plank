@@ -58,7 +58,6 @@ namespace Plank
 			Items.items_changed.connect (set_size);
 			Prefs.notify.connect (set_size);
 			Renderer.render_needed.connect (queue_draw);
-			notify["HoveredItem"].connect (hovered_item_changed);
 			
 			set_size ();
 		}
@@ -71,7 +70,7 @@ namespace Plank
 			if (event.button == 1)
 				Services.System.launch (File.new_for_path (HoveredItem.get_launcher ()), {});
 			else if (event.button == 2)
-				stdout.printf("middle click: %s\n", HoveredItem.get_launcher ());
+				Services.System.launch (File.new_for_path (HoveredItem.get_launcher ()), {});
 			else if (event.button == 3)
 				stdout.printf("right click: %s\n", HoveredItem.get_launcher ());
 			
@@ -135,11 +134,6 @@ namespace Plank
 		{
 			if (HoveredItem != item)
 				HoveredItem = item;
-		}
-		
-		protected void hovered_item_changed ()
-		{
-			queue_draw ();
 		}
 		
 		protected void set_size ()

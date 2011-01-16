@@ -46,7 +46,7 @@ namespace Plank
 		}
 		
 		int IndicatorSize {
-			get { return DockPadding; }
+			get { return 2 * DockPadding; }
 		}
 		
 		int DockPadding {
@@ -64,7 +64,13 @@ namespace Plank
 		public DockRenderer (DockWindow window)
 		{
 			this.window = window;
+			window.notify["HoveredItem"].connect (animation_state_changed);
 			Prefs.notify.connect (reset_buffers);
+		}
+		
+		void animation_state_changed ()
+		{
+			render_needed ();
 		}
 		
 		public void reset_buffers ()
@@ -78,10 +84,12 @@ namespace Plank
 		public Gdk.Rectangle item_region (DockItem item)
 		{
 			Gdk.Rectangle rect = Gdk.Rectangle ();
+			
 			rect.x = DockPadding + item.Position * (ItemPadding + Prefs.IconSize);
-			rect.y = DockHeight - IndicatorSize - Prefs.IconSize;
+			rect.y = DockHeight - VisibleDockHeight;
 			rect.width = Prefs.IconSize + ItemPadding;
-			rect.height = Prefs.IconSize + DockPadding + IndicatorSize;
+			rect.height = VisibleDockHeight;
+			
 			return rect;
 		}
 		
@@ -134,24 +142,22 @@ namespace Plank
 				lighten = 0.2;
 			
 			if (lighten > 0) {
-				Cairo.Operator operator = icon_surface.Context.get_operator ();
 				icon_surface.Context.set_operator (Cairo.Operator.ADD);
 				icon_surface.Context.paint_with_alpha (lighten);
-				icon_surface.Context.set_operator (operator);
+				icon_surface.Context.set_operator (Cairo.Operator.OVER);
 			}
 			
 			if (darken > 0) {
 				icon_surface.Context.rectangle (0, 0, Prefs.IconSize, Prefs.IconSize);
 				icon_surface.Context.set_source_rgba (0, 0, 0, darken);
 				
-				Cairo.Operator operator = icon_surface.Context.get_operator ();
 				icon_surface.Context.set_operator (Cairo.Operator.ATOP);
 				icon_surface.Context.fill ();
-				icon_surface.Context.set_operator (operator);
+				icon_surface.Context.set_operator (Cairo.Operator.OVER);
 			}
 			
 			Gdk.Rectangle rect = item_region (item);
-			surface.Context.set_source_surface (icon_surface.Internal, rect.x + ItemPadding / 2, rect.y);
+			surface.Context.set_source_surface (icon_surface.Internal, rect.x + ItemPadding / 2, rect.y + DockPadding);
 			surface.Context.paint ();
 		}
 	}
