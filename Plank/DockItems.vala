@@ -113,8 +113,8 @@ namespace Plank
 			});
 			
 			int pos = 0;
-			foreach (DockItem item in Items)
-				item.Position = pos++;
+			foreach (DockItem i in Items)
+				i.Position = pos++;
 		}
 		
 		void make_launcher (string dockitem, string launcher, int sort)
