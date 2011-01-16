@@ -109,10 +109,16 @@ namespace Plank
 				i.Position = pos++;
 		}
 		
-		int compare_items (DockItem a, DockItem b)
+		int compare_items (DockItem? a, DockItem? b)
 		{
+			if (a == null)
+				return -1;
+			if (b == null)
+				return 1;
+			
 			DockItem left = a as DockItem;
 			DockItem right = b as DockItem;
+			
 			if (left.get_sort () == right.get_sort ())
 				return 0;
 			if (left.get_sort () < right.get_sort ())
