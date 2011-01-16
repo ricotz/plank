@@ -16,6 +16,7 @@
 // 
 
 using Gtk;
+using Unique;
 
 using Plank.Services.Logging;
 using Plank.Services.Paths;
@@ -39,6 +40,7 @@ namespace Plank
 			// set program name
 			prctl (15, "plank", 0, 0, 0);
 			
+			// parse commandline options
 			var context = new OptionContext ("");
 			
 			context.add_main_entries (options, null);
@@ -49,6 +51,12 @@ namespace Plank
 			} catch { }
 			
 			Gtk.init (ref args);
+				
+			// ensure only one instance
+			if (new App ("org.freedesktop.plank", null).is_running) {
+				Logger.fatal<Plank> ("Exiting because another instance is already running.");
+				return -1;
+			}
 			
 			set_options ();
 			
