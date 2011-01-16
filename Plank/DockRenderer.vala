@@ -130,10 +130,8 @@ namespace Plank
 			var lighten = 0.0;
 			var darken = 0.0;
 			
-			if (window.HoveredItem == item)
+			if (window.HoveredItem == item && !Prefs.zoom_enabled ())
 				lighten = 0.2;
-			else
-				darken = 0.4;
 			
 			if (lighten > 0) {
 				Cairo.Operator operator = icon_surface.Context.get_operator ();

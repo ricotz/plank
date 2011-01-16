@@ -41,6 +41,11 @@ namespace Plank
 			base.with_file (filename);
 		}
 		
+		public bool zoom_enabled ()
+		{
+			return Zoom > MIN_ZOOM;
+		}
+		
 		public void increase_icon_size ()
 		{
 			if (IconSize < MAX_ICON_SIZE)
