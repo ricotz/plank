@@ -59,7 +59,7 @@ namespace Plank.Services.Drawing
 #endif
 		}
 		
-		public static void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius, double bottom_radius)
+		public static void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
 		{
 			top_radius = Math.fmin (top_radius, Math.fmin (width / 2.0, height / 2.0));
 			bottom_radius = Math.fmin (bottom_radius, Math.fmin (width / 2.0, height / 2.0));

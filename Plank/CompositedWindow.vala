@@ -23,7 +23,12 @@ namespace Plank
 	{
 		public CompositedWindow ()
 		{
-			GLib.Object (type: Gtk.WindowType.TOPLEVEL);
+			this.with_type (Gtk.WindowType.TOPLEVEL);
+		}
+		
+		public CompositedWindow.with_type (Gtk.WindowType window_type)
+		{
+			GLib.Object (type: window_type);
 			
 			app_paintable = true;
 			decorated = false;

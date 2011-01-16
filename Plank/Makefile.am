@@ -20,6 +20,7 @@ plank_SOURCES = \
 	DockPreferences.vala \
 	DockRenderer.vala \
 	DockWindow.vala \
+	HoverWindow.vala \
 	Plank.vala \
 	PlankSurface.vala \
 	Items/ApplicationDockItem.vala \

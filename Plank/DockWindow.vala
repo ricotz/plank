@@ -34,8 +34,12 @@ namespace Plank
 		
 		protected DockRenderer Renderer { get; set; }
 		
+		HoverWindow hover = new HoverWindow ();
+		
 		public DockWindow ()
 		{
+			base ();
+			
 			Prefs = new DockPreferences.with_file ("settings");
 			Items = new DockItems ();
 			Renderer = new DockRenderer (this);
@@ -132,8 +136,24 @@ namespace Plank
 		
 		protected void set_hovered (DockItem? item)
 		{
-			if (HoveredItem != item)
-				HoveredItem = item;
+			if (HoveredItem == item)
+				return;
+			
+			HoveredItem = item;
+			
+			if (HoveredItem == null) {
+				hover.hide ();
+				return;
+			}
+			
+			hover.Text = HoveredItem.Text;
+			
+			int x, y;
+			get_position (out x, out y);
+			var rect = Renderer.item_region (HoveredItem);
+			hover.move_hover (x + rect.x + rect.width / 2, y);
+			
+			hover.show ();
 		}
 		
 		protected void set_size ()
