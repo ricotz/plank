@@ -1,0 +1,24 @@
+# Usage
+# -----
+# 1. Set the schema_in_files variable to the schema-ini.in file(s) to install.
+# 2. Add install-gconf-schemas to the install-data-local rule dependencies.
+
+if GCONF_SCHEMAS_INSTALL
+schemasdir       = @GCONF_SCHEMA_FILE_DIR@
+schemas_DATA = $(schema_DATA:.schema-ini=.schemas)
+
+%.schemas: %.schema-ini
+	$(LDA_BINDIR)/lda-schema-to-gconf $< $@
+
+install-gconf-schemas: $(schemas_DATA)
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schemas_DATA)
+else
+install-gconf-schemas:
+endif
+
+schema_DATA = $(schema_in_files:.schema-ini.in=.schema-ini)
+schemadir = $(pkgdatadir)/schemas
+
+#@INTLTOOL_SCHEMA_INI_RULE@
+
+# vim: set ft=automake noet ts=8 sts=8 sw=8 :
