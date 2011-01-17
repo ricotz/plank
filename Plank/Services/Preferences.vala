@@ -42,10 +42,11 @@ namespace Plank.Services.Preferences
 		
 		File backing_file;
 		FileMonitor backing_monitor;
+		string group_name;
 		
 		public Preferences.with_file (string filename)
 		{
-			this ();
+			group_name = get_type ().name ();
 			
 			backing_file = Paths.Paths.UserConfigFolder.get_child (filename);
 			
@@ -61,6 +62,12 @@ namespace Plank.Services.Preferences
 			load_prefs ();
 			
 			start_monitor ();
+		}
+		
+		public Preferences.with_file_and_group (string filename, string group)
+		{
+			this.with_file (filename);
+			group_name = group;
 		}
 		
 		void start_monitor ()
@@ -95,18 +102,18 @@ namespace Plank.Services.Preferences
 				var obj_class = (ObjectClass) get_type ().class_ref ();
 				var properties = obj_class.list_properties ();
 				foreach (var prop in properties) {
-					if (!file.has_key (get_type ().name (), prop.name))
+					if (!file.has_key (group_name, prop.name))
 						continue;
 					
 					var type = prop.value_type;
 					var val = Value (type);
 					
 					if (type == typeof (int))
-						val.set_int (file.get_integer (get_type ().name (), prop.name));
+						val.set_int (file.get_integer (group_name, prop.name));
 					else if (type == typeof (double))
-						val.set_double (file.get_double (get_type ().name (), prop.name));
+						val.set_double (file.get_double (group_name, prop.name));
 					else if (type == typeof (string))
-						val.set_string (file.get_string (get_type ().name (), prop.name));
+						val.set_string (file.get_string (group_name, prop.name));
 					else
 						backing_error ("Unsupported preferences type '%s'");
 					
@@ -133,11 +140,11 @@ namespace Plank.Services.Preferences
 				get_property (prop.name, ref val);
 				
 				if (type == typeof (int))
-					file.set_integer (get_type ().name (), prop.name, val.get_int ());
+					file.set_integer (group_name, prop.name, val.get_int ());
 				else if (type == typeof (double))
-					file.set_double (get_type ().name (), prop.name, val.get_double ());
+					file.set_double (group_name, prop.name, val.get_double ());
 				else if (type == typeof (string))
-					file.set_string (get_type ().name (), prop.name, val.get_string ());
+					file.set_string (group_name, prop.name, val.get_string ());
 				else
 					backing_error ("Unsupported preferences type '%s'");
 			}
