@@ -30,9 +30,14 @@ namespace Plank
 		
 		public string Text { get; set; }
 		
+		ThemeRenderer theme { get; set; }
+		
 		public HoverWindow ()
 		{
 			base.with_type (Gtk.WindowType.POPUP);
+			theme = new ThemeRenderer ();
+			theme.TopRoundness = 3;
+			theme.BottomRoundness = 3;
 			
 			set_accept_focus (false);
 			can_focus = false;
@@ -100,33 +105,11 @@ namespace Plank
 			
 			set_size_request ((int) Math.fmax (HoverHeight, buffer + logical_rect.width), HoverHeight);
 			background_buffer = new PlankSurface (width_request, height_request);
-			background_buffer.Context.save ();
 			
 			// draw the background
-			var gradient = new Pattern.linear (background_buffer.Width / 2.0, 0, background_buffer.Width / 2.0, background_buffer.Height);
-			gradient.add_color_stop_rgba (0, 0.1647, 0.1647, 0.1647, 1);
-			gradient.add_color_stop_rgba (1, 0.3176, 0.3176, 0.3176, 1);
-			
-			Drawing.draw_rounded_rect (background_buffer.Context, 1, 1, background_buffer.Width - 2, background_buffer.Height - 2, 3, 3);
-			background_buffer.Context.set_source (gradient);
-			background_buffer.Context.fill_preserve ();
-			
-			background_buffer.Context.set_source_rgba (0.1647, 0.1647, 0.1647, 1);
-			background_buffer.Context.set_line_width (1.0);
-			background_buffer.Context.stroke ();
-			
-			gradient = new Pattern.linear (background_buffer.Width / 2.0, 2, background_buffer.Width / 2.0, background_buffer.Height - 4);
-			gradient.add_color_stop_rgba (0, 0.4392, 0.4392, 0.4392, 1);
-			gradient.add_color_stop_rgba (0.2, 0.4392, 0.4392, 0.4392, 0);
-			
-			Drawing.draw_rounded_rect (background_buffer.Context, 2, 2, background_buffer.Width - 4, background_buffer.Height - 4, 3, 3);
-			background_buffer.Context.set_source (gradient);
-			background_buffer.Context.set_line_width (1.0);
-			background_buffer.Context.stroke ();
+			theme.draw_background (background_buffer);
 			
 			// draw the text
-			background_buffer.Context.restore ();
-			
 			background_buffer.Context.move_to (buffer / 2, buffer / 2);
 			background_buffer.Context.set_source_rgb (1, 1, 1);
 			Pango.cairo_show_layout (background_buffer.Context, layout);

@@ -23,6 +23,7 @@ plank_SOURCES = \
 	HoverWindow.vala \
 	Plank.vala \
 	PlankSurface.vala \
+	ThemeRenderer.vala \
 	Items/ApplicationDockItem.vala \
 	Items/DockItem.vala \
 	Items/DockItemPreferences.vala \

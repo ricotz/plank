@@ -61,9 +61,13 @@ namespace Plank
 			get { return window.Prefs; }
 		}
 		
+		ThemeRenderer theme { get; set; }
+		
 		public DockRenderer (DockWindow window)
 		{
 			this.window = window;
+			theme = new ThemeRenderer ();
+			theme.BottomRoundness = 0;
 			window.notify["HoveredItem"].connect (animation_state_changed);
 			Prefs.notify.connect (reset_buffers);
 		}
@@ -118,26 +122,7 @@ namespace Plank
 			if (background_buffer == null) {
 				background_buffer = new PlankSurface.with_plank_surface (surface.Width, VisibleDockHeight, surface);
 				
-				var gradient = new Pattern.linear (background_buffer.Width / 2.0, 0, background_buffer.Width / 2.0, background_buffer.Height);
-				gradient.add_color_stop_rgba (0, 0.1647, 0.1647, 0.1647, 1);
-				gradient.add_color_stop_rgba (1, 0.3176, 0.3176, 0.3176, 1);
-				
-				Drawing.draw_rounded_rect (background_buffer.Context, 1, 1, background_buffer.Width - 2.0, background_buffer.Height, 6, 0);
-				background_buffer.Context.set_source (gradient);
-				background_buffer.Context.fill_preserve ();
-				
-				background_buffer.Context.set_source_rgba (0.1647, 0.1647, 0.1647, 1);
-				background_buffer.Context.set_line_width (1.0);
-				background_buffer.Context.stroke ();
-				
-				gradient = new Pattern.linear (background_buffer.Width / 2.0, 2, background_buffer.Width / 2.0, background_buffer.Height - 2);
-				gradient.add_color_stop_rgba (0, 0.4392, 0.4392, 0.4392, 1);
-				gradient.add_color_stop_rgba (0.2, 0.4392, 0.4392, 0.4392, 0);
-				
-				Drawing.draw_rounded_rect (background_buffer.Context, 2, 2, background_buffer.Width - 4.0, background_buffer.Height - 1.0, 6, 0);
-				background_buffer.Context.set_source (gradient);
-				background_buffer.Context.set_line_width (1.0);
-				background_buffer.Context.stroke ();
+				theme.draw_background (background_buffer);
 			}
 			
 			surface.Context.set_source_surface (background_buffer.Internal, 0, surface.Height - VisibleDockHeight);
