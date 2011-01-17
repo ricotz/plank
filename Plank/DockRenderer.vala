@@ -32,21 +32,23 @@ namespace Plank
 		
 		PlankSurface background_buffer;
 		PlankSurface main_buffer;
+		PlankSurface indicator_buffer;
+		PlankSurface urgent_indicator_buffer;
 		
 		public int DockWidth {
 			get { return (int) window.Items.Items.length () * (ItemPadding+ Prefs.IconSize) + 2 * DockPadding; }
 		}
 		
 		public int DockHeight {
-			get { return IndicatorSize + DockPadding + (int) (Prefs.Zoom * Prefs.IconSize); }
+			get { return IndicatorSize / 2 + DockPadding + (int) (Prefs.Zoom * Prefs.IconSize); }
 		}
 		
 		int VisibleDockHeight {
-			get { return IndicatorSize + DockPadding + Prefs.IconSize; }
+			get { return IndicatorSize / 2 + DockPadding + Prefs.IconSize; }
 		}
 		
 		int IndicatorSize {
-			get { return 2 * DockPadding; }
+			get { return 5 * DockPadding; }
 		}
 		
 		int DockPadding {
@@ -55,6 +57,10 @@ namespace Plank
 		
 		int ItemPadding {
 			get { return DockPadding; }
+		}
+		
+		int UrgentHueShift {
+			get { return 150; }
 		}
 		
 		DockPreferences Prefs {
@@ -131,7 +137,7 @@ namespace Plank
 		
 		void draw_item (PlankSurface surface, DockItem item)
 		{
-			PlankSurface icon_surface = new PlankSurface (Prefs.IconSize, Prefs.IconSize);
+			PlankSurface icon_surface = new PlankSurface.with_plank_surface (Prefs.IconSize, Prefs.IconSize, main_buffer);
 			
 			Pixbuf pbuf = Drawing.load_pixbuf (item.Icon, Prefs.IconSize);
 			cairo_set_source_pixbuf (icon_surface.Context, pbuf, 0, 0);
@@ -161,6 +167,70 @@ namespace Plank
 			Gdk.Rectangle rect = item_region (item);
 			surface.Context.set_source_surface (icon_surface.Internal, rect.x + ItemPadding / 2, rect.y + DockPadding);
 			surface.Context.paint ();
+			
+			// draw indicators
+			if (item.Indicator != IndicatorState.NONE) {
+				if (indicator_buffer == null)
+					create_normal_indicator ();
+				if (urgent_indicator_buffer == null)
+					create_urgent_indicator ();
+				
+				var indicator = (item.State & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
+				surface.Context.set_source_surface (indicator.Internal, rect.x + ItemPadding / 2 + rect.width / 2 - indicator.Width / 2, DockHeight - indicator.Height / 2 - 1);
+				surface.Context.paint ();
+			}
+		}
+		
+		void create_normal_indicator ()
+		{
+			var color = window.get_style ().bg [StateType.SELECTED];
+			// TODO implement these
+			//color = Drawing.set_min_value (color, 90);
+			//color = Drawing.set_min_sat (color, 0.4);
+			var r = color.red / (double) uint16.MAX;
+			var g = color.green / (double) uint16.MAX;
+			var b = color.blue / (double) uint16.MAX;
+			indicator_buffer = create_indicator (IndicatorSize, r, g, b);
+		}
+		
+		void create_urgent_indicator ()
+		{
+			var color = window.get_style ().bg [StateType.SELECTED];
+			// TODO implement these
+			//color = Drawing.set_min_value (color, 90);
+			//color = Drawing.add_hue (color, UrgentHueShift);
+			//color = Drawing.set_sat (color, 1);
+			var r = color.red / (double) uint16.MAX;
+			var g = color.green / (double) uint16.MAX;
+			var b = color.blue / (double) uint16.MAX;
+			urgent_indicator_buffer = create_indicator (IndicatorSize, r, g, b);
+		}
+		
+		PlankSurface create_indicator (int size, double r, double g, double b)
+		{
+			PlankSurface surface = new PlankSurface.with_plank_surface (size, size, background_buffer);
+			surface.Clear ();
+
+			var cr = surface.Context;
+			
+			var x = size / 2;
+			var y = x;
+			
+			cr.move_to (x, y);
+			cr.arc (x, y, size / 2, 0, Math.PI * 2);
+			
+			var rg = new Pattern.radial (x, y, 0, x, y, size / 2);
+			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
+			rg.add_color_stop_rgba (0.1, r, g, b, 1);
+			rg.add_color_stop_rgba (0.2, r, g, b, 0.6);
+			rg.add_color_stop_rgba (0.25, r, g, b, 0.25);
+			rg.add_color_stop_rgba (0.5, r, g, b, 0.15);
+			rg.add_color_stop_rgba (1.0, r, g, b, 0.0);
+			
+			cr.set_source (rg);
+			cr.fill ();
+			
+			return surface;
 		}
 	}
 }

@@ -19,6 +19,19 @@ using Gdk;
 
 namespace Plank.Items
 {
+	public enum IndicatorState
+	{
+		NONE,
+		SINGLE,
+		SINGLE_PLUS,
+	}
+	
+	public enum ItemState
+	{
+		NORMAL,
+		URGENT,
+	}
+	
 	public class DockItem : GLib.Object
 	{
 		public string Icon { get; set; default = "folder"; }
@@ -26,6 +39,10 @@ namespace Plank.Items
 		public string Text { get; set; default = ""; }
 		
 		public int Position { get; set; default = 0; }
+		
+		public ItemState State { get; set; default = ItemState.NORMAL; }
+		
+		public IndicatorState Indicator { get; set; default = IndicatorState.NONE; }
 		
 		protected DockItemPreferences Prefs { get; protected set; }
 		
