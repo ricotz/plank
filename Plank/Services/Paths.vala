@@ -69,7 +69,7 @@ namespace Plank.Services.Paths
 				XdgConfigHomeFolder = File.new_for_path (xdg_config_home);
 			
 			if (xdg_data_home == null || xdg_data_home.length == 0)
-				XdgDataHomeFolder = HomeFolder.get_child (".local").get_child (".share");
+				XdgDataHomeFolder = HomeFolder.get_child (".local").get_child ("share");
 			else
 				XdgDataHomeFolder = File.new_for_path (xdg_data_home);
 			
