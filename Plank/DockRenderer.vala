@@ -176,8 +176,16 @@ namespace Plank
 					create_urgent_indicator ();
 				
 				var indicator = (item.State & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
-				surface.Context.set_source_surface (indicator.Internal, rect.x + ItemPadding / 2 + rect.width / 2 - indicator.Width / 2, DockHeight - indicator.Height / 2 - 1);
-				surface.Context.paint ();
+				
+				if (item.Indicator == IndicatorState.SINGLE) {
+					surface.Context.set_source_surface (indicator.Internal, rect.x + ItemPadding / 2 + rect.width / 2 - indicator.Width / 2, DockHeight - indicator.Height / 2 - 1);
+					surface.Context.paint ();
+				} else {
+					surface.Context.set_source_surface (indicator.Internal, rect.x + ItemPadding / 2 + rect.width / 2 - indicator.Width / 2 - 3, DockHeight - indicator.Height / 2 - 1);
+					surface.Context.paint ();
+					surface.Context.set_source_surface (indicator.Internal, rect.x + ItemPadding / 2 + rect.width / 2 - indicator.Width / 2 + 3, DockHeight - indicator.Height / 2 - 1);
+					surface.Context.paint ();
+				}
 			}
 		}
 		
