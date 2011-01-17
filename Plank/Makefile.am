@@ -1,5 +1,6 @@
 VALAFLAGS = \
 	--pkg gtk+-2.0 \
+	--pkg gconf-2.0 \
 	--pkg libbamf \
 	--pkg gio-unix-2.0 \
 	--pkg unique-1.0 \
@@ -12,8 +13,8 @@ plank_PROGRAMS = \
 	plank \
 	$(NULL)
 
-plank_CFLAGS = $(GTK_CFLAGS) $(BAMF_CFLAGS) $(UNIQUE_CFLAGS)
-plank_LDADD = $(GTK_LIBS) $(BAMF_LIBS) $(UNIQUE_LIBS)
+plank_CFLAGS = $(GTK_CFLAGS) $(GCONF_CFLAGS) $(BAMF_CFLAGS) $(UNIQUE_CFLAGS)
+plank_LDADD = $(GTK_LIBS) $(GCONF_LIBS) $(BAMF_LIBS) $(UNIQUE_LIBS)
 plank_SOURCES = \
 	CompositedWindow.vala \
 	DockItems.vala \
