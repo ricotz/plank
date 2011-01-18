@@ -312,6 +312,37 @@ namespace Plank.Services.Drawing
 	
 	public class Drawing : GLib.Object
 	{
+		const string MISSING_ICONS = "application-default-icon;;application-x-executable";
+		
+		public static Pixbuf load_icon (string names, int width, int height)
+		{
+			List<string> all_names = new List<string> ();
+			
+			foreach (string s in names.split (";;"))
+				all_names.append (s);
+			foreach (string s in MISSING_ICONS.split (";;"))
+				all_names.append (s);
+			
+			Pixbuf pbuf = null;
+			
+			foreach (string name in all_names) {
+				pbuf = load_pixbuf (name, (int) Math.fmax (width, height));
+				if (pbuf != null)
+					break;
+				
+				if (name != all_names.nth_data (all_names.length ()))
+					Logging.Logger.info<Drawing> ("Could not find icon '%s'".printf (name));
+			}
+			
+			if (pbuf != null) {
+				if (width != -1 && height != -1 && (width != pbuf.width || height != pbuf.height))
+					return ar_scale (pbuf, width, height);
+				return pbuf;
+			}
+			
+			return get_empty_pixbuf ();
+		}
+		
 		static Pixbuf get_empty_pixbuf ()
 		{
 			Pixbuf pbuf = new Pixbuf (Colorspace.RGB, true, 8, 1, 1);
@@ -319,7 +350,7 @@ namespace Plank.Services.Drawing
 			return pbuf;
 		}
 		
-		public static Pixbuf load_pixbuf (string icon, int size)
+		static Pixbuf? load_pixbuf (string icon, int size)
 		{
 #if VALA_0_12
 			Pixbuf pbuf = null;
@@ -336,16 +367,32 @@ namespace Plank.Services.Drawing
 				}
 			} catch { }
 			
-			if (pbuf == null)
-				return get_empty_pixbuf ();
-			
 #if VALA_0_12
 			return pbuf;
 #else
+			if (pbuf == null)
+				return null;
+			
 			Pixbuf tmp = pbuf.copy ();
 			pbuf.unref ();
 			return tmp;
 #endif
+		}
+		
+		public static Pixbuf ar_scale (Pixbuf source, int width, int height)
+		{
+			var xScale = (double) width / (double) source.width;
+			var yScale = (double) height / (double) source.height;
+			var scale = Math.fmin (xScale, yScale);
+			
+			if (scale == 1)
+				return source;
+			
+			Pixbuf tmp = source.scale_simple ((int) (source.width * scale),
+				(int) (source.height * scale),
+				InterpType.HYPER);
+			
+			return tmp;
 		}
 	}
 }

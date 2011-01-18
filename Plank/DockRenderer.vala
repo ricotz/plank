@@ -139,7 +139,7 @@ namespace Plank
 		{
 			PlankSurface icon_surface = new PlankSurface.with_plank_surface (Prefs.IconSize, Prefs.IconSize, main_buffer);
 			
-			Pixbuf pbuf = Drawing.load_pixbuf (item.Icon, Prefs.IconSize);
+			Pixbuf pbuf = Drawing.load_icon (item.Icon, Prefs.IconSize, Prefs.IconSize);
 			cairo_set_source_pixbuf (icon_surface.Context, pbuf, 0, 0);
 			icon_surface.Context.paint ();
 			
