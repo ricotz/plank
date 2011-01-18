@@ -15,31 +15,39 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using bamf;
+using Bamf;
 
 namespace Plank.Services.Windows
 {
 	public class Matcher : GLib.Object
 	{
-		static construct {
-			BamfMatcher matcher = BamfMatcher.get_default ();
+		public signal void window_changed (Window w);
+		
+		public static Matcher Default { get; protected set; default = new Matcher (); }
+		
+		public Matcher ()
+		{
+			Bamf.Matcher matcher = Bamf.Matcher.get_default ();
+			
 			matcher.view_opened.connect ((matcher, arg1) => {
-				BamfView view = arg1 as BamfView;
-				stdout.printf("view type: %s", view.get_name ());
-				stdout.printf("new view\n");
+				if (arg1 is Window)
+					window_changed (arg1 as Window);
 			});
-			matcher.view_closed.connect (() => {
-				stdout.printf("lost view\n");
+			
+			matcher.view_closed.connect ((matcher, arg1) => {
+				if (arg1 is Window)
+					window_changed (arg1 as Window);
 			});
 		}
 		
-		public static void active_launchers ()
+		public void active_launchers ()
 		{
-			BamfMatcher matcher = BamfMatcher.get_default ();
-			unowned GLib.List<BamfApplication> apps = BamfMatcher.get_running_applications (matcher);
-			foreach (BamfApplication a in apps)
-				if (BamfView.is_user_visible (a))
-					stdout.printf("%s\n", BamfApplication.get_desktop_file (a));
+			Bamf.Matcher matcher = Bamf.Matcher.get_default ();
+			
+			unowned GLib.List<Application> apps = Bamf.Matcher.get_running_applications (matcher);
+			foreach (Application a in apps)
+				if (View.is_user_visible (a))
+					stdout.printf("%s\n", Application.get_desktop_file (a));
 		}
 	}
 }
