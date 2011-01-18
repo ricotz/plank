@@ -90,13 +90,20 @@ namespace Plank
 			dlg.set_logo_icon_name ("plank");
 			
 			dlg.set_comments ("Plank. Stupidly simple.");
-			dlg.set_copyright ("Copyright \xa9 2011 Plank Developers");
+			dlg.set_copyright ("Copyright © 2011 Plank Developers");
 			dlg.set_website ("https://launchpad.net/plank");
 			dlg.set_website_label ("Website");
 			
-			dlg.set_authors ({"Robert Dyer <robert@go-docky.com>"});
-			dlg.set_documenters ({"Robert Dyer <robert@go-docky.com>"});
-			dlg.set_artists ({"Daniel Foré <bunny@go-docky.co>"});
+			dlg.set_authors ({
+				"Robert Dyer <robert@go-docky.com>",
+				"Rico Tzschichholz <rtz@go-docky.com>"
+			});
+			dlg.set_documenters ({
+				"Robert Dyer <robert@go-docky.com>"
+			});
+			dlg.set_artists ({
+				"Daniel Foré <bunny@go-docky.com>"
+			});
 			dlg.set_translator_credits ("");
 			
 			dlg.show_all ();
