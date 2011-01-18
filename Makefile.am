@@ -1,5 +1,6 @@
 SUBDIRS = \
 	Plank
+	data \
 	m4 \
 	po
 

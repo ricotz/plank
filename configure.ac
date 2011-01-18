@@ -110,6 +110,7 @@ dnl }}}
 
 AC_CONFIG_FILES([
 Makefile
+data/Makefile
 m4/Makefile
 po/Makefile.in
 Plank/Makefile
