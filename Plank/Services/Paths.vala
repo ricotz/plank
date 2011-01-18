@@ -112,7 +112,7 @@ namespace Plank.Services.Paths
 					dir.make_directory_with_parents ();
 					return true;
 				} catch {
-					Logger.fatal<Paths> ("Could not access the directory '%s' or create it.  Plank will not work properly unless this folder is wriable.".printf (dir.get_path ()));
+					Logger.fatal<Paths> ("Could not access the directory '%s' or create it.".printf (dir.get_path ()));
 				}
 			
 			return false;

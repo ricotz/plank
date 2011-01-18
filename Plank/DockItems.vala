@@ -52,7 +52,7 @@ namespace Plank
 				items_monitor.set_rate_limit (500);
 				items_monitor.changed.connect (handle_items_dir_changed);
 			} catch {
-				Logger.fatal<DockItems> ("Unable to watch the launchers directory.  Plank will not function properly.");
+				Logger.fatal<DockItems> ("Unable to watch the launchers directory.");
 			}
 			
 			load_items ();
@@ -116,7 +116,7 @@ namespace Plank
 		
 		void load_items ()
 		{
-			Logger.debug<DockItems> ("Reloading items...");
+			Logger.debug<DockItems> ("Reloading dock items...");
 			
 			try {
 				var enumerator = launchers_dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
@@ -129,7 +129,7 @@ namespace Plank
 						if (item.ValidItem)
 							add_item (item);
 						else
-							Logger.warn<DockItems> ("The launcher '%s' in '%s' does not exist".printf (item.Launcher, filename));
+							Logger.warn<DockItems> ("The launcher '%s' in dock item '%s' does not exist".printf (item.Launcher, filename));
 					}
 			} catch { }
 			

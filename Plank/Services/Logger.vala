@@ -77,7 +77,7 @@ namespace Plank.Services.Logging
 		
 		public static void fatal<T> (string msg)
 		{
-			write (LogLevel.FATAL, format_message<T> (msg));
+			write (LogLevel.FATAL, format_message<T> (msg + " Plank will not function properly."));
 		}
 		
 		static string get_time ()
