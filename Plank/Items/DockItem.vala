@@ -29,6 +29,7 @@ namespace Plank.Items
 	public enum ItemState
 	{
 		NORMAL,
+		ACTIVE,
 		URGENT,
 	}
 	

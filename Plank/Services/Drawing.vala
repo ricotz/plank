@@ -394,5 +394,39 @@ namespace Plank.Services.Drawing
 			
 			return tmp;
 		}
+		
+		public static RGBColor average_color (Pixbuf source)
+		{
+			double rTotal = 0;
+			double gTotal = 0;
+			double bTotal = 0;
+			
+			uchar* dataPtr = source.get_pixels ();
+			double pixels = source.height * source.rowstride / source.n_channels;
+			
+			for (int i = 0; i < pixels; i++) {
+				uchar r = dataPtr [0];
+				uchar g = dataPtr [1];
+				uchar b = dataPtr [2];
+				
+				uchar max = (uchar) Math.fmax (r, Math.fmax (g, b));
+				uchar min = (uchar) Math.fmin (r, Math.fmin (g, b));
+				double delta = max - min;
+				
+				double sat = delta == 0 ? 0 : delta / max;
+				double score = 0.2 + 0.8 * sat;
+				
+				rTotal += r * score;
+				gTotal += g * score;
+				bTotal += b * score;
+				
+				dataPtr += source.n_channels;
+			}
+			
+			return RGBColor (rTotal / uint8.MAX / pixels,
+							 gTotal / uint8.MAX / pixels,
+							 bTotal / uint8.MAX / pixels,
+							 1).set_val (0.8).multiply_sat (1.15);
+		}
 	}
 }

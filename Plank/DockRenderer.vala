@@ -127,7 +127,6 @@ namespace Plank
 		{
 			if (background_buffer == null) {
 				background_buffer = new PlankSurface.with_plank_surface (surface.Width, VisibleDockHeight, surface);
-				
 				theme.draw_background (background_buffer);
 			}
 			
@@ -137,9 +136,9 @@ namespace Plank
 		
 		void draw_item (PlankSurface surface, DockItem item)
 		{
-			PlankSurface icon_surface = new PlankSurface.with_plank_surface (Prefs.IconSize, Prefs.IconSize, main_buffer);
+			var icon_surface = new PlankSurface.with_plank_surface (Prefs.IconSize, Prefs.IconSize, main_buffer);
 			
-			Pixbuf pbuf = Drawing.load_icon (item.Icon, Prefs.IconSize, Prefs.IconSize);
+			var pbuf = Drawing.load_icon (item.Icon, Prefs.IconSize, Prefs.IconSize);
 			cairo_set_source_pixbuf (icon_surface.Context, pbuf, 0, 0);
 			icon_surface.Context.paint ();
 			
@@ -149,12 +148,14 @@ namespace Plank
 			if (window.HoveredItem == item && !Prefs.zoom_enabled ())
 				lighten = 0.2;
 			
+			// glow the icon
 			if (lighten > 0) {
 				icon_surface.Context.set_operator (Cairo.Operator.ADD);
 				icon_surface.Context.paint_with_alpha (lighten);
 				icon_surface.Context.set_operator (Cairo.Operator.OVER);
 			}
 			
+			// darken the icon
 			if (darken > 0) {
 				icon_surface.Context.rectangle (0, 0, Prefs.IconSize, Prefs.IconSize);
 				icon_surface.Context.set_source_rgba (0, 0, 0, darken);
@@ -164,8 +165,18 @@ namespace Plank
 				icon_surface.Context.set_operator (Cairo.Operator.OVER);
 			}
 			
-			Gdk.Rectangle rect = item_region (item);
-			surface.Context.set_source_surface (icon_surface.Internal, rect.x + ItemPadding / 2, rect.y + DockPadding);
+			var rect = item_region (item);
+			var hover_rect = rect;
+			rect.y += DockPadding;
+			rect.height -= DockPadding;
+			rect.x += ItemPadding / 2;
+			
+			// draw active glow
+			if ((item.State & ItemState.ACTIVE) != 0)
+				draw_active_glow (surface, hover_rect, Drawing.average_color (pbuf));
+			
+			// draw the icon
+			surface.Context.set_source_surface (icon_surface.Internal, rect.x, rect.y);
 			surface.Context.paint ();
 			
 			// draw indicators
@@ -178,15 +189,27 @@ namespace Plank
 				var indicator = (item.State & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 				
 				if (item.Indicator == IndicatorState.SINGLE) {
-					surface.Context.set_source_surface (indicator.Internal, rect.x + ItemPadding / 2 + rect.width / 2 - indicator.Width / 2, DockHeight - indicator.Height / 2 - 1);
+					surface.Context.set_source_surface (indicator.Internal, rect.x + rect.width / 2 - indicator.Width / 2, DockHeight - indicator.Height / 2 - 1);
 					surface.Context.paint ();
 				} else {
-					surface.Context.set_source_surface (indicator.Internal, rect.x + ItemPadding / 2 + rect.width / 2 - indicator.Width / 2 - 3, DockHeight - indicator.Height / 2 - 1);
+					surface.Context.set_source_surface (indicator.Internal, rect.x + rect.width / 2 - indicator.Width / 2 - 3, DockHeight - indicator.Height / 2 - 1);
 					surface.Context.paint ();
-					surface.Context.set_source_surface (indicator.Internal, rect.x + ItemPadding / 2 + rect.width / 2 - indicator.Width / 2 + 3, DockHeight - indicator.Height / 2 - 1);
+					surface.Context.set_source_surface (indicator.Internal, rect.x + rect.width / 2 - indicator.Width / 2 + 3, DockHeight - indicator.Height / 2 - 1);
 					surface.Context.paint ();
 				}
 			}
+		}
+		
+		void draw_active_glow (PlankSurface surface, Gdk.Rectangle rect, RGBColor color)
+		{
+			surface.Context.rectangle (rect.x, rect.y, rect.width, rect.height);
+			
+			var gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
+			gradient.add_color_stop_rgba (0, color.R, color.G, color.B, 0);
+			gradient.add_color_stop_rgba (1, color.R, color.G, color.B, 0.6);
+			
+			surface.Context.set_source (gradient);
+			surface.Context.fill ();
 		}
 		
 		void create_normal_indicator ()
