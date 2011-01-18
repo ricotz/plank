@@ -16,6 +16,9 @@
 // 
 
 using Gdk;
+using Gtk;
+
+using Plank.Services.Drawing;
 
 namespace Plank.Items
 {
@@ -66,6 +69,23 @@ namespace Plank.Items
 		public string get_launcher ()
 		{
 			return Prefs.Launcher;
+		}
+		
+		public void launch ()
+		{
+			Services.System.launch (File.new_for_path (get_launcher ()), {});
+		}
+		
+		public virtual List<MenuItem> get_menu_items ()
+		{
+			List<MenuItem> items = new List<MenuItem> ();
+			
+			var item = new ImageMenuItem.with_mnemonic ("_Open");
+			item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon ("docky", 24, 24)));
+			item.activate.connect (() => launch ());
+			items.append (item);
+			
+			return items;
 		}
 	}
 }

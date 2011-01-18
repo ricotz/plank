@@ -36,6 +36,8 @@ namespace Plank
 		
 		HoverWindow hover = new HoverWindow ();
 		
+		Menu menu = new Menu ();
+		
 		public DockWindow ()
 		{
 			base ();
@@ -49,6 +51,8 @@ namespace Plank
 			skip_pager_hint = true;
 			skip_taskbar_hint = true;
 			set_type_hint (WindowTypeHint.DOCK);
+			
+			menu.attach_to_widget (this, null);
 			
 			stick ();
 			
@@ -68,21 +72,21 @@ namespace Plank
 		
 		public override bool button_press_event (EventButton event)
 		{
-			if (HoveredItem == null)
-				return true;
-			
-			if (event.button == 1)
-				Services.System.launch (File.new_for_path (HoveredItem.get_launcher ()), {});
-			else if (event.button == 2)
-				Services.System.launch (File.new_for_path (HoveredItem.get_launcher ()), {});
-			else if (event.button == 3)
-				stdout.printf("right click: %s\n", HoveredItem.get_launcher ());
-			
 			return true;
 		}
 		
 		public override bool button_release_event (EventButton event)
 		{
+			if (HoveredItem == null)
+				return true;
+			
+			if (event.button == 1)
+				HoveredItem.launch ();
+			else if (event.button == 2)
+				HoveredItem.launch ();
+			else if (event.button == 3)
+				do_popup ();
+			
 			return true;
 		}
 		
@@ -100,11 +104,16 @@ namespace Plank
 		
 		public override bool motion_notify_event (EventMotion event)
 		{
-			foreach (DockItem item in Items.Items)
-				if (rect_contains_point (Renderer.item_region (item), (int) event.x, (int) event.y)) {
+			foreach (DockItem item in Items.Items) {
+				var rect = Renderer.item_region (item);
+				var x = (int) event.x;
+				var y = (int) event.y;
+				
+				if (y >= rect.y && y <= rect.y + rect.height && x >= rect.x && x <= rect.x + rect.width) {
 					set_hovered (item);
 					return true;
 				}
+			}
 			
 			set_hovered (null);
 			return true;
@@ -170,10 +179,30 @@ namespace Plank
 				get_screen ().height () - height_request);
 		}
 		
-		protected bool rect_contains_point (Gdk.Rectangle rect, int x, int y)
+		protected void do_popup ()
 		{
-			return y >= rect.y && y <= rect.y + rect.height &&
-				x >= rect.x && x <= rect.x + rect.width;
+			foreach (Widget w in menu.get_children ()) {
+				menu.remove (w);
+				w.destroy ();
+			}
+			
+			foreach (MenuItem item in HoveredItem.get_menu_items ())
+				menu.append (item);
+			
+			menu.show_all ();
+			menu.popup (null, null, position_menu, 3, get_current_event_time ());
+		}
+		
+		void position_menu (Menu menu, out int x, out int y, out bool push_in)
+		{
+			int win_x, win_y;
+			get_position (out win_x, out win_y);
+			
+			var rect = Renderer.item_region (HoveredItem);
+			
+			x = win_x + rect.x + rect.width / 2 - menu.requisition.width / 2;
+			y = win_y - menu.requisition.height - 10;
+			push_in = false;
 		}
 	}
 }
