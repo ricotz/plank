@@ -161,23 +161,17 @@ namespace Plank
 		
 		void add_item (DockItem item)
 		{
-			Items.insert_sorted (item, (CompareFunc) compare_items);
+			Items.insert_sorted (item, (a, b) => {
+				return compare_items (a as DockItem, b as DockItem);
+			});
 			
 			int pos = 0;
 			foreach (DockItem i in Items)
 				i.Position = pos++;
 		}
 		
-		int compare_items (DockItem? a, DockItem? b)
+		public static int compare_items (DockItem left, DockItem right)
 		{
-			if (a == null)
-				return -1;
-			if (b == null)
-				return 1;
-			
-			DockItem left = a as DockItem;
-			DockItem right = b as DockItem;
-			
 			if (left.get_sort () == right.get_sort ())
 				return 0;
 			if (left.get_sort () < right.get_sort ())
