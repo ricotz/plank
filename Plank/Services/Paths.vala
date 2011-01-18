@@ -26,6 +26,9 @@ namespace Plank.Services.Paths
 		// User's home folder - $HOME
 		public static File HomeFolder { get; protected set; }
 		
+		// defaults to Build.PKGDATADIR
+		public static File DataFolder { get; protected set; }
+		
 		
 		// $XDG_CONFIG_HOME - defaults to $HOME/.config
 		public static File XdgConfigHomeFolder { get; protected set; }
@@ -53,6 +56,7 @@ namespace Plank.Services.Paths
 		{
 			// get environment-based settings
 			HomeFolder = File.new_for_path (Environment.get_home_dir ());
+			DataFolder = File.new_for_path (Build.PKGDATADIR);
 			
 			
 			// get XDG Base Directory settings

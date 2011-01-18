@@ -5,6 +5,7 @@ VALAFLAGS = \
 	--pkg gio-unix-2.0 \
 	--pkg unique-1.0 \
 	--vapidir .. \
+	Build.vapi \
 	$(NULL)
 
 plankdir = $(bindir)
