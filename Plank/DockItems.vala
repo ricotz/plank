@@ -165,6 +165,8 @@ namespace Plank
 				return compare_items (a as DockItem, b as DockItem);
 			});
 			
+			item.notify["Icon"].connect (() => { items_changed (); });
+			
 			int pos = 0;
 			foreach (DockItem i in Items)
 				i.Position = pos++;
