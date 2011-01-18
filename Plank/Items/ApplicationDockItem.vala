@@ -54,13 +54,12 @@ namespace Plank.Items
 				(event & FileMonitorEvent.DELETED) == 0)
 				return;
 			
+			Logger.debug<ApplicationDockItem> ("Launcher file '%s' changed, reloading".printf (Prefs.Launcher));
 			load_from_launcher ();
 		}
 		
 		void load_from_launcher ()
 		{
-			Logger.debug<ApplicationDockItem> ("Launcher file '%s' changed, reloading".printf (Prefs.Launcher));
-			
 			try {
 				KeyFile file = new KeyFile ();
 				file.load_from_file (Prefs.Launcher, 0);
