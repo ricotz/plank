@@ -7,7 +7,6 @@ SUBDIRS = \
 
 EXTRA_DIST = \
 	COPYRIGHT \
-	Makefile.common \
 	$(NULL)
 
 ACLOCAL_AMFLAGS = -I m4
