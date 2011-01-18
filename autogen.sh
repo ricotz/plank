@@ -14,7 +14,7 @@ PKG_NAME="plank"
 }
 
 if which gnome-autogen.sh ; then
-  REQUIRED_AUTOMAKE_VERSION=1.9 . gnome-autogen.sh
+  REQUIRED_AUTOMAKE_VERSION=1.11 . gnome-autogen.sh
 else
   if which intltoolize && which autoreconf ; then
     intltoolize --copy --force --automake || \

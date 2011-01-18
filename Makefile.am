@@ -1,11 +1,14 @@
 SUBDIRS = \
-	Plank
+	Plank \
 	data \
 	m4 \
-	po
+	po \
+	$(NULL)
 
 EXTRA_DIST = \
-	COPYRIGHT
+	COPYRIGHT \
+	Makefile.common \
+	$(NULL)
 
 ACLOCAL_AMFLAGS = -I m4
 

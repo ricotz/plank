@@ -1,5 +1,5 @@
 VALAFLAGS = \
-	--pkg gtk+-2.0 \
+	--pkg gtk+-${GTK_API_VERSION} \
 	--pkg gconf-2.0 \
 	--pkg libbamf \
 	--pkg gee-1.0 \
@@ -15,9 +15,9 @@ plank_PROGRAMS = \
 	plank \
 	$(NULL)
 
-plank_CFLAGS = $(GTK_CFLAGS) $(GEE_CFLAGS) $(GCONF_CFLAGS) $(BAMF_CFLAGS) $(UNIQUE_CFLAGS)
-plank_LDADD = $(GTK_LIBS) $(GEE_LIBS) $(GCONF_LIBS) $(BAMF_LIBS) $(UNIQUE_LIBS)
-plank_SOURCES = \
+plank_CFLAGS = $(PLANK_CORE_CFLAGS)
+plank_LDADD = $(PLANK_CORE_LIBS)
+plank_VALASOURCES = \
 	CompositedWindow.vala \
 	DockItems.vala \
 	DockPreferences.vala \
@@ -38,3 +38,19 @@ plank_SOURCES = \
 	Services/Preferences.vala \
 	Services/System.vala \
 	$(NULL)
+
+GENERATED_C_FILES = $(plank_VALASOURCES:.vala=.c)
+plank_SOURCES = $(plank_VALASOURCES:.vala=.c)
+
+$(GENERATED_C_FILES): plank_vala.stamp
+
+plank_vala.stamp: $(addprefix $(srcdir)/,$(plank_VALASOURCES))
+	$(AM_V_VALA)$(VALAC) $(plank_VALAFLAGS) $(VALAFLAGS) -C $^
+	$(AM_V_at)touch $@
+
+DISTCLEANFILES = $(GENERATED_C_FILES) plank_vala.stamp
+EXTRA_DIST = $(plank_VALASOURCES)
+
+# need to make sure the vala sources are rebuilt
+dist-hook:
+	rm -rf $(addprefix $(distdir)/,$(GENERATED_C_FILES))

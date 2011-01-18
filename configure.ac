@@ -1,33 +1,21 @@
 AC_INIT([plank], [0.1.0])
+AC_DEFINE(RELEASE_NAME, "Stupidly simple", "Codename of this release")
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([.])
 AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([1.11 foreign tar-pax])
-dnl -- Intl
-IT_PROG_INTLTOOL([0.35.0])
 
 dnl -- Populate top_srcdir variable
 top_srcdir=$(readlink -f $0 | sed -e s/configure$//)
 
-dnl Bzr Revno, if release set BZR_REVNO to the release version number
-if test -d $top_srcdir/.bzr ; then
-	BZR_REVNO=`bzr revno`
-else
-	BZR_REVNO=0.1
-fi
-AC_SUBST(BZR_REVNO)
+dnl ==============================================
+dnl Translation support
+dnl ==============================================
 
-if test -e $top_srcdir/.version_info ; then
-   VERSION_INFO=`cat .version_info`
-elif test -d $top_srcdir/.bzr ; then
-   VERSION_INFO=`bzr version-info --custom \
-   --template="bzr {branch_nick} r{revno}"`
-else
-   VERSION_INFO="Release"
-fi
-AC_SUBST(VERSION_INFO)
+IT_PROG_INTLTOOL([0.35.0])
+AM_GLIB_GNU_GETTEXT
 
 dnl pkg-config
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
@@ -37,28 +25,9 @@ fi
 
 AC_PROG_INSTALL
 AC_PROG_CC
+AM_PROG_CC_C_O
+AC_PROG_LIBTOOL
 AC_STDC_HEADERS
-AM_PROG_LIBTOOL
-
-dnl ==============================================
-dnl Check for vala
-dnl ==============================================
-AM_PROG_VALAC([0.9.1])
-
-dnl ==============================================
-dnl Check that we meet the dependencies
-dnl ==============================================
-MIN_GLIB_VERSION=2.18.0
-MIN_GTK_VERSION=2.16.0
-
-PKG_CHECK_MODULES(GOBJECT, [gobject-2.0])
-PKG_CHECK_MODULES(GLIB, [glib-2.0 >= $MIN_GLIB_VERSION])
-PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= $MIN_GTK_VERSION])
-PKG_CHECK_MODULES(GIO, [gio-2.0])
-PKG_CHECK_MODULES(GCONF, [gconf-2.0])
-PKG_CHECK_MODULES(BAMF, [libbamf])
-PKG_CHECK_MODULES(GEE, [gee-1.0])
-PKG_CHECK_MODULES(UNIQUE, [unique-1.0])
 
 dnl ==============================================
 dnl GConf
@@ -71,8 +40,51 @@ if test "$enable_schemas_install" != "no"; then
     fi
 fi
 
-dnl check for python
-AM_PATH_PYTHON
+dnl ==============================================
+dnl Set dependency versions
+dnl ==============================================
+AC_MSG_CHECKING([which GTK version to compile against])
+AC_ARG_WITH([gtk],
+   AC_HELP_STRING([--with-gtk=2.0|3.0],
+   [which GTK version to compile against (default: 2.0)]),
+   [case "$with_gtk" in
+       2.0|3.0) ;;
+       *) AC_MSG_ERROR([invalid GTK version specified]);;
+   esac],
+   [with_gtk=2.0])
+AC_MSG_RESULT([$with_gtk])
+
+case "$with_gtk" in
+   2.0) GTK_API_VERSION=2.0
+        GTK_MIN_VERSION=2.18.0
+        GLIB_MIN_VERSION=2.22.0
+        VALA_MIN_VERSION=0.10.0
+   ;;
+   3.0) GTK_API_VERSION=3.0
+        GTK_MIN_VERSION=2.91.7
+        GLIB_MIN_VERSION=2.27.5
+        VALA_MIN_VERSION=0.11.4
+   ;;
+esac
+AC_SUBST(GTK_API_VERSION)
+
+dnl ==============================================
+dnl Check that we meet the dependencies
+dnl ==============================================
+AM_PROG_VALAC([$VALA_MIN_VERSION])
+if test "x$VALAC" = "x"; then
+	AC_MSG_ERROR([You need Vala compiler])
+fi
+
+PKG_CHECK_MODULES(PLANK_CORE, gobject-2.0 >= $GLIB_MIN_VERSION
+                              glib-2.0 >= $GLIB_MIN_VERSION
+                              gio-2.0 >= $GLIB_MIN_VERSION
+                              gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION
+                              gconf-2.0
+                              gee-1.0
+                              unique-1.0
+                              libbamf
+)
 
 dnl Expansions
 AS_AC_EXPAND([PKGDATADIR], [$datadir/$PACKAGE_NAME])
@@ -142,6 +154,7 @@ ${PACKAGE}-${VERSION}
 
   Build Environment
     Install Prefix:     ${prefix}
+      Use GTK+ API:     ${GTK_API_VERSION}
 
   Build/Development
     Release Build:      ${enable_release}
