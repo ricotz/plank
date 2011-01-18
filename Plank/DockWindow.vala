@@ -77,8 +77,11 @@ namespace Plank
 		
 		public override bool button_release_event (EventButton event)
 		{
-			if (HoveredItem == null)
+			if (HoveredItem == null) {
+				if (event.button == 3)
+					do_popup ();
 				return true;
+			}
 			
 			if (event.button == 1)
 				HoveredItem.launch ();
@@ -186,11 +189,25 @@ namespace Plank
 				w.destroy ();
 			}
 			
-			foreach (MenuItem item in HoveredItem.get_menu_items ())
-				menu.append (item);
+			if (HoveredItem != null)
+				foreach (MenuItem item in HoveredItem.get_menu_items ())
+					menu.append (item);
+			else
+				add_default_menu_items (menu);
 			
 			menu.show_all ();
 			menu.popup (null, null, position_menu, 3, get_current_event_time ());
+		}
+		
+		void add_default_menu_items (Menu menu)
+		{
+			var item = new ImageMenuItem.from_stock (STOCK_ABOUT, null);
+			item.activate.connect (() => Plank.show_about ());
+			menu.append (item);
+			
+			item = new ImageMenuItem.from_stock (STOCK_QUIT, null);
+			item.activate.connect (() => Plank.quit ());
+			menu.append (item);
 		}
 		
 		void position_menu (Menu menu, out int x, out int y, out bool push_in)
@@ -198,9 +215,11 @@ namespace Plank
 			int win_x, win_y;
 			get_position (out win_x, out win_y);
 			
-			var rect = Renderer.item_region (HoveredItem);
+			if (HoveredItem != null) {
+				var rect = Renderer.item_region (HoveredItem);
+				x = win_x + rect.x + rect.width / 2 - menu.requisition.width / 2;
+			}
 			
-			x = win_x + rect.x + rect.width / 2 - menu.requisition.width / 2;
 			y = win_y - menu.requisition.height - 10;
 			push_in = false;
 		}
