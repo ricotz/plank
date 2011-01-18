@@ -7,15 +7,15 @@ namespace bamf {
 		[CCode (has_construct_function = false)]
 		protected BamfApplication ();
 		[CCode (cname = "bamf_application_get_application_type")]
-		public static unowned string get_application_type ();
+		public static unowned string get_application_type (bamf.BamfApplication application);
 		[CCode (cname = "bamf_application_get_desktop_file")]
-		public static unowned string get_desktop_file ();
+		public static unowned string get_desktop_file (bamf.BamfApplication application);
 		[CCode (cname = "bamf_application_get_show_menu_stubs")]
-		public static bool get_show_menu_stubs ();
+		public static bool get_show_menu_stubs (bamf.BamfApplication application);
 		[CCode (cname = "bamf_application_get_windows")]
-		public static unowned GLib.List get_windows ();
+		public static unowned GLib.List get_windows (bamf.BamfApplication application);
 		[CCode (cname = "bamf_application_get_xids")]
-		public static unowned GLib.Array get_xids ();
+		public static unowned GLib.Array get_xids (bamf.BamfApplication application);
 		public virtual signal void window_added (bamf.BamfView p0);
 		public virtual signal void window_removed (bamf.BamfView p0);
 	}
@@ -127,7 +127,7 @@ namespace bamf {
 		[CCode (cname = "bamf_view_is_urgent")]
 		public virtual bool is_urgent ();
 		[CCode (cname = "bamf_view_user_visible")]
-		public static bool is_user_visible ();
+		public static bool is_user_visible (bamf.BamfView view);
 		[NoWrapper]
 		public virtual unowned string view_type (bamf.BamfView view);
 		[NoAccessorMethod]

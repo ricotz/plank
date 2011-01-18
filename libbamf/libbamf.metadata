@@ -1,7 +1,6 @@
 * cheader_filename="libbamf/libbamf.h"
 
 BamfApplication type_check_function="BAMF_IS_APPLICATION"
-bamf_application_*.application hidden="1"
 
 BamfControl type_check_function="BAMF_IS_CONTROL"
 
@@ -12,6 +11,13 @@ BamfMatcher type_check_function="BAMF_IS_MATCHER"
 BamfTabSource type_check_function="BAMF_IS_TAB_SOURCE"
 
 BamfView type_check_function="BAMF_IS_VIEW"
-bamf_view_*.view hidden="1"
+bamf_view_get_children.view hidden="1"
+bamf_view_get_icon.view hidden="1"
+bamf_view_get_name.view hidden="1"
+bamf_view_get_view_type.view hidden="1"
+bamf_view_is_active.view hidden="1"
+bamf_view_is_closed.view hidden="1"
+bamf_view_is_running.view hidden="1"
+bamf_view_is_urgent.view hidden="1"
 
 BamfWindow type_check_function="BAMF_IS_WINDOW"

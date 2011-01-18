@@ -38,8 +38,8 @@ namespace Plank.Services.Windows
 			BamfMatcher matcher = BamfMatcher.get_default ();
 			unowned GLib.List<BamfApplication> apps = BamfMatcher.get_running_applications (matcher);
 			foreach (BamfApplication a in apps)
-				if (a.is_user_visible ())
-					stdout.printf("%s\n", a.get_desktop_file ());
+				if (BamfView.is_user_visible (a))
+					stdout.printf("%s\n", BamfApplication.get_desktop_file (a));
 		}
 	}
 }
