@@ -76,6 +76,11 @@ namespace Plank
 				Logger.DisplayLevel = LogLevel.DEBUG;
 		}
 		
+		public static void quit ()
+		{
+			Gtk.main_quit ();
+		}
+		
 		public static void show_about ()
 		{
 			var dlg = new AboutDialog ();
