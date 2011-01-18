@@ -30,6 +30,8 @@ namespace Plank
 		
 		public int BottomRoundness { get; set; default = 6; }
 		
+		public int LineWidth { get; set; default = 1; }
+		
 		public ThemeRenderer ()
 		{
 		}
@@ -38,8 +40,8 @@ namespace Plank
 		{
 			var cr = surface.Context;
 			
-			var top_offset = TopRoundness > 0 ? 1 : 0;
-			var bottom_offset = BottomRoundness > 0 ? 1 : 0;
+			var top_offset = TopRoundness > 0 ? LineWidth : 0;
+			var bottom_offset = BottomRoundness > 0 ? LineWidth : 0;
 			
 			var gradient = new Pattern.linear (surface.Width / 2.0, 0, surface.Width / 2.0, surface.Height);
 			gradient.add_color_stop_rgba (0, 0.1647, 0.1647, 0.1647, 1);
@@ -53,7 +55,7 @@ namespace Plank
 			cr.restore ();
 			
 			cr.set_source_rgba (0.1647, 0.1647, 0.1647, 1);
-			cr.set_line_width (1.0);
+			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			
 			gradient = new Pattern.linear (surface.Width / 2.0, 2 * top_offset, surface.Width / 2.0, surface.Height - 2 * top_offset - 2 * bottom_offset);
@@ -64,7 +66,7 @@ namespace Plank
 			cr.set_source (gradient);
 			
 			draw_rounded_rect (cr, 1.5, 2 * top_offset + 0.5, surface.Width - 4, surface.Height - 2 * top_offset, TopRoundness, BottomRoundness);
-			cr.set_line_width (1.0);
+			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			cr.restore ();
 		}
