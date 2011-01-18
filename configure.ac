@@ -57,6 +57,7 @@ PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= $MIN_GTK_VERSION])
 PKG_CHECK_MODULES(GIO, [gio-2.0])
 PKG_CHECK_MODULES(GCONF, [gconf-2.0])
 PKG_CHECK_MODULES(BAMF, [libbamf])
+PKG_CHECK_MODULES(GEE, [gee-1.0])
 PKG_CHECK_MODULES(UNIQUE, [unique-1.0])
 
 dnl ==============================================
