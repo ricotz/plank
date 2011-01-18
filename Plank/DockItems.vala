@@ -161,9 +161,7 @@ namespace Plank
 		
 		void add_item (DockItem item)
 		{
-			Items.insert_sorted (item, (a, b) => {
-				return compare_items (a as DockItem, b as DockItem);
-			});
+			Items.insert_sorted (item, (CompareFunc) compare_items);
 			
 			item.notify["Icon"].connect (() => { items_changed (); });
 			
