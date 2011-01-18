@@ -81,7 +81,7 @@ namespace Plank
 			var dlg = new AboutDialog ();
 			
 			dlg.set_program_name ("Plank");
-			dlg.set_version ("super early way before beta");
+			dlg.set_version (Build.VERSION);
 			dlg.set_logo_icon_name ("plank");
 			
 			dlg.set_comments ("Plank. Stupidly simple.");
