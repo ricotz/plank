@@ -191,27 +191,16 @@ namespace Plank
 		
 		void create_normal_indicator ()
 		{
-			var color = window.get_style ().bg [StateType.SELECTED];
-			// TODO implement these
-			//color = Drawing.set_min_value (color, 90);
-			//color = Drawing.set_min_sat (color, 0.4);
-			var r = color.red / (double) uint16.MAX;
-			var g = color.green / (double) uint16.MAX;
-			var b = color.blue / (double) uint16.MAX;
-			indicator_buffer = create_indicator (IndicatorSize, r, g, b);
+			var color = RGBColor.from_gdk (window.get_style ().bg [StateType.SELECTED]);
+			color = color.set_min_value (90 / (double) uint16.MAX).set_min_sat (0.4);
+			indicator_buffer = create_indicator (IndicatorSize, color.R, color.G, color.B);
 		}
 		
 		void create_urgent_indicator ()
 		{
-			var color = window.get_style ().bg [StateType.SELECTED];
-			// TODO implement these
-			//color = Drawing.set_min_value (color, 90);
-			//color = Drawing.add_hue (color, UrgentHueShift);
-			//color = Drawing.set_sat (color, 1);
-			var r = color.red / (double) uint16.MAX;
-			var g = color.green / (double) uint16.MAX;
-			var b = color.blue / (double) uint16.MAX;
-			urgent_indicator_buffer = create_indicator (IndicatorSize, r, g, b);
+			var color = RGBColor.from_gdk (window.get_style ().bg [StateType.SELECTED]);
+			color = color.set_min_value (90 / (double) uint16.MAX).add_hue (UrgentHueShift).set_sat (1);
+			urgent_indicator_buffer = create_indicator (IndicatorSize, color.R, color.G, color.B);
 		}
 		
 		PlankSurface create_indicator (int size, double r, double g, double b)
