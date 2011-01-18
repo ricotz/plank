@@ -111,7 +111,24 @@ dnl }}}
 
 AC_CONFIG_FILES([
 Makefile
+data/plank.desktop
 data/Makefile
+data/icons/Makefile
+data/icons/hicolor/Makefile
+data/icons/hicolor/16x16/Makefile
+data/icons/hicolor/16x16/apps/Makefile
+data/icons/hicolor/22x22/Makefile
+data/icons/hicolor/22x22/apps/Makefile
+data/icons/hicolor/24x24/Makefile
+data/icons/hicolor/24x24/apps/Makefile
+data/icons/hicolor/32x32/Makefile
+data/icons/hicolor/32x32/apps/Makefile
+data/icons/hicolor/48x48/Makefile
+data/icons/hicolor/48x48/apps/Makefile
+data/icons/hicolor/64x64/Makefile
+data/icons/hicolor/64x64/apps/Makefile
+data/icons/hicolor/128x128/Makefile
+data/icons/hicolor/128x128/apps/Makefile
 m4/Makefile
 po/Makefile.in
 Plank/Makefile

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Plank
+Type=Application
+Exec=plank
+Terminal=false
+Icon=plank
+_Comment=Plank. Stupidly simple.
+Categories=Utility;
