@@ -17,10 +17,22 @@
 
 using bamf;
 
-namespace Plank.Services
+namespace Plank.Services.Windows
 {
 	public class Matcher : GLib.Object
 	{
+		static construct {
+			BamfMatcher matcher = BamfMatcher.get_default ();
+			matcher.view_opened.connect ((matcher, arg1) => {
+				BamfView view = arg1 as BamfView;
+				stdout.printf("view type: %s", view.get_name ());
+				stdout.printf("new view\n");
+			});
+			matcher.view_closed.connect (() => {
+				stdout.printf("lost view\n");
+			});
+		}
+		
 		public static void active_launchers ()
 		{
 			BamfMatcher matcher = BamfMatcher.get_default ();
