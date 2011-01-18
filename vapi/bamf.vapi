@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "", lower_case_cprefix = "bamf_")]
 namespace bamf {
-	[CCode (type_check_function = "BAMF_IS_APPLICATION", cheader_filename = "libbamf.h")]
+	[CCode (type_check_function = "BAMF_IS_APPLICATION", cheader_filename = "libbamf/libbamf.h")]
 	public class BamfApplication : bamf.BamfView {
 		[CCode (has_construct_function = false)]
 		protected BamfApplication ();
@@ -19,7 +19,7 @@ namespace bamf {
 		public virtual signal void window_added (bamf.BamfView p0);
 		public virtual signal void window_removed (bamf.BamfView p0);
 	}
-	[CCode (type_check_function = "BAMF_IS_CONTROL", cheader_filename = "libbamf.h")]
+	[CCode (type_check_function = "BAMF_IS_CONTROL", cheader_filename = "libbamf/libbamf.h")]
 	public class BamfControl : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected BamfControl ();
@@ -34,7 +34,7 @@ namespace bamf {
 		[CCode (cname = "bamf_control_set_approver_behavior")]
 		public static void set_approver_behavior (bamf.BamfControl control, int32 behavior);
 	}
-	[CCode (type_check_function = "BAMF_IS_INDICATOR", cheader_filename = "libbamf.h")]
+	[CCode (type_check_function = "BAMF_IS_INDICATOR", cheader_filename = "libbamf/libbamf.h")]
 	public class BamfIndicator : bamf.BamfView {
 		[CCode (has_construct_function = false)]
 		protected BamfIndicator ();
@@ -45,7 +45,7 @@ namespace bamf {
 		[CCode (cname = "bamf_indicator_get_remote_path")]
 		public unowned string get_remote_path ();
 	}
-	[CCode (type_check_function = "BAMF_IS_MATCHER", cheader_filename = "libbamf.h")]
+	[CCode (type_check_function = "BAMF_IS_MATCHER", cheader_filename = "libbamf/libbamf.h")]
 	public class BamfMatcher : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected BamfMatcher ();
@@ -78,7 +78,7 @@ namespace bamf {
 		public virtual signal void view_closed (GLib.Object p0);
 		public virtual signal void view_opened (GLib.Object p0);
 	}
-	[CCode (type_check_function = "BAMF_IS_TAB_SOURCE", cheader_filename = "libbamf.h")]
+	[CCode (type_check_function = "BAMF_IS_TAB_SOURCE", cheader_filename = "libbamf/libbamf.h")]
 	public class BamfTabSource : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected BamfTabSource ();
@@ -106,7 +106,7 @@ namespace bamf {
 		public virtual signal void tab_opened (string p0);
 		public virtual signal void tab_uri_changed (string p0, string p1, string p2);
 	}
-	[CCode (type_check_function = "BAMF_IS_VIEW", cheader_filename = "libbamf.h")]
+	[CCode (type_check_function = "BAMF_IS_VIEW", cheader_filename = "libbamf/libbamf.h")]
 	public class BamfView : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected BamfView ();
@@ -148,7 +148,7 @@ namespace bamf {
 		public virtual signal void urgent_changed (bool urgent);
 		public virtual signal void user_visible_changed (bool user_visible);
 	}
-	[CCode (type_check_function = "BAMF_IS_WINDOW", cheader_filename = "libbamf.h")]
+	[CCode (type_check_function = "BAMF_IS_WINDOW", cheader_filename = "libbamf/libbamf.h")]
 	public class BamfWindow : bamf.BamfView {
 		[CCode (has_construct_function = false)]
 		protected BamfWindow ();
