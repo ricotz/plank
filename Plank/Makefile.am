@@ -1,12 +1,14 @@
+VAPIDIR = $(top_srcdir)/vapi
+
 VALAFLAGS = \
 	--pkg gtk+-${GTK_API_VERSION} \
 	--pkg gconf-2.0 \
-	--pkg libbamf \
+	--pkg bamf \
 	--pkg gee-1.0 \
 	--pkg gio-unix-2.0 \
 	--pkg unique-1.0 \
-	--vapidir .. \
-	Build.vapi \
+	--vapidir $(VAPIDIR) \
+	$(VAPIDIR)/config.vapi \
 	$(NULL)
 
 plankdir = $(bindir)

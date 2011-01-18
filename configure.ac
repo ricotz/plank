@@ -143,6 +143,7 @@ data/icons/hicolor/128x128/Makefile
 data/icons/hicolor/128x128/apps/Makefile
 m4/Makefile
 po/Makefile.in
+vapi/Makefile
 Plank/Makefile
 ])
 

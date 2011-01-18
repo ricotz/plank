@@ -3,6 +3,7 @@ SUBDIRS = \
 	data \
 	m4 \
 	po \
+	vapi \
 	$(NULL)
 
 EXTRA_DIST = \
