@@ -81,7 +81,7 @@ namespace Plank.Items
 			List<MenuItem> items = new List<MenuItem> ();
 			
 			var item = new ImageMenuItem.with_mnemonic ("_Open");
-			item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon ("docky", 24, 24)));
+			item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon ("document-open-symbolic;;document-open", 24, 24)));
 			item.activate.connect (() => launch ());
 			items.append (item);
 			
