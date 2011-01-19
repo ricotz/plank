@@ -59,8 +59,9 @@ namespace Plank
 			cr.stroke ();
 			
 			gradient = new Pattern.linear (surface.Width / 2.0, 2 * top_offset, surface.Width / 2.0, surface.Height - 2 * top_offset - 2 * bottom_offset);
-			gradient.add_color_stop_rgba (0, 0.4392, 0.4392, 0.4392, 1);
-			gradient.add_color_stop_rgba (0.2, 0.4392, 0.4392, 0.4392, 0);
+			gradient.add_color_stop_rgba (0, 1, 1, 1, 0.5);
+			gradient.add_color_stop_rgba (TopRoundness / (double) surface.Height, 1, 1, 1, 0.24);
+			gradient.add_color_stop_rgba (1, 1, 1, 1, 0.15);
 			
 			cr.save ();
 			cr.set_source (gradient);
