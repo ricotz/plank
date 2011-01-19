@@ -30,7 +30,9 @@ namespace Plank
 		
 		public string Text { get; set; }
 		
-		ThemeRenderer theme { get; set; }
+		ThemeRenderer theme;
+		
+		Pango.Layout layout;
 		
 		public HoverWindow ()
 		{
@@ -44,6 +46,14 @@ namespace Plank
 			skip_pager_hint = true;
 			skip_taskbar_hint = true;
 			set_type_hint (WindowTypeHint.DOCK);
+			
+			layout = new Pango.Layout (pango_context_get ());
+			layout.set_ellipsize (EllipsizeMode.END);
+			
+			var font_description = get_style ().font_desc;
+			font_description.set_absolute_size ((int) (11 * Pango.SCALE));
+			font_description.set_weight (Weight.BOLD);
+			layout.set_font_description (font_description);
 			
 			notify["Text"].connect (invalidate);
 			
@@ -83,14 +93,6 @@ namespace Plank
 				return;
 			
 			// calculate the text layout to find the size
-			var layout = new Pango.Layout (pango_context_get ());
-			
-			var font_description = get_style ().font_desc;
-			font_description.set_absolute_size ((int) (11 * Pango.SCALE));
-			font_description.set_weight (Weight.BOLD);
-			layout.set_font_description (font_description);
-			
-			layout.set_ellipsize (EllipsizeMode.END);
 			layout.set_text (Text, -1);
 			
 			// make the buffer
