@@ -45,7 +45,7 @@ namespace Plank.Items
 			var item = new ImageMenuItem.with_mnemonic ("_Pin to Dock");
 			int width, height;
 			icon_size_lookup (IconSize.MENU, out width, out height);
-			item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon ("document-open-symbolic;;document-open", width, height)));
+			item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon ("add", width, height)));
 			item.activate.connect (() => pin_launcher (this));
 			items.prepend (item);
 			
