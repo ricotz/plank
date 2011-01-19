@@ -169,8 +169,14 @@ namespace Plank
 			if ((event & (FileMonitorEvent.CREATED | FileMonitorEvent.DELETED)) == 0)
 				return;
 			
-			Items = new List<DockItem> ();
+			for (int i = 0; i < Items.length (); i++)
+				if (!(Items.nth_data (i) is TransientDockItem)) {
+					Items.delete_link (Items.nth (i));
+					i--;
+				}
+			
 			load_items ();
+			reload_transients ();
 		}
 		
 		void add_item (DockItem item)
@@ -204,7 +210,9 @@ namespace Plank
 				return;
 			
 			Items.remove (item);
-			add_item (new ApplicationDockItem.with_dockitem (launchers_dir.get_path () + "/" + dockitem));
+			var new_item = new ApplicationDockItem.with_dockitem (launchers_dir.get_path () + "/" + dockitem);
+			new_item.Position = item.Position;
+			add_item (new_item);
 		}
 		
 		void set_app (DockItem item)
