@@ -199,7 +199,8 @@ namespace Plank
 				var indicator = (item.State & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 				
 				var x = rect.x + rect.width / 2 - indicator.Width / 2;
-				var y = DockHeight - indicator.Height / 2 - 2 * theme.get_bottom_offset () - 1;
+				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+ 				var y = DockHeight - indicator.Height / 2 - 2 * (int) theme.get_bottom_offset () - 1;
 				
 				if (item.Indicator == IndicatorState.SINGLE) {
 					surface.Context.set_source_surface (indicator.Internal, x, y);
