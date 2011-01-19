@@ -60,8 +60,15 @@ namespace Plank
 			
 			gradient = new Pattern.linear (surface.Width / 2.0, 2 * top_offset, surface.Width / 2.0, surface.Height - 2 * top_offset - 2 * bottom_offset);
 			gradient.add_color_stop_rgba (0, 1, 1, 1, 0.5);
-			gradient.add_color_stop_rgba (TopRoundness / (double) surface.Height, 1, 1, 1, 0.24);
-			gradient.add_color_stop_rgba (1, 1, 1, 1, 0.15);
+			if (TopRoundness > 0)
+				gradient.add_color_stop_rgba (TopRoundness / (double) surface.Height, 1, 1, 1, 0.12);
+			else
+				gradient.add_color_stop_rgba (LineWidth / (double) surface.Height, 1, 1, 1, 0.12);
+			if (BottomRoundness > 0)
+				gradient.add_color_stop_rgba ((surface.Height - BottomRoundness) / (double) surface.Height, 1, 1, 1, 0.08);
+			else
+				gradient.add_color_stop_rgba ((surface.Height - LineWidth) / (double) surface.Height, 1, 1, 1, 0.08);
+			gradient.add_color_stop_rgba (1, 1, 1, 1, 0.19);
 			
 			cr.save ();
 			cr.set_source (gradient);
