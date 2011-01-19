@@ -53,7 +53,7 @@ namespace Plank
 			Gtk.init (ref args);
 				
 			// ensure only one instance
-			if (new App ("org.freedesktop.plank", null).is_running) {
+			if (new App ("net.launchpad.plank", null).is_running) {
 				Logger.fatal<Plank> ("Exiting because another instance is already running.");
 				return -1;
 			}
