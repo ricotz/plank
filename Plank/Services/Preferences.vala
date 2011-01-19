@@ -52,12 +52,8 @@ namespace Plank.Services.Preferences
 			
 			// ensure the preferences file exists
 			Paths.Paths.ensure_directory_exists (backing_file.get_parent ());
-			try {
-				if (!backing_file.query_exists ())
-						backing_file.create (0);
-			} catch {
-				backing_error ("Unable to create the preferences file '%s'");
-			}
+			if (!backing_file.query_exists ())
+				save_prefs ();
 			
 			load_prefs ();
 			
@@ -70,8 +66,20 @@ namespace Plank.Services.Preferences
 			group_name = group;
 		}
 		
+		void stop_monitor ()
+		{
+			if (backing_monitor == null)
+				return;
+			
+			backing_monitor.cancel ();
+			backing_monitor = null;
+		}
+		
 		void start_monitor ()
 		{
+			if (backing_monitor != null)
+				return;
+			
 			try {
 				backing_monitor = backing_file.monitor (0);
 				backing_monitor.set_rate_limit (500);
@@ -128,7 +136,7 @@ namespace Plank.Services.Preferences
 		
 		void save_prefs ()
 		{
-			backing_monitor.cancel ();
+			stop_monitor ();
 			
 			KeyFile file = new KeyFile ();
 			
