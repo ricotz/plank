@@ -24,7 +24,7 @@ namespace Plank.Services.Windows
 		public signal void window_opened (Window w);
 		public signal void window_closed ();
 		
-		public signal void app_opened (Application app);
+		public signal void app_opened (Bamf.Application app);
 		public signal void app_closed ();
 		
 		static Matcher matcher;
@@ -41,27 +41,27 @@ namespace Plank.Services.Windows
 			Bamf.Matcher.get_default ().view_opened.connect ((matcher, arg1) => {
 				if (arg1 is Window)
 					window_opened (arg1 as Window);
-				else if (arg1 is Application)
-					app_opened (arg1 as Application);
+				else if (arg1 is Bamf.Application)
+					app_opened (arg1 as Bamf.Application);
 			});
 			
 			Bamf.Matcher.get_default ().view_closed.connect ((matcher, arg1) => {
 				if (arg1 is Window)
 					window_closed ();
-				else if (arg1 is Application)
+				else if (arg1 is Bamf.Application)
 					app_closed ();
 			});
 		}
 		
-		public unowned List<Application> active_launchers ()
+		public unowned List<Bamf.Application> active_launchers ()
 		{
 			return Bamf.Matcher.get_default ().get_applications ();
 		}
 		
-		public Application? app_for_launcher (string launcher)
+		public Bamf.Application? app_for_launcher (string launcher)
 		{
-			unowned List<Application> apps = Bamf.Matcher.get_default ().get_applications ();
-			foreach (Application app in apps)
+			unowned List<Bamf.Application> apps = Bamf.Matcher.get_default ().get_applications ();
+			foreach (Bamf.Application app in apps)
 				if (app.get_desktop_file () == launcher)
 					return app;
 			
