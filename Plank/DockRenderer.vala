@@ -135,12 +135,12 @@ namespace Plank
 		
 		void draw_dock_background (PlankSurface surface)
 		{
-			if (background_buffer == null) {
+			if (background_buffer == null || background_buffer.Width != surface.Width || background_buffer.Height != VisibleDockHeight) {
 				background_buffer = new PlankSurface.with_plank_surface (surface.Width, VisibleDockHeight, surface);
 				theme.draw_background (background_buffer);
 			}
 			
-			surface.Context.set_source_surface (background_buffer.Internal, 0, surface.Height - VisibleDockHeight);
+			surface.Context.set_source_surface (background_buffer.Internal, 0, surface.Height - background_buffer.Height);
 			surface.Context.paint ();
 		}
 		
@@ -177,9 +177,9 @@ namespace Plank
 			
 			var rect = item_region (item);
 			var hover_rect = rect;
+			rect.x += ItemPadding / 2;
 			rect.y += 2 * theme.get_top_offset () + DockPadding;
 			rect.height -= DockPadding;
-			rect.x += ItemPadding / 2;
 			
 			// draw active glow
 			if ((item.State & ItemState.ACTIVE) != 0)
@@ -198,13 +198,16 @@ namespace Plank
 				
 				var indicator = (item.State & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 				
+				var x = rect.x + rect.width / 2 - indicator.Width / 2;
+				var y = DockHeight - indicator.Height / 2 - 2 * theme.get_bottom_offset () - 1;
+				
 				if (item.Indicator == IndicatorState.SINGLE) {
-					surface.Context.set_source_surface (indicator.Internal, rect.x + rect.width / 2 - indicator.Width / 2, DockHeight - indicator.Height / 2 - 2 * theme.get_bottom_offset () - 1);
+					surface.Context.set_source_surface (indicator.Internal, x, y);
 					surface.Context.paint ();
 				} else {
-					surface.Context.set_source_surface (indicator.Internal, rect.x + rect.width / 2 - indicator.Width / 2 - 3, DockHeight - indicator.Height / 2 - 2 * theme.get_bottom_offset () - 1);
+					surface.Context.set_source_surface (indicator.Internal, x - 3, y);
 					surface.Context.paint ();
-					surface.Context.set_source_surface (indicator.Internal, rect.x + rect.width / 2 - indicator.Width / 2 + 3, DockHeight - indicator.Height / 2 - 2 * theme.get_bottom_offset () - 1);
+					surface.Context.set_source_surface (indicator.Internal, x + 3, y);
 					surface.Context.paint ();
 				}
 			}
@@ -212,6 +215,8 @@ namespace Plank
 		
 		void draw_active_glow (PlankSurface surface, Gdk.Rectangle rect, RGBColor color)
 		{
+			rect.y += 2 * theme.get_top_offset ();
+			rect.height -= 2 * theme.get_top_offset () + 2 * theme.get_bottom_offset ();
 			surface.Context.rectangle (rect.x, rect.y, rect.width, rect.height);
 			
 			var gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);

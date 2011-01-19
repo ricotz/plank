@@ -59,14 +59,20 @@ namespace Plank
 			var top_offset = get_top_offset ();
 			var bottom_offset = get_bottom_offset ();
 			
-			var gradient = new Pattern.linear (surface.Width / 2.0, 0, surface.Width / 2.0, surface.Height);
+			var gradient = new Pattern.linear (0, 0, 0, surface.Height);
 			gradient.add_color_stop_rgba (0, 0.1647, 0.1647, 0.1647, 1);
 			gradient.add_color_stop_rgba (1, 0.3176, 0.3176, 0.3176, 1);
 			
 			cr.save ();
 			cr.set_source (gradient);
 			
-			draw_rounded_rect (cr, LineWidth + 0.5, top_offset + 0.5, surface.Width - 2 * LineWidth, surface.Height - top_offset - bottom_offset, TopRoundness, BottomRoundness);
+			draw_rounded_rect (cr,
+				LineWidth / 2.0,
+				top_offset / 2.0,
+				surface.Width - LineWidth,
+				surface.Height - top_offset / 2.0 - bottom_offset / 2.0,
+				TopRoundness,
+				BottomRoundness);
 			cr.fill_preserve ();
 			cr.restore ();
 			
@@ -74,22 +80,24 @@ namespace Plank
 			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			
-			gradient = new Pattern.linear (surface.Width / 2.0, 2 * top_offset, surface.Width / 2.0, surface.Height - 2 * top_offset - 2 * bottom_offset);
+			gradient = new Pattern.linear (0, top_offset,
+				0, surface.Height - top_offset - bottom_offset);
+			
 			gradient.add_color_stop_rgba (0, 1, 1, 1, 0.5);
-			if (TopRoundness > 0)
-				gradient.add_color_stop_rgba (TopRoundness / (double) surface.Height, 1, 1, 1, 0.12);
-			else
-				gradient.add_color_stop_rgba (LineWidth / (double) surface.Height, 1, 1, 1, 0.12);
-			if (BottomRoundness > 0)
-				gradient.add_color_stop_rgba ((surface.Height - BottomRoundness) / (double) surface.Height, 1, 1, 1, 0.08);
-			else
-				gradient.add_color_stop_rgba ((surface.Height - LineWidth) / (double) surface.Height, 1, 1, 1, 0.08);
+			gradient.add_color_stop_rgba ((TopRoundness > 0 ? TopRoundness : LineWidth) / (double) surface.Height, 1, 1, 1, 0.12);
+			gradient.add_color_stop_rgba ((surface.Height - (BottomRoundness > 0 ? BottomRoundness : LineWidth)) / (double) surface.Height, 1, 1, 1, 0.08);
 			gradient.add_color_stop_rgba (1, 1, 1, 1, 0.19);
 			
 			cr.save ();
 			cr.set_source (gradient);
 			
-			draw_rounded_rect (cr, 0.5 + 2 * LineWidth, top_offset + 0.5 + LineWidth, surface.Width - 4 * LineWidth, surface.Height - 2 * top_offset - 2 * bottom_offset, TopRoundness, BottomRoundness);
+			draw_rounded_rect (cr,
+				3 * LineWidth / 2.0,
+				3 * top_offset / 2.0,
+				surface.Width - 3 * LineWidth,
+				surface.Height - 3 * top_offset / 2.0 - 3 * bottom_offset / 2.0,
+				TopRoundness,
+				BottomRoundness);
 			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			cr.restore ();
