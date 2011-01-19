@@ -34,9 +34,12 @@ namespace Plank
 		
 		Pango.Layout layout;
 		
+		double text_offset;
+		
 		public HoverWindow ()
 		{
 			base.with_type (Gtk.WindowType.POPUP);
+			
 			theme = new ThemeRenderer ();
 			theme.TopRoundness = 3;
 			theme.BottomRoundness = 3;
@@ -47,19 +50,14 @@ namespace Plank
 			skip_taskbar_hint = true;
 			set_type_hint (WindowTypeHint.DOCK);
 			
-			layout = new Pango.Layout (pango_context_get ());
-			layout.set_ellipsize (EllipsizeMode.END);
+			set_redraw_on_allocate (true);
 			
-			var font_description = get_style ().font_desc;
-			font_description.set_absolute_size ((int) (11 * Pango.SCALE));
-			font_description.set_weight (Weight.BOLD);
-			layout.set_font_description (font_description);
+			update_layout ();
+			style_set.connect (() => update_layout ());
 			
 			notify["Text"].connect (invalidate);
 			
 			stick ();
-			set_size_request (100, 30);
-			
 			show_all ();
 		}
 		
@@ -77,20 +75,27 @@ namespace Plank
 			move (x, y);
 		}
 		
-		void invalidate ()
+		void update_layout ()
 		{
-			background_buffer = null;
-			draw_background ();
+			layout = new Pango.Layout (pango_context_get ());
+			layout.set_ellipsize (EllipsizeMode.END);
 			
-			queue_draw ();
+			var font_description = get_style ().font_desc;
+			font_description.set_absolute_size ((int) (11 * Pango.SCALE));
+			font_description.set_weight (Weight.BOLD);
+			layout.set_font_description (font_description);
+			
+			invalidate ();
 		}
 		
 		PlankSurface background_buffer;
 		
-		void draw_background ()
+		void invalidate ()
 		{
+			background_buffer = null;
+			
 			if (Text == "" || Text == null)
-				return;
+				Text = " ";
 			
 			// calculate the text layout to find the size
 			layout.set_text (Text, -1);
@@ -104,15 +109,20 @@ namespace Plank
 			}
 			
 			var buffer = HoverHeight - logical_rect.height;
+			text_offset = buffer / 2;
 			
 			set_size_request ((int) Math.fmax (HoverHeight, buffer + logical_rect.width), HoverHeight);
+		}
+		
+		void draw_background ()
+		{
 			background_buffer = new PlankSurface (width_request, height_request);
 			
 			// draw the background
 			theme.draw_background (background_buffer);
 			
 			// draw the text
-			background_buffer.Context.move_to (buffer / 2, buffer / 2);
+			background_buffer.Context.move_to (text_offset, text_offset);
 			background_buffer.Context.set_source_rgb (1, 1, 1);
 			Pango.cairo_show_layout (background_buffer.Context, layout);
 		}

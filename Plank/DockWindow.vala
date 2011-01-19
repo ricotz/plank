@@ -165,7 +165,8 @@ namespace Plank
 			var rect = Renderer.item_region (HoveredItem);
 			hover.move_hover (x + rect.x + rect.width / 2, y);
 			
-			hover.show ();
+			if (!hover.get_visible ())
+				hover.show ();
 		}
 		
 		protected void set_size ()
