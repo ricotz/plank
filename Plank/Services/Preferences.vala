@@ -149,6 +149,8 @@ namespace Plank.Services.Preferences
 					backing_error ("Unsupported preferences type '%s'");
 			}
 			
+			Logging.Logger.debug<Preferences> ("Saving preferences '%s'".printf (backing_file.get_path ()));
+			
 			try {
 				DataOutputStream stream;
 				if (backing_file.query_exists ())
