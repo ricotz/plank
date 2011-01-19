@@ -6,16 +6,11 @@ namespace Bamf {
 	public class Application : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Application ();
-		[CCode (cname = "bamf_application_get_application_type")]
-		public static unowned string get_application_type (Bamf.Application application);
-		[CCode (cname = "bamf_application_get_desktop_file")]
-		public static unowned string get_desktop_file (Bamf.Application application);
-		[CCode (cname = "bamf_application_get_show_menu_stubs")]
-		public static bool get_show_menu_stubs (Bamf.Application application);
-		[CCode (cname = "bamf_application_get_windows")]
-		public static unowned GLib.List get_windows (Bamf.Application application);
-		[CCode (cname = "bamf_application_get_xids")]
-		public static unowned GLib.Array get_xids (Bamf.Application application);
+		public unowned string get_application_type ();
+		public unowned string get_desktop_file ();
+		public bool get_show_menu_stubs ();
+		public unowned GLib.List get_windows ();
+		public unowned GLib.Array get_xids ();
 		public virtual signal void window_added (Bamf.View p0);
 		public virtual signal void window_removed (Bamf.View p0);
 	}
@@ -23,56 +18,36 @@ namespace Bamf {
 	public class Control : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Control ();
-		[CCode (cname = "bamf_control_get_default")]
 		public static unowned Bamf.Control get_default ();
-		[CCode (cname = "bamf_control_insert_desktop_file")]
-		public static void insert_desktop_file (Bamf.Control control, string desktop_file);
-		[CCode (cname = "bamf_control_register_application_for_pid")]
-		public static void register_application_for_pid (Bamf.Control control, string application, int32 pid);
-		[CCode (cname = "bamf_control_register_tab_provider")]
-		public static void register_tab_provider (Bamf.Control control, string path);
-		[CCode (cname = "bamf_control_set_approver_behavior")]
-		public static void set_approver_behavior (Bamf.Control control, int32 behavior);
+		public void insert_desktop_file (string desktop_file);
+		public void register_application_for_pid (string application, int32 pid);
+		public void register_tab_provider (string path);
+		public void set_approver_behavior (int32 behavior);
 	}
 	[CCode (type_check_function = "BAMF_IS_INDICATOR", cheader_filename = "libbamf/libbamf.h")]
 	public class Indicator : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Indicator ();
-		[CCode (cname = "bamf_indicator_get_dbus_menu_path")]
 		public unowned string get_dbus_menu_path ();
-		[CCode (cname = "bamf_indicator_get_remote_address")]
 		public unowned string get_remote_address ();
-		[CCode (cname = "bamf_indicator_get_remote_path")]
 		public unowned string get_remote_path ();
 	}
 	[CCode (type_check_function = "BAMF_IS_MATCHER", cheader_filename = "libbamf/libbamf.h")]
 	public class Matcher : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Matcher ();
-		[CCode (cname = "bamf_matcher_application_is_running")]
-		public static bool application_is_running (Bamf.Matcher matcher, string application);
-		[CCode (cname = "bamf_matcher_get_active_application")]
-		public static unowned Bamf.Application get_active_application (Bamf.Matcher matcher);
-		[CCode (cname = "bamf_matcher_get_active_window")]
-		public static unowned Bamf.Window get_active_window (Bamf.Matcher matcher);
-		[CCode (cname = "bamf_matcher_get_application_for_window")]
-		public static unowned Bamf.Application get_application_for_window (Bamf.Matcher matcher, Bamf.Window window);
-		[CCode (cname = "bamf_matcher_get_application_for_xid")]
-		public static unowned Bamf.Application get_application_for_xid (Bamf.Matcher matcher, uint32 xid);
-		[CCode (cname = "bamf_matcher_get_applications")]
-		public static unowned GLib.List get_applications (Bamf.Matcher matcher);
-		[CCode (cname = "bamf_matcher_get_default")]
+		public bool application_is_running (string application);
+		public unowned Bamf.Application get_active_application ();
+		public unowned Bamf.Window get_active_window ();
+		public unowned Bamf.Application get_application_for_window (Bamf.Window window);
+		public unowned Bamf.Application get_application_for_xid (uint32 xid);
+		public unowned GLib.List get_applications ();
 		public static unowned Bamf.Matcher get_default ();
-		[CCode (cname = "bamf_matcher_get_running_applications")]
-		public static unowned GLib.List get_running_applications (Bamf.Matcher matcher);
-		[CCode (cname = "bamf_matcher_get_tabs")]
-		public static unowned GLib.List get_tabs (Bamf.Matcher matcher);
-		[CCode (cname = "bamf_matcher_get_windows")]
-		public static unowned GLib.List get_windows (Bamf.Matcher matcher);
-		[CCode (cname = "bamf_matcher_get_xids_for_application")]
-		public static unowned GLib.Array get_xids_for_application (Bamf.Matcher matcher, string application);
-		[CCode (cname = "bamf_matcher_register_favorites")]
-		public static void register_favorites (Bamf.Matcher matcher, string favorites);
+		public unowned GLib.List get_running_applications ();
+		public unowned GLib.List get_tabs ();
+		public unowned GLib.List get_windows ();
+		public unowned GLib.Array get_xids_for_application (string application);
+		public void register_favorites (string favorites);
 		public virtual signal void active_application_changed (GLib.Object p0, GLib.Object p1);
 		public virtual signal void active_window_changed (GLib.Object p0, GLib.Object p1);
 		public virtual signal void view_closed (GLib.Object p0);
@@ -82,26 +57,16 @@ namespace Bamf {
 	public class TabSource : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected TabSource ();
-		[CCode (cname = "bamf_tab_source_get_tab_ids")]
-		public static unowned string get_tab_ids (Bamf.TabSource source);
-		[CCode (cname = "bamf_tab_source_get_tab_preview")]
-		public static unowned GLib.Array get_tab_preview (Bamf.TabSource source, string tab_id);
-		[CCode (cname = "bamf_tab_source_get_tab_uri")]
-		public static unowned string get_tab_uri (Bamf.TabSource source, string tab_id);
-		[CCode (cname = "bamf_tab_source_get_tab_xid")]
-		public static uint32 get_tab_xid (Bamf.TabSource source, string tab_id);
-		[CCode (cname = "bamf_tab_source_show_tab")]
+		public unowned string get_tab_ids ();
+		public unowned GLib.Array get_tab_preview (string tab_id);
+		public unowned string get_tab_uri (string tab_id);
+		public uint32 get_tab_xid (string tab_id);
 		public virtual void show_tab (Bamf.TabSource source, string tab_id, GLib.Error error);
-		[NoWrapper]
-		public virtual unowned string tab_ids (Bamf.TabSource source);
-		[NoWrapper]
-		public virtual unowned GLib.Array tab_preview (Bamf.TabSource source, string tab_id);
-		[NoWrapper]
-		public virtual unowned string tab_uri (Bamf.TabSource source, string tab_id);
-		[NoWrapper]
-		public virtual uint32 tab_xid (Bamf.TabSource source, string tab_id);
-		[NoAccessorMethod]
-		public string id { owned get; set construct; }
+		public virtual unowned string tab_ids ();
+		public virtual unowned GLib.Array tab_preview (string tab_id);
+		public virtual unowned string tab_uri (string tab_id);
+		public virtual uint32 tab_xid (string tab_id);
+		public string id { get; set construct; }
 		public virtual signal void tab_closed (string p0);
 		public virtual signal void tab_opened (string p0);
 		public virtual signal void tab_uri_changed (string p0, string p1, string p2);
@@ -110,36 +75,16 @@ namespace Bamf {
 	public class View : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected View ();
-		[CCode (cname = "bamf_view_get_children")]
 		public virtual unowned GLib.List get_children ();
-		[CCode (cname = "bamf_view_get_icon")]
 		public virtual unowned string get_icon ();
-		[CCode (cname = "bamf_view_get_name")]
 		public virtual unowned string get_name ();
-		[CCode (cname = "bamf_view_get_view_type")]
-		public static unowned string get_view_type ();
-		[CCode (cname = "bamf_view_is_active")]
+		public unowned string get_view_type ();
 		public virtual bool is_active ();
-		[CCode (cname = "bamf_view_is_closed")]
-		public static bool is_closed ();
-		[CCode (cname = "bamf_view_is_running")]
 		public virtual bool is_running ();
-		[CCode (cname = "bamf_view_is_urgent")]
 		public virtual bool is_urgent ();
-		[CCode (cname = "bamf_view_user_visible")]
-		public static bool is_user_visible (Bamf.View view);
-		[NoWrapper]
-		public virtual unowned string view_type (Bamf.View view);
-		[NoAccessorMethod]
-		public bool active { get; }
-		[NoAccessorMethod]
-		public string path { owned get; set construct; }
-		[NoAccessorMethod]
-		public bool running { get; }
-		[NoAccessorMethod]
-		public bool urgent { get; }
-		[NoAccessorMethod]
-		public bool user_visible { get; }
+		public bool user_visible ();
+		public virtual unowned string view_type ();
+		public string path { get; set construct; }
 		public virtual signal void active_changed (bool active);
 		public virtual signal void child_added (Bamf.View child);
 		public virtual signal void child_removed (Bamf.View child);
@@ -152,13 +97,9 @@ namespace Bamf {
 	public class Window : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Window ();
-		[CCode (cname = "bamf_window_get_transient")]
 		public unowned Bamf.Window get_transient ();
-		[CCode (cname = "bamf_window_get_window_type")]
 		public Bamf.WindowType get_window_type ();
-		[CCode (cname = "bamf_window_get_xid")]
 		public uint32 get_xid ();
-		[CCode (cname = "bamf_window_last_active")]
 		public ulong last_active ();
 	}
 	[CCode (cprefix = "BAMF_WINDOW_", has_type_id = false, cheader_filename = "libbamf/libbamf.h")]

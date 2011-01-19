@@ -44,10 +44,10 @@ namespace Plank.Services.Windows
 		{
 			Bamf.Matcher matcher = Bamf.Matcher.get_default ();
 			
-			unowned GLib.List<Application> apps = Bamf.Matcher.get_running_applications (matcher);
+			unowned GLib.List<Application> apps = matcher.get_running_applications ();
 			foreach (Application a in apps)
-				if (View.is_user_visible (a))
-					stdout.printf("%s\n", Application.get_desktop_file (a));
+				if (a.user_visible ())
+					stdout.printf("%s\n", a.get_desktop_file ());
 		}
 	}
 }
