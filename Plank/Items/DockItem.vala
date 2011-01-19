@@ -140,5 +140,15 @@ namespace Plank.Items
 			
 			return items;
 		}
+		
+		public virtual string unique_id ()
+		{
+			return "dockitem%d".printf ((int) this);
+		}
+		
+		public string as_uri ()
+		{
+			return "plank://" + unique_id ();
+		}
 	}
 }
