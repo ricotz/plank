@@ -137,7 +137,7 @@ namespace Plank
 				while ((info = enumerator.next_file ()) != null)
 					if (file_is_dockitem (info)) {
 						var filename = launchers_dir.get_path () + "/" + info.get_name ();
-						var item = new ApplicationDockItem (filename);
+						var item = new ApplicationDockItem.with_dockitem (filename);
 						
 						if (item.ValidItem)
 							add_item (item);
@@ -165,7 +165,7 @@ namespace Plank
 				var found = item_for_launcher (launcher);
 					
 				if (found == null && app.user_visible ())
-					add_item (new TransientDockItem (launcher));
+					add_item (new TransientDockItem.with_launcher (launcher));
 			}
 			
 			int pos = 0;

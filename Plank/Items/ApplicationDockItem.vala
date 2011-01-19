@@ -23,7 +23,11 @@ namespace Plank.Items
 {
 	public class ApplicationDockItem : DockItem
 	{
-		public ApplicationDockItem (string dockitem)
+		public ApplicationDockItem ()
+		{
+		}
+		
+		public ApplicationDockItem.with_dockitem (string dockitem)
 		{
 			Prefs = new DockItemPreferences.with_file (dockitem);
 			if (!ValidItem)

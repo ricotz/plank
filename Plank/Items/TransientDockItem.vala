@@ -23,7 +23,7 @@ namespace Plank.Items
 {
 	public class TransientDockItem : ApplicationDockItem
 	{
-		public TransientDockItem (string launcher)
+		public TransientDockItem.with_launcher (string launcher)
 		{
 			Prefs = new DockItemPreferences ();
 			
