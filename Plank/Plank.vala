@@ -20,7 +20,6 @@ using Unique;
 
 using Plank.Services.Logging;
 using Plank.Services.Paths;
-using Plank.Services.Windows;
 
 namespace Plank
 {
@@ -62,7 +61,6 @@ namespace Plank
 			set_options ();
 			
 			typeof (Paths).class_ref ();
-			typeof (Matcher).class_ref ();
 			
 			var app = new DockWindow ();
 			app.show_all ();
