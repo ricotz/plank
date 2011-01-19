@@ -21,46 +21,18 @@ using Plank.Services.Logging;
 
 namespace Plank.Items
 {
-	public class TransientDockItem : DockItem
+	public class TransientDockItem : ApplicationDockItem
 	{
 		public TransientDockItem (string launcher)
 		{
 			Prefs = new DockItemPreferences ();
+			
 			Prefs.Launcher = launcher;
 			Prefs.Sort = int.MAX;
 			
 			load_from_launcher ();
 			
-			try {
-				monitor = File.new_for_path (Prefs.Launcher).monitor (0);
-				monitor.set_rate_limit (500);
-				monitor.changed.connect (launcher_changed);
-			} catch {
-				Logger.warn<ApplicationDockItem> ("Unable to watch the launcher file '%s'".printf (Prefs.Launcher));
-			}
-		}
-		
-		FileMonitor monitor;
-		
-		void launcher_changed (File f, File? other, FileMonitorEvent event)
-		{
-			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) == 0 &&
-				(event & FileMonitorEvent.DELETED) == 0)
-				return;
-			
-			Logger.debug<ApplicationDockItem> ("Launcher file '%s' changed, reloading".printf (Prefs.Launcher));
-			load_from_launcher ();
-		}
-		
-		void load_from_launcher ()
-		{
-			try {
-				KeyFile file = new KeyFile ();
-				file.load_from_file (Prefs.Launcher, 0);
-				
-				Icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
-				Text = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
-			} catch { }
+			start_monitor ();
 		}
 	}
 }

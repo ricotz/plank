@@ -50,6 +50,10 @@ namespace Plank.Items
 		
 		public IndicatorState Indicator { get; set; default = IndicatorState.NONE; }
 		
+		public bool ValidItem {
+			get { return File.new_for_path (Prefs.Launcher).query_exists (); }
+		}
+		
 		protected DockItemPreferences Prefs { get; protected set; }
 		
 		public DockItem ()

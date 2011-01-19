@@ -23,16 +23,21 @@ namespace Plank.Items
 {
 	public class ApplicationDockItem : DockItem
 	{
-		public bool ValidItem {
-			get { return File.new_for_path (Prefs.Launcher).query_exists (); }
-		}
-		
 		public ApplicationDockItem (string dockitem)
 		{
 			Prefs = new DockItemPreferences.with_file (dockitem);
+			if (!ValidItem)
+				return;
 			
 			load_from_launcher ();
 			
+			start_monitor ();
+		}
+		
+		protected FileMonitor monitor;
+		
+		protected void start_monitor ()
+		{
 			try {
 				monitor = File.new_for_path (Prefs.Launcher).monitor (0);
 				monitor.set_rate_limit (500);
@@ -42,9 +47,7 @@ namespace Plank.Items
 			}
 		}
 		
-		FileMonitor monitor;
-		
-		void launcher_changed (File f, File? other, FileMonitorEvent event)
+		protected void launcher_changed (File f, File? other, FileMonitorEvent event)
 		{
 			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) == 0 &&
 				(event & FileMonitorEvent.DELETED) == 0)
@@ -54,7 +57,7 @@ namespace Plank.Items
 			load_from_launcher ();
 		}
 		
-		void load_from_launcher ()
+		protected void load_from_launcher ()
 		{
 			try {
 				KeyFile file = new KeyFile ();
