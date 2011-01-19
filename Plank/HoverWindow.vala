@@ -59,6 +59,7 @@ namespace Plank
 			
 			stick ();
 			show_all ();
+			hide ();
 		}
 		
 		public void move_hover (int item_x, int item_y)
