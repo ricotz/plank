@@ -46,6 +46,11 @@ namespace Plank.Services.Preferences
 		
 		public Preferences.with_file (string filename)
 		{
+			init_from_file (filename);
+		}
+		
+		protected void init_from_file (string filename)
+		{
 			group_name = get_type ().name ();
 			
 			backing_file = Paths.Paths.UserConfigFolder.get_child (filename);

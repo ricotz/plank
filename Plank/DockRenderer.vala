@@ -72,8 +72,12 @@ namespace Plank
 		public DockRenderer (DockWindow window)
 		{
 			this.window = window;
+			
 			theme = new ThemeRenderer ();
 			theme.BottomRoundness = 0;
+			theme.load ("dock");
+			theme.notify.connect (reset_buffers);
+			
 			window.notify["HoveredItem"].connect (animation_state_changed);
 			Prefs.notify.connect (reset_buffers);
 		}

@@ -43,6 +43,8 @@ namespace Plank
 			theme = new ThemeRenderer ();
 			theme.TopRoundness = 3;
 			theme.BottomRoundness = 3;
+			theme.load ("hover");
+			theme.notify.connect (theme_changed);
 			
 			set_accept_focus (false);
 			can_focus = false;
@@ -60,6 +62,12 @@ namespace Plank
 			stick ();
 			show_all ();
 			hide ();
+		}
+		
+		void theme_changed ()
+		{
+			background_buffer = null;
+			queue_draw ();
 		}
 		
 		public void move_hover (int item_x, int item_y)

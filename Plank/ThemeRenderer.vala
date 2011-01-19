@@ -21,10 +21,11 @@ using Gtk;
 
 using Plank.Items;
 using Plank.Services.Drawing;
+using Plank.Services.Preferences;
 
 namespace Plank
 {
-	public class ThemeRenderer : GLib.Object
+	public class ThemeRenderer : Preferences
 	{
 		public int TopRoundness { get; set; default = 6; }
 		
@@ -34,6 +35,11 @@ namespace Plank
 		
 		public ThemeRenderer ()
 		{
+		}
+		
+		public void load (string type)
+		{
+			init_from_file ("theme/" + type + ".theme");
 		}
 		
 		public void draw_background (PlankSurface surface)
