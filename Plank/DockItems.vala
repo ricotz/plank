@@ -21,6 +21,7 @@ using Plank.Items;
 
 using Plank.Services.Logging;
 using Plank.Services.Paths;
+using Plank.Services.Windows;
 
 namespace Plank
 {
@@ -56,6 +57,9 @@ namespace Plank
 			}
 			
 			load_items ();
+			
+			Matcher.get_default ().app_opened.connect (() => reload_transients ());
+			Matcher.get_default ().app_closed.connect (() => reload_transients ());
 		}
 		
 		bool load_default_gnome_items ()
@@ -114,6 +118,15 @@ namespace Plank
 				make_launcher ("empathy.dockitem", "/usr/share/applications/empathy.desktop", 3);
 		}
 		
+		DockItem? item_for_launcher (string launcher)
+		{
+			foreach (DockItem item in Items)
+				if (item.get_launcher () == launcher)
+					return item;
+			
+			return null;
+		}
+		
 		void load_items ()
 		{
 			Logger.debug<DockItems> ("Reloading dock items...");
@@ -129,11 +142,35 @@ namespace Plank
 						if (item.ValidItem)
 							add_item (item);
 						else
-							Logger.warn<DockItems> ("The launcher '%s' in dock item '%s' does not exist".printf (item.Launcher, filename));
+							Logger.warn<DockItems> ("The launcher '%s' in dock item '%s' does not exist".printf (item.get_launcher (), filename));
 					}
 			} catch { }
 			
+			reload_transients ();
+			
 			Logger.debug<DockItems> ("done.");
+		}
+		
+		void reload_transients ()
+		{
+			foreach (DockItem item in Items)
+				if (item is TransientDockItem)
+					Items.remove (item);
+			
+			foreach (Bamf.Application app in Matcher.get_default ().active_launchers ()) {
+				var launcher = app.get_desktop_file ();
+				if (launcher == "" || !File.new_for_path (launcher).query_exists ())
+					continue;
+				
+				var found = item_for_launcher (launcher);
+					
+				if (found == null && app.user_visible ())
+					add_item (new TransientDockItem (launcher));
+			}
+			
+			int pos = 0;
+			foreach (DockItem i in Items)
+				i.Position = pos++;
 			
 			items_changed ();
 		}
@@ -164,10 +201,13 @@ namespace Plank
 			Items.insert_sorted (item, (CompareFunc) compare_items);
 			
 			item.notify["Icon"].connect (() => { items_changed (); });
+			item.notify["Indicator"].connect (() => { items_changed (); });
+			item.notify["State"].connect (() => { items_changed (); });
 			
-			int pos = 0;
-			foreach (DockItem i in Items)
-				i.Position = pos++;
+			Matcher.get_default ().window_opened.connect (() => item.update_states ());
+			Matcher.get_default ().window_closed.connect (() => item.update_states ());
+			
+			item.set_app (Matcher.get_default ().app_for_launcher (item.get_launcher ()));
 		}
 		
 		public static int compare_items (DockItem left, DockItem right)

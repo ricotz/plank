@@ -38,6 +38,8 @@ namespace Plank.Items
 	
 	public class DockItem : GLib.Object
 	{
+		public Bamf.Application? App { get; set; }
+		
 		public string Icon { get; set; default = "folder"; }
 		
 		public string Text { get; set; default = ""; }
@@ -74,6 +76,38 @@ namespace Plank.Items
 		public void launch ()
 		{
 			Services.System.launch (File.new_for_path (get_launcher ()), {});
+		}
+		
+		public void set_app (Bamf.Application? app)
+		{
+			App = app;
+			
+			if (app != null) {
+				app.active_changed.connect (() => update_states ());
+				app.running_changed.connect (() => update_states ());
+				app.urgent_changed.connect (() => update_states ());
+			}
+			
+			update_states ();
+		}
+		
+		public void update_states ()
+		{
+			if (App == null) {
+				State = ItemState.NORMAL;
+				Indicator = IndicatorState.NONE;
+			} else {
+				State = ItemState.NORMAL;
+				if (App.is_active ())
+					State |= ItemState.ACTIVE;
+				if (App.is_urgent ())
+					State |= ItemState.URGENT;
+				if (App.get_children ().length () == 1)
+					Indicator = IndicatorState.SINGLE;
+				else
+					Indicator = IndicatorState.SINGLE_PLUS;
+			}
+			
 		}
 		
 		public virtual List<MenuItem> get_menu_items ()

@@ -21,33 +21,51 @@ namespace Plank.Services.Windows
 {
 	public class Matcher : GLib.Object
 	{
-		public signal void window_changed (Window w);
+		public signal void window_opened (Window w);
+		public signal void window_closed ();
 		
-		public static Matcher Default { get; protected set; default = new Matcher (); }
+		public signal void app_opened (Application app);
+		public signal void app_closed ();
+		
+		static Matcher matcher;
+		
+		public static Matcher get_default ()
+		{
+			if (matcher == null)
+				matcher = new Matcher ();
+			return matcher;
+		}
 		
 		public Matcher ()
 		{
-			Bamf.Matcher matcher = Bamf.Matcher.get_default ();
-			
-			matcher.view_opened.connect ((matcher, arg1) => {
+			Bamf.Matcher.get_default ().view_opened.connect ((matcher, arg1) => {
 				if (arg1 is Window)
-					window_changed (arg1 as Window);
+					window_opened (arg1 as Window);
+				else if (arg1 is Application)
+					app_opened (arg1 as Application);
 			});
 			
-			matcher.view_closed.connect ((matcher, arg1) => {
+			Bamf.Matcher.get_default ().view_closed.connect ((matcher, arg1) => {
 				if (arg1 is Window)
-					window_changed (arg1 as Window);
+					window_closed ();
+				else if (arg1 is Application)
+					app_closed ();
 			});
 		}
 		
-		public void active_launchers ()
+		public unowned List<Application> active_launchers ()
 		{
-			Bamf.Matcher matcher = Bamf.Matcher.get_default ();
+			return Bamf.Matcher.get_default ().get_applications ();
+		}
+		
+		public Application? app_for_launcher (string launcher)
+		{
+			unowned List<Application> apps = Bamf.Matcher.get_default ().get_applications ();
+			foreach (Application app in apps)
+				if (app.get_desktop_file () == launcher)
+					return app;
 			
-			unowned GLib.List<Application> apps = matcher.get_running_applications ();
-			foreach (Application a in apps)
-				if (a.user_visible ())
-					stdout.printf("%s\n", a.get_desktop_file ());
+			return null;
 		}
 	}
 }

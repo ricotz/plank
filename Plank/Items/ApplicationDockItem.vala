@@ -27,10 +27,6 @@ namespace Plank.Items
 			get { return File.new_for_path (Prefs.Launcher).query_exists (); }
 		}
 		
-		public string Launcher {
-			get { return Prefs.Launcher; }
-		}
-		
 		public ApplicationDockItem (string dockitem)
 		{
 			Prefs = new DockItemPreferences.with_file (dockitem);
