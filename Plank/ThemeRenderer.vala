@@ -42,12 +42,22 @@ namespace Plank
 			init_from_file ("theme/" + type + ".theme");
 		}
 		
+		public int get_top_offset ()
+		{
+			return TopRoundness > 0 ? LineWidth : 0;
+		}
+		
+		public int get_bottom_offset ()
+		{
+			return BottomRoundness > 0 ? LineWidth : 0;
+		}
+		
 		public void draw_background (PlankSurface surface)
 		{
 			var cr = surface.Context;
 			
-			var top_offset = TopRoundness > 0 ? LineWidth : 0;
-			var bottom_offset = BottomRoundness > 0 ? LineWidth : 0;
+			var top_offset = get_top_offset ();
+			var bottom_offset = get_bottom_offset ();
 			
 			var gradient = new Pattern.linear (surface.Width / 2.0, 0, surface.Width / 2.0, surface.Height);
 			gradient.add_color_stop_rgba (0, 0.1647, 0.1647, 0.1647, 1);
@@ -56,7 +66,7 @@ namespace Plank
 			cr.save ();
 			cr.set_source (gradient);
 			
-			draw_rounded_rect (cr, 0.5, top_offset + 0.5, surface.Width - 2 * LineWidth, surface.Height - top_offset - bottom_offset, TopRoundness, BottomRoundness);
+			draw_rounded_rect (cr, LineWidth + 0.5, top_offset + 0.5, surface.Width - 2 * LineWidth, surface.Height - top_offset - bottom_offset, TopRoundness, BottomRoundness);
 			cr.fill_preserve ();
 			cr.restore ();
 			
@@ -79,7 +89,7 @@ namespace Plank
 			cr.save ();
 			cr.set_source (gradient);
 			
-			draw_rounded_rect (cr, 0.5 + LineWidth, top_offset + 0.5 + LineWidth, surface.Width - 4 * LineWidth, surface.Height - 2 * top_offset - 2 * bottom_offset, TopRoundness, BottomRoundness);
+			draw_rounded_rect (cr, 0.5 + 2 * LineWidth, top_offset + 0.5 + LineWidth, surface.Width - 4 * LineWidth, surface.Height - 2 * top_offset - 2 * bottom_offset, TopRoundness, BottomRoundness);
 			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			cr.restore ();

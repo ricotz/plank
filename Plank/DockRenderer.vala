@@ -36,15 +36,15 @@ namespace Plank
 		PlankSurface urgent_indicator_buffer;
 		
 		public int DockWidth {
-			get { return (int) window.Items.Items.length () * (ItemPadding+ Prefs.IconSize) + 2 * DockPadding; }
+			get { return (int) window.Items.Items.length () * (ItemPadding+ Prefs.IconSize) + 2 * DockPadding + 4 * theme.LineWidth; }
 		}
 		
 		public int DockHeight {
-			get { return IndicatorSize / 2 + DockPadding + (int) (Prefs.Zoom * Prefs.IconSize); }
+			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + DockPadding + (int) (Prefs.Zoom * Prefs.IconSize) + 2 * theme.get_bottom_offset (); }
 		}
 		
 		int VisibleDockHeight {
-			get { return IndicatorSize / 2 + DockPadding + Prefs.IconSize; }
+			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + DockPadding + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
 		}
 		
 		int IndicatorSize {
@@ -67,7 +67,7 @@ namespace Plank
 			get { return window.Prefs; }
 		}
 		
-		ThemeRenderer theme { get; set; }
+		ThemeRenderer theme;
 		
 		public DockRenderer (DockWindow window)
 		{
@@ -76,10 +76,16 @@ namespace Plank
 			theme = new ThemeRenderer ();
 			theme.BottomRoundness = 0;
 			theme.load ("dock");
-			theme.notify.connect (reset_buffers);
+			theme.notify.connect (theme_changed);
 			
 			window.notify["HoveredItem"].connect (animation_state_changed);
 			Prefs.notify.connect (reset_buffers);
+		}
+		
+		void theme_changed ()
+		{
+			reset_buffers ();
+			window.set_size ();
 		}
 		
 		void animation_state_changed ()
@@ -99,7 +105,7 @@ namespace Plank
 		{
 			Gdk.Rectangle rect = Gdk.Rectangle ();
 			
-			rect.x = DockPadding + item.Position * (ItemPadding + Prefs.IconSize);
+			rect.x = 2 * theme.LineWidth + DockPadding + item.Position * (ItemPadding + Prefs.IconSize);
 			rect.y = DockHeight - VisibleDockHeight;
 			rect.width = Prefs.IconSize + ItemPadding;
 			rect.height = VisibleDockHeight;
@@ -171,7 +177,7 @@ namespace Plank
 			
 			var rect = item_region (item);
 			var hover_rect = rect;
-			rect.y += DockPadding;
+			rect.y += 2 * theme.get_top_offset () + DockPadding;
 			rect.height -= DockPadding;
 			rect.x += ItemPadding / 2;
 			
@@ -193,12 +199,12 @@ namespace Plank
 				var indicator = (item.State & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 				
 				if (item.Indicator == IndicatorState.SINGLE) {
-					surface.Context.set_source_surface (indicator.Internal, rect.x + rect.width / 2 - indicator.Width / 2, DockHeight - indicator.Height / 2 - 1);
+					surface.Context.set_source_surface (indicator.Internal, rect.x + rect.width / 2 - indicator.Width / 2, DockHeight - indicator.Height / 2 - 2 * theme.get_bottom_offset () - 1);
 					surface.Context.paint ();
 				} else {
-					surface.Context.set_source_surface (indicator.Internal, rect.x + rect.width / 2 - indicator.Width / 2 - 3, DockHeight - indicator.Height / 2 - 1);
+					surface.Context.set_source_surface (indicator.Internal, rect.x + rect.width / 2 - indicator.Width / 2 - 3, DockHeight - indicator.Height / 2 - 2 * theme.get_bottom_offset () - 1);
 					surface.Context.paint ();
-					surface.Context.set_source_surface (indicator.Internal, rect.x + rect.width / 2 - indicator.Width / 2 + 3, DockHeight - indicator.Height / 2 - 1);
+					surface.Context.set_source_surface (indicator.Internal, rect.x + rect.width / 2 - indicator.Width / 2 + 3, DockHeight - indicator.Height / 2 - 2 * theme.get_bottom_offset () - 1);
 					surface.Context.paint ();
 				}
 			}

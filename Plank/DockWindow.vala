@@ -169,7 +169,7 @@ namespace Plank
 				hover.show ();
 		}
 		
-		protected void set_size ()
+		public void set_size ()
 		{
 			set_size_request (Renderer.DockWidth, Renderer.DockHeight);
 			reposition ();
