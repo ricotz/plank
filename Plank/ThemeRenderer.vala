@@ -50,7 +50,7 @@ namespace Plank
 			cr.save ();
 			cr.set_source (gradient);
 			
-			draw_rounded_rect (cr, 0.5, top_offset + 0.5, surface.Width - 2, surface.Height - top_offset - bottom_offset, TopRoundness, BottomRoundness);
+			draw_rounded_rect (cr, 0.5, top_offset + 0.5, surface.Width - 2 * LineWidth, surface.Height - top_offset - bottom_offset - 2 * LineWidth, TopRoundness, BottomRoundness);
 			cr.fill_preserve ();
 			cr.restore ();
 			
@@ -73,7 +73,7 @@ namespace Plank
 			cr.save ();
 			cr.set_source (gradient);
 			
-			draw_rounded_rect (cr, 1.5, 2 * top_offset + 0.5, surface.Width - 4, surface.Height - 2 * top_offset, TopRoundness, BottomRoundness);
+			draw_rounded_rect (cr, LineWidth + 0.5, 2 * top_offset + 0.5, surface.Width - 4 * LineWidth, surface.Height - 2 * top_offset - 2 * LineWidth, TopRoundness, BottomRoundness);
 			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			cr.restore ();
