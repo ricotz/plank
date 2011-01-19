@@ -17,8 +17,15 @@ plank_PROGRAMS = \
 	plank \
 	$(NULL)
 
-plank_CFLAGS = $(PLANK_CORE_CFLAGS)
-plank_LDADD = $(PLANK_CORE_LIBS)
+plank_CFLAGS = \
+	$(PLANK_CORE_CFLAGS) \
+	-include config.h \
+	$(NULL)
+	
+plank_LDADD = \
+	$(PLANK_CORE_LIBS) \
+	$(NULL)
+
 plank_VALASOURCES = \
 	CompositedWindow.vala \
 	DockItems.vala \

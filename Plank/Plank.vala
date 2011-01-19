@@ -40,6 +40,8 @@ namespace Plank
 			// set program name
 			prctl (15, "plank", 0, 0, 0);
 			
+			Intl.bindtextdomain ("plank", Build.DATADIR + "/locale");
+			
 			// parse commandline options
 			var context = new OptionContext ("");
 			

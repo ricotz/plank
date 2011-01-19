@@ -14,6 +14,11 @@ dnl ==============================================
 dnl Translation support
 dnl ==============================================
 
+GETTEXT_PACKAGE=plank
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
+ALL_LINGUAS=`ls ${top_srcdir}/po/*.po | sed 's/.po$//' | sed 's/.*\///' | tr '\n' ' '`
+
 IT_PROG_INTLTOOL([0.35.0])
 AM_GLIB_GNU_GETTEXT
 
@@ -95,6 +100,7 @@ AS_AC_EXPAND([SCHEMADIR], [$PKGDATADIR/schemas])
 
 AC_DEFINE_UNQUOTED(PKGDATADIR, "$PKGDATADIR", [Package base directory])
 AC_DEFINE_UNQUOTED(SCHEMAFILEDIR, "$SCHEMADIR", [Directory with config schema])
+AC_DEFINE_UNQUOTED(DATADIR, "$DATADIR", [Data directory])
 
 dnl {{{ enable debug release configuration
 AC_ARG_ENABLE(debug,
