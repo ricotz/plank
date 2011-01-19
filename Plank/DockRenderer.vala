@@ -97,6 +97,8 @@ namespace Plank
 		{
 			main_buffer = null;
 			background_buffer = null;
+			indicator_buffer = null;
+			urgent_indicator_buffer = null;
 			
 			render_needed ();
 		}
@@ -200,7 +202,7 @@ namespace Plank
 				
 				var x = hover_rect.x + hover_rect.width / 2 - indicator.Width / 2;
 				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
- 				var y = DockHeight - indicator.Height / 2 - 2 * (int) theme.get_bottom_offset () - 1;
+ 				var y = DockHeight - indicator.Height / 2 - 2 * (int) theme.get_bottom_offset () - IndicatorSize / 24.0;
 				
 				if (item.Indicator == IndicatorState.SINGLE) {
 					surface.Context.set_source_surface (indicator.Internal, x, y);
