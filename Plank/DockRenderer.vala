@@ -48,15 +48,15 @@ namespace Plank
 		}
 		
 		int IndicatorSize {
-			get { return 5 * DockPadding; }
+			get { return (int) (theme.IndicatorSize / 10.0 * Prefs.IconSize); }
 		}
 		
 		int DockPadding {
-			get { return (int) (0.1 * Prefs.IconSize); }
+			get { return (int) (theme.Padding / 10.0 * Prefs.IconSize); }
 		}
 		
 		int ItemPadding {
-			get { return DockPadding; }
+			get { return (int) (theme.ItemPadding / 10.0 * Prefs.IconSize); }
 		}
 		
 		int UrgentHueShift {
@@ -198,7 +198,7 @@ namespace Plank
 				
 				var indicator = (item.State & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 				
-				var x = rect.x + rect.width / 2 - indicator.Width / 2;
+				var x = hover_rect.x + hover_rect.width / 2 - indicator.Width / 2;
 				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
  				var y = DockHeight - indicator.Height / 2 - 2 * (int) theme.get_bottom_offset () - 1;
 				

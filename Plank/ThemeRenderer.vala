@@ -33,6 +33,12 @@ namespace Plank
 		
 		public int LineWidth { get; set; default = 1; }
 		
+		public double Padding { get; set; default = 1.0; }
+		
+		public double ItemPadding { get; set; default = 1.0; }
+		
+		public double IndicatorSize { get; set; default = 5.0; }
+		
 		public ThemeRenderer ()
 		{
 		}

@@ -26,7 +26,7 @@ namespace Plank
 {
 	public class HoverWindow : CompositedWindow
 	{
-		const int HoverHeight = 26;
+		const int HOVER_HEIGHT = 26;
 		
 		public string Text { get; set; }
 		
@@ -117,10 +117,10 @@ namespace Plank
 				layout.get_pixel_extents (out ink_rect, out logical_rect);
 			}
 			
-			var buffer = HoverHeight - logical_rect.height;
+			var buffer = HOVER_HEIGHT - logical_rect.height;
 			text_offset = buffer / 2;
 			
-			set_size_request ((int) Math.fmax (HoverHeight, buffer + logical_rect.width), HoverHeight);
+			set_size_request ((int) Math.fmax (HOVER_HEIGHT, buffer + logical_rect.width), HOVER_HEIGHT);
 		}
 		
 		void draw_background ()
