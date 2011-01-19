@@ -160,19 +160,26 @@ namespace Plank
 			
 			hover.Text = HoveredItem.Text;
 			
+			position_hover ();
+			
+			if (!hover.get_visible ())
+				hover.show ();
+		}
+		
+		void position_hover ()
+		{
 			int x, y;
 			get_position (out x, out y);
 			var rect = Renderer.item_region (HoveredItem);
 			hover.move_hover (x + rect.x + rect.width / 2, y);
-			
-			if (!hover.get_visible ())
-				hover.show ();
 		}
 		
 		public void set_size ()
 		{
 			set_size_request (Renderer.DockWidth, Renderer.DockHeight);
 			reposition ();
+			if (HoveredItem != null)
+				position_hover ();
 			
 			Renderer.reset_buffers ();
 		}
