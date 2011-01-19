@@ -18,8 +18,6 @@
 using Gdk;
 using Gtk;
 
-using Plank.Services.Drawing;
-
 namespace Plank.Items
 {
 	public enum IndicatorState
@@ -38,6 +36,8 @@ namespace Plank.Items
 	
 	public class DockItem : GLib.Object
 	{
+		public signal void launcher_changed (DockItem item);
+		
 		public Bamf.Application? App { get; set; }
 		
 		public string Icon { get; set; default = "folder"; }
@@ -59,6 +59,8 @@ namespace Plank.Items
 		public DockItem ()
 		{
 			Prefs = new DockItemPreferences ();
+			
+			Prefs.notify["Launcher"].connect (() => launcher_changed (this));
 		}
 		
 		public int get_sort ()
@@ -84,14 +86,25 @@ namespace Plank.Items
 		
 		public void set_app (Bamf.Application? app)
 		{
+			if (app != null) {
+				app.active_changed.disconnect (update_needed);
+				app.running_changed.disconnect (update_needed);
+				app.urgent_changed.disconnect (update_needed);
+			}
+			
 			App = app;
 			
 			if (app != null) {
-				app.active_changed.connect (() => update_states ());
-				app.running_changed.connect (() => update_states ());
-				app.urgent_changed.connect (() => update_states ());
+				app.active_changed.connect (update_needed);
+				app.running_changed.connect (update_needed);
+				app.urgent_changed.connect (update_needed);
 			}
 			
+			update_states ();
+		}
+		
+		public void update_needed ()
+		{
 			update_states ();
 		}
 		
@@ -106,7 +119,10 @@ namespace Plank.Items
 					State |= ItemState.ACTIVE;
 				if (App.is_urgent ())
 					State |= ItemState.URGENT;
-				if (App.get_children ().length () == 1)
+				
+				if (!App.is_running ())
+					Indicator = IndicatorState.NONE;
+				else if (App.get_children ().length () == 1)
 					Indicator = IndicatorState.SINGLE;
 				else
 					Indicator = IndicatorState.SINGLE_PLUS;
@@ -118,10 +134,7 @@ namespace Plank.Items
 		{
 			List<MenuItem> items = new List<MenuItem> ();
 			
-			var item = new ImageMenuItem.with_mnemonic ("_Open");
-			int width, height;
-			icon_size_lookup (IconSize.MENU, out width, out height);
-			item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon ("document-open-symbolic;;document-open", width, height)));
+			var item = new ImageMenuItem.from_stock (STOCK_OPEN, null);
 			item.activate.connect (() => launch ());
 			items.append (item);
 			

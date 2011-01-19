@@ -67,5 +67,15 @@ namespace Plank.Services.Windows
 			
 			return null;
 		}
+		
+		public void set_favorites (List<string> favs)
+		{
+			string[] paths = new string[favs.length ()];
+			
+			for (int i = 0; i < favs.length (); i++)
+				paths [i] = favs.nth_data (i);
+			
+			Bamf.Matcher.get_default ().register_favorites (paths);
+		}
 	}
 }

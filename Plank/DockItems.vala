@@ -57,9 +57,168 @@ namespace Plank
 			}
 			
 			load_items ();
+			reload_transients ();
+			set_item_positions ();
 			
 			Matcher.get_default ().app_opened.connect (() => reload_transients ());
 			Matcher.get_default ().app_closed.connect (() => reload_transients ());
+		}
+		
+		void signal_items_changed ()
+		{
+			items_changed ();
+		}
+		
+		DockItem? item_for_launcher (string launcher)
+		{
+			foreach (DockItem item in Items)
+				if (item.get_launcher () == launcher)
+					return item;
+			
+			return null;
+		}
+		
+		void load_items ()
+		{
+			Logger.debug<DockItems> ("Reloading dock items...");
+			
+			try {
+				var enumerator = launchers_dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
+				FileInfo info;
+				while ((info = enumerator.next_file ()) != null)
+					if (file_is_dockitem (info)) {
+						var filename = launchers_dir.get_path () + "/" + info.get_name ();
+						var item = new ApplicationDockItem.with_dockitem (filename);
+						
+						if (item.ValidItem)
+							add_item (item);
+						else
+							Logger.warn<DockItems> ("The launcher '%s' in dock item '%s' does not exist".printf (item.get_launcher (), filename));
+					}
+			} catch { }
+			
+			set_item_positions ();
+			
+			List<string> favs = new List<string> ();
+			
+			foreach (DockItem item in Items)
+				if (!(item is TransientDockItem))
+					favs.append (item.get_launcher ());
+			
+			Matcher.get_default ().set_favorites (favs);
+			
+			Logger.debug<DockItems> ("done.");
+		}
+		
+		void reload_transients ()
+		{
+			List<string> old_items = new List<string> ();
+			
+			foreach (DockItem item in Items)
+				if (item is TransientDockItem)
+					old_items.append (item.get_launcher ());
+			
+			foreach (Bamf.Application app in Matcher.get_default ().active_launchers ()) {
+				var launcher = app.get_desktop_file ();
+				if (launcher == "" || !File.new_for_path (launcher).query_exists ())
+					continue;
+				
+				var found = item_for_launcher (launcher);
+				if (found != null) {
+					for (int i = 0; i < old_items.length (); i++)
+						if (old_items.nth_data (i) == launcher) {
+							old_items.delete_link (old_items.nth (i));
+							break;
+						}
+				} else if (app.user_visible ()) {
+					var new_item = new TransientDockItem.with_launcher (launcher);
+					new_item.set_sort (Items.last ().data.get_sort () + 1);
+					add_item (new_item);
+				}
+			}
+			
+			foreach (string launcher in old_items)
+				Items.remove (item_for_launcher (launcher));
+			
+			set_item_positions ();
+		}
+		
+		void set_item_positions ()
+		{
+			int pos = 0;
+			foreach (DockItem i in Items)
+				i.Position = pos++;
+			
+			items_changed ();
+		}
+		
+		bool file_is_dockitem (FileInfo info)
+		{
+			return !info.get_is_hidden () && info.get_name ().has_suffix (".dockitem");
+		}
+		
+		void handle_items_dir_changed (File f, File? other, FileMonitorEvent event)
+		{
+			try {
+				if (!file_is_dockitem (f.query_info (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_ACCESS_CAN_READ, 0)))
+					return;
+			} catch {
+				return;
+			}
+			
+			if ((event & (FileMonitorEvent.CREATED | FileMonitorEvent.DELETED)) == 0)
+				return;
+			
+			Items = new List<DockItem> ();
+			load_items ();
+		}
+		
+		void add_item (DockItem item)
+		{
+			Items.insert_sorted (item, (CompareFunc) compare_items);
+			
+			item.notify["Icon"].connect (signal_items_changed);
+			item.notify["Indicator"].connect (signal_items_changed);
+			item.notify["State"].connect (signal_items_changed);
+			
+			Matcher.get_default ().window_opened.connect (item.update_states);
+			Matcher.get_default ().window_closed.connect (item.update_states);
+			
+			set_app (item);
+			item.launcher_changed.connect (set_app);
+			Matcher.get_default ().app_opened.connect ((app) => {
+				if (app.get_desktop_file () == item.get_launcher ())
+					item.set_app (app);
+			});
+			
+			if (item is TransientDockItem)
+				(item as TransientDockItem).pin_launcher.connect (() => pin_item (item));
+		}
+
+		void pin_item (DockItem item)
+		{
+			string launcher = item.get_launcher ();
+			string dockitem = File.new_for_path (launcher).get_basename ().split (".") [0] + ".dockitem";
+			
+			if (!make_launcher (dockitem, launcher, item.get_sort ()))
+				return;
+			
+			Items.remove (item);
+			add_item (new ApplicationDockItem.with_dockitem (launchers_dir.get_path () + "/" + dockitem));
+		}
+		
+		void set_app (DockItem item)
+		{
+			item.set_app (Matcher.get_default ().app_for_launcher (item.get_launcher ()));
+		}
+		
+		static int compare_items (DockItem left, DockItem right)
+		{
+			if (left.get_sort () == right.get_sort ())
+				return 0;
+			if (left.get_sort () < right.get_sort ())
+				return -1;
+			return 1;
 		}
 		
 		bool load_default_gnome_items ()
@@ -116,107 +275,6 @@ namespace Plank
 			// add IM client
 			if (!make_launcher ("pidgin.dockitem", "/usr/share/applications/pidgin.desktop", 3))
 				make_launcher ("empathy.dockitem", "/usr/share/applications/empathy.desktop", 3);
-		}
-		
-		DockItem? item_for_launcher (string launcher)
-		{
-			foreach (DockItem item in Items)
-				if (item.get_launcher () == launcher)
-					return item;
-			
-			return null;
-		}
-		
-		void load_items ()
-		{
-			Logger.debug<DockItems> ("Reloading dock items...");
-			
-			try {
-				var enumerator = launchers_dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
-				FileInfo info;
-				while ((info = enumerator.next_file ()) != null)
-					if (file_is_dockitem (info)) {
-						var filename = launchers_dir.get_path () + "/" + info.get_name ();
-						var item = new ApplicationDockItem.with_dockitem (filename);
-						
-						if (item.ValidItem)
-							add_item (item);
-						else
-							Logger.warn<DockItems> ("The launcher '%s' in dock item '%s' does not exist".printf (item.get_launcher (), filename));
-					}
-			} catch { }
-			
-			reload_transients ();
-			
-			Logger.debug<DockItems> ("done.");
-		}
-		
-		void reload_transients ()
-		{
-			foreach (DockItem item in Items)
-				if (item is TransientDockItem)
-					Items.remove (item);
-			
-			foreach (Bamf.Application app in Matcher.get_default ().active_launchers ()) {
-				var launcher = app.get_desktop_file ();
-				if (launcher == "" || !File.new_for_path (launcher).query_exists ())
-					continue;
-				
-				var found = item_for_launcher (launcher);
-					
-				if (found == null && app.user_visible ())
-					add_item (new TransientDockItem.with_launcher (launcher));
-			}
-			
-			int pos = 0;
-			foreach (DockItem i in Items)
-				i.Position = pos++;
-			
-			items_changed ();
-		}
-		
-		bool file_is_dockitem (FileInfo info)
-		{
-			return !info.get_is_hidden () && info.get_name ().has_suffix (".dockitem");
-		}
-		
-		void handle_items_dir_changed (File f, File? other, FileMonitorEvent event)
-		{
-			try {
-				if (!file_is_dockitem (f.query_info (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_ACCESS_CAN_READ, 0)))
-					return;
-			} catch {
-				return;
-			}
-			
-			if ((event & (FileMonitorEvent.CREATED | FileMonitorEvent.DELETED)) == 0)
-				return;
-			
-			Items = new List<DockItem> ();
-			load_items ();
-		}
-		
-		void add_item (DockItem item)
-		{
-			Items.insert_sorted (item, (CompareFunc) compare_items);
-			
-			item.notify["Icon"].connect (() => { items_changed (); });
-			item.notify["Indicator"].connect (() => { items_changed (); });
-			item.notify["State"].connect (() => { items_changed (); });
-			
-			Matcher.get_default ().window_opened.connect (() => item.update_states ());
-			Matcher.get_default ().window_closed.connect (() => item.update_states ());
-			
-			item.set_app (Matcher.get_default ().app_for_launcher (item.get_launcher ()));
-		}
-		
-		public static int compare_items (DockItem left, DockItem right)
-		{
-			if (left.get_sort () == right.get_sort ())
-				return 0;
-			if (left.get_sort () < right.get_sort ())
-				return -1;
-			return 1;
 		}
 		
 		bool make_launcher (string dockitem, string launcher, int sort)

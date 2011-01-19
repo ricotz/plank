@@ -16,23 +16,40 @@
 // 
 
 using Gdk;
+using Gtk;
 
+using Plank.Services.Drawing;
 using Plank.Services.Logging;
 
 namespace Plank.Items
 {
 	public class TransientDockItem : ApplicationDockItem
 	{
+		public signal void pin_launcher (TransientDockItem item);
+		
 		public TransientDockItem.with_launcher (string launcher)
 		{
 			Prefs = new DockItemPreferences ();
 			
 			Prefs.Launcher = launcher;
-			Prefs.Sort = int.MAX;
 			
 			load_from_launcher ();
 			
 			start_monitor ();
+		}
+		
+		public override List<MenuItem> get_menu_items ()
+		{
+			List<MenuItem> items = base.get_menu_items ();
+			
+			var item = new ImageMenuItem.with_mnemonic ("_Pin to Dock");
+			int width, height;
+			icon_size_lookup (IconSize.MENU, out width, out height);
+			item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon ("document-open-symbolic;;document-open", width, height)));
+			item.activate.connect (() => pin_launcher (this));
+			items.prepend (item);
+			
+			return items;
 		}
 	}
 }

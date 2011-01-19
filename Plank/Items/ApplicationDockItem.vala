@@ -45,13 +45,13 @@ namespace Plank.Items
 			try {
 				monitor = File.new_for_path (Prefs.Launcher).monitor (0);
 				monitor.set_rate_limit (500);
-				monitor.changed.connect (launcher_changed);
+				monitor.changed.connect (monitor_changed);
 			} catch {
 				Logger.warn<ApplicationDockItem> ("Unable to watch the launcher file '%s'".printf (Prefs.Launcher));
 			}
 		}
 		
-		protected void launcher_changed (File f, File? other, FileMonitorEvent event)
+		protected void monitor_changed (File f, File? other, FileMonitorEvent event)
 		{
 			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) == 0 &&
 				(event & FileMonitorEvent.DELETED) == 0)

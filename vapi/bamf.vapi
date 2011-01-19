@@ -47,7 +47,7 @@ namespace Bamf {
 		public unowned GLib.List get_tabs ();
 		public unowned GLib.List get_windows ();
 		public unowned GLib.Array get_xids_for_application (string application);
-		public void register_favorites (string favorites);
+		public void register_favorites ([CCode (array_length = false)] string[] favorites);
 		public virtual signal void active_application_changed (GLib.Object p0, GLib.Object p1);
 		public virtual signal void active_window_changed (GLib.Object p0, GLib.Object p1);
 		public virtual signal void view_closed (GLib.Object p0);
