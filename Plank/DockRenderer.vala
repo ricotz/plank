@@ -198,7 +198,7 @@ namespace Plank
 			
 			// darken the icon
 			if (darken > 0) {
-				icon_surface.Context.rectangle (0, 0, Prefs.IconSize, Prefs.IconSize);
+				icon_surface.Context.rectangle (0, 0, icon_surface.Width, icon_surface.Height);
 				icon_surface.Context.set_source_rgba (0, 0, 0, darken);
 				
 				icon_surface.Context.set_operator (Cairo.Operator.ATOP);
