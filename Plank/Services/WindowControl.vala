@@ -173,7 +173,7 @@ namespace Plank.Services.Windows
 			List<Wnck.Window> windows = new List<Wnck.Window> ();
 			for (int i = 0; i < stack.length (); i++) {
 				var window = stack.nth_data (i);
-				for (int j = 0; j < xids.length; j++)
+				for (int j = 0; xids != null && j < xids.length; j++)
 					if (xids.index (j) == window.get_xid ())
 						windows.append (window);
 			}
@@ -245,7 +245,7 @@ namespace Plank.Services.Windows
 			});
 		}
 		
-		static bool windows_share_viewport (Wnck.Window first, Wnck.Window second)
+		static bool windows_share_viewport (Wnck.Window? first, Wnck.Window? second)
 		{
 			if (first == null || second == null)
 				return false;

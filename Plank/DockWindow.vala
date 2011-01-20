@@ -64,6 +64,7 @@ namespace Plank
 			menu.attach_to_widget (this, null);
 			menu.hide.connect (() => {
 				MenuVisible = false;
+				update_icon_regions ();
 				queue_draw ();
 			});
 			
@@ -82,7 +83,7 @@ namespace Plank
 			set_size ();
 		}
 		
-		public override bool button_release_event (EventButton event)
+		public override bool button_press_event (EventButton event)
 		{
 			if (HoveredItem == null)
 				return true;
@@ -90,6 +91,17 @@ namespace Plank
 			if (event.button == 3)
 				do_popup ();
 			else
+				HoveredItem.clicked (event.button, event.state);
+			
+			return true;
+		}
+		
+		public override bool button_release_event (EventButton event)
+		{
+			if (HoveredItem == null)
+				return true;
+			
+			if (!MenuVisible)
 				HoveredItem.clicked (event.button, event.state);
 			
 			return true;
@@ -220,14 +232,20 @@ namespace Plank
 				if (item.App == null)
 					continue;
 				
-				var rect = Renderer.item_region (item);
-				WindowControl.update_icon_regions (item.App, rect, win_x, win_y);
+				Gdk.Rectangle empty = Gdk.Rectangle ();
+				empty.x = empty.y = empty.width = empty.height = 0;
+				
+				if (MenuVisible)
+					WindowControl.update_icon_regions (item.App, empty, win_x, win_y);
+				else
+					WindowControl.update_icon_regions (item.App, Renderer.item_region (item), win_x, win_y);
 			}
 		}
 		
 		protected void do_popup ()
 		{
 			MenuVisible = true;
+			update_icon_regions ();
 			queue_draw ();
 			
 			foreach (Widget w in menu.get_children ()) {
