@@ -127,6 +127,8 @@ namespace Plank.Services.Preferences
 						val.set_double (file.get_double (group_name, prop.name));
 					else if (type == typeof (string))
 						val.set_string (file.get_string (group_name, prop.name));
+					else if (type.is_enum ())
+						val.set_enum (file.get_integer (group_name, prop.name));
 					else
 						backing_error ("Unsupported preferences type '%s'");
 					
@@ -158,6 +160,8 @@ namespace Plank.Services.Preferences
 					file.set_double (group_name, prop.name, val.get_double ());
 				else if (type == typeof (string))
 					file.set_string (group_name, prop.name, val.get_string ());
+				else if (type.is_enum ())
+					file.set_integer (group_name, prop.name, val.get_enum ());
 				else
 					backing_error ("Unsupported preferences type '%s'");
 			}

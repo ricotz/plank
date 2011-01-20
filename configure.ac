@@ -88,6 +88,7 @@ PKG_CHECK_MODULES(PLANK_CORE, gobject-2.0 >= $GLIB_MIN_VERSION
                               gconf-2.0
                               gee-1.0
                               unique-1.0
+                              libwnck-1.0
                               libbamf
 )
 

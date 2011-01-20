@@ -25,6 +25,27 @@ using Plank.Services.Preferences;
 
 namespace Plank
 {
+	public class DockThemeRenderer : ThemeRenderer
+	{
+		public double Padding { get; set; default = 1.0; }
+		
+		public double ItemPadding { get; set; default = 1.0; }
+		
+		public double IndicatorSize { get; set; default = 5.0; }
+		
+		public int UrgentBounceHeight { get; set; default = 80; }
+		
+		public int LaunchBounceHeight { get; set; default = 30; }
+		
+		public int GlowSize { get; set; default = 30; }
+		
+		public int ClickTime { get; set; default = 600 * 1000; }
+		
+		public int BounceTime { get; set; default = 600 * 1000; }
+		
+		public int ActiveTime { get; set; default = 300 * 1000; }
+	}
+	
 	public class ThemeRenderer : Preferences
 	{
 		public int TopRoundness { get; set; default = 6; }
@@ -32,12 +53,6 @@ namespace Plank
 		public int BottomRoundness { get; set; default = 6; }
 		
 		public int LineWidth { get; set; default = 1; }
-		
-		public double Padding { get; set; default = 1.0; }
-		
-		public double ItemPadding { get; set; default = 1.0; }
-		
-		public double IndicatorSize { get; set; default = 5.0; }
 		
 		public ThemeRenderer ()
 		{

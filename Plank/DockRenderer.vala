@@ -26,8 +26,6 @@ namespace Plank
 {
 	public class DockRenderer : GLib.Object
 	{
-		public signal void render_needed ();
-		
 		DockWindow window;
 		
 		PlankSurface background_buffer;
@@ -40,10 +38,10 @@ namespace Plank
 		}
 		
 		public int DockHeight {
-			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + DockPadding + (int) (Prefs.Zoom * Prefs.IconSize) + 2 * theme.get_bottom_offset (); }
+			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + DockPadding + (int) (Prefs.Zoom * Prefs.IconSize) + 2 * theme.get_bottom_offset () + theme.UrgentBounceHeight; }
 		}
 		
-		int VisibleDockHeight {
+		public int VisibleDockHeight {
 			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + DockPadding + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
 		}
 		
@@ -67,13 +65,13 @@ namespace Plank
 			get { return window.Prefs; }
 		}
 		
-		ThemeRenderer theme;
+		DockThemeRenderer theme;
 		
 		public DockRenderer (DockWindow window)
 		{
 			this.window = window;
 			
-			theme = new ThemeRenderer ();
+			theme = new DockThemeRenderer ();
 			theme.BottomRoundness = 0;
 			theme.load ("dock");
 			theme.notify.connect (theme_changed);
@@ -84,13 +82,12 @@ namespace Plank
 		
 		void theme_changed ()
 		{
-			reset_buffers ();
 			window.set_size ();
 		}
 		
 		void animation_state_changed ()
 		{
-			render_needed ();
+			animated_draw ();
 		}
 		
 		public void reset_buffers ()
@@ -100,7 +97,7 @@ namespace Plank
 			indicator_buffer = null;
 			urgent_indicator_buffer = null;
 			
-			render_needed ();
+			animated_draw ();
 		}
 		
 		public Gdk.Rectangle item_region (DockItem item)
@@ -148,17 +145,49 @@ namespace Plank
 		
 		void draw_item (PlankSurface surface, DockItem item)
 		{
-			var icon_surface = new PlankSurface.with_plank_surface (Prefs.IconSize, Prefs.IconSize, main_buffer);
+			var icon_surface = new PlankSurface.with_plank_surface (surface.Width, surface.Height, surface);
 			
+			// load the icon
 			var pbuf = Drawing.load_icon (item.Icon, Prefs.IconSize, Prefs.IconSize);
 			cairo_set_source_pixbuf (icon_surface.Context, pbuf, 0, 0);
 			icon_surface.Context.paint ();
 			
+			// get draw regions
+			var draw_rect = item_region (item);
+			var hover_rect = draw_rect;
+			
+			draw_rect.x += ItemPadding / 2;
+			draw_rect.y += 2 * theme.get_top_offset () + DockPadding;
+			draw_rect.height -= DockPadding;
+			
+			// lighten or darken the icon
 			var lighten = 0.0;
 			var darken = 0.0;
 			
+			var click_time = new DateTime.now_utc ().difference (item.LastClicked);
+			if (click_time < theme.ClickTime) {
+				var clickAnimationProgress = click_time / (double) theme.ClickTime;
+			
+				switch (item.ClickedAnimation) {
+				case ClickAnimation.BOUNCE:
+					if (!Gdk.Screen.get_default ().is_composited ())
+						break;
+					draw_rect.y -= (int) Math.fabs (Math.sin (2 * Math.PI * clickAnimationProgress) * theme.LaunchBounceHeight);
+					break;
+				case ClickAnimation.DARKEN:
+					darken = Math.fmax (0, Math.sin (Math.PI * 2 * clickAnimationProgress)) * 0.5;
+					break;
+				case ClickAnimation.LIGHTEN:
+					lighten = Math.fmax (0, Math.sin (Math.PI * 2 * clickAnimationProgress)) * 0.5;
+					break;
+				}
+			}
+			
 			if (window.HoveredItem == item && !Prefs.zoom_enabled ())
 				lighten = 0.2;
+			
+			if (window.HoveredItem == item && window.MenuVisible)
+				darken += 0.4;
 			
 			// glow the icon
 			if (lighten > 0) {
@@ -177,18 +206,19 @@ namespace Plank
 				icon_surface.Context.set_operator (Cairo.Operator.OVER);
 			}
 			
-			var rect = item_region (item);
-			var hover_rect = rect;
-			rect.x += ItemPadding / 2;
-			rect.y += 2 * theme.get_top_offset () + DockPadding;
-			rect.height -= DockPadding;
+			var urgent_time = new DateTime.now_utc ().difference (item.LastUrgent);
+			if (Gdk.Screen.get_default().is_composited () && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.BounceTime)
+				draw_rect.y -= (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) theme.BounceTime) * theme.UrgentBounceHeight);
 			
 			// draw active glow
-			if ((item.State & ItemState.ACTIVE) != 0)
-				draw_active_glow (surface, hover_rect, Drawing.average_color (pbuf));
+			var active_time = new DateTime.now_utc ().difference (item.LastActive);
+			var opacity = Math.fmin (1, active_time / (double) theme.ActiveTime);
+			if ((item.State & ItemState.ACTIVE) == 0)
+				opacity = 1 - opacity;
+			draw_active_glow (surface, hover_rect, Drawing.average_color (pbuf), opacity);
 			
 			// draw the icon
-			surface.Context.set_source_surface (icon_surface.Internal, rect.x, rect.y);
+			surface.Context.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);
 			surface.Context.paint ();
 			
 			// draw indicators
@@ -216,15 +246,18 @@ namespace Plank
 			}
 		}
 		
-		void draw_active_glow (PlankSurface surface, Gdk.Rectangle rect, RGBColor color)
+		void draw_active_glow (PlankSurface surface, Gdk.Rectangle rect, RGBColor color, double opacity)
 		{
+			if (opacity == 0)
+				return;
+			
 			rect.y += 2 * theme.get_top_offset ();
 			rect.height -= 2 * theme.get_top_offset () + 2 * theme.get_bottom_offset ();
 			surface.Context.rectangle (rect.x, rect.y, rect.width, rect.height);
 			
 			var gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
 			gradient.add_color_stop_rgba (0, color.R, color.G, color.B, 0);
-			gradient.add_color_stop_rgba (1, color.R, color.G, color.B, 0.6);
+			gradient.add_color_stop_rgba (1, color.R, color.G, color.B, 0.6 * opacity);
 			
 			surface.Context.set_source (gradient);
 			surface.Context.fill ();
@@ -269,6 +302,49 @@ namespace Plank
 			cr.fill ();
 			
 			return surface;
+		}
+		
+		uint animation_timer = 0;
+		
+		bool animation_needed ()
+		{
+			DateTime now = new DateTime.now_utc ();
+			
+			foreach (DockItem item in window.Items.Items) {
+				if (now.difference (item.LastClicked) < theme.ClickTime)
+					return true;
+				if (now.difference (item.LastUrgent) < theme.BounceTime)
+					return true;
+				if (now.difference (item.LastActive) < theme.ActiveTime)
+					return true;
+			}
+				
+			return false;
+		}
+		
+		public void animated_draw ()
+		{
+			if (animation_timer > 0) 
+				return;
+			
+			window.queue_draw ();
+			
+			if (animation_needed ())
+				animation_timer = GLib.Timeout.add (1000 / 60, draw_timeout);
+		}
+		
+		bool draw_timeout ()
+		{
+			window.queue_draw ();
+			
+			if (animation_needed ())
+				return true;
+			
+			if (animation_timer > 0)
+				GLib.Source.remove (animation_timer);
+			animation_timer = 0;
+
+			return false;
 		}
 	}
 }

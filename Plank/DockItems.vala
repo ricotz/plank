@@ -186,6 +186,7 @@ namespace Plank
 			item.notify["Icon"].connect (signal_items_changed);
 			item.notify["Indicator"].connect (signal_items_changed);
 			item.notify["State"].connect (signal_items_changed);
+			item.notify["LastClicked"].connect (signal_items_changed);
 			
 			Matcher.get_default ().window_opened.connect (item.update_states);
 			Matcher.get_default ().window_closed.connect (item.update_states);

@@ -4,9 +4,12 @@ VALAFLAGS = \
 	--pkg gtk+-${GTK_API_VERSION} \
 	--pkg gconf-2.0 \
 	--pkg bamf \
+	--pkg libwnck-1.0 \
 	--pkg gee-1.0 \
 	--pkg gio-unix-2.0 \
 	--pkg unique-1.0 \
+	--pkg x11 \
+	--pkg gdk-x11-2.0 \
 	--vapidir $(VAPIDIR) \
 	$(VAPIDIR)/config.vapi \
 	$(NULL)
@@ -47,6 +50,7 @@ plank_VALASOURCES = \
 	Services/Paths.vala \
 	Services/Preferences.vala \
 	Services/System.vala \
+	Services/WindowControl.vala \
 	$(NULL)
 
 GENERATED_C_FILES = $(plank_VALASOURCES:.vala=.c)
