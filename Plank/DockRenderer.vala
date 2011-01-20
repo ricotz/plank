@@ -37,16 +37,16 @@ namespace Plank
 			get { return (int) window.Items.Items.length () * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
 		}
 		
-		public int DockHeight {
-			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + VertPadding + (int) (Prefs.Zoom * Prefs.IconSize) + 2 * theme.get_bottom_offset () + theme.UrgentBounceHeight; }
-		}
-		
 		public int VisibleDockHeight {
 			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + (VertPadding > 0 ? VertPadding : 0) + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
 		}
 		
-		public int DockBackgroundHeight {
-			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + VertPadding + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
+		public int DockHeight {
+			get { return VisibleDockHeight + theme.UrgentBounceHeight + (int) ((Prefs.Zoom - 1) * Prefs.IconSize); }
+		}
+		
+		int DockBackgroundHeight {
+			get { return VisibleDockHeight + (VertPadding < 0 ? VertPadding : 0); }
 		}
 		
 		int IndicatorSize {
