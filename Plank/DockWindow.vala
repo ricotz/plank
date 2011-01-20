@@ -147,6 +147,11 @@ namespace Plank
 			return true;
 		}
 		
+		public override void size_allocate (Gdk.Rectangle allocation)
+		{
+			set_struts ();
+		}
+		
 		protected void set_hovered (DockItem? item)
 		{
 			if (HoveredItem == item)
@@ -203,7 +208,6 @@ namespace Plank
 		{
 			move ((get_screen ().width () - width_request) / 2,
 				get_screen ().height () - height_request);
-			set_struts ();
 			update_icon_regions ();
 		}
 		
@@ -265,33 +269,31 @@ namespace Plank
 		
 		void set_struts ()
 		{
-			// FIXME this doesnt quite work right yet
-			if (true || !is_realized ())
+			if (!is_realized ())
 				return;
 			
-			uchar[] struts = new uchar[12];
+			uint32[] struts = new uint32[13];
 			
 			if (Prefs.Autohide == AutohideType.NONE) {
 				Gdk.Rectangle monitor_geo = Gdk.Rectangle ();
 				get_screen ().get_monitor_geometry (get_screen ().get_primary_monitor (), out monitor_geo);
 				
-				struts [3] = (uchar) (Renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y + monitor_geo.height);
-				struts [10] = (uchar) monitor_geo.x;
-				struts [11] = (uchar) (monitor_geo.x + monitor_geo.width - 1);
+				struts [3] = Renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
+				struts [10] = monitor_geo.x;
+				struts [11] = monitor_geo.x + monitor_geo.width - 1;
 			}
 			
-			uchar[] first_struts = { struts [0], struts [1], struts [2], struts [3] };
+			uint32[] first_struts = { struts [0], struts [1], struts [2], struts [3], 0 };
 			
 			var display = x11_drawable_get_xdisplay (get_window ());
 			var xid = x11_drawable_get_xid (get_window ());
 			
-			display.intern_atom ("_NET_WM_STRUT_PARTIAL", false);
-			display.intern_atom ("_NET_WM_STRUT", false);
-			
-			display.change_property (xid, x11_get_xatom_by_name ("_NET_WM_STRUT_PARTIAL"), X.XA_CARDINAL,
-			                      32, X.PropMode.Replace, struts, struts.length);
-			display.change_property (xid, x11_get_xatom_by_name ("_NET_WM_STRUT"), X.XA_CARDINAL, 
-			                      32, X.PropMode.Replace, first_struts, first_struts.length);
+			uchar[] arr1 = (uchar[]) struts;
+			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,
+			                      32, X.PropMode.Replace, arr1, arr1.length);
+			uchar[] arr2 = (uchar[]) first_struts;
+			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL, 
+			                      32, X.PropMode.Replace, arr2, arr2.length);
 		}
 	}
 }
