@@ -44,11 +44,11 @@ namespace Plank
 		
 		public int GlowSize { get; set; default = 30; }
 		
-		public int ClickTime { get; set; default = 600 * 1000; }
+		public int ClickTime { get; set; default = 600; }
 		
-		public int BounceTime { get; set; default = 600 * 1000; }
+		public int BounceTime { get; set; default = 600; }
 		
-		public int ActiveTime { get; set; default = 300 * 1000; }
+		public int ActiveTime { get; set; default = 300; }
 		
 		protected override void verify (string prop)
 		{

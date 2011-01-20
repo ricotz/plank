@@ -174,8 +174,8 @@ namespace Plank
 			var darken = 0.0;
 			
 			var click_time = new DateTime.now_utc ().difference (item.LastClicked);
-			if (click_time < theme.ClickTime) {
-				var clickAnimationProgress = click_time / (double) theme.ClickTime;
+			if (click_time < theme.ClickTime * 1000) {
+				var clickAnimationProgress = click_time / (double) (theme.ClickTime * 1000);
 			
 				switch (item.ClickedAnimation) {
 				case ClickAnimation.BOUNCE:
@@ -216,12 +216,12 @@ namespace Plank
 			}
 			
 			var urgent_time = new DateTime.now_utc ().difference (item.LastUrgent);
-			if (Gdk.Screen.get_default().is_composited () && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.BounceTime)
-				draw_rect.y -= (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) theme.BounceTime) * theme.UrgentBounceHeight);
+			if (Gdk.Screen.get_default().is_composited () && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.BounceTime * 1000)
+				draw_rect.y -= (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.BounceTime * 1000)) * theme.UrgentBounceHeight);
 			
 			// draw active glow
 			var active_time = new DateTime.now_utc ().difference (item.LastActive);
-			var opacity = Math.fmin (1, active_time / (double) theme.ActiveTime);
+			var opacity = Math.fmin (1, active_time / (double) (theme.ActiveTime * 1000));
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
 			draw_active_glow (surface, hover_rect, Drawing.average_color (pbuf), opacity);
@@ -326,11 +326,11 @@ namespace Plank
 			DateTime now = new DateTime.now_utc ();
 			
 			foreach (DockItem item in window.Items.Items) {
-				if (now.difference (item.LastClicked) < theme.ClickTime)
+				if (now.difference (item.LastClicked) < theme.ClickTime * 1000)
 					return true;
-				if (now.difference (item.LastUrgent) < theme.BounceTime)
+				if (now.difference (item.LastUrgent) < theme.BounceTime * 1000)
 					return true;
-				if (now.difference (item.LastActive) < theme.ActiveTime)
+				if (now.difference (item.LastActive) < theme.ActiveTime * 1000)
 					return true;
 			}
 				
