@@ -42,6 +42,10 @@ namespace Plank
 		}
 		
 		public int VisibleDockHeight {
+			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + (VertPadding > 0 ? VertPadding : 0) + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
+		}
+		
+		public int DockBackgroundHeight {
 			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + VertPadding + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
 		}
 		
@@ -138,8 +142,8 @@ namespace Plank
 		
 		void draw_dock_background (PlankSurface surface)
 		{
-			if (background_buffer == null || background_buffer.Width != surface.Width || background_buffer.Height != VisibleDockHeight) {
-				background_buffer = new PlankSurface.with_plank_surface (surface.Width, VisibleDockHeight, surface);
+			if (background_buffer == null || background_buffer.Width != surface.Width || background_buffer.Height != DockBackgroundHeight) {
+				background_buffer = new PlankSurface.with_plank_surface (surface.Width, DockBackgroundHeight, surface);
 				theme.draw_background (background_buffer);
 			}
 			
@@ -161,7 +165,7 @@ namespace Plank
 			var hover_rect = draw_rect;
 			
 			draw_rect.x += ItemPadding / 2;
-			draw_rect.y += 2 * theme.get_top_offset () + VertPadding;
+			draw_rect.y += 2 * theme.get_top_offset () + (VertPadding > 0 ? VertPadding : 0);
 			draw_rect.height -= VertPadding;
 			
 			// lighten or darken the icon
