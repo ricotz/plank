@@ -22,6 +22,24 @@ namespace Plank.Services.Windows
 {
 	public class WindowControl : GLib.Object
 	{
+		public static List<Bamf.Window> get_windows (Bamf.Application app)
+		{
+			if (app == null)
+				return new List<Bamf.Window> ();
+			
+			List<Bamf.Window> windows = new List<Bamf.Window> ();
+			
+			unowned List<Bamf.View> children = app.get_children ();
+			for (int i = 0; i < children.length (); i++) {
+				var view = children.nth_data (i);
+				if (!view.user_visible () || !(view is Bamf.Window))
+					continue;
+				windows.append (view as Bamf.Window);
+			}
+			
+			return windows;
+		}
+		
 		public static void update_icon_regions (Bamf.Application app, Gdk.Rectangle rect, int x, int y)
 		{
 			if (app == null)
@@ -71,6 +89,15 @@ namespace Plank.Services.Windows
 				if (window != null && window.is_in_viewport (window.get_screen ().get_active_workspace ()) && !window.is_minimized ())
 					window.minimize ();
 			}
+		}
+		
+		public static void focus_window (Bamf.Window window)
+		{
+			Screen.get_default ();
+			var w = Wnck.Window.@get (window.get_xid ());
+			if (w == null)
+				return;
+			center_and_focus_window (w);
 		}
 		
 		public static void focus (Bamf.Application app)

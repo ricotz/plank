@@ -202,36 +202,34 @@ namespace Plank.Items
 				item.activate.connect (() => launch ());
 				items.append (item);
 			} else {
-				int width, height;
-				var item = new ImageMenuItem.with_mnemonic ("New _Window");
-				icon_size_lookup (IconSize.MENU, out width, out height);
-				item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon ("document-open-symbolic;;document-open", width, height)));
+				var item = add_menu_item (items, "New _Window", "document-open-symbolic;;document-open");
 				item.activate.connect (() => launch ());
 				items.append (item);
 				
-				item = new ImageMenuItem.with_mnemonic ("Ma_ximize");
-				icon_size_lookup (IconSize.MENU, out width, out height);
-				item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon ("view-fullscreen", width, height)));
-				item.activate.connect (() => {
-					WindowControl.maximize (App);
-				});
+				item = add_menu_item (items, "Ma_ximize", "view-fullscreen");
+				item.activate.connect (() => WindowControl.maximize (App));
 				items.append (item);
 				
-				item = new ImageMenuItem.with_mnemonic ("Mi_nimize");
-				icon_size_lookup (IconSize.MENU, out width, out height);
-				item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon ("view-restore", width, height)));
-				item.activate.connect (() => {
-					WindowControl.minimize (App);
-				});
+				item = add_menu_item (items, "Mi_nimize", "view-restore");
+				item.activate.connect (() => WindowControl.minimize (App));
 				items.append (item);
 				
-				item = new ImageMenuItem.with_mnemonic ("_Close All");
-				icon_size_lookup (IconSize.MENU, out width, out height);
-				item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon ("window-close-symbolic;;window-close", width, height)));
-				item.activate.connect (() => {
-					WindowControl.close_all (App);
-				});
+				item = add_menu_item (items, "_Close All", "window-close-symbolic;;window-close");
+				item.activate.connect (() => WindowControl.close_all (App));
 				items.append (item);
+				
+				List<Bamf.Window> windows = WindowControl.get_windows (App);
+				if (windows.length () > 0) {
+					items.append (new SeparatorMenuItem ());
+					
+					for (int i = 0; i < windows.length (); i++) {
+						var window = windows.nth_data (i);
+						
+						item = add_menu_item (items, window.get_name (), window.get_icon ());
+						item.activate.connect (() => WindowControl.focus_window (window));
+						items.append (item);
+					}
+				}
 			}
 			
 			return items;
@@ -245,6 +243,17 @@ namespace Plank.Items
 		public string as_uri ()
 		{
 			return "plank://" + unique_id ();
+		}
+		
+		MenuItem add_menu_item (List<MenuItem> items, string title, string icon)
+		{
+			int width, height;
+			var item = new ImageMenuItem.with_mnemonic (title);
+			
+			icon_size_lookup (IconSize.MENU, out width, out height);
+			item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon (icon, width, height)));
+			
+			return item;
 		}
 		
 		List<MenuItem> get_plank_items ()
