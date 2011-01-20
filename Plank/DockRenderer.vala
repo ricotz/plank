@@ -259,8 +259,10 @@ namespace Plank
 			gradient.add_color_stop_rgba (0, color.R, color.G, color.B, 0);
 			gradient.add_color_stop_rgba (1, color.R, color.G, color.B, 0.6 * opacity);
 			
+			surface.Context.set_operator (Cairo.Operator.ATOP);
 			surface.Context.set_source (gradient);
 			surface.Context.fill ();
+			surface.Context.set_operator (Cairo.Operator.OVER);
 		}
 		
 		void create_normal_indicator ()
