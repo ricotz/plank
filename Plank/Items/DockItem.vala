@@ -175,6 +175,11 @@ namespace Plank.Items
 		
 		protected virtual ClickAnimation on_clicked (uint button, ModifierType mod)
 		{
+			if (is_plank_item ()) {
+				Plank.show_about ();
+				return ClickAnimation.DARKEN;
+			}
+			
 			if (((App == null || App.get_children ().length () == 0) && button == 1) ||
 				button == 2 || 
 				(button == 1 && (mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK)) {
@@ -190,9 +195,14 @@ namespace Plank.Items
 			return ClickAnimation.DARKEN;
 		}
 		
+		bool is_plank_item ()
+		{
+			return get_launcher ().has_suffix ("plank.desktop");
+		}
+		
 		public virtual List<MenuItem> get_menu_items ()
 		{
-			if (get_launcher ().has_suffix ("plank.desktop"))
+			if (is_plank_item ())
 				return get_plank_items ();
 			
 			List<MenuItem> items = new List<MenuItem> ();
