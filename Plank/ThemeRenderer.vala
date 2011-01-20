@@ -27,7 +27,12 @@ namespace Plank
 {
 	public class DockThemeRenderer : ThemeRenderer
 	{
-		public double Padding { get; set; default = 1.0; }
+		const double MIN_INDICATOR_SIZE = 0.0;
+		const double MAX_INDICATOR_SIZE = 10.0;
+		
+		public double HorizPadding { get; set; default = 1.0; }
+		
+		public double VertPadding { get; set; default = 1.0; }
 		
 		public double ItemPadding { get; set; default = 1.0; }
 		
@@ -44,6 +49,55 @@ namespace Plank
 		public int BounceTime { get; set; default = 600 * 1000; }
 		
 		public int ActiveTime { get; set; default = 300 * 1000; }
+		
+		protected override void verify (string prop)
+		{
+			base.verify (prop);
+			
+			switch (prop) {
+			case "ItemPadding":
+				if (ItemPadding < 0)
+					ItemPadding = 0;
+				break;
+			
+			case "IndicatorSize":
+				if (IndicatorSize < MIN_INDICATOR_SIZE)
+					IndicatorSize = MIN_INDICATOR_SIZE;
+				else if (IndicatorSize > MAX_INDICATOR_SIZE)
+					IndicatorSize = MAX_INDICATOR_SIZE;
+				break;
+			
+			case "UrgentBounceHeight":
+				if (UrgentBounceHeight < 0)
+					UrgentBounceHeight = 0;
+				break;
+			
+			case "LaunchBounceHeight":
+				if (LaunchBounceHeight < 0)
+					LaunchBounceHeight = 0;
+				break;
+			
+			case "GlowSize":
+				if (GlowSize < 0)
+					GlowSize = 0;
+				break;
+			
+			case "ClickTime":
+				if (ClickTime < 0)
+					ClickTime = 0;
+				break;
+			
+			case "BounceTime":
+				if (BounceTime < 0)
+					BounceTime = 0;
+				break;
+			
+			case "ActiveTime":
+				if (ActiveTime < 0)
+					ActiveTime = 0;
+				break;
+			}
+		}
 	}
 	
 	public class ThemeRenderer : Preferences
@@ -134,6 +188,28 @@ namespace Plank
 			cr.arc (x + width - bottom_radius, y + height - bottom_radius, bottom_radius, 0, Math.PI * 0.5);
 			cr.arc (x + bottom_radius, y + height - bottom_radius, bottom_radius, Math.PI * 0.5, Math.PI);
 			cr.arc (x + top_radius, y + top_radius, top_radius, Math.PI, Math.PI * 1.5);
+		}
+		
+		protected override void verify (string prop)
+		{
+			base.verify (prop);
+			
+			switch (prop) {
+			case "TopRoundness":
+				if (TopRoundness < 0)
+					TopRoundness = 0;
+				break;
+			
+			case "BottomRoundness":
+				if (BottomRoundness < 0)
+					BottomRoundness = 0;
+				break;
+			
+			case "LineWidth":
+				if (LineWidth < 0)
+					LineWidth = 0;
+				break;
+			}
 		}
 	}
 }

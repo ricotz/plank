@@ -34,23 +34,27 @@ namespace Plank
 		PlankSurface urgent_indicator_buffer;
 		
 		public int DockWidth {
-			get { return (int) window.Items.Items.length () * (ItemPadding+ Prefs.IconSize) + 2 * DockPadding + 4 * theme.LineWidth; }
+			get { return (int) window.Items.Items.length () * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
 		}
 		
 		public int DockHeight {
-			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + DockPadding + (int) (Prefs.Zoom * Prefs.IconSize) + 2 * theme.get_bottom_offset () + theme.UrgentBounceHeight; }
+			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + VertPadding + (int) (Prefs.Zoom * Prefs.IconSize) + 2 * theme.get_bottom_offset () + theme.UrgentBounceHeight; }
 		}
 		
 		public int VisibleDockHeight {
-			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + DockPadding + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
+			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + VertPadding + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
 		}
 		
 		int IndicatorSize {
 			get { return (int) (theme.IndicatorSize / 10.0 * Prefs.IconSize); }
 		}
 		
-		int DockPadding {
-			get { return (int) (theme.Padding / 10.0 * Prefs.IconSize); }
+		int HorizPadding {
+			get { return (int) (theme.HorizPadding / 10.0 * Prefs.IconSize); }
+		}
+		
+		int VertPadding {
+			get { return (int) (theme.VertPadding / 10.0 * Prefs.IconSize); }
 		}
 		
 		int ItemPadding {
@@ -104,7 +108,7 @@ namespace Plank
 		{
 			Gdk.Rectangle rect = Gdk.Rectangle ();
 			
-			rect.x = 2 * theme.LineWidth + DockPadding + item.Position * (ItemPadding + Prefs.IconSize);
+			rect.x = 2 * theme.LineWidth + HorizPadding + item.Position * (ItemPadding + Prefs.IconSize);
 			rect.y = DockHeight - VisibleDockHeight;
 			rect.width = Prefs.IconSize + ItemPadding;
 			rect.height = VisibleDockHeight;
@@ -157,8 +161,8 @@ namespace Plank
 			var hover_rect = draw_rect;
 			
 			draw_rect.x += ItemPadding / 2;
-			draw_rect.y += 2 * theme.get_top_offset () + DockPadding;
-			draw_rect.height -= DockPadding;
+			draw_rect.y += 2 * theme.get_top_offset () + VertPadding;
+			draw_rect.height -= VertPadding;
 			
 			// lighten or darken the icon
 			var lighten = 0.0;
