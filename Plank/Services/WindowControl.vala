@@ -48,7 +48,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<ulong> xids = app.get_xids ();
 			
-			for (int i = 0; i < xids.length; i++) {
+			for (int i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window == null)
 					continue;
@@ -69,7 +69,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<ulong> xids = app.get_xids ();
 			
-			for (int i = 0; i < xids.length; i++) {
+			for (int i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null && !window.is_skip_tasklist ())
 					window.close (Gtk.get_current_event_time ());
@@ -84,7 +84,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<ulong> xids = app.get_xids ();
 			
-			for (int i = 0; i < xids.length; i++) {
+			for (int i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null && window.is_in_viewport (window.get_screen ().get_active_workspace ()) && !window.is_minimized ())
 					window.minimize ();
@@ -108,7 +108,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<ulong> xids = app.get_xids ();
 			
-			for (int i = 0; i < xids.length; i++) {
+			for (int i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null)
 					window.activate (Gtk.get_current_event_time ());
@@ -123,7 +123,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<ulong> xids = app.get_xids ();
 			
-			for (uint i = xids.length - 1; i >= 0; i--) {
+			for (uint i = xids.length - 1; xids != null && i >= 0; i--) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null && window.is_in_viewport (window.get_screen ().get_active_workspace ()) && window.is_minimized ()) {
 					window.unminimize (Gtk.get_current_event_time ());
@@ -140,7 +140,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<ulong> xids = app.get_xids ();
 			
-			for (int i = 0; i < xids.length; i++) {
+			for (int i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null)
 					window.maximize ();
@@ -155,7 +155,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<ulong> xids = app.get_xids ();
 			
-			for (int i = 0; i < xids.length; i++) {
+			for (int i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null && window.is_maximized ())
 					window.unmaximize ();
