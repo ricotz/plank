@@ -142,6 +142,7 @@ namespace Plank
 		public override bool expose_event (EventExpose event)
 		{
 			Renderer.draw_dock (cairo_create (event.window));
+			set_input_mask ();
 			
 			return true;
 		}
@@ -246,6 +247,20 @@ namespace Plank
 			x = win_x + rect.x + rect.width / 2 - menu.requisition.width / 2;
 			y = win_y + rect.y - menu.requisition.height - 10;
 			push_in = false;
+		}
+		
+		void set_input_mask ()
+		{
+			if (!is_realized ())
+				return;
+			
+			var pixmap = new Pixmap(null, width_request, Renderer.VisibleDockHeight, 1);
+			var cr = cairo_create (pixmap);
+			
+			cr.set_source_rgba (0, 0, 0, 1);
+			cr.paint ();
+			
+			input_shape_combine_mask ((Bitmap*) pixmap, 0, height_request - Renderer.VisibleDockHeight);
 		}
 		
 		void set_struts ()
