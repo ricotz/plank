@@ -80,6 +80,7 @@ namespace Plank
 			this.window = window;
 			
 			theme = new DockThemeRenderer ();
+			theme.TopRoundness = 4;
 			theme.BottomRoundness = 0;
 			theme.load ("dock");
 			theme.notify.connect (theme_changed);

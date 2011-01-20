@@ -30,11 +30,11 @@ namespace Plank
 		const double MIN_INDICATOR_SIZE = 0.0;
 		const double MAX_INDICATOR_SIZE = 10.0;
 		
-		public double HorizPadding { get; set; default = 1.0; }
+		public double HorizPadding { get; set; default = 0.0; }
 		
-		public double VertPadding { get; set; default = 1.0; }
+		public double VertPadding { get; set; default = -11.0; }
 		
-		public double ItemPadding { get; set; default = 1.0; }
+		public double ItemPadding { get; set; default = 2.0; }
 		
 		public double IndicatorSize { get; set; default = 5.0; }
 		
