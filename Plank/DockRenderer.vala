@@ -259,6 +259,11 @@ namespace Plank
 			if (opacity == 0)
 				return;
 			
+			surface.Context.translate (0, surface.Height - background_buffer.Height + theme.LineWidth);
+			theme.draw_inner_rect (surface.Context, background_buffer);
+			surface.Context.clip ();
+			surface.Context.translate (0, background_buffer.Height - surface.Height - theme.LineWidth);
+			
 			rect.y += 2 * theme.get_top_offset ();
 			rect.height -= 2 * theme.get_top_offset () + 2 * theme.get_bottom_offset ();
 			surface.Context.rectangle (rect.x, rect.y, rect.width, rect.height);
@@ -267,10 +272,9 @@ namespace Plank
 			gradient.add_color_stop_rgba (0, color.R, color.G, color.B, 0);
 			gradient.add_color_stop_rgba (1, color.R, color.G, color.B, 0.6 * opacity);
 			
-			surface.Context.set_operator (Cairo.Operator.ATOP);
 			surface.Context.set_source (gradient);
 			surface.Context.fill ();
-			surface.Context.set_operator (Cairo.Operator.OVER);
+			surface.Context.reset_clip ();
 		}
 		
 		void create_normal_indicator ()

@@ -166,6 +166,17 @@ namespace Plank
 			cr.save ();
 			cr.set_source (gradient);
 			
+			draw_inner_rect (cr, surface);
+			cr.set_line_width (LineWidth);
+			cr.stroke ();
+			cr.restore ();
+		}
+		
+		public void draw_inner_rect (Context cr, PlankSurface surface)
+		{
+			var top_offset = get_top_offset ();
+			var bottom_offset = get_bottom_offset ();
+			
 			draw_rounded_rect (cr,
 				3 * LineWidth / 2.0,
 				3 * top_offset / 2.0,
@@ -173,9 +184,6 @@ namespace Plank
 				surface.Height - 3 * top_offset / 2.0 - 3 * bottom_offset / 2.0,
 				TopRoundness,
 				BottomRoundness);
-			cr.set_line_width (LineWidth);
-			cr.stroke ();
-			cr.restore ();
 		}
 		
 		static void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
