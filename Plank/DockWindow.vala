@@ -21,6 +21,7 @@ using Gtk;
 
 using Plank.Items;
 using Plank.Services.Drawing;
+using Plank.Services.Windows;
 
 namespace Plank
 {
@@ -202,6 +203,21 @@ namespace Plank
 			move ((get_screen ().width () - width_request) / 2,
 				get_screen ().height () - height_request);
 			set_struts ();
+			update_icon_regions ();
+		}
+		
+		void update_icon_regions ()
+		{
+			int win_x, win_y;
+			get_position (out win_x, out win_y);
+			
+			foreach (DockItem item in Items.Items) {
+				if (item.App == null)
+					continue;
+				
+				var rect = Renderer.item_region (item);
+				WindowControl.update_icon_regions (item.App, rect, win_x, win_y);
+			}
 		}
 		
 		protected void do_popup ()

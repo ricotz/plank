@@ -22,6 +22,22 @@ namespace Plank.Services.Windows
 {
 	public class WindowControl : GLib.Object
 	{
+		public static void update_icon_regions (Bamf.Application app, Gdk.Rectangle rect, int x, int y)
+		{
+			if (app == null)
+				return;
+			
+			Screen.get_default ();
+			unowned Array<ulong> xids = app.get_xids ();
+			
+			for (int i = 0; i < xids.length; i++) {
+				var window = Wnck.Window.@get (xids.index (i));
+				if (window == null)
+					continue;
+				window.set_icon_geometry (x + rect.x, y + rect.y, rect.width, rect.height);
+			}
+		}
+		
 		public static void initialize ()
 		{
 			set_client_type (ClientType.PAGER);
