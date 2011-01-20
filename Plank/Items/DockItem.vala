@@ -235,7 +235,7 @@ namespace Plank.Items
 					for (int i = 0; i < windows.length (); i++) {
 						var window = windows.nth_data (i);
 						
-						item = add_menu_item (items, window.get_name (), window.get_icon ());
+						item = add_menu_item (items, window.get_name (), Icon);
 						item.activate.connect (() => WindowControl.focus_window (window));
 						items.append (item);
 					}
