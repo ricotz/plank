@@ -252,9 +252,9 @@ namespace Plank
 					surface.Context.set_source_surface (indicator.Internal, x, y);
 					surface.Context.paint ();
 				} else {
-					surface.Context.set_source_surface (indicator.Internal, x - 3, y);
+					surface.Context.set_source_surface (indicator.Internal, x - Prefs.IconSize / 16.0, y);
 					surface.Context.paint ();
-					surface.Context.set_source_surface (indicator.Internal, x + 3, y);
+					surface.Context.set_source_surface (indicator.Internal, x + Prefs.IconSize / 16.0, y);
 					surface.Context.paint ();
 				}
 			}

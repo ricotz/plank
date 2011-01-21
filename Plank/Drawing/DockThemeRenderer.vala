@@ -26,7 +26,7 @@ namespace Plank.Drawing
 		
 		public double TopPadding { get; set; default = -11.0; }
 		
-		public double BottomPadding { get; set; default = 3.0; }
+		public double BottomPadding { get; set; default = 2.5; }
 		
 		public double ItemPadding { get; set; default = 2.0; }
 		
