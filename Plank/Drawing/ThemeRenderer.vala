@@ -19,89 +19,10 @@ using Cairo;
 using Gdk;
 using Gtk;
 
-using Plank.Items;
-using Plank.Services.Drawing;
-using Plank.Services.Preferences;
+using Plank.Services;
 
-namespace Plank
+namespace Plank.Drawing
 {
-	public class DockThemeRenderer : ThemeRenderer
-	{
-		const double MIN_INDICATOR_SIZE = 0.0;
-		const double MAX_INDICATOR_SIZE = 10.0;
-		
-		public double HorizPadding { get; set; default = 0.0; }
-		
-		public double TopPadding { get; set; default = -11.0; }
-		
-		public double BottomPadding { get; set; default = 5.0; }
-		
-		public double ItemPadding { get; set; default = 2.0; }
-		
-		public double IndicatorSize { get; set; default = 5.0; }
-		
-		public int UrgentBounceHeight { get; set; default = 80; }
-		
-		public int LaunchBounceHeight { get; set; default = 30; }
-		
-		public int GlowSize { get; set; default = 30; }
-		
-		public int ClickTime { get; set; default = 600; }
-		
-		public int BounceTime { get; set; default = 600; }
-		
-		public int ActiveTime { get; set; default = 300; }
-		
-		protected override void verify (string prop)
-		{
-			base.verify (prop);
-			
-			switch (prop) {
-			case "ItemPadding":
-				if (ItemPadding < 0)
-					ItemPadding = 0;
-				break;
-			
-			case "IndicatorSize":
-				if (IndicatorSize < MIN_INDICATOR_SIZE)
-					IndicatorSize = MIN_INDICATOR_SIZE;
-				else if (IndicatorSize > MAX_INDICATOR_SIZE)
-					IndicatorSize = MAX_INDICATOR_SIZE;
-				break;
-			
-			case "UrgentBounceHeight":
-				if (UrgentBounceHeight < 0)
-					UrgentBounceHeight = 0;
-				break;
-			
-			case "LaunchBounceHeight":
-				if (LaunchBounceHeight < 0)
-					LaunchBounceHeight = 0;
-				break;
-			
-			case "GlowSize":
-				if (GlowSize < 0)
-					GlowSize = 0;
-				break;
-			
-			case "ClickTime":
-				if (ClickTime < 0)
-					ClickTime = 0;
-				break;
-			
-			case "BounceTime":
-				if (BounceTime < 0)
-					BounceTime = 0;
-				break;
-			
-			case "ActiveTime":
-				if (ActiveTime < 0)
-					ActiveTime = 0;
-				break;
-			}
-		}
-	}
-	
 	public class ThemeRenderer : Preferences
 	{
 		public int TopRoundness { get; set; default = 6; }
@@ -129,7 +50,7 @@ namespace Plank
 			return BottomRoundness > 0 ? LineWidth : 0;
 		}
 		
-		public void draw_background (PlankSurface surface)
+		public void draw_background (DockSurface surface)
 		{
 			var cr = surface.Context;
 			
@@ -174,7 +95,7 @@ namespace Plank
 			cr.restore ();
 		}
 		
-		public void draw_inner_rect (Context cr, PlankSurface surface)
+		public void draw_inner_rect (Context cr, DockSurface surface)
 		{
 			var top_offset = get_top_offset ();
 			var bottom_offset = get_bottom_offset ();
@@ -190,8 +111,8 @@ namespace Plank
 		
 		static void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
 		{
-			top_radius = Math.fmin (top_radius, Math.fmin (width / 2.0, height / 2.0));
-			bottom_radius = Math.fmin (bottom_radius, Math.fmin (width / 2.0, height / 2.0));
+			top_radius = Math.fmin (top_radius, Math.fmin (width, height));
+			bottom_radius = Math.fmin (bottom_radius, Math.fmin (width, height));
 			
 			cr.move_to (x + top_radius, y);
 			cr.arc (x + width - top_radius, y + top_radius, top_radius, Math.PI * 1.5, Math.PI * 2.0);

@@ -17,7 +17,7 @@
 
 using Gdk;
 
-namespace Plank
+namespace Plank.Widgets
 {
 	public class CompositedWindow : Gtk.Window
 	{

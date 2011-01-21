@@ -18,8 +18,8 @@
 using Gtk;
 using Unique;
 
-using Plank.Services.Logging;
-using Plank.Services.Paths;
+using Plank.Services;
+using Plank.Widgets;
 
 namespace Plank
 {

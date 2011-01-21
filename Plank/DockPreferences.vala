@@ -15,7 +15,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using Plank.Services.Preferences;
+using Plank.Services;
+using Plank.Widgets;
 
 namespace Plank
 {

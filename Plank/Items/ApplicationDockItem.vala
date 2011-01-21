@@ -17,7 +17,7 @@
 
 using Gdk;
 
-using Plank.Services.Logging;
+using Plank.Services;
 
 namespace Plank.Items
 {

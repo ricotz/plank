@@ -19,8 +19,7 @@ using GConf;
 
 using Plank.Items;
 
-using Plank.Services.Logging;
-using Plank.Services.Paths;
+using Plank.Services;
 using Plank.Services.Windows;
 
 namespace Plank

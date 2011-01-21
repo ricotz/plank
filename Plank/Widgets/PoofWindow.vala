@@ -18,10 +18,9 @@
 using Cairo;
 using Gdk;
 
-using Plank.Services.Logging;
-using Plank.Services.Paths;
+using Plank.Services;
 
-namespace Plank
+namespace Plank.Widgets
 {
 	public class PoofWindow : CompositedWindow
 	{

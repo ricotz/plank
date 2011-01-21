@@ -15,7 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-namespace Plank.Services.Preferences
+namespace Plank.Services
 {
 	public abstract class Preferences : GLib.Object
 	{
@@ -53,10 +53,10 @@ namespace Plank.Services.Preferences
 		{
 			group_name = get_type ().name ();
 			
-			backing_file = Paths.Paths.UserConfigFolder.get_child (filename);
+			backing_file = Paths.UserConfigFolder.get_child (filename);
 			
 			// ensure the preferences file exists
-			Paths.Paths.ensure_directory_exists (backing_file.get_parent ());
+			Paths.ensure_directory_exists (backing_file.get_parent ());
 			if (!backing_file.query_exists ())
 				save_prefs ();
 			
@@ -105,7 +105,7 @@ namespace Plank.Services.Preferences
 		
 		void load_prefs ()
 		{
-			Logging.Logger.debug<Preferences> ("Loading preferences from file '%s'".printf (backing_file.get_path ()));
+			Logger.debug<Preferences> ("Loading preferences from file '%s'".printf (backing_file.get_path ()));
 			
 			notify.disconnect (handle_notify);
 			try {
@@ -136,7 +136,7 @@ namespace Plank.Services.Preferences
 					verify (prop.name);
 				}
 			} catch {
-				Logging.Logger.warn<Preferences> ("Unable to load preferences from file '%s'".printf (backing_file.get_path ()));
+				Logger.warn<Preferences> ("Unable to load preferences from file '%s'".printf (backing_file.get_path ()));
 			}
 			notify.connect (handle_notify);
 		}
@@ -166,7 +166,7 @@ namespace Plank.Services.Preferences
 					backing_error ("Unsupported preferences type '%s'");
 			}
 			
-			Logging.Logger.debug<Preferences> ("Saving preferences '%s'".printf (backing_file.get_path ()));
+			Logger.debug<Preferences> ("Saving preferences '%s'".printf (backing_file.get_path ()));
 			
 			try {
 				DataOutputStream stream;
@@ -185,7 +185,7 @@ namespace Plank.Services.Preferences
 		
 		void backing_error (string err)
 		{
-			Logging.Logger.fatal<Preferences> (err.printf (backing_file.get_path ()));
+			Logger.fatal<Preferences> (err.printf (backing_file.get_path ()));
 		}
 	}
 }

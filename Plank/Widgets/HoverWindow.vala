@@ -20,9 +20,9 @@ using Gdk;
 using Gtk;
 using Pango;
 
-using Plank.Services.Drawing;
+using Plank.Drawing;
 
-namespace Plank
+namespace Plank.Widgets
 {
 	public class HoverWindow : CompositedWindow
 	{
@@ -97,7 +97,7 @@ namespace Plank
 			invalidate ();
 		}
 		
-		PlankSurface background_buffer;
+		DockSurface background_buffer;
 		
 		void invalidate ()
 		{
@@ -125,7 +125,7 @@ namespace Plank
 		
 		void draw_background ()
 		{
-			background_buffer = new PlankSurface (width_request, height_request);
+			background_buffer = new DockSurface (width_request, height_request);
 			
 			// draw the background
 			theme.draw_background (background_buffer);

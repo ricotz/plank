@@ -15,11 +15,10 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using Gdk;
 using Gtk;
 
-using Plank.Services.Drawing;
-using Plank.Services.Logging;
+using Plank.Drawing;
+using Plank.Services;
 
 namespace Plank.Items
 {
@@ -45,7 +44,7 @@ namespace Plank.Items
 			var item = new ImageMenuItem.with_mnemonic ("_Pin to Dock");
 			int width, height;
 			icon_size_lookup (IconSize.MENU, out width, out height);
-			item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon ("add", width, height)));
+			item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon ("add", width, height)));
 			item.activate.connect (() => pin_launcher (this));
 			items.prepend (item);
 			

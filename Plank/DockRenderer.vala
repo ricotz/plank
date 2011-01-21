@@ -20,7 +20,8 @@ using Gdk;
 using Gtk;
 
 using Plank.Items;
-using Plank.Services.Drawing;
+using Plank.Drawing;
+using Plank.Widgets;
 
 namespace Plank
 {
@@ -28,10 +29,10 @@ namespace Plank
 	{
 		DockWindow window;
 		
-		PlankSurface background_buffer;
-		PlankSurface main_buffer;
-		PlankSurface indicator_buffer;
-		PlankSurface urgent_indicator_buffer;
+		DockSurface background_buffer;
+		DockSurface main_buffer;
+		DockSurface indicator_buffer;
+		DockSurface urgent_indicator_buffer;
 		
 		public int DockWidth {
 			get { return (int) window.Items.Items.length () * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
@@ -131,7 +132,7 @@ namespace Plank
 				reset_buffers ();
 			
 			if (main_buffer == null)
-				main_buffer = new PlankSurface.with_surface (DockWidth, DockHeight, cr.get_target ());
+				main_buffer = new DockSurface.with_surface (DockWidth, DockHeight, cr.get_target ());
 			
 			main_buffer.Clear ();
 			
@@ -145,10 +146,10 @@ namespace Plank
 			cr.paint ();
 		}
 		
-		void draw_dock_background (PlankSurface surface)
+		void draw_dock_background (DockSurface surface)
 		{
 			if (background_buffer == null || background_buffer.Width != surface.Width || background_buffer.Height != DockBackgroundHeight) {
-				background_buffer = new PlankSurface.with_plank_surface (surface.Width, DockBackgroundHeight, surface);
+				background_buffer = new DockSurface.with_plank_surface (surface.Width, DockBackgroundHeight, surface);
 				theme.draw_background (background_buffer);
 			}
 			
@@ -156,12 +157,12 @@ namespace Plank
 			surface.Context.paint ();
 		}
 		
-		void draw_item (PlankSurface surface, DockItem item)
+		void draw_item (DockSurface surface, DockItem item)
 		{
-			var icon_surface = new PlankSurface.with_plank_surface (surface.Width, surface.Height, surface);
+			var icon_surface = new DockSurface.with_plank_surface (surface.Width, surface.Height, surface);
 			
 			// load the icon
-			var pbuf = Drawing.load_icon (item.Icon, Prefs.IconSize, Prefs.IconSize);
+			var pbuf = DrawingService.load_icon (item.Icon, Prefs.IconSize, Prefs.IconSize);
 			cairo_set_source_pixbuf (icon_surface.Context, pbuf, 0, 0);
 			icon_surface.Context.paint ();
 			
@@ -228,7 +229,7 @@ namespace Plank
 			var opacity = Math.fmin (1, active_time / (double) (theme.ActiveTime * 1000));
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
-			draw_active_glow (surface, hover_rect, Drawing.average_color (pbuf), opacity);
+			draw_active_glow (surface, hover_rect, DrawingService.average_color (pbuf), opacity);
 			
 			// draw the icon
 			surface.Context.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);
@@ -259,7 +260,7 @@ namespace Plank
 			}
 		}
 		
-		void draw_active_glow (PlankSurface surface, Gdk.Rectangle rect, RGBColor color, double opacity)
+		void draw_active_glow (DockSurface surface, Gdk.Rectangle rect, Drawing.Color color, double opacity)
 		{
 			if (opacity == 0)
 				return;
@@ -284,21 +285,21 @@ namespace Plank
 		
 		void create_normal_indicator ()
 		{
-			var color = RGBColor.from_gdk (window.get_style ().bg [StateType.SELECTED]);
+			var color = Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
 			color = color.set_min_value (90 / (double) uint16.MAX).set_min_sat (0.4);
 			indicator_buffer = create_indicator (IndicatorSize, color.R, color.G, color.B);
 		}
 		
 		void create_urgent_indicator ()
 		{
-			var color = RGBColor.from_gdk (window.get_style ().bg [StateType.SELECTED]);
+			var color = Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
 			color = color.set_min_value (90 / (double) uint16.MAX).add_hue (UrgentHueShift).set_sat (1);
 			urgent_indicator_buffer = create_indicator (IndicatorSize, color.R, color.G, color.B);
 		}
 		
-		PlankSurface create_indicator (int size, double r, double g, double b)
+		DockSurface create_indicator (int size, double r, double g, double b)
 		{
-			PlankSurface surface = new PlankSurface.with_plank_surface (size, size, background_buffer);
+			DockSurface surface = new DockSurface.with_plank_surface (size, size, background_buffer);
 			surface.Clear ();
 
 			var cr = surface.Context;

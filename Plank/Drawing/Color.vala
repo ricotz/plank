@@ -15,20 +15,18 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using Cairo;
 using Gdk;
-using Gtk;
 
-namespace Plank.Services.Drawing
+namespace Plank.Drawing
 {
-	public struct RGBColor
+	public struct Color
 	{
 		public double R;
 		public double G;
 		public double B;
 		public double A;
 		
-		public RGBColor (double R, double G, double B, double A)
+		public Color (double R, double G, double B, double A)
 		{
 			this.R = R;
 			this.G = G;
@@ -36,7 +34,7 @@ namespace Plank.Services.Drawing
 			this.A = A;
 		}
 		
-		public RGBColor.from_gdk (Gdk.Color color)
+		public Color.from_gdk (Gdk.Color color)
 		{
 			R = color.red / (double) uint16.MAX;
 			G = color.green / (double) uint16.MAX;
@@ -44,7 +42,7 @@ namespace Plank.Services.Drawing
 			A = 1.0;
 		}
 		
-		public RGBColor set_hue (double hue)
+		public Color set_hue (double hue)
 			requires (hue >= 0 && hue <= 360)
 		{
 			double h, s, v;
@@ -55,7 +53,7 @@ namespace Plank.Services.Drawing
 			return this;
 		}
 		
-		public RGBColor set_sat (double sat)
+		public Color set_sat (double sat)
 			requires (sat >= 0 && sat <= 1)
 		{
 			double h, s, v;
@@ -66,7 +64,7 @@ namespace Plank.Services.Drawing
 			return this;
 		}
 		
-		public RGBColor set_val (double val)
+		public Color set_val (double val)
 			requires (val >= 0 && val <= 1)
 		{
 			double h, s, v;
@@ -77,7 +75,7 @@ namespace Plank.Services.Drawing
 			return this;
 		}
 		
-		public RGBColor set_alpha (double alpha)
+		public Color set_alpha (double alpha)
 			requires (alpha >= 0 && alpha <= 1)
 		{
 			A = alpha;
@@ -105,7 +103,7 @@ namespace Plank.Services.Drawing
 			return v;
 		}
 		
-		public RGBColor add_hue (double val)
+		public Color add_hue (double val)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
@@ -115,7 +113,7 @@ namespace Plank.Services.Drawing
 			return this;
 		}
 		
-		public RGBColor set_min_sat (double sat)
+		public Color set_min_sat (double sat)
 			requires (sat >= 0 && sat <= 1)
 		{
 			double h, s, v;
@@ -126,7 +124,7 @@ namespace Plank.Services.Drawing
 			return this;
 		}
 		
-		public RGBColor set_min_value (double val)
+		public Color set_min_value (double val)
 			requires (val >= 0 && val <= 1)
 		{
 			double h, s, v;
@@ -137,7 +135,7 @@ namespace Plank.Services.Drawing
 			return this;
 		}
 		
-		public RGBColor set_max_sat (double sat)
+		public Color set_max_sat (double sat)
 			requires (sat >= 0 && sat <= 1)
 		{
 			double h, s, v;
@@ -148,7 +146,7 @@ namespace Plank.Services.Drawing
 			return this;
 		}
 
-		public RGBColor set_max_val (double val)
+		public Color set_max_val (double val)
 			requires (val >= 0 && val <= 1)
 		{
 			double h, s, v;
@@ -159,7 +157,7 @@ namespace Plank.Services.Drawing
 			return this;
 		}
 		
-		public RGBColor multiply_sat (double amount)
+		public Color multiply_sat (double amount)
 			requires (amount >= 0)
 		{
 			double h, s, v;
@@ -170,7 +168,7 @@ namespace Plank.Services.Drawing
 			return this;
 		}
 		
-		public RGBColor brighten_val (double amount)
+		public Color brighten_val (double amount)
 			requires (amount >= 0 && amount <= 1)
 		{
 			double h, s, v;
@@ -181,7 +179,7 @@ namespace Plank.Services.Drawing
 			return this;
 		}
 		
-		public RGBColor darken_val (double amount)
+		public Color darken_val (double amount)
 			requires (amount >= 0 && amount <= 1)
 		{
 			double h, s, v;
@@ -192,7 +190,7 @@ namespace Plank.Services.Drawing
 			return this;
 		}
 		
-		public RGBColor darken_by_sat (double amount)
+		public Color darken_by_sat (double amount)
 			requires (amount >= 0 && amount <= 1)
 		{
 			double h, s, v;
@@ -307,126 +305,6 @@ namespace Plank.Services.Drawing
 					break;
 				}
 			}
-		}
-	}
-	
-	public class Drawing : GLib.Object
-	{
-		const string MISSING_ICONS = "application-default-icon;;application-x-executable";
-		
-		public static Pixbuf load_icon (string names, int width, int height)
-		{
-			List<string> all_names = new List<string> ();
-			
-			foreach (string s in names.split (";;"))
-				all_names.append (s);
-			foreach (string s in MISSING_ICONS.split (";;"))
-				all_names.append (s);
-			
-			Pixbuf pbuf = null;
-			
-			foreach (string name in all_names) {
-				pbuf = load_pixbuf (name, (int) Math.fmax (width, height));
-				if (pbuf != null)
-					break;
-				
-				if (name != all_names.nth_data (all_names.length ()))
-					Logging.Logger.info<Drawing> ("Could not find icon '%s'".printf (name));
-			}
-			
-			if (pbuf != null) {
-				if (width != -1 && height != -1 && (width != pbuf.width || height != pbuf.height))
-					return ar_scale (pbuf, width, height);
-				return pbuf;
-			}
-			
-			return get_empty_pixbuf ();
-		}
-		
-		static Pixbuf get_empty_pixbuf ()
-		{
-			Pixbuf pbuf = new Pixbuf (Colorspace.RGB, true, 8, 1, 1);
-			pbuf.fill (0x00000000);
-			return pbuf;
-		}
-		
-		static Pixbuf? load_pixbuf (string icon, int size)
-		{
-#if VALA_0_12
-			Pixbuf pbuf = null;
-#else
-			unowned Pixbuf pbuf = null;
-#endif
-			try {
-				if (IconTheme.get_default ().has_icon (icon))
-					pbuf = IconTheme.get_default ().load_icon (icon, size, 0);
-				else if (icon.contains (".")) {
-					string[] parts = icon.split (".");
-					if (IconTheme.get_default ().has_icon (parts [0]))
-						pbuf = IconTheme.get_default ().load_icon (parts [0], size, 0);
-				}
-			} catch { }
-			
-#if VALA_0_12
-			return pbuf;
-#else
-			if (pbuf == null)
-				return null;
-			
-			Pixbuf tmp = pbuf.copy ();
-			pbuf.unref ();
-			return tmp;
-#endif
-		}
-		
-		public static Pixbuf ar_scale (Pixbuf source, int width, int height)
-		{
-			var xScale = (double) width / (double) source.width;
-			var yScale = (double) height / (double) source.height;
-			var scale = Math.fmin (xScale, yScale);
-			
-			if (scale == 1)
-				return source;
-			
-			Pixbuf tmp = source.scale_simple ((int) (source.width * scale),
-				(int) (source.height * scale),
-				InterpType.HYPER);
-			
-			return tmp;
-		}
-		
-		public static RGBColor average_color (Pixbuf source)
-		{
-			double rTotal = 0;
-			double gTotal = 0;
-			double bTotal = 0;
-			
-			uchar* dataPtr = source.get_pixels ();
-			double pixels = source.height * source.rowstride / source.n_channels;
-			
-			for (int i = 0; i < pixels; i++) {
-				uchar r = dataPtr [0];
-				uchar g = dataPtr [1];
-				uchar b = dataPtr [2];
-				
-				uchar max = (uchar) Math.fmax (r, Math.fmax (g, b));
-				uchar min = (uchar) Math.fmin (r, Math.fmin (g, b));
-				double delta = max - min;
-				
-				double sat = delta == 0 ? 0 : delta / max;
-				double score = 0.2 + 0.8 * sat;
-				
-				rTotal += r * score;
-				gTotal += g * score;
-				bTotal += b * score;
-				
-				dataPtr += source.n_channels;
-			}
-			
-			return RGBColor (rTotal / uint8.MAX / pixels,
-							 gTotal / uint8.MAX / pixels,
-							 bTotal / uint8.MAX / pixels,
-							 1).set_val (0.8).multiply_sat (1.15);
 		}
 	}
 }

@@ -35,6 +35,8 @@ Plank/.libs
 Plank/*.c
 Plank/plank
 Plank/plank_vala.stamp
+Plank/Drawing/*.c
 Plank/Services/*.c
 Plank/Items/*.c
+Plank/Widgets/*.c
 data/plank.desktop

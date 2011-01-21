@@ -15,9 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using Plank.Services.Logging;
-
-namespace Plank.Services.Paths
+namespace Plank.Services
 {
 	// This class follows the XDG Base Directory specification:
 	//   http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html

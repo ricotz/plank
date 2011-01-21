@@ -15,9 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using Plank.Services.Logging;
-
-namespace Plank.Services.Logging
+namespace Plank.Services
 {
 	public enum LogLevel
 	{

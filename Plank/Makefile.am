@@ -30,27 +30,29 @@ plank_LDADD = \
 	$(NULL)
 
 plank_VALASOURCES = \
-	CompositedWindow.vala \
 	DockItems.vala \
 	DockPreferences.vala \
 	DockRenderer.vala \
-	DockWindow.vala \
-	HoverWindow.vala \
 	Plank.vala \
-	PlankSurface.vala \
-	PoofWindow.vala \
-	ThemeRenderer.vala \
+	Drawing/Color.vala \
+	Drawing/DrawingService.vala \
+	Drawing/DockSurface.vala \
+	Drawing/DockThemeRenderer.vala \
+	Drawing/ThemeRenderer.vala \
 	Items/ApplicationDockItem.vala \
 	Items/DockItem.vala \
 	Items/DockItemPreferences.vala \
 	Items/TransientDockItem.vala \
-	Services/Drawing.vala \
 	Services/Logger.vala \
 	Services/Matcher.vala \
 	Services/Paths.vala \
 	Services/Preferences.vala \
 	Services/System.vala \
 	Services/WindowControl.vala \
+	Widgets/CompositedWindow.vala \
+	Widgets/DockWindow.vala \
+	Widgets/HoverWindow.vala \
+	Widgets/PoofWindow.vala \
 	$(NULL)
 
 GENERATED_C_FILES = $(plank_VALASOURCES:.vala=.c)

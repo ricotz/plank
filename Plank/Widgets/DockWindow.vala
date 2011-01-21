@@ -20,10 +20,10 @@ using Gdk;
 using Gtk;
 
 using Plank.Items;
-using Plank.Services.Drawing;
+using Plank.Drawing;
 using Plank.Services.Windows;
 
-namespace Plank
+namespace Plank.Widgets
 {
 	public enum AutohideType
 	{

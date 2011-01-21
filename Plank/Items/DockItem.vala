@@ -18,8 +18,8 @@
 using Gdk;
 using Gtk;
 
-using Plank.Services.Drawing;
-using Plank.Services.Logging;
+using Plank.Drawing;
+using Plank.Services;
 using Plank.Services.Windows;
 
 namespace Plank.Items
@@ -258,7 +258,7 @@ namespace Plank.Items
 			var item = new ImageMenuItem.with_mnemonic (title);
 			
 			icon_size_lookup (IconSize.MENU, out width, out height);
-			item.set_image (new Gtk.Image.from_pixbuf (Drawing.load_icon (icon, width, height)));
+			item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon (icon, width, height)));
 			
 			return item;
 		}

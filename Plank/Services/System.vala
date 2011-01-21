@@ -37,7 +37,7 @@ namespace Plank.Services
 		public static void launch (File? app, File[] files)
 		{
 			if (app != null && !app.query_exists ()) {
-				Logging.Logger.warn<System> ("Application '%s' doesn't exist".printf (app.get_path ()));
+				Logger.warn<System> ("Application '%s' doesn't exist".printf (app.get_path ()));
 				return;
 			}
 			
@@ -105,10 +105,10 @@ namespace Plank.Services
 					return;
 				}
 				
-				Logging.Logger.error<System> ("Error opening files. The application doesn't support files/URIs or wasn't found.");
+				Logger.error<System> ("Error opening files. The application doesn't support files/URIs or wasn't found.");
 			} catch (Error e) {
-				Logging.Logger.error<System> ("Error: " + e.domain.to_string ());
-				Logging.Logger.error<System> (e.message);
+				Logger.error<System> ("Error: " + e.domain.to_string ());
+				Logger.error<System> (e.message);
 			}
 		}
 	}

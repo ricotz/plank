@@ -17,9 +17,9 @@
 
 using Cairo;
 
-namespace Plank
+namespace Plank.Drawing
 {
-	public class PlankSurface : GLib.Object
+	public class DockSurface : GLib.Object
 	{
 		Surface surface;
 		Context context;
@@ -49,27 +49,27 @@ namespace Plank
 			}
 		}
 		
-		public PlankSurface (int width, int height)
+		public DockSurface (int width, int height)
 		{
 			Width = width;
 			Height = height;
 		}
 		
-		public PlankSurface.with_surface (int width, int height, Surface model)
+		public DockSurface.with_surface (int width, int height, Surface model)
 		{
 			this (width, height);
 			if (model != null)
 				Internal = new Surface.similar (model, Content.COLOR_ALPHA, Width, Height);
 		}
 
-		public PlankSurface.with_plank_surface (int width, int height, PlankSurface model)
+		public DockSurface.with_plank_surface (int width, int height, DockSurface model)
 		{
 			this (width, height);
 			if (model != null)
 				Internal = new Surface.similar (model.Internal, Content.COLOR_ALPHA, Width, Height);
 		}
 		
-		public PlankSurface.with_image_surface (ImageSurface image)
+		public DockSurface.with_image_surface (ImageSurface image)
 		{
 			this (image.get_width (), image.get_height ());
 			Internal = image;
