@@ -108,19 +108,24 @@ namespace Plank.Items
 		{
 			if (app != null) {
 				app.active_changed.disconnect (update_needed);
-				app.running_changed.disconnect (update_needed);
+				app.running_changed.disconnect (update_app);
 				app.urgent_changed.disconnect (update_needed);
 			}
 			
 			App = app;
 			
+			update_states ();
+			
 			if (app != null) {
 				app.active_changed.connect (update_needed);
-				app.running_changed.connect (update_needed);
+				app.running_changed.connect (update_app);
 				app.urgent_changed.connect (update_needed);
 			}
-			
-			update_states ();
+		}
+		
+		public void update_app ()
+		{
+			set_app (Matcher.get_default ().app_for_launcher (get_launcher ()));
 		}
 		
 		public void update_needed ()
@@ -132,7 +137,7 @@ namespace Plank.Items
 		{
 			var was_active = (State & ItemState.ACTIVE) != 0;
 			
-			if (App == null) {
+			if (App == null || App.is_closed () || !App.is_running ()) {
 				if (was_active)
 					LastActive = new DateTime.now_utc ();
 				State = ItemState.NORMAL;
@@ -152,9 +157,7 @@ namespace Plank.Items
 				}
 				
 				// set running
-				if (!App.is_running ())
-					Indicator = IndicatorState.NONE;
-				else if (WindowControl.get_num_windows (App) == 1)
+				if (WindowControl.get_num_windows (App) == 1)
 					Indicator = IndicatorState.SINGLE;
 				else
 					Indicator = IndicatorState.SINGLE_PLUS;

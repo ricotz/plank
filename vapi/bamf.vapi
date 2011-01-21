@@ -82,6 +82,7 @@ namespace Bamf {
 		public virtual bool is_active ();
 		public virtual bool is_running ();
 		public virtual bool is_urgent ();
+		public virtual bool is_closed ();
 		public bool user_visible ();
 		public virtual unowned string view_type ();
 		public string path { get; set construct; }

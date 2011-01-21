@@ -191,8 +191,8 @@ namespace Plank
 			Matcher.get_default ().window_opened.connect (item.update_states);
 			Matcher.get_default ().window_closed.connect (item.update_states);
 			
-			set_app (item);
-			item.launcher_changed.connect (set_app);
+			update_app (item);
+			item.launcher_changed.connect (update_app);
 			Matcher.get_default ().app_opened.connect ((app) => {
 				if (app.get_desktop_file () == item.get_launcher ())
 					item.set_app (app);
@@ -216,9 +216,9 @@ namespace Plank
 			add_item (new_item);
 		}
 		
-		void set_app (DockItem item)
+		void update_app (DockItem item)
 		{
-			item.set_app (Matcher.get_default ().app_for_launcher (item.get_launcher ()));
+			item.update_app ();
 		}
 		
 		static int compare_items (DockItem left, DockItem right)
