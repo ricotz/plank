@@ -121,6 +121,8 @@ namespace Plank
 				var launcher = app.get_desktop_file ();
 				if (launcher == "" || !File.new_for_path (launcher).query_exists ())
 					continue;
+				if (WindowControl.get_num_windows (app) == 0)
+					continue;
 				
 				var found = item_for_launcher (launcher);
 				if (found != null) {
