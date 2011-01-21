@@ -159,11 +159,6 @@ namespace Plank.Widgets
 			return true;
 		}
 		
-		public override void size_allocate (Gdk.Rectangle allocation)
-		{
-			set_struts ();
-		}
-		
 		protected void set_hovered (DockItem? item)
 		{
 			if (HoveredItem == item)
@@ -221,6 +216,7 @@ namespace Plank.Widgets
 			move ((get_screen ().width () - width_request) / 2,
 				get_screen ().height () - height_request);
 			update_icon_regions ();
+			set_struts ();
 		}
 		
 		void update_icon_regions ()
@@ -290,28 +286,47 @@ namespace Plank.Widgets
 			if (!is_realized ())
 				return;
 			
-			uint32[] struts = new uint32[13];
+			// since uchar is 8 bits in vala but the struts are 32 bits
+			// we have to allocate 4 times as much and do bit-masking
+			uchar[] struts = new uchar[12 * 4];
 			
 			if (Prefs.Autohide == AutohideType.NONE) {
+				uint32 left, right, height;
+				
 				Gdk.Rectangle monitor_geo = Gdk.Rectangle ();
 				get_screen ().get_monitor_geometry (get_screen ().get_primary_monitor (), out monitor_geo);
 				
-				struts [3] = Renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
-				struts [10] = monitor_geo.x;
-				struts [11] = monitor_geo.x + monitor_geo.width - 1;
+				left = monitor_geo.x;
+				right = monitor_geo.x + monitor_geo.width - 1;
+				height = Renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
+				
+				struts [12] = (uchar) ((height & 0xff000000) >> 24);
+				struts [12] = (uchar) ((height & 0x00ff0000) >> 16);
+				struts [12] = (uchar) ((height & 0x0000ff00) >> 8);
+				struts [12] = (uchar) (height & 0x000000ff);
+				
+				struts [40] = (uchar) ((left & 0xff000000) >> 24);
+				struts [41] = (uchar) ((left & 0x00ff0000) >> 16);
+				struts [42] = (uchar) ((left & 0x0000ff00) >> 8);
+				struts [43] = (uchar) (left & 0x000000ff);
+				
+				struts [44] = (uchar) ((right & 0xff000000) >> 24);
+				struts [45] = (uchar) ((right & 0x00ff0000) >> 16);
+				struts [46] = (uchar) ((right & 0x0000ff00) >> 8);
+				struts [47] = (uchar) (right & 0x000000ff);
 			}
 			
-			uint32[] first_struts = { struts [0], struts [1], struts [2], struts [3], 0 };
+			uchar[] first_struts = new uchar [4 * 4];
+			for (int i = 0; i < 4 * 4; i++)
+				first_struts [i] = struts [i];
 			
 			var display = x11_drawable_get_xdisplay (get_window ());
 			var xid = x11_drawable_get_xid (get_window ());
 			
-			uchar[] arr1 = (uchar[]) struts;
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,
-			                      32, X.PropMode.Replace, arr1, arr1.length);
-			uchar[] arr2 = (uchar[]) first_struts;
+			                      32, X.PropMode.Replace, struts, struts.length);
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL, 
-			                      32, X.PropMode.Replace, arr2, arr2.length);
+			                      32, X.PropMode.Replace, first_struts, first_struts.length);
 		}
 	}
 }
