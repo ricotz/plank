@@ -22,6 +22,14 @@ namespace Plank.Services.Windows
 {
 	public class WindowControl : GLib.Object
 	{
+		public static unowned Gdk.Pixbuf? get_window_icon (Bamf.Window window)
+		{
+			var w = Wnck.Window.@get (window.get_xid ());
+			if (w == null)
+				return null;
+			return w.get_icon ();
+		}
+		
 		public static uint get_num_windows (Bamf.Application app)
 		{
 			uint count = 0;

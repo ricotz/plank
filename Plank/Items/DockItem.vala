@@ -254,12 +254,22 @@ namespace Plank.Items
 				if (windows.length () > 0) {
 					items.append (new SeparatorMenuItem ());
 					
+					int width, height;
+					icon_size_lookup (IconSize.MENU, out width, out height);
+					
 					for (int i = 0; i < windows.length (); i++) {
 						var window = windows.nth_data (i);
 						
-						item = add_menu_item (items, window.get_name (), Icon);
-						item.activate.connect (() => WindowControl.focus_window (window));
-						items.append (item);
+						var pbuf = WindowControl.get_window_icon (window);
+						if (pbuf == null)
+							Drawing.load_icon (Icon, width, height);
+						else
+							pbuf = Drawing.ar_scale (pbuf, width, height);
+						
+						var window_item = new ImageMenuItem.with_mnemonic (window.get_name ());
+						window_item.set_image (new Gtk.Image.from_pixbuf (pbuf));
+						window_item.activate.connect (() => WindowControl.focus_window (window));
+						items.append (window_item);
 					}
 				}
 			}
