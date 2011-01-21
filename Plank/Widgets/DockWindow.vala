@@ -151,10 +151,15 @@ namespace Plank.Widgets
 			return true;
 		}
 		
+		uint startup_show_timer = 0;
+		
 		public override bool expose_event (EventExpose event)
 		{
-			if (Renderer.hidden)
-				Renderer.show ();
+			if (Renderer.hidden && startup_show_timer == 0)
+				startup_show_timer = GLib.Timeout.add (100, () => {
+					Renderer.show ();
+					return false;
+				});
 			
 			Renderer.draw_dock (cairo_create (event.window));
 			set_input_mask ();
