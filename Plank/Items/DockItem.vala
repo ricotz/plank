@@ -154,7 +154,7 @@ namespace Plank.Items
 				// set running
 				if (!App.is_running ())
 					Indicator = IndicatorState.NONE;
-				else if (App.get_children ().length () == 1)
+				else if (WindowControl.get_num_windows (App) == 1)
 					Indicator = IndicatorState.SINGLE;
 				else
 					Indicator = IndicatorState.SINGLE_PLUS;
@@ -230,7 +230,7 @@ namespace Plank.Items
 				
 				List<Bamf.Window> windows = WindowControl.get_windows (App);
 				if (windows.length () > 0) {
-					items.append (new SeparatorMenuItem ());
+					items.append (new TaskManager.TitledSeparator ("test"));
 					
 					for (int i = 0; i < windows.length (); i++) {
 						var window = windows.nth_data (i);

@@ -22,6 +22,25 @@ namespace Plank.Services.Windows
 {
 	public class WindowControl : GLib.Object
 	{
+		public static uint get_num_windows (Bamf.Application app)
+		{
+			uint count = 0;
+			
+			if (app != null) {
+				List<Bamf.Window> windows = new List<Bamf.Window> ();
+				
+				unowned List<Bamf.View> children = app.get_children ();
+				for (int i = 0; i < children.length (); i++) {
+					var view = children.nth_data (i);
+					if (!view.user_visible () || !(view is Bamf.Window))
+						continue;
+					count++;
+				}
+			}
+			
+			return count;
+		}
+		
 		public static List<Bamf.Window> get_windows (Bamf.Application app)
 		{
 			if (app == null)
