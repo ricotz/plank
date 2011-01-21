@@ -262,9 +262,9 @@ namespace Plank.Items
 						
 						var pbuf = WindowControl.get_window_icon (window);
 						if (pbuf == null)
-							Drawing.load_icon (Icon, width, height);
+							DrawingService.load_icon (Icon, width, height);
 						else
-							pbuf = Drawing.ar_scale (pbuf, width, height);
+							pbuf = DrawingService.ar_scale (pbuf, width, height);
 						
 						var window_item = new ImageMenuItem.with_mnemonic (window.get_name ());
 						window_item.set_image (new Gtk.Image.from_pixbuf (pbuf));
