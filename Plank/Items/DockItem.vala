@@ -166,13 +166,7 @@ namespace Plank.Items
 		
 		public void clicked (uint button, ModifierType mod)
 		{
-			try {
-				ClickedAnimation = on_clicked (button, mod);
-			} catch (Error e) {
-				Logger.error<DockItem> (e.message);
-				ClickedAnimation = ClickAnimation.DARKEN;
-			}
-			
+			ClickedAnimation = on_clicked (button, mod);
 			LastClicked = new DateTime.now_utc ();
 		}
 		

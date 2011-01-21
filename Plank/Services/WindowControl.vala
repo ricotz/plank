@@ -27,8 +27,6 @@ namespace Plank.Services.Windows
 			uint count = 0;
 			
 			if (app != null) {
-				List<Bamf.Window> windows = new List<Bamf.Window> ();
-				
 				unowned List<Bamf.View> children = app.get_children ();
 				for (int i = 0; i < children.length (); i++) {
 					var view = children.nth_data (i);
