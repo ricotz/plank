@@ -233,7 +233,7 @@ namespace Plank.Items
 				
 				List<Bamf.Window> windows = WindowControl.get_windows (App);
 				if (windows.length () > 0) {
-					items.append (new TaskManager.TitledSeparator ("test"));
+					items.append (new SeparatorMenuItem ());
 					
 					for (int i = 0; i < windows.length (); i++) {
 						var window = windows.nth_data (i);
