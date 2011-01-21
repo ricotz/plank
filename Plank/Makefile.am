@@ -64,9 +64,9 @@ plank_vala.stamp: $(addprefix $(srcdir)/,$(plank_VALASOURCES))
 	$(AM_V_VALA)$(VALAC) $(plank_VALAFLAGS) $(VALAFLAGS) -C $^
 	$(AM_V_at)touch $@
 
-DISTCLEANFILES = $(GENERATED_C_FILES) plank_vala.stamp
+CLEANFILES = $(GENERATED_C_FILES) plank_vala.stamp
 EXTRA_DIST = $(plank_VALASOURCES)
 
 # need to make sure the vala sources are rebuilt
 dist-hook:
-	rm -rf $(addprefix $(distdir)/,$(GENERATED_C_FILES))
+	rm -rf $(addprefix $(distdir)/,$(GENERATED_C_FILES) plank_vala.stamp)
