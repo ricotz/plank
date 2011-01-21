@@ -90,7 +90,7 @@ namespace Plank.Services
 				return;
 			
 			set_color_for_level (level);
-			stdout.printf ("[%s %s] ", level.to_string ().substring (33), get_time ());
+			stdout.printf ("[%s %s] ", level.to_string ().substring (25), get_time ());
 			
 			reset_color ();
 			stdout.printf (msg + "\n");
