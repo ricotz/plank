@@ -149,7 +149,7 @@ namespace Plank
 		void draw_dock_background (DockSurface surface)
 		{
 			if (background_buffer == null || background_buffer.Width != surface.Width || background_buffer.Height != DockBackgroundHeight) {
-				background_buffer = new DockSurface.with_plank_surface (surface.Width, DockBackgroundHeight, surface);
+				background_buffer = new DockSurface.with_dock_surface (surface.Width, DockBackgroundHeight, surface);
 				theme.draw_background (background_buffer);
 			}
 			
@@ -159,7 +159,7 @@ namespace Plank
 		
 		void draw_item (DockSurface surface, DockItem item)
 		{
-			var icon_surface = new DockSurface.with_plank_surface (surface.Width, surface.Height, surface);
+			var icon_surface = new DockSurface.with_dock_surface (surface.Width, surface.Height, surface);
 			
 			// load the icon
 			var pbuf = DrawingService.load_icon (item.Icon, Prefs.IconSize, Prefs.IconSize);
@@ -299,7 +299,7 @@ namespace Plank
 		
 		DockSurface create_indicator (int size, double r, double g, double b)
 		{
-			DockSurface surface = new DockSurface.with_plank_surface (size, size, background_buffer);
+			DockSurface surface = new DockSurface.with_dock_surface (size, size, background_buffer);
 			surface.Clear ();
 
 			var cr = surface.Context;

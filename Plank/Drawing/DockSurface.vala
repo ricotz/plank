@@ -62,7 +62,7 @@ namespace Plank.Drawing
 				Internal = new Surface.similar (model, Content.COLOR_ALPHA, Width, Height);
 		}
 
-		public DockSurface.with_plank_surface (int width, int height, DockSurface model)
+		public DockSurface.with_dock_surface (int width, int height, DockSurface model)
 		{
 			this (width, height);
 			if (model != null)
