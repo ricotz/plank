@@ -107,9 +107,10 @@ namespace Plank.Items
 		public void set_app (Bamf.Application? app)
 		{
 			if (app != null) {
-				app.active_changed.disconnect (update_needed);
+				app.active_changed.disconnect (update_active);
 				app.running_changed.disconnect (update_app);
-				app.urgent_changed.disconnect (update_needed);
+				app.closed.disconnect (update_app);
+				app.urgent_changed.disconnect (update_urgent);
 			}
 			
 			App = app;
@@ -117,9 +118,10 @@ namespace Plank.Items
 			update_states ();
 			
 			if (app != null) {
-				app.active_changed.connect (update_needed);
+				app.active_changed.connect (update_active);
 				app.running_changed.connect (update_app);
-				app.urgent_changed.connect (update_needed);
+				app.closed.connect (update_app);
+				app.urgent_changed.connect (update_urgent);
 			}
 		}
 		
@@ -128,12 +130,39 @@ namespace Plank.Items
 			set_app (Matcher.get_default ().app_for_launcher (get_launcher ()));
 		}
 		
-		public void update_needed ()
+		public void update_urgent ()
 		{
-			update_states ();
+			var was_urgent = (State & ItemState.URGENT) != 0;
+			
+			if (App == null || App.is_closed () || !App.is_running ()) {
+				if ((State & ItemState.URGENT) != 0)
+					State &= ~ItemState.URGENT;
+			} else {
+				if (App.is_urgent ())
+					State |= ItemState.URGENT;
+				else
+					State &= ~ItemState.URGENT;
+			}
+			
+			if (was_urgent != ((State & ItemState.URGENT) != 0))
+				LastUrgent = new DateTime.now_utc ();
 		}
 		
-		public void update_states ()
+		public void update_indicator ()
+		{
+			if (App == null || App.is_closed () || !App.is_running ()) {
+				Indicator = IndicatorState.NONE;
+				return;
+			}
+			
+			// set running
+			if (WindowControl.get_num_windows (App) > 1)
+				Indicator = IndicatorState.SINGLE_PLUS;
+			else
+				Indicator = IndicatorState.SINGLE;
+		}
+		
+		public void update_active ()
 		{
 			var was_active = (State & ItemState.ACTIVE) != 0;
 			
@@ -141,27 +170,23 @@ namespace Plank.Items
 				if (was_active)
 					LastActive = new DateTime.now_utc ();
 				State = ItemState.NORMAL;
-				Indicator = IndicatorState.NONE;
 			} else {
 				// set active
-				State = ItemState.NORMAL;
 				if (App.is_active ())
 					State |= ItemState.ACTIVE;
-				if (was_active != ((State & ItemState.ACTIVE) != 0))
-					LastActive = new DateTime.now_utc ();
-				
-				// set urgent
-				if (App.is_urgent ()) {
-					State |= ItemState.URGENT;
-					LastUrgent = new DateTime.now_utc ();
-				}
-				
-				// set running
-				if (WindowControl.get_num_windows (App) == 1)
-					Indicator = IndicatorState.SINGLE;
 				else
-					Indicator = IndicatorState.SINGLE_PLUS;
+					State &= ~ItemState.ACTIVE;
 			}
+			
+			if (was_active != ((State & ItemState.ACTIVE) != 0))
+				LastActive = new DateTime.now_utc ();
+		}
+		
+		public void update_states ()
+		{
+			update_urgent ();
+			update_indicator ();
+			update_active ();
 		}
 		
 		public void clicked (uint button, ModifierType mod)
