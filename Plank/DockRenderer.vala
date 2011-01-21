@@ -34,6 +34,8 @@ namespace Plank
 		DockSurface indicator_buffer;
 		DockSurface urgent_indicator_buffer;
 		
+		public bool hidden;
+		
 		public int DockWidth {
 			get { return (int) window.Items.Items.length () * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
 		}
@@ -74,6 +76,23 @@ namespace Plank
 			get { return 150; }
 		}
 		
+		double Opacity {
+			get {
+				double diff = Math.fmin (1, new DateTime.now_utc ().difference (last_fade) / (double) (theme.FadeTime * 1000));
+				return hidden ? diff : 1 - diff;
+			}
+		}
+		
+		int HideOffset {
+			get {
+				double diff = Math.fmin (1, new DateTime.now_utc ().difference (last_hide) / (double) (theme.SlideTime * 1000));
+				return (int) (VisibleDockHeight * (hidden ? diff : 1 - diff));
+			}
+		}
+		
+		DateTime last_hide = new DateTime.from_unix_utc (0);
+		DateTime last_fade = new DateTime.from_unix_utc (0);
+		
 		DockPreferences Prefs {
 			get { return window.Prefs; }
 		}
@@ -92,6 +111,22 @@ namespace Plank
 			
 			window.notify["HoveredItem"].connect (animation_state_changed);
 			Prefs.notify.connect (reset_buffers);
+			
+			hidden = true;
+		}
+		
+		public void show ()
+		{
+			hidden = false;
+			last_hide = new DateTime.now_utc ();
+			animated_draw ();
+		}
+		
+		public void hide ()
+		{
+			hidden = true;
+			last_hide = new DateTime.now_utc ();
+			animated_draw ();
 		}
 		
 		public void reset_buffers ()
@@ -132,8 +167,12 @@ namespace Plank
 				draw_item (main_buffer, item);
 			
 			cr.set_operator (Operator.SOURCE);
-			cr.set_source_surface (main_buffer.Internal, 0, 0);
+			cr.set_source_surface (main_buffer.Internal, 0, HideOffset);
 			cr.paint ();
+			
+			cr.set_source_rgba (0, 0, 0, 0);
+			cr.set_operator (Operator.SOURCE);
+			cr.paint_with_alpha (Opacity);
 		}
 		
 		void draw_dock_background (DockSurface surface)
@@ -279,6 +318,12 @@ namespace Plank
 		bool animation_needed ()
 		{
 			DateTime now = new DateTime.now_utc ();
+			
+			if (now.difference (last_hide) < theme.SlideTime * 1000)
+				return true;
+			
+			if (now.difference (last_fade) < theme.FadeTime * 1000)
+				return true;
 			
 			foreach (DockItem item in window.Items.Items) {
 				if (now.difference (item.LastClicked) < theme.ClickTime * 1000)

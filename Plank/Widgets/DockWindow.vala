@@ -153,6 +153,9 @@ namespace Plank.Widgets
 		
 		public override bool expose_event (EventExpose event)
 		{
+			if (Renderer.hidden)
+				Renderer.show ();
+			
 			Renderer.draw_dock (cairo_create (event.window));
 			set_input_mask ();
 			
