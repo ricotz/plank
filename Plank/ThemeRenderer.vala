@@ -32,7 +32,9 @@ namespace Plank
 		
 		public double HorizPadding { get; set; default = 0.0; }
 		
-		public double VertPadding { get; set; default = -11.0; }
+		public double TopPadding { get; set; default = -11.0; }
+		
+		public double BottomPadding { get; set; default = 5.0; }
 		
 		public double ItemPadding { get; set; default = 2.0; }
 		

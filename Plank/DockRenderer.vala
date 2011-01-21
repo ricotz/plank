@@ -38,7 +38,7 @@ namespace Plank
 		}
 		
 		public int VisibleDockHeight {
-			get { return 2 * theme.get_top_offset () + IndicatorSize / 2 + (VertPadding > 0 ? VertPadding : 0) + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
+			get { return 2 * theme.get_top_offset () + (TopPadding > 0 ? TopPadding : 0) + (BottomPadding > 0 ? BottomPadding : 0) + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
 		}
 		
 		public int DockHeight {
@@ -46,7 +46,7 @@ namespace Plank
 		}
 		
 		int DockBackgroundHeight {
-			get { return VisibleDockHeight + (VertPadding < 0 ? VertPadding : 0); }
+			get { return VisibleDockHeight + (TopPadding < 0 ? TopPadding : 0); }
 		}
 		
 		int IndicatorSize {
@@ -57,8 +57,12 @@ namespace Plank
 			get { return (int) (theme.HorizPadding / 10.0 * Prefs.IconSize); }
 		}
 		
-		int VertPadding {
-			get { return (int) (theme.VertPadding / 10.0 * Prefs.IconSize); }
+		int TopPadding {
+			get { return (int) (theme.TopPadding / 10.0 * Prefs.IconSize); }
+		}
+		
+		int BottomPadding {
+			get { return (int) (theme.BottomPadding / 10.0 * Prefs.IconSize); }
 		}
 		
 		int ItemPadding {
@@ -166,8 +170,8 @@ namespace Plank
 			var hover_rect = draw_rect;
 			
 			draw_rect.x += ItemPadding / 2;
-			draw_rect.y += 2 * theme.get_top_offset () + (VertPadding > 0 ? VertPadding : 0);
-			draw_rect.height -= VertPadding;
+			draw_rect.y += 2 * theme.get_top_offset () + (TopPadding > 0 ? TopPadding : 0);
+			draw_rect.height -= TopPadding;
 			
 			// lighten or darken the icon
 			var lighten = 0.0;
