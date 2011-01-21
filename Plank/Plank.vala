@@ -62,7 +62,7 @@ namespace Plank
 			
 			set_options ();
 			
-			typeof (Paths).class_ref ();
+			Paths.initialize ("plank");
 			
 			var app = new DockWindow ();
 			app.show_all ();

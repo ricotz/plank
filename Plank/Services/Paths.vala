@@ -52,7 +52,7 @@ namespace Plank.Services.Paths
 		// defaults to XdgCacheHomeFolder/plank
 		public static File UserCacheFolder { get; protected set; }
 		
-		static construct
+		public static void initialize (string app_name)
 		{
 			// get environment-based settings
 			HomeFolder = File.new_for_path (Environment.get_home_dir ());
@@ -94,9 +94,9 @@ namespace Plank.Services.Paths
 			
 			
 			// set the XDG Base Directory specified directories to use
-			UserConfigFolder = XdgConfigHomeFolder.get_child ("plank");
-			UserDataFolder   = XdgDataHomeFolder.get_child ("plank");
-			UserCacheFolder  = XdgCacheHomeFolder.get_child ("plank");
+			UserConfigFolder = XdgConfigHomeFolder.get_child (app_name);
+			UserDataFolder   = XdgDataHomeFolder.get_child (app_name);
+			UserCacheFolder  = XdgCacheHomeFolder.get_child (app_name);
 			
 			
 			// ensure all writable directories exist
