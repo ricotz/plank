@@ -106,11 +106,11 @@ namespace Plank.Items
 		
 		public void set_app (Bamf.Application? app)
 		{
-			if (app != null) {
-				app.active_changed.disconnect (update_active);
-				app.running_changed.disconnect (update_app);
-				app.closed.disconnect (update_app);
-				app.urgent_changed.disconnect (update_urgent);
+			if (App != null) {
+				App.active_changed.disconnect (update_active);
+				App.running_changed.disconnect (update_app);
+				App.closed.disconnect (update_app);
+				App.urgent_changed.disconnect (update_urgent);
 			}
 			
 			App = app;
