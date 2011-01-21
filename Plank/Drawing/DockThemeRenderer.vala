@@ -15,6 +15,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using Cairo;
+
 namespace Plank.Drawing
 {
 	public class DockThemeRenderer : ThemeRenderer
@@ -43,6 +45,56 @@ namespace Plank.Drawing
 		public int BounceTime { get; set; default = 600; }
 		
 		public int ActiveTime { get; set; default = 300; }
+		
+		public DockSurface create_indicator (DockSurface background, int size, double r, double g, double b)
+		{
+			DockSurface surface = new DockSurface.with_dock_surface (size, size, background);
+			surface.Clear ();
+
+			var cr = surface.Context;
+			
+			var x = size / 2;
+			var y = x;
+			
+			cr.move_to (x, y);
+			cr.arc (x, y, size / 2, 0, Math.PI * 2);
+			
+			var rg = new Pattern.radial (x, y, 0, x, y, size / 2);
+			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
+			rg.add_color_stop_rgba (0.1, r, g, b, 1);
+			rg.add_color_stop_rgba (0.2, r, g, b, 0.6);
+			rg.add_color_stop_rgba (0.25, r, g, b, 0.25);
+			rg.add_color_stop_rgba (0.5, r, g, b, 0.15);
+			rg.add_color_stop_rgba (1.0, r, g, b, 0.0);
+			
+			cr.set_source (rg);
+			cr.fill ();
+			
+			return surface;
+		}
+		
+		public void draw_active_glow (DockSurface surface, DockSurface clip_buffer, Gdk.Rectangle rect, Drawing.Color color, double opacity)
+		{
+			if (opacity == 0)
+				return;
+			
+			surface.Context.translate (0, surface.Height - clip_buffer.Height + LineWidth);
+			draw_inner_rect (surface.Context, clip_buffer);
+			surface.Context.clip ();
+			surface.Context.translate (0, clip_buffer.Height - surface.Height - LineWidth);
+			
+			rect.y += 2 * get_top_offset ();
+			rect.height -= 2 * get_top_offset () + 2 * get_bottom_offset ();
+			surface.Context.rectangle (rect.x, rect.y, rect.width, rect.height);
+			
+			var gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
+			gradient.add_color_stop_rgba (0, color.R, color.G, color.B, 0);
+			gradient.add_color_stop_rgba (1, color.R, color.G, color.B, 0.6 * opacity);
+			
+			surface.Context.set_source (gradient);
+			surface.Context.fill ();
+			surface.Context.reset_clip ();
+		}
 		
 		protected override void verify (string prop)
 		{

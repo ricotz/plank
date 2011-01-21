@@ -109,7 +109,7 @@ namespace Plank.Drawing
 				BottomRoundness);
 		}
 		
-		static void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
+		void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
 		{
 			top_radius = Math.fmin (top_radius, Math.fmin (width, height));
 			bottom_radius = Math.fmin (bottom_radius, Math.fmin (width, height));

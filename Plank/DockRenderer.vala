@@ -94,16 +94,6 @@ namespace Plank
 			Prefs.notify.connect (reset_buffers);
 		}
 		
-		void theme_changed ()
-		{
-			window.set_size ();
-		}
-		
-		void animation_state_changed ()
-		{
-			animated_draw ();
-		}
-		
 		public void reset_buffers ()
 		{
 			main_buffer = null;
@@ -229,7 +219,7 @@ namespace Plank
 			var opacity = Math.fmin (1, active_time / (double) (theme.ActiveTime * 1000));
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
-			draw_active_glow (surface, hover_rect, DrawingService.average_color (pbuf), opacity);
+			theme.draw_active_glow (surface, background_buffer, hover_rect, DrawingService.average_color (pbuf), opacity);
 			
 			// draw the icon
 			surface.Context.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);
@@ -260,68 +250,28 @@ namespace Plank
 			}
 		}
 		
-		void draw_active_glow (DockSurface surface, Gdk.Rectangle rect, Drawing.Color color, double opacity)
-		{
-			if (opacity == 0)
-				return;
-			
-			surface.Context.translate (0, surface.Height - background_buffer.Height + theme.LineWidth);
-			theme.draw_inner_rect (surface.Context, background_buffer);
-			surface.Context.clip ();
-			surface.Context.translate (0, background_buffer.Height - surface.Height - theme.LineWidth);
-			
-			rect.y += 2 * theme.get_top_offset ();
-			rect.height -= 2 * theme.get_top_offset () + 2 * theme.get_bottom_offset ();
-			surface.Context.rectangle (rect.x, rect.y, rect.width, rect.height);
-			
-			var gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
-			gradient.add_color_stop_rgba (0, color.R, color.G, color.B, 0);
-			gradient.add_color_stop_rgba (1, color.R, color.G, color.B, 0.6 * opacity);
-			
-			surface.Context.set_source (gradient);
-			surface.Context.fill ();
-			surface.Context.reset_clip ();
-		}
-		
 		void create_normal_indicator ()
 		{
 			var color = Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
 			color = color.set_min_value (90 / (double) uint16.MAX).set_min_sat (0.4);
-			indicator_buffer = create_indicator (IndicatorSize, color.R, color.G, color.B);
+			indicator_buffer = theme.create_indicator (background_buffer, IndicatorSize, color.R, color.G, color.B);
 		}
 		
 		void create_urgent_indicator ()
 		{
 			var color = Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
 			color = color.set_min_value (90 / (double) uint16.MAX).add_hue (UrgentHueShift).set_sat (1);
-			urgent_indicator_buffer = create_indicator (IndicatorSize, color.R, color.G, color.B);
+			urgent_indicator_buffer = theme.create_indicator (background_buffer, IndicatorSize, color.R, color.G, color.B);
 		}
 		
-		DockSurface create_indicator (int size, double r, double g, double b)
+		void theme_changed ()
 		{
-			DockSurface surface = new DockSurface.with_dock_surface (size, size, background_buffer);
-			surface.Clear ();
-
-			var cr = surface.Context;
-			
-			var x = size / 2;
-			var y = x;
-			
-			cr.move_to (x, y);
-			cr.arc (x, y, size / 2, 0, Math.PI * 2);
-			
-			var rg = new Pattern.radial (x, y, 0, x, y, size / 2);
-			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
-			rg.add_color_stop_rgba (0.1, r, g, b, 1);
-			rg.add_color_stop_rgba (0.2, r, g, b, 0.6);
-			rg.add_color_stop_rgba (0.25, r, g, b, 0.25);
-			rg.add_color_stop_rgba (0.5, r, g, b, 0.15);
-			rg.add_color_stop_rgba (1.0, r, g, b, 0.0);
-			
-			cr.set_source (rg);
-			cr.fill ();
-			
-			return surface;
+			window.set_size ();
+		}
+		
+		void animation_state_changed ()
+		{
+			animated_draw ();
 		}
 		
 		uint animation_timer = 0;
