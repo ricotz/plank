@@ -90,8 +90,6 @@ namespace Plank.Widgets
 			
 			if (event.button == 3)
 				do_popup ();
-			else
-				HoveredItem.clicked (event.button, event.state);
 			
 			return true;
 		}
