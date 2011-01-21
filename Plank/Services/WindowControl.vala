@@ -71,7 +71,7 @@ namespace Plank.Services.Windows
 				return;
 			
 			Screen.get_default ();
-			unowned Array<ulong> xids = app.get_xids ();
+			unowned Array<uint32> xids = app.get_xids ();
 			
 			for (int i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -92,7 +92,7 @@ namespace Plank.Services.Windows
 				return;
 			
 			Screen.get_default ();
-			unowned Array<ulong> xids = app.get_xids ();
+			unowned Array<uint32> xids = app.get_xids ();
 			
 			for (int i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -107,7 +107,7 @@ namespace Plank.Services.Windows
 				return;
 			
 			Screen.get_default ();
-			unowned Array<ulong> xids = app.get_xids ();
+			unowned Array<uint32> xids = app.get_xids ();
 			
 			for (int i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -131,7 +131,7 @@ namespace Plank.Services.Windows
 				return;
 			
 			Screen.get_default ();
-			unowned Array<ulong> xids = app.get_xids ();
+			unowned Array<uint32> xids = app.get_xids ();
 			
 			for (int i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -146,13 +146,13 @@ namespace Plank.Services.Windows
 				return;
 			
 			Screen.get_default ();
-			unowned Array<ulong> xids = app.get_xids ();
+			unowned Array<uint32> xids = app.get_xids ();
 			
-			for (uint i = xids.length - 1; xids != null && i >= 0; i--) {
+			for (int i = (int)xids.length - 1; xids != null && i >= 0; i--) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null && window.is_in_viewport (window.get_screen ().get_active_workspace ()) && window.is_minimized ()) {
 					window.unminimize (Gtk.get_current_event_time ());
-					Thread.usleep (10);
+					Thread.usleep (10000);
 				}
 			}
 		}
@@ -163,7 +163,7 @@ namespace Plank.Services.Windows
 				return;
 			
 			Screen.get_default ();
-			unowned Array<ulong> xids = app.get_xids ();
+			unowned Array<uint32> xids = app.get_xids ();
 			
 			for (int i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -178,7 +178,7 @@ namespace Plank.Services.Windows
 				return;
 			
 			Screen.get_default ();
-			unowned Array<ulong> xids = app.get_xids ();
+			unowned Array<uint32> xids = app.get_xids ();
 			
 			for (int i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -189,15 +189,13 @@ namespace Plank.Services.Windows
 		
 		public static void smart_focus (Bamf.Application app)
 		{
-			/* FIXME ya, this definitely doesnt work...
 			unowned List<Wnck.Window> stack = Screen.get_default ().get_windows_stacked ();
 			
 			Screen.get_default ();
-			unowned Array<ulong> xids = app.get_xids ();
+			unowned Array<uint32> xids = app.get_xids ();
 			
 			List<Wnck.Window> windows = new List<Wnck.Window> ();
-			for (int i = 0; i < stack.length (); i++) {
-				var window = stack.nth_data (i);
+			foreach (Wnck.Window window in stack) {
 				for (int j = 0; xids != null && j < xids.length; j++)
 					if (xids.index (j) == window.get_xid ())
 						windows.append (window);
@@ -241,7 +239,6 @@ namespace Plank.Services.Windows
 					minimize (app);
 					return;
 				}
-			*/
 			
 			focus (app);
 		}
@@ -252,7 +249,7 @@ namespace Plank.Services.Windows
 				var window = additional_windows.nth_data (i);
 				if (!window.is_minimized () && windows_share_viewport (targetWindow, window)) {
 					center_and_focus_window (window);
-					Thread.usleep (10);
+					Thread.usleep (10000);
 				}
 			}
 			
