@@ -1,6 +1,7 @@
 VAPIDIR = $(top_srcdir)/vapi
 
 VALAFLAGS = \
+	--thread \
 	--pkg gtk+-${GTK_API_VERSION} \
 	--pkg gconf-2.0 \
 	--pkg bamf \

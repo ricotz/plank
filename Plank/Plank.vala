@@ -41,8 +41,6 @@ namespace Plank
 			// set program name
 			prctl (15, "plank", 0, 0, 0);
 			
-			Intl.bindtextdomain ("plank", Build.DATADIR + "/locale");
-			
 			// parse commandline options
 			var context = new OptionContext ("");
 			
@@ -53,24 +51,34 @@ namespace Plank
 				context.parse (ref args);
 			} catch { }
 			
+			Intl.bindtextdomain ("plank", Build.DATADIR + "/locale");
+			
+			Logger.initialize ("Plank");
+			
+			if (!Thread.supported ()) {
+				Logger.fatal<Plank> ("Problem initializing thread support.");
+				return -1;
+			}
+			Gdk.threads_init ();
 			Gtk.init (ref args);
-				
+			
 			// ensure only one instance
 			if (new App ("net.launchpad.plank", null).is_running) {
 				Logger.fatal<Plank> ("Exiting because another instance is already running.");
-				return -1;
+				return -2;
 			}
 			
 			set_options ();
 			
-			Logger.initialize ("Plank");
 			Paths.initialize ("plank");
 			WindowControl.initialize ();
 			
 			var app = new DockWindow ();
 			app.show_all ();
 			
+			Gdk.threads_enter ();
 			Gtk.main ();
+			Gdk.threads_leave ();
 			
 			return 0;
 		}
