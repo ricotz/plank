@@ -80,9 +80,9 @@ namespace Plank.Services
 			
 			LogLevelFlags flags = LogLevelFlags.LEVEL_MASK | LogLevelFlags.FLAG_FATAL | LogLevelFlags.FLAG_RECURSION;
 			
+			Log.set_handler (null, flags, glib_log_func);
 			foreach (string domain in domains)
 				Log.set_handler (domain, flags, glib_log_func);
-			Log.set_handler (null, flags, glib_log_func);
 		}
 		
 		static string format_message<T> (string msg)
@@ -117,7 +117,8 @@ namespace Plank.Services
 		
 		public static void fatal<T> (string msg)
 		{
-			write (LogLevel.FATAL, format_message<T> (msg + " " + AppName + " will not function properly."));
+			write (LogLevel.FATAL, format_message<T> (msg);
+			write (LogLevel.FATAL, format_message<T> (AppName + " will not function properly."));
 		}
 		
 		static string get_time ()
