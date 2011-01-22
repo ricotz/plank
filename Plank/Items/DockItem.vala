@@ -48,6 +48,8 @@ namespace Plank.Items
 	
 	public class DockItem : GLib.Object
 	{
+		const int SCROLL_RATE = 200 * 1000;
+		
 		public signal void launcher_changed (DockItem item);
 		
 		public Bamf.Application? App { get; set; }
@@ -65,6 +67,8 @@ namespace Plank.Items
 		public ClickAnimation ClickedAnimation { get; protected set; default = ClickAnimation.NONE; }
 		
 		public DateTime LastClicked { get; protected set; default = new DateTime.from_unix_utc (0); }
+		
+		public DateTime LastScrolled { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
 		public DateTime LastUrgent { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
@@ -90,7 +94,7 @@ namespace Plank.Items
 		
 		public void set_sort (int pos)
 		{
-			if (Prefs.Sort!= pos)
+			if (Prefs.Sort != pos)
 				Prefs.Sort = pos;
 		}
 		
@@ -132,10 +136,10 @@ namespace Plank.Items
 		
 		public void update_urgent ()
 		{
-			var was_urgent = (State & ItemState.URGENT) != 0;
+			var was_urgent = (State & ItemState.URGENT) == ItemState.URGENT;
 			
 			if (App == null || App.is_closed () || !App.is_running ()) {
-				if ((State & ItemState.URGENT) != 0)
+				if ((State & ItemState.URGENT) == ItemState.URGENT)
 					State &= ~ItemState.URGENT;
 			} else {
 				if (App.is_urgent ())
@@ -144,7 +148,7 @@ namespace Plank.Items
 					State &= ~ItemState.URGENT;
 			}
 			
-			if (was_urgent != ((State & ItemState.URGENT) != 0))
+			if (was_urgent != ((State & ItemState.URGENT) == ItemState.URGENT))
 				LastUrgent = new DateTime.now_utc ();
 		}
 		
@@ -164,7 +168,7 @@ namespace Plank.Items
 		
 		public void update_active ()
 		{
-			var was_active = (State & ItemState.ACTIVE) != 0;
+			var was_active = (State & ItemState.ACTIVE) == ItemState.ACTIVE;
 			
 			if (App == null || App.is_closed () || !App.is_running ()) {
 				if (was_active)
@@ -178,7 +182,7 @@ namespace Plank.Items
 					State &= ~ItemState.ACTIVE;
 			}
 			
-			if (was_active != ((State & ItemState.ACTIVE) != 0))
+			if (was_active != ((State & ItemState.ACTIVE) == ItemState.ACTIVE))
 				LastActive = new DateTime.now_utc ();
 		}
 		
@@ -217,6 +221,26 @@ namespace Plank.Items
 			return ClickAnimation.DARKEN;
 		}
 		
+		public void scrolled (ScrollDirection direction, ModifierType mod)
+		{
+			on_scrolled (direction, mod);
+		}
+		
+		protected virtual void on_scrolled (ScrollDirection direction, ModifierType mod)
+		{
+			if (WindowControl.get_num_windows (App) == 0 ||
+				(new DateTime.now_utc ().difference (LastScrolled) < SCROLL_RATE))
+				return;
+			
+			LastScrolled = new DateTime.now_utc ();
+			
+			if ((direction & ScrollDirection.UP) == ScrollDirection.UP ||
+				(direction & ScrollDirection.LEFT) == ScrollDirection.LEFT)
+				WindowControl.focus_previous (App);
+			else
+				WindowControl.focus_next (App);
+		}
+		
 		bool is_plank_item ()
 		{
 			return get_launcher ().has_suffix ("plank.desktop");
@@ -252,7 +276,7 @@ namespace Plank.Items
 				
 				List<Bamf.Window> windows = WindowControl.get_windows (App);
 				if (windows.length () > 0) {
-					items.append (new SeparatorMenuItem ());
+					items.append (new TitledSeparator ("test"));
 					
 					int width, height;
 					icon_size_lookup (IconSize.MENU, out width, out height);

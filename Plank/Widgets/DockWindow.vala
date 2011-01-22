@@ -143,8 +143,8 @@ namespace Plank.Widgets
 				return true;
 			}
 			
-			if (HoveredItem == null)
-				return true;
+			if (HoveredItem != null)
+				HoveredItem.scrolled (event.direction, event.state);
 			
 			return true;
 		}
