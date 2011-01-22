@@ -19,6 +19,7 @@ using Gtk;
 using Unique;
 
 using Plank.Services;
+using Plank.Services.Windows;
 using Plank.Widgets;
 
 namespace Plank
@@ -63,6 +64,7 @@ namespace Plank
 			set_options ();
 			
 			Paths.initialize ("plank");
+			WindowControl.initialize ();
 			
 			var app = new DockWindow ();
 			app.show_all ();

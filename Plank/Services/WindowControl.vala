@@ -195,25 +195,19 @@ namespace Plank.Services.Windows
 			unowned Array<uint32> xids = app.get_xids ();
 			
 			List<Wnck.Window> windows = new List<Wnck.Window> ();
+			bool not_in_viewport = true;
+			bool urgent = false;
+			
 			foreach (Wnck.Window window in stack) {
 				for (int j = 0; xids != null && j < xids.length; j++)
-					if (xids.index (j) == window.get_xid ())
+					if (xids.index (j) == window.get_xid ()) {
 						windows.append (window);
+						if (!window.is_skip_tasklist () && window.is_in_viewport (window.get_screen ().get_active_workspace ()))
+							not_in_viewport = false;
+						if (window.needs_attention ())
+							urgent = true;
+					}
 			}
-			
-			bool not_in_viewport = true;
-			foreach (Wnck.Window window in windows)
-				if (!window.is_skip_tasklist () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
-					not_in_viewport = false;
-					break;
-				}
-			
-			bool urgent = false;
-			foreach (Wnck.Window window in windows)
-				if (window.needs_attention ()) {
-					urgent = true;
-					break;
-				}
 			
 			if (not_in_viewport || urgent) {
 				foreach (Wnck.Window window in windows) {
