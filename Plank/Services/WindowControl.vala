@@ -245,7 +245,7 @@ namespace Plank.Services.Windows
 		
 		static void intelligent_focus_off_viewport_window (Wnck.Window targetWindow, List<Wnck.Window> additional_windows)
 		{
-			for (uint i = additional_windows.length () - 1; i >= 0; i--) {
+			for (int i = (int)additional_windows.length () - 1; i >= 0; i--) {
 				var window = additional_windows.nth_data (i);
 				if (!window.is_minimized () && windows_share_viewport (targetWindow, window)) {
 					center_and_focus_window (window);
