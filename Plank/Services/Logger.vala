@@ -43,6 +43,25 @@ namespace Plank.Services
 	{
 		public static LogLevel DisplayLevel { get; set; default = LogLevel.WARN; }
 		
+		static string[] domains = {
+			"Gtk",
+			"Gdk",
+			"GLib",
+			"GLib-GObject",
+			"Pango",
+			"GdkPixbuf",
+			"GLib-GIO"
+		};
+		
+		public static void initialize ()
+		{
+			LogLevelFlags flags = LogLevelFlags.LEVEL_MASK | LogLevelFlags.FLAG_FATAL | LogLevelFlags.FLAG_RECURSION;
+			
+			foreach (string domain in domains)
+				Log.set_handler (domain, flags, glib_log_func);
+			Log.set_handler (null, flags, glib_log_func);
+		}
+		
 		static string format_message<T> (string msg)
 		{
 			return "[%s] %s".printf (typeof (T).name (), msg);
@@ -142,6 +161,46 @@ namespace Plank.Services
 			if (!isForeground)
 				color_code += 10;
 			stdout.printf ("\x001b[%dm", color_code);
+		}
+		
+		static void glib_log_func (string? d, LogLevelFlags flags, string msg)
+		{
+			string domain;
+			if (d == null)
+				domain = "";
+			else
+				domain = "[%s] ".printf (d);
+			
+			string message = msg.replace ("\n", "").replace ("\r", "");
+			
+			string format = "%s%s";
+			
+			switch (flags) {
+			case LogLevelFlags.LEVEL_CRITICAL:
+				fatal<Logger> (format.printf (domain, message));
+				break;
+			
+			case LogLevelFlags.LEVEL_ERROR:
+				error<Logger> (format.printf (domain, message));
+				break;
+			
+			case LogLevelFlags.LEVEL_WARNING:
+				warn<Logger> (format.printf (domain, message));
+				break;
+			
+			case LogLevelFlags.LEVEL_INFO:
+			case LogLevelFlags.LEVEL_MESSAGE:
+				info<Logger> (format.printf (domain, message));
+				break;
+			
+			case LogLevelFlags.LEVEL_DEBUG:
+				debug<Logger> (format.printf (domain, message));
+				break;
+			
+			default:
+				warn<Logger> (format.printf (domain, message));
+				break;
+			}
 		}
 	}
 }

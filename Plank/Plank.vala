@@ -63,6 +63,7 @@ namespace Plank
 			
 			set_options ();
 			
+			Logger.initialize ();
 			Paths.initialize ("plank");
 			WindowControl.initialize ();
 			
