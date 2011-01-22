@@ -47,6 +47,8 @@ namespace Plank.Widgets
 		
 		Menu menu = new Menu ();
 		
+		Gdk.Rectangle monitor_geo;
+		
 		public DockWindow ()
 		{
 			base ();
@@ -199,6 +201,14 @@ namespace Plank.Widgets
 			return false;
 		}
 		
+		void update_monitor_geo ()
+		{
+			int x, y;
+			get_position (out x, out y);
+			Gdk.Screen screen = get_screen ();
+			screen.get_monitor_geometry (screen.get_monitor_at_point (x, y), out monitor_geo);
+		}
+		
 		void position_hover ()
 		{
 			int x, y;
@@ -209,6 +219,8 @@ namespace Plank.Widgets
 		
 		public void set_size ()
 		{
+			update_monitor_geo ();
+			
 			set_size_request (Renderer.DockWidth, Renderer.DockHeight);
 			reposition ();
 			if (HoveredItem != null)
@@ -219,8 +231,7 @@ namespace Plank.Widgets
 		
 		protected void reposition ()
 		{
-			move ((get_screen ().width () - width_request) / 2,
-				get_screen ().height () - height_request);
+			move ((monitor_geo.width - width_request) / 2, monitor_geo.height - height_request);
 			update_icon_regions ();
 			set_struts ();
 		}
@@ -298,9 +309,6 @@ namespace Plank.Widgets
 			
 			if (Prefs.Autohide == AutohideType.NONE) {
 				uint32 left, right, height;
-				
-				Gdk.Rectangle monitor_geo = Gdk.Rectangle ();
-				get_screen ().get_monitor_geometry (get_screen ().get_primary_monitor (), out monitor_geo);
 				
 				left = monitor_geo.x;
 				right = monitor_geo.x + monitor_geo.width - 1;
