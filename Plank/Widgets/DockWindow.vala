@@ -231,7 +231,8 @@ namespace Plank.Widgets
 		
 		protected void reposition ()
 		{
-			move ((monitor_geo.width - width_request) / 2, monitor_geo.height - height_request);
+			//put dock on bottom-center of monitor
+			move (monitor_geo.x + (monitor_geo.width - width_request) / 2, monitor_geo.y + monitor_geo.height - height_request);
 			update_icon_regions ();
 			set_struts ();
 		}
