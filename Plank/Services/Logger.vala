@@ -41,9 +41,26 @@ namespace Plank.Services
 	
 	public class Logger : GLib.Object
 	{
+		class LogMessage : GLib.Object
+		{
+			public LogLevel Level { get; private set; }
+			public string Message { get; private set; }
+			
+			public LogMessage (LogLevel level, string message)
+			{
+				Level = level;
+				Message = message;
+			}
+		}
+		
 		public static LogLevel DisplayLevel { get; set; default = LogLevel.WARN; }
 		
 		public static string AppName { get; set; }
+		
+		static Object queue_lock = null;
+		
+		static List<LogMessage> log_queue;
+		static bool is_writing;
 		
 		static string[] domains = {
 			"Gtk",
@@ -58,6 +75,8 @@ namespace Plank.Services
 		public static void initialize (string app_name)
 		{
 			AppName = app_name;
+			is_writing = false;
+			log_queue = new List<LogMessage> ();
 			
 			LogLevelFlags flags = LogLevelFlags.LEVEL_MASK | LogLevelFlags.FLAG_FATAL | LogLevelFlags.FLAG_RECURSION;
 			
@@ -112,11 +131,37 @@ namespace Plank.Services
 			if (level < DisplayLevel)
 				return;
 			
-			set_color_for_level (level);
-			stdout.printf ("[%s %s] ", level.to_string ().substring (25), get_time ());
+			if (is_writing) {
+				lock (queue_lock)
+					log_queue.append (new LogMessage (level, msg));
+			} else {
+				is_writing = true;
+				
+				if (log_queue.length () > 0) {
+					unowned List<LogMessage> logs = log_queue;
+					lock (queue_lock)
+						log_queue = new List<LogMessage> ();
+					
+					stdout.printf("hi!\n");
+					stdout.printf("hi!\n");
+					stdout.printf("hi!\n");
+					foreach (LogMessage log in logs)
+						print_log (log);
+				}
+				
+				print_log (new LogMessage (level, msg));
+				
+				is_writing = false;
+			}
+		}
+		
+		static async void print_log (LogMessage log)
+		{
+			set_color_for_level (log.Level);
+			stdout.printf ("[%s %s] ", log.Level.to_string ().substring (25), get_time ());
 			
 			reset_color ();
-			stdout.printf (msg + "\n");
+			stdout.printf (log.Message + "\n");
 		}
 		
 		static void set_color_for_level (LogLevel level)
