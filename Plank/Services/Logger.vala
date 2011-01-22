@@ -143,9 +143,6 @@ namespace Plank.Services
 					lock (queue_lock)
 						log_queue = new List<LogMessage> ();
 					
-					stdout.printf("hi!\n");
-					stdout.printf("hi!\n");
-					stdout.printf("hi!\n");
 					foreach (LogMessage log in logs)
 						print_log (log);
 				}
