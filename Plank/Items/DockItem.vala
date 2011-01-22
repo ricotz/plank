@@ -276,7 +276,7 @@ namespace Plank.Items
 				
 				List<Bamf.Window> windows = WindowControl.get_windows (App);
 				if (windows.length () > 0) {
-					items.append (new TitledSeparator ("test"));
+					items.append (new SeparatorMenuItem ());
 					
 					int width, height;
 					icon_size_lookup (IconSize.MENU, out width, out height);
