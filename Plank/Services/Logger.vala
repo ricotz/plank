@@ -117,7 +117,7 @@ namespace Plank.Services
 		
 		public static void fatal<T> (string msg)
 		{
-			write (LogLevel.FATAL, format_message<T> (msg);
+			write (LogLevel.FATAL, format_message<T> (msg));
 			write (LogLevel.FATAL, format_message<T> (AppName + " will not function properly."));
 		}
 		
