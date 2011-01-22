@@ -38,19 +38,28 @@ namespace Plank.Services.Windows
 		
 		public Matcher ()
 		{
-			Bamf.Matcher.get_default ().view_opened.connect ((matcher, arg1) => {
-				if (arg1 is Window)
-					window_opened (arg1 as Window);
-				else if (arg1 is Bamf.Application)
-					app_opened (arg1 as Bamf.Application);
-			});
-			
-			Bamf.Matcher.get_default ().view_closed.connect ((matcher, arg1) => {
-				if (arg1 is Window)
-					window_closed ();
-				else if (arg1 is Bamf.Application)
-					app_closed ();
-			});
+			Bamf.Matcher.get_default ().view_opened.connect (view_opened);
+			Bamf.Matcher.get_default ().view_closed.connect (view_closed);
+		}
+		
+		void view_opened (Object? arg1)
+		{
+			if (arg1 == null)
+				return;
+			if (arg1 is Window)
+				window_opened (arg1 as Window);
+			else if (arg1 is Bamf.Application)
+				app_opened (arg1 as Bamf.Application);
+		}
+		
+		void view_closed (Object? arg1)
+		{
+			if (arg1 == null)
+				return;
+			if (arg1 is Window)
+				window_closed ();
+			else if (arg1 is Bamf.Application)
+				app_closed ();
 		}
 		
 		public unowned List<Bamf.Application> active_launchers ()
