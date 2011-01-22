@@ -43,6 +43,8 @@ namespace Plank.Services
 	{
 		public static LogLevel DisplayLevel { get; set; default = LogLevel.WARN; }
 		
+		public static string AppName { get; set; }
+		
 		static string[] domains = {
 			"Gtk",
 			"Gdk",
@@ -53,8 +55,10 @@ namespace Plank.Services
 			"GLib-GIO"
 		};
 		
-		public static void initialize ()
+		public static void initialize (string app_name)
 		{
+			AppName = app_name;
+			
 			LogLevelFlags flags = LogLevelFlags.LEVEL_MASK | LogLevelFlags.FLAG_FATAL | LogLevelFlags.FLAG_RECURSION;
 			
 			foreach (string domain in domains)
@@ -94,7 +98,7 @@ namespace Plank.Services
 		
 		public static void fatal<T> (string msg)
 		{
-			write (LogLevel.FATAL, format_message<T> (msg + " Plank will not function properly."));
+			write (LogLevel.FATAL, format_message<T> (msg + " " + AppName + " will not function properly."));
 		}
 		
 		static string get_time ()
