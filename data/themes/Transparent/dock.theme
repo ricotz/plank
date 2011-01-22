@@ -1,0 +1,8 @@
+
+[PlankDrawingDockThemeRenderer]
+TopRoundness=0
+BottomRoundness=0
+HorizPadding=0
+TopPadding=-12
+BottomPadding=2
+IndicatorSize=5

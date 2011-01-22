@@ -149,6 +149,9 @@ data/icons/hicolor/64x64/Makefile
 data/icons/hicolor/64x64/apps/Makefile
 data/icons/hicolor/128x128/Makefile
 data/icons/hicolor/128x128/apps/Makefile
+data/themes/Makefile
+data/themes/Matte/Makefile
+data/themes/Transparent/Makefile
 m4/Makefile
 po/Makefile.in
 vapi/Makefile
