@@ -26,7 +26,8 @@ namespace Plank
 		const int MAX_ICON_SIZE = 128;
 		
 		const double MIN_ZOOM = 1.0;
-		const double MAX_ZOOM = 4.0;
+		// FIXME change to 4.0 when zoom is available
+		const double MAX_ZOOM = 1.0;
 		
 		public double Zoom { get; set; default = 2.0; }
 		
