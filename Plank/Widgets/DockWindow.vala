@@ -31,6 +31,22 @@ namespace Plank.Widgets
 		INTELLIHIDE
 	}
 	
+	public enum Struts 
+	{
+		LEFT = 0,
+		RIGHT = 1,
+		TOP = 2,
+		BOTTOM = 3,
+		LEFT_START = 4,
+		LEFT_END = 5,
+		RIGHT_START = 6,
+		RIGHT_END = 7,
+		TOP_START = 8,
+		TOP_END = 9,
+		BOTTOM_START = 10,
+		BOTTOM_END = 11
+	}
+	
 	public class DockWindow : CompositedWindow
 	{
 		public DockPreferences Prefs { get; protected set; }
@@ -315,20 +331,20 @@ namespace Plank.Widgets
 				right = monitor_geo.x + monitor_geo.width - 1;
 				height = Renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
 				
-				struts [15] = (uchar) ((height & 0xff000000) >> 24);
-				struts [14] = (uchar) ((height & 0x00ff0000) >> 16);
-				struts [13] = (uchar) ((height & 0x0000ff00) >> 8);
-				struts [12] = (uchar) (height & 0x000000ff);
+				struts [Struts.BOTTOM * 4 + 3] = (uchar) ((height & 0xff000000) >> 24);
+				struts [Struts.BOTTOM * 4 + 2] = (uchar) ((height & 0x00ff0000) >> 16);
+				struts [Struts.BOTTOM * 4 + 1] = (uchar) ((height & 0x0000ff00) >> 8);
+				struts [Struts.BOTTOM * 4] = (uchar) (height & 0x000000ff);
 				
-				struts [43] = (uchar) ((left & 0xff000000) >> 24);
-				struts [42] = (uchar) ((left & 0x00ff0000) >> 16);
-				struts [41] = (uchar) ((left & 0x0000ff00) >> 8);
-				struts [40] = (uchar) (left & 0x000000ff);
+				struts [Struts.BOTTOM_START * 4 + 3] = (uchar) ((left & 0xff000000) >> 24);
+				struts [Struts.BOTTOM_START * 4 + 2] = (uchar) ((left & 0x00ff0000) >> 16);
+				struts [Struts.BOTTOM_START * 4 + 1] = (uchar) ((left & 0x0000ff00) >> 8);
+				struts [Struts.BOTTOM_START * 4] = (uchar) (left & 0x000000ff);
 				
-				struts [47] = (uchar) ((right & 0xff000000) >> 24);
-				struts [46] = (uchar) ((right & 0x00ff0000) >> 16);
-				struts [45] = (uchar) ((right & 0x0000ff00) >> 8);
-				struts [44] = (uchar) (right & 0x000000ff);
+				struts [Struts.BOTTOM_END * 4 + 3] = (uchar) ((right & 0xff000000) >> 24);
+				struts [Struts.BOTTOM_END * 4 + 2] = (uchar) ((right & 0x00ff0000) >> 16);
+				struts [Struts.BOTTOM_END * 4 + 1] = (uchar) ((right & 0x0000ff00) >> 8);
+				struts [Struts.BOTTOM_END * 4] = (uchar) (right & 0x000000ff);
 			}
 			
 			uchar[] first_struts = new uchar [4 * 4];
