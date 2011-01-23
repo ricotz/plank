@@ -39,6 +39,12 @@ namespace Plank.Drawing
 			Pixbuf pbuf = null;
 			
 			foreach (string name in all_names) {
+				if (icon_is_file (name)) {
+					pbuf = load_pixbuf_from_file (name, width, height);
+					if (pbuf != null)
+						break;
+				}
+				
 				pbuf = load_pixbuf (name, (int) Math.fmax (width, height));
 				if (pbuf != null)
 					break;
@@ -60,6 +66,27 @@ namespace Plank.Drawing
 		{
 			Pixbuf pbuf = new Pixbuf (Colorspace.RGB, true, 8, 1, 1);
 			pbuf.fill (0x00000000);
+			return pbuf;
+		}
+		
+		static bool icon_is_file (string name)
+		{
+			return name.has_prefix ("/") || name.has_prefix ("~/") || name.down ().has_prefix ("file://");
+		}
+		
+		static Pixbuf? load_pixbuf_from_file (string name, int width, int height)
+		{
+			Pixbuf pbuf = null;
+			
+			string filename = name;
+			if (name.has_prefix ("~/"))
+				filename = name.replace ("~/", Paths.HomeFolder.get_path ());
+			
+			try {
+				File file = File.new_for_path (filename);
+				pbuf = new Pixbuf.from_file (file.get_path ());
+			} catch { }
+			
 			return pbuf;
 		}
 		
