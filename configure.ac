@@ -61,14 +61,14 @@ AC_MSG_RESULT([$with_gtk])
 
 case "$with_gtk" in
    2.0) GTK_API_VERSION=2.0
-        GTK_MIN_VERSION=2.18.0
-        GLIB_MIN_VERSION=2.22.0
+        GTK_MIN_VERSION=2.22.0
+        GLIB_MIN_VERSION=2.26.0
         VALA_MIN_VERSION=0.10.0
    ;;
    3.0) GTK_API_VERSION=3.0
-        GTK_MIN_VERSION=2.91.7
-        GLIB_MIN_VERSION=2.27.5
-        VALA_MIN_VERSION=0.11.4
+        GTK_MIN_VERSION=2.99.2
+        GLIB_MIN_VERSION=2.27.91
+        VALA_MIN_VERSION=0.11.5
    ;;
 esac
 AC_SUBST(GTK_API_VERSION)
@@ -131,7 +131,6 @@ dnl }}}
 
 AC_CONFIG_FILES([
 Makefile
-data/plank.desktop
 data/Makefile
 data/icons/Makefile
 data/icons/hicolor/Makefile
@@ -153,9 +152,10 @@ data/themes/Makefile
 data/themes/Matte/Makefile
 data/themes/Transparent/Makefile
 m4/Makefile
+man/Makefile
+Plank/Makefile
 po/Makefile.in
 vapi/Makefile
-Plank/Makefile
 ])
 
 AC_OUTPUT

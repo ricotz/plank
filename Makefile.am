@@ -2,6 +2,7 @@ SUBDIRS = \
 	Plank \
 	data \
 	m4 \
+	man \
 	po \
 	vapi \
 	$(NULL)
