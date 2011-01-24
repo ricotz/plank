@@ -320,7 +320,7 @@ namespace Plank.Widgets
 			if (!is_realized ())
 				return;
 			
-			ulong[] struts = new ulong [12];
+			ulong[] struts = new ulong [Struts.BOTTOM_END + 1];
 			
 			if (Prefs.Autohide == AutohideType.NONE) {
 				struts [Struts.BOTTOM] = Renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
@@ -328,17 +328,17 @@ namespace Plank.Widgets
 				struts [Struts.BOTTOM_END] = monitor_geo.x + monitor_geo.width - 1;
 			}
 			
-			ulong[] first_struts = new ulong [4];
-			for (int i = 0; i < 4; i++)
+			ulong[] first_struts = new ulong [Struts.BOTTOM + 1];
+			for (int i = 0; i < Struts.BOTTOM + 1; i++)
 				first_struts [i] = struts [i];
 			
 			var display = x11_drawable_get_xdisplay (get_window ());
 			var xid = x11_drawable_get_xid (get_window ());
 			
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,
-			                      32, X.PropMode.Replace, (uchar[])struts, struts.length);
+			                      32, X.PropMode.Replace, (uchar[]) struts, struts.length);
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL, 
-			                      32, X.PropMode.Replace, (uchar[])first_struts, first_struts.length);
+			                      32, X.PropMode.Replace, (uchar[]) first_struts, first_struts.length);
 		}
 	}
 }
