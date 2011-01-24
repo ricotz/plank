@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011 Robert Dyer, Michal Hruby
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -33,18 +33,18 @@ namespace Plank.Widgets
 	
 	public enum Struts 
 	{
-		LEFT = 0,
-		RIGHT = 1,
-		TOP = 2,
-		BOTTOM = 3,
-		LEFT_START = 4,
-		LEFT_END = 5,
-		RIGHT_START = 6,
-		RIGHT_END = 7,
-		TOP_START = 8,
-		TOP_END = 9,
-		BOTTOM_START = 10,
-		BOTTOM_END = 11
+		LEFT,
+		RIGHT,
+		TOP,
+		BOTTOM,
+		LEFT_START,
+		LEFT_END,
+		RIGHT_START,
+		RIGHT_END,
+		TOP_START,
+		TOP_END,
+		BOTTOM_START,
+		BOTTOM_END
 	}
 	
 	public class DockWindow : CompositedWindow
@@ -320,44 +320,25 @@ namespace Plank.Widgets
 			if (!is_realized ())
 				return;
 			
-			// since uchar is 8 bits in vala but the struts are 32 bits
-			// we have to allocate 4 times as much and do bit-masking
-			uchar[] struts = new uchar[12 * 4];
+			ulong[] struts = new ulong [12];
 			
 			if (Prefs.Autohide == AutohideType.NONE) {
-				uint32 left, right, height;
-				
-				left = monitor_geo.x;
-				right = monitor_geo.x + monitor_geo.width - 1;
-				height = Renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
-				
-				struts [Struts.BOTTOM * 4 + 3] = (uchar) ((height & 0xff000000) >> 24);
-				struts [Struts.BOTTOM * 4 + 2] = (uchar) ((height & 0x00ff0000) >> 16);
-				struts [Struts.BOTTOM * 4 + 1] = (uchar) ((height & 0x0000ff00) >> 8);
-				struts [Struts.BOTTOM * 4] = (uchar) (height & 0x000000ff);
-				
-				struts [Struts.BOTTOM_START * 4 + 3] = (uchar) ((left & 0xff000000) >> 24);
-				struts [Struts.BOTTOM_START * 4 + 2] = (uchar) ((left & 0x00ff0000) >> 16);
-				struts [Struts.BOTTOM_START * 4 + 1] = (uchar) ((left & 0x0000ff00) >> 8);
-				struts [Struts.BOTTOM_START * 4] = (uchar) (left & 0x000000ff);
-				
-				struts [Struts.BOTTOM_END * 4 + 3] = (uchar) ((right & 0xff000000) >> 24);
-				struts [Struts.BOTTOM_END * 4 + 2] = (uchar) ((right & 0x00ff0000) >> 16);
-				struts [Struts.BOTTOM_END * 4 + 1] = (uchar) ((right & 0x0000ff00) >> 8);
-				struts [Struts.BOTTOM_END * 4] = (uchar) (right & 0x000000ff);
+				struts [Struts.BOTTOM] = Renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
+				struts [Struts.BOTTOM_START] = monitor_geo.x;
+				struts [Struts.BOTTOM_END] = monitor_geo.x + monitor_geo.width - 1;
 			}
 			
-			uchar[] first_struts = new uchar [4 * 4];
-			for (int i = 0; i < 4 * 4; i++)
+			ulong[] first_struts = new ulong [4];
+			for (int i = 0; i < 4; i++)
 				first_struts [i] = struts [i];
 			
 			var display = x11_drawable_get_xdisplay (get_window ());
 			var xid = x11_drawable_get_xid (get_window ());
 			
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,
-			                      32, X.PropMode.Replace, struts, struts.length);
+			                      32, X.PropMode.Replace, (uchar[])struts, struts.length);
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL, 
-			                      32, X.PropMode.Replace, first_struts, first_struts.length);
+			                      32, X.PropMode.Replace, (uchar[])first_struts, first_struts.length);
 		}
 	}
 }
