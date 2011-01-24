@@ -262,13 +262,25 @@ namespace Plank.Items
 				item.activate.connect (() => launch ());
 				items.append (item);
 				
-				item = add_menu_item (items, _("Ma_ximize"), "view-fullscreen");
-				item.activate.connect (() => WindowControl.maximize (App));
-				items.append (item);
+				if (WindowControl.has_maximized_window (App)) {
+					item = add_menu_item (items, _("Unma_ximize"), "view-fullscreen");
+					item.activate.connect (() => WindowControl.unmaximize (App));
+					items.append (item);
+				} else {
+					item = add_menu_item (items, _("Ma_ximize"), "view-fullscreen");
+					item.activate.connect (() => WindowControl.maximize (App));
+					items.append (item);
+				}
 				
-				item = add_menu_item (items, _("Mi_nimize"), "view-restore");
-				item.activate.connect (() => WindowControl.minimize (App));
-				items.append (item);
+				if (WindowControl.has_minimized_window (App)) {
+					item = add_menu_item (items, _("_Restore"), "view-restore");
+					item.activate.connect (() => WindowControl.restore (App));
+					items.append (item);
+				} else {
+					item = add_menu_item (items, _("Mi_nimize"), "view-restore");
+					item.activate.connect (() => WindowControl.minimize (App));
+					items.append (item);
+				}
 				
 				item = add_menu_item (items, _("_Close All"), "window-close-symbolic;;window-close");
 				item.activate.connect (() => WindowControl.close_all (App));
