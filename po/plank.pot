@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-19 21:17+0100\n"
+"POT-Creation-Date: 2011-01-24 03:25-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,4 +19,20 @@ msgstr ""
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
+msgstr ""
+
+#: ../Plank/Items/DockItem.vala:261
+msgid "New _Window"
+msgstr ""
+
+#: ../Plank/Items/DockItem.vala:265
+msgid "Ma_ximize"
+msgstr ""
+
+#: ../Plank/Items/DockItem.vala:269
+msgid "Mi_nimize"
+msgstr ""
+
+#: ../Plank/Items/DockItem.vala:273
+msgid "_Close All"
 msgstr ""

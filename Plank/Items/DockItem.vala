@@ -258,19 +258,19 @@ namespace Plank.Items
 				item.activate.connect (() => launch ());
 				items.append (item);
 			} else {
-				var item = add_menu_item (items, "New _Window", "document-open-symbolic;;document-open");
+				var item = add_menu_item (items, _("New _Window"), "document-open-symbolic;;document-open");
 				item.activate.connect (() => launch ());
 				items.append (item);
 				
-				item = add_menu_item (items, "Ma_ximize", "view-fullscreen");
+				item = add_menu_item (items, _("Ma_ximize"), "view-fullscreen");
 				item.activate.connect (() => WindowControl.maximize (App));
 				items.append (item);
 				
-				item = add_menu_item (items, "Mi_nimize", "view-restore");
+				item = add_menu_item (items, _("Mi_nimize"), "view-restore");
 				item.activate.connect (() => WindowControl.minimize (App));
 				items.append (item);
 				
-				item = add_menu_item (items, "_Close All", "window-close-symbolic;;window-close");
+				item = add_menu_item (items, _("_Close All"), "window-close-symbolic;;window-close");
 				item.activate.connect (() => WindowControl.close_all (App));
 				items.append (item);
 				
