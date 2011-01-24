@@ -109,7 +109,8 @@ namespace Plank
 			
 			dlg.set_authors ({
 				"Robert Dyer <robert@go-docky.com>",
-				"Rico Tzschichholz <rtz@go-docky.com>"
+				"Rico Tzschichholz <rtz@go-docky.com>",
+				"Michal Hruby <michal.mhr@gmail.com>"
 			});
 			dlg.set_documenters ({
 				"Robert Dyer <robert@go-docky.com>"
