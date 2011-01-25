@@ -359,6 +359,8 @@ namespace Plank
 				GLib.Source.remove (animation_timer);
 			animation_timer = 0;
 
+			// one final draw to clear out the end of previous animations
+			window.queue_draw ();
 			return false;
 		}
 	}
