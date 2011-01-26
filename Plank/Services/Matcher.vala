@@ -21,7 +21,7 @@ namespace Plank.Services.Windows
 {
 	public class Matcher : GLib.Object
 	{
-		public signal void window_opened (Window w);
+		public signal void window_opened (Bamf.Window w);
 		public signal void window_closed ();
 		
 		public signal void app_opened (Bamf.Application app);
@@ -46,8 +46,8 @@ namespace Plank.Services.Windows
 		{
 			if (arg1 == null)
 				return;
-			if (arg1 is Window)
-				window_opened (arg1 as Window);
+			if (arg1 is Bamf.Window)
+				window_opened (arg1 as Bamf.Window);
 			else if (arg1 is Bamf.Application)
 				app_opened (arg1 as Bamf.Application);
 		}
@@ -56,7 +56,7 @@ namespace Plank.Services.Windows
 		{
 			if (arg1 == null)
 				return;
-			if (arg1 is Window)
+			if (arg1 is Bamf.Window)
 				window_closed ();
 			else if (arg1 is Bamf.Application)
 				app_closed ();
