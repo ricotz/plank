@@ -27,6 +27,8 @@ namespace Plank
 	public class DockItems : GLib.Object
 	{
 		public signal void items_changed ();
+		public signal void item_added (DockItem item);
+		public signal void item_removed (DockItem item);
 		
 		public List<DockItem> Items = new List<DockItem> ();
 		
@@ -59,6 +61,7 @@ namespace Plank
 			reload_transients ();
 			set_item_positions ();
 			
+			Matcher.get_default ().app_opened.connect (app_opened);
 			Matcher.get_default ().app_opened.connect (() => reload_transients ());
 			Matcher.get_default ().app_closed.connect (() => reload_transients ());
 		}
@@ -139,7 +142,7 @@ namespace Plank
 			}
 			
 			foreach (string launcher in old_items)
-				Items.remove (item_for_launcher (launcher));
+				remove_item (item_for_launcher (launcher));
 			
 			set_item_positions ();
 		}
@@ -192,15 +195,41 @@ namespace Plank
 			Matcher.get_default ().window_opened.connect (item.update_states);
 			Matcher.get_default ().window_closed.connect (item.update_states);
 			
-			update_app (item);
 			item.launcher_changed.connect (update_app);
-			Matcher.get_default ().app_opened.connect ((app) => {
-				if (app.get_desktop_file () == item.get_launcher ())
-					item.set_app (app);
-			});
 			
 			if (item is TransientDockItem)
-				(item as TransientDockItem).pin_launcher.connect (() => pin_item (item));
+				(item as TransientDockItem).pin_launcher.connect (pin_item);
+			
+			update_app (item);
+			
+			item_added (item);
+		}
+		
+		void remove_item (DockItem item)
+		{
+			item.notify["Icon"].disconnect (signal_items_changed);
+			item.notify["Indicator"].disconnect (signal_items_changed);
+			item.notify["State"].disconnect (signal_items_changed);
+			item.notify["LastClicked"].disconnect (signal_items_changed);
+			
+			Matcher.get_default ().window_opened.disconnect (item.update_states);
+			Matcher.get_default ().window_closed.disconnect (item.update_states);
+			
+			item.launcher_changed.disconnect (update_app);
+			
+			if (item is TransientDockItem)
+				(item as TransientDockItem).pin_launcher.disconnect (pin_item);
+			
+			Items.remove (item);
+			
+			item_removed (item);
+		}
+		
+		void app_opened (Bamf.Application app)
+		{
+			foreach (DockItem item in Items)
+				if (app.get_desktop_file () == item.get_launcher ())
+					item.set_app (app);
 		}
 
 		void pin_item (DockItem item)
@@ -211,7 +240,7 @@ namespace Plank
 			if (!make_launcher (dockitem, launcher, item.get_sort ()))
 				return;
 			
-			Items.remove (item);
+			remove_item (item);
 			var new_item = new ApplicationDockItem.with_dockitem (launchers_dir.get_path () + "/" + dockitem);
 			new_item.Position = item.Position;
 			add_item (new_item);
