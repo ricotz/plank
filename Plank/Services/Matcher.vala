@@ -15,15 +15,15 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using Bamf;
-
 namespace Plank.Services.Windows
 {
 	public class Matcher : GLib.Object
 	{
+		public signal void window_changed (Bamf.Window? old_win, Bamf.Window? new_win);
 		public signal void window_opened (Bamf.Window w);
 		public signal void window_closed ();
 		
+		public signal void app_changed (Bamf.Application? old_app, Bamf.Application? new_app);
 		public signal void app_opened (Bamf.Application app);
 		public signal void app_closed ();
 		
@@ -38,8 +38,20 @@ namespace Plank.Services.Windows
 		
 		public Matcher ()
 		{
+			Bamf.Matcher.get_default ().active_application_changed.connect (handle_app_changed);
+			Bamf.Matcher.get_default ().active_window_changed.connect (handle_window_changed);
 			Bamf.Matcher.get_default ().view_opened.connect (view_opened);
 			Bamf.Matcher.get_default ().view_closed.connect (view_closed);
+		}
+		
+		void handle_app_changed (Object? arg1, Object? arg2)
+		{
+			app_changed (arg1 as Bamf.Application, arg2 as Bamf.Application);
+		}
+		
+		void handle_window_changed (Object? arg1, Object? arg2)
+		{
+			window_changed (arg1 as Bamf.Window, arg2 as Bamf.Window);
 		}
 		
 		void view_opened (Object? arg1)
