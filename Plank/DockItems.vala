@@ -183,7 +183,7 @@ namespace Plank
 			reload_transients ();
 		}
 		
-		void add_item (DockItem item)
+		public void add_item (DockItem item)
 		{
 			Items.insert_sorted (item, (CompareFunc) compare_items);
 			
@@ -205,7 +205,7 @@ namespace Plank
 			item_added (item);
 		}
 		
-		void remove_item (DockItem item)
+		public void remove_item (DockItem item)
 		{
 			item.notify["Icon"].disconnect (signal_items_changed);
 			item.notify["Indicator"].disconnect (signal_items_changed);
@@ -223,6 +223,7 @@ namespace Plank
 			Items.remove (item);
 			
 			item_removed (item);
+			set_item_positions ();
 		}
 		
 		void app_opened (Bamf.Application app)
