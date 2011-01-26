@@ -54,6 +54,7 @@ plank_VALASOURCES = \
 	Widgets/DockWindow.vala \
 	Widgets/HoverWindow.vala \
 	Widgets/PoofWindow.vala \
+	Widgets/TitledSeparator.vala \
 	$(NULL)
 
 GENERATED_C_FILES = $(plank_VALASOURCES:.vala=.c)
