@@ -283,10 +283,11 @@ namespace Plank
 					return false;
 				
 				// TODO - we need a way to map the exec's to launchers
-				make_launcher (browser + ".dockitem", browser, 0);
-				make_launcher (terminal + ".dockitem", terminal, 1);
-				make_launcher (calendar + ".dockitem", calendar, 2);
-				make_launcher (media + ".dockitem", media, 3);
+				make_launcher ("plank.dockitem", Build.DATADIR + "/applications/plank.desktop", 0);
+				make_launcher (browser + ".dockitem", browser, 1);
+				make_launcher (terminal + ".dockitem", terminal, 2);
+				make_launcher (calendar + ".dockitem", calendar, 3);
+				make_launcher (media + ".dockitem", media, 4);
 			} catch {
 				return false;
 			}
@@ -296,28 +297,31 @@ namespace Plank
 		
 		void load_default_items ()
 		{
+			// add plank item!
+			make_launcher ("plank.dockitem", Build.DATADIR + "/applications/plank.desktop", 0);
+			
 			// add browser
-			if (!make_launcher ("chromium-browser.dockitem", "/usr/share/applications/chromium-browser.desktop", 0))
-				if (!make_launcher ("google-chrome.dockitem", "/usr/local/share/applications/google-chrome.desktop", 0))
-					if (!make_launcher ("firefox.dockitem", "/usr/share/applications/firefox.desktop", 0))
-						if (!make_launcher ("epiphany.dockitem", "/usr/share/applications/epiphany.desktop", 0))
-							make_launcher ("konqbrowser.dockitem", "/usr/share/applications/kde4/konqbrowser.desktop", 0);
+			if (!make_launcher ("chromium-browser.dockitem", "/usr/share/applications/chromium-browser.desktop", 1))
+				if (!make_launcher ("google-chrome.dockitem", "/usr/local/share/applications/google-chrome.desktop", 1))
+					if (!make_launcher ("firefox.dockitem", "/usr/share/applications/firefox.desktop", 1))
+						if (!make_launcher ("epiphany.dockitem", "/usr/share/applications/epiphany.desktop", 1))
+							make_launcher ("konqbrowser.dockitem", "/usr/share/applications/kde4/konqbrowser.desktop", 1);
 			
 			// add terminal
-			if (!make_launcher ("terminator.dockitem", "/usr/share/applications/terminator.desktop", 1))
-				if (!make_launcher ("gnome-terminal.dockitem", "/usr/share/applications/gnome-terminal.desktop", 1))
-					make_launcher ("konsole.dockitem", "/usr/share/applications/kde4/konsole.desktop", 1);
+			if (!make_launcher ("terminator.dockitem", "/usr/share/applications/terminator.desktop", 2))
+				if (!make_launcher ("gnome-terminal.dockitem", "/usr/share/applications/gnome-terminal.desktop", 2))
+					make_launcher ("konsole.dockitem", "/usr/share/applications/kde4/konsole.desktop", 2);
 			
 			// add music player
-			if (!make_launcher ("exaile.dockitem", "/usr/share/applications/exaile.desktop", 2))
-				if (!make_launcher ("songbird.dockitem", "/usr/share/applications/songbird.desktop", 2))
-					if (!make_launcher ("rhythmbox.dockitem", "/usr/share/applications/rhythmbox.desktop", 2))
-						if (!make_launcher ("banshee-1.dockitem", "/usr/share/applications/banshee-1.desktop", 2))
-							make_launcher ("amarok.dockitem", "/usr/share/applications/kde4/amarok.desktop", 2);
+			if (!make_launcher ("exaile.dockitem", "/usr/share/applications/exaile.desktop", 3))
+				if (!make_launcher ("songbird.dockitem", "/usr/share/applications/songbird.desktop", 3))
+					if (!make_launcher ("rhythmbox.dockitem", "/usr/share/applications/rhythmbox.desktop", 3))
+						if (!make_launcher ("banshee-1.dockitem", "/usr/share/applications/banshee-1.desktop", 3))
+							make_launcher ("amarok.dockitem", "/usr/share/applications/kde4/amarok.desktop", 3);
 			
 			// add IM client
-			if (!make_launcher ("pidgin.dockitem", "/usr/share/applications/pidgin.desktop", 3))
-				make_launcher ("empathy.dockitem", "/usr/share/applications/empathy.desktop", 3);
+			if (!make_launcher ("pidgin.dockitem", "/usr/share/applications/pidgin.desktop", 4))
+				make_launcher ("empathy.dockitem", "/usr/share/applications/empathy.desktop", 4);
 		}
 		
 		bool make_launcher (string dockitem, string launcher, int sort)
