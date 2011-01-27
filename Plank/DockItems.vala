@@ -115,10 +115,13 @@ namespace Plank
 		void reload_transients ()
 		{
 			List<string> old_items = new List<string> ();
+			var last_sort = 1000;
 			
 			foreach (DockItem item in Items)
-				if (item is TransientDockItem)
+				if (item is TransientDockItem) {
 					old_items.append (item.get_launcher ());
+					last_sort = item.get_sort ();
+				}
 			
 			foreach (Bamf.Application app in Matcher.get_default ().active_launchers ()) {
 				var launcher = app.get_desktop_file ();
@@ -136,7 +139,7 @@ namespace Plank
 						}
 				} else if (app.user_visible ()) {
 					var new_item = new TransientDockItem.with_launcher (launcher);
-					new_item.set_sort (Items.last ().data.get_sort () + 1);
+					new_item.set_sort (last_sort + 1);
 					add_item (new_item);
 				}
 			}
