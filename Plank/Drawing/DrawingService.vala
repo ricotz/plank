@@ -119,8 +119,10 @@ namespace Plank.Drawing
 				filename = name.replace ("~/", Paths.HomeFolder.get_path ());
 			
 			try {
-				File file = File.new_for_path (filename);
-				pbuf = new Pixbuf.from_file (file.get_path ());
+				if (filename.has_prefix ("file://"))
+					pbuf = new Pixbuf.from_file (File.new_for_uri (filename).get_path ());
+				else
+					pbuf = new Pixbuf.from_file (File.new_for_path (filename).get_path ());
 			} catch { }
 			
 			return pbuf;
