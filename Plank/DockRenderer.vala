@@ -191,8 +191,8 @@ namespace Plank
 			var icon_surface = new DockSurface.with_dock_surface (Prefs.IconSize, Prefs.IconSize, surface);
 			
 			// load the icon
-			var pbuf = DrawingService.load_icon (item.Icon, Prefs.IconSize, Prefs.IconSize);
-			cairo_set_source_pixbuf (icon_surface.Context, pbuf, 0, 0);
+			var item_surface = item.get_surface (icon_surface);
+			icon_surface.Context.set_source_surface (item_surface.Internal, 0, 0);
 			icon_surface.Context.paint ();
 			
 			// get draw regions
@@ -258,7 +258,7 @@ namespace Plank
 			var opacity = Math.fmin (1, active_time / (double) (theme.ActiveTime * 1000));
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
-			theme.draw_active_glow (surface, background_buffer, hover_rect, DrawingService.average_color (pbuf), opacity);
+			theme.draw_active_glow (surface, background_buffer, hover_rect, item.AverageIconColor, opacity);
 			
 			// draw the icon
 			surface.Context.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);

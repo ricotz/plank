@@ -60,6 +60,8 @@ namespace Plank.Items
 		
 		public int Position { get; set; default = 0; }
 		
+		public Drawing.Color AverageIconColor { get; protected set; }
+		
 		public ItemState State { get; protected set; default = ItemState.NORMAL; }
 		
 		public IndicatorState Indicator { get; protected set; default = IndicatorState.NONE; }
@@ -74,6 +76,8 @@ namespace Plank.Items
 		
 		public DateTime LastActive { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
+		private DockSurface Surface { get; set; }
+		
 		public bool ValidItem {
 			get { return File.new_for_path (Prefs.Launcher).query_exists (); }
 		}
@@ -85,6 +89,9 @@ namespace Plank.Items
 			Prefs = new DockItemPreferences ();
 			
 			Prefs.notify["Launcher"].connect (() => launcher_changed (this));
+			Prefs.notify["Icon"].connect (() => {
+				Surface = null;
+			});
 		}
 		
 		public int get_sort ()
@@ -109,6 +116,24 @@ namespace Plank.Items
 				Services.System.launch (File.new_for_path (Prefs.Launcher), {});
 			else
 				Services.System.open (File.new_for_path (Prefs.Launcher));
+		}
+		
+		public DockSurface get_surface (DockSurface surface)
+		{
+			if (Surface == null || Surface.Width != surface.Width || Surface.Height != surface.Height) {
+				Surface = new DockSurface.with_dock_surface (surface.Width, surface.Height, surface);
+				draw_icon ();
+			}
+			return Surface;
+		}
+		
+		protected virtual void draw_icon ()
+		{
+			var pbuf = DrawingService.load_icon (Icon, Surface.Width, Surface.Height);
+			cairo_set_source_pixbuf (Surface.Context, pbuf, 0, 0);
+			Surface.Context.paint ();
+			
+			AverageIconColor = DrawingService.average_color (pbuf);
 		}
 		
 		public void set_app (Bamf.Application? app)
