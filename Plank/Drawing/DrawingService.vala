@@ -27,6 +27,42 @@ namespace Plank.Drawing
 	{
 		const string MISSING_ICONS = "application-default-icon;;application-x-executable";
 		
+		public static string? get_icon_from_file (File file)
+		{
+			try {
+				var info = file.query_info ("*", 0);
+				
+				// look first for a custom icon
+				var custom_icon = info.get_attribute_string ("metadata::custom-icon");
+				if (custom_icon != null && custom_icon != "") {
+					if (custom_icon.has_prefix ("file://"))
+						return custom_icon;
+					return file.get_child (custom_icon).get_path ();
+				}
+				
+				// look for a thumbnail
+				var thumb_icon = info.get_attribute_string ("thumbnail::path");
+				if (thumb_icon != null && thumb_icon != "")
+					return thumb_icon;
+				
+				// otherwise try to get the icon from the fileinfo
+				return get_icon_from_gicon (info.get_icon ());
+			} catch {
+				Logger.debug<DrawingService> ("Could not get file info for '%s'".printf (file.get_path ()));
+			}
+			
+			return null;
+		}
+		
+		public static string? get_icon_from_gicon (Icon? icon)
+		{
+			if (icon is ThemedIcon)
+				return string.joinv (";;", (icon as ThemedIcon).get_names ());
+			if (icon is FileIcon)
+				return (icon as FileIcon).get_file ().get_path ();
+			return null;
+		}
+		
 		public static Pixbuf load_icon (string names, int width, int height)
 		{
 			List<string> all_names = new List<string> ();

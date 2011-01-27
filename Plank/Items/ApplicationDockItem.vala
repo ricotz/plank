@@ -16,14 +16,16 @@
 // 
 
 using Gdk;
+using Gtk;
 
+using Plank.Drawing;
 using Plank.Services;
 
 namespace Plank.Items
 {
 	public class ApplicationDockItem : DockItem
 	{
-		public ApplicationDockItem ()
+		protected ApplicationDockItem ()
 		{
 		}
 		
@@ -33,9 +35,14 @@ namespace Plank.Items
 			if (!ValidItem)
 				return;
 			
-			load_from_launcher ();
-			
-			start_monitor ();
+			if (is_launcher ()) {
+				load_from_launcher ();
+				start_monitor ();
+			} else {
+				var file = File.new_for_path (Prefs.Launcher);
+				Icon = DrawingService.get_icon_from_file (file) ?? "folder";
+				Text = file.get_basename ();
+			}
 		}
 		
 		protected FileMonitor monitor;
@@ -63,13 +70,58 @@ namespace Plank.Items
 		
 		protected void load_from_launcher ()
 		{
+			string icon, text;
+			parse_launcher (Prefs.Launcher, out icon, out text);
+			Icon = icon;
+			Text = text;
+		}
+		
+		protected void parse_launcher (string launcher, out string icon, out string text)
+		{
 			try {
 				KeyFile file = new KeyFile ();
-				file.load_from_file (Prefs.Launcher, 0);
+				file.load_from_file (launcher, 0);
 				
-				Icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
-				Text = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
+				icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
+				text = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
+			} catch {
+				icon = "";
+				text = "";
+			}
+		}
+		
+		public override List<MenuItem> get_menu_items ()
+		{
+			if (is_launcher ())
+				return base.get_menu_items ();
+			
+			List<MenuItem> items = new List<MenuItem> ();
+			
+			File dir = File.new_for_path (Prefs.Launcher);
+			try {
+				var enumerator = dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
+				FileInfo info;
+				while ((info = enumerator.next_file ()) != null) {
+					var file = dir.get_child (info.get_name ());
+					
+					if (info.get_name ().has_suffix (".desktop")) {
+						string icon, text;
+						parse_launcher (file.get_path (), out icon, out text);
+						
+						var item = add_menu_item (items, text, icon);
+						item.activate.connect (() => Services.System.launch (file, {}));
+						items.append (item);
+					} else {
+						var icon = DrawingService.get_icon_from_file (file) ?? "";
+						
+						var item = add_menu_item (items, info.get_name (), icon);
+						item.activate.connect (() => Services.System.open (file));
+						items.append (item);
+					}
+				}
 			} catch { }
+			
+			return items;
 		}
 	}
 }

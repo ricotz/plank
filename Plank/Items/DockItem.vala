@@ -105,7 +105,10 @@ namespace Plank.Items
 		
 		public void launch ()
 		{
-			Services.System.launch (File.new_for_path (get_launcher ()), {});
+			if (is_launcher ())
+				Services.System.launch (File.new_for_path (Prefs.Launcher), {});
+			else
+				Services.System.open (File.new_for_path (Prefs.Launcher));
 		}
 		
 		public void set_app (Bamf.Application? app)
@@ -131,7 +134,7 @@ namespace Plank.Items
 		
 		public void update_app ()
 		{
-			set_app (Matcher.get_default ().app_for_launcher (get_launcher ()));
+			set_app (Matcher.get_default ().app_for_launcher (Prefs.Launcher));
 		}
 		
 		public void update_urgent ()
@@ -241,9 +244,14 @@ namespace Plank.Items
 				WindowControl.focus_next (App);
 		}
 		
+		protected bool is_launcher ()
+		{
+			return Prefs.Launcher.has_suffix (".desktop");
+		}
+		
 		bool is_plank_item ()
 		{
-			return get_launcher ().has_suffix ("plank.desktop");
+			return Prefs.Launcher.has_suffix ("plank.desktop");
 		}
 		
 		public virtual List<MenuItem> get_menu_items ()
@@ -323,7 +331,7 @@ namespace Plank.Items
 			return "plank://" + unique_id ();
 		}
 		
-		MenuItem add_menu_item (List<MenuItem> items, string title, string icon)
+		protected MenuItem add_menu_item (List<MenuItem> items, string title, string icon)
 		{
 			int width, height;
 			var item = new ImageMenuItem.with_mnemonic (title);
