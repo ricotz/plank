@@ -1,5 +1,6 @@
 //  
 //  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011 Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -26,27 +27,33 @@ namespace Plank.Items
 	{
 		public signal void pin_launcher (TransientDockItem item);
 		
-		public TransientDockItem.with_launcher (string launcher)
+		public TransientDockItem.with_application (Bamf.Application app)
 		{
 			Prefs = new DockItemPreferences ();
+			set_app (app);
 			
-			Prefs.Launcher = launcher;
-			
-			load_from_launcher ();
-			
-			start_monitor ();
+			string launcher = app.get_desktop_file ();
+			if (launcher == "") {
+				Text = app.get_name ();
+			} else {
+				Prefs.Launcher = launcher;
+				load_from_launcher ();
+				start_monitor ();
+			}
 		}
 		
 		public override List<MenuItem> get_menu_items ()
 		{
 			List<MenuItem> items = base.get_menu_items ();
 			
-			var item = new ImageMenuItem.with_mnemonic ("_Pin to Dock");
-			int width, height;
-			icon_size_lookup (IconSize.MENU, out width, out height);
-			item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon ("add", width, height)));
-			item.activate.connect (() => pin_launcher (this));
-			items.prepend (item);
+			if (!is_window ()) {
+				var item = new ImageMenuItem.with_mnemonic ("_Pin to Dock");
+				int width, height;
+				icon_size_lookup (IconSize.MENU, out width, out height);
+				item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon ("add", width, height)));
+				item.activate.connect (() => pin_launcher (this));
+				items.prepend (item);
+			}
 			
 			return items;
 		}

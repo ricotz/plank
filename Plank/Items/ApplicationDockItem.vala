@@ -1,5 +1,6 @@
 //  
 //  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011 Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,6 +21,7 @@ using Gtk;
 
 using Plank.Drawing;
 using Plank.Services;
+using Plank.Services.Windows;
 
 namespace Plank.Items
 {
@@ -37,6 +39,7 @@ namespace Plank.Items
 			
 			if (is_launcher ()) {
 				load_from_launcher ();
+				set_app (Matcher.get_default ().app_for_launcher (get_launcher ()));
 				start_monitor ();
 			} else {
 				var file = File.new_for_path (Prefs.Launcher);
@@ -92,7 +95,7 @@ namespace Plank.Items
 		
 		public override List<MenuItem> get_menu_items ()
 		{
-			if (is_launcher ())
+			if (is_launcher () || is_window ())
 				return base.get_menu_items ();
 			
 			List<MenuItem> items = new List<MenuItem> ();

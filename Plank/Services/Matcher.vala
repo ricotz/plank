@@ -1,5 +1,6 @@
 //  
 //  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011 Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,11 +22,11 @@ namespace Plank.Services.Windows
 	{
 		public signal void window_changed (Bamf.Window? old_win, Bamf.Window? new_win);
 		public signal void window_opened (Bamf.Window w);
-		public signal void window_closed ();
+		public signal void window_closed (Bamf.Window w);
 		
 		public signal void app_changed (Bamf.Application? old_app, Bamf.Application? new_app);
 		public signal void app_opened (Bamf.Application app);
-		public signal void app_closed ();
+		public signal void app_closed (Bamf.Application app);
 		
 		static Matcher matcher;
 		
@@ -61,7 +62,7 @@ namespace Plank.Services.Windows
 			if (arg1 is Bamf.Window)
 				window_opened (arg1 as Bamf.Window);
 			else if (arg1 is Bamf.Application)
-				app_opened (arg1 as Bamf.Application);
+				app_opened (arg1 as Bamf.Application);		
 		}
 		
 		void view_closed (Object? arg1)
@@ -69,9 +70,9 @@ namespace Plank.Services.Windows
 			if (arg1 == null)
 				return;
 			if (arg1 is Bamf.Window)
-				window_closed ();
+				window_closed (arg1 as Bamf.Window);
 			else if (arg1 is Bamf.Application)
-				app_closed ();
+				app_closed (arg1 as Bamf.Application);
 		}
 		
 		public unowned List<Bamf.Application> active_launchers ()
