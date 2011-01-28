@@ -304,7 +304,7 @@ namespace Plank.Items
 				item.activate.connect (() => launch ());
 				items.append (item);
 			} else {
-				var item = add_menu_item (items, _("New _Window"), "document-open-symbolic;;document-open");
+				var item = add_menu_item (items, _("_Open New Window"), "document-open-symbolic;;document-open");
 				item.activate.connect (() => launch ());
 				items.append (item);
 				
