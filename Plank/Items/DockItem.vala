@@ -27,23 +27,31 @@ namespace Plank.Items
 	public enum IndicatorState
 	{
 		NONE,
-		SINGLE,
-		SINGLE_PLUS,
+		SINGLE = 2,
+		SINGLE_PLUS = 4
 	}
 	
 	public enum ItemState
 	{
 		NORMAL,
-		ACTIVE,
-		URGENT,
+		ACTIVE = 2,
+		URGENT = 4
 	}
 	
 	public enum ClickAnimation
 	{
 		NONE,
-		BOUNCE,
-		DARKEN,
-		LIGHTEN
+		BOUNCE = 2,
+		DARKEN = 4,
+		LIGHTEN = 8
+	}
+	
+	public enum PopupButton
+	{
+		NONE,
+		LEFT = 2,
+		MIDDLE = 4,
+		RIGHT = 8
 	}
 	
 	public class DockItem : GLib.Object
@@ -59,6 +67,8 @@ namespace Plank.Items
 		public string Text { get; set; default = ""; }
 		
 		public int Position { get; set; default = 0; }
+		
+		public PopupButton Button { get; protected set; default = PopupButton.RIGHT; }
 		
 		public Drawing.Color AverageIconColor { get; protected set; }
 		

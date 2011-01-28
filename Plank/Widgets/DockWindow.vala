@@ -106,7 +106,22 @@ namespace Plank.Widgets
 			if (HoveredItem == null)
 				return true;
 			
-			if (event.button == 3)
+			int button = 0;
+			switch (event.button) {
+			case 1:
+				button = PopupButton.LEFT;
+				break;
+			
+			case 2:
+				button = PopupButton.MIDDLE;
+				break;
+			
+			case 3:
+				button = PopupButton.RIGHT;
+				break;
+			}
+			
+			if ((HoveredItem.Button & button) == button)
 				do_popup ();
 			
 			return true;

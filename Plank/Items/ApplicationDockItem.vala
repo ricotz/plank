@@ -42,6 +42,7 @@ namespace Plank.Items
 				var file = File.new_for_path (Prefs.Launcher);
 				Icon = DrawingService.get_icon_from_file (file) ?? "folder";
 				Text = file.get_basename ();
+				Button = PopupButton.RIGHT | PopupButton.LEFT;
 			}
 		}
 		
