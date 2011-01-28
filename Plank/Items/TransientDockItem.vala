@@ -41,7 +41,7 @@ namespace Plank.Items
 		{
 			List<MenuItem> items = base.get_menu_items ();
 			
-			var item = new ImageMenuItem.with_mnemonic ("_Pin to Dock");
+			var item = new ImageMenuItem.with_mnemonic ("_Keep in Dock");
 			int width, height;
 			icon_size_lookup (IconSize.MENU, out width, out height);
 			item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon ("add", width, height)));
