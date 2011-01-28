@@ -59,7 +59,6 @@ namespace Plank
 			
 			load_items ();
 			add_running_apps ();
-			set_item_positions ();
 			
 			Matcher.get_default ().app_opened.connect (app_opened);
 		}
@@ -84,7 +83,7 @@ namespace Plank
 			Logger.debug<DockItems> ("Reloading dock items...");
 			
 			try {
-				var enumerator = launchers_dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
+				var enumerator = launchers_dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_STANDARD_IS_HIDDEN, 0);
 				FileInfo info;
 				while ((info = enumerator.next_file ()) != null)
 					if (file_is_dockitem (info)) {
@@ -124,6 +123,9 @@ namespace Plank
 				if (item is TransientDockItem)
 					last_sort = item.get_sort ();
 			
+			if (!app.user_visible ())
+				return;
+			
 			var launcher = app.get_desktop_file ();
 			
 			if (launcher != "" && !File.new_for_path (launcher).query_exists ())
@@ -136,15 +138,10 @@ namespace Plank
 			if (found != null) {
 				found.set_app (app);
 			} else {
-				if (app.user_visible ()) {
-					DockItem new_item;
-					new_item = new TransientDockItem.with_application (app);
-					new_item.set_sort (last_sort++);
-					add_item (new_item);
-				}
+				var new_item = new TransientDockItem.with_application (app);
+				new_item.set_sort (last_sort + 1);
+				add_item (new_item);
 			}
-			
-			set_item_positions ();
 		}
 		
 		void app_closed (DockItem remove)
@@ -153,8 +150,6 @@ namespace Plank
 				remove_item (remove);
 			else if (remove is ApplicationDockItem)
 				remove.set_app (null);
-			
-			set_item_positions ();
 		}
 		
 		void set_item_positions ()
@@ -174,7 +169,7 @@ namespace Plank
 		void handle_items_dir_changed (File f, File? other, FileMonitorEvent event)
 		{
 			try {
-				if (!file_is_dockitem (f.query_info (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_ACCESS_CAN_READ, 0)))
+				if (!file_is_dockitem (f.query_info (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_STANDARD_IS_HIDDEN, 0)))
 					return;
 			} catch {
 				return;
@@ -191,12 +186,12 @@ namespace Plank
 			
 			load_items ();
 			add_running_apps ();
-			set_item_positions ();
 		}
 		
 		public void add_item (DockItem item)
 		{
 			Items.insert_sorted (item, (CompareFunc) compare_items);
+			set_item_positions ();
 			
 			item.notify["Icon"].connect (signal_items_changed);
 			item.notify["Indicator"].connect (signal_items_changed);
@@ -226,9 +221,9 @@ namespace Plank
 				(item as TransientDockItem).pin_launcher.disconnect (pin_item);
 			
 			Items.remove (item);
+			set_item_positions ();
 			
 			item_removed (item);
-			set_item_positions ();
 		}
 		
 		void pin_item (DockItem item)
