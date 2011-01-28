@@ -59,6 +59,7 @@ namespace Plank
 			
 			load_items ();
 			add_running_apps ();
+			set_item_positions ();
 			
 			Matcher.get_default ().app_opened.connect (app_opened);
 		}
@@ -141,6 +142,7 @@ namespace Plank
 				var new_item = new TransientDockItem.with_application (app);
 				new_item.set_sort (last_sort + 1);
 				add_item (new_item);
+				set_item_positions ();
 			}
 		}
 		
@@ -186,12 +188,12 @@ namespace Plank
 			
 			load_items ();
 			add_running_apps ();
+			set_item_positions ();
 		}
 		
 		public void add_item (DockItem item)
 		{
 			Items.insert_sorted (item, (CompareFunc) compare_items);
-			set_item_positions ();
 			
 			item.notify["Icon"].connect (signal_items_changed);
 			item.notify["Indicator"].connect (signal_items_changed);
@@ -221,7 +223,6 @@ namespace Plank
 				(item as TransientDockItem).pin_launcher.disconnect (pin_item);
 			
 			Items.remove (item);
-			set_item_positions ();
 			
 			item_removed (item);
 		}

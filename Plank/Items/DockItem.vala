@@ -62,7 +62,7 @@ namespace Plank.Items
 		
 		public signal void app_closed (DockItem item);
 		
-		public Bamf.Application? App { get; set; }
+		public Bamf.Application? App { get; private set; }
 		
 		public string Icon { get; set; default = ""; }
 		
@@ -155,9 +155,9 @@ namespace Plank.Items
 		{
 			if (App != null) {
 				App.active_changed.disconnect (update_active);
-				App.child_added.disconnect (update_states);
-				App.child_removed.disconnect (update_states);
 				App.urgent_changed.disconnect (update_urgent);
+				App.child_added.disconnect (update_indicator);
+				App.child_removed.disconnect (update_indicator);
 				App.closed.disconnect (signal_app_closed);
 			}
 			
@@ -168,8 +168,8 @@ namespace Plank.Items
 			if (app != null) {
 				app.active_changed.connect (update_active);
 				app.urgent_changed.connect (update_urgent);
-				app.child_added.connect (update_states);
-				app.child_removed.connect (update_states);
+				app.child_added.connect (update_indicator);
+				app.child_removed.connect (update_indicator);
 				app.closed.connect (signal_app_closed);
 			}
 		}
@@ -184,22 +184,16 @@ namespace Plank.Items
 			set_app (Matcher.get_default ().app_for_launcher (Prefs.Launcher));
 		}
 		
-		public void update_urgent ()
+		public void update_urgent (bool is_urgent)
 		{
 			var was_urgent = (State & ItemState.URGENT) == ItemState.URGENT;
 			
-			if (App == null || App.is_closed () || !App.is_running ()) {
-				if ((State & ItemState.URGENT) == ItemState.URGENT)
-					State &= ~ItemState.URGENT;
-			} else {
-				if (App.is_urgent ())
-					State |= ItemState.URGENT;
-				else
-					State &= ~ItemState.URGENT;
-			}
-			
-			if (was_urgent != ((State & ItemState.URGENT) == ItemState.URGENT))
+			if (is_urgent && !was_urgent) {
 				LastUrgent = new DateTime.now_utc ();
+				State |= ItemState.URGENT;
+			} else if (!is_urgent && was_urgent) {
+				State &= ~ItemState.URGENT;
+			}
 		}
 		
 		public void update_indicator ()
@@ -216,31 +210,29 @@ namespace Plank.Items
 				Indicator = IndicatorState.SINGLE;
 		}
 		
-		public void update_active ()
+		public void update_active (bool is_active)
 		{
 			var was_active = (State & ItemState.ACTIVE) == ItemState.ACTIVE;
 			
-			if (App == null || App.is_closed () || !App.is_running ()) {
-				if (was_active)
-					LastActive = new DateTime.now_utc ();
-				State = ItemState.NORMAL;
-			} else {
-				// set active
-				if (App.is_active ())
-					State |= ItemState.ACTIVE;
-				else
-					State &= ~ItemState.ACTIVE;
-			}
-			
-			if (was_active != ((State & ItemState.ACTIVE) == ItemState.ACTIVE))
+			// set active
+			if (is_active && !was_active) {
 				LastActive = new DateTime.now_utc ();
+				State |= ItemState.ACTIVE;
+			} else if (!is_active && was_active) {
+				State &= ~ItemState.ACTIVE;
+			}
 		}
 		
 		public void update_states ()
 		{
-			update_urgent ();
+			if (App == null || App.is_closed () || !App.is_running ()) {
+				update_urgent (false);
+				update_active (false);
+			} else {
+				update_urgent (App.is_urgent ());
+				update_active (App.is_active ());
+			}
 			update_indicator ();
-			update_active ();
 		}
 		
 		public void clicked (uint button, ModifierType mod)

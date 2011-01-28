@@ -249,6 +249,7 @@ namespace Plank
 				icon_surface.Context.set_operator (Cairo.Operator.OVER);
 			}
 			
+			// bounce icon on urgent state
 			var urgent_time = new DateTime.now_utc ().difference (item.LastUrgent);
 			if (Gdk.Screen.get_default().is_composited () && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.BounceTime * 1000)
 				draw_rect.y -= (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.BounceTime * 1000)) * theme.UrgentBounceHeight);

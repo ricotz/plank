@@ -94,7 +94,9 @@ namespace Plank.Widgets
 						EventMask.POINTER_MOTION_MASK |
 						EventMask.SCROLL_MASK);
 			
-			Items.items_changed.connect (set_size);
+			Items.item_added.connect (set_size);
+			Items.item_removed.connect (set_size);
+			Items.items_changed.connect (Renderer.animated_draw);
 			Prefs.notify.connect (set_size);
 			
 			set_size ();
