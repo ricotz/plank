@@ -33,7 +33,7 @@ namespace Plank.Drawing
 				var info = file.query_info ("*", 0);
 				
 				// look first for a custom icon
-				var custom_icon = info.get_attribute_string (FILE_ATTRIBUTE_PREVIEW_ICON);
+				var custom_icon = info.get_attribute_string ("metadata::custom-icon");
 				if (custom_icon != null && custom_icon != "") {
 					if (custom_icon.has_prefix ("file://"))
 						return custom_icon;
