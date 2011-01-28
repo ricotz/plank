@@ -126,6 +126,9 @@ namespace Plank.Items
 				Services.System.launch (File.new_for_path (Prefs.Launcher), {});
 			else
 				Services.System.open (File.new_for_path (Prefs.Launcher));
+			
+			ClickedAnimation = ClickAnimation.BOUNCE;
+			LastClicked = new DateTime.now_utc ();
 		}
 		
 		public DockSurface get_surface (DockSurface surface)

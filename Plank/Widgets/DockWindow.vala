@@ -83,7 +83,6 @@ namespace Plank.Widgets
 			menu.hide.connect (() => {
 				MenuVisible = false;
 				update_icon_regions ();
-				queue_draw ();
 			});
 			
 			stick ();
@@ -285,13 +284,14 @@ namespace Plank.Widgets
 				else
 					WindowControl.update_icon_regions (item.App, Renderer.item_region (item), win_x, win_y);
 			}
+			
+			Renderer.animated_draw ();
 		}
 		
 		protected void do_popup ()
 		{
 			MenuVisible = true;
 			update_icon_regions ();
-			queue_draw ();
 			
 			foreach (Widget w in menu.get_children ()) {
 				menu.remove (w);

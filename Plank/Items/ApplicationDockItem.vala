@@ -110,13 +110,21 @@ namespace Plank.Items
 						parse_launcher (file.get_path (), out icon, out text);
 						
 						var item = add_menu_item (items, text, icon);
-						item.activate.connect (() => Services.System.launch (file, {}));
+						item.activate.connect (() => {
+							Services.System.launch (file, {});
+							ClickedAnimation = ClickAnimation.BOUNCE;
+							LastClicked = new DateTime.now_utc ();
+						});
 						items.append (item);
 					} else {
 						var icon = DrawingService.get_icon_from_file (file) ?? "";
 						
 						var item = add_menu_item (items, info.get_name (), icon);
-						item.activate.connect (() => Services.System.open (file));
+						item.activate.connect (() => {
+							Services.System.open (file);
+							ClickedAnimation = ClickAnimation.BOUNCE;
+							LastClicked = new DateTime.now_utc ();
+						});
 						items.append (item);
 					}
 				}
