@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -58,12 +58,10 @@ namespace Plank
 			}
 			
 			load_items ();
-			reload_transients ();
+			add_running_apps ();
 			set_item_positions ();
 			
 			Matcher.get_default ().app_opened.connect (app_opened);
-			Matcher.get_default ().app_opened.connect (() => reload_transients ());
-			Matcher.get_default ().app_closed.connect (() => reload_transients ());
 		}
 		
 		void signal_items_changed ()
@@ -71,10 +69,11 @@ namespace Plank
 			items_changed ();
 		}
 		
-		DockItem? item_for_launcher (string launcher)
+		DockItem? item_for_application (Bamf.Application app)
 		{
 			foreach (DockItem item in Items)
-				if (item.get_launcher () == launcher)
+				if ((item.App != null && item.App == app) || (item.get_launcher () != null
+					&& item.get_launcher () != "" && item.get_launcher () == app.get_desktop_file ()))
 					return item;
 			
 			return null;
@@ -99,8 +98,6 @@ namespace Plank
 					}
 			} catch { }
 			
-			set_item_positions ();
-			
 			List<string> favs = new List<string> ();
 			
 			foreach (DockItem item in Items)
@@ -112,40 +109,50 @@ namespace Plank
 			Logger.debug<DockItems> ("done.");
 		}
 		
-		void reload_transients ()
+		void add_running_apps ()
 		{
-			List<string> old_items = new List<string> ();
+			// do this a better more efficient way
+			foreach (Bamf.Application app in Matcher.get_default ().active_launchers ())
+				app_opened (app);
+		}
+		
+		void app_opened (Bamf.Application app)
+		{
 			var last_sort = 1000;
 			
 			foreach (DockItem item in Items)
-				if (item is TransientDockItem) {
-					old_items.append (item.get_launcher ());
+				if (item is TransientDockItem)
 					last_sort = item.get_sort ();
-				}
 			
-			foreach (Bamf.Application app in Matcher.get_default ().active_launchers ()) {
-				var launcher = app.get_desktop_file ();
-				if (launcher == "" || !File.new_for_path (launcher).query_exists ())
-					continue;
-				if (WindowControl.get_num_windows (app) == 0)
-					continue;
-				
-				var found = item_for_launcher (launcher);
-				if (found != null) {
-					for (int i = 0; i < old_items.length (); i++)
-						if (old_items.nth_data (i) == launcher) {
-							old_items.delete_link (old_items.nth (i));
-							break;
-						}
-				} else if (app.user_visible ()) {
-					var new_item = new TransientDockItem.with_launcher (launcher);
-					new_item.set_sort (last_sort + 1);
+			var launcher = app.get_desktop_file ();
+			
+			if (launcher != "" && !File.new_for_path (launcher).query_exists ())
+				return;
+			
+			if (WindowControl.get_num_windows (app) == 0)
+				return;
+			
+			var found = item_for_application (app);
+			if (found != null) {
+				found.set_app (app);
+			} else {
+				if (app.user_visible ()) {
+					DockItem new_item;
+					new_item = new TransientDockItem.with_application (app);
+					new_item.set_sort (last_sort++);
 					add_item (new_item);
 				}
 			}
 			
-			foreach (string launcher in old_items)
-				remove_item (item_for_launcher (launcher));
+			set_item_positions ();
+		}
+		
+		void app_closed (DockItem remove)
+		{
+			if (remove is TransientDockItem)
+				remove_item (remove);
+			else if (remove is ApplicationDockItem)
+				remove.set_app (null);
 			
 			set_item_positions ();
 		}
@@ -183,7 +190,8 @@ namespace Plank
 				}
 			
 			load_items ();
-			reload_transients ();
+			add_running_apps ();
+			set_item_positions ();
 		}
 		
 		public void add_item (DockItem item)
@@ -195,15 +203,11 @@ namespace Plank
 			item.notify["State"].connect (signal_items_changed);
 			item.notify["LastClicked"].connect (signal_items_changed);
 			
-			Matcher.get_default ().window_opened.connect (item.update_states);
-			Matcher.get_default ().window_closed.connect (item.update_states);
-			
 			item.launcher_changed.connect (update_app);
+			item.app_closed.connect (app_closed);
 			
 			if (item is TransientDockItem)
 				(item as TransientDockItem).pin_launcher.connect (pin_item);
-			
-			update_app (item);
 			
 			item_added (item);
 		}
@@ -215,10 +219,8 @@ namespace Plank
 			item.notify["State"].disconnect (signal_items_changed);
 			item.notify["LastClicked"].disconnect (signal_items_changed);
 			
-			Matcher.get_default ().window_opened.disconnect (item.update_states);
-			Matcher.get_default ().window_closed.disconnect (item.update_states);
-			
 			item.launcher_changed.disconnect (update_app);
+			item.app_closed.disconnect (app_closed);
 			
 			if (item is TransientDockItem)
 				(item as TransientDockItem).pin_launcher.disconnect (pin_item);
@@ -229,13 +231,6 @@ namespace Plank
 			set_item_positions ();
 		}
 		
-		void app_opened (Bamf.Application app)
-		{
-			foreach (DockItem item in Items)
-				if (app.get_desktop_file () == item.get_launcher ())
-					item.set_app (app);
-		}
-
 		void pin_item (DockItem item)
 		{
 			string launcher = item.get_launcher ();
