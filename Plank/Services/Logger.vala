@@ -124,7 +124,7 @@ namespace Plank.Services
 		static string get_time ()
 		{
 			var now = new DateTime.now_local ();
-			return "%.2d:%.2d:%.2d.%.3d".printf (now.get_hour (), now.get_minute (), now.get_second (), now.get_microsecond ());
+			return "%.2d:%.2d:%.2d.%.6d".printf (now.get_hour (), now.get_minute (), now.get_second (), now.get_microsecond ());
 		}
 		
 		static void write (LogLevel level, string msg)
