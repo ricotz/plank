@@ -1,6 +1,5 @@
 //  
 //  Copyright (C) 2011 Robert Dyer
-//  Copyright (C) 2011 Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -39,7 +38,7 @@ namespace Plank.Services.Windows
 				unowned List<Bamf.View> children = app.get_children ();
 				for (int i = 0; i < children.length (); i++) {
 					var view = children.nth_data (i);
-					if (!(view is Bamf.Window && view.user_visible ()))
+					if (!view.user_visible () || !(view is Bamf.Window))
 						continue;
 					count++;
 				}
@@ -92,7 +91,7 @@ namespace Plank.Services.Windows
 			unowned List<Bamf.View> children = app.get_children ();
 			for (int i = 0; i < children.length (); i++) {
 				var view = children.nth_data (i);
-				if (!(view is Bamf.Window && view.user_visible ()))
+				if (!view.user_visible () || !(view is Bamf.Window))
 					continue;
 				windows.append (view as Bamf.Window);
 			}

@@ -1,6 +1,5 @@
 //  
 //  Copyright (C) 2011 Robert Dyer
-//  Copyright (C) 2011 Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -55,9 +54,7 @@ namespace Plank.Items
 		
 		public Bamf.Application? App { get; set; }
 		
-		public string AppPath { get; protected set; default = ""; }
-		
-		public string Icon { get; set; default = ""; }
+		public string Icon { get; set; default = "folder"; }
 		
 		public string Text { get; set; default = ""; }
 		
@@ -143,22 +140,20 @@ namespace Plank.Items
 		{
 			if (App != null) {
 				App.active_changed.disconnect (update_active);
-				App.child_added.disconnect (update_states);
-				App.child_removed.disconnect (update_states);
+				App.running_changed.disconnect (update_app);
+				App.closed.disconnect (update_app);
 				App.urgent_changed.disconnect (update_urgent);
 			}
 			
 			App = app;
-			AppPath = "";
 			
 			update_states ();
 			
 			if (app != null) {
 				app.active_changed.connect (update_active);
+				app.running_changed.connect (update_app);
+				app.closed.connect (update_app);
 				app.urgent_changed.connect (update_urgent);
-				app.child_added.connect (update_states);
-				app.child_removed.connect (update_states);
-				AppPath = app.path;
 			}
 		}
 		
@@ -279,11 +274,6 @@ namespace Plank.Items
 			return Prefs.Launcher.has_suffix (".desktop");
 		}
 		
-		protected bool is_window ()
-		{
-			return (App != null && App.get_desktop_file () == "");
-		}
-		
 		bool is_plank_item ()
 		{
 			return Prefs.Launcher.has_suffix ("plank.desktop");
@@ -301,13 +291,9 @@ namespace Plank.Items
 				item.activate.connect (() => launch ());
 				items.append (item);
 			} else {
-				MenuItem item;
-				
-				if (is_launcher ()) {
-					item = add_menu_item (items, _("New _Window"), "document-open-symbolic;;document-open");
-					item.activate.connect (() => launch ());
-					items.append (item);
-				}
+				var item = add_menu_item (items, _("New _Window"), "document-open-symbolic;;document-open");
+				item.activate.connect (() => launch ());
+				items.append (item);
 				
 				if (WindowControl.has_maximized_window (App)) {
 					item = add_menu_item (items, _("Unma_ximize"), "view-fullscreen");
