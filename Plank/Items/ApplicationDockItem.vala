@@ -100,9 +100,14 @@ namespace Plank.Items
 			
 			File dir = File.new_for_path (Prefs.Launcher);
 			try {
-				var enumerator = dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
+				var enumerator = dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + ","
+					+ FILE_ATTRIBUTE_STANDARD_IS_HIDDEN + ","
+					+ FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
 				FileInfo info;
 				while ((info = enumerator.next_file ()) != null) {
+					if (info.get_is_hidden ())
+						continue;
+					
 					var file = dir.get_child (info.get_name ());
 					
 					if (info.get_name ().has_suffix (".desktop")) {
