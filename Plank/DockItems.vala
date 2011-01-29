@@ -224,6 +224,7 @@ namespace Plank
 			
 			Items.remove (item);
 			
+			set_item_positions ();
 			item_removed (item);
 		}
 		

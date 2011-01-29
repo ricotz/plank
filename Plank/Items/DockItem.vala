@@ -199,15 +199,15 @@ namespace Plank.Items
 		public void update_indicator ()
 		{
 			if (App == null || App.is_closed () || !App.is_running ()) {
-				Indicator = IndicatorState.NONE;
-				return;
+				if (Indicator != IndicatorState.NONE)
+					Indicator = IndicatorState.NONE;
+			} else if (WindowControl.get_num_windows (App) > 1) {
+				if (Indicator != IndicatorState.SINGLE_PLUS)
+					Indicator = IndicatorState.SINGLE_PLUS;
+			} else {
+				if (Indicator != IndicatorState.SINGLE)
+					Indicator = IndicatorState.SINGLE;
 			}
-			
-			// set running
-			if (WindowControl.get_num_windows (App) > 1)
-				Indicator = IndicatorState.SINGLE_PLUS;
-			else
-				Indicator = IndicatorState.SINGLE;
 		}
 		
 		public void update_active (bool is_active)
