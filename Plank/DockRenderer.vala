@@ -109,9 +109,6 @@ namespace Plank
 			theme.load ("dock");
 			theme.notify.connect (theme_changed);
 			
-			window.notify["HoveredItem"].connect (animation_state_changed);
-			Prefs.notify.connect (reset_buffers);
-			
 			hidden = true;
 		}
 		
