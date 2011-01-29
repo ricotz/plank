@@ -26,11 +26,7 @@ namespace Plank.Services
 		
 		~Preferences ()
 		{
-			if (backing_monitor == null)
-				return;
-			
-			backing_monitor.cancel ();
-			backing_monitor = null;
+			stop_monitor ();
 		}
 		
 		void handle_notify (Object sender, ParamSpec property)

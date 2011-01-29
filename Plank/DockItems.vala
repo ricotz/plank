@@ -66,11 +66,10 @@ namespace Plank
 		
 		~DockItems ()
 		{
-			if (items_monitor == null)
-				return;
-			
-			items_monitor.cancel ();
-			items_monitor = null;
+			if (items_monitor != null) {
+				items_monitor.cancel ();
+				items_monitor = null;
+			}
 		}
 		
 		void signal_items_changed ()
