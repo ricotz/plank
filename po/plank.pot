@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-27 21:45-0600\n"
+"POT-Creation-Date: 2011-01-29 15:45-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,30 +21,30 @@ msgstr ""
 msgid "Plank. Stupidly simple."
 msgstr ""
 
-#: ../Plank/Items/DockItem.vala:307
+#: ../Plank/Items/ApplicationDockItem.vala:197
 msgid "_Open New Window"
 msgstr ""
 
-#: ../Plank/Items/DockItem.vala:312
+#: ../Plank/Items/ApplicationDockItem.vala:203
 msgid "Unma_ximize"
 msgstr ""
 
-#: ../Plank/Items/DockItem.vala:316
+#: ../Plank/Items/ApplicationDockItem.vala:207
 msgid "Ma_ximize"
 msgstr ""
 
-#: ../Plank/Items/DockItem.vala:322
+#: ../Plank/Items/ApplicationDockItem.vala:213
 msgid "_Restore"
 msgstr ""
 
-#: ../Plank/Items/DockItem.vala:326
+#: ../Plank/Items/ApplicationDockItem.vala:217
 msgid "Mi_nimize"
 msgstr ""
 
-#: ../Plank/Items/DockItem.vala:331
+#: ../Plank/Items/ApplicationDockItem.vala:222
 msgid "_Close All"
 msgstr ""
 
-#: ../Plank/Items/TransientDockItem.vala:44
+#: ../Plank/Items/TransientDockItem.vala:48
 msgid "_Keep in Dock"
 msgstr ""
