@@ -222,6 +222,7 @@ namespace Plank.Items
 				LastActive = new DateTime.now_utc ();
 				State |= ItemState.ACTIVE;
 			} else if (!is_active && was_active) {
+				LastActive = new DateTime.now_utc ();
 				State &= ~ItemState.ACTIVE;
 			}
 		}
