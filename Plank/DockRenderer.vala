@@ -39,7 +39,7 @@ namespace Plank
 		
 		public double HideOffset {
 			get {
-				double diff = Math.fmin (1, new DateTime.now_utc ().difference (last_hide) / (double) (theme.SlideTime * 1000));
+				double diff = Math.fmin (1, new DateTime.now_utc ().difference (last_hide) / (double) (theme.HideTime * 1000));
 				return Hidden ? diff : 1 - diff;
 			}
 		}
@@ -116,8 +116,8 @@ namespace Plank
 			notify["Hidden"].connect (() => {
 				var now = new DateTime.now_utc ();
 				var diff = now.difference (last_hide);
-				if (diff < theme.SlideTime * 1000)
-					last_hide = now.add_seconds ((diff - theme.SlideTime * 1000) / 1000000.0);
+				if (diff < theme.HideTime * 1000)
+					last_hide = now.add_seconds ((diff - theme.HideTime * 1000) / 1000000.0);
 				else
 					last_hide = new DateTime.now_utc ();
 				animated_draw ();
@@ -383,7 +383,7 @@ namespace Plank
 		{
 			DateTime now = new DateTime.now_utc ();
 			
-			if (now.difference (last_hide) <= theme.SlideTime * 1000)
+			if (now.difference (last_hide) <= theme.HideTime * 1000)
 				return true;
 			
 			if (now.difference (last_fade) <= theme.FadeTime * 1000)

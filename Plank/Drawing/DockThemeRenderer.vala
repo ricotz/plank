@@ -38,17 +38,20 @@ namespace Plank.Drawing
 		
 		public int LaunchBounceHeight { get; set; default = 30; }
 		
-		public int GlowSize { get; set; default = 30; }
-		
 		public int ClickTime { get; set; default = 600; }
 		
 		public int BounceTime { get; set; default = 600; }
 		
 		public int ActiveTime { get; set; default = 300; }
 		
+		public int SlideTime { get; set; default = 200; }
+		
 		public int FadeTime { get; set; default = 200; }
 		
-		public int SlideTime { get; set; default = 200; }
+		public int HideTime { get; set; default = 150; }
+		
+		// the urgent glow when the dock is hidden
+		public int GlowSize { get; set; default = 30; }
 		
 		public int GlowTime { get; set; default = 10000; }
 		
