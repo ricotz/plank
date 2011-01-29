@@ -32,21 +32,21 @@ namespace Plank
 	public class HideManager : GLib.Object
 	{
 		DockWindow window;
-		
-		bool hidden;
 		bool windows_intersect;
-		bool dock_hovered;
+		
+		public bool DockHovered { get; set; }
 		
 		public HideManager (DockWindow window)
 		{
 			this.window = window;
 			
-			dock_hovered = false;
 			update_window_intersect ();
+			DockHovered = false;
 			
-			hide ();
+			window.Renderer.hide ();
 			
-			window.Prefs.notify["HideMode"].connect (prefs_changed);
+			notify["DockHovered"].connect (update_hidden);
+			window.Prefs.notify["HideMode"].connect (update_hidden);
 			
 			window.enter_notify_event.connect (enter_notify_event);
 			window.leave_notify_event.connect (leave_notify_event);
@@ -55,83 +55,72 @@ namespace Plank
 			Matcher.get_default ().app_changed.connect (app_changed);
 		}
 		
-		public bool is_hidden ()
+		public void update_dock_hovered ()
 		{
-			return window.Prefs.HideMode != HideType.NONE && hidden;
+			// get current mouse pointer location
+			int x, y;
+			ModifierType mod;
+			Screen screen;
+			window.get_display ().get_pointer (out screen, out x, out y, out mod);
+			
+			// get window location
+			int win_x, win_y;
+			window.get_position (out win_x, out win_y);
+			
+			// compute rect of the window
+			var offset = (int) Math.fmax (1, (1 - window.Renderer.HideOffset) * window.Renderer.VisibleDockHeight);
+			var rect_x = win_x + window.height_request - offset;
+			
+			// use the window rect and cursor location to determine if dock is hovered
+			var hovered = y >= win_y && y <= win_y + offset && x >= rect_x && x <= rect_x + window.width_request;
+			if (hovered != DockHovered)
+				DockHovered = hovered;
 		}
 		
-		public void update_hidden ()
+		void update_hidden ()
 		{
 			switch (window.Prefs.HideMode) {
 			case HideType.NONE:
-				show ();
+				window.Renderer.show ();
 				break;
 			
 			case HideType.INTELLIGENT:
-				if (dock_hovered && !windows_intersect)
-					show ();
+				if (DockHovered && !windows_intersect)
+					window.Renderer.show ();
 				else
-					hide ();
+					window.Renderer.hide ();
 				break;
 			
 			case HideType.AUTO:
-				if (dock_hovered)
-					show ();
+				if (DockHovered)
+					window.Renderer.show ();
 				else
-					hide ();
+					window.Renderer.hide ();
 				break;
 			}
-		}
-		
-		void show ()
-		{
-			if (!hidden)
-				return;
-			
-			hidden = false;
-			window.Renderer.show ();
-		}
-		
-		void hide ()
-		{
-			if (window.Prefs.HideMode == HideType.NONE || hidden)
-				return;
-			
-			hidden = true;
-			window.Renderer.hide ();
 		}
 		
 		bool enter_notify_event (EventCrossing event)
 		{
-			if (hidden && event.y >= window.Renderer.DockHeight - 1) {
-				dock_hovered = true;
-				update_hidden ();
-			}
+			update_dock_hovered ();
 			
-			return hidden;
+			return window.Renderer.Hidden;
 		}
 		
 		bool leave_notify_event (EventCrossing event)
 		{
-			if (!window.menu_is_visible ()) {
-				dock_hovered = false;
-				update_hidden ();
-			}
+			if (DockHovered && !window.menu_is_visible ())
+				DockHovered = false;
 			
 			return false;
 		}
 		
 		bool motion_notify_event (EventMotion event)
 		{
-			dock_hovered = true;
-			update_hidden ();
+			if (!DockHovered)
+				DockHovered = true;
 			
-			return hidden;
-		}
-		
-		void prefs_changed ()
-		{
-			update_hidden ();
+			return window.Renderer.Hidden;
 		}
 		
 		void app_changed (Bamf.Application? old_app, Bamf.Application? new_app)

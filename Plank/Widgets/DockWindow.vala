@@ -72,7 +72,7 @@ namespace Plank.Widgets
 				update_icon_regions ();
 			});
 			menu.hide.connect (() => {
-				hide_manager.update_hidden ();
+				hide_manager.update_dock_hovered ();
 				update_icon_regions ();
 			});
 			
@@ -182,7 +182,7 @@ namespace Plank.Widgets
 				
 				// slide the dock in, if it shouldnt start hidden
 				GLib.Timeout.add (100, () => {
-					hide_manager.update_hidden ();
+					hide_manager.update_dock_hovered ();
 					return false;
 				});
 			}
