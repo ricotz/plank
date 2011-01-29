@@ -50,6 +50,10 @@ namespace Plank.Drawing
 		
 		public int SlideTime { get; set; default = 200; }
 		
+		public int GlowTime { get; set; default = 10000; }
+		
+		public int GlowPulseTime { get; set; default = 2000; }
+		
 		public DockSurface create_indicator (DockSurface background, int size, double r, double g, double b)
 		{
 			DockSurface surface = new DockSurface.with_dock_surface (size, size, background);

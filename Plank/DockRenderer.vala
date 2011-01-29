@@ -33,8 +33,16 @@ namespace Plank
 		DockSurface main_buffer;
 		DockSurface indicator_buffer;
 		DockSurface urgent_indicator_buffer;
+		DockSurface urgent_glow_buffer;
 		
-		public bool hidden;
+		public bool Hidden { get; protected set; default = true; }
+		
+		public double HideOffset {
+			get {
+				double diff = Math.fmin (1, new DateTime.now_utc ().difference (last_hide) / (double) (theme.SlideTime * 1000));
+				return Hidden ? diff : 1 - diff;
+			}
+		}
 		
 		public int DockWidth {
 			get { return (int) window.Items.Items.length () * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
@@ -79,14 +87,7 @@ namespace Plank
 		double Opacity {
 			get {
 				double diff = Math.fmin (1, new DateTime.now_utc ().difference (last_fade) / (double) (theme.FadeTime * 1000));
-				return hidden ? diff : 1 - diff;
-			}
-		}
-		
-		int HideOffset {
-			get {
-				double diff = Math.fmin (1, new DateTime.now_utc ().difference (last_hide) / (double) (theme.SlideTime * 1000));
-				return (int) (VisibleDockHeight * (hidden ? diff : 1 - diff));
+				return Hidden ? diff : 1 - diff;
 			}
 		}
 		
@@ -109,21 +110,34 @@ namespace Plank
 			theme.load ("dock");
 			theme.notify.connect (theme_changed);
 			
-			hidden = true;
+			window.notify["HoveredItem"].connect (animated_draw);
+			window.Items.items_changed.connect (animated_draw);
+			
+			notify["Hidden"].connect (() => {
+				var now = new DateTime.now_utc ();
+				var diff = now.difference (last_hide);
+				if (diff < theme.SlideTime * 1000)
+					last_hide = now.add_seconds ((diff - theme.SlideTime * 1000) / 1000000.0);
+				else
+					last_hide = new DateTime.now_utc ();
+				animated_draw ();
+			});
+			
+			show ();
 		}
 		
 		public void show ()
 		{
-			hidden = false;
-			last_hide = new DateTime.now_utc ();
-			animated_draw ();
+			if (!Hidden)
+				return;
+			Hidden = false;
 		}
 		
 		public void hide ()
 		{
-			hidden = true;
-			last_hide = new DateTime.now_utc ();
-			animated_draw ();
+			if (Hidden)
+				return;
+			Hidden = true;
 		}
 		
 		public void reset_buffers ()
@@ -132,8 +146,21 @@ namespace Plank
 			background_buffer = null;
 			indicator_buffer = null;
 			urgent_indicator_buffer = null;
+			urgent_glow_buffer = null;
 			
 			animated_draw ();
+		}
+		
+		public Gdk.Rectangle dock_region (DockItem item)
+		{
+			Gdk.Rectangle rect = Gdk.Rectangle ();
+			
+			rect.x = 0;
+			rect.y = (int) (VisibleDockHeight * HideOffset);
+			rect.width = DockWidth;
+			rect.height = VisibleDockHeight;
+			
+			return rect;
 		}
 		
 		public Gdk.Rectangle item_region (DockItem item)
@@ -164,12 +191,31 @@ namespace Plank
 				draw_item (main_buffer, item);
 			
 			cr.set_operator (Operator.SOURCE);
-			cr.set_source_surface (main_buffer.Internal, 0, HideOffset);
+			cr.set_source_surface (main_buffer.Internal, 0, VisibleDockHeight * HideOffset);
 			cr.paint ();
 			
-			cr.set_source_rgba (0, 0, 0, 0);
-			cr.set_operator (Operator.SOURCE);
-			cr.paint_with_alpha (Opacity);
+			if (Opacity < 1.0) {
+				cr.set_source_rgba (0, 0, 0, 0);
+				cr.paint_with_alpha (Opacity);
+			}
+			
+			if (HideOffset == 1) {
+				if (urgent_glow_buffer == null)
+					create_urgent_glow (background_buffer);
+				
+				foreach (DockItem item in window.Items.Items) {
+					var diff = new DateTime.now_utc ().difference (item.LastUrgent);
+					
+					if ((item.State & ItemState.URGENT) == ItemState.URGENT && diff < theme.GlowTime * 1000) {
+						var rect = item_region (item);
+						cr.set_source_surface (urgent_glow_buffer.Internal,
+							rect.x + rect.width / 2.0 - urgent_glow_buffer.Width / 2.0,
+							DockHeight - urgent_glow_buffer.Height / 2.0);
+						var opacity = 0.2 + (0.75 * (Math.sin (diff / (double) (theme.GlowPulseTime * 1000) * 2 * Math.PI) + 1) / 2);
+						cr.paint_with_alpha (opacity);
+					}
+				}
+			}
 		}
 		
 		void draw_dock_background (DockSurface surface)
@@ -226,7 +272,7 @@ namespace Plank
 			if (window.HoveredItem == item && !Prefs.zoom_enabled ())
 				lighten = 0.2;
 			
-			if (window.HoveredItem == item && window.MenuVisible)
+			if (window.HoveredItem == item && window.menu_is_visible ())
 				darken += 0.4;
 			
 			// glow the icon
@@ -301,14 +347,34 @@ namespace Plank
 			urgent_indicator_buffer = theme.create_indicator (background_buffer, IndicatorSize, color.R, color.G, color.B);
 		}
 		
+		void create_urgent_glow (DockSurface surface)
+		{
+			var color = Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
+			color = color.set_min_value (90 / (double) uint16.MAX).add_hue (UrgentHueShift).set_sat (1);
+
+			var size = (int) 2.5 * Prefs.IconSize;
+			urgent_glow_buffer = new DockSurface.with_dock_surface (size, size, surface);
+
+			Cairo.Context cr = urgent_glow_buffer.Context;
+
+			var x = size / 2.0;
+
+			cr.move_to (x, x);
+			cr.arc (x, x, size / 2, 0, Math.PI * 2);
+
+			var rg = new Pattern.radial (x, x, 0, x, x, size / 2);
+			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
+			rg.add_color_stop_rgba (0.33, color.R, color.G, color.B, 0.66);
+			rg.add_color_stop_rgba (0.66, color.R, color.G, color.B, 0.33);
+			rg.add_color_stop_rgba (1.0, color.R, color.G, color.B, 0.0);
+
+			cr.set_source (rg);
+			cr.fill ();
+		}
+		
 		void theme_changed ()
 		{
 			window.set_size ();
-		}
-		
-		void animation_state_changed ()
-		{
-			animated_draw ();
 		}
 		
 		uint animation_timer = 0;
@@ -317,19 +383,24 @@ namespace Plank
 		{
 			DateTime now = new DateTime.now_utc ();
 			
-			if (now.difference (last_hide) < theme.SlideTime * 1000)
+			if (now.difference (last_hide) <= theme.SlideTime * 1000)
 				return true;
 			
-			if (now.difference (last_fade) < theme.FadeTime * 1000)
+			if (now.difference (last_fade) <= theme.FadeTime * 1000)
 				return true;
 			
 			foreach (DockItem item in window.Items.Items) {
-				if (now.difference (item.LastClicked) < theme.ClickTime * 1000)
+				if (now.difference (item.LastClicked) <= theme.ClickTime * 1000)
 					return true;
-				if (now.difference (item.LastUrgent) < theme.BounceTime * 1000)
+				if (now.difference (item.LastActive) <= theme.ActiveTime * 1000)
 					return true;
-				if (now.difference (item.LastActive) < theme.ActiveTime * 1000)
-					return true;
+				if (HideOffset == 1.0) {
+					if (now.difference (item.LastUrgent) <= theme.GlowTime * 1000)
+						return true;
+				} else {
+					if (now.difference (item.LastUrgent) <= theme.BounceTime * 1000)
+						return true;
+				}
 			}
 				
 			return false;

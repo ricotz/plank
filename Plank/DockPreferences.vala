@@ -33,7 +33,7 @@ namespace Plank
 		
 		public int IconSize { get; set; default = 48; }
 		
-		public AutohideType Autohide { get; set; default = AutohideType.INTELLIHIDE; }
+		public HideType HideMode { get; set; default = HideType.INTELLIGENT; }
 		
 		public DockPreferences ()
 		{

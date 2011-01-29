@@ -34,6 +34,7 @@ plank_VALASOURCES = \
 	DockItems.vala \
 	DockPreferences.vala \
 	DockRenderer.vala \
+	HideManager.vala \
 	Plank.vala \
 	Drawing/Color.vala \
 	Drawing/DrawingService.vala \

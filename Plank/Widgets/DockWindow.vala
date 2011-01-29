@@ -25,26 +25,12 @@ using Plank.Services.Windows;
 
 namespace Plank.Widgets
 {
-	public enum AutohideType
+	public enum DockPosition
 	{
-		NONE,
-		INTELLIHIDE
-	}
-	
-	public enum Struts 
-	{
-		LEFT,
-		RIGHT,
-		TOP,
 		BOTTOM,
-		LEFT_START,
-		LEFT_END,
-		RIGHT_START,
-		RIGHT_END,
-		TOP_START,
-		TOP_END,
-		BOTTOM_START,
-		BOTTOM_END
+		TOP,
+		LEFT,
+		RIGHT
 	}
 	
 	public class DockWindow : CompositedWindow
@@ -55,15 +41,15 @@ namespace Plank.Widgets
 		
 		public DockItems Items { get; protected set; }
 		
-		public bool MenuVisible { get; protected set; }
+		public DockRenderer Renderer { get; protected set; }
 		
-		protected DockRenderer Renderer { get; set; }
+		protected HoverWindow hover = new HoverWindow ();
+
+		protected HideManager hide_manager;
 		
-		HoverWindow hover = new HoverWindow ();
+		protected Menu menu;
 		
-		Menu menu = new Menu ();
-		
-		Gdk.Rectangle monitor_geo;
+		protected Gdk.Rectangle monitor_geo;
 		
 		public DockWindow ()
 		{
@@ -72,6 +58,7 @@ namespace Plank.Widgets
 			Prefs = new DockPreferences.with_file ("settings");
 			Items = new DockItems ();
 			Renderer = new DockRenderer (this);
+			hide_manager = new HideManager (this);
 			
 			set_accept_focus (false);
 			can_focus = false;
@@ -79,9 +66,13 @@ namespace Plank.Widgets
 			skip_taskbar_hint = true;
 			set_type_hint (WindowTypeHint.DOCK);
 			
+			menu = new Menu ();
 			menu.attach_to_widget (this, null);
+			menu.show.connect (() => {
+				update_icon_regions ();
+			});
 			menu.hide.connect (() => {
-				MenuVisible = false;
+				hide_manager.update_hidden ();
 				update_icon_regions ();
 			});
 			
@@ -96,9 +87,10 @@ namespace Plank.Widgets
 			
 			Items.item_added.connect (set_size);
 			Items.item_removed.connect (set_size);
-			Items.items_changed.connect (Renderer.animated_draw);
-			notify["HoveredItem"].connect (Renderer.animated_draw);
 			Prefs.notify.connect (set_size);
+			Renderer.notify["Hidden"].connect (() => {
+				update_icon_regions ();
+			});
 			
 			set_size ();
 		}
@@ -124,17 +116,14 @@ namespace Plank.Widgets
 			}
 			
 			if ((HoveredItem.Button & button) == button)
-				do_popup ();
+				do_popup (event.button);
 			
 			return true;
 		}
 		
 		public override bool button_release_event (EventButton event)
 		{
-			if (HoveredItem == null)
-				return true;
-			
-			if (!MenuVisible)
+			if (HoveredItem != null && !menu_is_visible ())
 				HoveredItem.clicked (event.button, event.state);
 			
 			return true;
@@ -150,7 +139,7 @@ namespace Plank.Widgets
 		
 		public override bool leave_notify_event (EventCrossing event)
 		{
-			if (!MenuVisible)
+			if (!menu_is_visible ())
 				set_hovered (null);
 			else
 				hover.hide ();
@@ -184,18 +173,22 @@ namespace Plank.Widgets
 			return true;
 		}
 		
-		uint startup_show_timer = 0;
+		bool dock_is_starting = true;
 		
 		public override bool expose_event (EventExpose event)
 		{
-			if (Renderer.hidden && startup_show_timer == 0)
-				startup_show_timer = GLib.Timeout.add (100, () => {
-					Renderer.show ();
+			if (dock_is_starting) {
+				dock_is_starting = false;
+				
+				// slide the dock in, if it shouldnt start hidden
+				GLib.Timeout.add (100, () => {
+					hide_manager.update_hidden ();
 					return false;
 				});
+			}
 			
-			Renderer.draw_dock (cairo_create (event.window));
 			set_input_mask ();
+			Renderer.draw_dock (cairo_create (event.window));
 			
 			return true;
 		}
@@ -220,7 +213,7 @@ namespace Plank.Widgets
 				hover.show ();
 		}
 		
-		bool update_hovered (int x, int y)
+		protected bool update_hovered (int x, int y)
 		{
 			foreach (DockItem item in Items.Items) {
 				var rect = Renderer.item_region (item);
@@ -234,7 +227,7 @@ namespace Plank.Widgets
 			return false;
 		}
 		
-		void update_monitor_geo ()
+		protected void update_monitor_geo ()
 		{
 			int x, y;
 			get_position (out x, out y);
@@ -242,7 +235,7 @@ namespace Plank.Widgets
 			screen.get_monitor_geometry (screen.get_monitor_at_point (x, y), out monitor_geo);
 		}
 		
-		void position_hover ()
+		protected void position_hover ()
 		{
 			int x, y;
 			get_position (out x, out y);
@@ -264,13 +257,13 @@ namespace Plank.Widgets
 		
 		protected void reposition ()
 		{
-			//put dock on bottom-center of monitor
+			// put dock on bottom-center of monitor
 			move (monitor_geo.x + (monitor_geo.width - width_request) / 2, monitor_geo.y + monitor_geo.height - height_request);
 			update_icon_regions ();
 			set_struts ();
 		}
 		
-		void update_icon_regions ()
+		protected void update_icon_regions ()
 		{
 			int win_x, win_y;
 			get_position (out win_x, out win_y);
@@ -282,7 +275,7 @@ namespace Plank.Widgets
 				Gdk.Rectangle empty = Gdk.Rectangle ();
 				empty.x = empty.y = empty.width = empty.height = 0;
 				
-				if (MenuVisible)
+				if (menu_is_visible () || Renderer.Hidden)
 					WindowControl.update_icon_regions (item.App, empty, win_x, win_y);
 				else
 					WindowControl.update_icon_regions (item.App, Renderer.item_region (item), win_x, win_y);
@@ -291,13 +284,17 @@ namespace Plank.Widgets
 			Renderer.animated_draw ();
 		}
 		
-		protected void do_popup ()
+		public bool menu_is_visible ()
 		{
-			MenuVisible = true;
-			update_icon_regions ();
-			
+			return menu.get_visible ();
+		}
+		
+		protected void do_popup (uint button)
+		{
 			foreach (Widget w in menu.get_children ()) {
 				menu.remove (w);
+				if (w is ImageMenuItem)
+					(w as ImageMenuItem).get_image ().destroy ();
 				w.destroy ();
 			}
 			
@@ -305,10 +302,10 @@ namespace Plank.Widgets
 				menu.append (item);
 			
 			menu.show_all ();
-			menu.popup (null, null, position_menu, 3, get_current_event_time ());
+			menu.popup (null, null, position_menu, button, get_current_event_time ());
 		}
 		
-		void position_menu (Menu menu, out int x, out int y, out bool push_in)
+		protected void position_menu (Menu menu, out int x, out int y, out bool push_in)
 		{
 			int win_x, win_y;
 			get_position (out win_x, out win_y);
@@ -319,35 +316,53 @@ namespace Plank.Widgets
 			push_in = false;
 		}
 		
-		void set_input_mask ()
+		private void set_input_mask ()
 		{
 			if (!is_realized ())
 				return;
 			
-			var pixmap = new Pixmap(null, width_request, Renderer.VisibleDockHeight, 1);
+			var offset = (int) Math.fmax (1, (1 - Renderer.HideOffset) * Renderer.VisibleDockHeight);
+			var pixmap = new Pixmap (null, width_request, offset, 1);
 			var cr = cairo_create (pixmap);
 			
 			cr.set_source_rgba (0, 0, 0, 1);
 			cr.paint ();
 			
-			input_shape_combine_mask ((Bitmap*) pixmap, 0, height_request - Renderer.VisibleDockHeight);
+			input_shape_combine_mask ((Bitmap*) pixmap, 0, height_request - offset);
 		}
 		
-		void set_struts ()
+		protected enum Struts 
+		{
+			LEFT,
+			RIGHT,
+			TOP,
+			BOTTOM,
+			LEFT_START,
+			LEFT_END,
+			RIGHT_START,
+			RIGHT_END,
+			TOP_START,
+			TOP_END,
+			BOTTOM_START,
+			BOTTOM_END,
+			N_VALUES
+		}
+		
+		private void set_struts ()
 		{
 			if (!is_realized ())
 				return;
 			
-			ulong[] struts = new ulong [Struts.BOTTOM_END + 1];
+			ulong[] struts = new ulong [Struts.N_VALUES];
 			
-			if (Prefs.Autohide == AutohideType.NONE) {
+			if (Prefs.HideMode == HideType.NONE) {
 				struts [Struts.BOTTOM] = Renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
 				struts [Struts.BOTTOM_START] = monitor_geo.x;
 				struts [Struts.BOTTOM_END] = monitor_geo.x + monitor_geo.width - 1;
 			}
 			
 			ulong[] first_struts = new ulong [Struts.BOTTOM + 1];
-			for (int i = 0; i < Struts.BOTTOM + 1; i++)
+			for (int i = 0; i < first_struts.length; i++)
 				first_struts [i] = struts [i];
 			
 			var display = x11_drawable_get_xdisplay (get_window ());
