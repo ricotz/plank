@@ -90,6 +90,8 @@ namespace Plank
 					if (file_is_dockitem (info)) {
 						var filename = launchers_dir.get_path () + "/" + info.get_name ();
 						var item = new ApplicationDockItem.with_dockitem (filename);
+						if (item.get_launcher ().has_suffix ("plank.desktop"))
+							item = new PlankDockItem.with_dockitem (filename);
 						
 						if (item.ValidItem)
 							add_item (item);

@@ -243,11 +243,6 @@ namespace Plank.Items
 		
 		protected virtual ClickAnimation on_clicked (uint button, ModifierType mod)
 		{
-			if (is_plank_item ()) {
-				Plank.show_about ();
-				return ClickAnimation.DARKEN;
-			}
-			
 			if (((App == null || App.get_children ().length () == 0) && button == 1) ||
 				button == 2 || 
 				(button == 1 && (mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK)) {
@@ -293,16 +288,8 @@ namespace Plank.Items
 			return (App != null && App.get_desktop_file () == "");
 		}
 		
-		bool is_plank_item ()
-		{
-			return Prefs.Launcher.has_suffix ("plank.desktop");
-		}
-		
 		public virtual List<MenuItem> get_menu_items ()
 		{
-			if (is_plank_item ())
-				return get_plank_items ();
-			
 			List<MenuItem> items = new List<MenuItem> ();
 			
 			if (App == null || App.get_children ().length () == 0) {
@@ -388,21 +375,6 @@ namespace Plank.Items
 			item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon (icon, width, height)));
 			
 			return item;
-		}
-		
-		List<MenuItem> get_plank_items ()
-		{
-			List<MenuItem> items = new List<MenuItem> ();
-			
-			var item = new ImageMenuItem.from_stock (STOCK_ABOUT, null);
-			item.activate.connect (() => Plank.show_about ());
-			items.append (item);
-			
-			item = new ImageMenuItem.from_stock (STOCK_QUIT, null);
-			item.activate.connect (() => Plank.quit ());
-			items.append (item);
-			
-			return items;
 		}
 	}
 }

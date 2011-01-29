@@ -38,7 +38,7 @@ namespace Plank.Items
 			
 			if (is_launcher ()) {
 				load_from_launcher ();
-				set_app (Matcher.get_default ().app_for_launcher (get_launcher ()));
+				update_app ();
 				start_monitor ();
 			} else {
 				var file = File.new_for_path (Prefs.Launcher);
