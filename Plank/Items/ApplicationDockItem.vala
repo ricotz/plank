@@ -36,16 +36,9 @@ namespace Plank.Items
 			if (!ValidItem)
 				return;
 			
-			if (is_launcher ()) {
-				load_from_launcher ();
-				update_app ();
-				start_monitor ();
-			} else {
-				var file = File.new_for_path (Prefs.Launcher);
-				Icon = DrawingService.get_icon_from_file (file) ?? "folder";
-				Text = file.get_basename ();
-				Button = PopupButton.RIGHT | PopupButton.LEFT;
-			}
+			load_from_launcher ();
+			update_app ();
+			start_monitor ();
 		}
 		
 		protected FileMonitor monitor;
@@ -91,63 +84,6 @@ namespace Plank.Items
 				icon = "";
 				text = "";
 			}
-		}
-		
-		public override List<MenuItem> get_menu_items ()
-		{
-			if (is_launcher () || is_window ())
-				return base.get_menu_items ();
-			
-			List<MenuItem> items = new List<MenuItem> ();
-			
-			File dir = File.new_for_path (Prefs.Launcher);
-			try {
-				var enumerator = dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + ","
-					+ FILE_ATTRIBUTE_STANDARD_IS_HIDDEN + ","
-					+ FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
-				
-				FileInfo info;
-				HashTable<string, MenuItem> files = new HashTable<string, MenuItem> (str_hash, str_equal);
-				List<string> keys = new List<string> ();
-				
-				while ((info = enumerator.next_file ()) != null) {
-					if (info.get_is_hidden ())
-						continue;
-				
-					var file = dir.get_child (info.get_name ());
-					
-					if (info.get_name ().has_suffix (".desktop")) {
-						string icon, text;
-						parse_launcher (file.get_path (), out icon, out text);
-						
-						var item = add_menu_item (items, text, icon);
-						item.activate.connect (() => {
-							Services.System.launch (file, {});
-							ClickedAnimation = ClickAnimation.BOUNCE;
-							LastClicked = new DateTime.now_utc ();
-						});
-						files.insert (text, item);
-						keys.append (text);
-					} else {
-						var icon = DrawingService.get_icon_from_file (file) ?? "";
-						
-						var item = add_menu_item (items, info.get_name (), icon);
-						item.activate.connect (() => {
-							Services.System.open (file);
-							ClickedAnimation = ClickAnimation.BOUNCE;
-							LastClicked = new DateTime.now_utc ();
-						});
-						files.insert (info.get_name (), item);
-						keys.append (info.get_name ());
-					}
-				}
-				
-				keys.sort (strcmp);
-				foreach (string s in keys)
-					items.append (files.lookup (s));
-			} catch { }
-			
-			return items;
 		}
 	}
 }

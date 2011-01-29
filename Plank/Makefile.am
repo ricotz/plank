@@ -43,6 +43,7 @@ plank_VALASOURCES = \
 	Items/ApplicationDockItem.vala \
 	Items/DockItem.vala \
 	Items/DockItemPreferences.vala \
+	Items/FileDockItem.vala \
 	Items/PlankDockItem.vala \
 	Items/TransientDockItem.vala \
 	Services/Logger.vala \
