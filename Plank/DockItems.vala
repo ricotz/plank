@@ -204,7 +204,6 @@ namespace Plank
 			item.notify["State"].connect (signal_items_changed);
 			item.notify["LastClicked"].connect (signal_items_changed);
 			
-			item.launcher_changed.connect (update_app);
 			item.app_closed.connect (app_closed);
 			
 			if (item is TransientDockItem)
@@ -220,7 +219,6 @@ namespace Plank
 			item.notify["State"].disconnect (signal_items_changed);
 			item.notify["LastClicked"].disconnect (signal_items_changed);
 			
-			item.launcher_changed.disconnect (update_app);
 			item.app_closed.disconnect (app_closed);
 			
 			if (item is TransientDockItem)
@@ -244,11 +242,6 @@ namespace Plank
 			var new_item = new ApplicationDockItem.with_dockitem (launchers_dir.get_path () + "/" + dockitem);
 			new_item.Position = item.Position;
 			add_item (new_item);
-		}
-		
-		void update_app (DockItem item)
-		{
-			item.update_app ();
 		}
 		
 		static int compare_items (DockItem left, DockItem right)

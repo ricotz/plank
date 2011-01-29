@@ -37,7 +37,6 @@ namespace Plank.Items
 				return;
 			
 			load_from_launcher ();
-			update_app ();
 			start_monitor ();
 		}
 		

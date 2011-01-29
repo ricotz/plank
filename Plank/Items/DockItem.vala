@@ -100,7 +100,10 @@ namespace Plank.Items
 		{
 			Prefs = new DockItemPreferences ();
 			
-			Prefs.notify["Launcher"].connect (() => launcher_changed (this));
+			Prefs.notify["Launcher"].connect (() => {
+				update_app ();
+				launcher_changed (this);
+			});
 			Prefs.notify["Icon"].connect (() => {
 				Surface = null;
 			});
