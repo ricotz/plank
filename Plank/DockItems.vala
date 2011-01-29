@@ -104,8 +104,7 @@ namespace Plank
 
 						// put this into a static method of DockItem?
 						DockItem item;
-						string launcher;
-						get_launcher_value (filename, out launcher);
+						var launcher = DockItem.get_launcher_from_dockitem (filename);
 						if (launcher.has_suffix ("plank.desktop"))
 							item = new PlankDockItem.with_dockitem (filename);
 						else if (launcher.has_suffix (".desktop"))
@@ -312,11 +311,11 @@ namespace Plank
 				make_launcher (terminal + ".dockitem", terminal, 2);
 				make_launcher (calendar + ".dockitem", calendar, 3);
 				make_launcher (media + ".dockitem", media, 4);
+				
+				return true;
 			} catch {
 				return false;
 			}
-			
-			return true;
 		}
 		
 		void make_default_items ()
@@ -367,18 +366,6 @@ namespace Plank
 			}
 			
 			return true;
-		}
-		
-		public static void get_launcher_value (string dockitem, out string launcher)
-		{
-			try {
-				KeyFile file = new KeyFile ();
-				file.load_from_file (dockitem, 0);
-				
-				launcher = file.get_string (typeof (Items.DockItemPreferences).name (), "Launcher");
-			} catch {
-				launcher = "";
-			}
 		}
 	}
 }
