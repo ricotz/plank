@@ -43,8 +43,8 @@ namespace Plank
 			if (Paths.ensure_directory_exists (launchers_dir)) {
 				Logger.debug<DockItems> ("Adding default dock items...");
 				
-				if (!load_default_gnome_items ())
-					load_default_items ();
+				if (!make_default_gnome_items ())
+					make_default_items ();
 				
 				Logger.debug<DockItems> ("done.");
 			}
@@ -64,17 +64,30 @@ namespace Plank
 			Matcher.get_default ().app_opened.connect (app_opened);
 		}
 		
+		~DockItems ()
+		{
+			if (items_monitor == null)
+				return;
+			
+			items_monitor.cancel ();
+			items_monitor = null;
+		}
+		
 		void signal_items_changed ()
 		{
 			items_changed ();
 		}
 		
-		DockItem? item_for_application (Bamf.Application app)
+		ApplicationDockItem? item_for_application (Bamf.Application app)
 		{
-			foreach (DockItem item in Items)
-				if ((item.App != null && item.App == app) || (item.get_launcher () != null
-					&& item.get_launcher () != "" && item.get_launcher () == app.get_desktop_file ()))
-					return item;
+			foreach (DockItem item in Items) {
+				unowned ApplicationDockItem appitem = (item as ApplicationDockItem);
+				if (appitem == null)
+					continue;
+				if ((appitem.App != null && appitem.App == app) || (appitem.get_launcher () != null
+					&& appitem.get_launcher () != "" && appitem.get_launcher () == app.get_desktop_file ()))
+					return appitem;
+			}
 			
 			return null;
 		}
@@ -89,23 +102,31 @@ namespace Plank
 				while ((info = enumerator.next_file ()) != null)
 					if (file_is_dockitem (info)) {
 						var filename = launchers_dir.get_path () + "/" + info.get_name ();
-						var item = new ApplicationDockItem.with_dockitem (filename);
-						if (!item.get_launcher ().has_suffix (".desktop"))
-							item = new FileDockItem.with_dockitem (filename);
-						else if (item.get_launcher ().has_suffix ("plank.desktop"))
+
+						// put this into a static method of DockItem?
+						DockItem item;
+						string launcher;
+						get_launcher_value (filename, out launcher);
+						if (launcher.has_suffix ("plank.desktop"))
 							item = new PlankDockItem.with_dockitem (filename);
+						else if (launcher.has_suffix (".desktop"))
+							item = new ApplicationDockItem.with_dockitem (filename);
+						else
+							item = new FileDockItem.with_dockitem (filename);
 						
 						if (item.ValidItem)
 							add_item (item);
 						else
 							Logger.warn<DockItems> ("The launcher '%s' in dock item '%s' does not exist".printf (item.get_launcher (), filename));
 					}
-			} catch { }
+			} catch {
+				Logger.fatal<DockItems> ("Error loading dock items");
+			}
 			
 			List<string> favs = new List<string> ();
 			
 			foreach (DockItem item in Items)
-				if (!(item is TransientDockItem))
+				if ((item is ApplicationDockItem) && !(item is TransientDockItem))
 					favs.append (item.get_launcher ());
 			
 			Matcher.get_default ().set_favorites (favs);
@@ -154,7 +175,7 @@ namespace Plank
 			if (remove is TransientDockItem)
 				remove_item (remove);
 			else if (remove is ApplicationDockItem)
-				remove.set_app (null);
+				(remove as ApplicationDockItem).set_app (null);
 		}
 		
 		void set_item_positions ()
@@ -181,11 +202,13 @@ namespace Plank
 			if ((event & (FileMonitorEvent.CREATED | FileMonitorEvent.DELETED)) == 0)
 				return;
 			
-			for (int i = 0; i < Items.length (); i++)
-				if (!(Items.nth_data (i) is TransientDockItem)) {
-					Items.delete_link (Items.nth (i));
-					i--;
-				}
+			// remove peristent and invalid items
+			List<DockItem> remove = new List<DockItem> ();
+			foreach (var item in Items)
+				if (!(item is TransientDockItem) || !item.ValidItem)
+					remove.append (item);
+			foreach (var item in remove)
+				remove_item_without_signaling (item);
 			
 			load_items ();
 			add_running_apps ();
@@ -194,37 +217,48 @@ namespace Plank
 			items_changed ();
 		}
 		
-		public void add_item (DockItem item)
-		{
+		void add_item_without_signaling (DockItem item) {
 			Items.insert_sorted (item, (CompareFunc) compare_items);
-			set_item_positions ();
 			
 			item.notify["Icon"].connect (signal_items_changed);
 			item.notify["Indicator"].connect (signal_items_changed);
 			item.notify["State"].connect (signal_items_changed);
 			item.notify["LastClicked"].connect (signal_items_changed);
 			
-			item.app_closed.connect (app_closed);
+			if (item is ApplicationDockItem)
+				(item as ApplicationDockItem).app_closed.connect (app_closed);
 			
 			if (item is TransientDockItem)
 				(item as TransientDockItem).pin_launcher.connect (pin_item);
-			
+		}
+		
+		public void add_item (DockItem item)
+		{
+			add_item_without_signaling (item);
+			set_item_positions ();
+
 			item_added (item);
 		}
 		
-		public void remove_item (DockItem item)
+		void remove_item_without_signaling (DockItem item)
 		{
 			item.notify["Icon"].disconnect (signal_items_changed);
 			item.notify["Indicator"].disconnect (signal_items_changed);
 			item.notify["State"].disconnect (signal_items_changed);
 			item.notify["LastClicked"].disconnect (signal_items_changed);
 			
-			item.app_closed.disconnect (app_closed);
+			if (item is ApplicationDockItem)
+				(item as ApplicationDockItem).app_closed.disconnect (app_closed);
 			
 			if (item is TransientDockItem)
 				(item as TransientDockItem).pin_launcher.disconnect (pin_item);
 			
 			Items.remove (item);
+		}
+			
+		public void remove_item (DockItem item)
+		{
+			remove_item_without_signaling (item);
 			set_item_positions ();
 			
 			item_removed (item);
@@ -238,10 +272,12 @@ namespace Plank
 			if (!make_launcher (dockitem, launcher, item.get_sort ()))
 				return;
 			
-			remove_item (item);
+			remove_item_without_signaling (item);
 			var new_item = new ApplicationDockItem.with_dockitem (launchers_dir.get_path () + "/" + dockitem);
 			new_item.Position = item.Position;
-			add_item (new_item);
+			add_item_without_signaling (new_item);
+			
+			items_changed ();
 		}
 		
 		static int compare_items (DockItem left, DockItem right)
@@ -253,7 +289,7 @@ namespace Plank
 			return 1;
 		}
 		
-		bool load_default_gnome_items ()
+		bool make_default_gnome_items ()
 		{
 			try {
 				// browser
@@ -284,7 +320,7 @@ namespace Plank
 			return true;
 		}
 		
-		void load_default_items ()
+		void make_default_items ()
 		{
 			// add plank item!
 			make_launcher ("plank.dockitem", Build.DATADIR + "/applications/plank.desktop", 0);
@@ -332,6 +368,18 @@ namespace Plank
 			}
 			
 			return true;
+		}
+		
+		public static void get_launcher_value (string dockitem, out string launcher)
+		{
+			try {
+				KeyFile file = new KeyFile ();
+				file.load_from_file (dockitem, 0);
+				
+				launcher = file.get_string (typeof (Items.DockItemPreferences).name (), "Launcher");
+			} catch {
+				launcher = "";
+			}
 		}
 	}
 }

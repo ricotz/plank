@@ -24,6 +24,15 @@ namespace Plank.Services
 			notify.connect (handle_notify);
 		}
 		
+		~Preferences ()
+		{
+			if (backing_monitor == null)
+				return;
+			
+			backing_monitor.cancel ();
+			backing_monitor = null;
+		}
+		
 		void handle_notify (Object sender, ParamSpec property)
 		{
 			notify.disconnect (handle_notify);

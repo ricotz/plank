@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer, Michal Hruby
+//  Copyright (C) 2011 Robert Dyer, Michal Hruby, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -269,16 +269,17 @@ namespace Plank.Widgets
 			get_position (out win_x, out win_y);
 			
 			foreach (DockItem item in Items.Items) {
-				if (item.App == null)
+				unowned ApplicationDockItem appitem = (item as ApplicationDockItem);
+				if (appitem == null || appitem.App == null)
 					continue;
 				
 				Gdk.Rectangle empty = Gdk.Rectangle ();
 				empty.x = empty.y = empty.width = empty.height = 0;
 				
 				if (menu_is_visible () || Renderer.Hidden)
-					WindowControl.update_icon_regions (item.App, empty, win_x, win_y);
+					WindowControl.update_icon_regions (appitem.App, empty, win_x, win_y);
 				else
-					WindowControl.update_icon_regions (item.App, Renderer.item_region (item), win_x, win_y);
+					WindowControl.update_icon_regions (appitem.App, Renderer.item_region (appitem), win_x, win_y);
 			}
 			
 			Renderer.animated_draw ();

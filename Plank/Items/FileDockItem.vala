@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -15,13 +15,14 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using Gdk;
 using Gtk;
 
 using Plank.Drawing;
 
 namespace Plank.Items
 {
-	public class FileDockItem : ApplicationDockItem
+	public class FileDockItem : DockItem
 	{
 		public FileDockItem.with_dockitem (string dockitem)
 		{
@@ -33,6 +34,21 @@ namespace Plank.Items
 			Icon = DrawingService.get_icon_from_file (file) ?? "folder";
 			Text = file.get_basename ();
 			Button = PopupButton.RIGHT | PopupButton.LEFT;
+		}
+		
+		public override void launch ()
+		{
+			Services.System.open (File.new_for_path (Prefs.Launcher));
+		}
+		
+		protected override ClickAnimation on_clicked (uint button, ModifierType mod)
+		{
+			if (button == 1) {
+				launch ();
+				return ClickAnimation.BOUNCE;
+			}
+			
+			return ClickAnimation.NONE;
 		}
 		
 		public override List<MenuItem> get_menu_items ()
@@ -57,7 +73,7 @@ namespace Plank.Items
 					
 					if (info.get_name ().has_suffix (".desktop")) {
 						string icon, text;
-						parse_launcher (file.get_path (), out icon, out text);
+						ApplicationDockItem.parse_launcher (file.get_path (), out icon, out text);
 						
 						var item = add_menu_item (items, text, icon);
 						item.activate.connect (() => {
