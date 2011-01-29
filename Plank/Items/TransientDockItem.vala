@@ -24,7 +24,7 @@ namespace Plank.Items
 {
 	public class TransientDockItem : ApplicationDockItem
 	{
-		public signal void pin_launcher (TransientDockItem item);
+		public signal void pin_launcher ();
 		
 		public TransientDockItem.with_application (Bamf.Application app)
 		{
@@ -49,7 +49,7 @@ namespace Plank.Items
 				int width, height;
 				icon_size_lookup (IconSize.MENU, out width, out height);
 				item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon ("add", width, height)));
-				item.activate.connect (() => pin_launcher (this));
+				item.activate.connect (() => pin_launcher ());
 				items.prepend (item);
 			}
 			

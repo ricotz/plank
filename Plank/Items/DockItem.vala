@@ -58,7 +58,7 @@ namespace Plank.Items
 	{
 		protected const int SCROLL_RATE = 200 * 1000;
 		
-		public signal void launcher_changed (DockItem item);
+		public signal void launcher_changed ();
 		
 		public string Icon { get; set; default = ""; }
 		

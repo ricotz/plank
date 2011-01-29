@@ -26,7 +26,7 @@ namespace Plank.Items
 {
 	public class ApplicationDockItem : DockItem
 	{
-		public signal void app_closed (DockItem item);
+		public signal void app_closed ();
 		
 		public Bamf.Application? App { get; private set; }
 		
@@ -48,7 +48,7 @@ namespace Plank.Items
 			
 			Prefs.notify["Launcher"].connect (() => {
 				update_app ();
-				launcher_changed (this);
+				launcher_changed ();
 			});
 			
 			load_from_launcher ();
@@ -80,7 +80,7 @@ namespace Plank.Items
 		
 		public void signal_app_closed ()
 		{
-			app_closed (this);
+			app_closed ();
 		}
 		
 		protected bool is_window ()
