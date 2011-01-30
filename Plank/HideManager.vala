@@ -72,9 +72,7 @@ namespace Plank
 			var rect_x = win_x + window.height_request - offset;
 			
 			// use the window rect and cursor location to determine if dock is hovered
-			var hovered = y >= win_y && y <= win_y + offset && x >= rect_x && x <= rect_x + window.width_request;
-			if (hovered != DockHovered)
-				DockHovered = hovered;
+			DockHovered = y >= win_y && y <= win_y + offset && x >= rect_x && x <= rect_x + window.width_request;
 		}
 		
 		void update_hidden ()
