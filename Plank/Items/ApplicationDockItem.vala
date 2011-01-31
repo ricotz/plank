@@ -106,7 +106,7 @@ namespace Plank.Items
 			}
 		}
 		
-		public void update_indicator ()
+		public virtual void update_indicator ()
 		{
 			if (App == null || App.is_closed () || !App.is_running ()) {
 				if (Indicator != IndicatorState.NONE)
@@ -124,7 +124,6 @@ namespace Plank.Items
 		{
 			var was_active = (State & ItemState.ACTIVE) == ItemState.ACTIVE;
 			
-			// set active
 			if (is_active && !was_active) {
 				LastActive = new DateTime.now_utc ();
 				State |= ItemState.ACTIVE;
