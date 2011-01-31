@@ -302,8 +302,8 @@ namespace Plank
 			
 			// bounce icon on urgent state
 			var urgent_time = new DateTime.now_utc ().difference (item.LastUrgent);
-			if (Gdk.Screen.get_default().is_composited () && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.BounceTime * 1000)
-				draw_rect.y -= (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.BounceTime * 1000)) * theme.UrgentBounceHeight);
+			if (Gdk.Screen.get_default().is_composited () && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.UrgentBounceTime * 1000)
+				draw_rect.y -= (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * theme.UrgentBounceHeight);
 			
 			// draw active glow
 			var active_time = new DateTime.now_utc ().difference (item.LastActive);
@@ -341,26 +341,28 @@ namespace Plank
 			}
 		}
 		
+		Drawing.Color get_styled_color ()
+		{
+			return Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]).set_min_value (90 / (double) uint16.MAX);
+		}
+		
 		void create_normal_indicator ()
 		{
-			var color = Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
-			color = color.set_min_value (90 / (double) uint16.MAX).set_min_sat (0.4);
-			indicator_buffer = theme.create_indicator (background_buffer, IndicatorSize, color.R, color.G, color.B);
+			var color = get_styled_color ().set_min_sat (0.4);
+			indicator_buffer = theme.create_indicator (background_buffer, IndicatorSize, color);
 		}
 		
 		void create_urgent_indicator ()
 		{
-			var color = Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
-			color = color.set_min_value (90 / (double) uint16.MAX).add_hue (UrgentHueShift).set_sat (1);
-			urgent_indicator_buffer = theme.create_indicator (background_buffer, IndicatorSize, color.R, color.G, color.B);
+			var color = get_styled_color ().add_hue (UrgentHueShift).set_sat (1);
+			urgent_indicator_buffer = theme.create_indicator (background_buffer, IndicatorSize, color);
 		}
 		
 		void create_urgent_glow (DockSurface surface)
 		{
-			var color = Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
-			color = color.set_min_value (90 / (double) uint16.MAX).add_hue (UrgentHueShift).set_sat (1);
+			var color = get_styled_color ().add_hue (UrgentHueShift).set_sat (1);
 
-			var size = (int) 2.5 * Prefs.IconSize;
+			var size = (int) (theme.GlowSize / 10.0 * Prefs.IconSize);
 			urgent_glow_buffer = new DockSurface.with_dock_surface (size, size, surface);
 
 			Cairo.Context cr = urgent_glow_buffer.Context;
@@ -406,7 +408,7 @@ namespace Plank
 					if (now.difference (item.LastUrgent) <= theme.GlowTime * 1000)
 						return true;
 				} else {
-					if (now.difference (item.LastUrgent) <= theme.BounceTime * 1000)
+					if (now.difference (item.LastUrgent) <= theme.UrgentBounceTime * 1000)
 						return true;
 				}
 			}

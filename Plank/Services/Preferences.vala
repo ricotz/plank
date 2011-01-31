@@ -45,6 +45,20 @@ namespace Plank.Services
 			// want to force subclasses to implement this
 		}
 		
+		protected virtual bool is_serializable (string prop)
+		{
+			return false;
+		}
+		
+		protected virtual string serialize (string prop)
+		{
+			return "";
+		}
+		
+		protected virtual void deserialize (string prop, string val)
+		{
+		}
+		
 		File backing_file;
 		FileMonitor backing_monitor;
 		string group_name;
@@ -68,12 +82,6 @@ namespace Plank.Services
 			load_prefs ();
 			
 			start_monitor ();
-		}
-		
-		public Preferences.with_file_and_group (string filename, string group)
-		{
-			this.with_file (filename);
-			group_name = group;
 		}
 		
 		void stop_monitor ()
@@ -134,8 +142,13 @@ namespace Plank.Services
 						val.set_string (file.get_string (group_name, prop.name));
 					else if (type.is_enum ())
 						val.set_enum (file.get_integer (group_name, prop.name));
-					else
+					else if (is_serializable (prop.name)) {
+						deserialize (prop.name, file.get_string (group_name, prop.name));
+						continue;
+					} else {
 						backing_error ("Unsupported preferences type '%s'");
+						continue;
+					}
 					
 					set_property (prop.name, val);
 					verify (prop.name);
@@ -167,8 +180,16 @@ namespace Plank.Services
 					file.set_string (group_name, prop.name, val.get_string ());
 				else if (type.is_enum ())
 					file.set_integer (group_name, prop.name, val.get_enum ());
-				else
+				else if (is_serializable (prop.name))
+					file.set_string (group_name, prop.name, serialize (prop.name));
+				else {
 					backing_error ("Unsupported preferences type '%s'");
+					continue;
+				}
+				
+				var blurb = prop.get_blurb ();
+				if (blurb != null && blurb != "" && blurb != prop.name)
+					file.set_comment (group_name, prop.name, blurb);
 			}
 			
 			Logger.debug<Preferences> ("Saving preferences '%s'".printf (backing_file.get_path ()));

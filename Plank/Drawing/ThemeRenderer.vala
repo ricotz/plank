@@ -25,14 +25,78 @@ namespace Plank.Drawing
 {
 	public class ThemeRenderer : Preferences
 	{
+		[Description(nick = "top-roundness", blurb = "The roundness of the top corners.")]
 		public int TopRoundness { get; set; default = 6; }
 		
+		[Description(nick = "bottom-roundness", blurb = "The roundness of the bottom corners.")]
 		public int BottomRoundness { get; set; default = 6; }
 		
+		[Description(nick = "line-width", blurb = "The thickness (in pixels) of lines drawn.")]
 		public int LineWidth { get; set; default = 1; }
+		
+		[Description(nick = "outer-stroke-color", blurb = "The color (RGBA) of the outer stroke.")]
+		public Color OuterStrokeColor { get; set; }
+		
+		[Description(nick = "fill-start-color", blurb = "The starting color (RGBA) of the fill gradient.")]
+		public Color FillStartColor { get; set; }
+		
+		[Description(nick = "fill-end-color", blurb = "The ending color (RGBA) of the fill gradient.")]
+		public Color FillEndColor { get; set; }
+		
+		[Description(nick = "inner-stroke-color", blurb = "The color (RGBA) of the inner stroke.")]
+		public Color InnerStrokeColor { get; set; }
+		
+		construct
+		{
+			OuterStrokeColor = Color (0.1647, 0.1647, 0.1647, 1);
+			FillStartColor = Color (0.1647, 0.1647, 0.1647, 1);
+			FillEndColor = Color (0.3176, 0.3176, 0.3176, 1);
+			InnerStrokeColor = Color (1, 1, 1, 1);
+		}
+		
+		protected override bool is_serializable (string prop)
+		{
+			if (prop == "OuterStrokeColor")
+				return true;
+			if (prop == "FillStartColor")
+				return true;
+			if (prop == "FillEndColor")
+				return true;
+			if (prop == "InnerStrokeColor")
+				return true;
+			
+			return false;
+		}
+		
+		protected override string serialize (string prop)
+		{
+			if (prop == "OuterStrokeColor")
+				return OuterStrokeColor.to_string ();
+			if (prop == "FillStartColor")
+				return FillStartColor.to_string ();
+			if (prop == "FillEndColor")
+				return FillEndColor.to_string ();
+			if (prop == "InnerStrokeColor")
+				return InnerStrokeColor.to_string ();
+			
+			return "";
+		}
+		
+		protected override void deserialize (string prop, string val)
+		{
+			if (prop == "OuterStrokeColor")
+				OuterStrokeColor.from_string (val);
+			else if (prop == "FillStartColor")
+				FillStartColor.from_string (val);
+			else if (prop == "FillEndColor")
+				FillEndColor.from_string (val);
+			else if (prop == "InnerStrokeColor")
+				InnerStrokeColor.from_string (val);
+		}
 		
 		public ThemeRenderer ()
 		{
+			base ();
 		}
 		
 		public void load (string type)
@@ -58,8 +122,8 @@ namespace Plank.Drawing
 			var bottom_offset = get_bottom_offset ();
 			
 			var gradient = new Pattern.linear (0, 0, 0, surface.Height);
-			gradient.add_color_stop_rgba (0, 0.1647, 0.1647, 0.1647, 1);
-			gradient.add_color_stop_rgba (1, 0.3176, 0.3176, 0.3176, 1);
+			gradient.add_color_stop_rgba (0, FillStartColor.R, FillStartColor.G, FillStartColor.B, FillStartColor.A);
+			gradient.add_color_stop_rgba (1, FillEndColor.R, FillEndColor.G, FillEndColor.B, FillEndColor.A);
 			
 			cr.save ();
 			cr.set_source (gradient);
@@ -74,17 +138,17 @@ namespace Plank.Drawing
 			cr.fill_preserve ();
 			cr.restore ();
 			
-			cr.set_source_rgba (0.1647, 0.1647, 0.1647, 1);
+			cr.set_source_rgba (OuterStrokeColor.R, OuterStrokeColor.G, OuterStrokeColor.B, OuterStrokeColor.A);
 			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			
 			gradient = new Pattern.linear (0, top_offset,
 				0, surface.Height - top_offset - bottom_offset);
 			
-			gradient.add_color_stop_rgba (0, 1, 1, 1, 0.5);
-			gradient.add_color_stop_rgba ((TopRoundness > 0 ? TopRoundness : LineWidth) / (double) surface.Height, 1, 1, 1, 0.12);
-			gradient.add_color_stop_rgba ((surface.Height - (BottomRoundness > 0 ? BottomRoundness : LineWidth)) / (double) surface.Height, 1, 1, 1, 0.08);
-			gradient.add_color_stop_rgba (1, 1, 1, 1, 0.19);
+			gradient.add_color_stop_rgba (0, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.5);
+			gradient.add_color_stop_rgba ((TopRoundness > 0 ? TopRoundness : LineWidth) / (double) surface.Height, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.12);
+			gradient.add_color_stop_rgba ((surface.Height - (BottomRoundness > 0 ? BottomRoundness : LineWidth)) / (double) surface.Height, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.08);
+			gradient.add_color_stop_rgba (1, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.19);
 			
 			cr.save ();
 			cr.set_source (gradient);

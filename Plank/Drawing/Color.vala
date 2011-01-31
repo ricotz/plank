@@ -306,5 +306,20 @@ namespace Plank.Drawing
 				}
 			}
 		}
+		
+		public string to_string ()
+		{
+			return "%f;;%f;;%f;;%f".printf (R, G, B, A);
+		}
+		
+		public void from_string (string s)
+		{
+			string[] parts = s.split (";;");
+			
+			R = parts [0].to_double ();
+			G = parts [1].to_double ();
+			B = parts [2].to_double ();
+			A = parts [3].to_double ();
+		}
 	}
 }

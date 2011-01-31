@@ -24,40 +24,55 @@ namespace Plank.Drawing
 		const double MIN_INDICATOR_SIZE = 0.0;
 		const double MAX_INDICATOR_SIZE = 10.0;
 		
+		[Description(nick = "horizontal-padding", blurb = "The padding on the left/right dock edges, in tenths of a percent of IconSize.")]
 		public double HorizPadding { get; set; default = 0.0; }
 		
+		[Description(nick = "top-padding", blurb = "The padding on the top dock edge, in tenths of a percent of IconSize.")]
 		public double TopPadding { get; set; default = -11.0; }
 		
+		[Description(nick = "top-padding", blurb = "The padding on the bottom dock edge, in tenths of a percent of IconSize.")]
 		public double BottomPadding { get; set; default = 2.5; }
 		
+		[Description(nick = "item-padding", blurb = "The padding between items on the dock, in tenths of a percent of IconSize.")]
 		public double ItemPadding { get; set; default = 2.0; }
 		
+		[Description(nick = "indicator-size", blurb = "The size of item indicators, in tenths of a percent of IconSize.")]
 		public double IndicatorSize { get; set; default = 5.0; }
 		
+		[Description(nick = "urgent-bounce", blurb = "The height (in pixels) to bounce an icon when the application sets urgent.")]
 		public int UrgentBounceHeight { get; set; default = 80; }
 		
+		[Description(nick = "launch-bounce", blurb = "The height (in pixels) to bounce an icon when launching an application.")]
 		public int LaunchBounceHeight { get; set; default = 30; }
 		
+		[Description(nick = "click-time", blurb = "The amount of time (in ms) for click animations.")]
 		public int ClickTime { get; set; default = 600; }
 		
-		public int BounceTime { get; set; default = 600; }
+		[Description(nick = "urgent-bounce-time", blurb = "The amount of time (in ms) to bounce an urgent icon.")]
+		public int UrgentBounceTime { get; set; default = 600; }
 		
+		[Description(nick = "active-time", blurb = "The amount of time (in ms) for active window indicator animations.")]
 		public int ActiveTime { get; set; default = 300; }
 		
+		[Description(nick = "slide-time", blurb = "NOT USED YET")]
 		public int SlideTime { get; set; default = 200; }
 		
+		[Description(nick = "fade-time", blurb = "NOT USED YET")]
 		public int FadeTime { get; set; default = 200; }
 		
+		[Description(nick = "hide-time", blurb = "The time (in ms) to slide the dock in/out on a hide.")]
 		public int HideTime { get; set; default = 150; }
 		
-		// the urgent glow when the dock is hidden
+		[Description(nick = "glow-size", blurb = "The size of the urgent glow (shown when dock is hidden), in tenths of a percent of IconSize.")]
 		public int GlowSize { get; set; default = 30; }
 		
+		[Description(nick = "glow-time", blurb = "The total time (in ms) to show the hidden-dock urgent glow.")]
 		public int GlowTime { get; set; default = 10000; }
 		
+		[Description(nick = "glow-pulse-time", blurb = "The time (in ms) of each pulse of the hidden-dock urgent glow.")]
 		public int GlowPulseTime { get; set; default = 2000; }
 		
-		public DockSurface create_indicator (DockSurface background, int size, double r, double g, double b)
+		public DockSurface create_indicator (DockSurface background, int size, Color color)
 		{
 			DockSurface surface = new DockSurface.with_dock_surface (size, size, background);
 			surface.Clear ();
@@ -72,11 +87,11 @@ namespace Plank.Drawing
 			
 			var rg = new Pattern.radial (x, y, 0, x, y, size / 2);
 			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
-			rg.add_color_stop_rgba (0.1, r, g, b, 1);
-			rg.add_color_stop_rgba (0.2, r, g, b, 0.6);
-			rg.add_color_stop_rgba (0.25, r, g, b, 0.25);
-			rg.add_color_stop_rgba (0.5, r, g, b, 0.15);
-			rg.add_color_stop_rgba (1.0, r, g, b, 0.0);
+			rg.add_color_stop_rgba (0.1, color.R, color.G, color.B, 1);
+			rg.add_color_stop_rgba (0.2, color.R, color.G, color.B, 0.6);
+			rg.add_color_stop_rgba (0.25, color.R, color.G, color.B, 0.25);
+			rg.add_color_stop_rgba (0.5, color.R, color.G, color.B, 0.15);
+			rg.add_color_stop_rgba (1.0, color.R, color.G, color.B, 0.0);
 			
 			cr.set_source (rg);
 			cr.fill ();
@@ -84,7 +99,7 @@ namespace Plank.Drawing
 			return surface;
 		}
 		
-		public void draw_active_glow (DockSurface surface, int horiz_pad, DockSurface clip_buffer, Gdk.Rectangle rect, Drawing.Color color, double opacity)
+		public void draw_active_glow (DockSurface surface, int horiz_pad, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity)
 		{
 			if (opacity == 0)
 				return;
@@ -145,9 +160,9 @@ namespace Plank.Drawing
 					ClickTime = 0;
 				break;
 			
-			case "BounceTime":
-				if (BounceTime < 0)
-					BounceTime = 0;
+			case "UrgentBounceTime":
+				if (UrgentBounceTime < 0)
+					UrgentBounceTime = 0;
 				break;
 			
 			case "ActiveTime":
