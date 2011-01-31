@@ -189,7 +189,9 @@ namespace Plank.Services
 				
 				var blurb = prop.get_blurb ();
 				if (blurb != null && blurb != "" && blurb != prop.name)
-					file.set_comment (group_name, prop.name, blurb);
+					try {
+						file.set_comment (group_name, prop.name, blurb);
+					} catch { }
 			}
 			
 			Logger.debug<Preferences> ("Saving preferences '%s'".printf (backing_file.get_path ()));
