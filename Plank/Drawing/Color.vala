@@ -309,17 +309,20 @@ namespace Plank.Drawing
 		
 		public string to_string ()
 		{
-			return "%.2f;;%.2f;;%.2f;;%.2f".printf (R * 100, G * 100, B * 100, A * 100);
+			return "%d;;%d;;%d;;%d".printf ((int) (R * uint8.MAX),
+				(int) (G * uint8.MAX),
+				(int) (B * uint8.MAX),
+				(int) (A * uint8.MAX));
 		}
 		
 		public void from_string (string s)
 		{
 			string[] parts = s.split (";;");
 			
-			R = Math.fmin (1, Math.fmax (0, parts [0].to_double () / 100.0));
-			G = Math.fmin (1, Math.fmax (0, parts [1].to_double () / 100.0));
-			B = Math.fmin (1, Math.fmax (0, parts [2].to_double () / 100.0));
-			A = Math.fmin (1, Math.fmax (0, parts [3].to_double () / 100.0));
+			R = Math.fmin (uint8.MAX, Math.fmax (0, parts [0].to_int ())) * uint8.MAX;
+			G = Math.fmin (uint8.MAX, Math.fmax (0, parts [1].to_int ())) * uint8.MAX;
+			B = Math.fmin (uint8.MAX, Math.fmax (0, parts [2].to_int ())) * uint8.MAX;
+			A = Math.fmin (uint8.MAX, Math.fmax (0, parts [3].to_int ())) * uint8.MAX;
 		}
 	}
 }
