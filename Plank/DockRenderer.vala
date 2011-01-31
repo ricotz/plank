@@ -290,6 +290,10 @@ namespace Plank
 				icon_surface.Context.set_operator (Cairo.Operator.OVER);
 			}
 			
+			// draw badge text
+			if (item.BadgeText != "")
+				draw_badge (icon_surface, item.BadgeText);
+			
 			// darken the icon
 			if (darken > 0) {
 				icon_surface.Context.rectangle (0, 0, icon_surface.Width, icon_surface.Height);
@@ -380,6 +384,91 @@ namespace Plank
 
 			cr.set_source (rg);
 			cr.fill ();
+		}
+		
+		public void draw_badge (DockSurface surface, string badge_text)
+		{
+			var theme_color = Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
+			var badge_color_start = theme_color.set_val (1).set_sat (0.47);
+			var badge_color_end = theme_color.set_val (0.5).set_sat (0.51);
+			
+			var is_small = Prefs.IconSize < 32;
+			int padding = 4;
+			int lineWidth = 2;
+			double size = (is_small ? 0.9 : 0.65) * Math.fmin (surface.Width, surface.Height);
+			double x = surface.Width - size / 2;
+			double y = size / 2;
+			
+			if (!is_small) {
+				// draw outline shadow
+				surface.Context.set_line_width (lineWidth);
+				surface.Context.set_source_rgba (0, 0, 0, 0.5);
+				surface.Context.arc (x, y + 1, size / 2 - lineWidth, 0, Math.PI * 2);
+				surface.Context.stroke ();
+				
+				// draw filled gradient
+				var rg = new Pattern.radial (x, lineWidth, 0, x, lineWidth, size);
+				rg.add_color_stop_rgba (0, badge_color_start.R, badge_color_start.G, badge_color_start.B, badge_color_start.A);
+				rg.add_color_stop_rgba (1.0, badge_color_end.R, badge_color_end.G, badge_color_end.B, badge_color_end.A);
+				
+				surface.Context.set_source (rg);
+				surface.Context.arc (x, y, size / 2 - lineWidth, 0, Math.PI * 2);
+				surface.Context.fill ();
+				
+				// draw outline
+				surface.Context.set_source_rgba (1, 1, 1, 1);
+				surface.Context.arc (x, y, size / 2 - lineWidth, 0, Math.PI * 2);
+				surface.Context.stroke ();
+				
+				surface.Context.set_line_width (lineWidth / 2);
+				surface.Context.set_source_rgba (badge_color_end.R, badge_color_end.G, badge_color_end.B, badge_color_end.A);
+				surface.Context.arc (x, y, size / 2 - 2 * lineWidth, 0, Math.PI * 2);
+				surface.Context.stroke ();
+				
+				surface.Context.set_source_rgba (0, 0, 0, 0.2);
+			} else {
+				lineWidth = 0;
+				padding = 2;
+			}
+			
+			var layout = new Pango.Layout (pango_context_get ());
+			layout.set_width ((int) (surface.Height / 2 * Pango.SCALE));
+			layout.set_ellipsize (Pango.EllipsizeMode.NONE);
+			
+			var font_description = new Gtk.Style ().font_desc;
+			font_description.set_absolute_size ((int) (surface.Height / 2 * Pango.SCALE));
+			font_description.set_weight (Pango.Weight.BOLD);
+			layout.set_font_description (font_description);
+			
+			layout.set_text (badge_text, -1);
+			Pango.Rectangle ink_rect, logical_rect;
+			layout.get_pixel_extents (out ink_rect, out logical_rect);
+			
+			size -= 2 * padding + 2 * lineWidth;
+			
+			double scale = Math.fmin (1, Math.fmin (size / (double) logical_rect.width, size / (double) logical_rect.height));
+			
+			if (!is_small) {
+				surface.Context.set_source_rgba (0, 0, 0, 0.2);
+			} else {
+				surface.Context.set_source_rgba (0, 0, 0, 0.6);
+				x = surface.Width - scale * logical_rect.width / 2;
+				y = scale * logical_rect.height / 2;
+			}
+			
+			surface.Context.move_to (x - scale * logical_rect.width / 2, y - scale * logical_rect.height / 2);
+			
+			// draw text
+			surface.Context.save ();
+			if (scale < 1)
+				surface.Context.scale (scale, scale);
+			
+			surface.Context.set_line_width (2);
+			Pango.cairo_layout_path (surface.Context, layout);
+			surface.Context.stroke_preserve ();
+			surface.Context.set_source_rgba (1, 1, 1, 1);
+			surface.Context.fill ();
+			surface.Context.restore ();
 		}
 		
 		void theme_changed ()

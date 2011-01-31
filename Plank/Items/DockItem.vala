@@ -64,6 +64,8 @@ namespace Plank.Items
 		
 		public string Text { get; set; default = ""; }
 		
+		public string BadgeText { get; set; default = ""; }
+		
 		public int Position { get; set; default = 0; }
 		
 		public PopupButton Button { get; protected set; default = PopupButton.RIGHT; }
