@@ -84,15 +84,16 @@ namespace Plank.Drawing
 			return surface;
 		}
 		
-		public void draw_active_glow (DockSurface surface, DockSurface clip_buffer, Gdk.Rectangle rect, Drawing.Color color, double opacity)
+		public void draw_active_glow (DockSurface surface, int horiz_pad, DockSurface clip_buffer, Gdk.Rectangle rect, Drawing.Color color, double opacity)
 		{
 			if (opacity == 0)
 				return;
 			
-			surface.Context.translate (0, surface.Height - clip_buffer.Height + LineWidth);
+			var xoffset = horiz_pad < 0 ? -horiz_pad : 0;
+			surface.Context.translate (xoffset, surface.Height - clip_buffer.Height + LineWidth);
 			draw_inner_rect (surface.Context, clip_buffer);
 			surface.Context.clip ();
-			surface.Context.translate (0, clip_buffer.Height - surface.Height - LineWidth);
+			surface.Context.translate (-xoffset, clip_buffer.Height - surface.Height - LineWidth);
 			
 			rect.y += 2 * get_top_offset ();
 			rect.height -= 2 * get_top_offset () + 2 * get_bottom_offset ();

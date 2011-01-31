@@ -44,7 +44,15 @@ namespace Plank
 			}
 		}
 		
+		public int VisibleDockWidth {
+			get { return HorizPadding < 0 ? DockBackgroundWidth - 2 * HorizPadding : DockBackgroundWidth; }
+		}
+		
 		public int DockWidth {
+			get { return VisibleDockWidth; }
+		}
+		
+		int DockBackgroundWidth {
 			get { return (int) window.Items.Items.length () * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
 		}
 		
@@ -157,7 +165,7 @@ namespace Plank
 			
 			rect.x = 0;
 			rect.y = (int) (VisibleDockHeight * HideOffset);
-			rect.width = DockWidth;
+			rect.width = VisibleDockWidth;
 			rect.height = VisibleDockHeight;
 			
 			return rect;
@@ -167,7 +175,7 @@ namespace Plank
 		{
 			Gdk.Rectangle rect = Gdk.Rectangle ();
 			
-			rect.x = 2 * theme.LineWidth + HorizPadding + item.Position * (ItemPadding + Prefs.IconSize);
+			rect.x = 2 * theme.LineWidth + (HorizPadding > 0 ? HorizPadding : 0) + item.Position * (ItemPadding + Prefs.IconSize);
 			rect.y = DockHeight - VisibleDockHeight;
 			rect.width = Prefs.IconSize + ItemPadding;
 			rect.height = VisibleDockHeight;
@@ -177,11 +185,11 @@ namespace Plank
 		
 		public void draw_dock (Context cr)
 		{
-			if (main_buffer != null && (main_buffer.Height != DockHeight || main_buffer.Width != DockWidth))
+			if (main_buffer != null && (main_buffer.Width != VisibleDockWidth || main_buffer.Height != DockHeight))
 				reset_buffers ();
 			
 			if (main_buffer == null)
-				main_buffer = new DockSurface.with_surface (DockWidth, DockHeight, cr.get_target ());
+				main_buffer = new DockSurface.with_surface (VisibleDockWidth, DockHeight, cr.get_target ());
 			
 			main_buffer.Clear ();
 			
@@ -220,12 +228,12 @@ namespace Plank
 		
 		void draw_dock_background (DockSurface surface)
 		{
-			if (background_buffer == null || background_buffer.Width != surface.Width || background_buffer.Height != DockBackgroundHeight) {
-				background_buffer = new DockSurface.with_dock_surface (surface.Width, DockBackgroundHeight, surface);
+			if (background_buffer == null || background_buffer.Width != DockBackgroundWidth || background_buffer.Height != DockBackgroundHeight) {
+				background_buffer = new DockSurface.with_dock_surface (DockBackgroundWidth, DockBackgroundHeight, surface);
 				theme.draw_background (background_buffer);
 			}
 			
-			surface.Context.set_source_surface (background_buffer.Internal, 0, surface.Height - background_buffer.Height);
+			surface.Context.set_source_surface (background_buffer.Internal, (surface.Width - background_buffer.Width) / 2.0, surface.Height - background_buffer.Height);
 			surface.Context.paint ();
 		}
 		
@@ -302,7 +310,7 @@ namespace Plank
 			var opacity = Math.fmin (1, active_time / (double) (theme.ActiveTime * 1000));
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
-			theme.draw_active_glow (surface, background_buffer, hover_rect, item.AverageIconColor, opacity);
+			theme.draw_active_glow (surface, HorizPadding, background_buffer, hover_rect, item.AverageIconColor, opacity);
 			
 			// draw the icon
 			surface.Context.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);
