@@ -106,7 +106,7 @@ namespace Plank.Items
 			}
 		}
 		
-		public virtual void update_indicator ()
+		public void update_indicator ()
 		{
 			if (App == null || App.is_closed () || !App.is_running ()) {
 				if (Indicator != IndicatorState.NONE)

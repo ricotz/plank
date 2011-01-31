@@ -149,19 +149,13 @@ namespace Plank
 					last_sort = item.get_sort ();
 			
 			var launcher = app.get_desktop_file ();
-			if (!app.user_visible ())
-				return;
-		
 			if (launcher != "" && !File.new_for_path (launcher).query_exists ())
-				return;
-		
-			if (WindowControl.get_num_windows (app) == 0)
 				return;
 			
 			var found = item_for_application (app);
 			if (found != null) {
 				found.set_app (app);
-			} else {
+			} else if (app.user_visible () && WindowControl.get_num_windows (app) > 0) {
 				var new_item = new TransientDockItem.with_application (app);
 				new_item.set_sort (last_sort + 1);
 				add_item (new_item);

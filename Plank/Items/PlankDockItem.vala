@@ -48,10 +48,5 @@ namespace Plank.Items
 			
 			return items;
 		}
-		
-		public override void update_indicator ()
-		{
-			Indicator = IndicatorState.SINGLE;
-		}
 	}
 }
