@@ -16,6 +16,7 @@
 // 
 
 using Bamf;
+using Gee;
 using Wnck;
 
 namespace Plank.Services.Windows
@@ -35,7 +36,7 @@ namespace Plank.Services.Windows
 			uint count = 0;
 			
 			if (app != null) {
-				unowned List<Bamf.View> children = app.get_children ();
+				unowned GLib.List<Bamf.View> children = app.get_children ();
 				for (int i = 0; i < children.length (); i++) {
 					var view = children.nth_data (i);
 					if (!(view is Bamf.Window && view.user_visible ()))
@@ -81,19 +82,19 @@ namespace Plank.Services.Windows
 			return false;
 		}
 		
-		public static List<Bamf.Window> get_windows (Bamf.Application? app)
+		public static ArrayList<Bamf.Window> get_windows (Bamf.Application? app)
 		{
 			if (app == null)
-				return new List<Bamf.Window> ();
+				return new ArrayList<Bamf.Window> ();
 			
-			List<Bamf.Window> windows = new List<Bamf.Window> ();
+			ArrayList<Bamf.Window> windows = new ArrayList<Bamf.Window> ();
 			
-			unowned List<Bamf.View> children = app.get_children ();
+			unowned GLib.List<Bamf.View> children = app.get_children ();
 			for (int i = 0; i < children.length (); i++) {
 				var view = children.nth_data (i);
 				if (!(view is Bamf.Window && view.user_visible ()))
 					continue;
-				windows.append (view as Bamf.Window);
+				windows.add (view as Bamf.Window);
 			}
 			
 			return windows;
@@ -275,19 +276,19 @@ namespace Plank.Services.Windows
 		
 		public static void smart_focus (Bamf.Application? app)
 		{
-			unowned List<Wnck.Window> stack = Screen.get_default ().get_windows_stacked ();
+			unowned GLib.List<Wnck.Window> stack = Screen.get_default ().get_windows_stacked ();
 			
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
 			
-			List<Wnck.Window> windows = new List<Wnck.Window> ();
+			ArrayList<Wnck.Window> windows = new ArrayList<Wnck.Window> ();
 			bool not_in_viewport = true;
 			bool urgent = false;
 			
 			foreach (Wnck.Window window in stack) {
 				for (int j = 0; xids != null && j < xids.length; j++)
 					if (xids.index (j) == window.get_xid ()) {
-						windows.append (window);
+						windows.add (window);
 						if (!window.is_skip_tasklist () && window.is_in_viewport (window.get_screen ().get_active_workspace ()))
 							not_in_viewport = false;
 						if (window.needs_attention ())
@@ -323,10 +324,10 @@ namespace Plank.Services.Windows
 			focus (app);
 		}
 		
-		static void intelligent_focus_off_viewport_window (Wnck.Window targetWindow, List<Wnck.Window> additional_windows)
+		static void intelligent_focus_off_viewport_window (Wnck.Window targetWindow, ArrayList<Wnck.Window> additional_windows)
 		{
-			for (int i = (int) additional_windows.length () - 1; i >= 0; i--) {
-				var window = additional_windows.nth_data (i);
+			for (int i = (int) additional_windows.size - 1; i >= 0; i--) {
+				var window = additional_windows.get (i);
 				if (!window.is_minimized () && windows_share_viewport (targetWindow, window)) {
 					center_and_focus_window (window);
 					Thread.usleep (10000);
@@ -335,7 +336,7 @@ namespace Plank.Services.Windows
 			
 			center_and_focus_window (targetWindow);
 			
-			if (additional_windows.length () <= 1)
+			if (additional_windows.size <= 1)
 				return;
 			
 			// we do this to make sure our active window is also at the front... Its a tricky thing to do.

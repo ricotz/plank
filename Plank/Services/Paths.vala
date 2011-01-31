@@ -15,6 +15,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using Gee;
+
 namespace Plank.Services
 {
 	// This class follows the XDG Base Directory specification:
@@ -38,7 +40,7 @@ namespace Plank.Services
 		public static File XdgCacheHomeFolder { get; protected set; }
 		
 		// $XDG_DATA_DIRS - defaults to /usr/local/share/:/usr/share/
-		public static unowned List<File> XdgDataDirFolders { get; protected set; }
+		public static ArrayList<File> XdgDataDirFolders { get; protected set; }
 		
 		
 		// defaults to XdgConfigHomeFolder/plank
@@ -80,13 +82,13 @@ namespace Plank.Services
 			else
 				XdgCacheHomeFolder = File.new_for_path (xdg_cache_home);
 			
-			List<File> dirs = new List<File> ();
+			ArrayList<File> dirs = new ArrayList<File> ();
 			if (xdg_data_dirs == null || xdg_data_dirs.length == 0) {
-				dirs.append (File.new_for_path ("/usr/local/share"));
-				dirs.append (File.new_for_path ("/usr/share"));
+				dirs.add (File.new_for_path ("/usr/local/share"));
+				dirs.add (File.new_for_path ("/usr/share"));
 			} else {
 				foreach (string path in xdg_data_dirs.split (":"))
-					dirs.append (File.new_for_path (path));
+					dirs.add (File.new_for_path (path));
 			}
 			XdgDataDirFolders = dirs;
 			

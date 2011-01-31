@@ -16,6 +16,7 @@
 // 
 
 using Gdk;
+using Gee;
 using Gtk;
 
 using Plank.Drawing;
@@ -173,9 +174,9 @@ namespace Plank.Items
 		{
 		}
 		
-		public virtual List<MenuItem> get_menu_items ()
+		public virtual ArrayList<MenuItem> get_menu_items ()
 		{
-			List<MenuItem> items = new List<MenuItem> ();
+			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
 			
 			return items;
 		}
@@ -190,7 +191,7 @@ namespace Plank.Items
 			return "plank://" + unique_id ();
 		}
 		
-		protected MenuItem add_menu_item (List<MenuItem> items, string title, string icon)
+		protected MenuItem create_menu_item (string title, string icon)
 		{
 			int width, height;
 			var item = new ImageMenuItem.with_mnemonic (title);

@@ -16,6 +16,7 @@
 // 
 
 using Gdk;
+using Gee;
 using Gtk;
 
 using Plank.Drawing;
@@ -51,9 +52,9 @@ namespace Plank.Items
 			return ClickAnimation.NONE;
 		}
 		
-		public override List<MenuItem> get_menu_items ()
+		public override ArrayList<MenuItem> get_menu_items ()
 		{
-			List<MenuItem> items = new List<MenuItem> ();
+			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
 			
 			File dir = File.new_for_path (Prefs.Launcher);
 			try {
@@ -62,8 +63,8 @@ namespace Plank.Items
 					+ FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
 				
 				FileInfo info;
-				HashTable<string, MenuItem> files = new HashTable<string, MenuItem> (str_hash, str_equal);
-				List<string> keys = new List<string> ();
+				HashMap<string, MenuItem> files = new HashMap<string, MenuItem> (str_hash, str_equal);
+				ArrayList<string> keys = new ArrayList<string> ();
 				
 				while ((info = enumerator.next_file ()) != null) {
 					if (info.get_is_hidden ())
@@ -75,31 +76,31 @@ namespace Plank.Items
 						string icon, text;
 						ApplicationDockItem.parse_launcher (file.get_path (), out icon, out text);
 						
-						var item = add_menu_item (items, text, icon);
+						var item = create_menu_item (text, icon);
 						item.activate.connect (() => {
 							Services.System.launch (file, {});
 							ClickedAnimation = ClickAnimation.BOUNCE;
 							LastClicked = new DateTime.now_utc ();
 						});
-						files.insert (text, item);
-						keys.append (text);
+						files.set (text, item);
+						keys.add (text);
 					} else {
 						var icon = DrawingService.get_icon_from_file (file) ?? "";
 						
-						var item = add_menu_item (items, info.get_name (), icon);
+						var item = create_menu_item (info.get_name (), icon);
 						item.activate.connect (() => {
 							Services.System.open (file);
 							ClickedAnimation = ClickAnimation.BOUNCE;
 							LastClicked = new DateTime.now_utc ();
 						});
-						files.insert (info.get_name (), item);
-						keys.append (info.get_name ());
+						files.set (info.get_name (), item);
+						keys.add (info.get_name ());
 					}
 				}
 				
 				keys.sort (strcmp);
 				foreach (string s in keys)
-					items.append (files.lookup (s));
+					items.add (files.get (s));
 			} catch { }
 			
 			return items;

@@ -41,7 +41,7 @@ namespace Plank.Services
 				return;
 			}
 			
-			List<File> mounted_files = new List<File> ();
+			GLib.List<File> mounted_files = new GLib.List<File> ();
 			
 			// make sure all files are mounted
 			foreach (File f in files) {
@@ -71,7 +71,7 @@ namespace Plank.Services
 			return false;
 		}
 		
-		static void launch_with_files (File? app, List<File> files)
+		static void launch_with_files (File? app, GLib.List<File> files)
 		{
 			if (app == null && files.length () == 0)
 				return;
@@ -98,7 +98,7 @@ namespace Plank.Services
 				}
 				
 				if (info.supports_uris ()) {
-					List<string> uris = new List<string> ();
+					GLib.List<string> uris = new GLib.List<string> ();
 					foreach (File f in files)
 						uris.append (f.get_uri ());
 					info.launch_uris (uris, new AppLaunchContext ());

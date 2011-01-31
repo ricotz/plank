@@ -16,6 +16,7 @@
 // 
 
 using Gdk;
+using Gee;
 using Gtk;
 
 namespace Plank.Items
@@ -33,17 +34,17 @@ namespace Plank.Items
 			return ClickAnimation.DARKEN;
 		}
 		
-		public override List<MenuItem> get_menu_items ()
+		public override ArrayList<MenuItem> get_menu_items ()
 		{
-			List<MenuItem> items = new List<MenuItem> ();
+			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
 			
 			var item = new ImageMenuItem.from_stock (STOCK_ABOUT, null);
 			item.activate.connect (() => Plank.show_about ());
-			items.append (item);
+			items.add (item);
 			
 			item = new ImageMenuItem.from_stock (STOCK_QUIT, null);
 			item.activate.connect (() => Plank.quit ());
-			items.append (item);
+			items.add (item);
 			
 			return items;
 		}

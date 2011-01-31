@@ -17,6 +17,7 @@
 
 using Cairo;
 using Gdk;
+using Gee;
 using Gtk;
 
 using Plank.Services;
@@ -65,12 +66,12 @@ namespace Plank.Drawing
 		
 		public static Pixbuf load_icon (string names, int width, int height)
 		{
-			List<string> all_names = new List<string> ();
+			ArrayList<string> all_names = new ArrayList<string> ();
 			
 			foreach (string s in names.split (";;"))
-				all_names.append (s);
+				all_names.add (s);
 			foreach (string s in MISSING_ICONS.split (";;"))
-				all_names.append (s);
+				all_names.add (s);
 			
 			Pixbuf pbuf = null;
 			
@@ -85,7 +86,7 @@ namespace Plank.Drawing
 				if (pbuf != null)
 					break;
 				
-				if (name != all_names.nth_data (all_names.length ()))
+				if (name != all_names.last ())
 					Logger.info<DrawingService> ("Could not find icon '%s'".printf (name));
 			}
 			

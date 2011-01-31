@@ -15,6 +15,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using Gee;
+
 namespace Plank.Services.Windows
 {
 	public class Matcher : GLib.Object
@@ -74,14 +76,18 @@ namespace Plank.Services.Windows
 				app_closed (arg1 as Bamf.Application);
 		}
 		
-		public unowned List<Bamf.Application> active_launchers ()
+		public ArrayList<Bamf.Application> active_launchers ()
 		{
-			return Bamf.Matcher.get_default ().get_applications ();
+			unowned GLib.List<Bamf.Application> apps = Bamf.Matcher.get_default ().get_applications ();
+			ArrayList<Bamf.Application> list = new ArrayList<Bamf.Application> ();
+			foreach (Bamf.Application a in apps)
+				list.add (a);
+			return list;
 		}
 		
 		public Bamf.Application? app_for_launcher (string launcher)
 		{
-			unowned List<Bamf.Application> apps = Bamf.Matcher.get_default ().get_applications ();
+			unowned GLib.List<Bamf.Application> apps = Bamf.Matcher.get_default ().get_applications ();
 			foreach (Bamf.Application app in apps)
 				if (app.get_desktop_file () == launcher)
 					return app;
@@ -89,12 +95,12 @@ namespace Plank.Services.Windows
 			return null;
 		}
 		
-		public void set_favorites (List<string> favs)
+		public void set_favorites (ArrayList<string> favs)
 		{
-			string[] paths = new string[favs.length ()];
+			string[] paths = new string[favs.size];
 			
-			for (int i = 0; i < favs.length (); i++)
-				paths [i] = favs.nth_data (i);
+			for (int i = 0; i < favs.size; i++)
+				paths [i] = favs.get (i);
 			
 			Bamf.Matcher.get_default ().register_favorites (paths);
 		}

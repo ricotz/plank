@@ -16,6 +16,7 @@
 // 
 
 using GConf;
+using Gee;
 
 using Plank.Items;
 
@@ -30,7 +31,7 @@ namespace Plank
 		public signal void item_added (DockItem item);
 		public signal void item_removed (DockItem item);
 		
-		public List<DockItem> Items = new List<DockItem> ();
+		public ArrayList<DockItem> Items = new ArrayList<DockItem> ();
 		
 		FileMonitor items_monitor;
 		File launchers_dir;
@@ -121,11 +122,11 @@ namespace Plank
 				Logger.fatal<DockItems> ("Error loading dock items");
 			}
 			
-			List<string> favs = new List<string> ();
+			ArrayList<string> favs = new ArrayList<string> ();
 			
 			foreach (DockItem item in Items)
 				if ((item is ApplicationDockItem) && !(item is TransientDockItem))
-					favs.append (item.get_launcher ());
+					favs.add (item.get_launcher ());
 			
 			Matcher.get_default ().set_favorites (favs);
 			
@@ -203,10 +204,10 @@ namespace Plank
 				return;
 			
 			// remove peristent and invalid items
-			List<DockItem> remove = new List<DockItem> ();
+			ArrayList<DockItem> remove = new ArrayList<DockItem> ();
 			foreach (var item in Items)
 				if (!(item is TransientDockItem) || !item.ValidItem)
-					remove.append (item);
+					remove.add (item);
 			foreach (var item in remove)
 				remove_item_without_signaling (item);
 			
@@ -218,7 +219,8 @@ namespace Plank
 		}
 		
 		void add_item_without_signaling (DockItem item) {
-			Items.insert_sorted (item, (CompareFunc) compare_items);
+			Items.add (item);
+			Items.sort ((CompareFunc) compare_items);
 			
 			item.notify["Icon"].connect (signal_items_changed);
 			item.notify["Indicator"].connect (signal_items_changed);

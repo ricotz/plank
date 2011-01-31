@@ -16,6 +16,7 @@
 // 
 
 using Gdk;
+using Gee;
 using Gtk;
 
 using Plank.Drawing;
@@ -182,56 +183,56 @@ namespace Plank.Items
 				WindowControl.focus_next (App);
 		}
 		
-		public override List<MenuItem> get_menu_items ()
+		public override ArrayList<MenuItem> get_menu_items ()
 		{
-			List<MenuItem> items = new List<MenuItem> ();
+			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
 			
 			if (App == null || App.get_children ().length () == 0) {
 				var item = new ImageMenuItem.from_stock (STOCK_OPEN, null);
 				item.activate.connect (() => launch ());
-				items.append (item);
+				items.add (item);
 			} else {
 				MenuItem item;
 				
 				if (!is_window ()) {
-					item = add_menu_item (items, _("_Open New Window"), "document-open-symbolic;;document-open");
+					item = create_menu_item (_("_Open New Window"), "document-open-symbolic;;document-open");
 					item.activate.connect (() => launch ());
-					items.append (item);
+					items.add (item);
 				}
 				
 				if (WindowControl.has_maximized_window (App)) {
-					item = add_menu_item (items, _("Unma_ximize"), "view-fullscreen");
+					item = create_menu_item (_("Unma_ximize"), "view-fullscreen");
 					item.activate.connect (() => WindowControl.unmaximize (App));
-					items.append (item);
+					items.add (item);
 				} else {
-					item = add_menu_item (items, _("Ma_ximize"), "view-fullscreen");
+					item = create_menu_item (_("Ma_ximize"), "view-fullscreen");
 					item.activate.connect (() => WindowControl.maximize (App));
-					items.append (item);
+					items.add (item);
 				}
 				
 				if (WindowControl.has_minimized_window (App)) {
-					item = add_menu_item (items, _("_Restore"), "view-restore");
+					item = create_menu_item (_("_Restore"), "view-restore");
 					item.activate.connect (() => WindowControl.restore (App));
-					items.append (item);
+					items.add (item);
 				} else {
-					item = add_menu_item (items, _("Mi_nimize"), "view-restore");
+					item = create_menu_item (_("Mi_nimize"), "view-restore");
 					item.activate.connect (() => WindowControl.minimize (App));
-					items.append (item);
+					items.add (item);
 				}
 				
-				item = add_menu_item (items, _("_Close All"), "window-close-symbolic;;window-close");
+				item = create_menu_item (_("_Close All"), "window-close-symbolic;;window-close");
 				item.activate.connect (() => WindowControl.close_all (App));
-				items.append (item);
+				items.add (item);
 				
-				List<Bamf.Window> windows = WindowControl.get_windows (App);
-				if (windows.length () > 0) {
-					items.append (new SeparatorMenuItem ());
+				ArrayList<Bamf.Window> windows = WindowControl.get_windows (App);
+				if (windows.size > 0) {
+					items.add (new SeparatorMenuItem ());
 					
 					int width, height;
 					icon_size_lookup (IconSize.MENU, out width, out height);
 					
-					for (int i = 0; i < windows.length (); i++) {
-						var window = windows.nth_data (i);
+					for (int i = 0; i < windows.size; i++) {
+						var window = windows.get (i);
 						
 						var pbuf = WindowControl.get_window_icon (window);
 						if (pbuf == null)
@@ -242,7 +243,7 @@ namespace Plank.Items
 						var window_item = new ImageMenuItem.with_mnemonic (window.get_name ());
 						window_item.set_image (new Gtk.Image.from_pixbuf (pbuf));
 						window_item.activate.connect (() => WindowControl.focus_window (window));
-						items.append (window_item);
+						items.add (window_item);
 					}
 				}
 			}

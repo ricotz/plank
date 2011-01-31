@@ -15,6 +15,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using Gee;
+
 namespace Plank.Services
 {
 	public enum LogLevel
@@ -59,7 +61,7 @@ namespace Plank.Services
 		
 		static Object queue_lock = null;
 		
-		static List<LogMessage> log_queue;
+		static ArrayList<LogMessage> log_queue;
 		static bool is_writing;
 		
 		static string[] domains = {
@@ -76,7 +78,7 @@ namespace Plank.Services
 		{
 			AppName = app_name;
 			is_writing = false;
-			log_queue = new List<LogMessage> ();
+			log_queue = new ArrayList<LogMessage> ();
 			
 			LogLevelFlags flags = LogLevelFlags.LEVEL_MASK | LogLevelFlags.FLAG_FATAL | LogLevelFlags.FLAG_RECURSION;
 			
@@ -134,14 +136,14 @@ namespace Plank.Services
 			
 			if (is_writing) {
 				lock (queue_lock)
-					log_queue.append (new LogMessage (level, msg));
+					log_queue.add (new LogMessage (level, msg));
 			} else {
 				is_writing = true;
 				
-				if (log_queue.length () > 0) {
-					unowned List<LogMessage> logs = log_queue;
+				if (log_queue.size > 0) {
+					ArrayList<LogMessage> logs = log_queue;
 					lock (queue_lock)
-						log_queue = new List<LogMessage> ();
+						log_queue = new ArrayList<LogMessage> ();
 					
 					foreach (LogMessage log in logs)
 						print_log (log);

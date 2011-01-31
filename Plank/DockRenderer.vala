@@ -53,7 +53,7 @@ namespace Plank
 		}
 		
 		int DockBackgroundWidth {
-			get { return (int) window.Items.Items.length () * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
+			get { return (int) window.Items.Items.size * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
 		}
 		
 		public int VisibleDockHeight {
