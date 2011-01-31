@@ -319,10 +319,10 @@ namespace Plank.Drawing
 		{
 			string[] parts = s.split (";;");
 			
-			R = Math.fmin (uint8.MAX, Math.fmax (0, parts [0].to_int ())) * uint8.MAX;
-			G = Math.fmin (uint8.MAX, Math.fmax (0, parts [1].to_int ())) * uint8.MAX;
-			B = Math.fmin (uint8.MAX, Math.fmax (0, parts [2].to_int ())) * uint8.MAX;
-			A = Math.fmin (uint8.MAX, Math.fmax (0, parts [3].to_int ())) * uint8.MAX;
+			R = Math.fmin (uint8.MAX, Math.fmax (0, parts [0].to_int ())) / uint8.MAX;
+			G = Math.fmin (uint8.MAX, Math.fmax (0, parts [1].to_int ())) / uint8.MAX;
+			B = Math.fmin (uint8.MAX, Math.fmax (0, parts [2].to_int ())) / uint8.MAX;
+			A = Math.fmin (uint8.MAX, Math.fmax (0, parts [3].to_int ())) / uint8.MAX;
 		}
 	}
 }
