@@ -43,13 +43,20 @@ namespace Plank.Widgets
 		
 		public DockRenderer Renderer { get; protected set; }
 		
+		
 		protected HoverWindow hover = new HoverWindow ();
 
 		protected HideManager hide_manager;
 		
-		protected Menu menu;
+		protected Menu menu = new Menu ();
+		
 		
 		protected Gdk.Rectangle monitor_geo;
+		
+		uint reposition_timer = 0;
+		
+		bool dock_is_starting = true;
+		
 		
 		public DockWindow ()
 		{
@@ -66,7 +73,6 @@ namespace Plank.Widgets
 			skip_taskbar_hint = true;
 			set_type_hint (WindowTypeHint.DOCK);
 			
-			menu = new Menu ();
 			menu.attach_to_widget (this, null);
 			menu.show.connect (() => {
 				update_icon_regions ();
@@ -92,6 +98,10 @@ namespace Plank.Widgets
 				update_icon_regions ();
 			});
 			
+			get_screen ().size_changed.connect (update_monitor_geo);
+			get_screen ().monitors_changed.connect (update_monitor_geo);
+			
+			update_monitor_geo ();
 			set_size ();
 		}
 		
@@ -173,8 +183,6 @@ namespace Plank.Widgets
 			return true;
 		}
 		
-		bool dock_is_starting = true;
-		
 		public override bool expose_event (EventExpose event)
 		{
 			if (dock_is_starting) {
@@ -216,7 +224,7 @@ namespace Plank.Widgets
 		protected bool update_hovered (int x, int y)
 		{
 			foreach (DockItem item in Items.Items) {
-				var rect = Renderer.item_region (item);
+				var rect = Renderer.item_hover_region (item);
 				
 				if (y >= rect.y && y <= rect.y + rect.height && x >= rect.x && x <= rect.x + rect.width) {
 					set_hovered (item);
@@ -239,14 +247,12 @@ namespace Plank.Widgets
 		{
 			int x, y;
 			get_position (out x, out y);
-			var rect = Renderer.item_region (HoveredItem);
+			var rect = Renderer.item_hover_region (HoveredItem);
 			hover.move_hover (x + rect.x + rect.width / 2, y + rect.y);
 		}
 		
 		public void set_size ()
 		{
-			update_monitor_geo ();
-			
 			set_size_request (Renderer.DockWidth, Renderer.DockHeight);
 			reposition ();
 			if (HoveredItem != null)
@@ -257,10 +263,22 @@ namespace Plank.Widgets
 		
 		protected void reposition ()
 		{
-			// put dock on bottom-center of monitor
-			move (monitor_geo.x + (monitor_geo.width - width_request) / 2, monitor_geo.y + monitor_geo.height - height_request);
-			update_icon_regions ();
-			set_struts ();
+			if (reposition_timer != 0) {
+				GLib.Source.remove (reposition_timer);
+				reposition_timer = 0;
+			}
+			
+			reposition_timer = GLib.Timeout.add (50, () => {
+				reposition_timer = 0;
+				
+				// put dock on bottom-center of monitor
+				move (monitor_geo.x + (monitor_geo.width - width_request) / 2, monitor_geo.y + monitor_geo.height - height_request);
+				update_icon_regions ();
+				set_struts ();
+				set_hovered (null);
+				
+				return false;
+			});
 		}
 		
 		protected void update_icon_regions ()
@@ -279,7 +297,7 @@ namespace Plank.Widgets
 				if (menu_is_visible () || Renderer.Hidden)
 					WindowControl.update_icon_regions (appitem.App, empty, win_x, win_y);
 				else
-					WindowControl.update_icon_regions (appitem.App, Renderer.item_region (appitem), win_x, win_y);
+					WindowControl.update_icon_regions (appitem.App, Renderer.item_hover_region (appitem), win_x, win_y);
 			}
 			
 			Renderer.animated_draw ();
@@ -310,7 +328,7 @@ namespace Plank.Widgets
 		{
 			int win_x, win_y;
 			get_position (out win_x, out win_y);
-			var rect = Renderer.item_region (HoveredItem);
+			var rect = Renderer.item_hover_region (HoveredItem);
 			
 			x = win_x + rect.x + rect.width / 2 - menu.requisition.width / 2;
 			y = win_y + rect.y - menu.requisition.height - 10;

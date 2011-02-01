@@ -44,24 +44,27 @@ namespace Plank
 			}
 		}
 		
+		// width+height of the visible (cursor) rect of the dock
 		public int VisibleDockWidth {
 			get { return HorizPadding < 0 ? DockBackgroundWidth - 2 * HorizPadding : DockBackgroundWidth; }
-		}
-		
-		public int DockWidth {
-			get { return VisibleDockWidth; }
-		}
-		
-		int DockBackgroundWidth {
-			get { return (int) window.Items.Items.size * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
 		}
 		
 		public int VisibleDockHeight {
 			get { return 2 * theme.get_top_offset () + (TopPadding > 0 ? TopPadding : 0) + (BottomPadding > 0 ? BottomPadding : 0) + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
 		}
 		
+		// width+height of the dock window
+		public int DockWidth {
+			get { return VisibleDockWidth + Prefs.IconSize + ItemPadding; }
+		}
+		
 		public int DockHeight {
 			get { return VisibleDockHeight + theme.UrgentBounceHeight + (int) ((Prefs.Zoom - 1) * Prefs.IconSize); }
+		}
+		
+		// width+height of the dock background image, as drawn
+		int DockBackgroundWidth {
+			get { return (int) window.Items.Items.size * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
 		}
 		
 		int DockBackgroundHeight {
@@ -159,19 +162,26 @@ namespace Plank
 			animated_draw ();
 		}
 		
-		public Gdk.Rectangle dock_region (DockItem item)
+		public Gdk.Rectangle cursor_region ()
 		{
 			Gdk.Rectangle rect = Gdk.Rectangle ();
 			
-			rect.x = 0;
-			rect.y = (int) (VisibleDockHeight * HideOffset);
+			rect.x = (window.width_request - VisibleDockWidth) / 2;
+			rect.y = window.height_request - (int) Math.fmax (1, (1 - HideOffset) * VisibleDockHeight);
 			rect.width = VisibleDockWidth;
 			rect.height = VisibleDockHeight;
 			
 			return rect;
 		}
 		
-		public Gdk.Rectangle item_region (DockItem item)
+		public Gdk.Rectangle item_hover_region (DockItem item)
+		{
+			Gdk.Rectangle rect = item_draw_region (item);
+			rect.x += (window.width_request - VisibleDockWidth) / 2;
+			return rect;
+		}
+		
+		public Gdk.Rectangle item_draw_region (DockItem item)
 		{
 			Gdk.Rectangle rect = Gdk.Rectangle ();
 			
@@ -199,7 +209,7 @@ namespace Plank
 				draw_item (main_buffer, item);
 			
 			cr.set_operator (Operator.SOURCE);
-			cr.set_source_surface (main_buffer.Internal, 0, VisibleDockHeight * HideOffset);
+			cr.set_source_surface (main_buffer.Internal, (window.width_request - main_buffer.Width) / 2, VisibleDockHeight * HideOffset);
 			cr.paint ();
 			
 			if (Opacity < 1.0) {
@@ -215,7 +225,7 @@ namespace Plank
 					var diff = new DateTime.now_utc ().difference (item.LastUrgent);
 					
 					if ((item.State & ItemState.URGENT) == ItemState.URGENT && diff < theme.GlowTime * 1000) {
-						var rect = item_region (item);
+						var rect = item_draw_region (item);
 						cr.set_source_surface (urgent_glow_buffer.Internal,
 							rect.x + rect.width / 2.0 - urgent_glow_buffer.Width / 2.0,
 							DockHeight - urgent_glow_buffer.Height / 2.0);
@@ -247,7 +257,7 @@ namespace Plank
 			icon_surface.Context.paint ();
 			
 			// get draw regions
-			var draw_rect = item_region (item);
+			var draw_rect = item_draw_region (item);
 			var hover_rect = draw_rect;
 			
 			draw_rect.x += ItemPadding / 2;

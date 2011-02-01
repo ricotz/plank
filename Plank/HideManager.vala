@@ -68,11 +68,13 @@ namespace Plank
 			window.get_position (out win_x, out win_y);
 			
 			// compute rect of the window
-			var offset = (int) Math.fmax (1, (1 - window.Renderer.HideOffset) * window.Renderer.VisibleDockHeight);
-			var rect_x = win_x + window.height_request - offset;
+			var cursor_rect = window.Renderer.cursor_region ();
 			
 			// use the window rect and cursor location to determine if dock is hovered
-			DockHovered = y >= win_y && y <= win_y + offset && x >= rect_x && x <= rect_x + window.width_request;
+			var x_pos = win_x + cursor_rect.x;
+			var y_pos = win_y + cursor_rect.y;
+			DockHovered = x >= x_pos && x <= x_pos + cursor_rect.width &&
+						y >= y_pos && y <= y_pos + cursor_rect.height;
 		}
 		
 		void update_hidden ()
@@ -115,8 +117,7 @@ namespace Plank
 		
 		bool motion_notify_event (EventMotion event)
 		{
-			if (!DockHovered)
-				DockHovered = true;
+			update_dock_hovered ();
 			
 			return window.Renderer.Hidden;
 		}
