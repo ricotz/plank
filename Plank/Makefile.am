@@ -36,6 +36,7 @@ plank_VALASOURCES = \
 	DockRenderer.vala \
 	HideManager.vala \
 	Plank.vala \
+	Drawing/AnimatedRenderer.vala \
 	Drawing/Color.vala \
 	Drawing/DrawingService.vala \
 	Drawing/DockSurface.vala \

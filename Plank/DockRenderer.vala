@@ -25,7 +25,7 @@ using Plank.Widgets;
 
 namespace Plank
 {
-	public class DockRenderer : GLib.Object
+	public class DockRenderer : AnimatedRenderer
 	{
 		DockWindow window;
 		
@@ -113,6 +113,7 @@ namespace Plank
 		
 		public DockRenderer (DockWindow window)
 		{
+			base (window);
 			this.window = window;
 			
 			theme = new DockThemeRenderer ();
@@ -486,59 +487,28 @@ namespace Plank
 			window.set_size ();
 		}
 		
-		uint animation_timer = 0;
-		
-		bool animation_needed ()
+		protected override bool animation_needed (DateTime render_time)
 		{
-			DateTime now = new DateTime.now_utc ();
-			
-			if (now.difference (last_hide) <= theme.HideTime * 1000)
+			if (render_time.difference (last_hide) <= theme.HideTime * 1000)
 				return true;
 			
-			if (now.difference (last_fade) <= theme.FadeTime * 1000)
+			if (render_time.difference (last_fade) <= theme.FadeTime * 1000)
 				return true;
 			
 			foreach (DockItem item in window.Items.Items) {
-				if (now.difference (item.LastClicked) <= theme.ClickTime * 1000)
+				if (render_time.difference (item.LastClicked) <= theme.ClickTime * 1000)
 					return true;
-				if (now.difference (item.LastActive) <= theme.ActiveTime * 1000)
+				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)
 					return true;
 				if (HideOffset == 1.0) {
-					if (now.difference (item.LastUrgent) <= theme.GlowTime * 1000)
+					if (render_time.difference (item.LastUrgent) <= theme.GlowTime * 1000)
 						return true;
 				} else {
-					if (now.difference (item.LastUrgent) <= theme.UrgentBounceTime * 1000)
+					if (render_time.difference (item.LastUrgent) <= theme.UrgentBounceTime * 1000)
 						return true;
 				}
 			}
 				
-			return false;
-		}
-		
-		public void animated_draw ()
-		{
-			if (animation_timer > 0) 
-				return;
-			
-			window.queue_draw ();
-			
-			if (animation_needed ())
-				animation_timer = GLib.Timeout.add (1000 / 60, draw_timeout);
-		}
-		
-		bool draw_timeout ()
-		{
-			window.queue_draw ();
-			
-			if (animation_needed ())
-				return true;
-			
-			if (animation_timer > 0)
-				GLib.Source.remove (animation_timer);
-			animation_timer = 0;
-
-			// one final draw to clear out the end of previous animations
-			window.queue_draw ();
 			return false;
 		}
 	}
