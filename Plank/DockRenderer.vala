@@ -202,7 +202,7 @@ namespace Plank
 			if (main_buffer == null)
 				main_buffer = new DockSurface.with_surface (VisibleDockWidth, DockHeight, cr.get_target ());
 			
-			main_buffer.Clear ();
+			main_buffer.clear ();
 			
 			draw_dock_background (main_buffer);
 			
