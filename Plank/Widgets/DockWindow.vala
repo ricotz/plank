@@ -43,10 +43,12 @@ namespace Plank.Widgets
 		
 		public DockRenderer Renderer { get; protected set; }
 		
+		public HideManager HideTracker { get; protected set; }
+		
+		public DragManager DragTracker { get; protected set; }
+		
 		
 		protected HoverWindow hover = new HoverWindow ();
-
-		protected HideManager hide_manager;
 		
 		protected Menu menu = new Menu ();
 		
@@ -65,7 +67,8 @@ namespace Plank.Widgets
 			Prefs = new DockPreferences.with_file ("settings");
 			Items = new DockItems ();
 			Renderer = new DockRenderer (this);
-			hide_manager = new HideManager (this);
+			HideTracker = new HideManager (this);
+			DragTracker = new DragManager (this);
 			
 			set_accept_focus (false);
 			can_focus = false;
@@ -78,7 +81,7 @@ namespace Plank.Widgets
 				update_icon_regions ();
 			});
 			menu.hide.connect (() => {
-				hide_manager.update_dock_hovered ();
+				HideTracker.update_dock_hovered ();
 				update_icon_regions ();
 			});
 			
@@ -190,7 +193,7 @@ namespace Plank.Widgets
 				
 				// slide the dock in, if it shouldnt start hidden
 				GLib.Timeout.add (100, () => {
-					hide_manager.update_dock_hovered ();
+					HideTracker.update_dock_hovered ();
 					return false;
 				});
 			}

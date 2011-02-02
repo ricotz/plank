@@ -34,7 +34,7 @@ namespace Plank
 		DockWindow window;
 		bool windows_intersect;
 		
-		public bool DockHovered { get; set; }
+		public bool DockHovered { get; private set; }
 		
 		public HideManager (DockWindow window)
 		{
