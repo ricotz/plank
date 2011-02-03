@@ -119,7 +119,7 @@ namespace Plank
 			// We need to update if the dock is hovered even
 			// if we don't get a (drag-)motion-event
 			if (hover_timer == 0)
-				GLib.Timeout.add (50, update_dock_hovered);
+				hover_timer = GLib.Timeout.add (50, update_dock_hovered);
 			
 			InternalDragActive = true;
 			keyboard_grab (Owner.window, true, get_current_event_time ());
