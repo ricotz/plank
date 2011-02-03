@@ -82,8 +82,6 @@ namespace Plank
 			
 			enable_drag_to ();
 			enable_drag_from ();
-			
-			owner.notify["HoveredItem"].connect (hovered_item_changed);
 		}
 		
 		public bool ItemAcceptsDrop ()
@@ -117,6 +115,8 @@ namespace Plank
 
 		void drag_begin (Widget w, DragContext context)
 		{
+			Owner.notify["HoveredItem"].connect (hovered_item_changed);
+			
 			InternalDragActive = true;
 			keyboard_grab (Owner.window, true, get_current_event_time ());
 			drag_canceled = false;
@@ -213,6 +213,8 @@ namespace Plank
 			InternalDragActive = false;
 			drag_item = null;
 			keyboard_ungrab (get_current_event_time ());
+			
+			Owner.notify["HoveredItem"].disconnect (hovered_item_changed);
 		}
 
 		void drag_leave (Widget w, DragContext context, uint time_)
@@ -239,6 +241,8 @@ namespace Plank
 				marker = direct_hash (context);
 				drag_known = false;
 			}
+			
+			Owner.update_hovered (x, y);
 			
 			// we own the drag if InternalDragActive is true, lets not be silly
 			if (!drag_known && !InternalDragActive) {

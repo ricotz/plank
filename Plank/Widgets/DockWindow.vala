@@ -110,6 +110,11 @@ namespace Plank.Widgets
 		
 		public override bool button_press_event (EventButton event)
 		{
+			// This event gets fired before the drag end event, 
+			// in this case we ignore it.
+			if (DragTracker.InternalDragActive)
+				return true;
+				
 			if (HoveredItem == null)
 				return true;
 			
@@ -136,6 +141,11 @@ namespace Plank.Widgets
 		
 		public override bool button_release_event (EventButton event)
 		{
+			// This event gets fired before the drag end event, 
+			// in this case we ignore it.
+			if (DragTracker.InternalDragActive)
+				return true;
+
 			if (HoveredItem != null && !menu_is_visible ())
 				HoveredItem.clicked (event.button, event.state);
 			
@@ -144,14 +154,16 @@ namespace Plank.Widgets
 		
 		public override bool enter_notify_event (EventCrossing event)
 		{
-			if (update_hovered ((int) event.x, (int) event.y))
-				return true;
-			
+			update_hovered ((int) event.x, (int) event.y);
 			return true;
 		}
 		
 		public override bool leave_notify_event (EventCrossing event)
 		{
+			// Ignored this event if the given position is 0,0
+			if (event.x == 0 && event.y == 0)
+				return false;
+			
 			if (!menu_is_visible ())
 				set_hovered (null);
 			else
@@ -162,15 +174,17 @@ namespace Plank.Widgets
 		
 		public override bool motion_notify_event (EventMotion event)
 		{
-			if (update_hovered ((int) event.x, (int) event.y))
-				return true;
-			
-			set_hovered (null);
+			update_hovered ((int) event.x, (int) event.y);
 			return true;
 		}
 		
 		public override bool scroll_event (EventScroll event)
 		{
+			// This event gets fired before the drag end event, 
+			// in this case we ignore it.
+			if (DragTracker.InternalDragActive)
+				return true;
+			
 			if ((event.state & ModifierType.CONTROL_MASK) != 0) {
 				if (event.direction == ScrollDirection.UP)
 					Prefs.increase_icon_size ();
@@ -224,7 +238,7 @@ namespace Plank.Widgets
 				hover.show ();
 		}
 		
-		protected bool update_hovered (int x, int y)
+		public bool update_hovered (int x, int y)
 		{
 			foreach (DockItem item in Items.Items) {
 				var rect = Renderer.item_hover_region (item);
@@ -235,6 +249,7 @@ namespace Plank.Widgets
 				}
 			}
 			
+			set_hovered (null);			
 			return false;
 		}
 		
