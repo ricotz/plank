@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -33,7 +33,8 @@ namespace Plank
 		bool drag_data_requested;
 		bool drag_is_desktop_file;
 		uint marker = 0;
-		uint drag_hover_timer;
+		uint drag_hover_timer = 0;
+		uint hover_timer = 0;
 		Gee.Map<DockItem, int> original_item_pos = new HashMap<DockItem, int> ();
 		
 		public DockWindow Owner { get; private set; }
@@ -114,6 +115,11 @@ namespace Plank
 		void drag_begin (Widget w, DragContext context)
 		{
 			Owner.notify["HoveredItem"].connect (hovered_item_changed);
+			
+			// We need to update if the dock is hovered even
+			// if we don't get a (drag-)motion-event
+			if (hover_timer == 0)
+				GLib.Timeout.add (50, update_dock_hovered);
 			
 			InternalDragActive = true;
 			keyboard_grab (Owner.window, true, get_current_event_time ());
@@ -213,6 +219,9 @@ namespace Plank
 			keyboard_ungrab (get_current_event_time ());
 			
 			Owner.notify["HoveredItem"].disconnect (hovered_item_changed);
+			
+			if (hover_timer > 0)
+				GLib.Source.remove (hover_timer);
 		}
 
 		void drag_leave (Widget w, DragContext context, uint time_)
@@ -241,7 +250,6 @@ namespace Plank
 			}
 			
 			Owner.update_hovered (x, y);
-			Owner.HideTracker.update_dock_hovered ();
 			
 			// we own the drag if InternalDragActive is true, lets not be silly
 			if (!drag_known && !InternalDragActive) {
@@ -289,6 +297,12 @@ namespace Plank
 						item.scrolled (ScrollDirection.DOWN, 0);
 					return true;
 				});
+		}
+		
+		bool update_dock_hovered ()
+		{
+			Owner.HideTracker.update_dock_hovered ();
+			return true;
 		}
 		
 		Gdk.Window? best_proxy_window ()
