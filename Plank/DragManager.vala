@@ -241,6 +241,7 @@ namespace Plank
 			}
 			
 			Owner.update_hovered (x, y);
+			Owner.HideTracker.update_dock_hovered ();
 			
 			// we own the drag if InternalDragActive is true, lets not be silly
 			if (!drag_known && !InternalDragActive) {
@@ -260,7 +261,7 @@ namespace Plank
 		
 		void hovered_item_changed ()
 		{
-			if (InternalDragActive && DragItem != Owner.HoveredItem) {
+			if (InternalDragActive && Owner.HoveredItem != null && DragItem != Owner.HoveredItem) {
 				int destPos = Owner.HoveredItem.Position;
 				
 				// drag right
