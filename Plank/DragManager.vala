@@ -119,7 +119,10 @@ namespace Plank
 			// We need to update if the dock is hovered even
 			// if we don't get a (drag-)motion-event
 			if (hover_timer == 0)
-				hover_timer = GLib.Timeout.add (50, update_dock_hovered);
+				hover_timer = GLib.Timeout.add (50, () => {
+					Owner.HideTracker.update_dock_hovered ();
+					return true;
+				});
 			
 			InternalDragActive = true;
 			keyboard_grab (Owner.window, true, get_current_event_time ());
@@ -222,6 +225,7 @@ namespace Plank
 			
 			if (hover_timer > 0)
 				GLib.Source.remove (hover_timer);
+			hover_timer = 0;
 		}
 
 		void drag_leave (Widget w, DragContext context, uint time_)
@@ -297,12 +301,6 @@ namespace Plank
 						item.scrolled (ScrollDirection.DOWN, 0);
 					return true;
 				});
-		}
-		
-		bool update_dock_hovered ()
-		{
-			Owner.HideTracker.update_dock_hovered ();
-			return true;
 		}
 		
 		Gdk.Window? best_proxy_window ()
