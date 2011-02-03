@@ -36,6 +36,8 @@ namespace Plank
 		
 		public bool DockHovered { get; private set; }
 		
+		public bool Disabled { get; set; }
+		
 		public HideManager (DockWindow window)
 		{
 			this.window = window;
@@ -46,6 +48,7 @@ namespace Plank
 			window.Renderer.hide ();
 			
 			notify["DockHovered"].connect (update_hidden);
+			notify["Disabled"].connect (update_hidden);
 			window.Prefs.notify["HideMode"].connect (update_hidden);
 			
 			window.enter_notify_event.connect (enter_notify_event);
@@ -79,6 +82,11 @@ namespace Plank
 		
 		void update_hidden ()
 		{
+			if (Disabled) {
+				window.Renderer.show ();
+				return;
+			}
+			
 			switch (window.Prefs.HideMode) {
 			case HideType.NONE:
 				window.Renderer.show ();

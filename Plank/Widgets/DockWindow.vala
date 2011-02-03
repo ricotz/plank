@@ -101,6 +101,13 @@ namespace Plank.Widgets
 				update_icon_regions ();
 			});
 			
+			DragTracker.notify["ExternalDragActive"].connect (() => {
+				HideTracker.Disabled = DragTracker.InternalDragActive || DragTracker.ExternalDragActive;
+			});
+			DragTracker.notify["InternalDragActive"].connect (() => {
+				HideTracker.Disabled = DragTracker.InternalDragActive || DragTracker.ExternalDragActive;
+			});
+			
 			get_screen ().size_changed.connect (update_monitor_geo);
 			get_screen ().monitors_changed.connect (update_monitor_geo);
 			
