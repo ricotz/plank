@@ -207,7 +207,9 @@ namespace Plank
 			draw_dock_background (main_buffer);
 			
 			foreach (DockItem item in window.Items.Items)
-				draw_item (main_buffer, item);
+				// Do not draw the currently dragged item
+				if (window.DragTracker.DragItem != item)
+					draw_item (main_buffer, item);
 			
 			cr.set_operator (Operator.SOURCE);
 			cr.set_source_surface (main_buffer.Internal, (window.width_request - main_buffer.Width) / 2, VisibleDockHeight * HideOffset);

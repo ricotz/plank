@@ -36,8 +36,6 @@ namespace Plank
 		uint drag_hover_timer;
 		Gee.Map<DockItem, int> original_item_pos = new HashMap<DockItem, int> ();
 		
-		DockItem drag_item;
-		
 		public DockWindow Owner { get; private set; }
 		
 		public bool InternalDragActive { get; private set; }
@@ -107,8 +105,8 @@ namespace Plank
 		
 		void drag_data_get (Widget w, DragContext context, SelectionData selection_data, uint info, uint time_)
 		{
-			if (InternalDragActive && drag_item != null) {
-				string uri = "%s\r\n".printf (drag_item.as_uri ());
+			if (InternalDragActive && DragItem != null) {
+				string uri = "%s\r\n".printf (DragItem.as_uri ());
 				selection_data.set (selection_data.target, 8, (uchar[]) uri.to_utf8 ());
 			}
 		}
@@ -127,10 +125,10 @@ namespace Plank
 			}
 			
 			Pixbuf pbuf;
-			drag_item = Owner.HoveredItem;
+			DragItem = Owner.HoveredItem;
 			original_item_pos.clear ();
 			
-			if (drag_item != null) {
+			if (DragItem != null) {
 				foreach (DockItem item in Owner.Items.Items)
 					original_item_pos [item] = item.Position;
 				
@@ -188,10 +186,10 @@ namespace Plank
 		
 		void drag_end (Widget w, DragContext context)
 		{
-			if (!drag_canceled && drag_item != null) {
+			if (!drag_canceled && DragItem != null) {
 				if (!Owner.HideTracker.DockHovered) {
 					// Remove from dock
-					Owner.Items.remove_item (drag_item);
+					Owner.Items.remove_item (DragItem);
 					
 					int x, y;
 					ModifierType mod;
@@ -202,8 +200,8 @@ namespace Plank
 					// Dropped somewhere on dock
 					/* TODO
 					DockItem item = Owner.HoveredItem;
-					if (item != null && item.CanAcceptDrop (drag_item))
-						item.AcceptDrop (drag_item);
+					if (item != null && item.CanAcceptDrop (DragItem))
+						item.AcceptDrop (DragItem);
 					*/
 					// TODO is this needed? removing the item would update it
 					//Owner.Renderer.animated_draw ();
@@ -211,7 +209,7 @@ namespace Plank
 			}
 			
 			InternalDragActive = false;
-			drag_item = null;
+			DragItem = null;
 			keyboard_ungrab (get_current_event_time ());
 			
 			Owner.notify["HoveredItem"].disconnect (hovered_item_changed);
@@ -262,21 +260,21 @@ namespace Plank
 		
 		void hovered_item_changed ()
 		{
-			if (InternalDragActive && drag_item != Owner.HoveredItem) {
+			if (InternalDragActive && DragItem != Owner.HoveredItem) {
 				int destPos = Owner.HoveredItem.Position;
 				
 				// drag right
-				if (drag_item.Position < destPos) {
+				if (DragItem.Position < destPos) {
 					foreach (DockItem item in Owner.Items.Items)
-						if (item.Position > drag_item.Position && item.Position <= destPos)
+						if (item.Position > DragItem.Position && item.Position <= destPos)
 							item.Position--;
 				// drag left
-				} else if (drag_item.Position > destPos) {
+				} else if (DragItem.Position > destPos) {
 					foreach (DockItem item in Owner.Items.Items)
-						if (item.Position < drag_item.Position && item.Position >= destPos)
+						if (item.Position < DragItem.Position && item.Position >= destPos)
 							item.Position++;
 				}
-				drag_item.Position = destPos;
+				DragItem.Position = destPos;
 			}
 			
 			if (drag_hover_timer > 0)
