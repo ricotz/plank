@@ -35,17 +35,6 @@ AC_PROG_LIBTOOL
 AC_STDC_HEADERS
 
 dnl ==============================================
-dnl GConf
-dnl ==============================================
-AM_GCONF_SOURCE_2
-if test "$enable_schemas_install" != "no"; then
-    AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
-    if test x"$GCONFTOOL" = xno; then
-        AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
-    fi
-fi
-
-dnl ==============================================
 dnl Set dependency versions
 dnl ==============================================
 AC_MSG_CHECKING([which GTK version to compile against])
@@ -85,7 +74,6 @@ PKG_CHECK_MODULES(PLANK_CORE, gobject-2.0 >= $GLIB_MIN_VERSION
                               glib-2.0 >= $GLIB_MIN_VERSION
                               gio-2.0 >= $GLIB_MIN_VERSION
                               gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION
-                              gconf-2.0
                               gee-1.0
                               unique-1.0
                               x11
