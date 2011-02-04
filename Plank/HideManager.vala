@@ -102,7 +102,10 @@ namespace Plank
 		
 		bool enter_notify_event (EventCrossing event)
 		{
-			update_dock_hovered ();
+			if ((bool) event.send_event)
+				DockHovered = true;
+			else
+				update_dock_hovered ();
 			
 			return window.Renderer.Hidden;
 		}
