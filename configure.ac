@@ -1,5 +1,5 @@
 AC_INIT([plank], [0.1.0])
-AC_DEFINE(RELEASE_NAME, "Stupidly simple", "Codename of this release")
+AC_DEFINE(RELEASE_NAME, "Stupidly simple", Codename of this release)
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([.])
@@ -67,7 +67,7 @@ dnl Check that we meet the dependencies
 dnl ==============================================
 AM_PROG_VALAC([$VALA_MIN_VERSION])
 if test "x$VALAC" = "x"; then
-	AC_MSG_ERROR([You need Vala compiler])
+	AC_MSG_ERROR([You need a Vala $VALA_MIN_VERSION compiler])
 fi
 
 PKG_CHECK_MODULES(PLANK_CORE, gobject-2.0 >= $GLIB_MIN_VERSION
