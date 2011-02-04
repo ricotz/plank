@@ -117,8 +117,8 @@ namespace Plank
 		
 		bool leave_notify_event (EventCrossing event)
 		{
-			// ignore this event if the given position is 0,0
-			if (event.x == 0 && event.y == 0)
+			// ignore this event if it was sent explicitly
+			if ((bool) event.send_event)
 				return false;
 			
 			if (DockHovered && !window.menu_is_visible ())
