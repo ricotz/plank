@@ -28,31 +28,33 @@ namespace Plank.Items
 	public enum IndicatorState
 	{
 		NONE,
-		SINGLE = 2,
-		SINGLE_PLUS = 4
+		SINGLE,
+		SINGLE_PLUS
 	}
 	
+	[Flags]
 	public enum ItemState
 	{
-		NORMAL,
-		ACTIVE = 2,
-		URGENT = 4
+		NORMAL = 1 << 0,
+		ACTIVE = 1 << 1,
+		URGENT = 1 << 2
 	}
 	
 	public enum ClickAnimation
 	{
 		NONE,
-		BOUNCE = 2,
-		DARKEN = 4,
-		LIGHTEN = 8
+		BOUNCE,
+		DARKEN,
+		LIGHTEN
 	}
 	
+	[Flags]
 	public enum PopupButton
 	{
-		NONE,
-		LEFT = 2,
-		MIDDLE = 4,
-		RIGHT = 8
+		NONE   = 1 << 0,
+		LEFT   = 1 << 1,
+		MIDDLE = 1 << 2,
+		RIGHT  = 1 << 3
 	}
 	
 	public class DockItem : GLib.Object
