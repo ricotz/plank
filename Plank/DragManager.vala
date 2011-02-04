@@ -143,6 +143,7 @@ namespace Plank
 				
 				var icon_surface = new DockSurface (Owner.Prefs.IconSize, Owner.Prefs.IconSize);
 				pbuf = Owner.HoveredItem.get_surface (icon_surface).load_to_pixbuf ();
+				Owner.Renderer.animated_draw ();
 			} else {
 				pbuf = new Pixbuf (Colorspace.RGB, true, 8, 1, 1);
 			}

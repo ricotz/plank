@@ -148,8 +148,6 @@ namespace Plank.Widgets
 		
 		public override bool button_release_event (EventButton event)
 		{
-			// This event gets fired before the drag end event, 
-			// in this case we ignore it.
 			if (DragTracker.InternalDragActive)
 				return true;
 
@@ -167,7 +165,7 @@ namespace Plank.Widgets
 		
 		public override bool leave_notify_event (EventCrossing event)
 		{
-			// Ignored this event if the given position is 0,0
+			// ignore this event if the given position is 0,0 and a drag is active
 			if (event.x == 0 && event.y == 0)
 				return false;
 			
@@ -187,8 +185,6 @@ namespace Plank.Widgets
 		
 		public override bool scroll_event (EventScroll event)
 		{
-			// This event gets fired before the drag end event, 
-			// in this case we ignore it.
 			if (DragTracker.InternalDragActive)
 				return true;
 			
