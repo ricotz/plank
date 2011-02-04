@@ -228,7 +228,7 @@ namespace Plank.Widgets
 			
 			HoveredItem = item;
 			
-			if (HoveredItem == null) {
+			if (HoveredItem == null || DragTracker.InternalDragActive) {
 				hover.hide ();
 				return;
 			}
