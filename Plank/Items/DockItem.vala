@@ -87,6 +87,10 @@ namespace Plank.Items
 		
 		public DateTime LastActive { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
+		public virtual bool CanBeRemoved {
+			get { return true; }
+		}
+		
 		private DockSurface Surface { get; set; }
 		
 		public bool ValidItem {

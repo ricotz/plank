@@ -27,6 +27,10 @@ namespace Plank.Items
 	{
 		public signal void pin_launcher ();
 		
+		public override bool CanBeRemoved {
+			get { return false; }
+		}
+		
 		public TransientDockItem.with_application (Bamf.Application app)
 		{
 			set_app (app);

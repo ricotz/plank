@@ -196,7 +196,7 @@ namespace Plank
 		void drag_end (Widget w, DragContext context)
 		{
 			if (!drag_canceled && DragItem != null) {
-				if (!Owner.HideTracker.DockHovered) {
+				if (!Owner.HideTracker.DockHovered && DragItem.CanBeRemoved) {
 					// Remove from dock
 					Owner.Items.remove_item (DragItem);
 					
