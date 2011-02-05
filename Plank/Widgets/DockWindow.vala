@@ -107,6 +107,10 @@ namespace Plank.Widgets
 			DragTracker.notify["InternalDragActive"].connect (() => {
 				HideTracker.Disabled = DragTracker.InternalDragActive || DragTracker.ExternalDragActive;
 			});
+			DragTracker.notify["DragItem"].connect (() => {
+				if (DragTracker.DragItem != null)
+					set_hovered (null);
+			});
 			
 			get_screen ().size_changed.connect (update_monitor_geo);
 			get_screen ().monitors_changed.connect (update_monitor_geo);

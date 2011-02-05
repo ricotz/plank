@@ -142,7 +142,7 @@ namespace Plank
 					original_item_pos [item] = item.Position;
 				
 				var icon_surface = new DockSurface (Owner.Prefs.IconSize, Owner.Prefs.IconSize);
-				pbuf = Owner.HoveredItem.get_surface (icon_surface).load_to_pixbuf ();
+				pbuf = DragItem.get_surface (icon_surface).load_to_pixbuf ();
 				Owner.Renderer.animated_draw ();
 			} else {
 				pbuf = new Pixbuf (Colorspace.RGB, true, 8, 1, 1);
@@ -197,15 +197,17 @@ namespace Plank
 		void drag_end (Widget w, DragContext context)
 		{
 			if (!drag_canceled && DragItem != null) {
-				if (!Owner.HideTracker.DockHovered && DragItem.CanBeRemoved) {
-					// Remove from dock
-					Owner.Items.remove_item (DragItem);
-					
-					int x, y;
-					ModifierType mod;
-					Screen screen;
-					Owner.get_display ().get_pointer (out screen, out x, out y, out mod);
-					new PoofWindow (x, y);
+				if (!Owner.HideTracker.DockHovered) {
+					if (DragItem.CanBeRemoved) {
+						// Remove from dock
+						Owner.Items.remove_item (DragItem);
+						
+						int x, y;
+						ModifierType mod;
+						Screen screen;
+						Owner.get_display ().get_pointer (out screen, out x, out y, out mod);
+						new PoofWindow (x, y);
+					}
 				} else {
 					// Dropped somewhere on dock
 					/* TODO
@@ -227,6 +229,8 @@ namespace Plank
 			if (hover_timer > 0)
 				GLib.Source.remove (hover_timer);
 			hover_timer = 0;
+			
+			Owner.Renderer.animated_draw ();
 		}
 
 		void drag_leave (Widget w, DragContext context, uint time_)

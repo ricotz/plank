@@ -34,7 +34,16 @@ namespace Plank
 		DockWindow window;
 		bool windows_intersect;
 		
-		public bool DockHovered { get; private set; }
+		bool dock_hovered = false;
+		public bool DockHovered { 
+			get { return dock_hovered; }
+			private set {
+				if (dock_hovered == value)
+					return;
+				dock_hovered = value;
+				update_hidden ();
+			}
+		}
 		
 		public bool Disabled { get; set; }
 		
@@ -47,7 +56,6 @@ namespace Plank
 			
 			window.Renderer.hide ();
 			
-			notify["DockHovered"].connect (update_hidden);
 			notify["Disabled"].connect (update_hidden);
 			window.Prefs.notify["HideMode"].connect (update_hidden);
 			
@@ -56,6 +64,8 @@ namespace Plank
 			window.motion_notify_event.connect (motion_notify_event);
 			
 			Matcher.get_default ().app_changed.connect (app_changed);
+			
+			update_hidden ();
 		}
 		
 		public void update_dock_hovered ()
