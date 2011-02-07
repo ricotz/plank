@@ -28,7 +28,7 @@ namespace Plank.Items
 			base.with_dockitem (dockitem);
 		}
 		
-		protected override ClickAnimation on_clicked (uint button, ModifierType mod)
+		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
 			Plank.show_about ();
 			return ClickAnimation.DARKEN;

@@ -52,13 +52,26 @@ namespace Plank.Items
 		NONE,
 		LEFT = 2,
 		MIDDLE = 4,
-		RIGHT = 8
+		RIGHT = 8;
+		
+		public static PopupButton from_event_button (EventButton event)
+		{
+			switch (event.button) {
+			default:
+			case 1:
+				return PopupButton.LEFT;
+			
+			case 2:
+				return PopupButton.MIDDLE;
+			
+			case 3:
+				return PopupButton.RIGHT;
+			}
+		}
 	}
 	
 	public class DockItem : GLib.Object
 	{
-		protected const int SCROLL_RATE = 200 * 1000;
-		
 		public signal void launcher_changed ();
 		
 		public string Icon { get; set; default = ""; }
@@ -70,8 +83,6 @@ namespace Plank.Items
 		public int Position { get; set; default = 0; }
 		
 		public PopupButton Button { get; protected set; default = PopupButton.RIGHT; }
-		
-		public Drawing.Color AverageIconColor { get; protected set; }
 		
 		public ItemState State { get; protected set; default = ItemState.NORMAL; }
 		
@@ -87,20 +98,23 @@ namespace Plank.Items
 		
 		public DateTime LastActive { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
-		private DockSurface Surface { get; set; }
-		
 		public bool ValidItem {
 			get { return File.new_for_path (Prefs.Launcher).query_exists (); }
 		}
 		
+		public Drawing.Color AverageIconColor { get; protected set; }
+		
 		protected DockItemPreferences Prefs { get; protected set; }
+		
+		private DockSurface surface;
 		
 		public DockItem ()
 		{
 			Prefs = new DockItemPreferences ();
+			AverageIconColor = Drawing.Color (0, 0, 0, 0);
 			
 			Prefs.notify["Icon"].connect (() => {
-				Surface = null;
+				surface = null;
 			});
 		}
 		
@@ -134,18 +148,18 @@ namespace Plank.Items
 		
 		public DockSurface get_surface (DockSurface surface)
 		{
-			if (Surface == null || Surface.Width != surface.Width || Surface.Height != surface.Height) {
-				Surface = new DockSurface.with_dock_surface (surface.Width, surface.Height, surface);
+			if (this.surface == null || surface.Width != this.surface.Width || surface.Height != this.surface.Height) {
+				this.surface = new DockSurface.with_dock_surface (surface.Width, surface.Height, surface);
 				draw_icon ();
 			}
-			return Surface;
+			return this.surface;
 		}
 		
 		protected virtual void draw_icon ()
 		{
-			var pbuf = DrawingService.load_icon (Icon, Surface.Width, Surface.Height);
-			cairo_set_source_pixbuf (Surface.Context, pbuf, 0, 0);
-			Surface.Context.paint ();
+			var pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
+			cairo_set_source_pixbuf (surface.Context, pbuf, 0, 0);
+			surface.Context.paint ();
 			
 			AverageIconColor = DrawingService.average_color (pbuf);
 		}
@@ -154,13 +168,13 @@ namespace Plank.Items
 		{
 		}
 		
-		public void clicked (uint button, ModifierType mod)
+		public void clicked (PopupButton button, ModifierType mod)
 		{
 			ClickedAnimation = on_clicked (button, mod);
 			LastClicked = new DateTime.now_utc ();
 		}
 		
-		protected virtual ClickAnimation on_clicked (uint button, ModifierType mod)
+		protected virtual ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
 			return ClickAnimation.NONE;
 		}
@@ -176,9 +190,7 @@ namespace Plank.Items
 		
 		public virtual ArrayList<MenuItem> get_menu_items ()
 		{
-			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
-			
-			return items;
+			return new ArrayList<MenuItem> ();
 		}
 		
 		public virtual string unique_id ()

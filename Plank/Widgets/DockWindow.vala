@@ -110,21 +110,7 @@ namespace Plank.Widgets
 			if (HoveredItem == null)
 				return true;
 			
-			int button = 0;
-			switch (event.button) {
-			case 1:
-				button = PopupButton.LEFT;
-				break;
-			
-			case 2:
-				button = PopupButton.MIDDLE;
-				break;
-			
-			case 3:
-				button = PopupButton.RIGHT;
-				break;
-			}
-			
+			var button = PopupButton.from_event_button (event);
 			if ((HoveredItem.Button & button) == button)
 				do_popup (event.button);
 			
@@ -134,7 +120,7 @@ namespace Plank.Widgets
 		public override bool button_release_event (EventButton event)
 		{
 			if (HoveredItem != null && !menu_is_visible ())
-				HoveredItem.clicked (event.button, event.state);
+				HoveredItem.clicked (PopupButton.from_event_button (event), event.state);
 			
 			return true;
 		}

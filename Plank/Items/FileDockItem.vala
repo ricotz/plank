@@ -25,26 +25,36 @@ namespace Plank.Items
 {
 	public class FileDockItem : DockItem
 	{
+		File OwnedFile { get; set; }
+		
 		public FileDockItem.with_dockitem (string dockitem)
 		{
 			Prefs = new DockItemPreferences.with_file (dockitem);
 			if (!ValidItem)
 				return;
 			
-			var file = File.new_for_path (Prefs.Launcher);
-			Icon = DrawingService.get_icon_from_file (file) ?? "folder";
-			Text = file.get_basename ();
-			Button = PopupButton.RIGHT | PopupButton.LEFT;
+			Prefs.notify["Launcher"].connect (() => {
+				OwnedFile = File.new_for_path (Prefs.Launcher);
+			});
+			OwnedFile = File.new_for_path (Prefs.Launcher);
+			
+			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? "folder";
+			Text = OwnedFile.get_basename ();
+			
+			// pop up the dir contents on a left click too
+			if (OwnedFile.query_file_type (0) == FileType.DIRECTORY)
+				Button = PopupButton.RIGHT | PopupButton.LEFT;
 		}
 		
 		public override void launch ()
 		{
-			Services.System.open (File.new_for_path (Prefs.Launcher));
+			Services.System.open (OwnedFile);
 		}
 		
-		protected override ClickAnimation on_clicked (uint button, ModifierType mod)
+		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
-			if (button == 1) {
+			// this actually only happens if its a file, not a directory
+			if (button == PopupButton.LEFT) {
 				launch ();
 				return ClickAnimation.BOUNCE;
 			}
@@ -56,9 +66,18 @@ namespace Plank.Items
 		{
 			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
 			
-			File dir = File.new_for_path (Prefs.Launcher);
+			if (OwnedFile.query_file_type (0) == FileType.DIRECTORY)
+				get_dir_menu_items (items);
+			else
+				get_file_menu_items (items);
+			
+			return items;
+		}
+		
+		void get_dir_menu_items (ArrayList<MenuItem> items)
+		{
 			try {
-				var enumerator = dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + ","
+				var enumerator = OwnedFile.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + ","
 					+ FILE_ATTRIBUTE_STANDARD_IS_HIDDEN + ","
 					+ FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
 				
@@ -70,7 +89,7 @@ namespace Plank.Items
 					if (info.get_is_hidden ())
 						continue;
 				
-					var file = dir.get_child (info.get_name ());
+					var file = OwnedFile.get_child (info.get_name ());
 					
 					if (info.get_name ().has_suffix (".desktop")) {
 						string icon, text;
@@ -102,8 +121,19 @@ namespace Plank.Items
 				foreach (string s in keys)
 					items.add (files.get (s));
 			} catch { }
+		}
+		
+		void get_file_menu_items (ArrayList<MenuItem> items)
+		{
+			var item = create_menu_item (_("_Open"), "gtk-open");
+			item.activate.connect (launch);
+			items.add (item);
 			
-			return items;
+			item = create_menu_item (_("Open Containing _Folder"), "folder");
+			item.activate.connect (() => {
+				Services.System.open (OwnedFile.get_parent ());
+			});
+			items.add (item);
 		}
 	}
 }

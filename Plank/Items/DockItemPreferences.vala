@@ -25,11 +25,6 @@ namespace Plank.Items
 		
 		public int Sort { get; set; default = 0; }
 		
-		public DockItemPreferences ()
-		{
-			base ();
-		}
-		
 		public DockItemPreferences.with_file (string filename)
 		{
 			base.with_file (filename);

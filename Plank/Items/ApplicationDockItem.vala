@@ -27,13 +27,12 @@ namespace Plank.Items
 {
 	public class ApplicationDockItem : DockItem
 	{
+		// throttle scrolls for window switching (in ms)
+		const int SCROLL_RATE = 200;
+		
 		public signal void app_closed ();
 		
 		public Bamf.Application? App { get; private set; }
-		
-		protected ApplicationDockItem ()
-		{
-		}
 		
 		~ApplicationDockItem ()
 		{
@@ -47,13 +46,13 @@ namespace Plank.Items
 			if (!ValidItem)
 				return;
 			
+			notify["App"].connect (update_states);
 			Prefs.notify["Launcher"].connect (() => {
 				update_app ();
 				launcher_changed ();
 			});
 			
 			load_from_launcher ();
-			start_monitor ();
 		}
 		
 		public void set_app (Bamf.Application? app)
@@ -67,8 +66,6 @@ namespace Plank.Items
 			}
 			
 			App = app;
-			
-			update_states ();
 			
 			if (app != null) {
 				app.active_changed.connect (update_active);
@@ -150,16 +147,15 @@ namespace Plank.Items
 			Services.System.launch (File.new_for_path (Prefs.Launcher), {});
 		}
 		
-		protected override ClickAnimation on_clicked (uint button, ModifierType mod)
+		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
-			if (((App == null || App.get_children ().length () == 0) && button == 1) ||
-				button == 2 || 
-				(button == 1 && (mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK)) {
+			if (button == PopupButton.MIDDLE || 
+				(button == PopupButton.LEFT && (App == null || App.get_children ().length () == 0 || (mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))) {
 				launch ();
 				return ClickAnimation.BOUNCE;
 			}
 			
-			if ((App == null || App.get_children ().length () == 0) || button != 1)
+			if (button != PopupButton.LEFT || (App == null || App.get_children ().length () == 0))
 				return ClickAnimation.NONE;
 			
 			WindowControl.smart_focus (App);
@@ -170,7 +166,7 @@ namespace Plank.Items
 		protected override void on_scrolled (ScrollDirection direction, ModifierType mod)
 		{
 			if (WindowControl.get_num_windows (App) == 0 ||
-				(new DateTime.now_utc ().difference (LastScrolled) < SCROLL_RATE))
+				(new DateTime.now_utc ().difference (LastScrolled) < SCROLL_RATE * 1000))
 				return;
 			
 			LastScrolled = new DateTime.now_utc ();
@@ -250,6 +246,33 @@ namespace Plank.Items
 			return items;
 		}
 		
+		protected void load_from_launcher ()
+		{
+			stop_monitor ();
+			
+			string icon, text;
+			parse_launcher (Prefs.Launcher, out icon, out text);
+			Icon = icon;
+			Text = text;
+			
+			start_monitor ();
+		}
+		
+		public static void parse_launcher (string launcher, out string icon, out string text)
+		{
+			try {
+				KeyFile file = new KeyFile ();
+				file.load_from_file (launcher, 0);
+				
+				icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
+				// TODO use the localized string
+				text = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
+			} catch {
+				icon = "";
+				text = "";
+			}
+		}
+		
 		protected FileMonitor monitor;
 		
 		protected void start_monitor ()
@@ -268,8 +291,8 @@ namespace Plank.Items
 		
 		protected void monitor_changed (File f, File? other, FileMonitorEvent event)
 		{
-			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) == 0 &&
-				(event & FileMonitorEvent.DELETED) == 0)
+			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) != FileMonitorEvent.CHANGES_DONE_HINT &&
+				(event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
 				return;
 			
 			Logger.debug<ApplicationDockItem> ("Launcher file '%s' changed, reloading".printf (Prefs.Launcher));
@@ -282,30 +305,8 @@ namespace Plank.Items
 				return;
 			
 			monitor.cancel ();
+			monitor.changed.disconnect (monitor_changed);
 			monitor = null;
-		}
-		
-		protected void load_from_launcher ()
-		{
-			//TODO use the information from Bamf.Application which should give us a localized app-name
-			string icon, text;
-			parse_launcher (Prefs.Launcher, out icon, out text);
-			Icon = icon;
-			Text = text;
-		}
-		
-		public static void parse_launcher (string launcher, out string icon, out string text)
-		{
-			try {
-				KeyFile file = new KeyFile ();
-				file.load_from_file (launcher, 0);
-				
-				icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
-				text = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
-			} catch {
-				icon = "";
-				text = "";
-			}
 		}
 	}
 }
