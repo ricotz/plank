@@ -46,7 +46,6 @@ namespace Plank.Items
 			if (!ValidItem)
 				return;
 			
-			notify["App"].connect (update_states);
 			Prefs.notify["Launcher"].connect (() => {
 				update_app ();
 				launcher_changed ();
@@ -66,6 +65,7 @@ namespace Plank.Items
 			}
 			
 			App = app;
+			update_states ();
 			
 			if (app != null) {
 				app.active_changed.connect (update_active);
