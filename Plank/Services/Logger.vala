@@ -155,7 +155,7 @@ namespace Plank.Services
 			}
 		}
 		
-		static async void print_log (LogMessage log)
+		static void print_log (LogMessage log)
 		{
 			set_color_for_level (log.Level);
 			stdout.printf ("[%s %s] ", log.Level.to_string ().substring (25), get_time ());
