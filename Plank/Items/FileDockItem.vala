@@ -97,7 +97,7 @@ namespace Plank.Items
 						
 						var item = create_menu_item (text, icon);
 						item.activate.connect (() => {
-							Services.System.launch (file, {});
+							Services.System.launch (file);
 							ClickedAnimation = ClickAnimation.BOUNCE;
 							LastClicked = new DateTime.now_utc ();
 						});

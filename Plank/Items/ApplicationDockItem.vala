@@ -144,7 +144,7 @@ namespace Plank.Items
 		
 		public override void launch ()
 		{
-			Services.System.launch (File.new_for_path (Prefs.Launcher), {});
+			Services.System.launch (File.new_for_path (Prefs.Launcher));
 		}
 		
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
