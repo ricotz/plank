@@ -117,7 +117,7 @@ namespace Plank.Items
 					}
 				}
 				
-				keys.sort (strcmp);
+				keys.sort ((CompareFunc) strcmp);
 				foreach (string s in keys)
 					items.add (files.get (s));
 			} catch { }
