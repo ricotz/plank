@@ -117,6 +117,8 @@ if test -z "$CONFIG_REQUESTED" ; then
 fi
 dnl }}}
 
+SHAVE_INIT([shave], [enable])
+
 AC_CONFIG_FILES([
 Makefile
 data/Makefile
@@ -143,6 +145,8 @@ m4/Makefile
 man/Makefile
 Plank/Makefile
 po/Makefile.in
+shave/shave
+shave/shave-libtool
 vapi/Makefile
 ])
 
