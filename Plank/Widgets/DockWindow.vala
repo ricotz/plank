@@ -172,6 +172,7 @@ namespace Plank.Widgets
 		public override bool expose_event (EventExpose event)
 		{
 			if (dock_is_starting) {
+				Services.Logger.debug<DockWindow> ("dock window loaded");
 				dock_is_starting = false;
 				
 				// slide the dock in, if it shouldnt start hidden

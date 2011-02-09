@@ -41,6 +41,11 @@ namespace Plank
 			// set program name
 			prctl (15, "plank", 0, 0, 0);
 			
+			Logger.initialize ("Plank");
+			Logger.DisplayLevel = LogLevel.INFO;
+			Logger.info<Plank> ("Plank %s started".printf (Build.VERSION));
+			Logger.DisplayLevel = LogLevel.WARN;
+			
 			// parse commandline options
 			var context = new OptionContext ("");
 			
@@ -52,8 +57,6 @@ namespace Plank
 			} catch { }
 			
 			Intl.bindtextdomain ("plank", Build.DATADIR + "/locale");
-			
-			Logger.initialize ("Plank");
 			
 			if (!Thread.supported ()) {
 				Logger.fatal<Plank> ("Problem initializing thread support.");
