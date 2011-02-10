@@ -74,6 +74,8 @@ namespace Plank.Items
 	{
 		public signal void launcher_changed ();
 		
+		public signal void needs_redraw ();
+		
 		public string Icon { get; set; default = ""; }
 		
 		public string Text { get; set; default = ""; }
@@ -113,9 +115,14 @@ namespace Plank.Items
 			Prefs = new DockItemPreferences ();
 			AverageIconColor = Drawing.Color (0, 0, 0, 0);
 			
-			Prefs.notify["Icon"].connect (() => {
-				surface = null;
-			});
+			Gtk.IconTheme.get_default ().changed.connect (reset_buffer);
+			Prefs.notify["Icon"].connect (reset_buffer);
+		}
+		
+		~DockItem ()
+		{
+			Gtk.IconTheme.get_default ().changed.disconnect (reset_buffer);
+			Prefs.notify["Icon"].disconnect (reset_buffer);
 		}
 		
 		public static string get_launcher_from_dockitem (string dockitem)
@@ -144,6 +151,13 @@ namespace Plank.Items
 		public string get_launcher ()
 		{
 			return Prefs.Launcher;
+		}
+		
+		void reset_buffer ()
+		{
+			surface = null;
+			
+			needs_redraw ();
 		}
 		
 		public DockSurface get_surface (DockSurface surface)

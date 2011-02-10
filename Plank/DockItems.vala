@@ -216,6 +216,7 @@ namespace Plank
 			item.notify["Indicator"].connect (signal_items_changed);
 			item.notify["State"].connect (signal_items_changed);
 			item.notify["LastClicked"].connect (signal_items_changed);
+			item.needs_redraw.connect (signal_items_changed);
 			
 			if (item is ApplicationDockItem)
 				(item as ApplicationDockItem).app_closed.connect (app_closed);
@@ -238,6 +239,7 @@ namespace Plank
 			item.notify["Indicator"].disconnect (signal_items_changed);
 			item.notify["State"].disconnect (signal_items_changed);
 			item.notify["LastClicked"].disconnect (signal_items_changed);
+			item.needs_redraw.disconnect (signal_items_changed);
 			
 			if (item is ApplicationDockItem)
 				(item as ApplicationDockItem).app_closed.disconnect (app_closed);
