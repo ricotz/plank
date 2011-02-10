@@ -102,7 +102,6 @@ namespace Plank.Widgets
 			get_screen ().monitors_changed.connect (update_monitor_geo);
 			
 			update_monitor_geo ();
-			set_size ();
 		}
 		
 		public override bool button_press_event (EventButton event)
@@ -228,6 +227,7 @@ namespace Plank.Widgets
 			get_position (out x, out y);
 			Gdk.Screen screen = get_screen ();
 			screen.get_monitor_geometry (screen.get_monitor_at_point (x, y), out monitor_geo);
+			set_size ();
 		}
 		
 		protected void position_hover ()
