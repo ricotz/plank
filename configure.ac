@@ -1,5 +1,5 @@
 AC_INIT([plank], [0.1.0])
-AC_DEFINE(RELEASE_NAME, "Stupidly simple", "Codename of this release")
+AC_DEFINE(RELEASE_NAME, "Stupidly simple", Codename of this release)
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([.])
@@ -35,17 +35,6 @@ AC_PROG_LIBTOOL
 AC_STDC_HEADERS
 
 dnl ==============================================
-dnl GConf
-dnl ==============================================
-AM_GCONF_SOURCE_2
-if test "$enable_schemas_install" != "no"; then
-    AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
-    if test x"$GCONFTOOL" = xno; then
-        AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
-    fi
-fi
-
-dnl ==============================================
 dnl Set dependency versions
 dnl ==============================================
 AC_MSG_CHECKING([which GTK version to compile against])
@@ -78,14 +67,13 @@ dnl Check that we meet the dependencies
 dnl ==============================================
 AM_PROG_VALAC([$VALA_MIN_VERSION])
 if test "x$VALAC" = "x"; then
-	AC_MSG_ERROR([You need Vala compiler])
+	AC_MSG_ERROR([You need a Vala $VALA_MIN_VERSION compiler])
 fi
 
 PKG_CHECK_MODULES(PLANK_CORE, gobject-2.0 >= $GLIB_MIN_VERSION
                               glib-2.0 >= $GLIB_MIN_VERSION
                               gio-2.0 >= $GLIB_MIN_VERSION
                               gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION
-                              gconf-2.0
                               gee-1.0
                               unique-1.0
                               x11
@@ -129,6 +117,8 @@ if test -z "$CONFIG_REQUESTED" ; then
 fi
 dnl }}}
 
+SHAVE_INIT([shave], [enable])
+
 AC_CONFIG_FILES([
 Makefile
 data/Makefile
@@ -155,6 +145,8 @@ m4/Makefile
 man/Makefile
 Plank/Makefile
 po/Makefile.in
+shave/shave
+shave/shave-libtool
 vapi/Makefile
 ])
 

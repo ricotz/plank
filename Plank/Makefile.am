@@ -3,7 +3,6 @@ VAPIDIR = $(top_srcdir)/vapi
 VALAFLAGS = \
 	--thread \
 	--pkg gtk+-${GTK_API_VERSION} \
-	--pkg gconf-2.0 \
 	--pkg bamf \
 	--pkg libwnck-1.0 \
 	--pkg gee-1.0 \

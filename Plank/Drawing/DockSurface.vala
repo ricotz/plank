@@ -21,9 +21,7 @@ namespace Plank.Drawing
 {
 	public class DockSurface : GLib.Object
 	{
-		Surface surface;
-		Context context;
-
+		private Surface surface;
 		public Surface Internal {
 			get {
 				if (surface == null)
@@ -33,14 +31,11 @@ namespace Plank.Drawing
 			private set { surface = value; }
 		}
 		
-		bool HasInternal {
-			get { return surface != null; }
-		}
-		
 		public int Width { get; private set; }
 		
 		public int Height { get; private set; }
 		
+		private Context context;
 		public Cairo.Context Context {
 			get {
 				if (context == null)
@@ -67,12 +62,6 @@ namespace Plank.Drawing
 			this (width, height);
 			if (model != null)
 				Internal = new Surface.similar (model.Internal, Content.COLOR_ALPHA, Width, Height);
-		}
-		
-		public DockSurface.with_image_surface (ImageSurface image)
-		{
-			this (image.get_width (), image.get_height ());
-			Internal = image;
 		}
 		
 		public void clear ()

@@ -34,7 +34,7 @@ namespace Plank.Services
 			launch (null, files);
 		}
 		
-		public static void launch (File? app, File[] files)
+		public static void launch (File? app, File[] files = new File[] {})
 		{
 			if (app != null && !app.query_exists ()) {
 				Logger.warn<System> ("Application '%s' doesn't exist".printf (app.get_path ()));

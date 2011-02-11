@@ -19,7 +19,6 @@ using Gee;
 using Gtk;
 
 using Plank.Drawing;
-using Plank.Services;
 
 namespace Plank.Items
 {
@@ -33,21 +32,21 @@ namespace Plank.Items
 		
 		public TransientDockItem.with_application (Bamf.Application app)
 		{
+			base ();
 			set_app (app);
 			
-			string launcher = app.get_desktop_file ();
+			var launcher = app.get_desktop_file ();
 			if (launcher == "") {
 				Text = app.get_name ();
 			} else {
 				Prefs.Launcher = launcher;
 				load_from_launcher ();
-				start_monitor ();
 			}
 		}
 		
 		public override ArrayList<MenuItem> get_menu_items ()
 		{
-			ArrayList<MenuItem> items = base.get_menu_items ();
+			var items = base.get_menu_items ();
 			
 			if (!is_window ()) {
 				var item = new ImageMenuItem.with_mnemonic (_("_Keep in Dock"));

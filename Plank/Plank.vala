@@ -27,7 +27,20 @@ namespace Plank
 	public class Plank : GLib.Object
 	{
 		[CCode (cheader_filename = "sys/prctl.h", cname = "prctl")]
-		public extern static int prctl (int option, string arg2, ulong arg3, ulong arg4, ulong arg5);
+		extern static int prctl (int option, string arg2, ulong arg3, ulong arg4, ulong arg5);
+		
+		struct utsname
+		{
+			char sysname [65];
+			char nodename [65];
+			char release [65];
+			char version [65];
+			char machine [65];
+			char domainname [65];
+		}
+		
+		[CCode (cheader_filename = "sys/utsname.h", cname = "uname")]
+		extern static int uname (utsname buf);
 		
 		static bool DEBUG = false;
 
@@ -41,6 +54,14 @@ namespace Plank
 			// set program name
 			prctl (15, "plank", 0, 0, 0);
 			
+			Logger.initialize ("Plank");
+			Logger.DisplayLevel = LogLevel.INFO;
+			Logger.info<Plank> ("Plank version: %s".printf (Build.VERSION));
+			utsname un = utsname ();
+			uname (un);
+			Logger.info<Plank> ("Kernel version: %s".printf ((string) un.release));
+			Logger.DisplayLevel = LogLevel.WARN;
+			
 			// parse commandline options
 			var context = new OptionContext ("");
 			
@@ -52,8 +73,6 @@ namespace Plank
 			} catch { }
 			
 			Intl.bindtextdomain ("plank", Build.DATADIR + "/locale");
-			
-			Logger.initialize ("Plank");
 			
 			if (!Thread.supported ()) {
 				Logger.fatal<Plank> ("Problem initializing thread support.");

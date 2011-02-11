@@ -1,2 +1,3 @@
 Plank/Items/ApplicationDockItem.c
+Plank/Items/FileDockItem.c
 Plank/Items/TransientDockItem.c

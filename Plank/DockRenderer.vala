@@ -125,17 +125,19 @@ namespace Plank
 			window.notify["HoveredItem"].connect (animated_draw);
 			window.Items.items_changed.connect (animated_draw);
 			
-			notify["Hidden"].connect (() => {
-				var now = new DateTime.now_utc ();
-				var diff = now.difference (last_hide);
-				if (diff < theme.HideTime * 1000)
-					last_hide = now.add_seconds ((diff - theme.HideTime * 1000) / 1000000.0);
-				else
-					last_hide = new DateTime.now_utc ();
-				animated_draw ();
-			});
+			notify["Hidden"].connect (hidden_changed);
 			
 			show ();
+		}
+		
+		~DockRenderer ()
+		{
+			theme.notify.disconnect (theme_changed);
+			
+			window.notify["HoveredItem"].disconnect (animated_draw);
+			window.Items.items_changed.disconnect (animated_draw);
+			
+			notify["Hidden"].disconnect (hidden_changed);
 		}
 		
 		public void show ()
@@ -487,6 +489,18 @@ namespace Plank
 		void theme_changed ()
 		{
 			window.set_size ();
+		}
+		
+		void hidden_changed ()
+		{
+			var now = new DateTime.now_utc ();
+			var diff = now.difference (last_hide);
+			if (diff < theme.HideTime * 1000)
+				last_hide = now.add_seconds ((diff - theme.HideTime * 1000) / 1000000.0);
+			else
+				last_hide = new DateTime.now_utc ();
+			
+			animated_draw ();
 		}
 		
 		protected override bool animation_needed (DateTime render_time)

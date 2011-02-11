@@ -15,7 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using GConf;
 using Gee;
 
 using Plank.Items;
@@ -67,7 +66,16 @@ namespace Plank
 		
 		~DockItems ()
 		{
+			Matcher.get_default ().app_opened.disconnect (app_opened);
+			
+			Set<DockItem> items = new HashSet<DockItem> ();
+			items.add_all (Items);
+			foreach (var item in items)
+				remove_item_without_signaling (item);
+			Items.clear ();
+			
 			if (items_monitor != null) {
+				items_monitor.changed.disconnect (handle_items_dir_changed);
 				items_monitor.cancel ();
 				items_monitor = null;
 			}
@@ -217,6 +225,7 @@ namespace Plank
 			item.notify["Indicator"].connect (signal_items_changed);
 			item.notify["State"].connect (signal_items_changed);
 			item.notify["LastClicked"].connect (signal_items_changed);
+			item.needs_redraw.connect (signal_items_changed);
 			
 			if (item is ApplicationDockItem)
 				(item as ApplicationDockItem).app_closed.connect (app_closed);
@@ -239,6 +248,7 @@ namespace Plank
 			item.notify["Indicator"].disconnect (signal_items_changed);
 			item.notify["State"].disconnect (signal_items_changed);
 			item.notify["LastClicked"].disconnect (signal_items_changed);
+			item.needs_redraw.disconnect (signal_items_changed);
 			
 			if (item is ApplicationDockItem)
 				(item as ApplicationDockItem).app_closed.disconnect (app_closed);

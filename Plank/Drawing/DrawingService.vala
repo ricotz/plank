@@ -58,7 +58,7 @@ namespace Plank.Drawing
 		public static string? get_icon_from_gicon (Icon? icon)
 		{
 			if (icon is ThemedIcon)
-				return string.joinv (";;", (icon as ThemedIcon).get_names ());
+				return string.joinv (";;", (string[]) (icon as ThemedIcon).get_names ());
 			if (icon is FileIcon)
 				return (icon as FileIcon).get_file ().get_path ();
 			return null;

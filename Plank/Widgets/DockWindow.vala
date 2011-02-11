@@ -77,13 +77,8 @@ namespace Plank.Widgets
 			set_type_hint (WindowTypeHint.DOCK);
 			
 			menu.attach_to_widget (this, null);
-			menu.show.connect (() => {
-				update_icon_regions ();
-			});
-			menu.hide.connect (() => {
-				HideTracker.update_dock_hovered ();
-				update_icon_regions ();
-			});
+			menu.show.connect (update_icon_regions);
+			menu.hide.connect (HideTracker.update_dock_hovered);
 			
 			stick ();
 			
@@ -97,9 +92,7 @@ namespace Plank.Widgets
 			Items.item_added.connect (set_size);
 			Items.item_removed.connect (set_size);
 			Prefs.notify.connect (set_size);
-			Renderer.notify["Hidden"].connect (() => {
-				update_icon_regions ();
-			});
+			Renderer.notify["Hidden"].connect (update_icon_regions);
 			
 			DragTracker.notify["ExternalDragActive"].connect (() => {
 				HideTracker.Disabled = DragTracker.InternalDragActive || DragTracker.ExternalDragActive;
@@ -116,7 +109,20 @@ namespace Plank.Widgets
 			get_screen ().monitors_changed.connect (update_monitor_geo);
 			
 			update_monitor_geo ();
-			set_size ();
+		}
+		
+		~DockWindow ()
+		{
+			menu.show.disconnect (update_icon_regions);
+			menu.hide.disconnect (hide_manager.update_dock_hovered);
+			
+			Items.item_added.disconnect (set_size);
+			Items.item_removed.disconnect (set_size);
+			Prefs.notify.disconnect (set_size);
+			Renderer.notify["Hidden"].disconnect (update_icon_regions);
+			
+			get_screen ().size_changed.disconnect (update_monitor_geo);
+			get_screen ().monitors_changed.disconnect (update_monitor_geo);
 		}
 		
 		public override bool button_press_event (EventButton event)
@@ -129,21 +135,7 @@ namespace Plank.Widgets
 			if (HoveredItem == null)
 				return true;
 			
-			int button = 0;
-			switch (event.button) {
-			case 1:
-				button = PopupButton.LEFT;
-				break;
-			
-			case 2:
-				button = PopupButton.MIDDLE;
-				break;
-			
-			case 3:
-				button = PopupButton.RIGHT;
-				break;
-			}
-			
+			var button = PopupButton.from_event_button (event);
 			if ((HoveredItem.Button & button) == button)
 				do_popup (event.button);
 			
@@ -156,7 +148,7 @@ namespace Plank.Widgets
 				return true;
 
 			if (HoveredItem != null && !menu_is_visible ())
-				HoveredItem.clicked (event.button, event.state);
+				HoveredItem.clicked (PopupButton.from_event_button (event), event.state);
 			
 			return true;
 		}
@@ -210,6 +202,7 @@ namespace Plank.Widgets
 		public override bool expose_event (EventExpose event)
 		{
 			if (dock_is_starting) {
+				Services.Logger.debug<DockWindow> ("dock window loaded");
 				dock_is_starting = false;
 				
 				// slide the dock in, if it shouldnt start hidden
@@ -237,8 +230,10 @@ namespace Plank.Widgets
 				return;
 			}
 			
-			hover.Text = HoveredItem.Text;
+			if (hover.get_visible ())
+				hover.hide ();
 			
+			hover.Text = HoveredItem.Text;
 			position_hover ();
 			
 			if (!hover.get_visible ())
@@ -266,6 +261,7 @@ namespace Plank.Widgets
 			get_position (out x, out y);
 			Gdk.Screen screen = get_screen ();
 			screen.get_monitor_geometry (screen.get_monitor_at_point (x, y), out monitor_geo);
+			set_size ();
 		}
 		
 		protected void position_hover ()
