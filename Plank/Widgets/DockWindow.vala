@@ -199,8 +199,10 @@ namespace Plank.Widgets
 				return;
 			}
 			
-			hover.Text = HoveredItem.Text;
+			if (hover.get_visible ())
+				hover.hide ();
 			
+			hover.Text = HoveredItem.Text;
 			position_hover ();
 			
 			if (!hover.get_visible ())
