@@ -36,6 +36,8 @@ namespace Plank.Items
 		
 		~ApplicationDockItem ()
 		{
+			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
+			
 			set_app (null);
 			stop_monitor ();
 		}
@@ -46,10 +48,7 @@ namespace Plank.Items
 			if (!ValidItem)
 				return;
 			
-			Prefs.notify["Launcher"].connect (() => {
-				update_app ();
-				launcher_changed ();
-			});
+			Prefs.notify["Launcher"].connect (handle_launcher_changed);
 			
 			load_from_launcher ();
 		}
@@ -74,6 +73,13 @@ namespace Plank.Items
 				app.child_removed.connect (update_indicator);
 				app.closed.connect (signal_app_closed);
 			}
+		}
+		
+		void handle_launcher_changed ()
+		{
+			update_app ();
+			
+			launcher_changed ();
 		}
 		
 		public void signal_app_closed ()

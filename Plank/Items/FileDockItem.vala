@@ -33,7 +33,7 @@ namespace Plank.Items
 			if (!ValidItem)
 				return;
 			
-			Prefs.notify["Launcher"].connect (launcher_changed);
+			Prefs.notify["Launcher"].connect (handle_launcher_changed);
 			OwnedFile = File.new_for_path (Prefs.Launcher);
 			
 			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? "folder";
@@ -46,12 +46,14 @@ namespace Plank.Items
 		
 		~FileDockItem ()
 		{
-			Prefs.notify["Launcher"].disconnect (launcher_changed);
+			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
 		}
 		
-		void launcher_changed ()
+		void handle_launcher_changed ()
 		{
 			OwnedFile = File.new_for_path (Prefs.Launcher);
+			
+			launcher_changed ();
 		}
 		
 		public override void launch ()
