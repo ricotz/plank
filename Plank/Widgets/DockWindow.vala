@@ -74,13 +74,8 @@ namespace Plank.Widgets
 			set_type_hint (WindowTypeHint.DOCK);
 			
 			menu.attach_to_widget (this, null);
-			menu.show.connect (() => {
-				update_icon_regions ();
-			});
-			menu.hide.connect (() => {
-				hide_manager.update_dock_hovered ();
-				update_icon_regions ();
-			});
+			menu.show.connect (update_icon_regions);
+			menu.hide.connect (hide_manager.update_dock_hovered);
 			
 			stick ();
 			
@@ -94,14 +89,26 @@ namespace Plank.Widgets
 			Items.item_added.connect (set_size);
 			Items.item_removed.connect (set_size);
 			Prefs.notify.connect (set_size);
-			Renderer.notify["Hidden"].connect (() => {
-				update_icon_regions ();
-			});
+			Renderer.notify["Hidden"].connect (update_icon_regions);
 			
 			get_screen ().size_changed.connect (update_monitor_geo);
 			get_screen ().monitors_changed.connect (update_monitor_geo);
 			
 			update_monitor_geo ();
+		}
+		
+		~DockWindow ()
+		{
+			menu.show.disconnect (update_icon_regions);
+			menu.hide.disconnect (hide_manager.update_dock_hovered);
+			
+			Items.item_added.disconnect (set_size);
+			Items.item_removed.disconnect (set_size);
+			Prefs.notify.disconnect (set_size);
+			Renderer.notify["Hidden"].disconnect (update_icon_regions);
+			
+			get_screen ().size_changed.disconnect (update_monitor_geo);
+			get_screen ().monitors_changed.disconnect (update_monitor_geo);
 		}
 		
 		public override bool button_press_event (EventButton event)

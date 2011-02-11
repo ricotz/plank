@@ -66,7 +66,16 @@ namespace Plank
 		
 		~DockItems ()
 		{
+			Matcher.get_default ().app_opened.disconnect (app_opened);
+			
+			Set<DockItem> items = new HashSet<DockItem> ();
+			items.add_all (Items);
+			foreach (var item in items)
+				remove_item_without_signaling (item);
+			Items.clear ();
+			
 			if (items_monitor != null) {
+				items_monitor.changed.disconnect (handle_items_dir_changed);
 				items_monitor.cancel ();
 				items_monitor = null;
 			}

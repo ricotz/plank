@@ -33,9 +33,7 @@ namespace Plank.Items
 			if (!ValidItem)
 				return;
 			
-			Prefs.notify["Launcher"].connect (() => {
-				OwnedFile = File.new_for_path (Prefs.Launcher);
-			});
+			Prefs.notify["Launcher"].connect (launcher_changed);
 			OwnedFile = File.new_for_path (Prefs.Launcher);
 			
 			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? "folder";
@@ -44,6 +42,16 @@ namespace Plank.Items
 			// pop up the dir contents on a left click too
 			if (OwnedFile.query_file_type (0) == FileType.DIRECTORY)
 				Button = PopupButton.RIGHT | PopupButton.LEFT;
+		}
+		
+		~FileDockItem ()
+		{
+			Prefs.notify["Launcher"].disconnect (launcher_changed);
+		}
+		
+		void launcher_changed ()
+		{
+			OwnedFile = File.new_for_path (Prefs.Launcher);
 		}
 		
 		public override void launch ()

@@ -55,6 +55,18 @@ namespace Plank
 			Matcher.get_default ().app_changed.connect (app_changed);
 		}
 		
+		~HideManager ()
+		{
+			notify["DockHovered"].disconnect (update_hidden);
+			window.Prefs.notify["HideMode"].disconnect (update_hidden);
+			
+			window.enter_notify_event.disconnect (enter_notify_event);
+			window.leave_notify_event.disconnect (leave_notify_event);
+			window.motion_notify_event.disconnect (motion_notify_event);
+			
+			Matcher.get_default ().app_changed.disconnect (app_changed);
+		}
+		
 		public void update_dock_hovered ()
 		{
 			// get current mouse pointer location
