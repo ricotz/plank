@@ -169,10 +169,22 @@ namespace Plank
 		{
 			Gdk.Rectangle rect = Gdk.Rectangle ();
 			
-			rect.x = (window.width_request - VisibleDockWidth) / 2;
-			rect.y = window.height_request - (int) Math.fmax (1, (1 - HideOffset) * VisibleDockHeight);
+			rect.width = VisibleDockWidth;
+			rect.height = (int) Math.fmax (1, (1 - HideOffset) * VisibleDockHeight);
+			rect.x = (window.width_request - rect.width) / 2;
+			rect.y = window.height_request - rect.height;
+			
+			return rect;
+		}
+		
+		public Gdk.Rectangle static_dock_region ()
+		{
+			Gdk.Rectangle rect = Gdk.Rectangle ();
+			
 			rect.width = VisibleDockWidth;
 			rect.height = VisibleDockHeight;
+			rect.x = (window.width_request - rect.width) / 2;
+			rect.y = window.height_request - rect.height;
 			
 			return rect;
 		}

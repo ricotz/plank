@@ -114,7 +114,7 @@ namespace Plank.Widgets
 		~DockWindow ()
 		{
 			menu.show.disconnect (update_icon_regions);
-			menu.hide.disconnect (hide_manager.update_dock_hovered);
+			menu.hide.disconnect (HideTracker.update_dock_hovered);
 			
 			Items.item_added.disconnect (set_size);
 			Items.item_removed.disconnect (set_size);
