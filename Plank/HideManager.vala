@@ -84,7 +84,7 @@ namespace Plank
 			// use the dock rect and cursor location to determine if dock is hovered
 			var dock_rect = get_dock_region ();
 			DockHovered = x >= dock_rect.x && x <= dock_rect.x + dock_rect.width &&
-						y >= dock_rect.y && y <= dock_rect.y + dock_rect.height;
+						  y >= dock_rect.y && y <= dock_rect.y + dock_rect.height;
 		}
 		
 		Gdk.Rectangle get_dock_region ()
@@ -176,7 +176,8 @@ namespace Plank
 				if (active_window != null && active_window.get_pid () != w.get_pid ())
 					continue;
 				
-				if (window_intersects_rect (w, dock_rect)) {
+				var dest_rect = Gdk.Rectangle ();
+				if (window_geometry (w).intersect (dock_rect, dest_rect)) {
 					intersect = true;
 					break;
 				}
@@ -205,12 +206,11 @@ namespace Plank
 		
 		void setup_active_window ()
 		{
-			var screen = Wnck.Screen.get_default ();
-			var active_window = screen.get_active_window ();
+			var active_window = Wnck.Screen.get_default ().get_active_window ();
 			
 			if (active_window != null) {
-				active_window.geometry_changed.connect (handle_geometry_changed);
 				last_window_rect = window_geometry (active_window);
+				active_window.geometry_changed.connect (handle_geometry_changed);
 			}
 			
 			update_window_intersect ();
@@ -242,12 +242,6 @@ namespace Plank
 			var win_rect = Gdk.Rectangle ();
 			w.get_geometry (out win_rect.x, out win_rect.y, out win_rect.width, out win_rect.height);
 			return win_rect;
-		}
-		
-		bool window_intersects_rect (Wnck.Window w, Gdk.Rectangle rect)
-		{
-			var dest_rect = Gdk.Rectangle ();
-			return window_geometry (w).intersect (rect, dest_rect);
 		}
 	}
 }
