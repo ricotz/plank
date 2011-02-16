@@ -16,6 +16,7 @@
 // 
 
 using Gdk;
+using Wnck;
 
 using Plank.Services.Windows;
 using Plank.Widgets;
@@ -32,16 +33,12 @@ namespace Plank
 	public class HideManager : GLib.Object
 	{
 		DockWindow window;
-		bool windows_intersect;
 		
-		public bool DockHovered { get; set; }
+		public bool DockHovered { get; set; default = false; }
 		
 		public HideManager (DockWindow window)
 		{
 			this.window = window;
-			
-			update_window_intersect ();
-			DockHovered = false;
 			
 			window.Renderer.hide ();
 			
@@ -52,7 +49,12 @@ namespace Plank
 			window.leave_notify_event.connect (leave_notify_event);
 			window.motion_notify_event.connect (motion_notify_event);
 			
-			Matcher.get_default ().app_changed.connect (app_changed);
+			Matcher.get_default ().window_opened.connect (update_window_intersect);
+			Matcher.get_default ().window_closed.connect (update_window_intersect);
+			
+			var screen = Wnck.Screen.get_default ();
+			screen.active_window_changed.connect (handle_window_changed);
+			setup_active_window ();
 		}
 		
 		~HideManager ()
@@ -64,7 +66,11 @@ namespace Plank
 			window.leave_notify_event.disconnect (leave_notify_event);
 			window.motion_notify_event.disconnect (motion_notify_event);
 			
-			Matcher.get_default ().app_changed.disconnect (app_changed);
+			Matcher.get_default ().window_opened.disconnect (update_window_intersect);
+			Matcher.get_default ().window_closed.disconnect (update_window_intersect);
+			
+			var screen = Wnck.Screen.get_default ();
+			screen.active_window_changed.disconnect (handle_window_changed);
 		}
 		
 		public void update_dock_hovered ()
@@ -72,21 +78,27 @@ namespace Plank
 			// get current mouse pointer location
 			int x, y;
 			ModifierType mod;
-			Screen screen;
+			Gdk.Screen screen;
 			window.get_display ().get_pointer (out screen, out x, out y, out mod);
 			
+			// use the dock rect and cursor location to determine if dock is hovered
+			var dock_rect = get_dock_region ();
+			DockHovered = x >= dock_rect.x && x <= dock_rect.x + dock_rect.width &&
+						y >= dock_rect.y && y <= dock_rect.y + dock_rect.height;
+		}
+		
+		Gdk.Rectangle get_dock_region ()
+		{
 			// get window location
 			int win_x, win_y;
 			window.get_position (out win_x, out win_y);
 			
 			// compute rect of the window
-			var cursor_rect = window.Renderer.cursor_region ();
+			var dock_rect = window.Renderer.cursor_region ();
+			dock_rect.x += win_x;
+			dock_rect.y += win_y;
 			
-			// use the window rect and cursor location to determine if dock is hovered
-			var x_pos = win_x + cursor_rect.x;
-			var y_pos = win_y + cursor_rect.y;
-			DockHovered = x >= x_pos && x <= x_pos + cursor_rect.width &&
-						y >= y_pos && y <= y_pos + cursor_rect.height;
+			return dock_rect;
 		}
 		
 		void update_hidden ()
@@ -97,7 +109,7 @@ namespace Plank
 				break;
 			
 			case HideType.INTELLIGENT:
-				if (DockHovered && !windows_intersect)
+				if (DockHovered || !windows_intersect)
 					window.Renderer.show ();
 				else
 					window.Renderer.hide ();
@@ -137,14 +149,105 @@ namespace Plank
 			return window.Renderer.Hidden;
 		}
 		
-		void app_changed (Bamf.Application? old_app, Bamf.Application? new_app)
-		{
-			update_hidden ();
-		}
+		//
+		// intelligent hiding code
+		//
+		
+		bool windows_intersect;
+		Gdk.Rectangle last_window_rect;
+		
+		uint timer_geo;
+		uint timer_window_changed;
 		
 		void update_window_intersect ()
 		{
-			windows_intersect = false;
+			var intersect = false;
+			var dock_rect = get_dock_region ();
+			var screen = Wnck.Screen.get_default ();
+			var active_window = screen.get_active_window ();
+			
+			foreach (Wnck.Window w in screen.get_windows ()) {
+				if (w.is_minimized ())
+					continue;
+				if ((w.get_window_type () & (Wnck.WindowType.DESKTOP | Wnck.WindowType.DOCK | Wnck.WindowType.SPLASHSCREEN | Wnck.WindowType.MENU)) != 0)
+					continue;
+				if (screen.get_active_workspace () == null || !w.is_visible_on_workspace (screen.get_active_workspace ()))
+					continue;
+				if (active_window != null && active_window.get_pid () != w.get_pid ())
+					continue;
+				
+				if (window_intersects_rect (w, dock_rect)) {
+					intersect = true;
+					break;
+				}
+			}
+			
+			if (windows_intersect != intersect) {
+				windows_intersect = intersect;
+				update_hidden ();
+			}
+		}
+		
+		void handle_window_changed (Wnck.Window? previous)
+		{
+			if (previous != null)
+				previous.geometry_changed.disconnect (handle_geometry_changed);
+			
+			if (timer_window_changed > 0)
+				return;
+			
+			timer_window_changed = GLib.Timeout.add (200, () => {
+				setup_active_window ();
+				timer_window_changed = 0;
+				return false;
+			});
+		}
+		
+		void setup_active_window ()
+		{
+			var screen = Wnck.Screen.get_default ();
+			var active_window = screen.get_active_window ();
+			
+			if (active_window != null) {
+				active_window.geometry_changed.connect (handle_geometry_changed);
+				last_window_rect = window_geometry (active_window);
+			}
+			
+			update_window_intersect ();
+		}
+		
+		void handle_geometry_changed (Wnck.Window? w)
+		{
+			if (w == null)
+				return;
+			
+			var geo = window_geometry (w);
+			if (geo == last_window_rect)
+				return;
+			
+			last_window_rect = geo;
+			
+			if (timer_geo > 0)
+				return;
+			
+			timer_geo = GLib.Timeout.add (200, () => {
+				update_window_intersect ();
+				timer_geo = 0;
+				return false;
+			});
+		}
+		
+		Gdk.Rectangle window_geometry (Wnck.Window w)
+		{
+			var win_rect = Gdk.Rectangle ();
+			w.get_geometry (out win_rect.x, out win_rect.y, out win_rect.width, out win_rect.height);
+			return win_rect;
+		}
+		
+		bool window_intersects_rect (Wnck.Window w, Gdk.Rectangle rect)
+		{
+			var dest_rect = Gdk.Rectangle ();
+			return window_geometry (w).intersect (rect, dest_rect);
 		}
 	}
 }
