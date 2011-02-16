@@ -40,6 +40,7 @@ namespace Plank
 		{
 			this.window = window;
 			
+			windows_intersect = false;
 			window.Renderer.hide ();
 			
 			notify["DockHovered"].connect (update_hidden);
@@ -81,14 +82,6 @@ namespace Plank
 			Gdk.Screen screen;
 			window.get_display ().get_pointer (out screen, out x, out y, out mod);
 			
-			// use the dock rect and cursor location to determine if dock is hovered
-			var dock_rect = get_dock_region ();
-			DockHovered = x >= dock_rect.x && x <= dock_rect.x + dock_rect.width &&
-						  y >= dock_rect.y && y <= dock_rect.y + dock_rect.height;
-		}
-		
-		Gdk.Rectangle get_dock_region ()
-		{
 			// get window location
 			int win_x, win_y;
 			window.get_position (out win_x, out win_y);
@@ -98,7 +91,9 @@ namespace Plank
 			dock_rect.x += win_x;
 			dock_rect.y += win_y;
 			
-			return dock_rect;
+			// use the dock rect and cursor location to determine if dock is hovered
+			DockHovered = x >= dock_rect.x && x <= dock_rect.x + dock_rect.width &&
+						  y >= dock_rect.y && y <= dock_rect.y + dock_rect.height;
 		}
 		
 		void update_hidden ()
@@ -161,10 +156,21 @@ namespace Plank
 		
 		void update_window_intersect ()
 		{
+			// get window location
+			int win_x, win_y;
+			window.get_position (out win_x, out win_y);
+			
+			// compute rect of the window
+			var dock_rect = window.Renderer.static_dock_region ();
+			dock_rect.x += win_x;
+			dock_rect.y += win_y;
+			
 			var intersect = false;
-			var dock_rect = get_dock_region ();
 			var screen = Wnck.Screen.get_default ();
 			var active_window = screen.get_active_window ();
+			
+			if (active_window == null)
+				return;
 			
 			foreach (Wnck.Window w in screen.get_windows ()) {
 				if (w.is_minimized ())
