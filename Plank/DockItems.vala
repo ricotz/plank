@@ -343,10 +343,10 @@ namespace Plank
 				make_launcher ("/usr/share/applications/empathy.desktop", 4);
 		}
 		
-		string make_launcher (string launcher, int sort)
+		public string make_launcher (string launcher, int sort)
 		{
 			if (File.new_for_path (launcher).query_exists ()) {
-				Logger.debug<DockItems> ("Adding default dock item for launcher '%s'".printf (launcher));
+				Logger.debug<DockItems> ("Adding dock item for launcher '%s'".printf (launcher));
 				
 				KeyFile file = new KeyFile ();
 				

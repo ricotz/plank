@@ -83,21 +83,6 @@ namespace Plank
 			enable_drag_from ();
 		}
 		
-		public bool ItemAcceptsDrop ()
-		{
-			if (drag_data == null)
-				return false;
-			
-			/* TODO
-			DockItem item = Owner.HoveredItem;
-			
-			if (!drag_is_desktop_file && item != null && item.CanAcceptDrop (drag_data))
-				return true;
-			*/
-			
-			return false;
-		}
-		
 		bool owner_motion_notify_event (Widget w, EventMotion event)
 		{
 			ExternalDragActive = false;
@@ -183,9 +168,17 @@ namespace Plank
 			if (drag_data == null)
 				return true;
 			
-			if (ItemAcceptsDrop ()) {
-				// TODO
-				//Owner.HoveredItem.AcceptDrop (drag_data);
+			var item = Owner.HoveredItem;
+			
+			if (drag_is_desktop_file) {
+				foreach (var uri in drag_data)
+					if (uri.has_prefix ("file://") && uri.has_suffix (".desktop")) {
+						Owner.Items.make_launcher (uri.replace ("file://", ""), item.get_sort () + 1);
+						break;
+					}
+				
+			} else if (item != null && item.can_accept_drop (drag_data)) {
+				item.accept_drop (drag_data);
 			}
 			
 			ExternalDragActive = false;
