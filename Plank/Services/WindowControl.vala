@@ -100,10 +100,13 @@ namespace Plank.Services.Windows
 			return windows;
 		}
 		
-		public static void update_icon_regions (Bamf.Application? app, Gdk.Rectangle rect, int x, int y)
+		public static void update_icon_regions (Bamf.Application? app, Gdk.Rectangle? rect, int x, int y)
 		{
 			if (app == null)
 				return;
+			
+			if (rect == null)
+				rect = Gdk.Rectangle () {x = 0, y = 0, width = 0, height = 0};
 			
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();

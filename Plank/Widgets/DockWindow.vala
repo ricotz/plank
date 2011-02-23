@@ -286,11 +286,8 @@ namespace Plank.Widgets
 				if (appitem == null || appitem.App == null)
 					continue;
 				
-				Gdk.Rectangle empty = Gdk.Rectangle ();
-				empty.x = empty.y = empty.width = empty.height = 0;
-				
 				if (menu_is_visible () || Renderer.Hidden)
-					WindowControl.update_icon_regions (appitem.App, empty, win_x, win_y);
+					WindowControl.update_icon_regions (appitem.App, null, win_x, win_y);
 				else
 					WindowControl.update_icon_regions (appitem.App, Renderer.item_hover_region (appitem), win_x, win_y);
 			}
