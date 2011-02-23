@@ -321,8 +321,6 @@ namespace Plank.Widgets
 			hide_manager.update_dock_hovered ();
 			if (!hide_manager.DockHovered)
 				set_hovered (null);
-			
-			Renderer.animated_draw ();
 		}
 		
 		protected void position_menu (Menu menu, out int x, out int y, out bool push_in)
