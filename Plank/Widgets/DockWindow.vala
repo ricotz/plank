@@ -75,7 +75,7 @@ namespace Plank.Widgets
 			
 			menu.attach_to_widget (this, null);
 			menu.show.connect (update_icon_regions);
-			menu.hide.connect (hide_manager.update_dock_hovered);
+			menu.hide.connect (on_menu_hide);
 			
 			stick ();
 			
@@ -100,7 +100,7 @@ namespace Plank.Widgets
 		~DockWindow ()
 		{
 			menu.show.disconnect (update_icon_regions);
-			menu.hide.disconnect (hide_manager.update_dock_hovered);
+			menu.hide.disconnect (on_menu_hide);
 			
 			Items.item_added.disconnect (set_size);
 			Items.item_removed.disconnect (set_size);
@@ -314,6 +314,15 @@ namespace Plank.Widgets
 			
 			menu.show_all ();
 			menu.popup (null, null, position_menu, button, get_current_event_time ());
+		}
+		
+		protected void on_menu_hide ()
+		{
+			hide_manager.update_dock_hovered ();
+			if (!hide_manager.DockHovered)
+				set_hovered (null);
+			
+			Renderer.animated_draw ();
 		}
 		
 		protected void position_menu (Menu menu, out int x, out int y, out bool push_in)
