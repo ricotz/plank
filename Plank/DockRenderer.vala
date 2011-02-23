@@ -507,6 +507,7 @@ namespace Plank
 		{
 			var now = new DateTime.now_utc ();
 			var diff = now.difference (last_hide);
+			
 			if (diff < theme.HideTime * 1000)
 				last_hide = now.add_seconds ((diff - theme.HideTime * 1000) / 1000000.0);
 			else

@@ -78,7 +78,7 @@ namespace Plank.Widgets
 			
 			menu.attach_to_widget (this, null);
 			menu.show.connect (update_icon_regions);
-			menu.hide.connect (HideTracker.update_dock_hovered);
+			menu.hide.connect (on_menu_hide);
 			
 			stick ();
 			
@@ -114,7 +114,7 @@ namespace Plank.Widgets
 		~DockWindow ()
 		{
 			menu.show.disconnect (update_icon_regions);
-			menu.hide.disconnect (HideTracker.update_dock_hovered);
+			menu.hide.disconnect (on_menu_hide);
 			
 			Items.item_added.disconnect (set_size);
 			Items.item_removed.disconnect (set_size);
@@ -156,6 +156,7 @@ namespace Plank.Widgets
 		public override bool enter_notify_event (EventCrossing event)
 		{
 			update_hovered ((int) event.x, (int) event.y);
+			
 			return true;
 		}
 		
@@ -312,11 +313,8 @@ namespace Plank.Widgets
 				if (appitem == null || appitem.App == null)
 					continue;
 				
-				Gdk.Rectangle empty = Gdk.Rectangle ();
-				empty.x = empty.y = empty.width = empty.height = 0;
-				
 				if (menu_is_visible () || Renderer.Hidden)
-					WindowControl.update_icon_regions (appitem.App, empty, win_x, win_y);
+					WindowControl.update_icon_regions (appitem.App, null, win_x, win_y);
 				else
 					WindowControl.update_icon_regions (appitem.App, Renderer.item_hover_region (appitem), win_x, win_y);
 			}
@@ -345,6 +343,15 @@ namespace Plank.Widgets
 			menu.popup (null, null, position_menu, button, get_current_event_time ());
 		}
 		
+		protected void on_menu_hide ()
+		{
+			HideTracker.update_dock_hovered ();
+			if (!HideTracker.DockHovered)
+				set_hovered (null);
+			
+			Renderer.animated_draw ();
+		}
+		
 		protected void position_menu (Menu menu, out int x, out int y, out bool push_in)
 		{
 			int win_x, win_y;
@@ -362,13 +369,13 @@ namespace Plank.Widgets
 				return;
 			
 			var offset = (int) Math.fmax (1, (1 - Renderer.HideOffset) * Renderer.VisibleDockHeight);
-			var pixmap = new Pixmap (null, width_request, offset, 1);
+			var pixmap = new Pixmap (null, Renderer.VisibleDockWidth, offset, 1);
 			var cr = cairo_create (pixmap);
 			
 			cr.set_source_rgba (0, 0, 0, 1);
 			cr.paint ();
 			
-			input_shape_combine_mask ((Bitmap*) pixmap, 0, height_request - offset);
+			input_shape_combine_mask ((Bitmap*) pixmap, (width_request - Renderer.VisibleDockWidth) / 2, height_request - offset);
 		}
 		
 		protected enum Struts 

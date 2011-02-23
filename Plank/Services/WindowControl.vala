@@ -92,7 +92,7 @@ namespace Plank.Services.Windows
 			unowned GLib.List<Bamf.View> children = app.get_children ();
 			for (int i = 0; i < children.length (); i++) {
 				var view = children.nth_data (i);
-				if (!(view is Bamf.Window && view.user_visible ()))
+				if (!(view is Bamf.Window))
 					continue;
 				windows.add (view as Bamf.Window);
 			}
@@ -100,10 +100,13 @@ namespace Plank.Services.Windows
 			return windows;
 		}
 		
-		public static void update_icon_regions (Bamf.Application? app, Gdk.Rectangle rect, int x, int y)
+		public static void update_icon_regions (Bamf.Application? app, Gdk.Rectangle? rect, int x, int y)
 		{
 			if (app == null)
 				return;
+			
+			if (rect == null)
+				rect = Gdk.Rectangle () {x = 0, y = 0, width = 0, height = 0};
 			
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();

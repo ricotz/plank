@@ -81,9 +81,7 @@ namespace Plank
 		{
 			// get current mouse pointer location
 			int x, y;
-			ModifierType mod;
-			Gdk.Screen screen;
-			window.get_display ().get_pointer (out screen, out x, out y, out mod);
+			window.get_display ().get_pointer (null, out x, out y, null);
 			
 			// get window location
 			int win_x, win_y;
@@ -194,6 +192,7 @@ namespace Plank
 				if (active_window != null && active_window.get_pid () != w.get_pid ())
 					continue;
 				
+				// FIXME this var is only needed due to a vapi bug where we cant use null
 				var dest_rect = Gdk.Rectangle ();
 				if (window_geometry (w).intersect (dock_rect, dest_rect)) {
 					intersect = true;
