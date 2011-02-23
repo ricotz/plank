@@ -133,8 +133,7 @@ namespace Plank.Widgets
 		
 		public override bool enter_notify_event (EventCrossing event)
 		{
-			if (update_hovered ((int) event.x, (int) event.y))
-				return true;
+			update_hovered ((int) event.x, (int) event.y);
 			
 			return true;
 		}
