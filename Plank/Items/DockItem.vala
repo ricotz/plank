@@ -215,6 +215,16 @@ namespace Plank.Items
 			return new ArrayList<MenuItem> ();
 		}
 		
+		public virtual bool can_accept_drop (ArrayList<string> uris)
+		{
+			return false;
+		}
+		
+		public virtual bool accept_drop (ArrayList<string> uris)
+		{
+			return false;
+		}
+		
 		public virtual string unique_id ()
 		{
 			return "dockitem%d".printf ((int) this);

@@ -71,7 +71,7 @@ namespace Plank.Services
 			return false;
 		}
 		
-		static void launch_with_files (File? app, GLib.List<File> files)
+		public static void launch_with_files (File? app, GLib.List<File> files)
 		{
 			if (app == null && files.length () == 0)
 				return;

@@ -153,6 +153,15 @@ namespace Plank.Items
 			Services.System.launch (File.new_for_path (Prefs.Launcher));
 		}
 		
+		public void launch_with_uris (ArrayList<string> uris)
+		{
+			var files = new GLib.List<File> ();
+			foreach (var uri in uris)
+				files.append (File.new_for_uri (uri));
+			
+			Services.System.launch_with_files (File.new_for_path (Prefs.Launcher), files);
+		}
+		
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
 			if (button == PopupButton.MIDDLE || 
@@ -250,6 +259,35 @@ namespace Plank.Items
 			}
 			
 			return items;
+		}
+		
+		public override bool can_accept_drop (ArrayList<string> uris)
+		{
+			if (uris == null || is_window ())
+				return false;
+			
+			try {
+				// TODO get supported mime-types
+				var desktop_info = new DesktopAppInfo.from_filename (Prefs.Launcher);
+				var mimes = new ArrayList<string> ();
+				
+				foreach (var uri in uris) {
+					var info = File.new_for_uri (uri).query_info (GLib.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, GLib.FileQueryInfoFlags.NONE);
+					var mime = info.get_content_type ();
+					foreach (var m in mimes)
+						if (GLib.ContentType.is_a (mime, m) || GLib.ContentType.equals (mime, m))
+							return true;
+				}
+			} catch {}
+			
+			return base.can_accept_drop (uris);
+		}
+		
+		public override bool accept_drop (ArrayList<string> uris)
+		{
+			launch_with_uris (uris);
+			
+			return true;
 		}
 		
 		protected void load_from_launcher ()
