@@ -155,11 +155,6 @@ namespace Plank.Items
 		
 		public void launch_with_uris (ArrayList<string> uris)
 		{
-			var files = new GLib.List<File> ();
-			foreach (var uri in uris)
-				files.append (File.new_for_uri (uri));
-			
-			Services.System.launch_with_files (File.new_for_path (Prefs.Launcher), files);
 		}
 		
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
@@ -267,25 +262,34 @@ namespace Plank.Items
 				return false;
 			
 			try {
-				// TODO get supported mime-types
-				var desktop_info = new DesktopAppInfo.from_filename (Prefs.Launcher);
-				var mimes = new ArrayList<string> ();
+				var supported_types = new ArrayList<string> ();
+				try {
+					KeyFile file = new KeyFile ();
+					file.load_from_file (Prefs.Launcher, 0);
+					var mimes = file.get_string_list (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_MIME_TYPE);
+					foreach (var mime in mimes)
+						supported_types.add (g_content_type_from_mime_type (mime));
+				} catch {}
 				
 				foreach (var uri in uris) {
-					var info = File.new_for_uri (uri).query_info (GLib.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, GLib.FileQueryInfoFlags.NONE);
-					var mime = info.get_content_type ();
-					foreach (var m in mimes)
-						if (GLib.ContentType.is_a (mime, m) || GLib.ContentType.equals (mime, m))
+					var info = File.new_for_uri (uri).query_info (FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, FileQueryInfoFlags.NONE);
+					var uri_content_type = info.get_content_type ();
+					foreach (var content_type in supported_types)
+						if (g_content_type_is_a (uri_content_type, content_type) || g_content_type_equals (uri_content_type, content_type))
 							return true;
 				}
 			} catch {}
 			
-			return base.can_accept_drop (uris);
+			return false;
 		}
 		
 		public override bool accept_drop (ArrayList<string> uris)
 		{
-			launch_with_uris (uris);
+			var files = new GLib.List<File> ();
+			foreach (var uri in uris)
+				files.append (File.new_for_uri (uri));
+			
+			Services.System.launch_with_files (File.new_for_path (Prefs.Launcher), files);
 			
 			return true;
 		}
