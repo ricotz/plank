@@ -153,10 +153,6 @@ namespace Plank.Items
 			Services.System.launch (File.new_for_path (Prefs.Launcher));
 		}
 		
-		public void launch_with_uris (ArrayList<string> uris)
-		{
-		}
-		
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
 			if (button == PopupButton.MIDDLE || 
