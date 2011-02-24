@@ -346,20 +346,11 @@ namespace Plank
 		//	}
 		}
 
-		TargetEntry new_target_entry (string target, uint flags, uint info)
-		{
-			var te = TargetEntry ();
-			te.target = target;
-			te.flags = flags;
-			te.info = info;
-			return te;
-		}
-		
 		void enable_drag_to ()
 		{
 			TargetEntry[] dest = {
-				new_target_entry ("text/uri-list", 0, 0),
-				new_target_entry ("text/plank-uri-list", 0, 0)
+				TargetEntry () { target = "text/uri-list", flags = 0, info = 0 },
+				TargetEntry () { target = "text/plank-uri-list", flags = 0, info = 0 }
 			};
 			drag_dest_set (Owner, 0, dest, DragAction.COPY);
 		}
@@ -367,7 +358,7 @@ namespace Plank
 		void enable_drag_from ()
 		{
 			// we dont really want to offer the drag to anything, merely pretend to, so we set a mimetype nothing takes
-			var te = new_target_entry ("text/plank-uri-list", TargetFlags.SAME_APP, 0);
+			var te = TargetEntry () { target = "text/plank-uri-list", flags = TargetFlags.SAME_APP, info = 0 };
 			drag_source_set (Owner, ModifierType.BUTTON1_MASK, { te }, DragAction.PRIVATE);
 		}
 	}
