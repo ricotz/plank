@@ -226,6 +226,7 @@ namespace Plank
 
 		void drag_leave (Widget w, DragContext context, uint time_)
 		{
+			Owner.update_hovered (-1, -1);
 			drag_known = false;
 		}
 		
