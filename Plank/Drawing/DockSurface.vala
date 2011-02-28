@@ -140,10 +140,10 @@ namespace Plank.Drawing
 			
 			unowned uint8[] pixels = original.get_data ();
 			
+			int[] a = new int[w * h];
 			int[] r = new int[w * h];
 			int[] g = new int[w * h];
 			int[] b = new int[w * h];
-			int[] a = new int[w * h];
 			
 			int[] vmin = new int[int.max (w, h)];
 			int[] vmax = new int[int.max (w, h)];
@@ -162,29 +162,29 @@ namespace Plank.Drawing
 				}
 				
 				for (int y = 0; y < h; y++) {
-					int rsum = 0, gsum = 0, bsum = 0, asum = 0;
+					int asum = 0, rsum = 0, gsum = 0, bsum = 0;
 					
 					for (int i = -radius; i <= radius; i++) {
 						uint32 p = (yi + int.min (w - 1, int.max (i, 0))) * channels;
-						rsum += pixels[p];
-						gsum += pixels[p + 1];
-						bsum += pixels[p + 2];
-						asum += pixels[p + 3];
+						asum += pixels[p + 0];
+						rsum += pixels[p + 1];
+						gsum += pixels[p + 2];
+						bsum += pixels[p + 3];
 					}
 					
 					for (int x = 0; x < w; x++) {
+						a[yi] = dv[asum];
 						r[yi] = dv[rsum];
 						g[yi] = dv[gsum];
 						b[yi] = dv[bsum];
-						a[yi] = dv[asum];
 						
 						uint32 p1 = (y * w + vmin[x]) * channels;
 						uint32 p2 = (y * w + vmax[x]) * channels;
 						
-						rsum += pixels[p1] - pixels[p2];
-						gsum += pixels[p1 + 1] - pixels[p2 + 1];
-						bsum += pixels[p1 + 2] - pixels[p2 + 2];
-						asum += pixels[p1 + 3] - pixels[p2 + 3];
+						asum += pixels[p1 + 0] - pixels[p2 + 0];
+						rsum += pixels[p1 + 1] - pixels[p2 + 1];
+						gsum += pixels[p1 + 2] - pixels[p2 + 2];
+						bsum += pixels[p1 + 3] - pixels[p2 + 3];
 						
 						yi++;
 					}
@@ -196,16 +196,16 @@ namespace Plank.Drawing
 				}
 				
 				for (int x = 0; x < w; x++) {
-					int rsum = 0, gsum = 0, bsum = 0, asum = 0;
+					int asum = 0, rsum = 0, gsum = 0, bsum = 0;
 					int yp = -radius * w;
 					
 					for (int i = -radius; i <= radius; i++) {
 						yi = int.max (0, yp) + x;
 						
+						asum += a[yi];
 						rsum += r[yi];
 						gsum += g[yi];
 						bsum += b[yi];
-						asum += a[yi];
 						
 						yp += w;
 					}
@@ -213,18 +213,18 @@ namespace Plank.Drawing
 					yi = x;
 					
 					for (int y = 0; y < h; y++) {
-						pixels[yi * channels] = dv[rsum];
-						pixels[yi * channels + 1] = dv[gsum];
-						pixels[yi * channels + 2] = dv[bsum];
-						pixels[yi * channels + 3] = dv[asum];
+						pixels[yi * channels + 0] = dv[asum];
+						pixels[yi * channels + 1] = dv[rsum];
+						pixels[yi * channels + 2] = dv[gsum];
+						pixels[yi * channels + 3] = dv[bsum];
 						
 						uint32 p1 = x + vmin[y];
 						uint32 p2 = x + vmax[y];
 						
+						asum += a[p1] - a[p2];
 						rsum += r[p1] - r[p2];
 						gsum += g[p1] - g[p2];
 						bsum += b[p1] - b[p2];
-						asum += a[p1] - a[p2];
 						
 						yi += w;
 					}
@@ -260,8 +260,8 @@ namespace Plank.Drawing
 			
 			uchar* pixels = original.get_data ();
 			
-			// Process Rows
 			try {
+				// Process Rows
 				unowned Thread th = Thread.create<void*> (() => {
 					exponential_blur_rows (pixels, width, height, 0, height / 2, 0, width, alpha);
 				}, true);
@@ -292,18 +292,18 @@ namespace Plank.Drawing
 				// blur columns
 				uchar *column = pixels + columnIndex * 4;
 				
-				int zR = column[0] << ParamPrecision;
-				int zG = column[1] << ParamPrecision;
-				int zB = column[2] << ParamPrecision;
-				int zA = column[3] << ParamPrecision;
+				int zA = column[0] << ParamPrecision;
+				int zR = column[1] << ParamPrecision;
+				int zG = column[2] << ParamPrecision;
+				int zB = column[3] << ParamPrecision;
 				
 				// Top to Bottom
 				for (int index = width * (startY + 1); index < (endY - 1) * width; index += width)
-					exponential_blur_inner (&column[index * 4], ref zR, ref zG, ref zB, ref zA, alpha);
+					exponential_blur_inner (&column[index * 4], ref zA, ref zR, ref zG, ref zB, alpha);
 				
 				// Bottom to Top
 				for (int index = (endY - 2) * width; index >= startY; index -= width)
-					exponential_blur_inner (&column[index * 4], ref zR, ref zG, ref zB, ref zA, alpha);
+					exponential_blur_inner (&column[index * 4], ref zA, ref zR, ref zG, ref zB, alpha);
 			}
 		}
 		
@@ -313,32 +313,32 @@ namespace Plank.Drawing
 				// Get a pointer to our current row
 				uchar* row = pixels + rowIndex * width * 4;
 				
-				int zR = row[startX + 0] << ParamPrecision;
-				int zG = row[startX + 1] << ParamPrecision;
-				int zB = row[startX + 2] << ParamPrecision;
-				int zA = row[startX + 3] << ParamPrecision;
+				int zA = row[startX + 0] << ParamPrecision;
+				int zR = row[startX + 1] << ParamPrecision;
+				int zG = row[startX + 2] << ParamPrecision;
+				int zB = row[startX + 3] << ParamPrecision;
 				
 				// Left to Right
 				for (int index = startX + 1; index < endX; index++)
-					exponential_blur_inner (&row[index * 4], ref zR, ref zG, ref zB, ref zA, alpha);
+					exponential_blur_inner (&row[index * 4], ref zA, ref zR, ref zG, ref zB, alpha);
 				
 				// Right to Left
 				for (int index = endX - 2; index >= startX; index--)
-					exponential_blur_inner (&row[index * 4], ref zR, ref zG, ref zB, ref zA, alpha);
+					exponential_blur_inner (&row[index * 4], ref zA, ref zR, ref zG, ref zB, alpha);
 			}
 		}
 		
-		void exponential_blur_inner (uchar* pixel, ref int zR, ref int zG, ref int zB, ref int zA, int alpha)
+		void exponential_blur_inner (uchar* pixel, ref int zA, ref int zR, ref int zG, ref int zB, int alpha)
 		{
-			zR += (alpha * ((pixel[0] << ParamPrecision) - zR)) >> AlphaPrecision;
-			zG += (alpha * ((pixel[1] << ParamPrecision) - zG)) >> AlphaPrecision;
-			zB += (alpha * ((pixel[2] << ParamPrecision) - zB)) >> AlphaPrecision;
-			zA += (alpha * ((pixel[3] << ParamPrecision) - zA)) >> AlphaPrecision;
+			zA += (alpha * ((pixel[0] << ParamPrecision) - zA)) >> AlphaPrecision;
+			zR += (alpha * ((pixel[1] << ParamPrecision) - zR)) >> AlphaPrecision;
+			zG += (alpha * ((pixel[2] << ParamPrecision) - zG)) >> AlphaPrecision;
+			zB += (alpha * ((pixel[3] << ParamPrecision) - zB)) >> AlphaPrecision;
 			
-			pixel[0] = (uchar) (zR >> ParamPrecision);
-			pixel[1] = (uchar) (zG >> ParamPrecision);
-			pixel[2] = (uchar) (zB >> ParamPrecision);
-			pixel[3] = (uchar) (zA >> ParamPrecision);
+			pixel[0] = (uchar) (zA >> ParamPrecision);
+			pixel[1] = (uchar) (zR >> ParamPrecision);
+			pixel[2] = (uchar) (zG >> ParamPrecision);
+			pixel[3] = (uchar) (zB >> ParamPrecision);
 		}
 	}
 }
