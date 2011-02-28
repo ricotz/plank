@@ -170,7 +170,7 @@ namespace Plank
 			Gdk.Rectangle rect = Gdk.Rectangle ();
 			
 			rect.width = VisibleDockWidth;
-			rect.height = (int) Math.fmax (1, (1 - HideOffset) * VisibleDockHeight);
+			rect.height = int.max (1, (int) ((1 - HideOffset) * VisibleDockHeight));
 			rect.x = (window.width_request - rect.width) / 2;
 			rect.y = window.height_request - rect.height;
 			

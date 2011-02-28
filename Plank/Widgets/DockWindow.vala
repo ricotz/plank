@@ -370,7 +370,7 @@ namespace Plank.Widgets
 			if (!is_realized ())
 				return;
 			
-			var offset = (int) Math.fmax (1, (1 - Renderer.HideOffset) * Renderer.VisibleDockHeight);
+			var offset = int.max (1, (int) ((1 - Renderer.HideOffset) * Renderer.VisibleDockHeight));
 			var pixmap = new Pixmap (null, Renderer.VisibleDockWidth, offset, 1);
 			var cr = cairo_create (pixmap);
 			
