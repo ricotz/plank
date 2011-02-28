@@ -118,7 +118,7 @@ namespace Plank.Drawing
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
-			s = Math.fmax (s, sat);
+			s = double.max (s, sat);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
 			
 			return this;
@@ -129,7 +129,7 @@ namespace Plank.Drawing
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
-			v = Math.fmax (v, val);
+			v = double.max (v, val);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
 			
 			return this;
@@ -140,7 +140,7 @@ namespace Plank.Drawing
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
-			s = Math.fmin (s, sat);
+			s = double.min (s, sat);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
 			
 			return this;
@@ -151,7 +151,7 @@ namespace Plank.Drawing
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
-			v = Math.fmin (v, val);
+			v = double.min (v, val);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
 			
 			return this;
@@ -162,7 +162,7 @@ namespace Plank.Drawing
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
-			s = Math.fmin (1, s * amount);
+			s = double.min (1, s * amount);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
 			
 			return this;
@@ -173,7 +173,7 @@ namespace Plank.Drawing
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
-			v = Math.fmin (1, v + (1 - v) * amount);
+			v = double.min (1, v + (1 - v) * amount);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
 			
 			return this;
@@ -184,7 +184,7 @@ namespace Plank.Drawing
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
-			v = Math.fmax (0, v - (1 - v) * amount);
+			v = double.max (0, v - (1 - v) * amount);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
 			
 			return this;
@@ -195,7 +195,7 @@ namespace Plank.Drawing
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
-			v = Math.fmax (0, v - amount * s);
+			v = double.max (0, v - amount * s);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
 			
 			return this;
@@ -206,8 +206,8 @@ namespace Plank.Drawing
 			requires (g >= 0 && g <= 1)
 			requires (b >= 0 && b <= 1)
 		{
-			double min = Math.fmin (r, Math.fmin (g, b));
-			double max = Math.fmax (r, Math.fmax (g, b));
+			double min = double.min (r, double.min (g, b));
+			double max = double.max (r, double.max (g, b));
 			
 			v = max;
 			if (v == 0) {
@@ -221,8 +221,8 @@ namespace Plank.Drawing
 			g /= v;
 			b /= v;
 			
-			min = Math.fmin (r, Math.fmin (g, b));
-			max = Math.fmax (r, Math.fmax (g, b));
+			min = double.min (r, double.min (g, b));
+			max = double.max (r, double.max (g, b));
 			
 			double delta = max - min;
 			s = delta;
@@ -319,10 +319,10 @@ namespace Plank.Drawing
 		{
 			string[] parts = s.split (";;");
 			
-			R = Math.fmin (uint8.MAX, Math.fmax (0, parts [0].to_int ())) / uint8.MAX;
-			G = Math.fmin (uint8.MAX, Math.fmax (0, parts [1].to_int ())) / uint8.MAX;
-			B = Math.fmin (uint8.MAX, Math.fmax (0, parts [2].to_int ())) / uint8.MAX;
-			A = Math.fmin (uint8.MAX, Math.fmax (0, parts [3].to_int ())) / uint8.MAX;
+			R = double.min (uint8.MAX, double.max (0, parts [0].to_int ())) / uint8.MAX;
+			G = double.min (uint8.MAX, double.max (0, parts [1].to_int ())) / uint8.MAX;
+			B = double.min (uint8.MAX, double.max (0, parts [2].to_int ())) / uint8.MAX;
+			A = double.min (uint8.MAX, double.max (0, parts [3].to_int ())) / uint8.MAX;
 		}
 	}
 }

@@ -82,7 +82,7 @@ namespace Plank.Drawing
 						break;
 				}
 				
-				pbuf = load_pixbuf (name, (int) Math.fmax (width, height));
+				pbuf = load_pixbuf (name, (int) double.max (width, height));
 				if (pbuf != null)
 					break;
 				
@@ -162,7 +162,7 @@ namespace Plank.Drawing
 		{
 			var xScale = (double) width / (double) source.width;
 			var yScale = (double) height / (double) source.height;
-			var scale = Math.fmin (xScale, yScale);
+			var scale = double.min (xScale, yScale);
 			
 			if (scale == 1)
 				return source;
@@ -188,8 +188,8 @@ namespace Plank.Drawing
 				uchar g = dataPtr [1];
 				uchar b = dataPtr [2];
 				
-				uchar max = (uchar) Math.fmax (r, Math.fmax (g, b));
-				uchar min = (uchar) Math.fmin (r, Math.fmin (g, b));
+				uchar max = (uchar) double.max (r, double.max (g, b));
+				uchar min = (uchar) double.min (r, double.min (g, b));
 				double delta = max - min;
 				
 				double sat = delta == 0 ? 0 : delta / max;

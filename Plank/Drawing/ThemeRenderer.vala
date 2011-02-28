@@ -175,8 +175,8 @@ namespace Plank.Drawing
 		
 		void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
 		{
-			top_radius = Math.fmin (top_radius, Math.fmin (width, height));
-			bottom_radius = Math.fmin (bottom_radius, Math.fmin (width, height) - top_radius);
+			top_radius = double.min (top_radius, double.min (width, height));
+			bottom_radius = double.min (bottom_radius, double.min (width, height) - top_radius);
 			
 			cr.move_to (x + top_radius, y);
 			cr.arc (x + width - top_radius, y + top_radius, top_radius, Math.PI * 1.5, Math.PI * 2.0);
