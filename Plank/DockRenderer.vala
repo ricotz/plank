@@ -309,6 +309,8 @@ namespace Plank
 			
 			if (window.HoveredItem == item && window.menu_is_visible ())
 				darken += 0.4;
+			else if (window.DragTracker.ExternalDragActive && window.DragTracker.drag_data != null && !item.can_accept_drop (window.DragTracker.drag_data))
+				darken += 0.6;
 			
 			// glow the icon
 			if (lighten > 0) {
