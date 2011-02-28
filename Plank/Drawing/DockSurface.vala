@@ -79,6 +79,7 @@ namespace Plank.Drawing
 		{
 			ImageSurface image_surface = new ImageSurface (Format.ARGB32, Width, Height);
 			Cairo.Context cr = new Cairo.Context (image_surface);
+			
 			cr.set_operator (Operator.SOURCE);
 			cr.set_source_surface (Internal, 0, 0);
 			cr.paint ();
@@ -119,6 +120,230 @@ namespace Plank.Drawing
 			}
 			
 			return pb;
+		}
+		
+		public void fast_blur (int radius, int process_count = 1)
+		{
+			if (radius < 1 || process_count < 1)
+				return;
+			
+			int w = Width;
+			int h = Height;
+			int channels = 4;
+			
+			int wh = w * h;
+			int[] r = new int[wh];
+			int[] g = new int[wh];
+			int[] b = new int[wh];
+			int[] a = new int[wh];
+			
+			int[] vmin = new int[int.max (w, h)];
+			int[] vmax = new int[int.max (w, h)];
+			
+			ImageSurface original = new ImageSurface (Format.ARGB32, w, h);
+			Cairo.Context cr = new Cairo.Context (original);
+			
+			cr.set_operator (Operator.SOURCE);
+			cr.set_source_surface (Internal, 0, 0);
+			cr.paint ();
+			
+			unowned uint8[] pixels = original.get_data ();
+			
+			int div = 2 * radius + 1;
+			uint8[] dv = new uint8[256 * div];
+			
+			for (int i = 0; i < 256 * div; i++)
+				dv[i] = (uint8) (i / div);
+			
+			while (process_count-- >= 0) {
+				int yw = 0;
+				int yi = 0;
+				
+				for (int y = 0; y < h; y++) {
+					int rsum = 0, gsum = 0, bsum = 0, asum = 0;
+					
+					for (int i = -radius; i <= radius; i++) {
+						uint32 p = (yi + int.min (w - 1, int.max (i, 0))) * channels;
+						rsum += pixels[p];
+						gsum += pixels[p + 1];
+						bsum += pixels[p + 2];
+						asum += pixels[p + 3];
+					}
+					
+					for (int x = 0; x < w; x++) {
+						r[yi] = dv[rsum];
+						g[yi] = dv[gsum];
+						b[yi] = dv[bsum];
+						a[yi] = dv[asum];
+						
+						if (y == 0) {
+							vmin[x] = int.min (x + radius + 1, w - 1);
+							vmax[x] = int.max (x - radius, 0);
+						}
+						
+						uint32 p1 = (yw + vmin[x]) * channels;
+						uint32 p2 = (yw + vmax[x]) * channels;
+						
+						rsum += pixels[p1] - pixels[p2];
+						gsum += pixels[p1 + 1] - pixels[p2 + 1];
+						bsum += pixels[p1 + 2] - pixels[p2 + 2];
+						asum += pixels[p1 + 3] - pixels[p2 + 3];
+						
+						yi++;
+					}
+					
+					yw += w;
+				}
+				
+				for (int x = 0; x < w; x++) {
+					int rsum = 0, gsum = 0, bsum = 0, asum = 0;
+					int yp = -radius * w;
+					
+					for (int i = -radius; i <= radius; i++) {
+						yi = int.max (0, yp) + x;
+						
+						rsum += r[yi];
+						gsum += g[yi];
+						bsum += b[yi];
+						asum += a[yi];
+						
+						yp += w;
+					}
+					
+					yi = x;
+					
+					for (int y = 0; y < h; y++) {
+						pixels[yi * channels] = dv[rsum];
+						pixels[yi * channels + 1] = dv[gsum];
+						pixels[yi * channels + 2] = dv[bsum];
+						pixels[yi * channels + 3] = dv[asum];
+						
+						if (x == 0) {
+							vmin[y] = int.min (y + radius + 1, h - 1) * w;
+							vmax[y] = int.max (y - radius, 0) * w;
+						}
+						
+						uint32 p1 = x + vmin[y];
+						uint32 p2 = x + vmax[y];
+						
+						rsum += r[p1] - r[p2];
+						gsum += g[p1] - g[p2];
+						bsum += b[p1] - b[p2];
+						asum += a[p1] - a[p2];
+						
+						yi += w;
+					}
+				}
+			}
+			
+			original.mark_dirty ();
+			
+			Context.set_operator (Operator.SOURCE);
+			Context.set_source_surface (original, 0, 0);
+			Context.paint ();
+			Context.set_operator (Operator.OVER);
+		}
+		
+		const int AlphaPrecision = 16;
+		const int ParamPrecision = 7;
+		
+		public void exponential_blur (int radius)
+		{
+			if (radius < 1)
+				return;
+			
+			int alpha = (int) ((1 << AlphaPrecision) * (1.0 - Math.exp (-2.3 / (radius + 1.0))));
+			int height = Height;
+			int width = Width;
+			
+			ImageSurface original = new ImageSurface (Format.ARGB32, width, height);
+			Cairo.Context cr = new Cairo.Context (original);
+			
+			cr.set_operator (Operator.SOURCE);
+			cr.set_source_surface (Internal, 0, 0);
+			cr.paint ();
+			
+			uchar* pixels = original.get_data ();
+			
+			// Process Rows
+			try {
+				unowned Thread th = Thread.create<void*> (() => {
+					exponential_blur_rows (pixels, width, height, 0, height / 2, 0, width, alpha);
+				}, true);
+				
+				exponential_blur_rows (pixels, width, height, height / 2, height, 0, width, alpha);
+				th.join ();
+				
+				// Process Columns
+				th = Thread.create<void*> (() => {
+					exponential_blur_columns (pixels, width, height, 0, width / 2, 0, height, alpha);
+				}, true);
+				
+				exponential_blur_columns (pixels, width, height, width / 2, width, 0, height, alpha);
+				th.join ();
+			} catch { }
+			
+			original.mark_dirty ();
+			
+			Context.set_operator (Operator.SOURCE);
+			Context.set_source_surface (original, 0, 0);
+			Context.paint ();
+			Context.set_operator (Operator.OVER);
+		}
+		
+		void exponential_blur_columns (uchar* pixels, int width, int height, int startCol, int endCol, int startY, int endY, int alpha)
+		{
+			for (int columnIndex = startCol; columnIndex < endCol; columnIndex++) {
+				// blur columns
+				uchar *column = pixels + columnIndex * 4;
+				
+				int zR = column[0] << ParamPrecision;
+				int zG = column[1] << ParamPrecision;
+				int zB = column[2] << ParamPrecision;
+				int zA = column[3] << ParamPrecision;
+				
+				// Top to Bottom
+				for (int index = width * (startY + 1); index < (endY - 1) * width; index += width)
+					exponential_blur_inner (&column[index * 4], ref zR, ref zG, ref zB, ref zA, alpha);
+				
+				// Bottom to Top
+				for (int index = (endY - 2) * width; index >= startY; index -= width)
+					exponential_blur_inner (&column[index * 4], ref zR, ref zG, ref zB, ref zA, alpha);
+			}
+		}
+		
+		void exponential_blur_rows (uchar* pixels, int width, int height, int startRow, int endRow, int startX, int endX, int alpha)
+		{
+			for (int rowIndex = startRow; rowIndex < endRow; rowIndex++) {
+				// Get a pointer to our current row
+				uchar* row = pixels + rowIndex * width * 4;
+				
+				int zR = row[startX + 0] << ParamPrecision;
+				int zG = row[startX + 1] << ParamPrecision;
+				int zB = row[startX + 2] << ParamPrecision;
+				int zA = row[startX + 3] << ParamPrecision;
+				
+				// Left to Right
+				for (int index = startX + 1; index < endX; index++)
+					exponential_blur_inner (&row[index * 4], ref zR, ref zG, ref zB, ref zA, alpha);
+				
+				// Right to Left
+				for (int index = endX - 2; index >= startX; index--)
+					exponential_blur_inner (&row[index * 4], ref zR, ref zG, ref zB, ref zA, alpha);
+			}
+		}
+		
+		void exponential_blur_inner (uchar* pixel, ref int zR, ref int zG, ref int zB, ref int zA, int alpha)
+		{
+			zR += (alpha * ((pixel[0] << ParamPrecision) - zR)) >> AlphaPrecision;
+			zG += (alpha * ((pixel[1] << ParamPrecision) - zG)) >> AlphaPrecision;
+			zB += (alpha * ((pixel[2] << ParamPrecision) - zB)) >> AlphaPrecision;
+			zA += (alpha * ((pixel[3] << ParamPrecision) - zA)) >> AlphaPrecision;
+			
+			pixel[0] = (uchar) (zR >> ParamPrecision);
+			pixel[1] = (uchar) (zG >> ParamPrecision);
+			pixel[2] = (uchar) (zB >> ParamPrecision);
+			pixel[3] = (uchar) (zA >> ParamPrecision);
 		}
 	}
 }
