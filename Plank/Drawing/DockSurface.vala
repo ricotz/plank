@@ -131,6 +131,9 @@ namespace Plank.Drawing
 			int h = Height;
 			int channels = 4;
 			
+			if (radius > w - 1 || radius > h - 1)
+				return;
+			
 			ImageSurface original = new ImageSurface (Format.ARGB32, w, h);
 			Cairo.Context cr = new Cairo.Context (original);
 			
@@ -139,11 +142,7 @@ namespace Plank.Drawing
 			cr.paint ();
 			
 			unowned uint8[] pixels = original.get_data ();
-			
-			int[] a = new int[w * h];
-			int[] r = new int[w * h];
-			int[] g = new int[w * h];
-			int[] b = new int[w * h];
+			uint8[] buffer = new uint8[w * h * channels];
 			
 			int[] vmin = new int[int.max (w, h)];
 			int[] vmax = new int[int.max (w, h)];
@@ -154,7 +153,7 @@ namespace Plank.Drawing
 				dv[i] = (uint8) (i / div);
 			
 			while (process_count-- > 0) {
-				int yi = 0;
+				uint32 yi = 0;
 				
 				for (int x = 0; x < w; x++) {
 					vmin[x] = int.min (x + radius + 1, w - 1);
@@ -164,32 +163,42 @@ namespace Plank.Drawing
 				for (int y = 0; y < h; y++) {
 					int asum = 0, rsum = 0, gsum = 0, bsum = 0;
 					
-					for (int i = -radius; i <= radius; i++) {
-						uint32 p = (yi + int.min (w - 1, int.max (i, 0))) * channels;
-						asum += pixels[p + 0];
-						rsum += pixels[p + 1];
-						gsum += pixels[p + 2];
-						bsum += pixels[p + 3];
+					yi = y * w * channels;
+										
+					asum += radius * pixels[yi + 0];
+					rsum += radius * pixels[yi + 1];
+					gsum += radius * pixels[yi + 2];
+					bsum += radius * pixels[yi + 3];
+					
+					for (int i = 0; i <= radius; i++) {
+						asum += pixels[yi + 0];
+						rsum += pixels[yi + 1];
+						gsum += pixels[yi + 2];
+						bsum += pixels[yi + 3];
+						
+						yi += channels;
 					}
 					
+					yi = y * w * channels;
+										
 					for (int x = 0; x < w; x++) {
-						a[yi] = dv[asum];
-						r[yi] = dv[rsum];
-						g[yi] = dv[gsum];
-						b[yi] = dv[bsum];
-						
 						uint32 p1 = (y * w + vmin[x]) * channels;
 						uint32 p2 = (y * w + vmax[x]) * channels;
+						
+						buffer[yi + 0] = dv[asum];
+						buffer[yi + 1] = dv[rsum];
+						buffer[yi + 2] = dv[gsum];
+						buffer[yi + 3] = dv[bsum];
 						
 						asum += pixels[p1 + 0] - pixels[p2 + 0];
 						rsum += pixels[p1 + 1] - pixels[p2 + 1];
 						gsum += pixels[p1 + 2] - pixels[p2 + 2];
 						bsum += pixels[p1 + 3] - pixels[p2 + 3];
 						
-						yi++;
+						yi += channels;
 					}
 				}
-					
+				
 				for (int y = 0; y < h; y++) {
 					vmin[y] = int.min (y + radius + 1, h - 1) * w;
 					vmax[y] = int.max (y - radius, 0) * w;
@@ -197,36 +206,40 @@ namespace Plank.Drawing
 				
 				for (int x = 0; x < w; x++) {
 					int asum = 0, rsum = 0, gsum = 0, bsum = 0;
-					int yp = -radius * w;
 					
-					for (int i = -radius; i <= radius; i++) {
-						yi = int.max (0, yp) + x;
+					yi = x * channels;
+					
+					asum += radius * buffer[yi + 0];
+					rsum += radius * buffer[yi + 1];
+					gsum += radius * buffer[yi + 2];
+					bsum += radius * buffer[yi + 3];
+
+					for (int i = 0; i <= radius; i++) {
+						asum += buffer[yi + 0];
+						rsum += buffer[yi + 1];
+						gsum += buffer[yi + 2];
+						bsum += buffer[yi + 3];
 						
-						asum += a[yi];
-						rsum += r[yi];
-						gsum += g[yi];
-						bsum += b[yi];
-						
-						yp += w;
+						yi += w * channels;
 					}
 					
-					yi = x;
+					yi = x * channels;
 					
 					for (int y = 0; y < h; y++) {
-						pixels[yi * channels + 0] = dv[asum];
-						pixels[yi * channels + 1] = dv[rsum];
-						pixels[yi * channels + 2] = dv[gsum];
-						pixels[yi * channels + 3] = dv[bsum];
+						uint32 p1 = (x + vmin[y]) * channels;
+						uint32 p2 = (x + vmax[y]) * channels;
 						
-						uint32 p1 = x + vmin[y];
-						uint32 p2 = x + vmax[y];
+						pixels[yi + 0] = dv[asum];
+						pixels[yi + 1] = dv[rsum];
+						pixels[yi + 2] = dv[gsum];
+						pixels[yi + 3] = dv[bsum];
 						
-						asum += a[p1] - a[p2];
-						rsum += r[p1] - r[p2];
-						gsum += g[p1] - g[p2];
-						bsum += b[p1] - b[p2];
+						asum += buffer[p1 + 0] - buffer[p2 + 0];
+						rsum += buffer[p1 + 1] - buffer[p2 + 1];
+						gsum += buffer[p1 + 2] - buffer[p2 + 2];
+						bsum += buffer[p1 + 3] - buffer[p2 + 3];
 						
-						yi += w;
+						yi += w * channels;
 					}
 				}
 			}
