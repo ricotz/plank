@@ -131,15 +131,6 @@ namespace Plank.Drawing
 			int h = Height;
 			int channels = 4;
 			
-			int wh = w * h;
-			int[] r = new int[wh];
-			int[] g = new int[wh];
-			int[] b = new int[wh];
-			int[] a = new int[wh];
-			
-			int[] vmin = new int[int.max (w, h)];
-			int[] vmax = new int[int.max (w, h)];
-			
 			ImageSurface original = new ImageSurface (Format.ARGB32, w, h);
 			Cairo.Context cr = new Cairo.Context (original);
 			
@@ -149,14 +140,20 @@ namespace Plank.Drawing
 			
 			unowned uint8[] pixels = original.get_data ();
 			
+			int[] r = new int[w * h];
+			int[] g = new int[w * h];
+			int[] b = new int[w * h];
+			int[] a = new int[w * h];
+			
+			int[] vmin = new int[int.max (w, h)];
+			int[] vmax = new int[int.max (w, h)];
+			
 			int div = 2 * radius + 1;
 			uint8[] dv = new uint8[256 * div];
-			
-			for (int i = 0; i < 256 * div; i++)
+			for (int i = 0; i < dv.length; i++)
 				dv[i] = (uint8) (i / div);
 			
 			while (process_count-- > 0) {
-				int yw = 0;
 				int yi = 0;
 				
 				for (int x = 0; x < w; x++) {
@@ -181,8 +178,8 @@ namespace Plank.Drawing
 						b[yi] = dv[bsum];
 						a[yi] = dv[asum];
 						
-						uint32 p1 = (yw + vmin[x]) * channels;
-						uint32 p2 = (yw + vmax[x]) * channels;
+						uint32 p1 = (y * w + vmin[x]) * channels;
+						uint32 p2 = (y * w + vmax[x]) * channels;
 						
 						rsum += pixels[p1] - pixels[p2];
 						gsum += pixels[p1 + 1] - pixels[p2 + 1];
@@ -191,8 +188,6 @@ namespace Plank.Drawing
 						
 						yi++;
 					}
-					
-					yw += w;
 				}
 					
 				for (int y = 0; y < h; y++) {
