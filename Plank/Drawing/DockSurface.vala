@@ -262,7 +262,7 @@ namespace Plank.Drawing
 			
 			try {
 				// Process Rows
-				unowned Thread th = Thread.create<void*> (() => {
+				unowned Thread<void*> th = Thread.create<void*> (() => {
 					exponential_blur_rows (pixels, width, height, 0, height / 2, 0, width, alpha);
 				}, true);
 				
