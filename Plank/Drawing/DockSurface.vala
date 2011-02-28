@@ -150,9 +150,9 @@ namespace Plank.Drawing
 			unowned uint8[] pixels = original.get_data ();
 			
 			int div = 2 * radius + 1;
-			uint8[] dv = new uint8[256 * div];
+			uint8[] dv = new uint8[uint8.MAX * div];
 			
-			for (int i = 0; i < 256 * div; i++)
+			for (int i = 0; i < uint8.MAX * div; i++)
 				dv[i] = (uint8) (i / div);
 			
 			while (process_count-- >= 0) {
