@@ -159,6 +159,11 @@ namespace Plank.Drawing
 				int yw = 0;
 				int yi = 0;
 				
+				for (int x = 0; x < w; x++) {
+					vmin[x] = int.min (x + radius + 1, w - 1);
+					vmax[x] = int.max (x - radius, 0);
+				}
+				
 				for (int y = 0; y < h; y++) {
 					int rsum = 0, gsum = 0, bsum = 0, asum = 0;
 					
@@ -176,11 +181,6 @@ namespace Plank.Drawing
 						b[yi] = dv[bsum];
 						a[yi] = dv[asum];
 						
-						if (y == 0) {
-							vmin[x] = int.min (x + radius + 1, w - 1);
-							vmax[x] = int.max (x - radius, 0);
-						}
-						
 						uint32 p1 = (yw + vmin[x]) * channels;
 						uint32 p2 = (yw + vmax[x]) * channels;
 						
@@ -193,6 +193,11 @@ namespace Plank.Drawing
 					}
 					
 					yw += w;
+				}
+					
+				for (int y = 0; y < h; y++) {
+					vmin[y] = int.min (y + radius + 1, h - 1) * w;
+					vmax[y] = int.max (y - radius, 0) * w;
 				}
 				
 				for (int x = 0; x < w; x++) {
@@ -217,11 +222,6 @@ namespace Plank.Drawing
 						pixels[yi * channels + 1] = dv[gsum];
 						pixels[yi * channels + 2] = dv[bsum];
 						pixels[yi * channels + 3] = dv[asum];
-						
-						if (x == 0) {
-							vmin[y] = int.min (y + radius + 1, h - 1) * w;
-							vmax[y] = int.max (y - radius, 0) * w;
-						}
 						
 						uint32 p1 = x + vmin[y];
 						uint32 p2 = x + vmax[y];
