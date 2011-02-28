@@ -343,7 +343,7 @@ namespace Plank.Drawing
 			}
 		}
 		
-		void exponential_blur_inner (uchar* pixel, ref int zA, ref int zR, ref int zG, ref int zB, int alpha)
+		private static inline void exponential_blur_inner (uchar* pixel, ref int zA, ref int zR, ref int zG, ref int zB, int alpha)
 		{
 			zA += (alpha * ((pixel[0] << ParamPrecision) - zA)) >> AlphaPrecision;
 			zR += (alpha * ((pixel[1] << ParamPrecision) - zR)) >> AlphaPrecision;
