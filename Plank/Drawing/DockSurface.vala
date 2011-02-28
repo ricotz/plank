@@ -275,7 +275,7 @@ namespace Plank.Drawing
 			
 			try {
 				// Process Rows
-#if VALA_0_11
+#if VALA_0_12
 				unowned Thread<void*> th = Thread.create<void*> (() => {
 #else
 				unowned Thread th = Thread.create<void*> (() => {
