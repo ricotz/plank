@@ -67,8 +67,8 @@ namespace Plank.Widgets
 			Prefs = new DockPreferences.with_file ("settings");
 			Items = new DockItems ();
 			Renderer = new DockRenderer (this);
-			HideTracker = new HideManager (this);
 			DragTracker = new DragManager (this);
+			HideTracker = new HideManager (this);
 			
 			set_accept_focus (false);
 			can_focus = false;
@@ -95,8 +95,6 @@ namespace Plank.Widgets
 			
 			Renderer.notify["Hidden"].connect (update_icon_regions);
 			
-			DragTracker.notify["ExternalDragActive"].connect (HideTracker.update_dock_hovered);
-			DragTracker.notify["InternalDragActive"].connect (HideTracker.update_dock_hovered);
 			DragTracker.notify["DragItem"].connect (drag_item_changed);
 			
 			get_screen ().size_changed.connect (update_monitor_geo);
@@ -116,8 +114,6 @@ namespace Plank.Widgets
 			
 			Renderer.notify["Hidden"].disconnect (update_icon_regions);
 			
-			DragTracker.notify["ExternalDragActive"].disconnect (HideTracker.update_dock_hovered);
-			DragTracker.notify["InternalDragActive"].disconnect (HideTracker.update_dock_hovered);
 			DragTracker.notify["DragItem"].disconnect (drag_item_changed);
 			
 			get_screen ().size_changed.disconnect (update_monitor_geo);
