@@ -92,18 +92,12 @@ namespace Plank.Widgets
 			Items.item_added.connect (set_size);
 			Items.item_removed.connect (set_size);
 			Prefs.notify.connect (set_size);
+			
 			Renderer.notify["Hidden"].connect (update_icon_regions);
 			
-			DragTracker.notify["ExternalDragActive"].connect (() => {
-				HideTracker.Disabled = DragTracker.InternalDragActive || DragTracker.ExternalDragActive;
-			});
-			DragTracker.notify["InternalDragActive"].connect (() => {
-				HideTracker.Disabled = DragTracker.InternalDragActive || DragTracker.ExternalDragActive;
-			});
-			DragTracker.notify["DragItem"].connect (() => {
-				if (DragTracker.DragItem != null)
-					set_hovered (null);
-			});
+			DragTracker.notify["ExternalDragActive"].connect (HideTracker.update_dock_hovered);
+			DragTracker.notify["InternalDragActive"].connect (HideTracker.update_dock_hovered);
+			DragTracker.notify["DragItem"].connect (drag_item_changed);
 			
 			get_screen ().size_changed.connect (update_monitor_geo);
 			get_screen ().monitors_changed.connect (update_monitor_geo);
@@ -119,7 +113,12 @@ namespace Plank.Widgets
 			Items.item_added.disconnect (set_size);
 			Items.item_removed.disconnect (set_size);
 			Prefs.notify.disconnect (set_size);
+			
 			Renderer.notify["Hidden"].disconnect (update_icon_regions);
+			
+			DragTracker.notify["ExternalDragActive"].disconnect (HideTracker.update_dock_hovered);
+			DragTracker.notify["InternalDragActive"].disconnect (HideTracker.update_dock_hovered);
+			DragTracker.notify["DragItem"].disconnect (drag_item_changed);
 			
 			get_screen ().size_changed.disconnect (update_monitor_geo);
 			get_screen ().monitors_changed.disconnect (update_monitor_geo);
@@ -269,6 +268,12 @@ namespace Plank.Widgets
 			get_position (out x, out y);
 			var rect = Renderer.item_hover_region (HoveredItem);
 			hover.move_hover (x + rect.x + rect.width / 2, y + rect.y);
+		}
+		
+		protected void drag_item_changed ()
+		{
+			if (DragTracker.DragItem != null)
+				set_hovered (null);
 		}
 		
 		public void set_size ()

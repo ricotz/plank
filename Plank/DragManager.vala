@@ -206,8 +206,6 @@ namespace Plank
 					if (item != null && item.CanAcceptDrop (DragItem))
 						item.AcceptDrop (DragItem);
 					*/
-					// TODO is this needed? removing the item would update it
-					//Owner.Renderer.animated_draw ();
 				}
 			}
 			
@@ -338,7 +336,7 @@ namespace Plank
 			}
 			
 		// FIXME
-		//	if ((Owner.CursorTracker.Modifier & ModifierType.BUTTON1_MASK) != 0) {
+		//	if ((Owner.CursorTracker.Modifier & ModifierType.BUTTON1_MASK) == ModifierType.BUTTON1_MASK) {
 				Gdk.Window bestProxy = best_proxy_window ();
 				if (proxy_window != bestProxy) {
 					proxy_window = bestProxy;

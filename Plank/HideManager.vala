@@ -34,18 +34,18 @@ namespace Plank
 	{
 		DockWindow window;
 		
-		public bool DockHovered { get; set; default = false; }
+		bool disabled;
 		
-		public bool Disabled { get; set; }
+		public bool DockHovered { get; set; default = false; }
 		
 		public HideManager (DockWindow window)
 		{
 			this.window = window;
 			
+			disabled = false;
 			windows_intersect = false;
 			window.Renderer.hide ();
 			
-			notify["Disabled"].connect (update_hidden);
 			notify["DockHovered"].connect (update_hidden);
 			window.Prefs.notify["HideMode"].connect (update_hidden);
 			
@@ -79,6 +79,9 @@ namespace Plank
 		
 		public void update_dock_hovered ()
 		{
+			// disable hiding if drags are active
+			disabled = window.DragTracker.InternalDragActive || window.DragTracker.ExternalDragActive;
+			
 			// get current mouse pointer location
 			int x, y;
 			window.get_display ().get_pointer (null, out x, out y, null);
@@ -99,7 +102,7 @@ namespace Plank
 		
 		void update_hidden ()
 		{
-			if (Disabled) {
+			if (disabled) {
 				window.Renderer.show ();
 				return;
 			}
