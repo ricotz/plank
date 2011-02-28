@@ -39,7 +39,7 @@ namespace Plank
 		
 		public double HideOffset {
 			get {
-				double diff = Math.fmin (1, new DateTime.now_utc ().difference (last_hide) / (double) (theme.HideTime * 1000));
+				double diff = double.min (1, new DateTime.now_utc ().difference (last_hide) / (double) (theme.HideTime * 1000));
 				return Hidden ? diff : 1 - diff;
 			}
 		}
@@ -97,7 +97,7 @@ namespace Plank
 		
 		double Opacity {
 			get {
-				double diff = Math.fmin (1, new DateTime.now_utc ().difference (last_fade) / (double) (theme.FadeTime * 1000));
+				double diff = double.min (1, new DateTime.now_utc ().difference (last_fade) / (double) (theme.FadeTime * 1000));
 				return Hidden ? diff : 1 - diff;
 			}
 		}
@@ -296,10 +296,10 @@ namespace Plank
 					draw_rect.y -= (int) Math.fabs (Math.sin (2 * Math.PI * clickAnimationProgress) * theme.LaunchBounceHeight);
 					break;
 				case ClickAnimation.DARKEN:
-					darken = Math.fmax (0, Math.sin (Math.PI * 2 * clickAnimationProgress)) * 0.5;
+					darken = double.max (0, Math.sin (Math.PI * 2 * clickAnimationProgress)) * 0.5;
 					break;
 				case ClickAnimation.LIGHTEN:
-					lighten = Math.fmax (0, Math.sin (Math.PI * 2 * clickAnimationProgress)) * 0.5;
+					lighten = double.max (0, Math.sin (Math.PI * 2 * clickAnimationProgress)) * 0.5;
 					break;
 				}
 			}
@@ -340,7 +340,7 @@ namespace Plank
 			
 			// draw active glow
 			var active_time = new DateTime.now_utc ().difference (item.LastActive);
-			var opacity = Math.fmin (1, active_time / (double) (theme.ActiveTime * 1000));
+			var opacity = double.min (1, active_time / (double) (theme.ActiveTime * 1000));
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
 			theme.draw_active_glow (surface, HorizPadding, background_buffer, hover_rect, item.AverageIconColor, opacity);
@@ -424,7 +424,7 @@ namespace Plank
 			var is_small = Prefs.IconSize < 32;
 			int padding = 4;
 			int lineWidth = 2;
-			double size = (is_small ? 0.9 : 0.65) * Math.fmin (surface.Width, surface.Height);
+			double size = (is_small ? 0.9 : 0.65) * double.min (surface.Width, surface.Height);
 			double x = surface.Width - size / 2;
 			double y = size / 2;
 			
@@ -475,7 +475,7 @@ namespace Plank
 			
 			size -= 2 * padding + 2 * lineWidth;
 			
-			double scale = Math.fmin (1, Math.fmin (size / (double) logical_rect.width, size / (double) logical_rect.height));
+			double scale = double.min (1, double.min (size / (double) logical_rect.width, size / (double) logical_rect.height));
 			
 			if (!is_small) {
 				surface.Context.set_source_rgba (0, 0, 0, 0.2);

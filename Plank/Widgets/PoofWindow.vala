@@ -67,7 +67,7 @@ namespace Plank.Widgets
 
 		double get_animation_state ()
 		{
-			return Math.fmax (0, Math.fmin (1, (double) new DateTime.now_utc ().difference (start_time) / RUN_LENGTH));
+			return double.max (0, double.min (1, (double) new DateTime.now_utc ().difference (start_time) / RUN_LENGTH));
 		}
 
 		public override bool expose_event (EventExpose event)

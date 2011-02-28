@@ -162,7 +162,7 @@ namespace Plank.Drawing
 		{
 			var xScale = (double) width / (double) source.width;
 			var yScale = (double) height / (double) source.height;
-			var scale = Math.fmin (xScale, yScale);
+			var scale = double.min (xScale, yScale);
 			
 			if (scale == 1)
 				return source;
@@ -190,9 +190,9 @@ namespace Plank.Drawing
 				
 				uchar max = uchar.max (r, uchar.max (g, b));
 				uchar min = uchar.min (r, uchar.min (g, b));
-				double delta = max - min;
+				uchar delta = max - min;
 				
-				double sat = delta == 0 ? 0 : delta / max;
+				double sat = delta == 0 ? 0 : delta / (double) max;
 				double score = 0.2 + 0.8 * sat;
 				
 				rTotal += r * score;
