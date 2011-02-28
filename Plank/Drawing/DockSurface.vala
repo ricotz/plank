@@ -155,7 +155,7 @@ namespace Plank.Drawing
 			for (int i = 0; i < uint8.MAX * div; i++)
 				dv[i] = (uint8) (i / div);
 			
-			while (process_count-- >= 0) {
+			while (process_count-- > 0) {
 				int yw = 0;
 				int yi = 0;
 				
