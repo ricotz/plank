@@ -370,14 +370,14 @@ namespace Plank.Widgets
 			if (!is_realized ())
 				return;
 			
-			var offset = int.max (1, (int) ((1 - Renderer.HideOffset) * Renderer.VisibleDockHeight));
-			var pixmap = new Pixmap (null, Renderer.VisibleDockWidth, offset, 1);
+			var rect = Renderer.cursor_region ();
+			var pixmap = new Pixmap (null, rect.width, rect.height, 1);
 			var cr = cairo_create (pixmap);
 			
 			cr.set_source_rgba (0, 0, 0, 1);
 			cr.paint ();
 			
-			input_shape_combine_mask ((Bitmap*) pixmap, (width_request - Renderer.VisibleDockWidth) / 2, height_request - offset);
+			input_shape_combine_mask ((Bitmap*) pixmap, rect.x, rect.y);
 		}
 		
 		protected enum Struts 
