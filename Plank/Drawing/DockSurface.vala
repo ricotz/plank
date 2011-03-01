@@ -395,8 +395,8 @@ namespace Plank.Drawing
 						shiftar[x, k] = shift * 4;
 				}
 			
-			// Horizontal Pass
 			try {
+				// Horizontal Pass
 #if VALA_0_12
 				unowned Thread<void*> th = Thread.create<void*> (() => {
 #else
@@ -407,29 +407,23 @@ namespace Plank.Drawing
 				
 				gaussian_blur_horizontal (abuffer, bbuffer, kernel, gaussWidth, width, height, height / 2, height, shiftar);
 				th.join ();
-			} catch {}
-			
-			// Clear buffer
-			memset (abuffer, 0, sizeof(double) * size);
-			
-			// Precompute vertical shifts
-			shiftar = new int[int.max (width, height), gaussWidth];
-			for (int y = 0; y < height; y++)
-				for (int k = 0; k < gaussWidth; k++) {
-					int shift = k - radius;
-					if (y + shift <= 0 || y + shift >= height)
-						shiftar[y, k] = 0;
-					else
-						shiftar[y, k] = shift * width * 4;
-				}
-			
-			// Vertical Pass
-			try {
-#if VALA_0_12
-				unowned Thread<void*> th = Thread.create<void*> (() => {
-#else
-				unowned Thread th = Thread.create<void*> (() => {
-#endif
+				
+				// Clear buffer
+				memset (abuffer, 0, sizeof(double) * size);
+				
+				// Precompute vertical shifts
+				shiftar = new int[int.max (width, height), gaussWidth];
+				for (int y = 0; y < height; y++)
+					for (int k = 0; k < gaussWidth; k++) {
+						int shift = k - radius;
+						if (y + shift <= 0 || y + shift >= height)
+							shiftar[y, k] = 0;
+						else
+							shiftar[y, k] = shift * width * 4;
+					}
+				
+				// Vertical Pass
+				th = Thread.create<void*> (() => {
 					gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, 0, width / 2, shiftar);
 				}, true);
 				
