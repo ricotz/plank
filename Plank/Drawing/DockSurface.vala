@@ -90,17 +90,17 @@ namespace Plank.Drawing
 			Gdk.Pixbuf pb = new Gdk.Pixbuf (Gdk.Colorspace.RGB, true, 8, width, height);
 			pb.fill (0x00000000);
 			
-			uchar *data = image_surface.get_data ();
-			uchar *pixels = pb.get_pixels ();
+			uint8 *data = image_surface.get_data ();
+			uint8 *pixels = pb.get_pixels ();
 			int length = width * height;
 			
 			if (image_surface.get_format () == Format.ARGB32) {
 				for (int i = 0; i < length; i++) {
 					// if alpha is 0 set nothing
 					if (data[3] > 0) {
-						pixels[0] = (uchar) (data[2] * 255 / data[3]);
-						pixels[1] = (uchar) (data[1] * 255 / data[3]);
-						pixels[2] = (uchar) (data[0] * 255 / data[3]);
+						pixels[0] = (uint8) (data[2] * 255 / data[3]);
+						pixels[1] = (uint8) (data[1] * 255 / data[3]);
+						pixels[2] = (uint8) (data[0] * 255 / data[3]);
 						pixels[3] = data[3];
 					}
 		
@@ -141,7 +141,7 @@ namespace Plank.Drawing
 			cr.set_source_surface (Internal, 0, 0);
 			cr.paint ();
 			
-			unowned uint8[] pixels = original.get_data ();
+			uint8 *pixels = original.get_data ();
 			uint8[] buffer = new uint8[w * h * channels];
 			
 			int[] vmin = new int[int.max (w, h)];
@@ -269,7 +269,7 @@ namespace Plank.Drawing
 			cr.set_source_surface (Internal, 0, 0);
 			cr.paint ();
 			
-			uchar* pixels = original.get_data ();
+			uint8 *pixels = original.get_data ();
 			
 			try {
 				// Process Rows
@@ -301,11 +301,11 @@ namespace Plank.Drawing
 			Context.set_operator (Operator.OVER);
 		}
 		
-		void exponential_blur_columns (uchar* pixels, int width, int height, int startCol, int endCol, int startY, int endY, int alpha)
+		void exponential_blur_columns (uint8* pixels, int width, int height, int startCol, int endCol, int startY, int endY, int alpha)
 		{
 			for (int columnIndex = startCol; columnIndex < endCol; columnIndex++) {
 				// blur columns
-				uchar *column = pixels + columnIndex * 4;
+				uint8 *column = pixels + columnIndex * 4;
 				
 				int zA = column[0] << ParamPrecision;
 				int zR = column[1] << ParamPrecision;
@@ -322,11 +322,11 @@ namespace Plank.Drawing
 			}
 		}
 		
-		void exponential_blur_rows (uchar* pixels, int width, int height, int startRow, int endRow, int startX, int endX, int alpha)
+		void exponential_blur_rows (uint8* pixels, int width, int height, int startRow, int endRow, int startX, int endX, int alpha)
 		{
 			for (int rowIndex = startRow; rowIndex < endRow; rowIndex++) {
 				// Get a pointer to our current row
-				uchar* row = pixels + rowIndex * width * 4;
+				uint8* row = pixels + rowIndex * width * 4;
 				
 				int zA = row[startX + 0] << ParamPrecision;
 				int zR = row[startX + 1] << ParamPrecision;
@@ -343,17 +343,125 @@ namespace Plank.Drawing
 			}
 		}
 		
-		private static inline void exponential_blur_inner (uchar* pixel, ref int zA, ref int zR, ref int zG, ref int zB, int alpha)
+		private static inline void exponential_blur_inner (uint8* pixel, ref int zA, ref int zR, ref int zG, ref int zB, int alpha)
 		{
 			zA += (alpha * ((pixel[0] << ParamPrecision) - zA)) >> AlphaPrecision;
 			zR += (alpha * ((pixel[1] << ParamPrecision) - zR)) >> AlphaPrecision;
 			zG += (alpha * ((pixel[2] << ParamPrecision) - zG)) >> AlphaPrecision;
 			zB += (alpha * ((pixel[3] << ParamPrecision) - zB)) >> AlphaPrecision;
 			
-			pixel[0] = (uchar) (zA >> ParamPrecision);
-			pixel[1] = (uchar) (zR >> ParamPrecision);
-			pixel[2] = (uchar) (zG >> ParamPrecision);
-			pixel[3] = (uchar) (zB >> ParamPrecision);
+			pixel[0] = (uint8) (zA >> ParamPrecision);
+			pixel[1] = (uint8) (zR >> ParamPrecision);
+			pixel[2] = (uint8) (zG >> ParamPrecision);
+			pixel[3] = (uint8) (zB >> ParamPrecision);
+		}
+		
+		// Note: This method is wickedly slow
+		public void gaussian_blur (int size)
+		{
+			int gaussWidth = size * 2 + 1;
+			double[] kernel = build_gaussian_kernel (gaussWidth);
+			
+			int width = Width;
+			int height = Height;
+			
+			ImageSurface original = new ImageSurface (Format.ARGB32, width, height);
+			Cairo.Context cr = new Cairo.Context (original);
+			
+			cr.set_operator (Operator.SOURCE);
+			cr.set_source_surface (Internal, 0, 0);
+			cr.paint ();
+			
+			double gaussSum = 0;
+			foreach (var d in kernel)
+				gaussSum += d;
+			
+			for (int i = 0; i < kernel.length; i++)
+				kernel[i] = kernel[i] / gaussSum;
+			
+			uint8 *src = original.get_data ();
+			
+			var len = height * original.get_stride ();
+			var xbuffer = new double[len];
+			var ybuffer = new double[len];
+			
+			// Horizontal Pass
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					int dest = y * width + x;
+					int dest2 = dest * 4;
+					
+					for (int k = 0; k < gaussWidth; k++) {
+						int shift = k - size;
+						
+						int source;
+						if (x + shift <= 0 || x + shift >= width)
+							source = dest;
+						else
+							source = dest + shift;
+						source *= 4;
+						
+						xbuffer[dest2 + 0] += src[source + 0] * kernel[k];
+						xbuffer[dest2 + 1] += src[source + 1] * kernel[k];
+						xbuffer[dest2 + 2] += src[source + 2] * kernel[k];
+						xbuffer[dest2 + 3] += src[source + 3] * kernel[k];
+					}
+				}
+			}
+		
+			// Vertical Pass
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++) {
+					int dest = y * width + x;
+					int dest2 = dest * 4;
+					
+					for (int k = 0; k < gaussWidth; k++) {
+						int shift = k - size;
+						
+						int source;
+						if (y + shift <= 0 || y + shift >= height)
+							source = dest;
+						else
+							source = dest + shift * width;
+						source *= 4;
+						
+						ybuffer[dest2 + 0] += xbuffer[source + 0] * kernel[k];
+						ybuffer[dest2 + 1] += xbuffer[source + 1] * kernel[k];
+						ybuffer[dest2 + 2] += xbuffer[source + 2] * kernel[k];
+						ybuffer[dest2 + 3] += xbuffer[source + 3] * kernel[k];
+					}
+				}
+			}
+			
+			for (int i = 0; i < len; i++)
+				src[i] = (uint8) ybuffer[i];
+			
+			original.mark_dirty ();
+			
+			Context.set_operator (Operator.SOURCE);
+			Context.set_source_surface (original, 0, 0);
+			Context.paint ();
+			Context.set_operator (Operator.OVER);
+		}
+		
+		static double[] build_gaussian_kernel (int gaussWidth)
+			requires (gaussWidth % 2 == 1)
+		{
+			double[] kernel = new double[gaussWidth];
+			
+			// Maximum value of curve
+			double sd = 255;
+			
+			// Width of curve
+			double range = gaussWidth;
+			
+			// Average value of curve
+			double mean = range / sd;
+			
+			for (int i = 0; i < gaussWidth / 2 + 1; i++)
+				kernel[gaussWidth - i - 1] = kernel[i] = Math.pow (Math.sin (((i + 1) * (Math.PI / 2) - mean) / range), 2) * sd;
+			
+			return kernel;
 		}
 	}
 }

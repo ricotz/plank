@@ -28,6 +28,12 @@ namespace Plank
 	{
 		[CCode (cheader_filename = "sys/prctl.h", cname = "prctl")]
 		extern static int prctl (int option, string arg2, ulong arg3, ulong arg4, ulong arg5);
+
+		static delegate void sighandler_t (int num);
+
+		[CCode (cheader_filename = "signal.h", cname = "signal")]
+		extern static sighandler_t @signal(int signum, sighandler_t handler);
+
 		
 		struct utsname
 		{
@@ -49,10 +55,21 @@ namespace Plank
 			{ null }
 		};
 		
+		static void sig_handler (int sig)
+		{
+			Logger.warn<Plank> ("Caught signal (%d), exiting".printf (sig));
+			quit ();
+		}
+		
 		public static int main (string[] args)
 		{
 			// set program name
 			prctl (15, "plank", 0, 0, 0);
+			
+			// SIGINT
+			@signal(2, sig_handler);
+			// SIGTERM
+			@signal(15, sig_handler);
 			
 			Logger.initialize ("Plank");
 			Logger.DisplayLevel = LogLevel.INFO;
