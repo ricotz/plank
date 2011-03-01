@@ -16,6 +16,7 @@
 // 
 
 using Cairo;
+using Posix;
 
 namespace Plank.Drawing
 {
@@ -357,9 +358,9 @@ namespace Plank.Drawing
 		}
 		
 		// Note: This method is wickedly slow
-		public void gaussian_blur (int size)
+		public void gaussian_blur (int radius)
 		{
-			int gaussWidth = size * 2 + 1;
+			int gaussWidth = radius * 2 + 1;
 			double[] kernel = build_gaussian_kernel (gaussWidth);
 			
 			int width = Width;
@@ -381,60 +382,85 @@ namespace Plank.Drawing
 			
 			uint8 *src = original.get_data ();
 			
-			var len = height * original.get_stride ();
-			var xbuffer = new double[len];
-			var ybuffer = new double[len];
+			var size = height * original.get_stride ();
+			var row_padding = original.get_stride () - width * 4;
+			
+			var abuffer = new double[size];
+			var bbuffer = new double[size];
+			
+			// Copy image to double[] for faster horizontal pass
+			for (int i = 0; i < size; i++)
+				abuffer[i] = (double) src[i];
+			
+			int cur_pixel = 0;
+			
+			// Precompute horizontal shifts
+			int[,] shiftar = new int[int.max (width, height), gaussWidth];
+			for (int x = 0; x < width; x++)
+				for (int k = 0; k < gaussWidth; k++) {
+					int shift = k - radius;
+					if (x + shift <= 0 || x + shift >= width)
+						shift = 0;
+					else
+						shift *= 4;
+					shiftar[x,k] = shift;
+				}
 			
 			// Horizontal Pass
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
-					int dest = y * width + x;
-					int dest2 = dest * 4;
-					
 					for (int k = 0; k < gaussWidth; k++) {
-						int shift = k - size;
+						int source = cur_pixel + shiftar[x,k];
 						
-						int source;
-						if (x + shift <= 0 || x + shift >= width)
-							source = dest;
-						else
-							source = dest + shift;
-						source *= 4;
-						
-						xbuffer[dest2 + 0] += src[source + 0] * kernel[k];
-						xbuffer[dest2 + 1] += src[source + 1] * kernel[k];
-						xbuffer[dest2 + 2] += src[source + 2] * kernel[k];
-						xbuffer[dest2 + 3] += src[source + 3] * kernel[k];
+						bbuffer[cur_pixel + 0] += abuffer[source + 0] * kernel[k];
+						bbuffer[cur_pixel + 1] += abuffer[source + 1] * kernel[k];
+						bbuffer[cur_pixel + 2] += abuffer[source + 2] * kernel[k];
+						bbuffer[cur_pixel + 3] += abuffer[source + 3] * kernel[k];
 					}
+					
+					cur_pixel += 4;
 				}
+				
+				cur_pixel += row_padding;
 			}
-		
+			
+			cur_pixel = 0;
+			
+			memset (abuffer, 0, sizeof(double) * size);
+			
+			// Precompute vertical shifts
+			shiftar = new int[int.max (width, height), gaussWidth];
+			for (int y = 0; y < height; y++)
+				for (int k = 0; k < gaussWidth; k++) {
+					int shift = k - radius;
+					if (y + shift <= 0 || y + shift >= height)
+						shift = 0;
+					else
+						shift *= width * 4;
+					shiftar[y,k] = shift;
+				}
+			
 			// Vertical Pass
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
-					int dest = y * width + x;
-					int dest2 = dest * 4;
-					
 					for (int k = 0; k < gaussWidth; k++) {
-						int shift = k - size;
-						
-						int source;
-						if (y + shift <= 0 || y + shift >= height)
-							source = dest;
-						else
-							source = dest + shift * width;
-						source *= 4;
-						
-						ybuffer[dest2 + 0] += xbuffer[source + 0] * kernel[k];
-						ybuffer[dest2 + 1] += xbuffer[source + 1] * kernel[k];
-						ybuffer[dest2 + 2] += xbuffer[source + 2] * kernel[k];
-						ybuffer[dest2 + 3] += xbuffer[source + 3] * kernel[k];
+						int source = cur_pixel + shiftar[y,k];
+											
+						abuffer[cur_pixel + 0] += bbuffer[source + 0] * kernel[k];
+						abuffer[cur_pixel + 1] += bbuffer[source + 1] * kernel[k];
+						abuffer[cur_pixel + 2] += bbuffer[source + 2] * kernel[k];
+						abuffer[cur_pixel + 3] += bbuffer[source + 3] * kernel[k];
 					}
+					
+					cur_pixel += 4;
 				}
+				
+				cur_pixel += row_padding;
 			}
 			
-			for (int i = 0; i < len; i++)
-				src[i] = (uint8) ybuffer[i];
+			// Save blurred image to original uint8[]
+			for (int i = 0; i < size; i++)
+				src[i] = (uint8) abuffer[i];
 			
 			original.mark_dirty ();
 			
