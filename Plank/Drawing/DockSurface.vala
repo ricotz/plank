@@ -393,14 +393,18 @@ namespace Plank.Drawing
 					
 					for (int k = 0; k < gaussWidth; k++) {
 						int shift = k - size;
-						int source = dest + shift;
 						
+						int source;
 						if (x + shift <= 0 || x + shift >= width)
 							source = dest;
-						
+						else
+							source = dest + shift;
 						source *= 4;
-						for (int i = 0; i < 4; i++)
-							xbuffer[dest2 + i] += src[source + i] * kernel[k];
+						
+						xbuffer[dest2 + 0] += src[source + 0] * kernel[k];
+						xbuffer[dest2 + 1] += src[source + 1] * kernel[k];
+						xbuffer[dest2 + 2] += src[source + 2] * kernel[k];
+						xbuffer[dest2 + 3] += src[source + 3] * kernel[k];
 					}
 				}
 			}
@@ -413,14 +417,18 @@ namespace Plank.Drawing
 					
 					for (int k = 0; k < gaussWidth; k++) {
 						int shift = k - size;
-						int source = dest + shift * width;
 						
+						int source;
 						if (y + shift <= 0 || y + shift >= height)
 							source = dest;
-						
+						else
+							source = dest + shift * width;
 						source *= 4;
-						for (int i = 0; i < 4; i++)
-							ybuffer[dest2 + i] += xbuffer[source + i] * kernel[k];
+						
+						ybuffer[dest2 + 0] += xbuffer[source + 0] * kernel[k];
+						ybuffer[dest2 + 1] += xbuffer[source + 1] * kernel[k];
+						ybuffer[dest2 + 2] += xbuffer[source + 2] * kernel[k];
+						ybuffer[dest2 + 3] += xbuffer[source + 3] * kernel[k];
 					}
 				}
 			}
