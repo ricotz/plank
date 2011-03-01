@@ -390,10 +390,9 @@ namespace Plank.Drawing
 				for (int k = 0; k < gaussWidth; k++) {
 					int shift = k - radius;
 					if (x + shift <= 0 || x + shift >= width)
-						shift = 0;
+						shiftar[x, k] = 0;
 					else
-						shift *= 4;
-					shiftar[x,k] = shift;
+						shiftar[x, k] = shift * 4;
 				}
 			
 			// Horizontal Pass
@@ -419,24 +418,23 @@ namespace Plank.Drawing
 				for (int k = 0; k < gaussWidth; k++) {
 					int shift = k - radius;
 					if (y + shift <= 0 || y + shift >= height)
-						shift = 0;
+						shiftar[y, k] = 0;
 					else
-						shift *= width * 4;
-					shiftar[y,k] = shift;
+						shiftar[y, k] = shift * width * 4;
 				}
 			
 			// Vertical Pass
 			try {
 #if VALA_0_12
-				unowned Thread<void*> th2 = Thread.create<void*> (() => {
+				unowned Thread<void*> th = Thread.create<void*> (() => {
 #else
-				unowned Thread th2 = Thread.create<void*> (() => {
+				unowned Thread th = Thread.create<void*> (() => {
 #endif
 					gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, 0, width / 2, shiftar);
 				}, true);
 				
 				gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, width / 2, width, shiftar);
-				th2.join ();
+				th.join ();
 			} catch {}
 			
 			// Save blurred image to original uint8[]
@@ -454,10 +452,11 @@ namespace Plank.Drawing
 		void gaussian_blur_horizontal (double* src, double* dest, double* kernel, int gaussWidth, int width, int height, int startRow, int endRow, int[,] shift)
 		{
 			uint32 cur_pixel = startRow * width * 4;
+			
 			for (int y = startRow; y < endRow; y++) {
 				for (int x = 0; x < width; x++) {
 					for (int k = 0; k < gaussWidth; k++) {
-						uint32 source = cur_pixel + shift[x,k];
+						uint32 source = cur_pixel + shift[x, k];
 						
 						dest[cur_pixel + 0] += src[source + 0] * kernel[k];
 						dest[cur_pixel + 1] += src[source + 1] * kernel[k];
@@ -473,10 +472,11 @@ namespace Plank.Drawing
 		void gaussian_blur_vertical (double* src, double* dest, double* kernel, int gaussWidth, int width, int height, int startCol, int endCol, int[,] shift)
 		{
 			uint32 cur_pixel = startCol * 4;
+			
 			for (int y = 0; y < height; y++) {
 				for (int x = startCol; x < endCol; x++) {
 					for (int k = 0; k < gaussWidth; k++) {
-						uint32 source = cur_pixel + shift[y,k];
+						uint32 source = cur_pixel + shift[y, k];
 						
 						dest[cur_pixel + 0] += src[source + 0] * kernel[k];
 						dest[cur_pixel + 1] += src[source + 1] * kernel[k];
@@ -507,6 +507,7 @@ namespace Plank.Drawing
 			for (int i = 0; i < gaussWidth / 2 + 1; i++)
 				kernel[gaussWidth - i - 1] = kernel[i] = Math.pow (Math.sin (((i + 1) * (Math.PI / 2) - mean) / range), 2) * sd;
 			
+			// normalize the values
 			double gaussSum = 0;
 			foreach (var d in kernel)			
 				gaussSum += d;
