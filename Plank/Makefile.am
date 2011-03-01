@@ -10,6 +10,7 @@ VALAFLAGS = \
 	--pkg libwnck-$(WNCK_API_VERSION) \
 	--pkg unique-$(UNIQUE_API_VERSION) \
 	--pkg x11 \
+	--pkg posix \
 	--vapidir $(VAPIDIR) \
 	$(VAPIDIR)/config.vapi \
 	$(NULL)
