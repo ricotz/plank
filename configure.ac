@@ -1,4 +1,4 @@
-AC_INIT([plank], [0.1.0])
+AC_INIT([plank], [0.2.0])
 AC_DEFINE(RELEASE_NAME, "Stupidly simple", Codename of this release)
 
 AC_CONFIG_MACRO_DIR([m4])
