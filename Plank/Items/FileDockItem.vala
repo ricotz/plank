@@ -25,6 +25,8 @@ namespace Plank.Items
 {
 	public class FileDockItem : DockItem
 	{
+		const string DEFAULT_ICON = "inode-directory;;gnome-mime-inode-directory;;inode-x-generic;;folder";
+		
 		File OwnedFile { get; set; }
 		
 		public FileDockItem.with_dockitem (string dockitem)
@@ -36,7 +38,7 @@ namespace Plank.Items
 			Prefs.notify["Launcher"].connect (handle_launcher_changed);
 			OwnedFile = File.new_for_path (Prefs.Launcher);
 			
-			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? "folder";
+			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? DEFAULT_ICON;
 			Text = OwnedFile.get_basename ();
 			
 			// pop up the dir contents on a left click too
@@ -47,6 +49,76 @@ namespace Plank.Items
 		~FileDockItem ()
 		{
 			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
+		}
+		
+		protected override void draw_icon (DockSurface surface)
+		{
+			if (Icon != DEFAULT_ICON) {
+				base.draw_icon (surface);
+				return;
+			}
+			
+			var width = surface.Width;
+			var height = surface.Height;
+			var radius = 3;
+			
+			surface.Context.move_to (radius, 0);
+			surface.Context.arc (0.5 + width - radius, 0.5 + radius, radius, Math.PI * 1.5, Math.PI * 2.0);
+			surface.Context.arc (0.5 + width - radius, 0.5 + height - radius, radius, 0, Math.PI * 0.5);
+			surface.Context.arc (0.5 + radius, 0.5 + height - radius, radius, Math.PI * 0.5, Math.PI);
+			surface.Context.arc (0.5 + radius, 0.5 + radius, radius, Math.PI, Math.PI * 1.5);
+			
+			surface.Context.set_source_rgba (0, 0, 0, 0.8);
+			surface.Context.fill_preserve ();
+			
+			surface.Context.set_source_rgba (1, 1, 1, 0.8);
+			surface.Context.set_line_width (1);
+			surface.Context.stroke ();
+			
+			try {
+				var enumerator = OwnedFile.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + ","
+					+ FILE_ATTRIBUTE_STANDARD_IS_HIDDEN + ","
+					+ FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
+				
+				FileInfo info;
+				HashMap<string, string> files = new HashMap<string, string> (str_hash, str_equal);
+				ArrayList<string> keys = new ArrayList<string> ();
+				
+				while ((info = enumerator.next_file ()) != null) {
+					if (info.get_is_hidden ())
+						continue;
+				
+					var file = OwnedFile.get_child (info.get_name ());
+					string icon, text;
+					
+					if (info.get_name ().has_suffix (".desktop")) {
+						ApplicationDockItem.parse_launcher (file.get_path (), out icon, out text);
+					} else {
+						icon = DrawingService.get_icon_from_file (file) ?? "";
+						text = info.get_name ();
+					}
+					
+					files.set (text, icon);
+					keys.add (text);
+				}
+				
+				var pos = 0;
+				width = (width - 3 * radius) / 2;
+				height = (height - 3 * radius) / 2;
+				
+				keys.sort ((CompareFunc) strcmp);
+				foreach (string s in keys) {
+					var x = pos % 2;
+					int y = pos / 2;
+					
+					if (++pos > 4)
+						break;
+					
+					var pbuf = DrawingService.load_icon (files.get (s), width, height);
+					cairo_set_source_pixbuf (surface.Context, pbuf, x * (width + radius) + radius, y * (height + radius) + radius);
+					surface.Context.paint ();
+				}
+			} catch { }
 		}
 		
 		void handle_launcher_changed ()

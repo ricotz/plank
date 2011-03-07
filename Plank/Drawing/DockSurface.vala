@@ -16,6 +16,7 @@
 // 
 
 using Cairo;
+using Posix;
 
 namespace Plank.Drawing
 {
@@ -120,6 +121,50 @@ namespace Plank.Drawing
 			}
 			
 			return pb;
+		}
+		
+		public Drawing.Color average_color ()
+		{
+			double bTotal = 0;
+			double gTotal = 0;
+			double rTotal = 0;
+			
+			int w = Width;
+			int h = Height;
+			
+			ImageSurface original = new ImageSurface (Format.ARGB32, w, h);
+			Cairo.Context cr = new Cairo.Context (original);
+			
+			cr.set_operator (Operator.SOURCE);
+			cr.set_source_surface (Internal, 0, 0);
+			cr.paint ();
+			
+			uint8 *data = original.get_data ();
+			int length = w * h;
+			
+			for (int i = 0; i < length; i++) {
+				uint8 b = data [0];
+				uint8 g = data [1];
+				uint8 r = data [2];
+				
+				uint8 max = (uint8) double.max (r, double.max (g, b));
+				uint8 min = (uint8) double.min (r, double.min (g, b));
+				double delta = max - min;
+				
+				double sat = delta == 0 ? 0 : delta / max;
+				double score = 0.2 + 0.8 * sat;
+				
+				bTotal += b * score;
+				gTotal += g * score;
+				rTotal += r * score;
+				
+				data += 4;
+			}
+			
+			return Drawing.Color (rTotal / uint8.MAX / length,
+							 gTotal / uint8.MAX / length,
+							 bTotal / uint8.MAX / length,
+							 1).set_val (0.8).multiply_sat (1.15);
 		}
 		
 		public void fast_blur (int radius, int process_count = 1)
@@ -357,9 +402,9 @@ namespace Plank.Drawing
 		}
 		
 		// Note: This method is wickedly slow
-		public void gaussian_blur (int size)
+		public void gaussian_blur (int radius)
 		{
-			int gaussWidth = size * 2 + 1;
+			int gaussWidth = radius * 2 + 1;
 			double[] kernel = build_gaussian_kernel (gaussWidth);
 			
 			int width = Width;
@@ -372,69 +417,67 @@ namespace Plank.Drawing
 			cr.set_source_surface (Internal, 0, 0);
 			cr.paint ();
 			
-			double gaussSum = 0;
-			foreach (var d in kernel)
-				gaussSum += d;
-			
-			for (int i = 0; i < kernel.length; i++)
-				kernel[i] = kernel[i] / gaussSum;
-			
 			uint8 *src = original.get_data ();
 			
-			var len = height * original.get_stride ();
-			var xbuffer = new double[len];
-			var ybuffer = new double[len];
+			var size = height * original.get_stride ();
 			
-			// Horizontal Pass
-			for (int y = 0; y < height; y++) {
-				for (int x = 0; x < width; x++) {
-					int dest = y * width + x;
-					int dest2 = dest * 4;
-					
-					for (int k = 0; k < gaussWidth; k++) {
-						int shift = k - size;
-						
-						int source;
-						if (x + shift <= 0 || x + shift >= width)
-							source = dest;
-						else
-							source = dest + shift;
-						source *= 4;
-						
-						xbuffer[dest2 + 0] += src[source + 0] * kernel[k];
-						xbuffer[dest2 + 1] += src[source + 1] * kernel[k];
-						xbuffer[dest2 + 2] += src[source + 2] * kernel[k];
-						xbuffer[dest2 + 3] += src[source + 3] * kernel[k];
-					}
+			double *abuffer = new double[size];
+			double *bbuffer = new double[size];
+			
+			// Copy image to double[] for faster horizontal pass
+			for (int i = 0; i < size; i++)
+				abuffer[i] = (double) src[i];
+			
+			// Precompute horizontal shifts
+			int[,] shiftar = new int[int.max (width, height), gaussWidth];
+			for (int x = 0; x < width; x++)
+				for (int k = 0; k < gaussWidth; k++) {
+					int shift = k - radius;
+					if (x + shift <= 0 || x + shift >= width)
+						shiftar[x, k] = 0;
+					else
+						shiftar[x, k] = shift * 4;
 				}
-			}
-		
-			// Vertical Pass
-			for (int y = 0; y < height; y++) {
-				for (int x = 0; x < width; x++) {
-					int dest = y * width + x;
-					int dest2 = dest * 4;
-					
+			
+			try {
+				// Horizontal Pass
+#if VALA_0_12
+				unowned Thread<void*> th = Thread.create<void*> (() => {
+#else
+				unowned Thread th = Thread.create<void*> (() => {
+#endif
+					gaussian_blur_horizontal (abuffer, bbuffer, kernel, gaussWidth, width, height, 0, height / 2, shiftar);
+				}, true);
+				
+				gaussian_blur_horizontal (abuffer, bbuffer, kernel, gaussWidth, width, height, height / 2, height, shiftar);
+				th.join ();
+				
+				// Clear buffer
+				memset (abuffer, 0, sizeof(double) * size);
+				
+				// Precompute vertical shifts
+				shiftar = new int[int.max (width, height), gaussWidth];
+				for (int y = 0; y < height; y++)
 					for (int k = 0; k < gaussWidth; k++) {
-						int shift = k - size;
-						
-						int source;
+						int shift = k - radius;
 						if (y + shift <= 0 || y + shift >= height)
-							source = dest;
+							shiftar[y, k] = 0;
 						else
-							source = dest + shift * width;
-						source *= 4;
-						
-						ybuffer[dest2 + 0] += xbuffer[source + 0] * kernel[k];
-						ybuffer[dest2 + 1] += xbuffer[source + 1] * kernel[k];
-						ybuffer[dest2 + 2] += xbuffer[source + 2] * kernel[k];
-						ybuffer[dest2 + 3] += xbuffer[source + 3] * kernel[k];
+							shiftar[y, k] = shift * width * 4;
 					}
-				}
-			}
+				
+				// Vertical Pass
+				th = Thread.create<void*> (() => {
+					gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, 0, width / 2, shiftar);
+				}, true);
+				
+				gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, width / 2, width, shiftar);
+				th.join ();
+			} catch {}
 			
-			for (int i = 0; i < len; i++)
-				src[i] = (uint8) ybuffer[i];
+			// Save blurred image to original uint8[]
+			for (int i = 0; i < size; i++)
+				src[i] = (uint8) abuffer[i];
 			
 			original.mark_dirty ();
 			
@@ -442,6 +485,47 @@ namespace Plank.Drawing
 			Context.set_source_surface (original, 0, 0);
 			Context.paint ();
 			Context.set_operator (Operator.OVER);
+		}
+
+		void gaussian_blur_horizontal (double* src, double* dest, double* kernel, int gaussWidth, int width, int height, int startRow, int endRow, int[,] shift)
+		{
+			uint32 cur_pixel = startRow * width * 4;
+			
+			for (int y = startRow; y < endRow; y++) {
+				for (int x = 0; x < width; x++) {
+					for (int k = 0; k < gaussWidth; k++) {
+						uint32 source = cur_pixel + shift[x, k];
+						
+						dest[cur_pixel + 0] += src[source + 0] * kernel[k];
+						dest[cur_pixel + 1] += src[source + 1] * kernel[k];
+						dest[cur_pixel + 2] += src[source + 2] * kernel[k];
+						dest[cur_pixel + 3] += src[source + 3] * kernel[k];
+					}
+					
+					cur_pixel += 4;
+				}
+			}
+		}
+		
+		void gaussian_blur_vertical (double* src, double* dest, double* kernel, int gaussWidth, int width, int height, int startCol, int endCol, int[,] shift)
+		{
+			uint32 cur_pixel = startCol * 4;
+			
+			for (int y = 0; y < height; y++) {
+				for (int x = startCol; x < endCol; x++) {
+					for (int k = 0; k < gaussWidth; k++) {
+						uint32 source = cur_pixel + shift[y, k];
+						
+						dest[cur_pixel + 0] += src[source + 0] * kernel[k];
+						dest[cur_pixel + 1] += src[source + 1] * kernel[k];
+						dest[cur_pixel + 2] += src[source + 2] * kernel[k];
+						dest[cur_pixel + 3] += src[source + 3] * kernel[k];
+					}
+					
+					cur_pixel += 4;
+				}
+				cur_pixel += (width - endCol + startCol) * 4;
+			}
 		}
 		
 		static double[] build_gaussian_kernel (int gaussWidth)
@@ -460,6 +544,14 @@ namespace Plank.Drawing
 			
 			for (int i = 0; i < gaussWidth / 2 + 1; i++)
 				kernel[gaussWidth - i - 1] = kernel[i] = Math.pow (Math.sin (((i + 1) * (Math.PI / 2) - mean) / range), 2) * sd;
+			
+			// normalize the values
+			double gaussSum = 0;
+			foreach (var d in kernel)			
+				gaussSum += d;
+			
+			for (int i = 0; i < kernel.length; i++)
+				kernel[i] = kernel[i] / gaussSum;
 			
 			return kernel;
 		}
