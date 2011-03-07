@@ -165,6 +165,8 @@ namespace Plank.Items
 			if (this.surface == null || surface.Width != this.surface.Width || surface.Height != this.surface.Height) {
 				this.surface = new DockSurface.with_dock_surface (surface.Width, surface.Height, surface);
 				draw_icon ();
+				
+				AverageIconColor = this.surface.average_color ();
 			}
 			return this.surface;
 		}
@@ -174,8 +176,6 @@ namespace Plank.Items
 			var pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
 			cairo_set_source_pixbuf (surface.Context, pbuf, 0, 0);
 			surface.Context.paint ();
-			
-			AverageIconColor = DrawingService.average_color (pbuf);
 		}
 		
 		public virtual void launch ()

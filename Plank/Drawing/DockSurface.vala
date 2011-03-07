@@ -123,6 +123,50 @@ namespace Plank.Drawing
 			return pb;
 		}
 		
+		public Drawing.Color average_color ()
+		{
+			double bTotal = 0;
+			double gTotal = 0;
+			double rTotal = 0;
+			
+			int w = Width;
+			int h = Height;
+			
+			ImageSurface original = new ImageSurface (Format.ARGB32, w, h);
+			Cairo.Context cr = new Cairo.Context (original);
+			
+			cr.set_operator (Operator.SOURCE);
+			cr.set_source_surface (Internal, 0, 0);
+			cr.paint ();
+			
+			uint8 *data = original.get_data ();
+			int length = w * h;
+			
+			for (int i = 0; i < length; i++) {
+				uint8 b = data [0];
+				uint8 g = data [1];
+				uint8 r = data [2];
+				
+				uint8 max = (uint8) double.max (r, double.max (g, b));
+				uint8 min = (uint8) double.min (r, double.min (g, b));
+				double delta = max - min;
+				
+				double sat = delta == 0 ? 0 : delta / max;
+				double score = 0.2 + 0.8 * sat;
+				
+				bTotal += b * score;
+				gTotal += g * score;
+				rTotal += r * score;
+				
+				data += 4;
+			}
+			
+			return Drawing.Color (rTotal / uint8.MAX / length,
+							 gTotal / uint8.MAX / length,
+							 bTotal / uint8.MAX / length,
+							 1).set_val (0.8).multiply_sat (1.15);
+		}
+		
 		public void fast_blur (int radius, int process_count = 1)
 		{
 			if (radius < 1 || process_count < 1)
