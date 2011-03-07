@@ -5,4 +5,5 @@ Exec=plank
 Terminal=false
 Icon=plank
 _Comment=Plank. Stupidly simple.
+NoDisplay=false
 Categories=Utility;
