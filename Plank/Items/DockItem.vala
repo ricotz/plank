@@ -164,14 +164,14 @@ namespace Plank.Items
 		{
 			if (this.surface == null || surface.Width != this.surface.Width || surface.Height != this.surface.Height) {
 				this.surface = new DockSurface.with_dock_surface (surface.Width, surface.Height, surface);
-				draw_icon ();
+				draw_icon (this.surface);
 				
 				AverageIconColor = this.surface.average_color ();
 			}
 			return this.surface;
 		}
 		
-		protected virtual void draw_icon ()
+		protected virtual void draw_icon (DockSurface surface)
 		{
 			var pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
 			cairo_set_source_pixbuf (surface.Context, pbuf, 0, 0);
