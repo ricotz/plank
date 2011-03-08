@@ -68,10 +68,10 @@ namespace Plank.Items
 			surface.Context.arc (radius + 0.5, height - radius - 0.5, radius, Math.PI * 0.5, Math.PI);
 			surface.Context.arc (radius + 0.5, radius + 0.5, radius, Math.PI, Math.PI * 1.5);
 			
-			surface.Context.set_source_rgba (0, 0, 0, 0.8);
+			surface.Context.set_source_rgba (0, 0, 0, 0.6);
 			surface.Context.fill_preserve ();
 			
-			surface.Context.set_source_rgba (1, 1, 1, 0.8);
+			surface.Context.set_source_rgba (1, 1, 1, 0.6);
 			surface.Context.set_line_width (1);
 			surface.Context.stroke ();
 			
