@@ -75,50 +75,39 @@ namespace Plank.Items
 			surface.Context.set_line_width (1);
 			surface.Context.stroke ();
 			
-			try {
-				var enumerator = OwnedFile.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + ","
-					+ FILE_ATTRIBUTE_STANDARD_IS_HIDDEN + ","
-					+ FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
+			HashMap<string, string> icons = new HashMap<string, string> (str_hash, str_equal);
+			ArrayList<string> keys = new ArrayList<string> ();
+			
+			foreach (var file in get_files ()) {
+				string icon, text;
 				
-				FileInfo info;
-				HashMap<string, string> files = new HashMap<string, string> (str_hash, str_equal);
-				ArrayList<string> keys = new ArrayList<string> ();
-				
-				while ((info = enumerator.next_file ()) != null) {
-					if (info.get_is_hidden ())
-						continue;
-				
-					var file = OwnedFile.get_child (info.get_name ());
-					string icon, text;
-					
-					if (info.get_name ().has_suffix (".desktop")) {
-						ApplicationDockItem.parse_launcher (file.get_path (), out icon, out text);
-					} else {
-						icon = DrawingService.get_icon_from_file (file) ?? "";
-						text = info.get_name ();
-					}
-					
-					files.set (text, icon);
-					keys.add (text);
+				if (file.get_basename ().has_suffix (".desktop")) {
+					ApplicationDockItem.parse_launcher (file.get_path (), out icon, out text);
+				} else {
+					icon = DrawingService.get_icon_from_file (file) ?? "";
+					text = file.get_basename ();
 				}
 				
-				var pos = 0;
-				width = (width - 3 * radius) / 2;
-				height = (height - 3 * radius) / 2;
+				icons.set (text, icon);
+				keys.add (text);
+			}
+			
+			var pos = 0;
+			width = (width - 3 * radius) / 2;
+			height = (height - 3 * radius) / 2;
+			
+			keys.sort ((CompareFunc) strcmp);
+			foreach (string s in keys) {
+				var x = pos % 2;
+				int y = pos / 2;
 				
-				keys.sort ((CompareFunc) strcmp);
-				foreach (string s in keys) {
-					var x = pos % 2;
-					int y = pos / 2;
-					
-					if (++pos > 4)
-						break;
-					
-					var pbuf = DrawingService.load_icon (files.get (s), width, height);
-					cairo_set_source_pixbuf (surface.Context, pbuf, x * (width + radius) + radius, y * (height + radius) + radius);
-					surface.Context.paint ();
-				}
-			} catch { }
+				if (++pos > 4)
+					break;
+				
+				var pbuf = DrawingService.load_icon (icons.get (s), width, height);
+				cairo_set_source_pixbuf (surface.Context, pbuf, x * (width + radius) + radius, y * (height + radius) + radius);
+				surface.Context.paint ();
+			}
 		}
 		
 		void handle_launcher_changed ()
@@ -148,75 +137,65 @@ namespace Plank.Items
 		
 		public override ArrayList<MenuItem> get_menu_items ()
 		{
-			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
-			
 			if (OwnedFile.query_file_type (0) == FileType.DIRECTORY)
-				get_dir_menu_items (items);
-			else
-				get_file_menu_items (items);
+				return get_dir_menu_items ();
 			
-			return items;
+			return get_file_menu_items ();
 		}
 		
-		void get_dir_menu_items (ArrayList<MenuItem> items)
+		ArrayList<MenuItem> get_dir_menu_items ()
 		{
-			try {
-				var enumerator = OwnedFile.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + ","
-					+ FILE_ATTRIBUTE_STANDARD_IS_HIDDEN + ","
-					+ FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
-				
-				FileInfo info;
-				HashMap<string, MenuItem> files = new HashMap<string, MenuItem> (str_hash, str_equal);
-				ArrayList<string> keys = new ArrayList<string> ();
-				
-				while ((info = enumerator.next_file ()) != null) {
-					if (info.get_is_hidden ())
-						continue;
-				
-					var file = OwnedFile.get_child (info.get_name ());
+			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
+		
+			HashMap<string, MenuItem> menu_items = new HashMap<string, MenuItem> (str_hash, str_equal);
+			ArrayList<string> keys = new ArrayList<string> ();
+			
+			foreach (var file in get_files ()) {
+				if (file.get_basename ().has_suffix (".desktop")) {
+					string icon, text;
+					ApplicationDockItem.parse_launcher (file.get_path (), out icon, out text);
 					
-					if (info.get_name ().has_suffix (".desktop")) {
-						string icon, text;
-						ApplicationDockItem.parse_launcher (file.get_path (), out icon, out text);
-						
-						var item = create_menu_item (text, icon);
-						item.activate.connect (() => {
-							Services.System.launch (file);
-							ClickedAnimation = ClickAnimation.BOUNCE;
-							LastClicked = new DateTime.now_utc ();
-						});
-						files.set (text, item);
-						keys.add (text);
-					} else {
-						var icon = DrawingService.get_icon_from_file (file) ?? "";
-						
-						var item = create_menu_item (info.get_name (), icon);
-						item.activate.connect (() => {
-							Services.System.open (file);
-							ClickedAnimation = ClickAnimation.BOUNCE;
-							LastClicked = new DateTime.now_utc ();
-						});
-						files.set (info.get_name (), item);
-						keys.add (info.get_name ());
-					}
+					var item = create_menu_item (text, icon);
+					item.activate.connect (() => {
+						Services.System.launch (file);
+						ClickedAnimation = ClickAnimation.BOUNCE;
+						LastClicked = new DateTime.now_utc ();
+					});
+					menu_items.set (text, item);
+					keys.add (text);
+				} else {
+					var icon = DrawingService.get_icon_from_file (file) ?? "";
+					
+					var item = create_menu_item (file.get_basename (), icon);
+					item.activate.connect (() => {
+						Services.System.open (file);
+						ClickedAnimation = ClickAnimation.BOUNCE;
+						LastClicked = new DateTime.now_utc ();
+					});
+					menu_items.set (file.get_basename (), item);
+					keys.add (file.get_basename ());
 				}
-				
-				keys.sort ((CompareFunc) strcmp);
-				foreach (string s in keys)
-					items.add (files.get (s));
-			} catch { }
+			}
+			
+			keys.sort ((CompareFunc) strcmp);
+			foreach (string s in keys)
+				items.add (menu_items.get (s));
 			
 			items.add (new SeparatorMenuItem ());
 			
-			var item = create_menu_item (_("_Open in Nautilus"), "gtk-open");
+			var item = create_menu_item (_("_Open in File Browser"), "gtk-open");
 			item.activate.connect (() => {
 				launch ();
 			});
 			items.add (item);
+			
+			return items;
 		}
 		
-		void get_file_menu_items (ArrayList<MenuItem> items)
+		ArrayList<MenuItem> get_file_menu_items ()
 		{
+			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
+			
 			var item = create_menu_item (_("_Open"), "gtk-open");
 			item.activate.connect (launch);
 			items.add (item);
@@ -228,6 +207,30 @@ namespace Plank.Items
 				LastClicked = new DateTime.now_utc ();
 			});
 			items.add (item);
+			
+			return items;
+		}
+		
+		ArrayList<File> get_files ()
+		{
+			ArrayList<File> files = new ArrayList<File> ();
+			
+			try {
+				var enumerator = OwnedFile.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + ","
+					+ FILE_ATTRIBUTE_STANDARD_IS_HIDDEN + ","
+					+ FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
+				
+				FileInfo info;
+				
+				while ((info = enumerator.next_file ()) != null) {
+					if (info.get_is_hidden ())
+						continue;
+				
+					files.add (OwnedFile.get_child (info.get_name ()));
+				}
+			} catch { }
+			
+			return files;
 		}
 	}
 }
