@@ -203,6 +203,14 @@ namespace Plank.Items
 				foreach (string s in keys)
 					items.add (files.get (s));
 			} catch { }
+			
+			items.add (new SeparatorMenuItem ());
+			
+			var item = create_menu_item (_("_Open in Nautilus"), "gtk-open");
+			item.activate.connect (() => {
+				Services.System.open (OwnedFile);
+			});
+			items.add (item);
 		}
 		
 		void get_file_menu_items (ArrayList<MenuItem> items)
