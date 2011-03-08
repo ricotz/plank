@@ -62,11 +62,11 @@ namespace Plank.Items
 			var height = surface.Height;
 			var radius = 3;
 			
-			surface.Context.move_to (radius, 0);
-			surface.Context.arc (0.5 + width - radius, 0.5 + radius, radius, Math.PI * 1.5, Math.PI * 2.0);
-			surface.Context.arc (0.5 + width - radius, 0.5 + height - radius, radius, 0, Math.PI * 0.5);
-			surface.Context.arc (0.5 + radius, 0.5 + height - radius, radius, Math.PI * 0.5, Math.PI);
-			surface.Context.arc (0.5 + radius, 0.5 + radius, radius, Math.PI, Math.PI * 1.5);
+			surface.Context.move_to (radius, 0.5);
+			surface.Context.arc (width - radius - 0.5, radius + 0.5, radius, Math.PI * 1.5, Math.PI * 2.0);
+			surface.Context.arc (width - radius - 0.5, height - radius - 0.5, radius, 0, Math.PI * 0.5);
+			surface.Context.arc (radius + 0.5, height - radius - 0.5, radius, Math.PI * 0.5, Math.PI);
+			surface.Context.arc (radius + 0.5, radius + 0.5, radius, Math.PI, Math.PI * 1.5);
 			
 			surface.Context.set_source_rgba (0, 0, 0, 0.8);
 			surface.Context.fill_preserve ();
