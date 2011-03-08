@@ -131,6 +131,8 @@ namespace Plank.Items
 		public override void launch ()
 		{
 			Services.System.open (OwnedFile);
+			ClickedAnimation = ClickAnimation.BOUNCE;
+			LastClicked = new DateTime.now_utc ();
 		}
 		
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
@@ -208,7 +210,7 @@ namespace Plank.Items
 			
 			var item = create_menu_item (_("_Open in Nautilus"), "gtk-open");
 			item.activate.connect (() => {
-				Services.System.open (OwnedFile);
+				launch ();
 			});
 			items.add (item);
 		}
@@ -222,6 +224,8 @@ namespace Plank.Items
 			item = create_menu_item (_("Open Containing _Folder"), "folder");
 			item.activate.connect (() => {
 				Services.System.open (OwnedFile.get_parent ());
+				ClickedAnimation = ClickAnimation.BOUNCE;
+				LastClicked = new DateTime.now_utc ();
 			});
 			items.add (item);
 		}
