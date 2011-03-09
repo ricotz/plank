@@ -25,11 +25,11 @@ namespace Plank
 		const int MIN_ICON_SIZE = 24;
 		const int MAX_ICON_SIZE = 128;
 		
-		const double MIN_ZOOM = 1.0;
-		// FIXME change to 4.0 when zoom is available
-		const double MAX_ZOOM = 1.0;
+		// FIXME zoom disabled
+		//const double MIN_ZOOM = 1.0;
+		//const double MAX_ZOOM = 4.0;
 		
-		public double Zoom { get; set; default = 2.0; }
+		//public double Zoom { get; set; default = 2.0; }
 		
 		public int IconSize { get; set; default = 48; }
 		
@@ -45,10 +45,13 @@ namespace Plank
 			base.with_file (filename);
 		}
 		
+		/*
+		// FIXME zoom disabled
 		public bool zoom_enabled ()
 		{
 			return Zoom > MIN_ZOOM;
 		}
+		*/
 		
 		public void increase_icon_size ()
 		{
@@ -65,12 +68,15 @@ namespace Plank
 		protected override void verify (string prop)
 		{
 			switch (prop) {
+			/*
+			// FIXME zoom disabled
 			case "Zoom":
 				if (Zoom < MIN_ZOOM)
 					Zoom = MIN_ZOOM;
 				else if (Zoom > MAX_ZOOM)
 					Zoom = MAX_ZOOM;
 				break;
+			*/
 			
 			case "IconSize":
 				if (IconSize < MIN_ICON_SIZE)

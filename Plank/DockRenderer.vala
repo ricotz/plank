@@ -59,7 +59,8 @@ namespace Plank
 		}
 		
 		public int DockHeight {
-			get { return VisibleDockHeight + theme.UrgentBounceHeight + (int) ((Prefs.Zoom - 1) * Prefs.IconSize); }
+			// FIXME zoom disabled
+			get { return VisibleDockHeight + theme.UrgentBounceHeight /*+ (int) ((Prefs.Zoom - 1) * Prefs.IconSize)*/; }
 		}
 		
 		// width+height of the dock background image, as drawn
@@ -304,7 +305,8 @@ namespace Plank
 				}
 			}
 			
-			if (window.HoveredItem == item && !Prefs.zoom_enabled ())
+			// FIXME zoom disabled
+			if (window.HoveredItem == item /*&& !Prefs.zoom_enabled ()*/)
 				lighten = 0.2;
 			
 			if (window.HoveredItem == item && window.menu_is_visible ())

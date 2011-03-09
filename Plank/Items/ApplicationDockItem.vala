@@ -34,14 +34,6 @@ namespace Plank.Items
 		
 		public Bamf.Application? App { get; private set; }
 		
-		~ApplicationDockItem ()
-		{
-			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
-			
-			set_app (null);
-			stop_monitor ();
-		}
-		
 		public ApplicationDockItem.with_dockitem (string dockitem)
 		{
 			Prefs = new DockItemPreferences.with_file (dockitem);
@@ -49,8 +41,18 @@ namespace Plank.Items
 				return;
 			
 			Prefs.notify["Launcher"].connect (handle_launcher_changed);
+			Prefs.deleted.connect (handle_deleted);
 			
 			load_from_launcher ();
+		}
+		
+		~ApplicationDockItem ()
+		{
+			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
+			Prefs.deleted.disconnect (handle_deleted);
+			
+			set_app (null);
+			stop_monitor ();
 		}
 		
 		public void set_app (Bamf.Application? app)

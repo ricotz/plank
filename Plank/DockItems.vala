@@ -199,7 +199,9 @@ namespace Plank
 				return;
 			}
 			
-			if ((event & (FileMonitorEvent.CREATED | FileMonitorEvent.DELETED)) == 0)
+			// only watch for new items
+			// items watch themselves for updates or deletions
+			if ((event & FileMonitorEvent.CREATED) != FileMonitorEvent.CREATED)
 				return;
 			
 			// remove peristent and invalid items
@@ -226,6 +228,7 @@ namespace Plank
 			item.notify["State"].connect (signal_items_changed);
 			item.notify["LastClicked"].connect (signal_items_changed);
 			item.needs_redraw.connect (signal_items_changed);
+			item.deleted.connect (handle_item_deleted);
 			
 			if (item is ApplicationDockItem)
 				(item as ApplicationDockItem).app_closed.connect (app_closed);
@@ -249,6 +252,7 @@ namespace Plank
 			item.notify["State"].disconnect (signal_items_changed);
 			item.notify["LastClicked"].disconnect (signal_items_changed);
 			item.needs_redraw.disconnect (signal_items_changed);
+			item.deleted.disconnect (handle_item_deleted);
 			
 			if (item is ApplicationDockItem)
 				(item as ApplicationDockItem).app_closed.disconnect (app_closed);
@@ -258,7 +262,19 @@ namespace Plank
 			
 			Items.remove (item);
 		}
+		
+		void handle_item_deleted (DockItem item)
+		{
+			Bamf.Application? app = null;
+			if (item is ApplicationDockItem)
+				app = (item as ApplicationDockItem).App;
 			
+			remove_item (item);
+			
+			if (app != null)
+				app_opened (app);
+		}
+		
 		public void remove_item (DockItem item)
 		{
 			remove_item_without_signaling (item);

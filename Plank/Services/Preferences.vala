@@ -19,6 +19,8 @@ namespace Plank.Services
 {
 	public abstract class Preferences : GLib.Object
 	{
+		public signal void deleted ();
+		
 		public Preferences ()
 		{
 			notify.connect (handle_notify);
@@ -109,11 +111,15 @@ namespace Plank.Services
 		
 		void backing_file_changed (File f, File? other, FileMonitorEvent event)
 		{
-			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) == 0 &&
-				(event & FileMonitorEvent.DELETED) == 0)
+			// only watch for change or delete events
+			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) != FileMonitorEvent.CHANGES_DONE_HINT &&
+				(event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
 				return;
 			
-			load_prefs ();
+			if ((event & FileMonitorEvent.DELETED) == FileMonitorEvent.DELETED)
+				deleted ();
+			else
+				load_prefs ();
 		}
 		
 		void load_prefs ()
@@ -155,6 +161,7 @@ namespace Plank.Services
 				}
 			} catch {
 				Logger.warn<Preferences> ("Unable to load preferences from file '%s'".printf (backing_file.get_path ()));
+				deleted ();
 			}
 			notify.connect (handle_notify);
 		}
