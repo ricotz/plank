@@ -116,7 +116,7 @@ namespace Plank.Services
 				(event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
 				return;
 			
-			if ((event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
+			if ((event & FileMonitorEvent.DELETED) == FileMonitorEvent.DELETED)
 				deleted ();
 			else
 				load_prefs ();
