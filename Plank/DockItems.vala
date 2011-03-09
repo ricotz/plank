@@ -265,7 +265,14 @@ namespace Plank
 		
 		void handle_item_deleted (DockItem item)
 		{
+			Bamf.Application? app = null;
+			if (item is ApplicationDockItem)
+				app = (item as ApplicationDockItem).App;
+			
 			remove_item (item);
+			
+			if (app != null)
+				app_opened (app);
 		}
 		
 		public void remove_item (DockItem item)
