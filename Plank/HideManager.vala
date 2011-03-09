@@ -32,6 +32,8 @@ namespace Plank
 	
 	public class HideManager : GLib.Object
 	{
+		const uint UPDATE_TIMEOUT = 200;
+		
 		DockWindow window;
 		
 		public bool DockHovered { get; set; default = false; }
@@ -44,7 +46,7 @@ namespace Plank
 			window.Renderer.hide ();
 			
 			notify["DockHovered"].connect (update_hidden);
-			window.Prefs.notify["HideMode"].connect (update_hidden);
+			window.Prefs.notify.connect (prefs_changed);
 			
 			window.enter_notify_event.connect (enter_notify_event);
 			window.leave_notify_event.connect (leave_notify_event);
@@ -61,7 +63,7 @@ namespace Plank
 		~HideManager ()
 		{
 			notify["DockHovered"].disconnect (update_hidden);
-			window.Prefs.notify["HideMode"].disconnect (update_hidden);
+			window.Prefs.notify.disconnect (prefs_changed);
 			
 			window.enter_notify_event.disconnect (enter_notify_event);
 			window.leave_notify_event.disconnect (leave_notify_event);
@@ -72,6 +74,24 @@ namespace Plank
 			
 			var screen = Wnck.Screen.get_default ();
 			screen.active_window_changed.disconnect (handle_window_changed);
+			
+			stop_timers ();
+		}
+		
+		uint timer_prefs_changed = 0;
+		
+		void prefs_changed ()
+		{
+			if (timer_prefs_changed > 0) {
+				GLib.Source.remove (timer_prefs_changed);
+				timer_prefs_changed = 0;
+			}
+			
+			timer_prefs_changed = GLib.Timeout.add (UPDATE_TIMEOUT, () => {
+				update_window_intersect ();
+				timer_prefs_changed = 0;
+				return false;
+			});
 		}
 		
 		public void update_dock_hovered ()
@@ -202,7 +222,7 @@ namespace Plank
 			if (timer_window_changed > 0)
 				return;
 			
-			timer_window_changed = GLib.Timeout.add (200, () => {
+			timer_window_changed = GLib.Timeout.add (UPDATE_TIMEOUT, () => {
 				setup_active_window ();
 				timer_window_changed = 0;
 				return false;
@@ -235,7 +255,7 @@ namespace Plank
 			if (timer_geo > 0)
 				return;
 			
-			timer_geo = GLib.Timeout.add (200, () => {
+			timer_geo = GLib.Timeout.add (UPDATE_TIMEOUT, () => {
 				update_window_intersect ();
 				timer_geo = 0;
 				return false;
@@ -247,6 +267,24 @@ namespace Plank
 			var win_rect = Gdk.Rectangle ();
 			w.get_geometry (out win_rect.x, out win_rect.y, out win_rect.width, out win_rect.height);
 			return win_rect;
+		}
+		
+		void stop_timers ()
+		{
+			if (timer_geo > 0) {
+				GLib.Source.remove (timer_geo);
+				timer_geo = 0;
+			}
+			
+			if (timer_window_changed > 0) {
+				GLib.Source.remove (timer_window_changed);
+				timer_window_changed = 0;
+			}
+			
+			if (timer_prefs_changed > 0) {
+				GLib.Source.remove (timer_prefs_changed);
+				timer_prefs_changed = 0;
+			}
 		}
 	}
 }
