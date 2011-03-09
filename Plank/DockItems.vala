@@ -289,7 +289,7 @@ namespace Plank
 		void pin_item (DockItem item)
 		{
 			if (item is TransientDockItem) {
-				var dockitem = make_launcher (item.get_launcher (), item.get_sort ());
+				var dockitem = make_dock_item (item.get_launcher (), item.get_sort ());
 				if (dockitem == "")
 					return;
 				
@@ -324,15 +324,15 @@ namespace Plank
 			if (browser == null && terminal == null && calendar == null && media == null)
 				return false;
 			
-			make_launcher (Build.DATADIR + "/applications/plank.desktop", 0);
+			make_dock_item (Build.DATADIR + "/applications/plank.desktop", 0);
 			if (browser != null)
-				make_launcher (new DesktopAppInfo (browser.get_id ()).get_filename (), 1);
+				make_dock_item (new DesktopAppInfo (browser.get_id ()).get_filename (), 1);
 			if (terminal != null)
-				make_launcher (new DesktopAppInfo (terminal.get_id ()).get_filename (), 2);
+				make_dock_item (new DesktopAppInfo (terminal.get_id ()).get_filename (), 2);
 			if (calendar != null)
-				make_launcher (new DesktopAppInfo (calendar.get_id ()).get_filename (), 3);
+				make_dock_item (new DesktopAppInfo (calendar.get_id ()).get_filename (), 3);
 			if (media != null)
-				make_launcher (new DesktopAppInfo (media.get_id ()).get_filename (), 4);
+				make_dock_item (new DesktopAppInfo (media.get_id ()).get_filename (), 4);
 			
 			return true;
 		}
@@ -340,46 +340,54 @@ namespace Plank
 		void make_default_items ()
 		{
 			// add plank item!
-			make_launcher (Build.DATADIR + "/applications/plank.desktop", 0);
+			make_dock_item (Build.DATADIR + "/applications/plank.desktop", 0);
 			
 			// add browser
-			if (make_launcher ("/usr/share/applications/chromium-browser.desktop", 1) == "")
-				if (make_launcher ("/usr/local/share/applications/google-chrome.desktop", 1) == "")
-					if (make_launcher ("/usr/share/applications/firefox.desktop", 1) == "")
-						if (make_launcher ("/usr/share/applications/epiphany.desktop", 1) == "")
-							make_launcher ("/usr/share/applications/kde4/konqbrowser.desktop", 1);
+			if (make_dock_item ("/usr/share/applications/chromium-browser.desktop", 1) == "")
+				if (make_dock_item ("/usr/local/share/applications/google-chrome.desktop", 1) == "")
+					if (make_dock_item ("/usr/share/applications/firefox.desktop", 1) == "")
+						if (make_dock_item ("/usr/share/applications/epiphany.desktop", 1) == "")
+							make_dock_item ("/usr/share/applications/kde4/konqbrowser.desktop", 1);
 			
 			// add terminal
-			if (make_launcher ("/usr/share/applications/terminator.desktop", 2) == "")
-				if (make_launcher ("/usr/share/applications/gnome-terminal.desktop", 2) == "")
-					make_launcher ("/usr/share/applications/kde4/konsole.desktop", 2);
+			if (make_dock_item ("/usr/share/applications/terminator.desktop", 2) == "")
+				if (make_dock_item ("/usr/share/applications/gnome-terminal.desktop", 2) == "")
+					make_dock_item ("/usr/share/applications/kde4/konsole.desktop", 2);
 			
 			// add music player
-			if (make_launcher ("/usr/share/applications/exaile.desktop", 3) == "")
-				if (make_launcher ("/usr/share/applications/songbird.desktop", 3) == "")
-					if (make_launcher ("/usr/share/applications/rhythmbox.desktop", 3) == "")
-						if (make_launcher ("/usr/share/applications/banshee-1.desktop", 3) == "")
-							make_launcher ("/usr/share/applications/kde4/amarok.desktop", 3);
+			if (make_dock_item ("/usr/share/applications/exaile.desktop", 3) == "")
+				if (make_dock_item ("/usr/share/applications/songbird.desktop", 3) == "")
+					if (make_dock_item ("/usr/share/applications/rhythmbox.desktop", 3) == "")
+						if (make_dock_item ("/usr/share/applications/banshee-1.desktop", 3) == "")
+							make_dock_item ("/usr/share/applications/kde4/amarok.desktop", 3);
 			
 			// add IM client
-			if (make_launcher ("/usr/share/applications/pidgin.desktop", 4) == "")
-				make_launcher ("/usr/share/applications/empathy.desktop", 4);
+			if (make_dock_item ("/usr/share/applications/pidgin.desktop", 4) == "")
+				make_dock_item ("/usr/share/applications/empathy.desktop", 4);
 		}
 		
-		string make_launcher (string launcher, int sort)
+		string make_dock_item (string launcher, int sort)
 		{
 			if (File.new_for_path (launcher).query_exists ()) {
-				Logger.debug<DockItems> ("Adding default dock item for launcher '%s'".printf (launcher));
-				
 				KeyFile file = new KeyFile ();
 				
 				file.set_string (typeof (Items.DockItemPreferences).name (), "Launcher", launcher);
 				file.set_integer (typeof (Items.DockItemPreferences).name (), "Sort", sort);
 				
 				try {
-					string dockitem = File.new_for_path (launcher).get_basename ().split (".") [0] + ".dockitem";
+					// find a unique file name, based on the name of the launcher
+					var launcher_base = File.new_for_path (launcher).get_basename ().split (".") [0];
+					var dockitem = launcher_base + ".dockitem";
+					var counter = 1;
+					
+					while (launchers_dir.get_child (dockitem).query_exists ())
+						dockitem = "%s-%d.dockitem".printf (launcher_base, counter++);
+					
+					// save the key file
 					var stream = new DataOutputStream (launchers_dir.get_child (dockitem).create (0));
 					stream.put_string (file.to_data ());
+					
+					Logger.debug<DockItems> ("Adding dock item '%s' for launcher '%s'".printf (dockitem, launcher));
 					return dockitem;
 				} catch { }
 			}
