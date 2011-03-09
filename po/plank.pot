@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-08 03:37-0600\n"
+"POT-Creation-Date: 2011-03-09 04:14-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,38 +21,42 @@ msgstr ""
 msgid "Plank. Stupidly simple."
 msgstr ""
 
-#: ../Plank/Items/ApplicationDockItem.vala:193
+#: ../Plank/Items/ApplicationDockItem.vala:195
+msgid "_Keep in Dock"
+msgstr ""
+
+#: ../Plank/Items/ApplicationDockItem.vala:206
 msgid "_Open New Window"
 msgstr ""
 
-#: ../Plank/Items/ApplicationDockItem.vala:199
+#: ../Plank/Items/ApplicationDockItem.vala:212
 msgid "Unma_ximize"
 msgstr ""
 
-#: ../Plank/Items/ApplicationDockItem.vala:203
+#: ../Plank/Items/ApplicationDockItem.vala:216
 msgid "Ma_ximize"
 msgstr ""
 
-#: ../Plank/Items/ApplicationDockItem.vala:209
+#: ../Plank/Items/ApplicationDockItem.vala:222
 msgid "_Restore"
 msgstr ""
 
-#: ../Plank/Items/ApplicationDockItem.vala:213
+#: ../Plank/Items/ApplicationDockItem.vala:226
 msgid "Mi_nimize"
 msgstr ""
 
-#: ../Plank/Items/ApplicationDockItem.vala:218
+#: ../Plank/Items/ApplicationDockItem.vala:231
 msgid "_Close All"
 msgstr ""
 
-#: ../Plank/Items/FileDockItem.vala:128
+#: ../Plank/Items/FileDockItem.vala:188
+msgid "_Open in File Browser"
+msgstr ""
+
+#: ../Plank/Items/FileDockItem.vala:201
 msgid "_Open"
 msgstr ""
 
-#: ../Plank/Items/FileDockItem.vala:132
+#: ../Plank/Items/FileDockItem.vala:205
 msgid "Open Containing _Folder"
-msgstr ""
-
-#: ../Plank/Items/TransientDockItem.vala:48
-msgid "_Keep in Dock"
 msgstr ""
