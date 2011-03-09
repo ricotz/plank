@@ -126,7 +126,7 @@ namespace Plank
 				foreach (DockItem item in Owner.Items.Items)
 					original_item_pos [item] = item.Position;
 				
-				var icon_surface = new DockSurface (Owner.Prefs.IconSize, Owner.Prefs.IconSize);
+				var icon_surface = new DockSurface ((int) (1.2 * Owner.Prefs.IconSize), (int) (1.2 * Owner.Prefs.IconSize));
 				pbuf = DragItem.get_surface (icon_surface).load_to_pixbuf ();
 				Owner.Renderer.animated_draw ();
 			} else {
