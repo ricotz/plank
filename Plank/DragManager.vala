@@ -174,7 +174,7 @@ namespace Plank
 				var pos = item.get_sort () + 1;
 				foreach (var uri in drag_data)
 					if (uri.has_prefix ("file://") && uri.has_suffix (".desktop"))
-						Owner.Items.make_launcher (uri.replace ("file://", ""), pos++);
+						Owner.Items.make_dock_item (uri.replace ("file://", ""), pos++);
 			} else if (item != null && item.can_accept_drop (drag_data)) {
 				item.accept_drop (drag_data);
 			}
