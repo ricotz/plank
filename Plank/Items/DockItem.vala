@@ -72,6 +72,8 @@ namespace Plank.Items
 	
 	public class DockItem : GLib.Object
 	{
+		public signal void deleted ();
+		
 		public signal void launcher_changed ();
 		
 		public signal void needs_redraw ();
@@ -115,14 +117,21 @@ namespace Plank.Items
 			Prefs = new DockItemPreferences ();
 			AverageIconColor = Drawing.Color (0, 0, 0, 0);
 			
+			Prefs.deleted.connect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.connect (reset_buffer);
 			Prefs.notify["Icon"].connect (reset_buffer);
 		}
 		
 		~DockItem ()
 		{
+			Prefs.deleted.disconnect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.disconnect (reset_buffer);
 			Prefs.notify["Icon"].disconnect (reset_buffer);
+		}
+		
+		protected void handle_deleted ()
+		{
+			deleted ();
 		}
 		
 		public static string get_launcher_from_dockitem (string dockitem)

@@ -36,6 +36,7 @@ namespace Plank.Items
 				return;
 			
 			Prefs.notify["Launcher"].connect (handle_launcher_changed);
+			Prefs.deleted.connect (handle_deleted);
 			OwnedFile = File.new_for_path (Prefs.Launcher);
 			
 			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? DEFAULT_ICON;
@@ -49,6 +50,7 @@ namespace Plank.Items
 		~FileDockItem ()
 		{
 			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
+			Prefs.deleted.disconnect (handle_deleted);
 		}
 		
 		protected override void draw_icon (DockSurface surface)
