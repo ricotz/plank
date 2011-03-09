@@ -30,6 +30,8 @@ namespace Plank.Items
 		// throttle scrolls for window switching (in ms)
 		const int SCROLL_RATE = 200;
 		
+		public signal void pin_launcher ();
+		
 		public signal void app_closed ();
 		
 		public Bamf.Application? App { get; private set; }
@@ -190,13 +192,16 @@ namespace Plank.Items
 		{
 			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
 			
+			MenuItem item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
+			(item as CheckMenuItem).active = !(this is TransientDockItem);
+			item.activate.connect (() => pin_launcher ());
+			items.add (item);
+			
 			if (App == null || App.get_children ().length () == 0) {
-				var item = new ImageMenuItem.from_stock (STOCK_OPEN, null);
+				item = new ImageMenuItem.from_stock (STOCK_OPEN, null);
 				item.activate.connect (() => launch ());
 				items.add (item);
 			} else {
-				MenuItem item;
-				
 				if (!is_window ()) {
 					item = create_menu_item (_("_Open New Window"), "document-open-symbolic;;document-open");
 					item.activate.connect (() => launch ());

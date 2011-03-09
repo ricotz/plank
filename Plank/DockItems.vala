@@ -230,11 +230,10 @@ namespace Plank
 			item.needs_redraw.connect (signal_items_changed);
 			item.deleted.connect (handle_item_deleted);
 			
-			if (item is ApplicationDockItem)
+			if (item is ApplicationDockItem) {
 				(item as ApplicationDockItem).app_closed.connect (app_closed);
-			
-			if (item is TransientDockItem)
-				(item as TransientDockItem).pin_launcher.connect (pin_item);
+				(item as ApplicationDockItem).pin_launcher.connect (pin_item);
+			}
 		}
 		
 		public void add_item (DockItem item)
@@ -254,11 +253,10 @@ namespace Plank
 			item.needs_redraw.disconnect (signal_items_changed);
 			item.deleted.disconnect (handle_item_deleted);
 			
-			if (item is ApplicationDockItem)
+			if (item is ApplicationDockItem) {
 				(item as ApplicationDockItem).app_closed.disconnect (app_closed);
-			
-			if (item is TransientDockItem)
-				(item as TransientDockItem).pin_launcher.disconnect (pin_item);
+				(item as ApplicationDockItem).pin_launcher.disconnect (pin_item);
+			}
 			
 			Items.remove (item);
 		}
@@ -269,10 +267,15 @@ namespace Plank
 			if (item is ApplicationDockItem)
 				app = (item as ApplicationDockItem).App;
 			
-			remove_item (item);
+			remove_item_without_signaling (item);
 			
-			if (app != null)
-				app_opened (app);
+			if (app != null) {
+				var new_item = new TransientDockItem.with_application (app);
+				new_item.Position = item.Position;
+				add_item_without_signaling (new_item);
+			}
+			
+			items_changed ();
 		}
 		
 		public void remove_item (DockItem item)
@@ -285,16 +288,20 @@ namespace Plank
 		
 		void pin_item (DockItem item)
 		{
-			var dockitem = make_launcher (item.get_launcher (), item.get_sort ());
-			if (dockitem == "")
-				return;
-			
-			remove_item_without_signaling (item);
-			var new_item = new ApplicationDockItem.with_dockitem (launchers_dir.get_path () + "/" + dockitem);
-			new_item.Position = item.Position;
-			add_item_without_signaling (new_item);
-			
-			items_changed ();
+			if (item is TransientDockItem) {
+				var dockitem = make_launcher (item.get_launcher (), item.get_sort ());
+				if (dockitem == "")
+					return;
+				
+				remove_item_without_signaling (item);
+				var new_item = new ApplicationDockItem.with_dockitem (launchers_dir.get_path () + "/" + dockitem);
+				new_item.Position = item.Position;
+				add_item_without_signaling (new_item);
+				
+				items_changed ();
+			} else {
+				item.delete ();
+			}
 		}
 		
 		static int compare_items (DockItem left, DockItem right)

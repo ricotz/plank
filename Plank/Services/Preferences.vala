@@ -86,6 +86,13 @@ namespace Plank.Services
 			start_monitor ();
 		}
 		
+		public void delete ()
+		{
+			try {
+				backing_file.delete ();
+			} catch { }
+		}
+		
 		void stop_monitor ()
 		{
 			if (backing_monitor == null)
