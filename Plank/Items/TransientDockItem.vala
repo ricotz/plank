@@ -24,8 +24,6 @@ namespace Plank.Items
 {
 	public class TransientDockItem : ApplicationDockItem
 	{
-		public signal void pin_launcher ();
-		
 		public TransientDockItem.with_application (Bamf.Application app)
 		{
 			base ();
@@ -38,22 +36,6 @@ namespace Plank.Items
 				Prefs.Launcher = launcher;
 				load_from_launcher ();
 			}
-		}
-		
-		public override ArrayList<MenuItem> get_menu_items ()
-		{
-			var items = base.get_menu_items ();
-			
-			if (!is_window ()) {
-				var item = new ImageMenuItem.with_mnemonic (_("_Keep in Dock"));
-				int width, height;
-				icon_size_lookup (IconSize.MENU, out width, out height);
-				item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon ("add", width, height)));
-				item.activate.connect (() => pin_launcher ());
-				items.insert (0, item);
-			}
-			
-			return items;
 		}
 	}
 }

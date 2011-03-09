@@ -134,6 +134,11 @@ namespace Plank.Items
 			deleted ();
 		}
 		
+		public void delete ()
+		{
+			Prefs.delete ();
+		}
+		
 		public static string get_launcher_from_dockitem (string dockitem)
 		{
 			try {
