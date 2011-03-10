@@ -15,6 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using Cairo;
 using Gdk;
 using Gee;
 using Gtk;
@@ -70,12 +71,16 @@ namespace Plank.Items
 			surface.Context.arc (radius + 0.5, height - radius - 0.5, radius, Math.PI * 0.5, Math.PI);
 			surface.Context.arc (radius + 0.5, radius + 0.5, radius, Math.PI, Math.PI * 1.5);
 			
-			surface.Context.set_source_rgba (0, 0, 0, 0.6);
-			surface.Context.fill_preserve ();
-			
 			surface.Context.set_source_rgba (1, 1, 1, 0.6);
 			surface.Context.set_line_width (1);
-			surface.Context.stroke ();
+			surface.Context.stroke_preserve ();
+			
+			var rg = new Pattern.radial (width / 2, height, height / 8, width / 2, height, height);
+			rg.add_color_stop_rgba (0, 0, 0, 0, 1);
+			rg.add_color_stop_rgba (1, 0, 0, 0, 0.6);
+			
+			surface.Context.set_source (rg);
+			surface.Context.fill ();
 			
 			HashMap<string, string> icons = new HashMap<string, string> (str_hash, str_equal);
 			ArrayList<string> keys = new ArrayList<string> ();
