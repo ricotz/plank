@@ -275,6 +275,7 @@ namespace Plank
 				add_item_without_signaling (new_item);
 			}
 			
+			set_item_positions ();
 			items_changed ();
 		}
 		
