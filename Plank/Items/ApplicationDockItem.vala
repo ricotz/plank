@@ -192,16 +192,20 @@ namespace Plank.Items
 		{
 			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
 			
-			MenuItem item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
-			(item as CheckMenuItem).active = !(this is TransientDockItem);
-			item.activate.connect (() => pin_launcher ());
-			items.add (item);
+			if (!is_window ()) {
+				var item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
+				item.active = !(this is TransientDockItem);
+				item.activate.connect (() => pin_launcher ());
+				items.add (item);
+			}
 			
 			if (App == null || App.get_children ().length () == 0) {
-				item = new ImageMenuItem.from_stock (STOCK_OPEN, null);
+				var item = new ImageMenuItem.from_stock (STOCK_OPEN, null);
 				item.activate.connect (() => launch ());
 				items.add (item);
 			} else {
+				MenuItem item;
+				
 				if (!is_window ()) {
 					item = create_menu_item (_("_Open New Window"), "document-open-symbolic;;document-open");
 					item.activate.connect (() => launch ());
