@@ -275,6 +275,9 @@ namespace Plank
 			item.needs_redraw.connect (signal_items_changed);
 			item.deleted.connect (handle_item_deleted);
 			
+			if (item is TransientDockItem)
+				(item as TransientDockItem).app_user_visible_changed.connect (app_user_visible_changed);
+			
 			if (item is ApplicationDockItem) {
 				(item as ApplicationDockItem).app_closed.connect (app_closed);
 				(item as ApplicationDockItem).pin_launcher.connect (pin_item);
@@ -307,6 +310,9 @@ namespace Plank
 			item.notify["LastClicked"].disconnect (signal_items_changed);
 			item.needs_redraw.disconnect (signal_items_changed);
 			item.deleted.disconnect (handle_item_deleted);
+			
+			if (item is TransientDockItem)
+				(item as TransientDockItem).app_user_visible_changed.disconnect (app_user_visible_changed);
 			
 			if (item is ApplicationDockItem) {
 				(item as ApplicationDockItem).app_closed.disconnect (app_closed);
