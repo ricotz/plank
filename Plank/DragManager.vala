@@ -338,7 +338,7 @@ namespace Plank
 		// FIXME
 		//	if ((Owner.CursorTracker.Modifier & ModifierType.BUTTON1_MASK) == ModifierType.BUTTON1_MASK) {
 				Gdk.Window bestProxy = best_proxy_window ();
-				if (proxy_window != null && proxy_window != bestProxy) {
+				if (bestProxy != null && proxy_window != bestProxy) {
 					proxy_window = bestProxy;
 					drag_dest_set_proxy (Owner, proxy_window, DragProtocol.XDND, true);
 				}
