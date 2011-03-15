@@ -96,7 +96,10 @@ namespace Plank
 		
 		ApplicationDockItem? item_for_application (Bamf.Application app)
 		{
-			foreach (DockItem item in Items) {
+			Set<DockItem> items = new HashSet<DockItem> ();
+			items.add_all (Items);
+			items.add_all (InvisibleItems);
+			foreach (DockItem item in items) {
 				unowned ApplicationDockItem appitem = (item as ApplicationDockItem);
 				if (appitem == null)
 					continue;
