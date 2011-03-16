@@ -46,7 +46,7 @@ namespace Plank.Drawing
 		public int LaunchBounceHeight { get; set; default = 30; }
 		
 		[Description(nick = "click-time", blurb = "The amount of time (in ms) for click animations.")]
-		public int ClickTime { get; set; default = 600; }
+		public int ClickTime { get; set; default = 300; }
 		
 		[Description(nick = "urgent-bounce-time", blurb = "The amount of time (in ms) to bounce an urgent icon.")]
 		public int UrgentBounceTime { get; set; default = 600; }

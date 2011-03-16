@@ -295,10 +295,10 @@ namespace Plank
 					draw_rect.y -= (int) Math.fabs (Math.sin (2 * Math.PI * clickAnimationProgress) * theme.LaunchBounceHeight);
 					break;
 				case ClickAnimation.DARKEN:
-					darken = double.max (0, Math.sin (Math.PI * 2 * clickAnimationProgress)) * 0.5;
+					darken = double.max (0, Math.sin (Math.PI * clickAnimationProgress)) * 0.5;
 					break;
 				case ClickAnimation.LIGHTEN:
-					lighten = double.max (0, Math.sin (Math.PI * 2 * clickAnimationProgress)) * 0.5;
+					lighten = double.max (0, Math.sin (Math.PI * clickAnimationProgress)) * 0.5;
 					break;
 				}
 			}
