@@ -188,8 +188,7 @@ namespace Plank.Items
 			
 			LastScrolled = new DateTime.now_utc ();
 			
-			if ((direction & ScrollDirection.UP) == ScrollDirection.UP ||
-				(direction & ScrollDirection.LEFT) == ScrollDirection.LEFT)
+			if (direction == ScrollDirection.UP || direction == ScrollDirection.LEFT)
 				WindowControl.focus_previous (App);
 			else
 				WindowControl.focus_next (App);
