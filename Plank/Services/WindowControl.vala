@@ -385,6 +385,7 @@ namespace Plank.Services.Windows
 			viewpRect.width = viewportWidth;
 			viewpRect.height = viewportHeight;
 			
+			// FIXME this var is only needed due to a vapi bug where we cant use null
 			Gdk.Rectangle dest = Gdk.Rectangle ();
 			return viewpRect.intersect (secondGeo, dest);
 		}
