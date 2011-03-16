@@ -63,7 +63,7 @@ namespace Plank.Items
 			
 			var width = surface.Width;
 			var height = surface.Height;
-			var radius = 3;
+			var radius = 3 + 6 * height / (128 - 48);
 			
 			surface.Context.move_to (radius, 0.5);
 			surface.Context.arc (width - radius - 0.5, radius + 0.5, radius, Math.PI * 1.5, Math.PI * 2.0);
