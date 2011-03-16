@@ -100,8 +100,9 @@ namespace Plank.Items
 			}
 			
 			var pos = 0;
-			width = (width - 3 * radius) / 2;
-			height = (height - 3 * radius) / 2;
+			var icon_width = (int) ((width - 80 * radius / 33.0) / 2.0);
+			var icon_height = (int) ((height - 80 * radius / 33.0) / 2.0);
+			var offset = (int) ((width - 2 * icon_width) / 3.0);
 			
 			keys.sort ((CompareFunc) strcmp);
 			foreach (string s in keys) {
@@ -111,8 +112,8 @@ namespace Plank.Items
 				if (++pos > 4)
 					break;
 				
-				var pbuf = DrawingService.load_icon (icons.get (s), width, height);
-				cairo_set_source_pixbuf (surface.Context, pbuf, x * (width + radius) + radius, y * (height + radius) + radius);
+				var pbuf = DrawingService.load_icon (icons.get (s), icon_width, icon_height);
+				cairo_set_source_pixbuf (surface.Context, pbuf, x * (icon_width + offset) + offset, y * (icon_height + offset) + offset);
 				surface.Context.paint ();
 			}
 		}
