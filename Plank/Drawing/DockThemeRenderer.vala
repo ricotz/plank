@@ -39,17 +39,20 @@ namespace Plank.Drawing
 		[Description(nick = "indicator-size", blurb = "The size of item indicators, in tenths of a percent of IconSize.")]
 		public double IndicatorSize { get; set; default = 5.0; }
 		
-		[Description(nick = "urgent-bounce", blurb = "The height (in pixels) to bounce an icon when the application sets urgent.")]
-		public int UrgentBounceHeight { get; set; default = 80; }
+		[Description(nick = "urgent-bounce", blurb = "The height (in percent of IconSize) to bounce an icon when the application sets urgent.")]
+		public double UrgentBounceHeight { get; set; default = 5.0 / 3.0; }
 		
-		[Description(nick = "launch-bounce", blurb = "The height (in pixels) to bounce an icon when launching an application.")]
-		public int LaunchBounceHeight { get; set; default = 30; }
+		[Description(nick = "launch-bounce", blurb = "The height (in percent of IconSize) to bounce an icon when launching an application.")]
+		public double LaunchBounceHeight { get; set; default = 0.625; }
 		
 		[Description(nick = "click-time", blurb = "The amount of time (in ms) for click animations.")]
-		public int ClickTime { get; set; default = 600; }
+		public int ClickTime { get; set; default = 300; }
 		
 		[Description(nick = "urgent-bounce-time", blurb = "The amount of time (in ms) to bounce an urgent icon.")]
 		public int UrgentBounceTime { get; set; default = 600; }
+		
+		[Description(nick = "launch-bounce-time", blurb = "The amount of time (in ms) to bounce an icon when launching an application.")]
+		public int LaunchBounceTime { get; set; default = 600; }
 		
 		[Description(nick = "active-time", blurb = "The amount of time (in ms) for active window indicator animations.")]
 		public int ActiveTime { get; set; default = 300; }

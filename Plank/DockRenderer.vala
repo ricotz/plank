@@ -60,7 +60,7 @@ namespace Plank
 		
 		public int DockHeight {
 			// FIXME zoom disabled
-			get { return VisibleDockHeight + theme.UrgentBounceHeight /*+ (int) ((Prefs.Zoom - 1) * Prefs.IconSize)*/; }
+			get { return VisibleDockHeight + (int) (Prefs.IconSize * theme.UrgentBounceHeight) /*+ (int) ((Prefs.Zoom - 1) * Prefs.IconSize)*/; }
 		}
 		
 		// width+height of the dock background image, as drawn
@@ -286,21 +286,21 @@ namespace Plank
 			var lighten = 0.0;
 			var darken = 0.0;
 			
+			var max_click_time = item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
 			var click_time = new DateTime.now_utc ().difference (item.LastClicked);
-			if (click_time < theme.ClickTime * 1000) {
-				var clickAnimationProgress = click_time / (double) (theme.ClickTime * 1000);
-			
+			if (click_time < max_click_time * 1000) {
+				var clickAnimationProgress = click_time / (double) (max_click_time * 1000);
+				
 				switch (item.ClickedAnimation) {
 				case ClickAnimation.BOUNCE:
-					if (!Gdk.Screen.get_default ().is_composited ())
-						break;
-					draw_rect.y -= (int) Math.fabs (Math.sin (2 * Math.PI * clickAnimationProgress) * theme.LaunchBounceHeight);
+					if (Gdk.Screen.get_default ().is_composited ())
+						draw_rect.y -= ((int) (Math.sin (2 * Math.PI * clickAnimationProgress) * Prefs.IconSize * theme.LaunchBounceHeight)).abs ();
 					break;
 				case ClickAnimation.DARKEN:
-					darken = double.max (0, Math.sin (Math.PI * 2 * clickAnimationProgress)) * 0.5;
+					darken = double.max (0, Math.sin (Math.PI * clickAnimationProgress)) * 0.5;
 					break;
 				case ClickAnimation.LIGHTEN:
-					lighten = double.max (0, Math.sin (Math.PI * 2 * clickAnimationProgress)) * 0.5;
+					lighten = double.max (0, Math.sin (Math.PI * clickAnimationProgress)) * 0.5;
 					break;
 				}
 			}
@@ -338,7 +338,7 @@ namespace Plank
 			// bounce icon on urgent state
 			var urgent_time = new DateTime.now_utc ().difference (item.LastUrgent);
 			if (Gdk.Screen.get_default().is_composited () && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.UrgentBounceTime * 1000)
-				draw_rect.y -= (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * theme.UrgentBounceHeight);
+				draw_rect.y -= (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * Prefs.IconSize * theme.UrgentBounceHeight);
 			
 			// draw active glow
 			var active_time = new DateTime.now_utc ().difference (item.LastActive);
@@ -529,17 +529,12 @@ namespace Plank
 				return true;
 			
 			foreach (DockItem item in window.Items.Items) {
-				if (render_time.difference (item.LastClicked) <= theme.ClickTime * 1000)
+				if (render_time.difference (item.LastClicked) <= (item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
 					return true;
 				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)
 					return true;
-				if (HideOffset == 1.0) {
-					if (render_time.difference (item.LastUrgent) <= theme.GlowTime * 1000)
-						return true;
-				} else {
-					if (render_time.difference (item.LastUrgent) <= theme.UrgentBounceTime * 1000)
-						return true;
-				}
+				if (render_time.difference (item.LastUrgent) <= (HideOffset == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
+					return true;
 			}
 				
 			return false;
