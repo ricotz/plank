@@ -64,15 +64,16 @@ PKG_CHECK_MODULES(PLANK_CORE, gobject-2.0 >= $GLIB_MIN_VERSION
                               x11
 )
 
-VALA_PACKAGES="--pkg gdk-x11-2.0 \
-               --pkg gtk+-2.0 \
-               --pkg gio-unix-2.0 \
-               --pkg bamf \
-               --pkg gee-1.0 \
-               --pkg libwnck-1.0 \
-               --pkg unique-1.0 \
-               --pkg x11"
-AC_SUBST(VALA_PACKAGES)
+PLANK_CORE_VALA_PKGS="--pkg gdk-x11-2.0 \
+                      --pkg gtk+-2.0 \
+                      --pkg gio-unix-2.0 \
+                      --pkg bamf \
+                      --pkg gee-1.0 \
+                      --pkg libwnck-1.0 \
+                      --pkg posix \
+                      --pkg unique-1.0 \
+                      --pkg x11"
+AC_SUBST(PLANK_CORE_VALA_PKGS)
 
 dnl Expansions
 AS_AC_EXPAND([PKGDATADIR], [$datadir/$PACKAGE_NAME])

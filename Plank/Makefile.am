@@ -2,8 +2,7 @@ VAPIDIR = $(top_srcdir)/vapi
 
 VALAFLAGS = \
 	--thread \
-	--pkg posix \
-	$(VALA_PACKAGES) \
+	$(PLANK_CORE_VALA_PKGS) \
 	--vapidir $(VAPIDIR) \
 	$(VAPIDIR)/config.vapi \
 	$(NULL)
