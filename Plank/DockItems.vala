@@ -31,8 +31,8 @@ namespace Plank
 		public signal void item_removed (DockItem item);
 		
 		public ArrayList<DockItem> Items = new ArrayList<DockItem> ();
-		
 		ArrayList<DockItem> InvisibleItems = new ArrayList<DockItem> ();
+		ArrayList<DockItem> AllItems = new ArrayList<DockItem> ();
 		
 		FileMonitor items_monitor;
 		File launchers_dir;
@@ -72,7 +72,7 @@ namespace Plank
 			
 			Set<DockItem> items = new HashSet<DockItem> ();
 			items.add_all (Items);
-			foreach (var item in items)
+			foreach (var item in AllItems)
 				remove_item_without_signaling (item);
 			Items.clear ();
 			
@@ -81,6 +81,8 @@ namespace Plank
 			foreach (var item in items)
 				remove_invisible_item (item);
 			InvisibleItems.clear ();
+			
+			AllItems.clear ();
 			
 			if (items_monitor != null) {
 				items_monitor.changed.disconnect (handle_items_dir_changed);
@@ -96,10 +98,7 @@ namespace Plank
 		
 		ApplicationDockItem? item_for_application (Bamf.Application app)
 		{
-			Set<DockItem> items = new HashSet<DockItem> ();
-			items.add_all (Items);
-			items.add_all (InvisibleItems);
-			foreach (DockItem item in items) {
+			foreach (DockItem item in AllItems) {
 				unowned ApplicationDockItem appitem = (item as ApplicationDockItem);
 				if (appitem == null)
 					continue;
@@ -193,7 +192,7 @@ namespace Plank
 					add_item (item);
 				} else {
 					remove_item (item);
-					add_invisible_item (item);
+					add_invisible_item (item as TransientDockItem);
 				}
 			}
 		}
@@ -203,16 +202,10 @@ namespace Plank
 			if (remove is ApplicationDockItem)
 				(remove as ApplicationDockItem).set_app (null);
 			
-			if (remove is TransientDockItem)
+			if (InvisibleItems.contains (remove))
+				remove_invisible_item (remove);
+			else if (remove is TransientDockItem)
 				remove_item (remove);
-		}
-		
-		void invisible_app_closed (DockItem remove)
-		{
-			if (remove is ApplicationDockItem)
-				(remove as ApplicationDockItem).set_app (null);
-			
-			remove_invisible_item (remove);
 		}
 		
 		void set_item_positions ()
@@ -256,20 +249,20 @@ namespace Plank
 			items_changed ();
 		}
 		
-		void add_invisible_item (DockItem item)
+		void add_invisible_item (TransientDockItem item)
 		{
-			if (item is TransientDockItem) {
-				InvisibleItems.add (item);
-				
-				(item as TransientDockItem).app_closed.connect (invisible_app_closed);
-				(item as TransientDockItem).app_user_visible_changed.connect (app_user_visible_changed);
-			}
+			InvisibleItems.add (item);
+			AllItems.add (item);
+			
+			item.app_closed.connect (app_closed);
+			item.app_user_visible_changed.connect (app_user_visible_changed);
 		}
 		
 		void add_item_without_signaling (DockItem item)
 		{
 			Items.add (item);
 			Items.sort ((CompareFunc) compare_items);
+			AllItems.add (item);
 			
 			item.notify["Icon"].connect (signal_items_changed);
 			item.notify["Indicator"].connect (signal_items_changed);
@@ -298,11 +291,12 @@ namespace Plank
 		void remove_invisible_item (DockItem item)
 		{
 			if (item is TransientDockItem) {
-				(item as TransientDockItem).app_closed.disconnect (invisible_app_closed);
+				(item as TransientDockItem).app_closed.disconnect (app_closed);
 				(item as TransientDockItem).app_user_visible_changed.disconnect (app_user_visible_changed);
 			}
 			
 			InvisibleItems.remove (item);
+			AllItems.add (item);
 		}
 		
 		void remove_item_without_signaling (DockItem item)
@@ -323,6 +317,7 @@ namespace Plank
 			}
 			
 			Items.remove (item);
+			AllItems.add (item);
 		}
 		
 		public void remove_item (DockItem item)
