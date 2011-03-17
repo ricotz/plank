@@ -139,21 +139,6 @@ namespace Plank.Services.Windows
 			}
 		}
 		
-		public static void minimize (Bamf.Application? app)
-		{
-			if (app == null)
-				return;
-			
-			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
-			
-			for (int i = 0; xids != null && i < xids.length; i++) {
-				var window = Wnck.Window.@get (xids.index (i));
-				if (window != null && window.is_in_viewport (window.get_screen ().get_active_workspace ()) && !window.is_minimized ())
-					window.minimize ();
-			}
-		}
-		
 		public static void focus_window (Bamf.Window window)
 		{
 			Screen.get_default ();
@@ -175,14 +160,8 @@ namespace Plank.Services.Windows
 			if (app == null)
 				return;
 			
-			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
-			
-			for (int i = 0; xids != null && i < xids.length; i++) {
-				var window = Wnck.Window.@get (xids.index (i));
-				if (window != null)
-					center_and_focus_window (window);
-			}
+			foreach (var window in get_ordered_window_stack (app))
+				center_and_focus_window (window);
 		}
 		
 		static int find_active_xid_index (Array<uint32> xids)
@@ -230,17 +209,25 @@ namespace Plank.Services.Windows
 			focus_window_by_xid (xids.index (i));
 		}
 		
+		public static void minimize (Bamf.Application? app)
+		{
+			if (app == null)
+				return;
+			
+			foreach (var window in get_ordered_window_stack (app))
+				if (!window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ()))
+					window.minimize ();
+		}
+		
 		public static void restore (Bamf.Application? app)
 		{
 			if (app == null)
 				return;
 			
-			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
-			
-			for (int i = (int) xids.length - 1; xids != null && i >= 0; i--) {
-				var window = Wnck.Window.@get (xids.index (i));
-				if (window != null && window.is_in_viewport (window.get_screen ().get_active_workspace ()) && window.is_minimized ()) {
+			var stack = get_ordered_window_stack (app);
+			for (int i = (int) stack.size - 1; i >= 0; i--) {
+				var window = stack.get (i);
+				if (window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
 					window.unminimize (Gtk.get_current_event_time ());
 					Thread.usleep (10000);
 				}
@@ -252,14 +239,9 @@ namespace Plank.Services.Windows
 			if (app == null)
 				return;
 			
-			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
-			
-			for (int i = 0; xids != null && i < xids.length; i++) {
-				var window = Wnck.Window.@get (xids.index (i));
-				if (window != null)
+			foreach (var window in get_ordered_window_stack (app))
+				if (!window.is_maximized ())
 					window.maximize ();
-			}
 		}
 		
 		public static void unmaximize (Bamf.Application? app)
@@ -267,36 +249,45 @@ namespace Plank.Services.Windows
 			if (app == null)
 				return;
 			
+			foreach (var window in get_ordered_window_stack (app))
+				if (window.is_maximized ())
+					window.unmaximize ();
+		}
+		
+		public static ArrayList<Wnck.Window> get_ordered_window_stack (Bamf.Application? app)
+		{
+			var windows = new ArrayList<Wnck.Window> ();
+			
+			if (app == null)
+				return windows;
+			
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
+			unowned GLib.List<Wnck.Window> stack = Screen.get_default ().get_windows_stacked ();
 			
-			for (int i = 0; xids != null && i < xids.length; i++) {
-				var window = Wnck.Window.@get (xids.index (i));
-				if (window != null && window.is_maximized ())
-					window.unmaximize ();
-			}
+			foreach (var window in stack)
+				for (int j = 0; j < xids.length; j++)
+					if (xids.index (j) == window.get_xid ())
+						windows.add (window);
+			
+			return windows;
 		}
 		
 		public static void smart_focus (Bamf.Application? app)
 		{
-			unowned GLib.List<Wnck.Window> stack = Screen.get_default ().get_windows_stacked ();
+			if (app == null)
+				return;
+
+			ArrayList<Wnck.Window> windows = get_ordered_window_stack (app);
 			
-			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
-			
-			ArrayList<Wnck.Window> windows = new ArrayList<Wnck.Window> ();
 			bool not_in_viewport = true;
 			bool urgent = false;
 			
-			foreach (Wnck.Window window in stack) {
-				for (int j = 0; xids != null && j < xids.length; j++)
-					if (xids.index (j) == window.get_xid ()) {
-						windows.add (window);
-						if (!window.is_skip_tasklist () && window.is_in_viewport (window.get_screen ().get_active_workspace ()))
-							not_in_viewport = false;
-						if (window.needs_attention ())
-							urgent = true;
-					}
+			foreach (Wnck.Window window in windows) {
+				if (!window.is_skip_tasklist () && window.is_in_viewport (window.get_screen ().get_active_workspace ()))
+					not_in_viewport = false;
+				if (window.needs_attention ())
+					urgent = true;
 			}
 			
 			if (not_in_viewport || urgent) {
@@ -313,18 +304,25 @@ namespace Plank.Services.Windows
 			
 			foreach (Wnck.Window window in windows)
 				if (window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
-					restore (app);
+					foreach (var w in windows)
+						if (w.is_minimized () && w.is_in_viewport (w.get_screen ().get_active_workspace ())) {
+							w.unminimize (Gtk.get_current_event_time ());
+							Thread.usleep (10000);
+						}
 					return;
 				}
 			
 			foreach (Wnck.Window window in windows)
 				if ((window.is_active () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) ||
 					window == Screen.get_default ().get_active_window ()) {
-					minimize (app);
+					foreach (var w in windows)
+						if (!w.is_minimized () && w.is_in_viewport (w.get_screen ().get_active_workspace ()))
+							w.minimize ();
 					return;
 				}
 			
-			focus (app);
+			foreach (var window in windows)
+				center_and_focus_window (window);
 		}
 		
 		static void intelligent_focus_off_viewport_window (Wnck.Window targetWindow, ArrayList<Wnck.Window> additional_windows)
