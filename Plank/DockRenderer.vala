@@ -378,7 +378,7 @@ namespace Plank
 		
 		Drawing.Color get_styled_color ()
 		{
-			return Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]).set_min_value (90 / (double) uint16.MAX);
+			return new Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]).set_min_value (90 / (double) uint16.MAX);
 		}
 		
 		void create_normal_indicator ()
@@ -419,7 +419,7 @@ namespace Plank
 		
 		public void draw_badge (DockSurface surface, string badge_text)
 		{
-			var theme_color = Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
+			var theme_color = new Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
 			var badge_color_start = theme_color.set_val (1).set_sat (0.47);
 			var badge_color_end = theme_color.set_val (0.5).set_sat (0.51);
 			

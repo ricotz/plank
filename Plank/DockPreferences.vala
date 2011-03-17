@@ -29,10 +29,13 @@ namespace Plank
 		//const double MIN_ZOOM = 1.0;
 		//const double MAX_ZOOM = 4.0;
 		
+		//[Description(nick = "zoom", blurb = "How much to zoom dock icons when hovered (percentage).")]
 		//public double Zoom { get; set; default = 2.0; }
 		
+		[Description(nick = "icon-size", blurb = "The size of dock icons (in pixels).")]
 		public int IconSize { get; set; default = 48; }
 		
+		[Description(nick = "hide-mode", blurb = "If 0, the dock won't hide.  If 1, the dock intelligently hides.  If 2, the dock auto-hides.")]
 		public HideType HideMode { get; set; default = HideType.INTELLIGENT; }
 		
 		public DockPreferences ()

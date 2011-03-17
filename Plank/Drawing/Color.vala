@@ -17,9 +17,11 @@
 
 using Gdk;
 
+using Plank.Services;
+
 namespace Plank.Drawing
 {
-	public struct Color
+	public class Color : GLib.Object, PrefsSerializable
 	{
 		public double R;
 		public double G;
@@ -307,7 +309,7 @@ namespace Plank.Drawing
 			}
 		}
 		
-		public string to_string ()
+		public string prefs_serialize ()
 		{
 			return "%d;;%d;;%d;;%d".printf ((int) (R * uint8.MAX),
 				(int) (G * uint8.MAX),
@@ -315,7 +317,7 @@ namespace Plank.Drawing
 				(int) (A * uint8.MAX));
 		}
 		
-		public void from_string (string s)
+		public void prefs_deserialize (string s)
 		{
 			string[] parts = s.split (";;");
 			
