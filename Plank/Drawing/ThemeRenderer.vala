@@ -48,50 +48,10 @@ namespace Plank.Drawing
 		
 		construct
 		{
-			OuterStrokeColor = Color (0.1647, 0.1647, 0.1647, 1);
-			FillStartColor = Color (0.1647, 0.1647, 0.1647, 1);
-			FillEndColor = Color (0.3176, 0.3176, 0.3176, 1);
-			InnerStrokeColor = Color (1, 1, 1, 1);
-		}
-		
-		protected override bool is_serializable (string prop)
-		{
-			if (prop == "OuterStrokeColor")
-				return true;
-			if (prop == "FillStartColor")
-				return true;
-			if (prop == "FillEndColor")
-				return true;
-			if (prop == "InnerStrokeColor")
-				return true;
-			
-			return false;
-		}
-		
-		protected override string serialize (string prop)
-		{
-			if (prop == "OuterStrokeColor")
-				return OuterStrokeColor.to_string ();
-			if (prop == "FillStartColor")
-				return FillStartColor.to_string ();
-			if (prop == "FillEndColor")
-				return FillEndColor.to_string ();
-			if (prop == "InnerStrokeColor")
-				return InnerStrokeColor.to_string ();
-			
-			return "";
-		}
-		
-		protected override void deserialize (string prop, string val)
-		{
-			if (prop == "OuterStrokeColor")
-				OuterStrokeColor.from_string (val);
-			else if (prop == "FillStartColor")
-				FillStartColor.from_string (val);
-			else if (prop == "FillEndColor")
-				FillEndColor.from_string (val);
-			else if (prop == "InnerStrokeColor")
-				InnerStrokeColor.from_string (val);
+			OuterStrokeColor = new Color (0.1647, 0.1647, 0.1647, 1);
+			FillStartColor = new Color (0.1647, 0.1647, 0.1647, 1);
+			FillEndColor = new Color (0.3176, 0.3176, 0.3176, 1);
+			InnerStrokeColor = new Color (1, 1, 1, 1);
 		}
 		
 		public ThemeRenderer ()

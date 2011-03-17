@@ -161,7 +161,7 @@ namespace Plank.Drawing
 				data += 4;
 			}
 			
-			return Drawing.Color (rTotal / uint8.MAX / length,
+			return new Drawing.Color (rTotal / uint8.MAX / length,
 							 gTotal / uint8.MAX / length,
 							 bTotal / uint8.MAX / length,
 							 1).set_val (0.8).multiply_sat (1.15);

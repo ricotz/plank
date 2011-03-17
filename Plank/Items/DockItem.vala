@@ -115,7 +115,7 @@ namespace Plank.Items
 		public DockItem ()
 		{
 			Prefs = new DockItemPreferences ();
-			AverageIconColor = Drawing.Color (0, 0, 0, 0);
+			AverageIconColor = new Drawing.Color (0, 0, 0, 0);
 			
 			Prefs.deleted.connect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.connect (reset_buffer);

@@ -17,6 +17,12 @@
 
 namespace Plank.Services
 {
+	public interface PrefsSerializable : GLib.Object
+	{
+		public abstract string prefs_serialize ();
+		public abstract void prefs_deserialize (string s);
+	}
+	
 	public abstract class Preferences : GLib.Object
 	{
 		public signal void deleted ();
@@ -45,20 +51,6 @@ namespace Plank.Services
 		{
 			// do nothing, this isnt abstract because we dont
 			// want to force subclasses to implement this
-		}
-		
-		protected virtual bool is_serializable (string prop)
-		{
-			return false;
-		}
-		
-		protected virtual string serialize (string prop)
-		{
-			return "";
-		}
-		
-		protected virtual void deserialize (string prop, string val)
-		{
 		}
 		
 		File backing_file;
@@ -155,8 +147,9 @@ namespace Plank.Services
 						val.set_string (file.get_string (group_name, prop.name));
 					else if (type.is_enum ())
 						val.set_enum (file.get_integer (group_name, prop.name));
-					else if (is_serializable (prop.name)) {
-						deserialize (prop.name, file.get_string (group_name, prop.name));
+					else if (type.is_a (typeof (PrefsSerializable))) {
+						get_property (prop.name, ref val);
+						(val.get_object () as PrefsSerializable).prefs_deserialize (file.get_string (group_name, prop.name));
 						continue;
 					} else {
 						backing_error ("Unsupported preferences type '%s'");
@@ -198,8 +191,8 @@ namespace Plank.Services
 					file.set_string (group_name, prop.name, val.get_string ());
 				else if (type.is_enum ())
 					file.set_integer (group_name, prop.name, val.get_enum ());
-				else if (is_serializable (prop.name))
-					file.set_string (group_name, prop.name, serialize (prop.name));
+				else if (type.is_a (typeof (PrefsSerializable)))
+					file.set_string (group_name, prop.name, (val.get_object () as PrefsSerializable).prefs_serialize ());
 				else {
 					backing_error ("Unsupported preferences type '%s'");
 					continue;
