@@ -23,6 +23,11 @@ namespace Plank.Services.Windows
 {
 	public class WindowControl : GLib.Object
 	{
+		// when working on a group of windows, wait this amount between each action
+		const uint WINDOW_GROUP_DELAY = 10000;
+		// when changing a viewport, wait this time (for viewport change animations) before continuing
+		const uint VIEWPORT_CHANGE_DELAY = 200;
+		
 		public static unowned Gdk.Pixbuf? get_window_icon (Bamf.Window window)
 		{
 			var w = Wnck.Window.@get (window.get_xid ());
@@ -162,7 +167,7 @@ namespace Plank.Services.Windows
 			
 			foreach (var window in get_ordered_window_stack (app)) {
 				center_and_focus_window (window);
-				Thread.usleep (10000);
+				Thread.usleep (WINDOW_GROUP_DELAY);
 			}
 		}
 		
@@ -219,7 +224,7 @@ namespace Plank.Services.Windows
 			foreach (var window in get_ordered_window_stack (app))
 				if (!window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
 					window.minimize ();
-					Thread.usleep (10000);
+					Thread.usleep (WINDOW_GROUP_DELAY);
 				}
 		}
 		
@@ -233,7 +238,7 @@ namespace Plank.Services.Windows
 				var window = stack.get (i);
 				if (window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
 					window.unminimize (Gtk.get_current_event_time ());
-					Thread.usleep (10000);
+					Thread.usleep (WINDOW_GROUP_DELAY);
 				}
 			}
 		}
@@ -311,7 +316,7 @@ namespace Plank.Services.Windows
 					foreach (var w in windows)
 						if (w.is_minimized () && w.is_in_viewport (w.get_screen ().get_active_workspace ())) {
 							w.unminimize (Gtk.get_current_event_time ());
-							Thread.usleep (10000);
+							Thread.usleep (WINDOW_GROUP_DELAY);
 						}
 					return;
 				}
@@ -322,14 +327,14 @@ namespace Plank.Services.Windows
 					foreach (var w in windows)
 						if (!w.is_minimized () && w.is_in_viewport (w.get_screen ().get_active_workspace ())) {
 							w.minimize ();
-							Thread.usleep (10000);
+							Thread.usleep (WINDOW_GROUP_DELAY);
 						}
 					return;
 				}
 			
 			foreach (var window in windows) {
 				center_and_focus_window (window);
-				Thread.usleep (10000);
+				Thread.usleep (WINDOW_GROUP_DELAY);
 			}
 		}
 		
@@ -339,7 +344,7 @@ namespace Plank.Services.Windows
 				var window = additional_windows.get (i);
 				if (!window.is_minimized () && windows_share_viewport (targetWindow, window)) {
 					center_and_focus_window (window);
-					Thread.usleep (10000);
+					Thread.usleep (WINDOW_GROUP_DELAY);
 				}
 			}
 			
@@ -350,8 +355,8 @@ namespace Plank.Services.Windows
 			
 			// we do this to make sure our active window is also at the front... Its a tricky thing to do.
 			// sometimes compiz plays badly.  This hacks around it
-			uint time = Gtk.get_current_event_time () + 200;
-			Timeout.add (200, () => {
+			uint time = Gtk.get_current_event_time () + VIEWPORT_CHANGE_DELAY;
+			Timeout.add (VIEWPORT_CHANGE_DELAY, () => {
 				targetWindow.activate (time);
 				return false;
 			});
