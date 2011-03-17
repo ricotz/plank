@@ -2,15 +2,8 @@ VAPIDIR = $(top_srcdir)/vapi
 
 VALAFLAGS = \
 	--thread \
-	--pkg gtk+-${GTK_API_VERSION} \
-	--pkg gdk-x11-$(GTK_API_VERSION) \
-	--pkg gio-unix-2.0 \
-	--pkg bamf \
-	--pkg gee-1.0 \
-	--pkg libwnck-$(WNCK_API_VERSION) \
-	--pkg unique-$(UNIQUE_API_VERSION) \
-	--pkg x11 \
 	--pkg posix \
+	$(VALA_PACKAGES) \
 	--vapidir $(VAPIDIR) \
 	$(VAPIDIR)/config.vapi \
 	$(NULL)
