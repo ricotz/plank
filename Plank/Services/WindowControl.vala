@@ -160,8 +160,10 @@ namespace Plank.Services.Windows
 			if (app == null)
 				return;
 			
-			foreach (var window in get_ordered_window_stack (app))
+			foreach (var window in get_ordered_window_stack (app)) {
 				center_and_focus_window (window);
+				Thread.usleep (10000);
+			}
 		}
 		
 		static int find_active_xid_index (Array<uint32> xids)
@@ -215,8 +217,10 @@ namespace Plank.Services.Windows
 				return;
 			
 			foreach (var window in get_ordered_window_stack (app))
-				if (!window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ()))
+				if (!window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
 					window.minimize ();
+					Thread.usleep (10000);
+				}
 		}
 		
 		public static void restore (Bamf.Application? app)
@@ -316,13 +320,17 @@ namespace Plank.Services.Windows
 				if ((window.is_active () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) ||
 					window == Screen.get_default ().get_active_window ()) {
 					foreach (var w in windows)
-						if (!w.is_minimized () && w.is_in_viewport (w.get_screen ().get_active_workspace ()))
+						if (!w.is_minimized () && w.is_in_viewport (w.get_screen ().get_active_workspace ())) {
 							w.minimize ();
+							Thread.usleep (10000);
+						}
 					return;
 				}
 			
-			foreach (var window in windows)
+			foreach (var window in windows) {
 				center_and_focus_window (window);
+				Thread.usleep (10000);
+			}
 		}
 		
 		static void intelligent_focus_off_viewport_window (Wnck.Window targetWindow, ArrayList<Wnck.Window> additional_windows)
