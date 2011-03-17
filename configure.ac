@@ -61,7 +61,7 @@ case "$with_gtk" in
         WNCK_API_VERSION=3.0
         GTK_MIN_VERSION=3.0.0
         GLIB_MIN_VERSION=2.28.0
-        VALA_MIN_VERSION=0.11.6
+        VALA_MIN_VERSION=0.11.7
    ;;
 esac
 AC_SUBST(GTK_API_VERSION)
