@@ -31,8 +31,6 @@ namespace Plank.Items
 		
 		public signal void app_closed ();
 		
-		public signal void app_user_visible_changed ();
-		
 		public Bamf.Application? App { get; private set; }
 		
 		public ApplicationDockItem.with_dockitem (string dockitem)
@@ -63,7 +61,6 @@ namespace Plank.Items
 				App.urgent_changed.disconnect (update_urgent);
 				App.child_added.disconnect (update_indicator);
 				App.child_removed.disconnect (update_indicator);
-				App.user_visible_changed.disconnect (signal_user_visible_changed);
 				App.closed.disconnect (signal_app_closed);
 			}
 			
@@ -75,7 +72,6 @@ namespace Plank.Items
 				app.urgent_changed.connect (update_urgent);
 				app.child_added.connect (update_indicator);
 				app.child_removed.connect (update_indicator);
-				app.user_visible_changed.connect (signal_user_visible_changed);
 				app.closed.connect (signal_app_closed);
 			}
 		}
@@ -85,11 +81,6 @@ namespace Plank.Items
 			update_app ();
 			
 			launcher_changed ();
-		}
-		
-		public void signal_user_visible_changed (bool user_visible)
-		{
-			app_user_visible_changed ();
 		}
 		
 		public void signal_app_closed ()
