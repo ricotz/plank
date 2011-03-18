@@ -26,7 +26,7 @@ namespace Plank.Services.Windows
 		// when working on a group of windows, wait this amount between each action
 		const uint WINDOW_GROUP_DELAY = 10000;
 		// when changing a viewport, wait this time (for viewport change animations) before continuing
-		const uint VIEWPORT_CHANGE_DELAY = 200;
+		public static const uint VIEWPORT_CHANGE_DELAY = 200;
 		
 		public static unowned Gdk.Pixbuf? get_window_icon (Bamf.Window window)
 		{

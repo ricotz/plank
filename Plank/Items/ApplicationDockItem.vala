@@ -27,11 +27,10 @@ namespace Plank.Items
 {
 	public class ApplicationDockItem : DockItem
 	{
-		// throttle scrolls for window switching (in ms)
-		const int SCROLL_RATE = 200;
-		
 		public signal void pin_launcher ();
+		
 		public signal void app_closed ();
+		
 		public signal void app_user_visible_changed ();
 		
 		public Bamf.Application? App { get; private set; }
@@ -183,7 +182,7 @@ namespace Plank.Items
 		protected override void on_scrolled (ScrollDirection direction, ModifierType mod)
 		{
 			if (WindowControl.get_num_windows (App) == 0 ||
-				(new DateTime.now_utc ().difference (LastScrolled) < SCROLL_RATE * 1000))
+				(new DateTime.now_utc ().difference (LastScrolled) < WindowControl.VIEWPORT_CHANGE_DELAY * 1000))
 				return;
 			
 			LastScrolled = new DateTime.now_utc ();
