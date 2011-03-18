@@ -27,12 +27,9 @@ namespace Plank.Items
 {
 	public class ApplicationDockItem : DockItem
 	{
-		// throttle scrolls for window switching (in ms)
-		const int SCROLL_RATE = 200;
-		
 		public signal void pin_launcher ();
+		
 		public signal void app_closed ();
-		public signal void app_user_visible_changed ();
 		
 		public Bamf.Application? App { get; private set; }
 		
@@ -64,7 +61,6 @@ namespace Plank.Items
 				App.urgent_changed.disconnect (update_urgent);
 				App.child_added.disconnect (update_indicator);
 				App.child_removed.disconnect (update_indicator);
-				App.user_visible_changed.disconnect (signal_user_visible_changed);
 				App.closed.disconnect (signal_app_closed);
 			}
 			
@@ -76,7 +72,6 @@ namespace Plank.Items
 				app.urgent_changed.connect (update_urgent);
 				app.child_added.connect (update_indicator);
 				app.child_removed.connect (update_indicator);
-				app.user_visible_changed.connect (signal_user_visible_changed);
 				app.closed.connect (signal_app_closed);
 			}
 		}
@@ -86,11 +81,6 @@ namespace Plank.Items
 			update_app ();
 			
 			launcher_changed ();
-		}
-		
-		public void signal_user_visible_changed (bool user_visible)
-		{
-			app_user_visible_changed ();
 		}
 		
 		public void signal_app_closed ()
@@ -183,7 +173,7 @@ namespace Plank.Items
 		protected override void on_scrolled (ScrollDirection direction, ModifierType mod)
 		{
 			if (WindowControl.get_num_windows (App) == 0 ||
-				(new DateTime.now_utc ().difference (LastScrolled) < SCROLL_RATE * 1000))
+				(new DateTime.now_utc ().difference (LastScrolled) < WindowControl.VIEWPORT_CHANGE_DELAY * 1000))
 				return;
 			
 			LastScrolled = new DateTime.now_utc ();

@@ -32,8 +32,6 @@ namespace Plank
 		
 		public ArrayList<DockItem> Items = new ArrayList<DockItem> ();
 		
-		ArrayList<DockItem> InvisibleItems = new ArrayList<DockItem> ();
-		
 		FileMonitor items_monitor;
 		File launchers_dir;
 		
@@ -76,12 +74,6 @@ namespace Plank
 				remove_item_without_signaling (item);
 			Items.clear ();
 			
-			items = new HashSet<DockItem> ();
-			items.add_all (InvisibleItems);
-			foreach (var item in items)
-				remove_invisible_item (item);
-			InvisibleItems.clear ();
-			
 			if (items_monitor != null) {
 				items_monitor.changed.disconnect (handle_items_dir_changed);
 				items_monitor.cancel ();
@@ -96,10 +88,7 @@ namespace Plank
 		
 		ApplicationDockItem? item_for_application (Bamf.Application app)
 		{
-			Set<DockItem> items = new HashSet<DockItem> ();
-			items.add_all (Items);
-			items.add_all (InvisibleItems);
-			foreach (DockItem item in items) {
+			foreach (DockItem item in Items) {
 				unowned ApplicationDockItem appitem = (item as ApplicationDockItem);
 				if (appitem == null)
 					continue;
@@ -174,45 +163,19 @@ namespace Plank
 			var found = item_for_application (app);
 			if (found != null) {
 				found.set_app (app);
-			} else {
+			} else if (app.user_visible () && WindowControl.get_num_windows (app) > 0) {
 				var new_item = new TransientDockItem.with_application (app);
 				new_item.set_sort (last_sort + 1);
-				if (app.user_visible ())
-					add_item (new_item);
-				else
-					add_invisible_item (new_item);
-			}
-		}
-		
-		void app_user_visible_changed (DockItem item)
-		{
-			if (item is TransientDockItem) {
-				Bamf.Application app = (item as TransientDockItem).App;
-				if (app.user_visible ()) {
-					remove_invisible_item (item);
-					add_item (item);
-				} else {
-					remove_item (item);
-					add_invisible_item (item);
-				}
+				add_item (new_item);
 			}
 		}
 		
 		void app_closed (DockItem remove)
 		{
-			if (remove is ApplicationDockItem)
-				(remove as ApplicationDockItem).set_app (null);
-			
 			if (remove is TransientDockItem)
 				remove_item (remove);
-		}
-		
-		void invisible_app_closed (DockItem remove)
-		{
-			if (remove is ApplicationDockItem)
+			else if (remove is ApplicationDockItem)
 				(remove as ApplicationDockItem).set_app (null);
-			
-			remove_invisible_item (remove);
 		}
 		
 		void set_item_positions ()
@@ -256,16 +219,6 @@ namespace Plank
 			items_changed ();
 		}
 		
-		void add_invisible_item (DockItem item)
-		{
-			if (item is TransientDockItem) {
-				InvisibleItems.add (item);
-				
-				(item as TransientDockItem).app_closed.connect (invisible_app_closed);
-				(item as TransientDockItem).app_user_visible_changed.connect (app_user_visible_changed);
-			}
-		}
-		
 		void add_item_without_signaling (DockItem item)
 		{
 			Items.add (item);
@@ -277,9 +230,6 @@ namespace Plank
 			item.notify["LastClicked"].connect (signal_items_changed);
 			item.needs_redraw.connect (signal_items_changed);
 			item.deleted.connect (handle_item_deleted);
-			
-			if (item is TransientDockItem)
-				(item as TransientDockItem).app_user_visible_changed.connect (app_user_visible_changed);
 			
 			if (item is ApplicationDockItem) {
 				(item as ApplicationDockItem).app_closed.connect (app_closed);
@@ -295,16 +245,6 @@ namespace Plank
 			item_added (item);
 		}
 		
-		void remove_invisible_item (DockItem item)
-		{
-			if (item is TransientDockItem) {
-				(item as TransientDockItem).app_closed.disconnect (invisible_app_closed);
-				(item as TransientDockItem).app_user_visible_changed.disconnect (app_user_visible_changed);
-			}
-			
-			InvisibleItems.remove (item);
-		}
-		
 		void remove_item_without_signaling (DockItem item)
 		{
 			item.notify["Icon"].disconnect (signal_items_changed);
@@ -313,9 +253,6 @@ namespace Plank
 			item.notify["LastClicked"].disconnect (signal_items_changed);
 			item.needs_redraw.disconnect (signal_items_changed);
 			item.deleted.disconnect (handle_item_deleted);
-			
-			if (item is TransientDockItem)
-				(item as TransientDockItem).app_user_visible_changed.disconnect (app_user_visible_changed);
 			
 			if (item is ApplicationDockItem) {
 				(item as ApplicationDockItem).app_closed.disconnect (app_closed);
@@ -359,7 +296,8 @@ namespace Plank
 					return;
 				
 				remove_item_without_signaling (item);
-				var new_item = new ApplicationDockItem.with_dockitem (launchers_dir.get_path () + "/" + dockitem);
+				var new_item = new ApplicationDockItem.with_dockitem (launchers_dir.get_child (dockitem).get_path ());
+				stdout.printf("%s\n", launchers_dir.get_child (dockitem).get_path ());
 				new_item.Position = item.Position;
 				add_item_without_signaling (new_item);
 				

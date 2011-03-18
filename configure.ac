@@ -37,36 +37,11 @@ AC_STDC_HEADERS
 dnl ==============================================
 dnl Set dependency versions
 dnl ==============================================
-AC_MSG_CHECKING([which GTK version to compile against])
-AC_ARG_WITH([gtk],
-   AC_HELP_STRING([--with-gtk=2.0|3.0],
-   [which GTK version to compile against (default: 2.0)]),
-   [case "$with_gtk" in
-       2.0|3.0) ;;
-       *) AC_MSG_ERROR([invalid GTK version specified]);;
-   esac],
-   [with_gtk=2.0])
-AC_MSG_RESULT([$with_gtk])
 
-case "$with_gtk" in
-   2.0) GTK_API_VERSION=2.0
-        UNIQUE_API_VERSION=1.0
-        WNCK_API_VERSION=1.0
-        GTK_MIN_VERSION=2.22.0
-        GLIB_MIN_VERSION=2.26.0
-        VALA_MIN_VERSION=0.10.0
-   ;;
-   3.0) GTK_API_VERSION=3.0
-        UNIQUE_API_VERSION=3.0
-        WNCK_API_VERSION=3.0
-        GTK_MIN_VERSION=3.0.0
-        GLIB_MIN_VERSION=2.28.0
-        VALA_MIN_VERSION=0.11.6
-   ;;
-esac
-AC_SUBST(GTK_API_VERSION)
-AC_SUBST(UNIQUE_API_VERSION)
-AC_SUBST(WNCK_API_VERSION)
+GTK_MIN_VERSION=2.22.0
+GLIB_MIN_VERSION=2.26.0
+VALA_MIN_VERSION=0.10.0
+BAMF_MIN_VERSION=0.2.58
 
 dnl ==============================================
 dnl Check that we meet the dependencies
@@ -80,14 +55,25 @@ PKG_CHECK_MODULES(PLANK_CORE, gobject-2.0 >= $GLIB_MIN_VERSION
                               glib-2.0 >= $GLIB_MIN_VERSION
                               gio-2.0 >= $GLIB_MIN_VERSION
                               gio-unix-2.0 >= $GLIB_MIN_VERSION
-                              gtk+-$GTK_API_VERSION >= $GTK_MIN_VERSION
-                              gdk-x11-$GTK_API_VERSION >= $GTK_MIN_VERSION
-                              libbamf
+                              gtk+-2.0 >= $GTK_MIN_VERSION
+                              gdk-x11-2.0 >= $GTK_MIN_VERSION
+                              libbamf >= $BAMF_MIN_VERSION
                               gee-1.0
-                              libwnck-$WNCK_API_VERSION
-                              unique-$UNIQUE_API_VERSION
+                              libwnck-1.0
+                              unique-1.0
                               x11
 )
+
+PLANK_CORE_VALA_PKGS="--pkg gdk-x11-2.0 \
+                      --pkg gtk+-2.0 \
+                      --pkg gio-unix-2.0 \
+                      --pkg bamf \
+                      --pkg gee-1.0 \
+                      --pkg libwnck-1.0 \
+                      --pkg posix \
+                      --pkg unique-1.0 \
+                      --pkg x11"
+AC_SUBST(PLANK_CORE_VALA_PKGS)
 
 dnl Expansions
 AS_AC_EXPAND([PKGDATADIR], [$datadir/$PACKAGE_NAME])
@@ -166,7 +152,6 @@ ${PACKAGE}-${VERSION}
 
   Build Environment
     Install Prefix:     ${prefix}
-      Use GTK+ API:     ${GTK_API_VERSION}
 
   Build/Development
     Release Build:      ${enable_release}
