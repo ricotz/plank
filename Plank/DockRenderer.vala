@@ -224,8 +224,10 @@ namespace Plank
 			foreach (DockItem item in window.Items.Items)
 				draw_item (main_buffer, item);
 			
+			var x_offset = (window.width_request - main_buffer.Width) / 2;
+			
 			cr.set_operator (Operator.SOURCE);
-			cr.set_source_surface (main_buffer.Internal, (window.width_request - main_buffer.Width) / 2, VisibleDockHeight * HideOffset);
+			cr.set_source_surface (main_buffer.Internal, x_offset, VisibleDockHeight * HideOffset);
 			cr.paint ();
 			
 			if (Opacity < 1.0) {
@@ -243,7 +245,7 @@ namespace Plank
 					if ((item.State & ItemState.URGENT) == ItemState.URGENT && diff < theme.GlowTime * 1000) {
 						var rect = item_draw_region (item);
 						cr.set_source_surface (urgent_glow_buffer.Internal,
-							rect.x + rect.width / 2.0 - urgent_glow_buffer.Width / 2.0,
+							x_offset + rect.x + rect.width / 2.0 - urgent_glow_buffer.Width / 2.0,
 							DockHeight - urgent_glow_buffer.Height / 2.0);
 						var opacity = 0.2 + (0.75 * (Math.sin (diff / (double) (theme.GlowPulseTime * 1000) * 2 * Math.PI) + 1) / 2);
 						cr.paint_with_alpha (opacity);
