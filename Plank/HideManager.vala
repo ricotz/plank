@@ -33,6 +33,8 @@ namespace Plank
 	public class HideManager : GLib.Object
 	{
 		const uint UPDATE_TIMEOUT = 200;
+
+		const int IGNORED_WNCK_WINDOW_TYPES = (Wnck.WindowType.DESKTOP | Wnck.WindowType.DOCK | Wnck.WindowType.SPLASHSCREEN | Wnck.WindowType.MENU);
 		
 		DockWindow window;
 		
@@ -186,18 +188,19 @@ namespace Plank
 			var intersect = false;
 			var screen = Wnck.Screen.get_default ();
 			var active_window = screen.get_active_window ();
+			var active_workspace = screen.get_active_workspace ();
 			
-			if (active_window == null)
+			if (active_window == null || active_workspace == null)
 				return;
 			
 			foreach (Wnck.Window w in screen.get_windows ()) {
 				if (w.is_minimized ())
 					continue;
-				if ((w.get_window_type () & (Wnck.WindowType.DESKTOP | Wnck.WindowType.DOCK | Wnck.WindowType.SPLASHSCREEN | Wnck.WindowType.MENU)) != 0)
+				if ((w.get_window_type () & IGNORED_WNCK_WINDOW_TYPES) != 0)
 					continue;
-				if (screen.get_active_workspace () == null || !w.is_visible_on_workspace (screen.get_active_workspace ()))
+				if (!w.is_visible_on_workspace (active_workspace))
 					continue;
-				if (active_window != null && active_window.get_pid () != w.get_pid ())
+				if (w.get_pid () != active_window.get_pid ())
 					continue;
 				
 #if VALA_0_12
