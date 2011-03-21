@@ -297,7 +297,6 @@ namespace Plank
 				
 				remove_item_without_signaling (item);
 				var new_item = new ApplicationDockItem.with_dockitem (launchers_dir.get_child (dockitem).get_path ());
-				stdout.printf("%s\n", launchers_dir.get_child (dockitem).get_path ());
 				new_item.Position = item.Position;
 				add_item_without_signaling (new_item);
 				
