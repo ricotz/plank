@@ -33,8 +33,6 @@ namespace Plank
 	public class HideManager : GLib.Object
 	{
 		const uint UPDATE_TIMEOUT = 200;
-
-		const int IGNORED_WNCK_WINDOW_TYPES = (Wnck.WindowType.DESKTOP | Wnck.WindowType.DOCK | Wnck.WindowType.SPLASHSCREEN | Wnck.WindowType.MENU);
 		
 		DockWindow window;
 		
@@ -196,7 +194,7 @@ namespace Plank
 			foreach (Wnck.Window w in screen.get_windows ()) {
 				if (w.is_minimized ())
 					continue;
-				if ((w.get_window_type () & IGNORED_WNCK_WINDOW_TYPES) != 0)
+				if ((w.get_window_type () & (Wnck.WindowType.DESKTOP | Wnck.WindowType.DOCK | Wnck.WindowType.SPLASHSCREEN | Wnck.WindowType.MENU)) != 0)
 					continue;
 				if (!w.is_visible_on_workspace (active_workspace))
 					continue;
