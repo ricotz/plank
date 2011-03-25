@@ -118,15 +118,15 @@ namespace Plank.Items
 			AverageIconColor = new Drawing.Color (0, 0, 0, 0);
 			
 			Prefs.deleted.connect (handle_deleted);
-			Gtk.IconTheme.get_default ().changed.connect (reset_buffer);
-			Prefs.notify["Icon"].connect (reset_buffer);
+			Gtk.IconTheme.get_default ().changed.connect (reset_icon_buffer);
+			Prefs.notify["Icon"].connect (reset_icon_buffer);
 		}
 		
 		~DockItem ()
 		{
 			Prefs.deleted.disconnect (handle_deleted);
-			Gtk.IconTheme.get_default ().changed.disconnect (reset_buffer);
-			Prefs.notify["Icon"].disconnect (reset_buffer);
+			Gtk.IconTheme.get_default ().changed.disconnect (reset_icon_buffer);
+			Prefs.notify["Icon"].disconnect (reset_icon_buffer);
 		}
 		
 		protected void handle_deleted ()
@@ -167,7 +167,7 @@ namespace Plank.Items
 			return Prefs.Launcher;
 		}
 		
-		void reset_buffer ()
+		protected void reset_icon_buffer ()
 		{
 			surface = null;
 			

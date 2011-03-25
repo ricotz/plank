@@ -21,6 +21,7 @@ using Gee;
 using Gtk;
 
 using Plank.Drawing;
+using Plank.Services;
 
 namespace Plank.Items
 {
@@ -29,6 +30,7 @@ namespace Plank.Items
 		const string DEFAULT_ICON = "inode-directory;;gnome-mime-inode-directory;;inode-x-generic;;folder";
 		
 		File OwnedFile { get; set; }
+		FileMonitor dir_monitor;
 		
 		public FileDockItem.with_dockitem (string dockitem)
 		{
@@ -44,14 +46,34 @@ namespace Plank.Items
 			Text = OwnedFile.get_basename ();
 			
 			// pop up the dir contents on a left click too
-			if (OwnedFile.query_file_type (0) == FileType.DIRECTORY)
+			if (OwnedFile.query_file_type (0) == FileType.DIRECTORY) {
 				Button = PopupButton.RIGHT | PopupButton.LEFT;
+				
+				try {
+					dir_monitor = OwnedFile.monitor (0);
+					dir_monitor.set_rate_limit (500);
+					dir_monitor.changed.connect (handle_dir_changed);
+				} catch {
+					Logger.fatal<FileDockItem> ("Unable to watch the stack directory '%s'.".printf (OwnedFile.get_path ()));
+				}
+			}
 		}
 		
 		~FileDockItem ()
 		{
 			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
 			Prefs.deleted.disconnect (handle_deleted);
+			
+			if (dir_monitor != null) {
+				dir_monitor.changed.disconnect (handle_dir_changed);
+				dir_monitor.cancel ();
+				dir_monitor = null;
+			}
+		}
+		
+		void handle_dir_changed (File f, File? other, FileMonitorEvent event)
+		{
+			reset_icon_buffer ();
 		}
 		
 		protected override void draw_icon (DockSurface surface)
