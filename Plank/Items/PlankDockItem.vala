@@ -38,9 +38,25 @@ namespace Plank.Items
 		{
 			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
 			
-			var item = new ImageMenuItem.from_stock (STOCK_ABOUT, null);
+			var item = create_menu_item (_("Get _Help Online..."), "help");
+			item.activate.connect (() => {
+				Services.System.open_uri ("https://answers.launchpad.net/plank");
+			});
+			items.add (item);
+			
+			item = create_menu_item (_("_Translate This Application..."), "locale");
+			item.activate.connect (() => {
+				Services.System.open_uri ("https://translations.launchpad.net/plank");
+			});
+			items.add (item);
+			
+			items.add (new SeparatorMenuItem ());
+			
+			item = new ImageMenuItem.from_stock (STOCK_ABOUT, null);
 			item.activate.connect (() => Plank.show_about ());
 			items.add (item);
+			
+			items.add (new SeparatorMenuItem ());
 			
 			item = new ImageMenuItem.from_stock (STOCK_QUIT, null);
 			item.activate.connect (() => Plank.quit ());

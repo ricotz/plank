@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-09 04:14-0600\n"
+"POT-Creation-Date: 2011-03-27 08:54-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Plank. Stupidly simple."
 msgstr ""
 
-#: ../Plank/Items/ApplicationDockItem.vala:195
+#: ../Plank/Items/ApplicationDockItem.vala:192
 msgid "_Keep in Dock"
 msgstr ""
 
@@ -49,14 +49,22 @@ msgstr ""
 msgid "_Close All"
 msgstr ""
 
-#: ../Plank/Items/FileDockItem.vala:188
+#: ../Plank/Items/FileDockItem.vala:216
 msgid "_Open in File Browser"
 msgstr ""
 
-#: ../Plank/Items/FileDockItem.vala:201
+#: ../Plank/Items/FileDockItem.vala:229
 msgid "_Open"
 msgstr ""
 
-#: ../Plank/Items/FileDockItem.vala:205
+#: ../Plank/Items/FileDockItem.vala:233
 msgid "Open Containing _Folder"
+msgstr ""
+
+#: ../Plank/Items/PlankDockItem.vala:41
+msgid "Get _Help Online..."
+msgstr ""
+
+#: ../Plank/Items/PlankDockItem.vala:47
+msgid "_Translate This Application..."
 msgstr ""
