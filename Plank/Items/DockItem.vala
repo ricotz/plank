@@ -139,18 +139,6 @@ namespace Plank.Items
 			Prefs.delete ();
 		}
 		
-		public static string get_launcher_from_dockitem (string dockitem)
-		{
-			try {
-				KeyFile file = new KeyFile ();
-				file.load_from_file (dockitem, 0);
-				
-				return file.get_string (typeof (DockItemPreferences).name (), "Launcher");
-			} catch {
-				return "";
-			}
-		}
-		
 		public int get_sort ()
 		{
 			return Prefs.Sort;
