@@ -302,18 +302,22 @@ namespace Plank.Widgets
 		
 		protected void do_popup (uint button)
 		{
+			var items = HoveredItem.get_menu_items ();
+			if (items.size == 0)
+				return;
+			
+			foreach (MenuItem item in items)
+				menu.append (item);
+			
+			menu.show_all ();
+			menu.popup (null, null, position_menu, button, get_current_event_time ());
+			
 			foreach (Widget w in menu.get_children ()) {
 				menu.remove (w);
 				if (w is ImageMenuItem)
 					(w as ImageMenuItem).get_image ().destroy ();
 				w.destroy ();
 			}
-			
-			foreach (MenuItem item in HoveredItem.get_menu_items ())
-				menu.append (item);
-			
-			menu.show_all ();
-			menu.popup (null, null, position_menu, button, get_current_event_time ());
 		}
 		
 		protected void on_menu_hide ()
