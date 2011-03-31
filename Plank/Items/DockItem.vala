@@ -102,7 +102,7 @@ namespace Plank.Items
 		
 		public DateTime LastActive { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
-		public bool ValidItem {
+		public virtual bool ValidItem {
 			get { return File.new_for_path (Prefs.Launcher).query_exists (); }
 		}
 		
