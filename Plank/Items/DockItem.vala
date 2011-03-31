@@ -47,6 +47,7 @@ namespace Plank.Items
 		LIGHTEN = 8
 	}
 	
+	[Flags]
 	public enum PopupButton
 	{
 		NONE,
