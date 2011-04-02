@@ -302,6 +302,13 @@ namespace Plank.Widgets
 		
 		protected void do_popup (uint button)
 		{
+			foreach (Widget w in menu.get_children ()) {
+				menu.remove (w);
+				if (w is ImageMenuItem)
+					(w as ImageMenuItem).get_image ().destroy ();
+				w.destroy ();
+			}
+			
 			var items = HoveredItem.get_menu_items ();
 			if (items.size == 0)
 				return;
@@ -318,13 +325,6 @@ namespace Plank.Widgets
 			hide_manager.update_dock_hovered ();
 			if (!hide_manager.DockHovered)
 				set_hovered (null);
-			
-			foreach (Widget w in menu.get_children ()) {
-				menu.remove (w);
-				if (w is ImageMenuItem)
-					(w as ImageMenuItem).get_image ().destroy ();
-				w.destroy ();
-			}
 		}
 		
 		protected void position_menu (Menu menu, out int x, out int y, out bool push_in)
