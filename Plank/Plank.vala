@@ -30,7 +30,7 @@ namespace Plank
 		public static int main (string[] args)
 		{
 			var main_class = new Plank ();
-			Factory.init (main_class);
+			Factory.init (main_class, new ItemFactory ());
 			return main_class.start (args);
 		}
 		

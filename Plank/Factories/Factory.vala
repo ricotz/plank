@@ -20,10 +20,12 @@ namespace Plank.Factories
 	public class Factory : GLib.Object
 	{
 		public static AbstractMain main;
+		public static ItemFactory item_factory;
 		
-		public static void init (AbstractMain main_class)
+		public static void init (AbstractMain main_class, ItemFactory item)
 		{
 			main = main_class;
+			item_factory = item;
 		}
 	}
 }

@@ -17,6 +17,7 @@
 
 using Gee;
 
+using Plank.Factories;
 using Plank.Items;
 
 using Plank.Services;
@@ -110,16 +111,7 @@ namespace Plank
 				while ((info = enumerator.next_file ()) != null)
 					if (file_is_dockitem (info)) {
 						var filename = launchers_dir.get_path () + "/" + info.get_name ();
-
-						// put this into a static method of DockItem?
-						DockItem item;
-						var launcher = get_launcher_from_dockitem (filename);
-						if (launcher.has_suffix ("plank.desktop"))
-							item = new PlankDockItem.with_dockitem (filename);
-						else if (launcher.has_suffix (".desktop"))
-							item = new ApplicationDockItem.with_dockitem (filename);
-						else
-							item = new FileDockItem.with_dockitem (filename);
+						DockItem item = Factory.item_factory.make_item (filename);
 						
 						if (item.ValidItem)
 							add_item (item);
@@ -139,18 +131,6 @@ namespace Plank
 			Matcher.get_default ().set_favorites (favs);
 			
 			Logger.debug<DockItems> ("done.");
-		}
-		
-		string get_launcher_from_dockitem (string dockitem)
-		{
-			try {
-				KeyFile file = new KeyFile ();
-				file.load_from_file (dockitem, 0);
-				
-				return file.get_string (typeof (Items.DockItemPreferences).name (), "Launcher");
-			} catch {
-				return "";
-			}
 		}
 		
 		void add_running_apps ()

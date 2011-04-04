@@ -36,6 +36,7 @@ plank_VALASOURCES = \
 	Drawing/ThemeRenderer.vala \
 	Factories/AbstractMain.vala \
 	Factories/Factory.vala \
+	Factories/ItemFactory.vala \
 	Items/ApplicationDockItem.vala \
 	Items/DockItem.vala \
 	Items/DockItemPreferences.vala \
