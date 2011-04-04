@@ -53,6 +53,9 @@ namespace Plank.Widgets
 		
 		protected Gdk.Rectangle monitor_geo;
 		
+		int win_x;
+		int win_y;
+		
 		uint reposition_timer = 0;
 		
 		bool dock_is_starting = true;
@@ -94,6 +97,7 @@ namespace Plank.Widgets
 			get_screen ().size_changed.connect (update_monitor_geo);
 			get_screen ().monitors_changed.connect (update_monitor_geo);
 			
+			get_position (out win_x, out win_y);
 			update_monitor_geo ();
 		}
 		
@@ -231,19 +235,16 @@ namespace Plank.Widgets
 		
 		protected void update_monitor_geo ()
 		{
-			int x, y;
-			get_position (out x, out y);
-			Gdk.Screen screen = get_screen ();
-			screen.get_monitor_geometry (screen.get_monitor_at_point (x, y), out monitor_geo);
+			var screen = get_screen ();
+			screen.get_monitor_geometry (screen.get_monitor_at_point (win_x, win_y), out monitor_geo);
+			
 			set_size ();
 		}
 		
 		protected void position_hover ()
 		{
-			int x, y;
-			get_position (out x, out y);
 			var rect = Renderer.item_hover_region (HoveredItem);
-			hover.move_hover (x + rect.x + rect.width / 2, y + rect.y);
+			hover.move_hover (win_x + rect.x + rect.width / 2, win_y + rect.y);
 		}
 		
 		public void set_size ()
@@ -267,7 +268,10 @@ namespace Plank.Widgets
 				reposition_timer = 0;
 				
 				// put dock on bottom-center of monitor
-				move (monitor_geo.x + (monitor_geo.width - width_request) / 2, monitor_geo.y + monitor_geo.height - height_request);
+				win_x = monitor_geo.x + (monitor_geo.width - width_request) / 2;
+				win_y = monitor_geo.y + monitor_geo.height - height_request;
+				move (win_x, win_y);
+				
 				update_icon_regions ();
 				set_struts ();
 				set_hovered (null);
@@ -278,9 +282,6 @@ namespace Plank.Widgets
 		
 		protected void update_icon_regions ()
 		{
-			int win_x, win_y;
-			get_position (out win_x, out win_y);
-			
 			foreach (DockItem item in Items.Items) {
 				unowned ApplicationDockItem appitem = (item as ApplicationDockItem);
 				if (appitem == null || appitem.App == null)
@@ -329,8 +330,6 @@ namespace Plank.Widgets
 		
 		protected void position_menu (Menu menu, out int x, out int y, out bool push_in)
 		{
-			int win_x, win_y;
-			get_position (out win_x, out win_y);
 			var rect = Renderer.item_hover_region (HoveredItem);
 			
 			x = win_x + rect.x + rect.width / 2 - menu.requisition.width / 2;
