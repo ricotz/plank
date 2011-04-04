@@ -100,10 +100,10 @@ namespace Plank
 			var dlg = new AboutDialog ();
 			
 			dlg.set_program_name ("Plank");
-			dlg.set_version (Build.VERSION);
+			dlg.set_version (Build.VERSION + "\n" + Build.VERSION_INFO);
 			dlg.set_logo_icon_name ("plank");
 			
-			dlg.set_comments ("Plank. Stupidly simple.");
+			dlg.set_comments ("Plank. " + Build.RELEASE_NAME);
 			dlg.set_copyright ("Copyright © 2011 Plank Developers");
 			dlg.set_website ("https://launchpad.net/plank");
 			dlg.set_website_label ("Website");

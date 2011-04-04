@@ -1,5 +1,5 @@
 AC_INIT([plank], [0.2.0])
-AC_DEFINE(RELEASE_NAME, "Stupidly simple", Codename of this release)
+AC_DEFINE(RELEASE_NAME, "Stupidly simple.", Codename of this release)
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([.])
@@ -9,6 +9,14 @@ AM_INIT_AUTOMAKE([1.11 foreign tar-pax])
 
 dnl -- Populate top_srcdir variable
 top_srcdir=$(readlink -f $0 | sed -e s/configure$//)
+
+if test -d $top_srcdir/.bzr ; then
+	VERSION_INFO=`bzr version-info --custom \
+	--template="bzr {branch_nick} r{revno}"`
+else
+	VERSION_INFO="Release"
+fi
+AC_DEFINE_UNQUOTED(VERSION_INFO, "$VERSION_INFO", Version info for package)
 
 dnl ==============================================
 dnl Translation support
