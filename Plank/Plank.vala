@@ -18,44 +18,23 @@
 using Gtk;
 using Unique;
 
+using Plank.Factories;
 using Plank.Services;
 using Plank.Services.Windows;
 using Plank.Widgets;
 
 namespace Plank
 {
-	public class Plank : GLib.Object
+	public class Plank : AbstractMain
 	{
-		[CCode (cheader_filename = "sys/prctl.h", cname = "prctl")]
-		extern static int prctl (int option, string arg2, ulong arg3, ulong arg4, ulong arg5);
-		
-		struct utsname
-		{
-			char sysname [65];
-			char nodename [65];
-			char release [65];
-			char version [65];
-			char machine [65];
-			char domainname [65];
-		}
-		
-		[CCode (cheader_filename = "sys/utsname.h", cname = "uname")]
-		extern static int uname (utsname buf);
-		
-		static bool DEBUG = false;
-
-		const OptionEntry[] options = {
-			{ "debug", 'd', 0, OptionArg.NONE, out DEBUG, "Enable debug logging", null },
-			{ null }
-		};
-		
-		static void sig_handler (int sig)
-		{
-			Logger.warn<Plank> ("Caught signal (%d), exiting".printf (sig));
-			quit ();
-		}
-		
 		public static int main (string[] args)
+		{
+			var main_class = new Plank ();
+			Factory.init (main_class);
+			return main_class.start (args);
+		}
+		
+		private int start (string[] args)
 		{
 			// set program name
 			prctl (15, "plank", 0, 0, 0);
@@ -111,18 +90,12 @@ namespace Plank
 			return 0;
 		}
 		
-		static void set_options ()
-		{
-			if (DEBUG)
-				Logger.DisplayLevel = LogLevel.DEBUG;
-		}
-		
-		public static void quit ()
+		public override void quit ()
 		{
 			Gtk.main_quit ();
 		}
 		
-		public static void show_about ()
+		public override void show_about ()
 		{
 			var dlg = new AboutDialog ();
 			
