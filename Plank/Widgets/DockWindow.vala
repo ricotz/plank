@@ -53,8 +53,8 @@ namespace Plank.Widgets
 		
 		protected Gdk.Rectangle monitor_geo;
 		
-		int win_x;
-		int win_y;
+		public int win_x { get; protected set; }
+		public int win_y { get; protected set; }
 		
 		uint reposition_timer = 0;
 		
@@ -97,7 +97,11 @@ namespace Plank.Widgets
 			get_screen ().size_changed.connect (update_monitor_geo);
 			get_screen ().monitors_changed.connect (update_monitor_geo);
 			
-			get_position (out win_x, out win_y);
+			int x, y;
+			get_position (out x, out y);
+			win_x = x;
+			win_y = y;
+			
 			update_monitor_geo ();
 		}
 		
