@@ -317,8 +317,8 @@ namespace Plank.Items
 			if (monitor == null)
 				return;
 			
-			monitor.cancel ();
 			monitor.changed.disconnect (monitor_changed);
+			monitor.cancel ();
 			monitor = null;
 		}
 	}
