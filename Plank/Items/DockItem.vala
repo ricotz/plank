@@ -108,9 +108,7 @@ namespace Plank.Items
 			get { return true; }
 		}
 		
-		private DockSurface Surface { get; set; }
-		
-		public bool ValidItem {
+		public virtual bool ValidItem {
 			get { return File.new_for_path (Prefs.Launcher).query_exists (); }
 		}
 		
@@ -126,15 +124,15 @@ namespace Plank.Items
 			AverageIconColor = new Drawing.Color (0, 0, 0, 0);
 			
 			Prefs.deleted.connect (handle_deleted);
-			Gtk.IconTheme.get_default ().changed.connect (reset_buffer);
-			Prefs.notify["Icon"].connect (reset_buffer);
+			Gtk.IconTheme.get_default ().changed.connect (reset_icon_buffer);
+			Prefs.notify["Icon"].connect (reset_icon_buffer);
 		}
 		
 		~DockItem ()
 		{
 			Prefs.deleted.disconnect (handle_deleted);
-			Gtk.IconTheme.get_default ().changed.disconnect (reset_buffer);
-			Prefs.notify["Icon"].disconnect (reset_buffer);
+			Gtk.IconTheme.get_default ().changed.disconnect (reset_icon_buffer);
+			Prefs.notify["Icon"].disconnect (reset_icon_buffer);
 		}
 		
 		protected void handle_deleted ()
@@ -145,18 +143,6 @@ namespace Plank.Items
 		public void delete ()
 		{
 			Prefs.delete ();
-		}
-		
-		public static string get_launcher_from_dockitem (string dockitem)
-		{
-			try {
-				KeyFile file = new KeyFile ();
-				file.load_from_file (dockitem, 0);
-				
-				return file.get_string (typeof (DockItemPreferences).name (), "Launcher");
-			} catch {
-				return "";
-			}
 		}
 		
 		public int get_sort ()
@@ -175,7 +161,7 @@ namespace Plank.Items
 			return Prefs.Launcher;
 		}
 		
-		void reset_buffer ()
+		protected void reset_icon_buffer ()
 		{
 			surface = null;
 			

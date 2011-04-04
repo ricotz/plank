@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -207,8 +207,9 @@ namespace Plank
 			var intersect = false;
 			var screen = Wnck.Screen.get_default ();
 			var active_window = screen.get_active_window ();
+			var active_workspace = screen.get_active_workspace ();
 			
-			if (active_window == null)
+			if (active_window == null || active_workspace == null)
 				return;
 			
 			foreach (Wnck.Window w in screen.get_windows ()) {
@@ -216,9 +217,9 @@ namespace Plank
 					continue;
 				if ((w.get_window_type () & (Wnck.WindowType.DESKTOP | Wnck.WindowType.DOCK | Wnck.WindowType.SPLASHSCREEN | Wnck.WindowType.MENU)) != 0)
 					continue;
-				if (screen.get_active_workspace () == null || !w.is_visible_on_workspace (screen.get_active_workspace ()))
+				if (!w.is_visible_on_workspace (active_workspace))
 					continue;
-				if (active_window != null && active_window.get_pid () != w.get_pid ())
+				if (w.get_pid () != active_window.get_pid ())
 					continue;
 				
 #if VALA_0_12

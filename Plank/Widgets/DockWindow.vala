@@ -335,7 +335,11 @@ namespace Plank.Widgets
 				w.destroy ();
 			}
 			
-			foreach (MenuItem item in HoveredItem.get_menu_items ())
+			var items = HoveredItem.get_menu_items ();
+			if (items.size == 0)
+				return;
+			
+			foreach (MenuItem item in items)
 				menu.append (item);
 			
 			menu.show_all ();

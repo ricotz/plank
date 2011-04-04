@@ -113,7 +113,7 @@ namespace Plank
 
 						// put this into a static method of DockItem?
 						DockItem item;
-						var launcher = DockItem.get_launcher_from_dockitem (filename);
+						var launcher = get_launcher_from_dockitem (filename);
 						if (launcher.has_suffix ("plank.desktop"))
 							item = new PlankDockItem.with_dockitem (filename);
 						else if (launcher.has_suffix (".desktop"))
@@ -139,6 +139,18 @@ namespace Plank
 			Matcher.get_default ().set_favorites (favs);
 			
 			Logger.debug<DockItems> ("done.");
+		}
+		
+		string get_launcher_from_dockitem (string dockitem)
+		{
+			try {
+				KeyFile file = new KeyFile ();
+				file.load_from_file (dockitem, 0);
+				
+				return file.get_string (typeof (Items.DockItemPreferences).name (), "Launcher");
+			} catch {
+				return "";
+			}
 		}
 		
 		void add_running_apps ()
@@ -297,7 +309,6 @@ namespace Plank
 				
 				remove_item_without_signaling (item);
 				var new_item = new ApplicationDockItem.with_dockitem (launchers_dir.get_child (dockitem).get_path ());
-				stdout.printf("%s\n", launchers_dir.get_child (dockitem).get_path ());
 				new_item.Position = item.Position;
 				add_item_without_signaling (new_item);
 				
