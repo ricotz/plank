@@ -31,6 +31,10 @@ namespace Plank.Factories
 	
 	public abstract class AbstractMain : GLib.Object
 	{
+		public string help_url;
+		
+		public string translate_url;
+
 		public abstract void quit ();
 		
 		public abstract void show_about ();
@@ -42,7 +46,7 @@ namespace Plank.Factories
 		protected extern static int uname (utsname buf);
 		
 		protected static bool DEBUG = false;
-
+		
 		protected const OptionEntry[] options = {
 			{ "debug", 'd', 0, OptionArg.NONE, out DEBUG, "Enable debug logging", null },
 			{ null }

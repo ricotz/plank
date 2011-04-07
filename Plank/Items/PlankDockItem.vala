@@ -42,13 +42,13 @@ namespace Plank.Items
 			
 			var item = create_menu_item (_("Get _Help Online..."), "help");
 			item.activate.connect (() => {
-				Services.System.open_uri ("https://answers.launchpad.net/plank");
+				Services.System.open_uri (Factory.main.help_url);
 			});
 			items.add (item);
 			
 			item = create_menu_item (_("_Translate This Application..."), "locale");
 			item.activate.connect (() => {
-				Services.System.open_uri ("https://translations.launchpad.net/plank");
+				Services.System.open_uri (Factory.main.translate_url);
 			});
 			items.add (item);
 			
