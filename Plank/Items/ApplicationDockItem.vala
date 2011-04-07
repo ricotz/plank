@@ -27,11 +27,22 @@ namespace Plank.Items
 {
 	public class ApplicationDockItem : DockItem
 	{
+		// for the Unity static quicklists
+		// see https://wiki.edubuntu.org/Unity/LauncherAPI#Static Quicklist entries
+		private const string UNITY_QUICKLISTS_KEY = "X-Ayatana-Desktop-Shortcuts";
+		private const string UNITY_QUICKLISTS_SHORTCUT_GROUP_NAME = "%s Shortcut Group";
+		private const string UNITY_QUICKLISTS_TARGET_KEY = "TargetEnvironment";
+		private const string UNITY_QUICKLISTS_TARGET_VALUE = "Unity";
+		private const string UNITY_QUICKLISTS_NAME_KEY = "Name";
+		private const string UNITY_QUICKLISTS_EXEC_KEY = "Exec";
+		
 		public signal void pin_launcher ();
 		
 		public signal void app_closed ();
 		
 		public Bamf.Application? App { get; private set; }
+		
+		HashMap<string, string> shortcuts = new HashMap<string, string> (str_hash, str_equal);
 		
 		public ApplicationDockItem.with_dockitem (string dockitem)
 		{
@@ -189,10 +200,22 @@ namespace Plank.Items
 			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
 			
 			if (!is_window ()) {
-				var item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
-				item.active = !(this is TransientDockItem);
-				item.activate.connect (() => pin_launcher ());
-				items.add (item);
+				var check_item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
+				check_item.active = !(this is TransientDockItem);
+				check_item.activate.connect (() => pin_launcher ());
+				items.add (check_item);
+				
+				foreach (string s in shortcuts.keys) {
+					var item = new MenuItem.with_mnemonic (s);
+					item.activate.connect (() => {
+						try {
+							AppInfo.create_from_commandline (shortcuts.get (s), null, AppInfoCreateFlags.NONE).launch (null, null);
+						} catch { }
+					});
+					items.add (item);
+				}
+				
+				items.add (new SeparatorMenuItem ());
 			}
 			
 			if (App == null || App.get_children ().length () == 0) {
@@ -302,15 +325,18 @@ namespace Plank.Items
 			stop_monitor ();
 			
 			string icon, text;
-			parse_launcher (Prefs.Launcher, out icon, out text);
+			parse_launcher (Prefs.Launcher, out icon, out text, shortcuts);
 			Icon = icon;
 			Text = text;
 			
 			start_monitor ();
 		}
 		
-		public static void parse_launcher (string launcher, out string icon, out string text)
+		public static void parse_launcher (string launcher, out string icon, out string text, HashMap<string, string>? shortcuts)
 		{
+			icon = "";
+			text = "";
+			
 			try {
 				KeyFile file = new KeyFile ();
 				file.load_from_file (launcher, 0);
@@ -318,10 +344,27 @@ namespace Plank.Items
 				icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
 				// TODO use the localized string
 				text = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
-			} catch {
-				icon = "";
-				text = "";
-			}
+				
+				// get the Unity static quicklists
+				// see https://wiki.edubuntu.org/Unity/LauncherAPI#Static Quicklist entries
+				if (shortcuts != null) {
+					shortcuts.clear ();
+					
+					if (file.has_key (KeyFileDesktop.GROUP, UNITY_QUICKLISTS_KEY))
+						foreach (string shortcut in file.get_string_list (KeyFileDesktop.GROUP, UNITY_QUICKLISTS_KEY)) {
+							var group = UNITY_QUICKLISTS_SHORTCUT_GROUP_NAME.printf (shortcut);
+							
+							if (file.has_group (group) && file.has_key (group, UNITY_QUICKLISTS_TARGET_KEY)) {
+								var target = file.get_string (group, UNITY_QUICKLISTS_TARGET_KEY);
+								if (target != UNITY_QUICKLISTS_TARGET_VALUE && target != "Plank")
+									continue;
+								
+								// TODO use the localized string
+								shortcuts.set (file.get_string (group, UNITY_QUICKLISTS_NAME_KEY), file.get_string (group, UNITY_QUICKLISTS_EXEC_KEY));
+							}
+						}
+				}
+			} catch { }
 		}
 		
 		protected FileMonitor monitor;
@@ -355,8 +398,8 @@ namespace Plank.Items
 			if (monitor == null)
 				return;
 			
-			monitor.cancel ();
 			monitor.changed.disconnect (monitor_changed);
+			monitor.cancel ();
 			monitor = null;
 		}
 	}

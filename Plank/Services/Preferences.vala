@@ -90,6 +90,7 @@ namespace Plank.Services
 			if (backing_monitor == null)
 				return;
 			
+			backing_monitor.changed.disconnect (backing_file_changed);
 			backing_monitor.cancel ();
 			backing_monitor = null;
 		}

@@ -19,6 +19,8 @@ using Gdk;
 using Gee;
 using Gtk;
 
+using Plank.Factories;
+
 namespace Plank.Items
 {
 	public class PlankDockItem : ApplicationDockItem
@@ -30,7 +32,7 @@ namespace Plank.Items
 		
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
-			Plank.show_about ();
+			Factory.main.show_about ();
 			return ClickAnimation.DARKEN;
 		}
 		
@@ -53,13 +55,13 @@ namespace Plank.Items
 			items.add (new SeparatorMenuItem ());
 			
 			item = new ImageMenuItem.from_stock (STOCK_ABOUT, null);
-			item.activate.connect (() => Plank.show_about ());
+			item.activate.connect (() => Factory.main.show_about ());
 			items.add (item);
 			
 			items.add (new SeparatorMenuItem ());
 			
 			item = new ImageMenuItem.from_stock (STOCK_QUIT, null);
-			item.activate.connect (() => Plank.quit ());
+			item.activate.connect (() => Factory.main.quit ());
 			items.add (item);
 			
 			return items;

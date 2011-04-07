@@ -75,8 +75,10 @@ namespace Plank.Widgets
 			var x = item_x - width_request / 2;
 			var y = item_y - height_request - 10;
 			
+			var screen = get_screen ();
+			
 			Gdk.Rectangle monitor;
-			get_screen ().get_monitor_geometry (get_screen ().get_monitor_at_point (item_x, item_y), out monitor);
+			screen.get_monitor_geometry (screen.get_monitor_at_point (item_x, item_y), out monitor);
 			
 			x = int.max (monitor.x, int.min (x, monitor.x + monitor.width - width_request));
 			y = int.max (monitor.y, int.min (y, monitor.y + monitor.height - height_request));

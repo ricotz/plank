@@ -28,11 +28,19 @@ namespace Plank.Widgets
 {
 	public class TitledSeparatorMenuItem : SeparatorMenuItem
 	{
+		bool draw_line = true;
+		
 		string text;
 		
 		public TitledSeparatorMenuItem (string text)
 		{
 			this.text = text;
+		}
+		
+		public TitledSeparatorMenuItem.no_line (string text)
+		{
+			this (text);
+			draw_line = false;
 		}
 		
 		protected override bool expose_event (Gdk.EventExpose event)
@@ -51,22 +59,24 @@ namespace Plank.Widgets
 			
 			var style = get_style ();
 			
-			var xthickness = style.xthickness;
-			var ythickness = style.ythickness;
-			
-			if (wide_separators)
-				Gtk.paint_box (style, get_window (), StateType.NORMAL,
-					ShadowType.ETCHED_OUT, event.area, this, "hseparator",
-					alloc.x + horizontal_padding + xthickness,
-					alloc.y + (alloc.height - separator_height - ythickness)/2,
-					alloc.width - 2 * (horizontal_padding + xthickness),
-					separator_height);
-			else
-				Gtk.paint_hline (style, get_window (), StateType.NORMAL,
-					event.area, this, "menuitem",
-					alloc.x + horizontal_padding + xthickness,
-					alloc.x + alloc.width - horizontal_padding - xthickness - 1,
-					alloc.y + (alloc.height - ythickness) / 2);
+			if (draw_line) {
+				var xthickness = style.xthickness;
+				var ythickness = style.ythickness;
+				
+				if (wide_separators)
+					Gtk.paint_box (style, get_window (), StateType.NORMAL,
+						ShadowType.ETCHED_OUT, event.area, this, "hseparator",
+						alloc.x + horizontal_padding + xthickness,
+						alloc.y + (alloc.height - separator_height - ythickness)/2,
+						alloc.width - 2 * (horizontal_padding + xthickness),
+						separator_height);
+				else
+					Gtk.paint_hline (style, get_window (), StateType.NORMAL,
+						event.area, this, "menuitem",
+						alloc.x + horizontal_padding + xthickness,
+						alloc.x + alloc.width - horizontal_padding - xthickness - 1,
+						alloc.y + (alloc.height - ythickness) / 2);
+			}
 			
 			var font_desc = style.font_desc;
 			font_desc.set_absolute_size ((int) (alloc.height * Pango.SCALE * Pango.Scale.LARGE));

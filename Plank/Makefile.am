@@ -35,6 +35,9 @@ plank_VALASOURCES = \
 	Drawing/DockSurface.vala \
 	Drawing/DockThemeRenderer.vala \
 	Drawing/ThemeRenderer.vala \
+	Factories/AbstractMain.vala \
+	Factories/Factory.vala \
+	Factories/ItemFactory.vala \
 	Items/ApplicationDockItem.vala \
 	Items/DockItem.vala \
 	Items/DockItemPreferences.vala \
@@ -51,7 +54,7 @@ plank_VALASOURCES = \
 	Widgets/DockWindow.vala \
 	Widgets/HoverWindow.vala \
 	Widgets/PoofWindow.vala \
-	Widgets/TitledSeparator.vala \
+	Widgets/TitledSeparatorMenuItem.vala \
 	$(NULL)
 
 GENERATED_C_FILES = $(plank_VALASOURCES:.vala=.c)

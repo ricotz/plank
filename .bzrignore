@@ -36,6 +36,7 @@ Plank/*.c
 Plank/plank
 Plank/plank_vala.stamp
 Plank/Drawing/*.c
+Plank/Factories/*.c
 Plank/Services/*.c
 Plank/Items/*.c
 Plank/Widgets/*.c
