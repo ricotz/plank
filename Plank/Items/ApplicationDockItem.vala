@@ -208,6 +208,12 @@ namespace Plank.Items
 			
 			var closed = App == null || App.get_children ().length () == 0;
 			
+			if (closed) {
+				var item = new ImageMenuItem.from_stock (STOCK_OPEN, null);
+				item.activate.connect (() => launch ());
+				items.add (item);
+			}
+			
 			if (!closed) {
 				MenuItem item;
 				
@@ -243,8 +249,7 @@ namespace Plank.Items
 			}
 			
 			if (!is_window () && shortcuts.size > 0) {
-				if (!closed)
-					items.add (new SeparatorMenuItem ());
+				items.add (new SeparatorMenuItem ());
 				
 				foreach (string s in shortcuts.keys) {
 					var item = new MenuItem.with_mnemonic (s);
@@ -255,12 +260,6 @@ namespace Plank.Items
 					});
 					items.add (item);
 				}
-			}
-			
-			if (closed) {
-				var item = new ImageMenuItem.from_stock (STOCK_OPEN, null);
-				item.activate.connect (() => launch ());
-				items.add (item);
 			}
 			
 			if (!closed) {
