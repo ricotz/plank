@@ -200,29 +200,21 @@ namespace Plank.Items
 			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
 			
 			if (!is_window ()) {
-				var check_item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
-				check_item.active = !(this is TransientDockItem);
-				check_item.activate.connect (() => pin_launcher ());
-				items.add (check_item);
-				
-				foreach (string s in shortcuts.keys) {
-					var item = new MenuItem.with_mnemonic (s);
-					item.activate.connect (() => {
-						try {
-							AppInfo.create_from_commandline (shortcuts.get (s), null, AppInfoCreateFlags.NONE).launch (null, null);
-						} catch { }
-					});
-					items.add (item);
-				}
-				
-				items.add (new SeparatorMenuItem ());
+				var item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
+				item.active = !(this is TransientDockItem);
+				item.activate.connect (() => pin_launcher ());
+				items.add (item);
 			}
 			
-			if (App == null || App.get_children ().length () == 0) {
+			var closed = App == null || App.get_children ().length () == 0;
+			
+			if (closed) {
 				var item = new ImageMenuItem.from_stock (STOCK_OPEN, null);
 				item.activate.connect (() => launch ());
 				items.add (item);
-			} else {
+			}
+			
+			if (!closed) {
 				MenuItem item;
 				
 				if (!is_window ()) {
@@ -254,7 +246,23 @@ namespace Plank.Items
 				item = create_menu_item (_("_Close All"), "window-close-symbolic;;window-close");
 				item.activate.connect (() => WindowControl.close_all (App));
 				items.add (item);
+			}
+			
+			if (!is_window () && shortcuts.size > 0) {
+				items.add (new SeparatorMenuItem ());
 				
+				foreach (string s in shortcuts.keys) {
+					var item = new MenuItem.with_mnemonic (s);
+					item.activate.connect (() => {
+						try {
+							AppInfo.create_from_commandline (shortcuts.get (s), null, AppInfoCreateFlags.NONE).launch (null, null);
+						} catch { }
+					});
+					items.add (item);
+				}
+			}
+			
+			if (!closed) {
 				ArrayList<Bamf.Window> windows = WindowControl.get_windows (App);
 				if (windows.size > 0) {
 					items.add (new SeparatorMenuItem ());

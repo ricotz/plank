@@ -27,10 +27,16 @@ namespace Plank
 {
 	public class Plank : AbstractMain
 	{
+		public Plank ()
+		{
+			help_url = "https://answers.launchpad.net/plank";
+			translate_url = "https://translations.launchpad.net/plank";
+		}
+		
 		public static int main (string[] args)
 		{
 			var main_class = new Plank ();
-			Factory.init (main_class, new ItemFactory ());
+			Factory.init (main_class, new ItemFactory ("plank.desktop"));
 			return main_class.start (args);
 		}
 		
