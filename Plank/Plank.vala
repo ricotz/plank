@@ -15,123 +15,45 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using Gtk;
-using Unique;
-
 using Plank.Factories;
-using Plank.Services;
-using Plank.Services.Windows;
-using Plank.Widgets;
 
 namespace Plank
 {
 	public class Plank : AbstractMain
 	{
-		public Plank ()
-		{
-			help_url = "https://answers.launchpad.net/plank";
-			translate_url = "https://translations.launchpad.net/plank";
-		}
-		
 		public static int main (string[] args)
 		{
 			var main_class = new Plank ();
-			Factory.init (main_class, new ItemFactory ("plank.desktop"));
+			Factory.init (main_class, new ItemFactory ());
 			return main_class.start (args);
 		}
 		
-		private int start (string[] args)
+		public Plank ()
 		{
-			// set program name
-			prctl (15, "plank", 0, 0, 0);
+			program_name = "Plank";
+			exec_name = "plank";
 			
-			Posix.signal(Posix.SIGINT, sig_handler);
-			Posix.signal(Posix.SIGTERM, sig_handler);
+			app_copyright = "2011";
+			app_dbus = "net.launchpad.plank";
+			app_icon = "plank";
+			app_launcher = "plank.desktop";
 			
-			Logger.initialize ("Plank");
-			Logger.DisplayLevel = LogLevel.INFO;
-			Logger.info<Plank> ("Plank version: %s".printf (Build.VERSION));
-			utsname un = utsname ();
-			uname (un);
-			Logger.info<Plank> ("Kernel version: %s".printf ((string) un.release));
-			Logger.DisplayLevel = LogLevel.WARN;
+			main_url = "https://launchpad.net/plank";
+			help_url = "https://answers.launchpad.net/plank";
+			translate_url = "https://translations.launchpad.net/plank";
 			
-			// parse commandline options
-			var context = new OptionContext ("");
-			
-			context.add_main_entries (options, null);
-			context.add_group (Gtk.get_option_group (false));
-			
-			try {
-				context.parse (ref args);
-			} catch { }
-			
-			Intl.bindtextdomain ("plank", Build.DATADIR + "/locale");
-			
-			if (!Thread.supported ()) {
-				Logger.fatal<Plank> ("Problem initializing thread support.");
-				return -1;
-			}
-			Gdk.threads_init ();
-			Gtk.init (ref args);
-			
-			// ensure only one instance
-			if (new App ("net.launchpad.plank", null).is_running) {
-				Logger.fatal<Plank> ("Exiting because another instance is already running.");
-				return -2;
-			}
-			
-			set_options ();
-			
-			Paths.initialize ("plank");
-			WindowControl.initialize ();
-			
-			var app = new DockWindow ();
-			app.show_all ();
-			
-			Gdk.threads_enter ();
-			Gtk.main ();
-			Gdk.threads_leave ();
-			
-			return 0;
-		}
-		
-		public override void quit ()
-		{
-			Gtk.main_quit ();
-		}
-		
-		public override void show_about ()
-		{
-			var dlg = new AboutDialog ();
-			
-			dlg.set_program_name ("Plank");
-			dlg.set_version (Build.VERSION + "\n" + Build.VERSION_INFO);
-			dlg.set_logo_icon_name ("plank");
-			
-			dlg.set_comments ("Plank. " + Build.RELEASE_NAME);
-			dlg.set_copyright ("Copyright © 2011 Plank Developers");
-			dlg.set_website ("https://launchpad.net/plank");
-			dlg.set_website_label ("Website");
-			
-			dlg.set_authors ({
+			about_authors = {
 				"Robert Dyer <robert@go-docky.com>",
 				"Rico Tzschichholz <rtz@go-docky.com>",
 				"Michal Hruby <michal.mhr@gmail.com>"
-			});
-			dlg.set_documenters ({
+			};
+			about_documenters = {
 				"Robert Dyer <robert@go-docky.com>"
-			});
-			dlg.set_artists ({
+			};
+			about_artists = {
 				"Daniel Foré <bunny@go-docky.com>"
-			});
-			dlg.set_translator_credits ("");
-			
-			dlg.show_all ();
-			dlg.response.connect (() => {
-				dlg.hide_all ();
-				dlg.destroy ();
-			});
+			};
+			about_translators = "";
 		}
 	}
 }
