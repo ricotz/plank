@@ -26,15 +26,20 @@ namespace Plank.Services
 		
 		public static void open (File file)
 		{
-			launch (null, { file });
+			launch_with_files (null, { file });
 		}
 		
 		public static void open_files (File[] files)
 		{
-			launch (null, files);
+			launch_with_files (null, files);
 		}
 		
-		public static void launch (File? app, File[] files = new File[] {})
+		public static void launch (File? app)
+		{
+			launch_with_files (app, new File[] {});
+		}
+		
+		public static void launch_with_files (File? app, File[] files)
 		{
 			if (app != null && !app.query_exists ()) {
 				Logger.warn<System> ("Application '%s' doesn't exist".printf (app.get_path ()));
@@ -59,7 +64,7 @@ namespace Plank.Services
 			}
 			
 			if (mounted_files.length () > 0 || files.length == 0)
-				launch_with_files (app, mounted_files);
+				internal_launch (app, mounted_files);
 		}
 		
 		static bool path_is_mounted (string path)
@@ -71,7 +76,7 @@ namespace Plank.Services
 			return false;
 		}
 		
-		static void launch_with_files (File? app, GLib.List<File> files)
+		static void internal_launch (File? app, GLib.List<File> files)
 		{
 			if (app == null && files.length () == 0)
 				return;

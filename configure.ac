@@ -143,9 +143,10 @@ data/icons/hicolor/128x128/apps/Makefile
 data/themes/Makefile
 data/themes/Matte/Makefile
 data/themes/Transparent/Makefile
+lib/Makefile
 m4/Makefile
 man/Makefile
-Plank/Makefile
+src/Makefile
 po/Makefile.in
 shave/shave
 shave/shave-libtool

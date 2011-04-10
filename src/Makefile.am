@@ -4,6 +4,7 @@ VALAFLAGS = \
 	--thread \
 	$(PLANK_CORE_VALA_PKGS) \
 	--vapidir $(VAPIDIR) \
+	../lib/plank.vapi \
 	$(VAPIDIR)/config.vapi \
 	$(NULL)
 
@@ -16,44 +17,16 @@ plank_PROGRAMS = \
 plank_CFLAGS = \
 	$(PLANK_CORE_CFLAGS) \
 	-include config.h \
+	-I ../lib \
 	$(NULL)
 	
 plank_LDADD = \
 	$(PLANK_CORE_LIBS) \
+	../lib/libplank.la \
 	$(NULL)
 
 plank_VALASOURCES = \
-	DockItems.vala \
-	DockPreferences.vala \
-	DockRenderer.vala \
-	HideManager.vala \
-	Plank.vala \
-	Drawing/AnimatedRenderer.vala \
-	Drawing/Color.vala \
-	Drawing/DrawingService.vala \
-	Drawing/DockSurface.vala \
-	Drawing/DockThemeRenderer.vala \
-	Drawing/ThemeRenderer.vala \
-	Factories/AbstractMain.vala \
-	Factories/Factory.vala \
-	Factories/ItemFactory.vala \
-	Items/ApplicationDockItem.vala \
-	Items/DockItem.vala \
-	Items/DockItemPreferences.vala \
-	Items/FileDockItem.vala \
-	Items/PlankDockItem.vala \
-	Items/TransientDockItem.vala \
-	Services/Logger.vala \
-	Services/Matcher.vala \
-	Services/Paths.vala \
-	Services/Preferences.vala \
-	Services/System.vala \
-	Services/WindowControl.vala \
-	Widgets/CompositedWindow.vala \
-	Widgets/DockWindow.vala \
-	Widgets/HoverWindow.vala \
-	Widgets/PoofWindow.vala \
-	Widgets/TitledSeparatorMenuItem.vala \
+	PlankMain.vala \
 	$(NULL)
 
 GENERATED_C_FILES = $(plank_VALASOURCES:.vala=.c)

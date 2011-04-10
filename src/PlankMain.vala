@@ -17,18 +17,18 @@
 
 using Plank.Factories;
 
-namespace Plank
+namespace PlankMain
 {
-	public class Plank : AbstractMain
+	public class PlankMain : AbstractMain
 	{
 		public static int main (string[] args)
 		{
-			var main_class = new Plank ();
+			var main_class = new PlankMain ();
 			Factory.init (main_class, new ItemFactory ());
 			return main_class.start (args);
 		}
 		
-		public Plank ()
+		public PlankMain ()
 		{
 			program_name = "Plank";
 			exec_name = "plank";

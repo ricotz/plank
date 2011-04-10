@@ -1,10 +1,11 @@
 SUBDIRS = \
-	Plank \
 	data \
+	lib \
 	m4 \
 	man \
 	po \
 	vapi \
+	src \
 	$(NULL)
 
 EXTRA_DIST = \
