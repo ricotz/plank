@@ -21,13 +21,6 @@ namespace Plank.Factories
 {
 	public class ItemFactory : GLib.Object
 	{
-		protected string app_launcher;
-		
-		public ItemFactory (string app_launcher)
-		{
-			this.app_launcher = app_launcher;
-		}
-		
 		public virtual DockItem make_item (string dock_item_filename)
 		{
 			var launcher = get_launcher_from_dockitem (dock_item_filename);
@@ -37,7 +30,7 @@ namespace Plank.Factories
 		
 		protected DockItem default_make_item (string dock_item_filename, string launcher)
 		{
-			if (launcher.has_suffix (app_launcher))
+			if (launcher.has_suffix (Factory.main.app_launcher))
 				return new PlankDockItem.with_dockitem (dock_item_filename);
 			if (launcher.has_suffix (".desktop"))
 				return new ApplicationDockItem.with_dockitem (dock_item_filename);

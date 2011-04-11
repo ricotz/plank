@@ -1,4 +1,4 @@
 data/plank.desktop.in
-Plank/Items/ApplicationDockItem.vala
-Plank/Items/FileDockItem.vala
-Plank/Items/PlankDockItem.vala
+lib/Items/ApplicationDockItem.vala
+lib/Items/FileDockItem.vala
+lib/Items/PlankDockItem.vala

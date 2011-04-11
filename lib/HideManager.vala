@@ -209,30 +209,28 @@ namespace Plank
 			var active_window = screen.get_active_window ();
 			var active_workspace = screen.get_active_workspace ();
 			
-			if (active_window == null || active_workspace == null)
-				return;
-			
-			foreach (Wnck.Window w in screen.get_windows ()) {
-				if (w.is_minimized ())
-					continue;
-				if ((w.get_window_type () & (Wnck.WindowType.DESKTOP | Wnck.WindowType.DOCK | Wnck.WindowType.SPLASHSCREEN | Wnck.WindowType.MENU)) != 0)
-					continue;
-				if (!w.is_visible_on_workspace (active_workspace))
-					continue;
-				if (w.get_pid () != active_window.get_pid ())
-					continue;
-				
+			if (active_window != null && active_workspace != null)
+				foreach (Wnck.Window w in screen.get_windows ()) {
+					if (w.is_minimized ())
+						continue;
+					if ((w.get_window_type () & (Wnck.WindowType.DESKTOP | Wnck.WindowType.DOCK | Wnck.WindowType.SPLASHSCREEN | Wnck.WindowType.MENU)) != 0)
+						continue;
+					if (!w.is_visible_on_workspace (active_workspace))
+						continue;
+					if (w.get_pid () != active_window.get_pid ())
+						continue;
+					
 #if VALA_0_12
-				if (window_geometry (w).intersect (dock_rect, null)) {
+					if (window_geometry (w).intersect (dock_rect, null)) {
 #else
-				// FIXME this var is only needed due to a vapi bug where we cant use null
-				var dest_rect = Gdk.Rectangle ();
-				if (window_geometry (w).intersect (dock_rect, dest_rect)) {
+					// FIXME this var is only needed due to a vapi bug where we cant use null
+					var dest_rect = Gdk.Rectangle ();
+					if (window_geometry (w).intersect (dock_rect, dest_rect)) {
 #endif
-					intersect = true;
-					break;
+						intersect = true;
+						break;
+					}
 				}
-			}
 			
 			if (windows_intersect != intersect) {
 				windows_intersect = intersect;

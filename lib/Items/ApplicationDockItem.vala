@@ -319,11 +319,11 @@ namespace Plank.Items
 		
 		public override bool accept_drop (ArrayList<string> uris)
 		{
-			var files = new GLib.List<File> ();
+			var files = new ArrayList<File> ();
 			foreach (var uri in uris)
-				files.append (File.new_for_uri (uri));
+				files.add (File.new_for_uri (uri));
 			
-			Services.System.launch_with_files (File.new_for_path (Prefs.Launcher), files);
+			Services.System.launch_with_files (File.new_for_path (Prefs.Launcher), files.to_array ());
 			
 			return true;
 		}
