@@ -144,6 +144,7 @@ data/themes/Makefile
 data/themes/Matte/Makefile
 data/themes/Transparent/Makefile
 lib/Makefile
+lib/libplank.pc
 m4/Makefile
 man/Makefile
 src/Makefile

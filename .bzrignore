@@ -37,6 +37,7 @@ lib/*.h
 lib/*.vapi
 lib/*.lo
 lib/*.la
+lib/*.pc
 lib/*.stamp
 lib/Drawing/*.c
 lib/Factories/*.c

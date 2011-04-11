@@ -5,10 +5,20 @@ LIB_REVISION=0
 LIB_AGE=0
 LIB_VERSION_INFO="$(LIB_CURRENT):$(LIB_REVISION):$(LIB_AGE)"
 
-#lib_LTLIBRARIES = libplank.la
-noinst_LTLIBRARIES = libplank.la
+libplankincludedir = $(includedir)/plank
+libplankinclude_HEADERS = plank.h
 
-libplankdir = $(bindir)
+vapidir = $(datadir)/vala/vapi
+dist_vapi_DATA = plank.vapi
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = libplank.pc
+
+libplankdir = $(libdir)
+
+BUILT_SOURCES = libplank_la_vala.stamp
+
+lib_LTLIBRARIES = libplank.la
 
 libplank_la_CFLAGS = \
 	$(PLANK_CORE_CFLAGS) \
@@ -65,12 +75,13 @@ libplank_la_VALASOURCES = \
 	Widgets/TitledSeparatorMenuItem.vala \
 	$(NULL)
 
-libplank_la_SOURCES = $(libplank_la_VALASOURCES:.vala=.c)
+libplank_la_SOURCES = \
+	libplank_la_vala.stamp \
+	$(libplank_la_VALASOURCES:.vala=.c) \
+	$(NULL)
 
-$(libplank_la_SOURCES): libplank_la_vala.stamp
-
-plank.vapi libplank_la_vala.stamp: $(libplank_la_VALASOURCES) Makefile
-	$(AM_V_VALA)$(VALAC) $(libplank_la_VALAFLAGS) -C -H plank.h --library plank $(filter %.vala %.c,$^)
+plank.vapi plank.h libplank_la_vala.stamp: $(libplank_la_VALASOURCES)
+	$(AM_V_VALA)$(VALAC) $(libplank_la_VALAFLAGS) -C -H plank.h --vapi plank.vapi --library plank $^
 	$(AM_V_at)touch $@
 
 DISTCLEANFILES = \
@@ -82,7 +93,6 @@ DISTCLEANFILES = \
 
 EXTRA_DIST = \
 	$(libplank_la_VALASOURCES) \
+	libplank.pc.in \
 	$(NULL)
 
-#dist-hook:
-#	rm -rf $(addprefix $(distdir)/,	$(libplank_la_SOURCES) libplank_la_vala.stamp)

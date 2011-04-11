@@ -10,9 +10,9 @@ VALAFLAGS = \
 
 plankdir = $(bindir)
 
-plank_PROGRAMS = \
-	plank \
-	$(NULL)
+BUILT_SOURCES = plank_vala.stamp
+
+plank_PROGRAMS = plank
 
 plank_CFLAGS = \
 	$(PLANK_CORE_CFLAGS) \
@@ -29,12 +29,13 @@ plank_VALASOURCES = \
 	PlankMain.vala \
 	$(NULL)
 
-plank_SOURCES = $(plank_VALASOURCES:.vala=.c)
+plank_SOURCES = \
+	plank_vala.stamp \
+	$(plank_VALASOURCES:.vala=.c) \
+	$(NULL)
 
-$(plank_SOURCES): plank_vala.stamp
-
-plank_vala.stamp: $(plank_VALASOURCES) Makefile
-	$(AM_V_VALA)$(VALAC) $(plank_VALAFLAGS) $(VALAFLAGS) -C $(filter %.vala %.c,$^)
+plank_vala.stamp: $(plank_VALASOURCES)
+	$(AM_V_VALA)$(VALAC) $(plank_VALAFLAGS) $(VALAFLAGS) -C $^
 	$(AM_V_at)touch $@
 
 DISTCLEANFILES = \
@@ -46,5 +47,3 @@ EXTRA_DIST = \
 	$(plank_VALASOURCES) \
 	$(NULL)
 
-#dist-hook:
-#	rm -rf $(addprefix $(distdir)/, $(plank_SOURCES) plank_vala.stamp)
