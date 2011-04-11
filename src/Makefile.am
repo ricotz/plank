@@ -35,7 +35,7 @@ plank_SOURCES = \
 	$(NULL)
 
 plank_vala.stamp: $(plank_VALASOURCES)
-	$(AM_V_VALA)$(VALAC) $(plank_VALAFLAGS) $(VALAFLAGS) -C $^
+	$(AM_V_VALA)$(VALAC) $(plank_VALAFLAGS) $(VALAFLAGS) -C $(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
 
 DISTCLEANFILES = \
