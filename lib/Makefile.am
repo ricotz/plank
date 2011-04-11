@@ -1,3 +1,5 @@
+include $(top_srcdir)/Makefile.common
+
 VAPIDIR = $(top_srcdir)/vapi
 
 LIB_CURRENT=0
