@@ -59,6 +59,8 @@ if test "x$VALAC" = "x"; then
 	AC_MSG_ERROR([You need a Vala $VALA_MIN_VERSION compiler])
 fi
 
+AM_SILENT_RULES([yes])
+
 PKG_CHECK_MODULES(PLANK_CORE, gobject-2.0 >= $GLIB_MIN_VERSION
                               glib-2.0 >= $GLIB_MIN_VERSION
                               gio-2.0 >= $GLIB_MIN_VERSION
@@ -119,8 +121,6 @@ if test -z "$CONFIG_REQUESTED" ; then
 fi
 dnl }}}
 
-SHAVE_INIT([shave], [enable])
-
 AC_CONFIG_FILES([
 Makefile
 data/Makefile
@@ -149,8 +149,6 @@ m4/Makefile
 man/Makefile
 src/Makefile
 po/Makefile.in
-shave/shave
-shave/shave-libtool
 vapi/Makefile
 ])
 
