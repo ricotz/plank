@@ -65,9 +65,7 @@ libplank_la_VALASOURCES = \
 	Widgets/TitledSeparatorMenuItem.vala \
 	$(NULL)
 
-libplank_la_SOURCES = \
-	$(libplank_la_VALASOURCES:.vala=.c) \
-	$(NULL)
+libplank_la_SOURCES = $(libplank_la_VALASOURCES:.vala=.c)
 
 $(libplank_la_SOURCES): libplank_la_vala.stamp
 
@@ -75,7 +73,7 @@ plank.vapi libplank_la_vala.stamp: $(libplank_la_VALASOURCES) Makefile
 	$(AM_V_VALA)$(VALAC) $(libplank_la_VALAFLAGS) -C -H plank.h --library plank $(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
 
-CLEANFILES = \
+DISTCLEANFILES = \
 	$(libplank_la_SOURCES) \
 	libplank_la_vala.stamp \
 	plank.vapi \
@@ -86,6 +84,5 @@ EXTRA_DIST = \
 	$(libplank_la_VALASOURCES) \
 	$(NULL)
 
-# need to make sure the vala sources are rebuilt
-dist-hook:
-	rm -rf $(addprefix $(distdir)/,	$(libplank_la_SOURCES) libplank_la_vala.stamp)
+#dist-hook:
+#	rm -rf $(addprefix $(distdir)/,	$(libplank_la_SOURCES) libplank_la_vala.stamp)
