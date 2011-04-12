@@ -1,3 +1,5 @@
+include $(top_srcdir)/Makefile.common
+
 VAPIDIR = $(top_srcdir)/vapi
 
 LIB_CURRENT=0
@@ -82,7 +84,7 @@ libplank_la_SOURCES = \
 	$(NULL)
 
 plank.vapi plank.h libplank_la_vala.stamp: $(libplank_la_VALASOURCES)
-	$(AM_V_VALA)$(VALAC) $(libplank_la_VALAFLAGS) -C -H plank.h --vapi plank.vapi --library plank $^
+	$(AM_V_VALA)$(VALAC) $(libplank_la_VALAFLAGS) -C -H plank.h --vapi plank.vapi --library plank $(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
 
 DISTCLEANFILES = \

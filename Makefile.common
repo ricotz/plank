@@ -1,0 +1,4 @@
+AM_V_VALA = $(am__v_VALA_$(V))
+am__v_VALA_ = $(am__v_VALA_$(AM_DEFAULT_VERBOSITY))
+am__v_VALA_0 = @echo "  VALAC " $?;
+
