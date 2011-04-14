@@ -167,18 +167,19 @@ namespace Plank.Items
 		
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
-			if (button == PopupButton.MIDDLE || 
-				(button == PopupButton.LEFT && (App == null || App.get_children ().length () == 0 || (mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))) {
-				launch ();
-				return ClickAnimation.BOUNCE;
+			if (!is_window ())
+				if (button == PopupButton.MIDDLE || 
+					(button == PopupButton.LEFT && (App == null || App.get_children ().length () == 0 || (mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))) {
+					launch ();
+					return ClickAnimation.BOUNCE;
+				}
+			
+			if (button == PopupButton.LEFT && App != null && App.get_children ().length () > 0) {
+				WindowControl.smart_focus (App);
+				return ClickAnimation.DARKEN;
 			}
 			
-			if (button != PopupButton.LEFT || (App == null || App.get_children ().length () == 0))
-				return ClickAnimation.NONE;
-			
-			WindowControl.smart_focus (App);
-			
-			return ClickAnimation.DARKEN;
+			return ClickAnimation.NONE;
 		}
 		
 		protected override void on_scrolled (ScrollDirection direction, ModifierType mod)
