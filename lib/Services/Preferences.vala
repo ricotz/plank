@@ -55,7 +55,6 @@ namespace Plank.Services
 		
 		File backing_file;
 		FileMonitor backing_monitor;
-		string group_name;
 		
 		public Preferences.with_file (string filename)
 		{
@@ -64,8 +63,6 @@ namespace Plank.Services
 		
 		protected void init_from_file (string filename)
 		{
-			group_name = get_type ().name ();
-			
 			backing_file = Paths.UserConfigFolder.get_child (filename);
 			
 			// ensure the preferences file exists
@@ -134,6 +131,8 @@ namespace Plank.Services
 				var obj_class = (ObjectClass) get_type ().class_ref ();
 				var properties = obj_class.list_properties ();
 				foreach (var prop in properties) {
+					var group_name = prop.owner_type.name ();
+					
 					if (!file.has_key (group_name, prop.name))
 						continue;
 					
@@ -182,6 +181,8 @@ namespace Plank.Services
 			var obj_class = (ObjectClass) get_type ().class_ref ();
 			var properties = obj_class.list_properties ();
 			foreach (var prop in properties) {
+				var group_name = prop.owner_type.name ();
+				
 				var type = prop.value_type;
 				var val = Value (type);
 				get_property (prop.name, ref val);
