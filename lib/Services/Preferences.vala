@@ -133,7 +133,7 @@ namespace Plank.Services
 				foreach (var prop in properties) {
 					var group_name = prop.owner_type.name ();
 					
-					if (!file.has_key (group_name, prop.name))
+					if (!file.has_group (group_name) || !file.has_key (group_name, prop.name))
 						continue;
 					
 					var type = prop.value_type;
