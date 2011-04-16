@@ -146,6 +146,8 @@ namespace Plank.Services
 						val.set_double (file.get_double (group_name, prop.name));
 					else if (type == typeof (string))
 						val.set_string (file.get_string (group_name, prop.name));
+					else if (type == typeof (bool))
+						val.set_boolean (file.get_boolean (group_name, prop.name));
 					else if (type.is_enum ())
 						val.set_enum (file.get_integer (group_name, prop.name));
 					else if (type.is_a (typeof (PrefsSerializable))) {
@@ -190,6 +192,8 @@ namespace Plank.Services
 					file.set_double (group_name, prop.name, val.get_double ());
 				else if (type == typeof (string))
 					file.set_string (group_name, prop.name, val.get_string ());
+				else if (type == typeof (bool))
+					file.set_boolean (group_name, prop.name, val.get_boolean ());
 				else if (type.is_enum ())
 					file.set_integer (group_name, prop.name, val.get_enum ());
 				else if (type.is_a (typeof (PrefsSerializable)))
