@@ -96,7 +96,7 @@ namespace Plank.Factories
 			
 			set_options ();
 			
-			Paths.initialize (exec_name);
+			Paths.initialize (exec_name, Build.PKGDATADIR);
 			WindowControl.initialize ();
 			
 			var app = new DockWindow ();

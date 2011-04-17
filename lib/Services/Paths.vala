@@ -52,11 +52,11 @@ namespace Plank.Services
 		// defaults to XdgCacheHomeFolder/plank
 		public static File UserCacheFolder { get; protected set; }
 		
-		public static void initialize (string app_name)
+		public static void initialize (string app_name, string data_folder)
 		{
 			// get environment-based settings
 			HomeFolder = File.new_for_path (Environment.get_home_dir ());
-			DataFolder = File.new_for_path (Build.PKGDATADIR);
+			DataFolder = File.new_for_path (data_folder);
 			
 			
 			// get XDG Base Directory settings
