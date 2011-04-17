@@ -318,7 +318,7 @@ namespace Plank
 			if (browser == null && terminal == null && calendar == null && media == null)
 				return false;
 			
-			make_dock_item (Build.DATADIR + "/applications/plank.desktop", 0);
+			make_dock_item (Factory.main.build_data_dir + "/applications/plank.desktop", 0);
 			if (browser != null)
 				make_dock_item (new DesktopAppInfo (browser.get_id ()).get_filename (), 1);
 			if (terminal != null)
@@ -334,7 +334,7 @@ namespace Plank
 		void make_default_items ()
 		{
 			// add plank item!
-			make_dock_item (Build.DATADIR + "/applications/plank.desktop", 0);
+			make_dock_item (Factory.main.build_data_dir + "/applications/plank.desktop", 0);
 			
 			// add browser
 			if (make_dock_item ("/usr/share/applications/chromium-browser.desktop", 1) == "")

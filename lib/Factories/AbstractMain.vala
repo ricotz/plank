@@ -36,6 +36,12 @@ namespace Plank.Factories
 	
 	public abstract class AbstractMain : GLib.Object
 	{
+		public string build_data_dir;
+		public string build_pkg_data_dir;
+		public string build_release_name;
+		public string build_version;
+		public string build_version_info;
+		
 		public string program_name;
 		public string exec_name;
 		
@@ -63,7 +69,7 @@ namespace Plank.Factories
 			
 			Logger.initialize (program_name);
 			Logger.DisplayLevel = LogLevel.INFO;
-			Logger.info<AbstractMain> ("%s version: %s".printf (program_name, Build.VERSION));
+			Logger.info<AbstractMain> ("%s version: %s".printf (program_name, build_version));
 			utsname un = utsname ();
 			uname (un);
 			Logger.info<AbstractMain> ("Kernel version: %s".printf ((string) un.release));
@@ -79,7 +85,7 @@ namespace Plank.Factories
 				context.parse (ref args);
 			} catch { }
 			
-			Intl.bindtextdomain (exec_name, Build.DATADIR + "/locale");
+			Intl.bindtextdomain (exec_name, build_data_dir + "/locale");
 			
 			if (!Thread.supported ()) {
 				Logger.fatal<AbstractMain> ("Problem initializing thread support.");
@@ -96,7 +102,7 @@ namespace Plank.Factories
 			
 			set_options ();
 			
-			Paths.initialize (exec_name, Build.PKGDATADIR);
+			Paths.initialize (exec_name, build_pkg_data_dir);
 			WindowControl.initialize ();
 			
 			var app = new DockWindow ();
@@ -144,10 +150,10 @@ namespace Plank.Factories
 			var dlg = new AboutDialog ();
 			
 			dlg.set_program_name (exec_name);
-			dlg.set_version (Build.VERSION + "\n" + Build.VERSION_INFO);
+			dlg.set_version (build_version + "\n" + build_version_info);
 			dlg.set_logo_icon_name (app_icon);
 			
-			dlg.set_comments (program_name + ". " + Build.RELEASE_NAME);
+			dlg.set_comments (program_name + ". " + build_release_name);
 			dlg.set_copyright ("Copyright © %s %s Developers".printf (app_copyright, program_name));
 			dlg.set_website (main_url);
 			dlg.set_website_label ("Website");
