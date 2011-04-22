@@ -42,7 +42,8 @@ namespace Plank.Items
 		
 		public Bamf.Application? App { get; private set; }
 		
-		HashMap<string, string> shortcuts = new HashMap<string, string> (str_hash, str_equal);
+		ArrayList<string> shortcuts = new ArrayList<string> ();
+		HashMap<string, string> shortcut_map = new HashMap<string, string> (str_hash, str_equal);
 		
 		public ApplicationDockItem.with_dockitem (string dockitem)
 		{
@@ -252,11 +253,11 @@ namespace Plank.Items
 			if (!is_window () && shortcuts.size > 0) {
 				items.add (new SeparatorMenuItem ());
 				
-				foreach (string s in shortcuts.keys) {
+				foreach (string s in shortcuts) {
 					var item = new MenuItem.with_mnemonic (s);
 					item.activate.connect (() => {
 						try {
-							AppInfo.create_from_commandline (shortcuts.get (s), null, AppInfoCreateFlags.NONE).launch (null, null);
+							AppInfo.create_from_commandline (shortcut_map.get (s), null, AppInfoCreateFlags.NONE).launch (null, null);
 						} catch { }
 					});
 					items.add (item);
@@ -296,14 +297,14 @@ namespace Plank.Items
 			stop_monitor ();
 			
 			string icon, text;
-			parse_launcher (Prefs.Launcher, out icon, out text, shortcuts);
+			parse_launcher (Prefs.Launcher, out icon, out text, shortcuts, shortcut_map);
 			Icon = icon;
 			Text = text;
 			
 			start_monitor ();
 		}
 		
-		public static void parse_launcher (string launcher, out string icon, out string text, HashMap<string, string>? shortcuts)
+		public static void parse_launcher (string launcher, out string icon, out string text, ArrayList<string>? shortcuts, HashMap<string, string>? shortcut_map)
 		{
 			icon = "";
 			text = "";
@@ -320,6 +321,7 @@ namespace Plank.Items
 				// see https://wiki.edubuntu.org/Unity/LauncherAPI#Static Quicklist entries
 				if (shortcuts != null) {
 					shortcuts.clear ();
+					shortcut_map.clear ();
 					
 					if (file.has_key (KeyFileDesktop.GROUP, UNITY_QUICKLISTS_KEY))
 						foreach (var shortcut in file.get_string_list (KeyFileDesktop.GROUP, UNITY_QUICKLISTS_KEY)) {
@@ -349,7 +351,9 @@ namespace Plank.Items
 							}
 							
 							// TODO use the localized string
-							shortcuts.set (file.get_string (group, UNITY_QUICKLISTS_NAME_KEY), file.get_string (group, UNITY_QUICKLISTS_EXEC_KEY));
+							var name = file.get_string (group, UNITY_QUICKLISTS_NAME_KEY);
+							shortcuts.add (name);
+							shortcut_map.set (name, file.get_string (group, UNITY_QUICKLISTS_EXEC_KEY));
 						}
 				}
 			} catch { }
