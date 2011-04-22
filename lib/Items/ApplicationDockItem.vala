@@ -322,17 +322,34 @@ namespace Plank.Items
 					shortcuts.clear ();
 					
 					if (file.has_key (KeyFileDesktop.GROUP, UNITY_QUICKLISTS_KEY))
-						foreach (string shortcut in file.get_string_list (KeyFileDesktop.GROUP, UNITY_QUICKLISTS_KEY)) {
+						foreach (var shortcut in file.get_string_list (KeyFileDesktop.GROUP, UNITY_QUICKLISTS_KEY)) {
 							var group = UNITY_QUICKLISTS_SHORTCUT_GROUP_NAME.printf (shortcut);
+							if (!file.has_group (group))
+								continue;
 							
-							if (file.has_group (group) && file.has_key (group, UNITY_QUICKLISTS_TARGET_KEY)) {
+							// check for TargetEnvironment
+							if (file.has_key (group, UNITY_QUICKLISTS_TARGET_KEY)) {
 								var target = file.get_string (group, UNITY_QUICKLISTS_TARGET_KEY);
 								if (target != UNITY_QUICKLISTS_TARGET_VALUE && target != "Plank")
 									continue;
-								
-								// TODO use the localized string
-								shortcuts.set (file.get_string (group, UNITY_QUICKLISTS_NAME_KEY), file.get_string (group, UNITY_QUICKLISTS_EXEC_KEY));
 							}
+							
+							// check for OnlyShowIn
+							if (file.has_key (group, "OnlyShowIn")) {
+								var found = false;
+								
+								foreach (var s in file.get_string_list (group, "OnlyShowIn"))
+									if (s == UNITY_QUICKLISTS_TARGET_VALUE || s == "Plank") {
+										found = true;
+										break;
+									}
+								
+								if (!found)
+									continue;
+							}
+							
+							// TODO use the localized string
+							shortcuts.set (file.get_string (group, UNITY_QUICKLISTS_NAME_KEY), file.get_string (group, UNITY_QUICKLISTS_EXEC_KEY));
 						}
 				}
 			} catch { }
