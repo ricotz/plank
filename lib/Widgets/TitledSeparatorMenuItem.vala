@@ -54,8 +54,7 @@ namespace Plank.Widgets
 			
 			style_get ("wide-separators", out wide_separators,
 				"separator-height", out separator_height,
-				"horizontal-padding", out horizontal_padding,
-				null);
+				"horizontal-padding", out horizontal_padding);
 			
 			var style = get_style ();
 			

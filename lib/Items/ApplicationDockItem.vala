@@ -42,7 +42,8 @@ namespace Plank.Items
 		
 		public Bamf.Application? App { get; private set; }
 		
-		HashMap<string, string> shortcuts = new HashMap<string, string> (str_hash, str_equal);
+		ArrayList<string> shortcuts = new ArrayList<string> ();
+		HashMap<string, string> shortcut_map = new HashMap<string, string> (str_hash, str_equal);
 		
 		public ApplicationDockItem.with_dockitem (string dockitem)
 		{
@@ -167,18 +168,19 @@ namespace Plank.Items
 		
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
-			if (button == PopupButton.MIDDLE || 
-				(button == PopupButton.LEFT && (App == null || App.get_children ().length () == 0 || (mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))) {
-				launch ();
-				return ClickAnimation.BOUNCE;
+			if (!is_window ())
+				if (button == PopupButton.MIDDLE || 
+					(button == PopupButton.LEFT && (App == null || App.get_children ().length () == 0 || (mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))) {
+					launch ();
+					return ClickAnimation.BOUNCE;
+				}
+			
+			if (button == PopupButton.LEFT && App != null && App.get_children ().length () > 0) {
+				WindowControl.smart_focus (App);
+				return ClickAnimation.DARKEN;
 			}
 			
-			if (button != PopupButton.LEFT || (App == null || App.get_children ().length () == 0))
-				return ClickAnimation.NONE;
-			
-			WindowControl.smart_focus (App);
-			
-			return ClickAnimation.DARKEN;
+			return ClickAnimation.NONE;
 		}
 		
 		protected override void on_scrolled (ScrollDirection direction, ModifierType mod)
@@ -251,11 +253,11 @@ namespace Plank.Items
 			if (!is_window () && shortcuts.size > 0) {
 				items.add (new SeparatorMenuItem ());
 				
-				foreach (string s in shortcuts.keys) {
+				foreach (string s in shortcuts) {
 					var item = new MenuItem.with_mnemonic (s);
 					item.activate.connect (() => {
 						try {
-							AppInfo.create_from_commandline (shortcuts.get (s), null, AppInfoCreateFlags.NONE).launch (null, null);
+							AppInfo.create_from_commandline (shortcut_map.get (s), null, AppInfoCreateFlags.NONE).launch (null, null);
 						} catch { }
 					});
 					items.add (item);
@@ -333,14 +335,14 @@ namespace Plank.Items
 			stop_monitor ();
 			
 			string icon, text;
-			parse_launcher (Prefs.Launcher, out icon, out text, shortcuts);
+			parse_launcher (Prefs.Launcher, out icon, out text, shortcuts, shortcut_map);
 			Icon = icon;
 			Text = text;
 			
 			start_monitor ();
 		}
 		
-		public static void parse_launcher (string launcher, out string icon, out string text, HashMap<string, string>? shortcuts)
+		public static void parse_launcher (string launcher, out string icon, out string text, ArrayList<string>? shortcuts, HashMap<string, string>? shortcut_map)
 		{
 			icon = "";
 			text = "";
@@ -357,19 +359,39 @@ namespace Plank.Items
 				// see https://wiki.edubuntu.org/Unity/LauncherAPI#Static Quicklist entries
 				if (shortcuts != null) {
 					shortcuts.clear ();
+					shortcut_map.clear ();
 					
 					if (file.has_key (KeyFileDesktop.GROUP, UNITY_QUICKLISTS_KEY))
-						foreach (string shortcut in file.get_string_list (KeyFileDesktop.GROUP, UNITY_QUICKLISTS_KEY)) {
+						foreach (var shortcut in file.get_string_list (KeyFileDesktop.GROUP, UNITY_QUICKLISTS_KEY)) {
 							var group = UNITY_QUICKLISTS_SHORTCUT_GROUP_NAME.printf (shortcut);
+							if (!file.has_group (group))
+								continue;
 							
-							if (file.has_group (group) && file.has_key (group, UNITY_QUICKLISTS_TARGET_KEY)) {
+							// check for TargetEnvironment
+							if (file.has_key (group, UNITY_QUICKLISTS_TARGET_KEY)) {
 								var target = file.get_string (group, UNITY_QUICKLISTS_TARGET_KEY);
 								if (target != UNITY_QUICKLISTS_TARGET_VALUE && target != "Plank")
 									continue;
-								
-								// TODO use the localized string
-								shortcuts.set (file.get_string (group, UNITY_QUICKLISTS_NAME_KEY), file.get_string (group, UNITY_QUICKLISTS_EXEC_KEY));
 							}
+							
+							// check for OnlyShowIn
+							if (file.has_key (group, "OnlyShowIn")) {
+								var found = false;
+								
+								foreach (var s in file.get_string_list (group, "OnlyShowIn"))
+									if (s == UNITY_QUICKLISTS_TARGET_VALUE || s == "Plank") {
+										found = true;
+										break;
+									}
+								
+								if (!found)
+									continue;
+							}
+							
+							// TODO use the localized string
+							var name = file.get_string (group, UNITY_QUICKLISTS_NAME_KEY);
+							shortcuts.add (name);
+							shortcut_map.set (name, file.get_string (group, UNITY_QUICKLISTS_EXEC_KEY));
 						}
 				}
 			} catch { }

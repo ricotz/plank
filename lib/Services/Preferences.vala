@@ -55,7 +55,6 @@ namespace Plank.Services
 		
 		File backing_file;
 		FileMonitor backing_monitor;
-		string group_name;
 		
 		public Preferences.with_file (string filename)
 		{
@@ -64,8 +63,6 @@ namespace Plank.Services
 		
 		protected void init_from_file (string filename)
 		{
-			group_name = get_type ().name ();
-			
 			backing_file = Paths.UserConfigFolder.get_child (filename);
 			
 			// ensure the preferences file exists
@@ -134,7 +131,9 @@ namespace Plank.Services
 				var obj_class = (ObjectClass) get_type ().class_ref ();
 				var properties = obj_class.list_properties ();
 				foreach (var prop in properties) {
-					if (!file.has_key (group_name, prop.name))
+					var group_name = prop.owner_type.name ();
+					
+					if (!file.has_group (group_name) || !file.has_key (group_name, prop.name))
 						continue;
 					
 					var type = prop.value_type;
@@ -146,6 +145,8 @@ namespace Plank.Services
 						val.set_double (file.get_double (group_name, prop.name));
 					else if (type == typeof (string))
 						val.set_string (file.get_string (group_name, prop.name));
+					else if (type == typeof (bool))
+						val.set_boolean (file.get_boolean (group_name, prop.name));
 					else if (type.is_enum ())
 						val.set_enum (file.get_integer (group_name, prop.name));
 					else if (type.is_a (typeof (PrefsSerializable))) {
@@ -180,6 +181,8 @@ namespace Plank.Services
 			var obj_class = (ObjectClass) get_type ().class_ref ();
 			var properties = obj_class.list_properties ();
 			foreach (var prop in properties) {
+				var group_name = prop.owner_type.name ();
+				
 				var type = prop.value_type;
 				var val = Value (type);
 				get_property (prop.name, ref val);
@@ -190,6 +193,8 @@ namespace Plank.Services
 					file.set_double (group_name, prop.name, val.get_double ());
 				else if (type == typeof (string))
 					file.set_string (group_name, prop.name, val.get_string ());
+				else if (type == typeof (bool))
+					file.set_boolean (group_name, prop.name, val.get_boolean ());
 				else if (type.is_enum ())
 					file.set_integer (group_name, prop.name, val.get_enum ());
 				else if (type.is_a (typeof (PrefsSerializable)))

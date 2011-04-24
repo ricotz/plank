@@ -37,7 +37,6 @@ libplank_la_VALAFLAGS = \
 	--thread \
 	$(PLANK_CORE_VALA_PKGS) \
 	--vapidir $(VAPIDIR) \
-	$(VAPIDIR)/config.vapi \
 	$(NULL)
 
 libplank_la_LIBADD = \
