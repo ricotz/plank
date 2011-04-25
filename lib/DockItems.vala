@@ -27,8 +27,12 @@ namespace Plank
 {
 	public class DockItems : GLib.Object
 	{
-		public signal void items_changed ();
+		// triggered when the state of an item changes
+		public signal void item_state_changed ();
+		
+		// triggered when a new item is added to the collection
 		public signal void item_added (DockItem item);
+		// triggered when an item is removed from the collection
 		public signal void item_removed (DockItem item);
 		
 		public ArrayList<DockItem> Items = new ArrayList<DockItem> ();
@@ -82,9 +86,25 @@ namespace Plank
 			}
 		}
 		
-		void signal_items_changed ()
+		public void add_item (DockItem item)
 		{
-			items_changed ();
+			add_item_without_signaling (item);
+			set_item_positions ();
+
+			item_added (item);
+		}
+		
+		public void remove_item (DockItem item)
+		{
+			remove_item_without_signaling (item);
+			set_item_positions ();
+			
+			item_removed (item);
+		}
+		
+		void signal_item_state_changed ()
+		{
+			item_state_changed ();
 		}
 		
 		ApplicationDockItem? item_for_application (Bamf.Application app)
@@ -208,7 +228,7 @@ namespace Plank
 			add_running_apps ();
 			set_item_positions ();
 			
-			items_changed ();
+			item_state_changed ();
 		}
 		
 		void add_item_without_signaling (DockItem item)
@@ -216,11 +236,11 @@ namespace Plank
 			Items.add (item);
 			Items.sort ((CompareFunc) compare_items);
 			
-			item.notify["Icon"].connect (signal_items_changed);
-			item.notify["Indicator"].connect (signal_items_changed);
-			item.notify["State"].connect (signal_items_changed);
-			item.notify["LastClicked"].connect (signal_items_changed);
-			item.needs_redraw.connect (signal_items_changed);
+			item.notify["Icon"].connect (signal_item_state_changed);
+			item.notify["Indicator"].connect (signal_item_state_changed);
+			item.notify["State"].connect (signal_item_state_changed);
+			item.notify["LastClicked"].connect (signal_item_state_changed);
+			item.needs_redraw.connect (signal_item_state_changed);
 			item.deleted.connect (handle_item_deleted);
 			
 			if (item is ApplicationDockItem) {
@@ -229,21 +249,13 @@ namespace Plank
 			}
 		}
 		
-		public void add_item (DockItem item)
-		{
-			add_item_without_signaling (item);
-			set_item_positions ();
-
-			item_added (item);
-		}
-		
 		void remove_item_without_signaling (DockItem item)
 		{
-			item.notify["Icon"].disconnect (signal_items_changed);
-			item.notify["Indicator"].disconnect (signal_items_changed);
-			item.notify["State"].disconnect (signal_items_changed);
-			item.notify["LastClicked"].disconnect (signal_items_changed);
-			item.needs_redraw.disconnect (signal_items_changed);
+			item.notify["Icon"].disconnect (signal_item_state_changed);
+			item.notify["Indicator"].disconnect (signal_item_state_changed);
+			item.notify["State"].disconnect (signal_item_state_changed);
+			item.notify["LastClicked"].disconnect (signal_item_state_changed);
+			item.needs_redraw.disconnect (signal_item_state_changed);
 			item.deleted.disconnect (handle_item_deleted);
 			
 			if (item is ApplicationDockItem) {
@@ -252,14 +264,6 @@ namespace Plank
 			}
 			
 			Items.remove (item);
-		}
-		
-		public void remove_item (DockItem item)
-		{
-			remove_item_without_signaling (item);
-			set_item_positions ();
-			
-			item_removed (item);
 		}
 		
 		void handle_item_deleted (DockItem item)
@@ -277,7 +281,7 @@ namespace Plank
 			}
 			
 			set_item_positions ();
-			items_changed ();
+			item_state_changed ();
 		}
 		
 		void pin_item (DockItem item)
@@ -292,7 +296,7 @@ namespace Plank
 				new_item.Position = item.Position;
 				add_item_without_signaling (new_item);
 				
-				items_changed ();
+				item_state_changed ();
 			} else {
 				item.delete ();
 			}

@@ -124,7 +124,7 @@ namespace Plank
 			theme.notify.connect (theme_changed);
 			
 			window.notify["HoveredItem"].connect (animated_draw);
-			window.Items.items_changed.connect (animated_draw);
+			window.Items.item_state_changed.connect (animated_draw);
 			
 			notify["Hidden"].connect (hidden_changed);
 			
@@ -136,7 +136,7 @@ namespace Plank
 			theme.notify.disconnect (theme_changed);
 			
 			window.notify["HoveredItem"].disconnect (animated_draw);
-			window.Items.items_changed.disconnect (animated_draw);
+			window.Items.item_state_changed.disconnect (animated_draw);
 			
 			notify["Hidden"].disconnect (hidden_changed);
 		}
