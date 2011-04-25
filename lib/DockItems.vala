@@ -38,24 +38,20 @@ namespace Plank
 		public ArrayList<DockItem> Items = new ArrayList<DockItem> ();
 		
 		FileMonitor items_monitor;
-		File launchers_dir;
 		
 		public DockItems ()
 		{
-			launchers_dir = Paths.UserConfigFolder.get_child ("launchers");
+			Factory.item_factory.launchers_dir = Paths.UserConfigFolder.get_child ("launchers");
 			
 			// if we made the launcher directory, assume a first run and pre-populate with launchers
-			if (Paths.ensure_directory_exists (launchers_dir)) {
+			if (Paths.ensure_directory_exists (Factory.item_factory.launchers_dir)) {
 				Logger.debug<DockItems> ("Adding default dock items...");
-				
-				if (!make_default_gnome_items ())
-					make_default_items ();
-				
+				Factory.item_factory.make_default_items ();
 				Logger.debug<DockItems> ("done.");
 			}
 			
 			try {
-				items_monitor = launchers_dir.monitor (0);
+				items_monitor = Factory.item_factory.launchers_dir.monitor (0);
 				items_monitor.set_rate_limit (500);
 				items_monitor.changed.connect (handle_items_dir_changed);
 			} catch {
@@ -73,7 +69,7 @@ namespace Plank
 		{
 			Matcher.get_default ().app_opened.disconnect (app_opened);
 			
-			Set<DockItem> items = new HashSet<DockItem> ();
+			var items = new HashSet<DockItem> ();
 			items.add_all (Items);
 			foreach (var item in items)
 				remove_item_without_signaling (item);
@@ -126,11 +122,11 @@ namespace Plank
 			Logger.debug<DockItems> ("Reloading dock items...");
 			
 			try {
-				var enumerator = launchers_dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_STANDARD_IS_HIDDEN, 0);
+				var enumerator = Factory.item_factory.launchers_dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_STANDARD_IS_HIDDEN, 0);
 				FileInfo info;
 				while ((info = enumerator.next_file ()) != null)
 					if (file_is_dockitem (info)) {
-						var filename = launchers_dir.get_path () + "/" + info.get_name ();
+						var filename = Factory.item_factory.launchers_dir.get_path () + "/" + info.get_name ();
 						DockItem item = Factory.item_factory.make_item (filename);
 						
 						if (item.ValidItem)
@@ -287,12 +283,12 @@ namespace Plank
 		void pin_item (DockItem item)
 		{
 			if (item is TransientDockItem) {
-				var dockitem = make_dock_item (item.get_launcher (), item.get_sort ());
+				var dockitem = Factory.item_factory.make_dock_item (item.get_launcher (), item.get_sort ());
 				if (dockitem == "")
 					return;
 				
 				remove_item_without_signaling (item);
-				var new_item = new ApplicationDockItem.with_dockitem (launchers_dir.get_child (dockitem).get_path ());
+				var new_item = new ApplicationDockItem.with_dockitem (Factory.item_factory.launchers_dir.get_child (dockitem).get_path ());
 				new_item.Position = item.Position;
 				add_item_without_signaling (new_item);
 				
@@ -309,88 +305,6 @@ namespace Plank
 			if (left.get_sort () < right.get_sort ())
 				return -1;
 			return 1;
-		}
-		
-		bool make_default_gnome_items ()
-		{
-			var browser = AppInfo.get_default_for_type ("text/html", false);
-			// TODO dont know how to get terminal...
-			var terminal = AppInfo.get_default_for_uri_scheme ("ssh");
-			var calendar = AppInfo.get_default_for_type ("text/calendar", false);
-			var media = AppInfo.get_default_for_type ("video/mpeg", false);
-			
-			if (browser == null && terminal == null && calendar == null && media == null)
-				return false;
-			
-			make_dock_item (Factory.main.build_data_dir + "/applications/plank.desktop", 0);
-			if (browser != null)
-				make_dock_item (new DesktopAppInfo (browser.get_id ()).get_filename (), 1);
-			if (terminal != null)
-				make_dock_item (new DesktopAppInfo (terminal.get_id ()).get_filename (), 2);
-			if (calendar != null)
-				make_dock_item (new DesktopAppInfo (calendar.get_id ()).get_filename (), 3);
-			if (media != null)
-				make_dock_item (new DesktopAppInfo (media.get_id ()).get_filename (), 4);
-			
-			return true;
-		}
-		
-		void make_default_items ()
-		{
-			// add plank item!
-			make_dock_item (Factory.main.build_data_dir + "/applications/plank.desktop", 0);
-			
-			// add browser
-			if (make_dock_item ("/usr/share/applications/chromium-browser.desktop", 1) == "")
-				if (make_dock_item ("/usr/local/share/applications/google-chrome.desktop", 1) == "")
-					if (make_dock_item ("/usr/share/applications/firefox.desktop", 1) == "")
-						if (make_dock_item ("/usr/share/applications/epiphany.desktop", 1) == "")
-							make_dock_item ("/usr/share/applications/kde4/konqbrowser.desktop", 1);
-			
-			// add terminal
-			if (make_dock_item ("/usr/share/applications/terminator.desktop", 2) == "")
-				if (make_dock_item ("/usr/share/applications/gnome-terminal.desktop", 2) == "")
-					make_dock_item ("/usr/share/applications/kde4/konsole.desktop", 2);
-			
-			// add music player
-			if (make_dock_item ("/usr/share/applications/exaile.desktop", 3) == "")
-				if (make_dock_item ("/usr/share/applications/songbird.desktop", 3) == "")
-					if (make_dock_item ("/usr/share/applications/rhythmbox.desktop", 3) == "")
-						if (make_dock_item ("/usr/share/applications/banshee-1.desktop", 3) == "")
-							make_dock_item ("/usr/share/applications/kde4/amarok.desktop", 3);
-			
-			// add IM client
-			if (make_dock_item ("/usr/share/applications/pidgin.desktop", 4) == "")
-				make_dock_item ("/usr/share/applications/empathy.desktop", 4);
-		}
-		
-		string make_dock_item (string launcher, int sort)
-		{
-			if (File.new_for_path (launcher).query_exists ()) {
-				KeyFile file = new KeyFile ();
-				
-				file.set_string (typeof (Items.DockItemPreferences).name (), "Launcher", launcher);
-				file.set_integer (typeof (Items.DockItemPreferences).name (), "Sort", sort);
-				
-				try {
-					// find a unique file name, based on the name of the launcher
-					var launcher_base = File.new_for_path (launcher).get_basename ().split (".") [0];
-					var dockitem = launcher_base + ".dockitem";
-					var counter = 1;
-					
-					while (launchers_dir.get_child (dockitem).query_exists ())
-						dockitem = "%s-%d.dockitem".printf (launcher_base, counter++);
-					
-					// save the key file
-					var stream = new DataOutputStream (launchers_dir.get_child (dockitem).create (0));
-					stream.put_string (file.to_data ());
-					
-					Logger.debug<DockItems> ("Adding dock item '%s' for launcher '%s'".printf (dockitem, launcher));
-					return dockitem;
-				} catch { }
-			}
-			
-			return "";
 		}
 	}
 }
