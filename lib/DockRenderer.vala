@@ -127,8 +127,6 @@ namespace Plank
 			window.Items.item_state_changed.connect (animated_draw);
 			
 			notify["Hidden"].connect (hidden_changed);
-			
-			show ();
 		}
 		
 		~DockRenderer ()

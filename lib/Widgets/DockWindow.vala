@@ -189,7 +189,7 @@ namespace Plank.Widgets
 				dock_is_starting = false;
 				
 				// slide the dock in, if it shouldnt start hidden
-				GLib.Timeout.add (100, () => {
+				GLib.Timeout.add (400, () => {
 					hide_manager.update_dock_hovered ();
 					return false;
 				});
