@@ -104,8 +104,8 @@ namespace Plank.Items
 			surface.Context.set_source (rg);
 			surface.Context.fill ();
 			
-			HashMap<string, string> icons = new HashMap<string, string> (str_hash, str_equal);
-			ArrayList<string> keys = new ArrayList<string> ();
+			var icons = new HashMap<string, string> (str_hash, str_equal);
+			var keys = new ArrayList<string> ();
 			
 			foreach (var file in get_files ()) {
 				string icon, text;
@@ -127,7 +127,7 @@ namespace Plank.Items
 			var offset = (int) ((width - 2 * icon_width) / 3.0);
 			
 			keys.sort ((CompareFunc) strcmp);
-			foreach (string s in keys) {
+			foreach (var s in keys) {
 				var x = pos % 2;
 				int y = pos / 2;
 				
@@ -175,10 +175,10 @@ namespace Plank.Items
 		
 		ArrayList<MenuItem> get_dir_menu_items ()
 		{
-			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
+			var items = new ArrayList<MenuItem> ();
 		
-			HashMap<string, MenuItem> menu_items = new HashMap<string, MenuItem> (str_hash, str_equal);
-			ArrayList<string> keys = new ArrayList<string> ();
+			var menu_items = new HashMap<string, MenuItem> (str_hash, str_equal);
+			var keys = new ArrayList<string> ();
 			
 			foreach (var file in get_files ()) {
 				if (file.get_basename ().has_suffix (".desktop")) {
@@ -208,7 +208,7 @@ namespace Plank.Items
 			}
 			
 			keys.sort ((CompareFunc) strcmp);
-			foreach (string s in keys)
+			foreach (var s in keys)
 				items.add (menu_items.get (s));
 			
 			items.add (new SeparatorMenuItem ());
@@ -224,7 +224,7 @@ namespace Plank.Items
 		
 		ArrayList<MenuItem> get_file_menu_items ()
 		{
-			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
+			var items = new ArrayList<MenuItem> ();
 			
 			var item = create_menu_item (_("_Open"), "gtk-open");
 			item.activate.connect (launch);
@@ -243,7 +243,7 @@ namespace Plank.Items
 		
 		ArrayList<File> get_files ()
 		{
-			ArrayList<File> files = new ArrayList<File> ();
+			var files = new ArrayList<File> ();
 			
 			try {
 				var enumerator = OwnedFile.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + ","

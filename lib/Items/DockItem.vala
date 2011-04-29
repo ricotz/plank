@@ -223,9 +223,9 @@ namespace Plank.Items
 		protected MenuItem create_menu_item (string title, string icon)
 		{
 			int width, height;
-			var item = new ImageMenuItem.with_mnemonic (title);
-			
 			icon_size_lookup (IconSize.MENU, out width, out height);
+			
+			var item = new ImageMenuItem.with_mnemonic (title);
 			item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon (icon, width, height)));
 			
 			return item;

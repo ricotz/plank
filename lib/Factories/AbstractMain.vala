@@ -105,8 +105,7 @@ namespace Plank.Factories
 			Paths.initialize (exec_name, build_pkg_data_dir);
 			WindowControl.initialize ();
 			
-			var app = new DockWindow ();
-			app.show_all ();
+			new DockWindow ().show_all ();
 			
 			Gdk.threads_enter ();
 			Gtk.main ();

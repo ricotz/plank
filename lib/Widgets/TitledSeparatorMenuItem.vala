@@ -45,12 +45,12 @@ namespace Plank.Widgets
 		
 		protected override bool expose_event (Gdk.EventExpose event)
 		{
+			Gtk.Allocation alloc;
+			get_allocation (out alloc);
+			
 			bool wide_separators;
 			int separator_height;
 			int horizontal_padding;
-			
-			Gtk.Allocation alloc;
-			get_allocation (out alloc);
 			
 			style_get ("wide-separators", out wide_separators,
 				"separator-height", out separator_height,

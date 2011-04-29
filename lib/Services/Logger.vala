@@ -80,10 +80,10 @@ namespace Plank.Services
 			is_writing = false;
 			log_queue = new ArrayList<LogMessage> ();
 			
-			LogLevelFlags flags = LogLevelFlags.LEVEL_MASK | LogLevelFlags.FLAG_FATAL | LogLevelFlags.FLAG_RECURSION;
+			var flags = LogLevelFlags.LEVEL_MASK | LogLevelFlags.FLAG_FATAL | LogLevelFlags.FLAG_RECURSION;
 			
 			Log.set_handler (null, flags, glib_log_func);
-			foreach (string domain in domains)
+			foreach (var domain in domains)
 				Log.set_handler (domain, flags, glib_log_func);
 		}
 		
@@ -141,11 +141,11 @@ namespace Plank.Services
 				is_writing = true;
 				
 				if (log_queue.size > 0) {
-					ArrayList<LogMessage> logs = log_queue;
+					var logs = log_queue;
 					lock (queue_lock)
 						log_queue = new ArrayList<LogMessage> ();
 					
-					foreach (LogMessage log in logs)
+					foreach (var log in logs)
 						print_log (log);
 				}
 				
@@ -214,15 +214,13 @@ namespace Plank.Services
 		
 		static void glib_log_func (string? d, LogLevelFlags flags, string msg)
 		{
-			string domain;
-			if (d == null)
-				domain = "";
-			else
+			var domain = "";
+			if (d != null)
 				domain = "[%s] ".printf (d);
 			
-			string message = msg.replace ("\n", "").replace ("\r", "");
+			var message = msg.replace ("\n", "").replace ("\r", "");
 			
-			string format = "%s%s";
+			var format = "%s%s";
 			
 			switch (flags) {
 			case LogLevelFlags.LEVEL_CRITICAL:

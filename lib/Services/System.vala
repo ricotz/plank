@@ -46,10 +46,10 @@ namespace Plank.Services
 				return;
 			}
 			
-			GLib.List<File> mounted_files = new GLib.List<File> ();
+			var mounted_files = new GLib.List<File> ();
 			
 			// make sure all files are mounted
-			foreach (File f in files) {
+			foreach (var f in files) {
 				if (f.get_path () != null && f.get_path () != "" && (f.is_native () || path_is_mounted (f.get_path ()))) {
 					mounted_files.append (f);
 					continue;
@@ -69,7 +69,7 @@ namespace Plank.Services
 		
 		static bool path_is_mounted (string path)
 		{
-			foreach (Mount m in VolumeMonitor.get ().get_mounts ())
+			foreach (var m in VolumeMonitor.get ().get_mounts ())
 				if (m.get_root () != null && m.get_root ().get_path () != null && path.contains (m.get_root ().get_path ()))
 					return true;
 			
@@ -103,8 +103,8 @@ namespace Plank.Services
 				}
 				
 				if (info.supports_uris ()) {
-					GLib.List<string> uris = new GLib.List<string> ();
-					foreach (File f in files)
+					var uris = new GLib.List<string> ();
+					foreach (var f in files)
 						uris.append (f.get_uri ());
 					info.launch_uris (uris, new AppLaunchContext ());
 					return;

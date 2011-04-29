@@ -77,7 +77,7 @@ namespace Plank.Drawing
 		
 		public DockSurface create_indicator (DockSurface background, int size, Color color)
 		{
-			DockSurface surface = new DockSurface.with_dock_surface (size, size, background);
+			var surface = new DockSurface.with_dock_surface (size, size, background);
 			surface.clear ();
 
 			var cr = surface.Context;

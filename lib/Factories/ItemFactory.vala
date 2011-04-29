@@ -41,7 +41,7 @@ namespace Plank.Factories
 		protected string get_launcher_from_dockitem (string dockitem)
 		{
 			try {
-				KeyFile file = new KeyFile ();
+				var file = new KeyFile ();
 				file.load_from_file (dockitem, 0);
 				
 				return file.get_string (typeof (Items.DockItemPreferences).name (), "Launcher");
@@ -109,7 +109,7 @@ namespace Plank.Factories
 		public string make_dock_item (string launcher, int sort)
 		{
 			if (File.new_for_path (launcher).query_exists ()) {
-				KeyFile file = new KeyFile ();
+				var file = new KeyFile ();
 				
 				file.set_string (typeof (Items.DockItemPreferences).name (), "Launcher", launcher);
 				file.set_integer (typeof (Items.DockItemPreferences).name (), "Sort", sort);

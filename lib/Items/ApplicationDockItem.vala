@@ -199,7 +199,7 @@ namespace Plank.Items
 		
 		public override ArrayList<MenuItem> get_menu_items ()
 		{
-			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
+			var items = new ArrayList<MenuItem> ();
 			
 			if (!is_window ()) {
 				var item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
@@ -253,7 +253,7 @@ namespace Plank.Items
 			if (!is_window () && shortcuts.size > 0) {
 				items.add (new SeparatorMenuItem ());
 				
-				foreach (string s in shortcuts) {
+				foreach (var s in shortcuts) {
 					var item = new MenuItem.with_mnemonic (s);
 					item.activate.connect (() => {
 						try {
@@ -265,14 +265,14 @@ namespace Plank.Items
 			}
 			
 			if (!closed) {
-				ArrayList<Bamf.Window> windows = WindowControl.get_windows (App);
+				var windows = WindowControl.get_windows (App);
 				if (windows.size > 0) {
 					items.add (new SeparatorMenuItem ());
 					
 					int width, height;
 					icon_size_lookup (IconSize.MENU, out width, out height);
 					
-					for (int i = 0; i < windows.size; i++) {
+					for (var i = 0; i < windows.size; i++) {
 						var window = windows.get (i);
 						
 						var pbuf = WindowControl.get_window_icon (window);
@@ -310,7 +310,7 @@ namespace Plank.Items
 			text = "";
 			
 			try {
-				KeyFile file = new KeyFile ();
+				var file = new KeyFile ();
 				file.load_from_file (launcher, 0);
 				
 				icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);

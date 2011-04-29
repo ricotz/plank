@@ -66,16 +66,16 @@ namespace Plank.Drawing
 		
 		public static Pixbuf load_icon (string names, int width, int height)
 		{
-			ArrayList<string> all_names = new ArrayList<string> ();
+			var all_names = new ArrayList<string> ();
 			
-			foreach (string s in names.split (";;"))
+			foreach (var s in names.split (";;"))
 				all_names.add (s);
-			foreach (string s in MISSING_ICONS.split (";;"))
+			foreach (var s in MISSING_ICONS.split (";;"))
 				all_names.add (s);
 			
 			Pixbuf pbuf = null;
 			
-			foreach (string name in all_names) {
+			foreach (var name in all_names) {
 				if (icon_is_file (name)) {
 					pbuf = load_pixbuf_from_file (name, width, height);
 					if (pbuf != null)
@@ -101,7 +101,7 @@ namespace Plank.Drawing
 		
 		static Pixbuf get_empty_pixbuf ()
 		{
-			Pixbuf pbuf = new Pixbuf (Colorspace.RGB, true, 8, 1, 1);
+			var pbuf = new Pixbuf (Colorspace.RGB, true, 8, 1, 1);
 			pbuf.fill (0x00000000);
 			return pbuf;
 		}
@@ -115,7 +115,7 @@ namespace Plank.Drawing
 		{
 			Pixbuf pbuf = null;
 			
-			string filename = name;
+			var filename = name;
 			if (name.has_prefix ("~/"))
 				filename = name.replace ("~/", Paths.HomeFolder.get_path ());
 			
@@ -140,7 +140,7 @@ namespace Plank.Drawing
 				if (IconTheme.get_default ().has_icon (icon))
 					pbuf = IconTheme.get_default ().load_icon (icon, size, 0);
 				else if (icon.contains (".")) {
-					string[] parts = icon.split (".");
+					var parts = icon.split (".");
 					if (IconTheme.get_default ().has_icon (parts [0]))
 						pbuf = IconTheme.get_default ().load_icon (parts [0], size, 0);
 				}
@@ -152,7 +152,7 @@ namespace Plank.Drawing
 			if (pbuf == null)
 				return null;
 			
-			Pixbuf tmp = pbuf.copy ();
+			var tmp = pbuf.copy ();
 			pbuf.unref ();
 			return tmp;
 #endif
@@ -167,7 +167,7 @@ namespace Plank.Drawing
 			if (scale == 1)
 				return source;
 			
-			Pixbuf tmp = source.scale_simple ((int) (source.width * scale),
+			var tmp = source.scale_simple ((int) (source.width * scale),
 				(int) (source.height * scale),
 				InterpType.HYPER);
 			
@@ -176,24 +176,24 @@ namespace Plank.Drawing
 		
 		public static Drawing.Color average_color (Pixbuf source)
 		{
-			double rTotal = 0;
-			double gTotal = 0;
-			double bTotal = 0;
+			var rTotal = 0.0;
+			var gTotal = 0.0;
+			var bTotal = 0.0;
 			
-			uchar* dataPtr = source.get_pixels ();
+			uint8* dataPtr = source.get_pixels ();
 			double pixels = source.height * source.rowstride / source.n_channels;
 			
-			for (int i = 0; i < pixels; i++) {
-				uchar r = dataPtr [0];
-				uchar g = dataPtr [1];
-				uchar b = dataPtr [2];
+			for (var i = 0; i < pixels; i++) {
+				var r = dataPtr [0];
+				var g = dataPtr [1];
+				var b = dataPtr [2];
 				
-				uchar max = (uchar) double.max (r, double.max (g, b));
-				uchar min = (uchar) double.min (r, double.min (g, b));
+				var max = (uint8) double.max (r, double.max (g, b));
+				var min = (uint8) double.min (r, double.min (g, b));
 				double delta = max - min;
 				
-				double sat = delta == 0 ? 0 : delta / max;
-				double score = 0.2 + 0.8 * sat;
+				var sat = delta == 0 ? 0.0 : delta / max;
+				var score = 0.2 + 0.8 * sat;
 				
 				rTotal += r * score;
 				gTotal += g * score;

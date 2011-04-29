@@ -42,7 +42,7 @@ namespace Plank.Services.Windows
 			
 			if (app != null) {
 				unowned GLib.List<Bamf.View> children = app.get_children ();
-				for (int i = 0; i < children.length (); i++) {
+				for (var i = 0; i < children.length (); i++) {
 					var view = children.nth_data (i);
 					if (!(view is Bamf.Window && view.user_visible ()))
 						continue;
@@ -61,7 +61,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
 			
-			for (int i = 0; xids != null && i < xids.length; i++) {
+			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null && window.is_maximized ())
 					return true;
@@ -78,7 +78,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
 			
-			for (int i = 0; xids != null && i < xids.length; i++) {
+			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null && window.is_minimized ())
 					return true;
@@ -92,10 +92,10 @@ namespace Plank.Services.Windows
 			if (app == null)
 				return new ArrayList<Bamf.Window> ();
 			
-			ArrayList<Bamf.Window> windows = new ArrayList<Bamf.Window> ();
+			var windows = new ArrayList<Bamf.Window> ();
 			
 			unowned GLib.List<Bamf.View> children = app.get_children ();
-			for (int i = 0; i < children.length (); i++) {
+			for (var i = 0; i < children.length (); i++) {
 				var view = children.nth_data (i);
 				if (!(view is Bamf.Window))
 					continue;
@@ -116,7 +116,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
 			
-			for (int i = 0; xids != null && i < xids.length; i++) {
+			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window == null)
 					continue;
@@ -137,7 +137,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
 			
-			for (int i = 0; xids != null && i < xids.length; i++) {
+			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null && !window.is_skip_tasklist ())
 					window.close (Gtk.get_current_event_time ());
@@ -173,7 +173,7 @@ namespace Plank.Services.Windows
 		
 		static int find_active_xid_index (Array<uint32> xids)
 		{
-			int i = 0;
+			var i = 0;
 			for (; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null && window.is_active ())
@@ -190,7 +190,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
 			
-			int i = find_active_xid_index (xids);
+			var i = find_active_xid_index (xids);
 			i = i < xids.length ? i - 1 : 0;
 			
 			if (i < 0)
@@ -207,7 +207,7 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
 			
-			int i = find_active_xid_index (xids);
+			var i = find_active_xid_index (xids);
 			i = i < xids.length ? i + 1 : 0;
 			
 			if (i == xids.length)
@@ -234,7 +234,7 @@ namespace Plank.Services.Windows
 				return;
 			
 			var stack = get_ordered_window_stack (app);
-			for (int i = (int) stack.size - 1; i >= 0; i--) {
+			for (var i = (int) stack.size - 1; i >= 0; i--) {
 				var window = stack.get (i);
 				if (window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
 					window.unminimize (Gtk.get_current_event_time ());
@@ -275,7 +275,7 @@ namespace Plank.Services.Windows
 			unowned GLib.List<Wnck.Window> stack = Screen.get_default ().get_windows_stacked ();
 			
 			foreach (var window in stack)
-				for (int j = 0; j < xids.length; j++)
+				for (var j = 0; j < xids.length; j++)
 					if (xids.index (j) == window.get_xid ())
 						windows.add (window);
 			
@@ -287,12 +287,12 @@ namespace Plank.Services.Windows
 			if (app == null)
 				return;
 
-			ArrayList<Wnck.Window> windows = get_ordered_window_stack (app);
+			var windows = get_ordered_window_stack (app);
 			
-			bool not_in_viewport = true;
-			bool urgent = false;
+			var not_in_viewport = true;
+			var urgent = false;
 			
-			foreach (Wnck.Window window in windows) {
+			foreach (var window in windows) {
 				if (!window.is_skip_tasklist () && window.is_in_viewport (window.get_screen ().get_active_workspace ()))
 					not_in_viewport = false;
 				if (window.needs_attention ())
@@ -300,7 +300,7 @@ namespace Plank.Services.Windows
 			}
 			
 			if (not_in_viewport || urgent) {
-				foreach (Wnck.Window window in windows) {
+				foreach (var window in windows) {
 					if (urgent && !window.needs_attention ())
 						continue;
 					
@@ -311,7 +311,7 @@ namespace Plank.Services.Windows
 				}
 			}
 			
-			foreach (Wnck.Window window in windows)
+			foreach (var window in windows)
 				if (window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
 					foreach (var w in windows)
 						if (w.is_minimized () && w.is_in_viewport (w.get_screen ().get_active_workspace ())) {
@@ -321,7 +321,7 @@ namespace Plank.Services.Windows
 					return;
 				}
 			
-			foreach (Wnck.Window window in windows)
+			foreach (var window in windows)
 				if ((window.is_active () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) ||
 					window == Screen.get_default ().get_active_window ()) {
 					foreach (var w in windows)
@@ -340,7 +340,7 @@ namespace Plank.Services.Windows
 		
 		static void intelligent_focus_off_viewport_window (Wnck.Window targetWindow, ArrayList<Wnck.Window> additional_windows)
 		{
-			for (int i = (int) additional_windows.size - 1; i >= 0; i--) {
+			for (var i = (int) additional_windows.size - 1; i >= 0; i--) {
 				var window = additional_windows.get (i);
 				if (!window.is_minimized () && windows_share_viewport (targetWindow, window)) {
 					center_and_focus_window (window);
@@ -355,7 +355,7 @@ namespace Plank.Services.Windows
 			
 			// we do this to make sure our active window is also at the front... Its a tricky thing to do.
 			// sometimes compiz plays badly.  This hacks around it
-			uint time = Gtk.get_current_event_time () + VIEWPORT_CHANGE_DELAY;
+			var time = Gtk.get_current_event_time () + VIEWPORT_CHANGE_DELAY;
 			Timeout.add (VIEWPORT_CHANGE_DELAY, () => {
 				targetWindow.activate (time);
 				return false;
@@ -367,12 +367,12 @@ namespace Plank.Services.Windows
 			if (first == null || second == null)
 				return false;
 			
-			Wnck.Workspace wksp = first.get_workspace () ?? second.get_workspace ();
+			var wksp = first.get_workspace () ?? second.get_workspace ();
 			if (wksp == null)
 				return false;
 			
-			Gdk.Rectangle firstGeo = Gdk.Rectangle ();
-			Gdk.Rectangle secondGeo = Gdk.Rectangle ();
+			var firstGeo = Gdk.Rectangle ();
+			var secondGeo = Gdk.Rectangle ();
 			
 			first.get_geometry (out firstGeo.x, out firstGeo.y, out firstGeo.width, out firstGeo.height);
 			second.get_geometry (out secondGeo.x, out secondGeo.y, out secondGeo.width, out secondGeo.height);
@@ -383,14 +383,13 @@ namespace Plank.Services.Windows
 			secondGeo.x += wksp.get_viewport_x ();
 			secondGeo.y += wksp.get_viewport_y ();
 			
-			int viewportWidth, viewportHeight;
-			viewportWidth = first.get_screen ().get_width ();
-			viewportHeight = first.get_screen ().get_height ();
+			var viewportWidth = first.get_screen ().get_width ();
+			var viewportHeight = first.get_screen ().get_height ();
 			
-			int firstViewportX = ((firstGeo.x + firstGeo.width / 2) / viewportWidth) * viewportWidth;
-			int firstViewportY = ((firstGeo.y + firstGeo.height / 2) / viewportHeight) * viewportHeight;
+			var firstViewportX = ((firstGeo.x + firstGeo.width / 2) / viewportWidth) * viewportWidth;
+			var firstViewportY = ((firstGeo.y + firstGeo.height / 2) / viewportHeight) * viewportHeight;
 			
-			Gdk.Rectangle viewpRect = Gdk.Rectangle ();
+			var viewpRect = Gdk.Rectangle ();
 			viewpRect.x = firstViewportX;
 			viewpRect.y = firstViewportY;
 			viewpRect.width = viewportWidth;
@@ -400,14 +399,14 @@ namespace Plank.Services.Windows
 			return viewpRect.intersect (secondGeo, null);
 #else
 			// FIXME this var is only needed due to a vapi bug where we cant use null
-			Gdk.Rectangle dest = Gdk.Rectangle ();
+			var dest = Gdk.Rectangle ();
 			return viewpRect.intersect (secondGeo, dest);
 #endif
 		}
 		
 		static void center_and_focus_window (Wnck.Window w) 
 		{
-			uint time = Gtk.get_current_event_time ();
+			var time = Gtk.get_current_event_time ();
 			if (w.get_workspace () != null && w.get_workspace () != w.get_screen ().get_active_workspace ()) 
 				w.get_workspace ().activate (time);
 			

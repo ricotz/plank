@@ -105,7 +105,7 @@ namespace Plank
 		
 		ApplicationDockItem? item_for_application (Bamf.Application app)
 		{
-			foreach (DockItem item in Items) {
+			foreach (var item in Items) {
 				unowned ApplicationDockItem appitem = (item as ApplicationDockItem);
 				if (appitem == null)
 					continue;
@@ -127,7 +127,7 @@ namespace Plank
 				while ((info = enumerator.next_file ()) != null)
 					if (file_is_dockitem (info)) {
 						var filename = Factory.item_factory.launchers_dir.get_path () + "/" + info.get_name ();
-						DockItem item = Factory.item_factory.make_item (filename);
+						var item = Factory.item_factory.make_item (filename);
 						
 						if (item.ValidItem)
 							add_item (item);
@@ -138,9 +138,9 @@ namespace Plank
 				Logger.fatal<DockItems> ("Error loading dock items");
 			}
 			
-			ArrayList<string> favs = new ArrayList<string> ();
+			var favs = new ArrayList<string> ();
 			
-			foreach (DockItem item in Items)
+			foreach (var item in Items)
 				if ((item is ApplicationDockItem) && !(item is TransientDockItem))
 					favs.add (item.get_launcher ());
 			
@@ -152,7 +152,7 @@ namespace Plank
 		void add_running_apps ()
 		{
 			// do this a better more efficient way
-			foreach (Bamf.Application app in Matcher.get_default ().active_launchers ())
+			foreach (var app in Matcher.get_default ().active_launchers ())
 				app_opened (app);
 		}
 		
@@ -160,7 +160,7 @@ namespace Plank
 		{
 			var last_sort = 1000;
 			
-			foreach (DockItem item in Items)
+			foreach (var item in Items)
 				if (item is TransientDockItem)
 					last_sort = item.get_sort ();
 			
@@ -189,7 +189,7 @@ namespace Plank
 		void set_item_positions ()
 		{
 			int pos = 0;
-			foreach (DockItem i in Items)
+			foreach (var i in Items)
 				i.Position = pos++;
 		}
 		
@@ -213,7 +213,7 @@ namespace Plank
 				return;
 			
 			// remove peristent and invalid items
-			ArrayList<DockItem> remove = new ArrayList<DockItem> ();
+			var remove = new ArrayList<DockItem> ();
 			foreach (var item in Items)
 				if (!(item is TransientDockItem) || !item.ValidItem)
 					remove.add (item);
