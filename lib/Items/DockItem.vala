@@ -95,6 +95,10 @@ namespace Plank.Items
 		
 		public ClickAnimation ClickedAnimation { get; protected set; default = ClickAnimation.NONE; }
 		
+		public DateTime AddTime { get; set; default = new DateTime.from_unix_utc (0); }
+		
+		public DateTime RemoveTime { get; set; default = new DateTime.from_unix_utc (0); }
+		
 		public DateTime LastClicked { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
 		public DateTime LastScrolled { get; protected set; default = new DateTime.from_unix_utc (0); }

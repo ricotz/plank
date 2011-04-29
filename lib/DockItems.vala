@@ -232,6 +232,7 @@ namespace Plank
 			Items.add (item);
 			Items.sort ((CompareFunc) compare_items);
 			
+			item.AddTime = new DateTime.now_utc ();
 			item.notify["Icon"].connect (signal_item_state_changed);
 			item.notify["Indicator"].connect (signal_item_state_changed);
 			item.notify["State"].connect (signal_item_state_changed);
@@ -247,6 +248,7 @@ namespace Plank
 		
 		void remove_item_without_signaling (DockItem item)
 		{
+			item.RemoveTime = new DateTime.now_utc ();
 			item.notify["Icon"].disconnect (signal_item_state_changed);
 			item.notify["Indicator"].disconnect (signal_item_state_changed);
 			item.notify["State"].disconnect (signal_item_state_changed);
