@@ -224,7 +224,7 @@ namespace Plank.Items
 			return "plank://" + unique_id ();
 		}
 		
-		protected MenuItem create_menu_item (string title, string icon)
+		protected static MenuItem create_menu_item (string title, string icon)
 		{
 			int width, height;
 			icon_size_lookup (IconSize.MENU, out width, out height);

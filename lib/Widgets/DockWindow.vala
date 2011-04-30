@@ -17,10 +17,12 @@
 
 using Cairo;
 using Gdk;
+using Gee;
 using Gtk;
 
 using Plank.Items;
 using Plank.Drawing;
+using Plank.Factories;
 using Plank.Services.Windows;
 
 namespace Plank.Widgets
@@ -125,8 +127,11 @@ namespace Plank.Widgets
 				return true;
 			
 			var button = PopupButton.from_event_button (event);
-			if ((HoveredItem.Button & button) == button)
-				do_popup (event.button);
+			if ((event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK
+					&& (button & PopupButton.RIGHT) == PopupButton.RIGHT)
+				do_popup (event.button, true);
+			else if ((HoveredItem.Button & button) == button)
+				do_popup (event.button, false);
 			
 			return true;
 		}
@@ -307,7 +312,7 @@ namespace Plank.Widgets
 			return menu.get_visible ();
 		}
 		
-		protected void do_popup (uint button)
+		protected void do_popup (uint button, bool show_plank_menu)
 		{
 			foreach (var w in menu.get_children ()) {
 				menu.remove (w);
@@ -316,7 +321,12 @@ namespace Plank.Widgets
 				w.destroy ();
 			}
 			
-			var items = HoveredItem.get_menu_items ();
+			ArrayList<MenuItem> items;
+			if (show_plank_menu)
+				items = PlankDockItem.get_plank_menu_items ();
+			else
+				items = HoveredItem.get_menu_items ();
+			
 			if (items.size == 0)
 				return;
 			
@@ -324,7 +334,10 @@ namespace Plank.Widgets
 				menu.append (item);
 			
 			menu.show_all ();
-			menu.popup (null, null, position_menu, button, get_current_event_time ());
+			if (show_plank_menu)
+				menu.popup (null, null, null, button, get_current_event_time ());
+			else
+				menu.popup (null, null, position_menu, button, get_current_event_time ());
 		}
 		
 		protected void on_menu_hide ()
