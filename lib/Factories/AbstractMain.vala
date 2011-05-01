@@ -69,10 +69,10 @@ namespace Plank.Factories
 			
 			Logger.initialize (program_name);
 			Logger.DisplayLevel = LogLevel.INFO;
-			Logger.info<AbstractMain> ("%s version: %s".printf (program_name, build_version));
+			message ("%s version: %s", program_name, build_version);
 			utsname un = utsname ();
 			uname (un);
-			Logger.info<AbstractMain> ("Kernel version: %s".printf ((string) un.release));
+			message ("Kernel version: %s", (string) un.release);
 			Logger.DisplayLevel = LogLevel.WARN;
 			
 			// parse commandline options
@@ -87,18 +87,15 @@ namespace Plank.Factories
 			
 			Intl.bindtextdomain (exec_name, build_data_dir + "/locale");
 			
-			if (!Thread.supported ()) {
-				Logger.fatal<AbstractMain> ("Problem initializing thread support.");
-				return -1;
-			}
+			if (!Thread.supported ())
+				error ("Problem initializing thread support.");
 			Gdk.threads_init ();
+			
 			Gtk.init (ref args);
 			
 			// ensure only one instance
-			if (new App (app_dbus, null).is_running) {
-				Logger.fatal<AbstractMain> ("Exiting because another instance is already running.");
-				return -2;
-			}
+			if (new App (app_dbus, null).is_running)
+				error ("Exiting because another instance is already running.");
 			
 			set_options ();
 			
@@ -134,7 +131,7 @@ namespace Plank.Factories
 		
 		protected static void sig_handler (int sig)
 		{
-			Logger.warn<AbstractMain> ("Caught signal (%d), exiting".printf (sig));
+			warning ("Caught signal (%d), exiting", sig);
 			Factory.main.quit ();
 		}
 		

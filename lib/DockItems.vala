@@ -45,9 +45,9 @@ namespace Plank
 			
 			// if we made the launcher directory, assume a first run and pre-populate with launchers
 			if (Paths.ensure_directory_exists (Factory.item_factory.launchers_dir)) {
-				Logger.debug<DockItems> ("Adding default dock items...");
+				debug ("Adding default dock items...");
 				Factory.item_factory.make_default_items ();
-				Logger.debug<DockItems> ("done.");
+				debug ("done.");
 			}
 			
 			try {
@@ -55,7 +55,7 @@ namespace Plank
 				items_monitor.set_rate_limit (500);
 				items_monitor.changed.connect (handle_items_dir_changed);
 			} catch {
-				Logger.fatal<DockItems> ("Unable to watch the launchers directory.");
+				error ("Unable to watch the launchers directory.");
 			}
 			
 			load_items ();
@@ -119,7 +119,7 @@ namespace Plank
 		
 		void load_items ()
 		{
-			Logger.debug<DockItems> ("Reloading dock items...");
+			debug ("Reloading dock items...");
 			
 			try {
 				var enumerator = Factory.item_factory.launchers_dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_STANDARD_IS_HIDDEN, 0);
@@ -132,10 +132,10 @@ namespace Plank
 						if (item.ValidItem)
 							add_item (item);
 						else
-							Logger.warn<DockItems> ("The launcher '%s' in dock item '%s' does not exist".printf (item.get_launcher (), filename));
+							warning ("The launcher '%s' in dock item '%s' does not exist", item.get_launcher (), filename);
 					}
 			} catch {
-				Logger.fatal<DockItems> ("Error loading dock items");
+				error ("Error loading dock items");
 			}
 			
 			var favs = new ArrayList<string> ();
@@ -146,7 +146,7 @@ namespace Plank
 			
 			Matcher.get_default ().set_favorites (favs);
 			
-			Logger.debug<DockItems> ("done.");
+			debug ("done.");
 		}
 		
 		void add_running_apps ()

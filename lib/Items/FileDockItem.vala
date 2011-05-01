@@ -54,7 +54,7 @@ namespace Plank.Items
 					dir_monitor.set_rate_limit (500);
 					dir_monitor.changed.connect (handle_dir_changed);
 				} catch {
-					Logger.fatal<FileDockItem> ("Unable to watch the stack directory '%s'.".printf (OwnedFile.get_path ()));
+					error ("Unable to watch the stack directory '%s'.", OwnedFile.get_path ());
 				}
 			}
 		}

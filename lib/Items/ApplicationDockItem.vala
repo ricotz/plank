@@ -371,7 +371,7 @@ namespace Plank.Items
 				monitor.set_rate_limit (500);
 				monitor.changed.connect (monitor_changed);
 			} catch {
-				Logger.warn<ApplicationDockItem> ("Unable to watch the launcher file '%s'".printf (Prefs.Launcher));
+				warning ("Unable to watch the launcher file '%s'", Prefs.Launcher);
 			}
 		}
 		
@@ -381,7 +381,7 @@ namespace Plank.Items
 				(event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
 				return;
 			
-			Logger.debug<ApplicationDockItem> ("Launcher file '%s' changed, reloading".printf (Prefs.Launcher));
+			debug ("Launcher file '%s' changed, reloading", Prefs.Launcher);
 			load_from_launcher ();
 		}
 		

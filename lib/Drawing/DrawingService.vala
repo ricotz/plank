@@ -49,7 +49,7 @@ namespace Plank.Drawing
 				// otherwise try to get the icon from the fileinfo
 				return get_icon_from_gicon (info.get_icon ());
 			} catch {
-				Logger.debug<DrawingService> ("Could not get file info for '%s'".printf (file.get_path ()));
+				debug ("Could not get file info for '%s'", file.get_path ());
 			}
 			
 			return null;
@@ -87,7 +87,7 @@ namespace Plank.Drawing
 					break;
 				
 				if (name != all_names.last ())
-					Logger.info<DrawingService> ("Could not find icon '%s'".printf (name));
+					message ("Could not find icon '%s'", name);
 			}
 			
 			if (pbuf != null) {

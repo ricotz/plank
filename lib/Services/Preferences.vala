@@ -121,7 +121,7 @@ namespace Plank.Services
 		
 		void load_prefs ()
 		{
-			Logger.debug<Preferences> ("Loading preferences from file '%s'".printf (backing_file.get_path ()));
+			debug ("Loading preferences from file '%s'", backing_file.get_path ());
 			
 			notify.disconnect (handle_notify);
 			try {
@@ -162,7 +162,7 @@ namespace Plank.Services
 					verify (prop.name);
 				}
 			} catch {
-				Logger.warn<Preferences> ("Unable to load preferences from file '%s'".printf (backing_file.get_path ()));
+				warning ("Unable to load preferences from file '%s'", backing_file.get_path ());
 				deleted ();
 			}
 			notify.connect (handle_notify);
@@ -211,7 +211,7 @@ namespace Plank.Services
 					} catch { }
 			}
 			
-			Logger.debug<Preferences> ("Saving preferences '%s'".printf (backing_file.get_path ()));
+			debug ("Saving preferences '%s'", backing_file.get_path ());
 			
 			try {
 				DataOutputStream stream;
@@ -230,7 +230,7 @@ namespace Plank.Services
 		
 		void backing_error (string err)
 		{
-			Logger.fatal<Preferences> (err.printf (backing_file.get_path ()));
+			error (err, backing_file.get_path ());
 		}
 	}
 }

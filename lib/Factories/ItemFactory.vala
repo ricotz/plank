@@ -127,7 +127,7 @@ namespace Plank.Factories
 					var stream = new DataOutputStream (launchers_dir.get_child (dockitem).create (0));
 					stream.put_string (file.to_data ());
 					
-					Logger.debug<ItemFactory> ("Adding dock item '%s' for launcher '%s'".printf (dockitem, launcher));
+					debug ("Adding dock item '%s' for launcher '%s'", dockitem, launcher);
 					return dockitem;
 				} catch { }
 			}
