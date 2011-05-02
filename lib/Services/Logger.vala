@@ -78,22 +78,18 @@ namespace Plank.Services
 			Log.set_default_handler (glib_log_func);
 		}
 		
-		static string format_message<T> (string msg)
+		static string format_message (string msg)
 		{
-			if (typeof (T) == typeof (Logger)) {
-				if (re != null && re.match (msg)) {
-					var parts = re.split (msg);
-					return "[%s%s] %s".printf (parts[1], parts[2], parts[3]);
-				}
-				return msg;
+			if (re != null && re.match (msg)) {
+				var parts = re.split (msg);
+				return "[%s%s] %s".printf (parts[1], parts[2], parts[3]);
 			}
-			
-			return "[%s] %s".printf (typeof (T).name (), msg);
+			return msg;
 		}
 		
-		public static void notification<T> (string msg)
+		public static void notification (string msg)
 		{
-			write (LogLevel.NOTIFY, format_message<T> (msg));
+			write (LogLevel.NOTIFY, format_message (msg));
 		}
 		
 		static string get_time ()
@@ -196,26 +192,26 @@ namespace Plank.Services
 			
 			switch (flags) {
 			case LogLevelFlags.LEVEL_CRITICAL:
-				write (LogLevel.FATAL, format_message<Logger> (message));
-				write (LogLevel.FATAL, format_message<Logger> (AppName + " will not function properly."));
+				write (LogLevel.FATAL, format_message (message));
+				write (LogLevel.FATAL, format_message (AppName + " will not function properly."));
 				break;
 			
 			case LogLevelFlags.LEVEL_ERROR:
-				write (LogLevel.ERROR, format_message<Logger> (message));
+				write (LogLevel.ERROR, format_message (message));
 				break;
 			
 			case LogLevelFlags.LEVEL_INFO:
 			case LogLevelFlags.LEVEL_MESSAGE:
-				write (LogLevel.INFO, format_message<Logger> (message));
+				write (LogLevel.INFO, format_message (message));
 				break;
 			
 			case LogLevelFlags.LEVEL_DEBUG:
-				write (LogLevel.DEBUG, format_message<Logger> (message));
+				write (LogLevel.DEBUG, format_message (message));
 				break;
 			
 			case LogLevelFlags.LEVEL_WARNING:
 			default:
-				write (LogLevel.WARN, format_message<Logger> (message));
+				write (LogLevel.WARN, format_message (message));
 				break;
 			}
 		}
