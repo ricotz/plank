@@ -72,7 +72,7 @@ namespace Plank.Services
 			is_writing = false;
 			log_queue = new ArrayList<LogMessage> ();
 			try {
-				re = new Regex ("""(.*\.vala:\d+): (.*)""");
+				re = new Regex ("""(.*)\.vala(:\d+): (.*)""");
 			} catch { }
 			
 			Log.set_default_handler (glib_log_func);
@@ -83,7 +83,7 @@ namespace Plank.Services
 			if (typeof (T) == typeof (Logger)) {
 				if (re != null && re.match (msg)) {
 					var parts = re.split (msg);
-					return "[%s] %s".printf (parts[1], parts[2]);
+					return "[%s%s] %s".printf (parts[1], parts[2], parts[3]);
 				}
 				return msg;
 			}
