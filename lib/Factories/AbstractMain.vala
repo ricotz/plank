@@ -63,6 +63,7 @@ namespace Plank.Factories
 		{
 			// set program name
 			prctl (15, exec_name, 0, 0, 0);
+			Environment.set_prgname (exec_name);
 			
 			Posix.signal(Posix.SIGINT, sig_handler);
 			Posix.signal(Posix.SIGTERM, sig_handler);
@@ -70,7 +71,7 @@ namespace Plank.Factories
 			Logger.initialize (program_name);
 			Logger.DisplayLevel = LogLevel.INFO;
 			message ("%s version: %s", program_name, build_version);
-			utsname un = utsname ();
+			var un = utsname ();
 			uname (un);
 			message ("Kernel version: %s", (string) un.release);
 			Logger.DisplayLevel = LogLevel.WARN;
