@@ -64,19 +64,29 @@ namespace Plank.Services
 		static ArrayList<LogMessage> log_queue;
 		static bool is_writing;
 		
+		static Regex re;
+		
 		public static void initialize (string app_name)
 		{
 			AppName = app_name;
 			is_writing = false;
 			log_queue = new ArrayList<LogMessage> ();
+			try {
+				re = new Regex ("""(.*\.vala:\d+): (.*)""");
+			} catch { }
 			
 			Log.set_default_handler (glib_log_func);
 		}
 		
 		static string format_message<T> (string msg)
 		{
-			if (typeof (T) == typeof (Logger))
+			if (typeof (T) == typeof (Logger)) {
+				if (re != null && re.match (msg)) {
+					var parts = re.split (msg);
+					return "[%s] %s".printf (parts[1], parts[2]);
+				}
 				return msg;
+			}
 			
 			return "[%s] %s".printf (typeof (T).name (), msg);
 		}
@@ -121,10 +131,10 @@ namespace Plank.Services
 		static void print_log (LogMessage log)
 		{
 			set_color_for_level (log.Level);
-			stdout.printf ("[%s %s] ", log.Level.to_string ().substring (25), get_time ());
+			stdout.printf ("[%s %s]", log.Level.to_string ().substring (25), get_time ());
 			
 			reset_color ();
-			stdout.printf (log.Message + "\n");
+			stdout.printf (" %s\n", log.Message);
 		}
 		
 		static void set_color_for_level (LogLevel level)
