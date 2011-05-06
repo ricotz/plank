@@ -161,7 +161,7 @@ namespace Plank.Items
 			update_indicator ();
 		}
 		
-		public override void launch ()
+		public void launch ()
 		{
 			Services.System.launch (File.new_for_path (Prefs.Launcher));
 		}

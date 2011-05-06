@@ -147,7 +147,7 @@ namespace Plank.Items
 			launcher_changed ();
 		}
 		
-		public override void launch ()
+		public void launch ()
 		{
 			Services.System.open (OwnedFile);
 			ClickedAnimation = ClickAnimation.BOUNCE;

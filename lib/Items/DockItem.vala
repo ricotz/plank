@@ -185,10 +185,6 @@ namespace Plank.Items
 			surface.Context.paint ();
 		}
 		
-		public virtual void launch ()
-		{
-		}
-		
 		public void clicked (PopupButton button, ModifierType mod)
 		{
 			ClickedAnimation = on_clicked (button, mod);
