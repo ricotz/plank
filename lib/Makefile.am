@@ -34,8 +34,7 @@ libplank_la_LDFLAGS = \
 	$(NULL)
 
 libplank_la_VALAFLAGS = \
-	--thread \
-	$(PLANK_CORE_VALA_PKGS) \
+	$(PLANK_CORE_VALAFLAGS) \
 	--vapidir $(VAPIDIR) \
 	$(NULL)
 

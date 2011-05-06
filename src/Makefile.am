@@ -2,9 +2,8 @@ include $(top_srcdir)/Makefile.common
 
 VAPIDIR = $(top_srcdir)/vapi
 
-VALAFLAGS = \
-	--thread \
-	$(PLANK_CORE_VALA_PKGS) \
+plank_VALAFLAGS = \
+	$(PLANK_CORE_VALAFLAGS) \
 	$(top_builddir)/lib/plank.vapi \
 	--vapidir $(VAPIDIR) \
 	$(VAPIDIR)/config.vapi \
@@ -37,7 +36,7 @@ plank_SOURCES = \
 	$(NULL)
 
 plank_vala.stamp: $(plank_VALASOURCES)
-	$(AM_V_VALA)$(VALAC) $(plank_VALAFLAGS) $(VALAFLAGS) -C $(filter %.vala %.c,$^)
+	$(AM_V_VALA)$(VALAC) $(plank_VALAFLAGS) -C $(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
 
 DISTCLEANFILES = \
