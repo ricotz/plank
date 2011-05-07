@@ -52,7 +52,6 @@ namespace Plank
 			
 			try {
 				items_monitor = Factory.item_factory.launchers_dir.monitor (0);
-				items_monitor.set_rate_limit (500);
 				items_monitor.changed.connect (handle_items_dir_changed);
 			} catch {
 				error ("Unable to watch the launchers directory.");

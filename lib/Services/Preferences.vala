@@ -99,7 +99,6 @@ namespace Plank.Services
 			
 			try {
 				backing_monitor = backing_file.monitor (0);
-				backing_monitor.set_rate_limit (500);
 				backing_monitor.changed.connect (backing_file_changed);
 			} catch {
 				error ("Unable to watch the preferences file '%s'", backing_file.get_path ());

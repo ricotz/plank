@@ -368,7 +368,6 @@ namespace Plank.Items
 			
 			try {
 				monitor = File.new_for_path (Prefs.Launcher).monitor (0);
-				monitor.set_rate_limit (500);
 				monitor.changed.connect (monitor_changed);
 			} catch {
 				warning ("Unable to watch the launcher file '%s'", Prefs.Launcher);
