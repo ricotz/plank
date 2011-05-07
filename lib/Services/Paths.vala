@@ -26,7 +26,8 @@ namespace Plank.Services
 		// User's home folder - $HOME
 		public static File HomeFolder { get; protected set; }
 		
-		// defaults to Build.PKGDATADIR
+		// path passed in to initialize method
+		// should be Build.PKGDATADIR
 		public static File DataFolder { get; protected set; }
 		
 		
@@ -43,14 +44,15 @@ namespace Plank.Services
 		public static ArrayList<File> XdgDataDirFolders { get; protected set; }
 		
 		
-		// defaults to XdgConfigHomeFolder/plank
+		// defaults to XdgConfigHomeFolder/app_name
 		public static File UserConfigFolder { get; protected set; }
 		
-		// defaults to XdgDataHomeFolder/plank
+		// defaults to XdgDataHomeFolder/app_name
 		public static File UserDataFolder { get; protected set; }
 		
-		// defaults to XdgCacheHomeFolder/plank
+		// defaults to XdgCacheHomeFolder/app_name
 		public static File UserCacheFolder { get; protected set; }
+		
 		
 		public static void initialize (string app_name, string data_folder)
 		{
