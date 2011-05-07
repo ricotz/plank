@@ -34,7 +34,7 @@ namespace Plank.Services
 			launch_with_files (null, files);
 		}
 		
-		public static void launch (File? app)
+		public static void launch (File app)
 		{
 			launch_with_files (app, new File[] {});
 		}
