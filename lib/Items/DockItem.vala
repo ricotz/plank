@@ -113,6 +113,20 @@ namespace Plank.Items
 		
 		public Drawing.Color AverageIconColor { get; protected set; }
 		
+		public string Launcher {
+			get { return Prefs.Launcher; }
+		}
+		
+		public int Sort {
+			get {
+				return Prefs.Sort;
+			}
+			set {
+				if (Prefs.Sort != value)
+					Prefs.Sort = value;
+			}
+		}
+		
 		protected DockItemPreferences Prefs { get; protected set; }
 		
 		private DockSurface surface;
@@ -142,22 +156,6 @@ namespace Plank.Items
 		public void delete ()
 		{
 			Prefs.delete ();
-		}
-		
-		public int get_sort ()
-		{
-			return Prefs.Sort;
-		}
-		
-		public void set_sort (int pos)
-		{
-			if (Prefs.Sort != pos)
-				Prefs.Sort = pos;
-		}
-		
-		public string get_launcher ()
-		{
-			return Prefs.Launcher;
 		}
 		
 		protected void reset_icon_buffer ()

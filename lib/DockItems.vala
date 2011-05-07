@@ -109,8 +109,8 @@ namespace Plank
 				unowned ApplicationDockItem appitem = (item as ApplicationDockItem);
 				if (appitem == null)
 					continue;
-				if ((appitem.App != null && appitem.App == app) || (appitem.get_launcher () != null
-					&& appitem.get_launcher () != "" && appitem.get_launcher () == app.get_desktop_file ()))
+				if ((appitem.App != null && appitem.App == app) || (appitem.Launcher != null
+					&& appitem.Launcher != "" && appitem.Launcher == app.get_desktop_file ()))
 					return appitem;
 			}
 			
@@ -132,7 +132,7 @@ namespace Plank
 						if (item.ValidItem)
 							add_item (item);
 						else
-							warning ("The launcher '%s' in dock item '%s' does not exist", item.get_launcher (), filename);
+							warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, filename);
 					}
 			} catch {
 				error ("Error loading dock items");
@@ -142,7 +142,7 @@ namespace Plank
 			
 			foreach (var item in Items)
 				if ((item is ApplicationDockItem) && !(item is TransientDockItem))
-					favs.add (item.get_launcher ());
+					favs.add (item.Launcher);
 			
 			Matcher.get_default ().set_favorites (favs);
 			
@@ -162,7 +162,7 @@ namespace Plank
 			
 			foreach (var item in Items)
 				if (item is TransientDockItem)
-					last_sort = item.get_sort ();
+					last_sort = item.Sort;
 			
 			var launcher = app.get_desktop_file ();
 			if (launcher != "" && !File.new_for_path (launcher).query_exists ())
@@ -173,7 +173,7 @@ namespace Plank
 				found.set_app (app);
 			} else if (app.user_visible () && WindowControl.get_num_windows (app) > 0) {
 				var new_item = new TransientDockItem.with_application (app);
-				new_item.set_sort (last_sort + 1);
+				new_item.Sort = last_sort + 1;
 				add_item (new_item);
 			}
 		}
@@ -285,7 +285,7 @@ namespace Plank
 		void pin_item (DockItem item)
 		{
 			if (item is TransientDockItem) {
-				var dockitem = Factory.item_factory.make_dock_item (item.get_launcher (), item.get_sort ());
+				var dockitem = Factory.item_factory.make_dock_item (item.Launcher, item.Sort);
 				if (dockitem == "")
 					return;
 				
@@ -302,9 +302,9 @@ namespace Plank
 		
 		static int compare_items (DockItem left, DockItem right)
 		{
-			if (left.get_sort () == right.get_sort ())
+			if (left.Sort == right.Sort)
 				return 0;
-			if (left.get_sort () < right.get_sort ())
+			if (left.Sort < right.Sort)
 				return -1;
 			return 1;
 		}
