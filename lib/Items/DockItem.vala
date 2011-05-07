@@ -127,7 +127,7 @@ namespace Plank.Items
 			}
 		}
 		
-		protected DockItemPreferences Prefs { get; protected set; }
+		protected DockItemPreferences Prefs { get; set; }
 		
 		private DockSurface surface;
 		
