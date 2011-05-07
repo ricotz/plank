@@ -102,7 +102,7 @@ namespace Plank.Services
 				backing_monitor.set_rate_limit (500);
 				backing_monitor.changed.connect (backing_file_changed);
 			} catch {
-				backing_error ("Unable to watch the preferences file '%s'");
+				error ("Unable to watch the preferences file '%s'", backing_file.get_path ());
 			}
 		}
 		
@@ -154,7 +154,7 @@ namespace Plank.Services
 						(val.get_object () as PrefsSerializable).prefs_deserialize (file.get_string (group_name, prop.name));
 						continue;
 					} else {
-						backing_error ("Unsupported preferences type for preferences file '%s'");
+						debug ("Unsupported preferences type '%s' for property '%' in file '%s'", type.name (), prop.name, backing_file.get_path ());
 						continue;
 					}
 					
@@ -200,7 +200,7 @@ namespace Plank.Services
 				else if (type.is_a (typeof (PrefsSerializable)))
 					file.set_string (group_name, prop.name, (val.get_object () as PrefsSerializable).prefs_serialize ());
 				else {
-					backing_error ("Unsupported preferences type for preferences file '%s'");
+					debug ("Unsupported preferences type '%s' for property '%' in file '%s'", type.name (), prop.name, backing_file.get_path ());
 					continue;
 				}
 				
@@ -222,15 +222,10 @@ namespace Plank.Services
 				
 				stream.put_string (file.to_data ());
 			} catch {
-				backing_error ("Unable to create the preferences file '%s'");
+				error ("Unable to create the preferences file '%s'", backing_file.get_path ());
 			}
 			
 			start_monitor ();
-		}
-		
-		void backing_error (string err)
-		{
-			error (err, backing_file.get_path ());
 		}
 	}
 }
