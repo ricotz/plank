@@ -154,7 +154,7 @@ namespace Plank.Services
 						(val.get_object () as PrefsSerializable).prefs_deserialize (file.get_string (group_name, prop.name));
 						continue;
 					} else {
-						backing_error ("Unsupported preferences type '%s'");
+						backing_error ("Unsupported preferences type for preferences file '%s'");
 						continue;
 					}
 					
@@ -200,7 +200,7 @@ namespace Plank.Services
 				else if (type.is_a (typeof (PrefsSerializable)))
 					file.set_string (group_name, prop.name, (val.get_object () as PrefsSerializable).prefs_serialize ());
 				else {
-					backing_error ("Unsupported preferences type '%s'");
+					backing_error ("Unsupported preferences type for preferences file '%s'");
 					continue;
 				}
 				
