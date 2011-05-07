@@ -80,7 +80,7 @@ libplank_la_SOURCES = \
 	$(libplank_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-plank.vapi plank.h libplank_la_vala.stamp: $(libplank_la_VALASOURCES)
+libplank_la_vala.stamp: $(libplank_la_VALASOURCES)
 	$(AM_V_VALA)$(VALAC) $(libplank_la_VALAFLAGS) -C -H plank.h --vapi plank.vapi --library plank $(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
 
