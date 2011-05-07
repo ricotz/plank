@@ -210,6 +210,8 @@ namespace Plank.Items
 		
 		public virtual string unique_id ()
 		{
+			// TODO this is a unique ID, but it is not stable!
+			// do we still need stable IDs?
 			return "dockitem%d".printf ((int) this);
 		}
 		
