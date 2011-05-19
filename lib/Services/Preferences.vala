@@ -40,11 +40,26 @@ namespace Plank.Services
 		void handle_notify (Object sender, ParamSpec property)
 		{
 			notify.disconnect (handle_notify);
-			verify (property.name);
+			call_verify (property.name);
 			notify.connect (handle_notify);
 			
 			if (backing_file != null)
 				save_prefs ();
+		}
+		
+		void handle_verify_notify (Object sender, ParamSpec property)
+		{
+			warning ("Key '%s' failed verification in preferences file '%s'", property.name, backing_file.get_path ());
+			
+			if (backing_file != null)
+				save_prefs ();
+		}
+		
+		private void call_verify (string prop)
+		{
+			notify.connect (handle_verify_notify);
+			verify (prop);
+			notify.disconnect (handle_verify_notify);
 		}
 		
 		protected virtual void verify (string prop)
@@ -122,6 +137,8 @@ namespace Plank.Services
 		{
 			debug ("Loading preferences from file '%s'", backing_file.get_path ());
 			
+			var missing_keys = false;
+			
 			notify.disconnect (handle_notify);
 			try {
 				var file = new KeyFile ();
@@ -132,8 +149,11 @@ namespace Plank.Services
 				foreach (var prop in properties) {
 					var group_name = prop.owner_type.name ();
 					
-					if (!file.has_group (group_name) || !file.has_key (group_name, prop.name))
+					if (!file.has_group (group_name) || !file.has_key (group_name, prop.name)) {
+						warning ("Missing key '%s' for group '%s' in preferences file '%s' - using default value", prop.name, group_name, backing_file.get_path ());
+						missing_keys = true;
 						continue;
+					}
 					
 					var type = prop.value_type;
 					var val = Value (type);
@@ -158,13 +178,16 @@ namespace Plank.Services
 					}
 					
 					set_property (prop.name, val);
-					verify (prop.name);
+					call_verify (prop.name);
 				}
 			} catch {
 				warning ("Unable to load preferences from file '%s'", backing_file.get_path ());
 				deleted ();
 			}
 			notify.connect (handle_notify);
+			
+			if (missing_keys)
+				save_prefs ();
 		}
 		
 		void save_prefs ()
