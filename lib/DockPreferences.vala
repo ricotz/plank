@@ -15,6 +15,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using Gdk;
+
 using Plank.Services;
 using Plank.Widgets;
 
@@ -38,14 +40,29 @@ namespace Plank
 		[Description(nick = "hide-mode", blurb = "If 0, the dock won't hide.  If 1, the dock intelligently hides.  If 2, the dock auto-hides.")]
 		public HideType HideMode { get; set; default = HideType.INTELLIGENT; }
 		
+		[Description(nick = "monitor", blurb = "The monitor number for the dock.")]
+		public int Monitor { get; set; default = 0; }
+		
 		public DockPreferences ()
 		{
 			base ();
+			Screen.get_default ().monitors_changed.connect (monitors_changed);
 		}
 		
 		public DockPreferences.with_file (string filename)
 		{
 			base.with_file (filename);
+			Screen.get_default ().monitors_changed.connect (monitors_changed);
+		}
+		
+		~DockPreferences ()
+		{
+			Screen.get_default ().monitors_changed.disconnect (monitors_changed);
+		}
+		
+		private void monitors_changed ()
+		{
+			verify ("Monitor");
 		}
 		
 		/*
@@ -86,6 +103,12 @@ namespace Plank
 					IconSize = MIN_ICON_SIZE;
 				else if (IconSize > MAX_ICON_SIZE)
 					IconSize = MAX_ICON_SIZE;
+				break;
+			
+			case "Monitor":
+				var max = Screen.get_default ().get_n_monitors ();
+				if (Monitor >= max)
+					Monitor = 0;
 				break;
 			}
 		}

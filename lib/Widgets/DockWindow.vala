@@ -97,7 +97,7 @@ namespace Plank.Widgets
 			Renderer.notify["Hidden"].connect (update_icon_regions);
 			
 			get_screen ().size_changed.connect (update_monitor_geo);
-			get_screen ().monitors_changed.connect (update_monitor_geo);
+			Prefs.notify["Monitor"].connect (update_monitor_geo);
 			
 			int x, y;
 			get_position (out x, out y);
@@ -118,7 +118,7 @@ namespace Plank.Widgets
 			Renderer.notify["Hidden"].disconnect (update_icon_regions);
 			
 			get_screen ().size_changed.disconnect (update_monitor_geo);
-			get_screen ().monitors_changed.disconnect (update_monitor_geo);
+			Prefs.notify["Monitor"].disconnect (update_monitor_geo);
 		}
 		
 		public override bool button_press_event (EventButton event)
@@ -244,10 +244,7 @@ namespace Plank.Widgets
 		
 		protected void update_monitor_geo ()
 		{
-			var screen = get_screen ();
-			var monitor = screen.get_monitor_at_point (win_x, win_y);
-			
-			screen.get_monitor_geometry (monitor, out monitor_geo);
+			get_screen ().get_monitor_geometry (Prefs.Monitor, out monitor_geo);
 			
 			set_size ();
 		}
