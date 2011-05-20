@@ -25,7 +25,7 @@ namespace Plank.Services
 	
 	public abstract class Preferences : GLib.Object
 	{
-		[Signal (detailed = true)]
+		[Signal (no_recurse = true, run = "first", action = true, no_hooks = true, detailed = true)]
 		public signal void changed ();
 		
 		public signal void deleted ();
@@ -52,7 +52,7 @@ namespace Plank.Services
 		
 		void handle_verify_notify (Object sender, ParamSpec property)
 		{
-			warning ("Key '%s' failed verification in preferences file '%s'", property.name, backing_file.get_path ());
+			warning ("Key '%s' failed verification in preferences file '%s', changing value", property.name, backing_file.get_path ());
 			
 			if (backing_file != null)
 				save_prefs ();
