@@ -51,7 +51,7 @@ namespace Plank.Items
 			if (!ValidItem)
 				return;
 			
-			Prefs.notify["Launcher"].connect (handle_launcher_changed);
+			Prefs.changed["Launcher"].connect (handle_launcher_changed);
 			Prefs.deleted.connect (handle_deleted);
 			
 			load_from_launcher ();
@@ -59,7 +59,7 @@ namespace Plank.Items
 		
 		~ApplicationDockItem ()
 		{
-			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
+			Prefs.changed["Launcher"].disconnect (handle_launcher_changed);
 			Prefs.deleted.disconnect (handle_deleted);
 			
 			set_app (null);

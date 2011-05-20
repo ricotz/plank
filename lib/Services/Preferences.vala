@@ -25,6 +25,9 @@ namespace Plank.Services
 	
 	public abstract class Preferences : GLib.Object
 	{
+		[Signal (detailed = true)]
+		public signal void changed ();
+		
 		public signal void deleted ();
 		
 		public Preferences ()
@@ -42,6 +45,8 @@ namespace Plank.Services
 			notify.disconnect (handle_notify);
 			call_verify (property.name);
 			notify.connect (handle_notify);
+			
+			changed[property.name] ();
 			
 			if (backing_file != null)
 				save_prefs ();

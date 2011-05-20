@@ -46,7 +46,7 @@ namespace Plank
 			window.Renderer.hide ();
 			
 			notify["DockHovered"].connect (update_hidden);
-			window.Prefs.notify.connect (prefs_changed);
+			window.Prefs.changed.connect (prefs_changed);
 			
 			window.enter_notify_event.connect (enter_notify_event);
 			window.leave_notify_event.connect (leave_notify_event);
@@ -62,7 +62,7 @@ namespace Plank
 		~HideManager ()
 		{
 			notify["DockHovered"].disconnect (update_hidden);
-			window.Prefs.notify.disconnect (prefs_changed);
+			window.Prefs.changed.disconnect (prefs_changed);
 			
 			window.enter_notify_event.disconnect (enter_notify_event);
 			window.leave_notify_event.disconnect (leave_notify_event);

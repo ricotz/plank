@@ -121,7 +121,7 @@ namespace Plank
 			theme.TopRoundness = 4;
 			theme.BottomRoundness = 0;
 			theme.load ("dock");
-			theme.notify.connect (theme_changed);
+			theme.changed.connect (theme_changed);
 			
 			window.notify["HoveredItem"].connect (animated_draw);
 			window.Items.item_state_changed.connect (animated_draw);
@@ -131,7 +131,7 @@ namespace Plank
 		
 		~DockRenderer ()
 		{
-			theme.notify.disconnect (theme_changed);
+			theme.changed.disconnect (theme_changed);
 			
 			window.notify["HoveredItem"].disconnect (animated_draw);
 			window.Items.item_state_changed.disconnect (animated_draw);

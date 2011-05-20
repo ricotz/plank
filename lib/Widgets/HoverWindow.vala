@@ -44,7 +44,7 @@ namespace Plank.Widgets
 			theme.TopRoundness = 3;
 			theme.BottomRoundness = 3;
 			theme.load ("hover");
-			theme.notify.connect (theme_changed);
+			theme.changed.connect (theme_changed);
 			
 			set_accept_focus (false);
 			can_focus = false;

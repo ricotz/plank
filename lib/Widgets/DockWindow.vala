@@ -93,11 +93,11 @@ namespace Plank.Widgets
 			
 			Items.item_added.connect (set_size);
 			Items.item_removed.connect (set_size);
-			Prefs.notify.connect (set_size);
+			Prefs.changed.connect (set_size);
 			Renderer.notify["Hidden"].connect (update_icon_regions);
 			
 			get_screen ().size_changed.connect (update_monitor_geo);
-			Prefs.notify["Monitor"].connect (update_monitor_geo);
+			Prefs.changed["Monitor"].connect (update_monitor_geo);
 			
 			int x, y;
 			get_position (out x, out y);
@@ -114,11 +114,11 @@ namespace Plank.Widgets
 			
 			Items.item_added.disconnect (set_size);
 			Items.item_removed.disconnect (set_size);
-			Prefs.notify.disconnect (set_size);
+			Prefs.changed.disconnect (set_size);
 			Renderer.notify["Hidden"].disconnect (update_icon_regions);
 			
 			get_screen ().size_changed.disconnect (update_monitor_geo);
-			Prefs.notify["Monitor"].disconnect (update_monitor_geo);
+			Prefs.changed["Monitor"].disconnect (update_monitor_geo);
 		}
 		
 		public override bool button_press_event (EventButton event)

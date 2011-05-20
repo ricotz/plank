@@ -38,7 +38,7 @@ namespace Plank.Items
 			if (!ValidItem)
 				return;
 			
-			Prefs.notify["Launcher"].connect (handle_launcher_changed);
+			Prefs.changed["Launcher"].connect (handle_launcher_changed);
 			Prefs.deleted.connect (handle_deleted);
 			OwnedFile = File.new_for_path (Prefs.Launcher);
 			
@@ -60,7 +60,7 @@ namespace Plank.Items
 		
 		~FileDockItem ()
 		{
-			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
+			Prefs.changed["Launcher"].disconnect (handle_launcher_changed);
 			Prefs.deleted.disconnect (handle_deleted);
 			
 			if (dir_monitor != null) {
