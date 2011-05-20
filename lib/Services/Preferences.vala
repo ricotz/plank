@@ -46,8 +46,6 @@ namespace Plank.Services
 			call_verify (property.name);
 			notify.connect (handle_notify);
 			
-			changed[property.name] ();
-			
 			if (backing_file != null)
 				save_prefs ();
 		}
@@ -64,6 +62,7 @@ namespace Plank.Services
 		{
 			notify.connect (handle_verify_notify);
 			verify (prop);
+			changed[prop] ();
 			notify.disconnect (handle_verify_notify);
 		}
 		
