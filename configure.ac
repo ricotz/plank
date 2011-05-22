@@ -85,6 +85,9 @@ PLANK_CORE_VALA_PKGS="--pkg gdk-x11-2.0 \
                       --pkg x11"
 AC_SUBST(PLANK_CORE_VALA_PKGS)
 
+PLANK_CORE_VALAFLAGS="--thread $PLANK_CORE_VALA_PKGS"
+AC_SUBST(PLANK_CORE_VALAFLAGS)
+
 dnl Expansions
 AS_AC_EXPAND([PKGDATADIR], [$datadir/$PACKAGE_NAME])
 AS_AC_EXPAND([DATADIR], [$datadir])
@@ -103,6 +106,7 @@ AC_ARG_ENABLE(debug,
 		enable_debug=yes, enable_debug=no)
 AM_CONDITIONAL(ENABLE_DEBUG, test "x$enable_debug" = "xyes")
 if test "x$enable_debug" = "xyes" ; then
+	PLANK_CORE_VALAFLAGS+=" -g"
 	CONFIG_REQUESTED="yes"
 fi
 dnl }}}

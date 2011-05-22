@@ -17,10 +17,12 @@
 
 using Cairo;
 using Gdk;
+using Gee;
 using Gtk;
 
 using Plank.Items;
 using Plank.Drawing;
+using Plank.Factories;
 using Plank.Services.Windows;
 
 namespace Plank.Widgets
@@ -94,14 +96,14 @@ namespace Plank.Widgets
 			
 			Items.item_added.connect (set_size);
 			Items.item_removed.connect (set_size);
-			Prefs.notify.connect (set_size);
+			Prefs.changed.connect (set_size);
 			
 			Renderer.notify["Hidden"].connect (update_icon_regions);
 			
 			DragTracker.notify["DragItem"].connect (drag_item_changed);
 			
 			get_screen ().size_changed.connect (update_monitor_geo);
-			get_screen ().monitors_changed.connect (update_monitor_geo);
+			Prefs.changed["Monitor"].connect (update_monitor_geo);
 			
 			int x, y;
 			get_position (out x, out y);
@@ -118,14 +120,14 @@ namespace Plank.Widgets
 			
 			Items.item_added.disconnect (set_size);
 			Items.item_removed.disconnect (set_size);
-			Prefs.notify.disconnect (set_size);
+			Prefs.changed.disconnect (set_size);
 			
 			Renderer.notify["Hidden"].disconnect (update_icon_regions);
 			
 			DragTracker.notify["DragItem"].disconnect (drag_item_changed);
 			
 			get_screen ().size_changed.disconnect (update_monitor_geo);
-			get_screen ().monitors_changed.disconnect (update_monitor_geo);
+			Prefs.changed["Monitor"].disconnect (update_monitor_geo);
 		}
 		
 		public override bool button_press_event (EventButton event)
@@ -139,8 +141,11 @@ namespace Plank.Widgets
 				return true;
 			
 			var button = PopupButton.from_event_button (event);
-			if ((HoveredItem.Button & button) == button)
-				do_popup (event.button);
+			if ((event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK
+					&& (button & PopupButton.RIGHT) == PopupButton.RIGHT)
+				do_popup (event.button, true);
+			else if ((HoveredItem.Button & button) == button)
+				do_popup (event.button, false);
 			
 			return true;
 		}
@@ -204,11 +209,11 @@ namespace Plank.Widgets
 		public override bool expose_event (EventExpose event)
 		{
 			if (dock_is_starting) {
-				Services.Logger.debug<DockWindow> ("dock window loaded");
+				debug ("dock window loaded");
 				dock_is_starting = false;
 				
 				// slide the dock in, if it shouldnt start hidden
-				GLib.Timeout.add (100, () => {
+				GLib.Timeout.add (400, () => {
 					HideTracker.update_dock_hovered ();
 					return false;
 				});
@@ -244,7 +249,7 @@ namespace Plank.Widgets
 		
 		public bool update_hovered (int x, int y)
 		{
-			foreach (DockItem item in Items.Items) {
+			foreach (var item in Items.Items) {
 				var rect = Renderer.item_hover_region (item);
 				
 				if (y >= rect.y && y <= rect.y + rect.height && x >= rect.x && x <= rect.x + rect.width) {
@@ -259,8 +264,7 @@ namespace Plank.Widgets
 		
 		protected void update_monitor_geo ()
 		{
-			var screen = get_screen ();
-			screen.get_monitor_geometry (screen.get_monitor_at_point (win_x, win_y), out monitor_geo);
+			get_screen ().get_monitor_geometry (Prefs.Monitor, out monitor_geo);
 			
 			set_size ();
 		}
@@ -312,7 +316,7 @@ namespace Plank.Widgets
 		
 		protected void update_icon_regions ()
 		{
-			foreach (DockItem item in Items.Items) {
+			foreach (var item in Items.Items) {
 				unowned ApplicationDockItem appitem = (item as ApplicationDockItem);
 				if (appitem == null || appitem.App == null)
 					continue;
@@ -331,24 +335,32 @@ namespace Plank.Widgets
 			return menu.get_visible ();
 		}
 		
-		protected void do_popup (uint button)
+		protected void do_popup (uint button, bool show_plank_menu)
 		{
-			foreach (Widget w in menu.get_children ()) {
+			foreach (var w in menu.get_children ()) {
 				menu.remove (w);
 				if (w is ImageMenuItem)
 					(w as ImageMenuItem).get_image ().destroy ();
 				w.destroy ();
 			}
 			
-			var items = HoveredItem.get_menu_items ();
+			ArrayList<MenuItem> items;
+			if (show_plank_menu)
+				items = PlankDockItem.get_plank_menu_items ();
+			else
+				items = HoveredItem.get_menu_items ();
+			
 			if (items.size == 0)
 				return;
 			
-			foreach (MenuItem item in items)
+			foreach (var item in items)
 				menu.append (item);
 			
 			menu.show_all ();
-			menu.popup (null, null, position_menu, button, get_current_event_time ());
+			if (show_plank_menu)
+				menu.popup (null, null, null, button, get_current_event_time ());
+			else
+				menu.popup (null, null, position_menu, button, get_current_event_time ());
 		}
 		
 		protected void on_menu_show ()
@@ -410,7 +422,7 @@ namespace Plank.Widgets
 			if (!is_realized ())
 				return;
 			
-			ulong[] struts = new ulong [Struts.N_VALUES];
+			var struts = new ulong [Struts.N_VALUES];
 			
 			if (Prefs.HideMode == HideType.NONE) {
 				struts [Struts.BOTTOM] = Renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
@@ -418,8 +430,8 @@ namespace Plank.Widgets
 				struts [Struts.BOTTOM_END] = monitor_geo.x + monitor_geo.width - 1;
 			}
 			
-			ulong[] first_struts = new ulong [Struts.BOTTOM + 1];
-			for (int i = 0; i < first_struts.length; i++)
+			var first_struts = new ulong [Struts.BOTTOM + 1];
+			for (var i = 0; i < first_struts.length; i++)
 				first_struts [i] = struts [i];
 			
 			var display = x11_drawable_get_xdisplay (get_window ());

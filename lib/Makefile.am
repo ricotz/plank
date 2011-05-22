@@ -34,8 +34,7 @@ libplank_la_LDFLAGS = \
 	$(NULL)
 
 libplank_la_VALAFLAGS = \
-	--thread \
-	$(PLANK_CORE_VALA_PKGS) \
+	$(PLANK_CORE_VALAFLAGS) \
 	--vapidir $(VAPIDIR) \
 	$(NULL)
 
@@ -82,7 +81,9 @@ libplank_la_SOURCES = \
 	$(libplank_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-plank.vapi plank.h libplank_la_vala.stamp: $(libplank_la_VALASOURCES)
+plank.h plank.vapi: libplank_la_vala.stamp
+
+libplank_la_vala.stamp: $(libplank_la_VALASOURCES)
 	$(AM_V_VALA)$(VALAC) $(libplank_la_VALAFLAGS) -C -H plank.h --vapi plank.vapi --library plank $(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
 

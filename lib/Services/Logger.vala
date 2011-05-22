@@ -57,70 +57,39 @@ namespace Plank.Services
 		
 		public static LogLevel DisplayLevel { get; set; default = LogLevel.WARN; }
 		
-		public static string AppName { get; set; }
+		static string AppName { get; set; }
 		
 		static Object queue_lock = null;
 		
 		static ArrayList<LogMessage> log_queue;
 		static bool is_writing;
 		
-		static string[] domains = {
-			"Gtk",
-			"Gdk",
-			"GLib",
-			"GLib-GObject",
-			"Pango",
-			"GdkPixbuf",
-			"GLib-GIO"
-		};
+		static Regex re;
 		
 		public static void initialize (string app_name)
 		{
 			AppName = app_name;
 			is_writing = false;
 			log_queue = new ArrayList<LogMessage> ();
+			try {
+				re = new Regex ("""(.*)\.vala(:\d+): (.*)""");
+			} catch { }
 			
-			LogLevelFlags flags = LogLevelFlags.LEVEL_MASK | LogLevelFlags.FLAG_FATAL | LogLevelFlags.FLAG_RECURSION;
-			
-			Log.set_handler (null, flags, glib_log_func);
-			foreach (string domain in domains)
-				Log.set_handler (domain, flags, glib_log_func);
+			Log.set_default_handler (glib_log_func);
 		}
 		
-		static string format_message<T> (string msg)
+		static string format_message (string msg)
 		{
-			return "[%s] %s".printf (typeof (T).name (), msg);
+			if (re != null && re.match (msg)) {
+				var parts = re.split (msg);
+				return "[%s%s] %s".printf (parts[1], parts[2], parts[3]);
+			}
+			return msg;
 		}
 		
-		public static void debug<T> (string msg)
+		public static void notification (string msg)
 		{
-			write (LogLevel.DEBUG, format_message<T> (msg));
-		}
-		
-		public static void info<T> (string msg)
-		{
-			write (LogLevel.INFO, format_message<T> (msg));
-		}
-		
-		public static void notification<T> (string msg)
-		{
-			write (LogLevel.NOTIFY, format_message<T> (msg));
-		}
-		
-		public static void warn<T> (string msg)
-		{
-			write (LogLevel.WARN, format_message<T> (msg));
-		}
-		
-		public static void error<T> (string msg)
-		{
-			write (LogLevel.ERROR, format_message<T> (msg));
-		}
-		
-		public static void fatal<T> (string msg)
-		{
-			write (LogLevel.FATAL, format_message<T> (msg));
-			write (LogLevel.FATAL, format_message<T> (AppName + " will not function properly."));
+			write (LogLevel.NOTIFY, format_message (msg));
 		}
 		
 		static string get_time ()
@@ -141,11 +110,11 @@ namespace Plank.Services
 				is_writing = true;
 				
 				if (log_queue.size > 0) {
-					ArrayList<LogMessage> logs = log_queue;
+					var logs = log_queue;
 					lock (queue_lock)
 						log_queue = new ArrayList<LogMessage> ();
 					
-					foreach (LogMessage log in logs)
+					foreach (var log in logs)
 						print_log (log);
 				}
 				
@@ -158,10 +127,10 @@ namespace Plank.Services
 		static void print_log (LogMessage log)
 		{
 			set_color_for_level (log.Level);
-			stdout.printf ("[%s %s] ", log.Level.to_string ().substring (25), get_time ());
+			stdout.printf ("[%s %s]", log.Level.to_string ().substring (25), get_time ());
 			
 			reset_color ();
-			stdout.printf (log.Message + "\n");
+			stdout.printf (" %s\n", log.Message);
 		}
 		
 		static void set_color_for_level (LogLevel level)
@@ -214,40 +183,35 @@ namespace Plank.Services
 		
 		static void glib_log_func (string? d, LogLevelFlags flags, string msg)
 		{
-			string domain;
-			if (d == null)
-				domain = "";
-			else
+			var domain = "";
+			if (d != null)
 				domain = "[%s] ".printf (d);
 			
-			string message = msg.replace ("\n", "").replace ("\r", "");
-			
-			string format = "%s%s";
+			var message = msg.replace ("\n", "").replace ("\r", "");
+			message = "%s%s".printf (domain, message);
 			
 			switch (flags) {
 			case LogLevelFlags.LEVEL_CRITICAL:
-				fatal<Logger> (format.printf (domain, message));
+				write (LogLevel.FATAL, format_message (message));
+				write (LogLevel.FATAL, format_message (AppName + " will not function properly."));
 				break;
 			
 			case LogLevelFlags.LEVEL_ERROR:
-				error<Logger> (format.printf (domain, message));
-				break;
-			
-			case LogLevelFlags.LEVEL_WARNING:
-				warn<Logger> (format.printf (domain, message));
+				write (LogLevel.ERROR, format_message (message));
 				break;
 			
 			case LogLevelFlags.LEVEL_INFO:
 			case LogLevelFlags.LEVEL_MESSAGE:
-				info<Logger> (format.printf (domain, message));
+				write (LogLevel.INFO, format_message (message));
 				break;
 			
 			case LogLevelFlags.LEVEL_DEBUG:
-				debug<Logger> (format.printf (domain, message));
+				write (LogLevel.DEBUG, format_message (message));
 				break;
 			
+			case LogLevelFlags.LEVEL_WARNING:
 			default:
-				warn<Logger> (format.printf (domain, message));
+				write (LogLevel.WARN, format_message (message));
 				break;
 			}
 		}

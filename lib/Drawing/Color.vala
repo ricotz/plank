@@ -208,8 +208,8 @@ namespace Plank.Drawing
 			requires (g >= 0 && g <= 1)
 			requires (b >= 0 && b <= 1)
 		{
-			double min = double.min (r, double.min (g, b));
-			double max = double.max (r, double.max (g, b));
+			var min = double.min (r, double.min (g, b));
+			var max = double.max (r, double.max (g, b));
 			
 			v = max;
 			if (v == 0) {
@@ -226,7 +226,7 @@ namespace Plank.Drawing
 			min = double.min (r, double.min (g, b));
 			max = double.max (r, double.max (g, b));
 			
-			double delta = max - min;
+			var delta = max - min;
 			s = delta;
 			if (s == 0) {
 				h = 0;
@@ -263,16 +263,12 @@ namespace Plank.Drawing
 				g = v;
 				b = v;
 			} else {
-				int secNum;
-				double fracSec;
-				double p, q, t;
-				
-				secNum = (int) Math.floor (h / 60);
-				fracSec = h / 60 - secNum;
+				var secNum = (int) Math.floor (h / 60);
+				var fracSec = h / 60.0 - secNum;
 
-				p = v * (1 - s);
-				q = v * (1 - s * fracSec);
-				t = v * (1 - s * (1 - fracSec));
+				var p = v * (1 - s);
+				var q = v * (1 - s * fracSec);
+				var t = v * (1 - s * (1 - fracSec));
 				
 				switch (secNum) {
 				case 0:
@@ -319,7 +315,7 @@ namespace Plank.Drawing
 		
 		public void prefs_deserialize (string s)
 		{
-			string[] parts = s.split (";;");
+			var parts = s.split (";;");
 			
 			R = double.min (uint8.MAX, double.max (0, parts [0].to_int ())) / uint8.MAX;
 			G = double.min (uint8.MAX, double.max (0, parts [1].to_int ())) / uint8.MAX;

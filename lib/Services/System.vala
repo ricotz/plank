@@ -34,7 +34,7 @@ namespace Plank.Services
 			launch_with_files (null, files);
 		}
 		
-		public static void launch (File? app)
+		public static void launch (File app)
 		{
 			launch_with_files (app, new File[] {});
 		}
@@ -42,14 +42,14 @@ namespace Plank.Services
 		public static void launch_with_files (File? app, File[] files)
 		{
 			if (app != null && !app.query_exists ()) {
-				Logger.warn<System> ("Application '%s' doesn't exist".printf (app.get_path ()));
+				warning ("Application '%s' doesn't exist", app.get_path ());
 				return;
 			}
 			
-			GLib.List<File> mounted_files = new GLib.List<File> ();
+			var mounted_files = new GLib.List<File> ();
 			
 			// make sure all files are mounted
-			foreach (File f in files) {
+			foreach (var f in files) {
 				if (f.get_path () != null && f.get_path () != "" && (f.is_native () || path_is_mounted (f.get_path ()))) {
 					mounted_files.append (f);
 					continue;
@@ -69,7 +69,7 @@ namespace Plank.Services
 		
 		static bool path_is_mounted (string path)
 		{
-			foreach (Mount m in VolumeMonitor.get ().get_mounts ())
+			foreach (var m in VolumeMonitor.get ().get_mounts ())
 				if (m.get_root () != null && m.get_root ().get_path () != null && path.contains (m.get_root ().get_path ()))
 					return true;
 			
@@ -103,17 +103,17 @@ namespace Plank.Services
 				}
 				
 				if (info.supports_uris ()) {
-					GLib.List<string> uris = new GLib.List<string> ();
-					foreach (File f in files)
+					var uris = new GLib.List<string> ();
+					foreach (var f in files)
 						uris.append (f.get_uri ());
 					info.launch_uris (uris, new AppLaunchContext ());
 					return;
 				}
 				
-				Logger.error<System> ("Error opening files. The application doesn't support files/URIs or wasn't found.");
+				error ("Error opening files. The application doesn't support files/URIs or wasn't found.");
 			} catch (Error e) {
-				Logger.error<System> ("Error: " + e.domain.to_string ());
-				Logger.error<System> (e.message);
+				debug ("Error: " + e.domain.to_string ());
+				error (e.message);
 			}
 		}
 	}

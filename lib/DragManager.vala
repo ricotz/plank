@@ -20,6 +20,7 @@ using Gee;
 using Gtk;
 
 using Plank.Drawing;
+using Plank.Factories;
 using Plank.Items;
 using Plank.Widgets;
 
@@ -171,10 +172,10 @@ namespace Plank
 			var item = Owner.HoveredItem;
 			
 			if (drag_is_desktop_file) {
-				var pos = item.get_sort () + 1;
+				var pos = item.Sort + 1;
 				foreach (var uri in drag_data)
 					if (uri.has_prefix ("file://") && uri.has_suffix (".desktop"))
-						Owner.Items.make_dock_item (uri.replace ("file://", ""), pos++);
+						Factory.item_factory.make_dock_item (uri.replace ("file://", ""), pos++);
 			} else if (item != null && item.can_accept_drop (drag_data)) {
 				item.accept_drop (drag_data);
 			}
@@ -234,7 +235,7 @@ namespace Plank
 			
 			if (drag_canceled)
 				foreach (var entry in original_item_pos.entries)
-					entry.key.set_sort (entry.value);
+					entry.key.Sort = entry.value;
 			
 			return !drag_canceled;
 		}

@@ -96,6 +96,10 @@ namespace Plank.Items
 		
 		public ClickAnimation ClickedAnimation { get; protected set; default = ClickAnimation.NONE; }
 		
+		public DateTime AddTime { get; set; default = new DateTime.from_unix_utc (0); }
+		
+		public DateTime RemoveTime { get; set; default = new DateTime.from_unix_utc (0); }
+		
 		public DateTime LastClicked { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
 		public DateTime LastScrolled { get; protected set; default = new DateTime.from_unix_utc (0); }
@@ -114,7 +118,21 @@ namespace Plank.Items
 		
 		public Drawing.Color AverageIconColor { get; protected set; }
 		
-		protected DockItemPreferences Prefs { get; protected set; }
+		public string Launcher {
+			get { return Prefs.Launcher; }
+		}
+		
+		public int Sort {
+			get {
+				return Prefs.Sort;
+			}
+			set {
+				if (Prefs.Sort != value)
+					Prefs.Sort = value;
+			}
+		}
+		
+		protected DockItemPreferences Prefs { get; set; }
 		
 		private DockSurface surface;
 		
@@ -125,14 +143,14 @@ namespace Plank.Items
 			
 			Prefs.deleted.connect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.connect (reset_icon_buffer);
-			Prefs.notify["Icon"].connect (reset_icon_buffer);
+			Prefs.changed["Icon"].connect (reset_icon_buffer);
 		}
 		
 		~DockItem ()
 		{
 			Prefs.deleted.disconnect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.disconnect (reset_icon_buffer);
-			Prefs.notify["Icon"].disconnect (reset_icon_buffer);
+			Prefs.changed["Icon"].disconnect (reset_icon_buffer);
 		}
 		
 		protected void handle_deleted ()
@@ -143,22 +161,6 @@ namespace Plank.Items
 		public void delete ()
 		{
 			Prefs.delete ();
-		}
-		
-		public int get_sort ()
-		{
-			return Prefs.Sort;
-		}
-		
-		public void set_sort (int pos)
-		{
-			if (Prefs.Sort != pos)
-				Prefs.Sort = pos;
-		}
-		
-		public string get_launcher ()
-		{
-			return Prefs.Launcher;
 		}
 		
 		protected void reset_icon_buffer ()
@@ -184,10 +186,6 @@ namespace Plank.Items
 			var pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
 			cairo_set_source_pixbuf (surface.Context, pbuf, 0, 0);
 			surface.Context.paint ();
-		}
-		
-		public virtual void launch ()
-		{
 		}
 		
 		public void clicked (PopupButton button, ModifierType mod)
@@ -227,6 +225,8 @@ namespace Plank.Items
 		
 		public virtual string unique_id ()
 		{
+			// TODO this is a unique ID, but it is not stable!
+			// do we still need stable IDs?
 			return "dockitem%d".printf ((int) this);
 		}
 		
@@ -235,12 +235,12 @@ namespace Plank.Items
 			return "plank://" + unique_id ();
 		}
 		
-		protected MenuItem create_menu_item (string title, string icon)
+		protected static MenuItem create_menu_item (string title, string icon)
 		{
 			int width, height;
-			var item = new ImageMenuItem.with_mnemonic (title);
-			
 			icon_size_lookup (IconSize.MENU, out width, out height);
+			
+			var item = new ImageMenuItem.with_mnemonic (title);
 			item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon (icon, width, height)));
 			
 			return item;

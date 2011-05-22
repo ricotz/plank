@@ -40,12 +40,11 @@ namespace Plank.Widgets
 			set_keep_above (true);
 			type_hint = WindowTypeHint.SPLASHSCREEN;
 			
-			string poof_file = Paths.DataFolder.get_child ("poof.png").get_path ();
+			var poof_file = Paths.DataFolder.get_child ("poof.png").get_path ();
 			try {
 				poof_image = new Pixbuf.from_file (poof_file);
 			} catch {
-				Logger.error<PoofWindow> ("Unable to load poof animation image '%s'".printf (poof_file));
-				return;
+				error ("Unable to load poof animation image '%s'", poof_file);
 			}
 			
 			set_size_request (POOF_SIZE, POOF_SIZE);

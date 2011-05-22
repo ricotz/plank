@@ -79,8 +79,8 @@ namespace Plank.Services.Windows
 		public ArrayList<Bamf.Application> active_launchers ()
 		{
 			unowned GLib.List<Bamf.Application> apps = Bamf.Matcher.get_default ().get_applications ();
-			ArrayList<Bamf.Application> list = new ArrayList<Bamf.Application> ();
-			foreach (Bamf.Application a in apps)
+			var list = new ArrayList<Bamf.Application> ();
+			foreach (var a in apps)
 				list.add (a);
 			return list;
 		}
@@ -88,7 +88,7 @@ namespace Plank.Services.Windows
 		public Bamf.Application? app_for_launcher (string launcher)
 		{
 			unowned GLib.List<Bamf.Application> apps = Bamf.Matcher.get_default ().get_applications ();
-			foreach (Bamf.Application app in apps)
+			foreach (var app in apps)
 				if (app.get_desktop_file () == launcher)
 					return app;
 			
@@ -97,9 +97,9 @@ namespace Plank.Services.Windows
 		
 		public void set_favorites (ArrayList<string> favs)
 		{
-			string[] paths = new string[favs.size];
+			var paths = new string[favs.size];
 			
-			for (int i = 0; i < favs.size; i++)
+			for (var i = 0; i < favs.size; i++)
 				paths [i] = favs.get (i);
 			
 			Bamf.Matcher.get_default ().register_favorites (paths);

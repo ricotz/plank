@@ -38,7 +38,7 @@ namespace Plank.Items
 			if (!ValidItem)
 				return;
 			
-			Prefs.notify["Launcher"].connect (handle_launcher_changed);
+			Prefs.changed["Launcher"].connect (handle_launcher_changed);
 			Prefs.deleted.connect (handle_deleted);
 			OwnedFile = File.new_for_path (Prefs.Launcher);
 			
@@ -51,17 +51,16 @@ namespace Plank.Items
 				
 				try {
 					dir_monitor = OwnedFile.monitor (0);
-					dir_monitor.set_rate_limit (500);
 					dir_monitor.changed.connect (handle_dir_changed);
 				} catch {
-					Logger.fatal<FileDockItem> ("Unable to watch the stack directory '%s'.".printf (OwnedFile.get_path ()));
+					error ("Unable to watch the stack directory '%s'.", OwnedFile.get_path ());
 				}
 			}
 		}
 		
 		~FileDockItem ()
 		{
-			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
+			Prefs.changed["Launcher"].disconnect (handle_launcher_changed);
 			Prefs.deleted.disconnect (handle_deleted);
 			
 			if (dir_monitor != null) {
@@ -104,8 +103,8 @@ namespace Plank.Items
 			surface.Context.set_source (rg);
 			surface.Context.fill ();
 			
-			HashMap<string, string> icons = new HashMap<string, string> (str_hash, str_equal);
-			ArrayList<string> keys = new ArrayList<string> ();
+			var icons = new HashMap<string, string> (str_hash, str_equal);
+			var keys = new ArrayList<string> ();
 			
 			foreach (var file in get_files ()) {
 				string icon, text;
@@ -127,7 +126,7 @@ namespace Plank.Items
 			var offset = (int) ((width - 2 * icon_width) / 3.0);
 			
 			keys.sort ((CompareFunc) strcmp);
-			foreach (string s in keys) {
+			foreach (var s in keys) {
 				var x = pos % 2;
 				int y = pos / 2;
 				
@@ -147,7 +146,7 @@ namespace Plank.Items
 			launcher_changed ();
 		}
 		
-		public override void launch ()
+		public void launch ()
 		{
 			Services.System.open (OwnedFile);
 			ClickedAnimation = ClickAnimation.BOUNCE;
@@ -175,10 +174,10 @@ namespace Plank.Items
 		
 		ArrayList<MenuItem> get_dir_menu_items ()
 		{
-			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
+			var items = new ArrayList<MenuItem> ();
 		
-			HashMap<string, MenuItem> menu_items = new HashMap<string, MenuItem> (str_hash, str_equal);
-			ArrayList<string> keys = new ArrayList<string> ();
+			var menu_items = new HashMap<string, MenuItem> (str_hash, str_equal);
+			var keys = new ArrayList<string> ();
 			
 			foreach (var file in get_files ()) {
 				if (file.get_basename ().has_suffix (".desktop")) {
@@ -208,7 +207,7 @@ namespace Plank.Items
 			}
 			
 			keys.sort ((CompareFunc) strcmp);
-			foreach (string s in keys)
+			foreach (var s in keys)
 				items.add (menu_items.get (s));
 			
 			items.add (new SeparatorMenuItem ());
@@ -224,7 +223,7 @@ namespace Plank.Items
 		
 		ArrayList<MenuItem> get_file_menu_items ()
 		{
-			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
+			var items = new ArrayList<MenuItem> ();
 			
 			var item = create_menu_item (_("_Open"), "gtk-open");
 			item.activate.connect (launch);
@@ -243,7 +242,7 @@ namespace Plank.Items
 		
 		ArrayList<File> get_files ()
 		{
-			ArrayList<File> files = new ArrayList<File> ();
+			var files = new ArrayList<File> ();
 			
 			try {
 				var enumerator = OwnedFile.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + ","

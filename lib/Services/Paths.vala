@@ -26,7 +26,8 @@ namespace Plank.Services
 		// User's home folder - $HOME
 		public static File HomeFolder { get; protected set; }
 		
-		// defaults to Build.PKGDATADIR
+		// path passed in to initialize method
+		// should be Build.PKGDATADIR
 		public static File DataFolder { get; protected set; }
 		
 		
@@ -43,14 +44,15 @@ namespace Plank.Services
 		public static ArrayList<File> XdgDataDirFolders { get; protected set; }
 		
 		
-		// defaults to XdgConfigHomeFolder/plank
+		// defaults to XdgConfigHomeFolder/app_name
 		public static File UserConfigFolder { get; protected set; }
 		
-		// defaults to XdgDataHomeFolder/plank
+		// defaults to XdgDataHomeFolder/app_name
 		public static File UserDataFolder { get; protected set; }
 		
-		// defaults to XdgCacheHomeFolder/plank
+		// defaults to XdgCacheHomeFolder/app_name
 		public static File UserCacheFolder { get; protected set; }
+		
 		
 		public static void initialize (string app_name, string data_folder)
 		{
@@ -60,10 +62,10 @@ namespace Plank.Services
 			
 			
 			// get XDG Base Directory settings
-			string? xdg_config_home = Environment.get_variable ("XDG_CONFIG_HOME");
-			string? xdg_data_home   = Environment.get_variable ("XDG_DATA_HOME");
-			string? xdg_cache_home  = Environment.get_variable ("XDG_CACHE_HOME");
-			string? xdg_data_dirs   = Environment.get_variable ("XDG_DATA_DIRS");
+			var xdg_config_home = Environment.get_variable ("XDG_CONFIG_HOME");
+			var xdg_data_home   = Environment.get_variable ("XDG_DATA_HOME");
+			var xdg_cache_home  = Environment.get_variable ("XDG_CACHE_HOME");
+			var xdg_data_dirs   = Environment.get_variable ("XDG_DATA_DIRS");
 			
 			
 			// determine directories based on XDG with fallbacks
@@ -82,12 +84,12 @@ namespace Plank.Services
 			else
 				XdgCacheHomeFolder = File.new_for_path (xdg_cache_home);
 			
-			ArrayList<File> dirs = new ArrayList<File> ();
+			var dirs = new ArrayList<File> ();
 			if (xdg_data_dirs == null || xdg_data_dirs.length == 0) {
 				dirs.add (File.new_for_path ("/usr/local/share"));
 				dirs.add (File.new_for_path ("/usr/share"));
 			} else {
-				foreach (string path in xdg_data_dirs.split (":"))
+				foreach (var path in xdg_data_dirs.split (":"))
 					dirs.add (File.new_for_path (path));
 			}
 			XdgDataDirFolders = dirs;
@@ -112,7 +114,7 @@ namespace Plank.Services
 					dir.make_directory_with_parents ();
 					return true;
 				} catch {
-					Logger.fatal<Paths> ("Could not access the directory '%s' or create it.".printf (dir.get_path ()));
+					error ("Could not access or create the directory '%s'.", dir.get_path ());
 				}
 			
 			return false;

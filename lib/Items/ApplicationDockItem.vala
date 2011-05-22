@@ -51,7 +51,7 @@ namespace Plank.Items
 			if (!ValidItem)
 				return;
 			
-			Prefs.notify["Launcher"].connect (handle_launcher_changed);
+			Prefs.changed["Launcher"].connect (handle_launcher_changed);
 			Prefs.deleted.connect (handle_deleted);
 			
 			load_from_launcher ();
@@ -59,7 +59,7 @@ namespace Plank.Items
 		
 		~ApplicationDockItem ()
 		{
-			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
+			Prefs.changed["Launcher"].disconnect (handle_launcher_changed);
 			Prefs.deleted.disconnect (handle_deleted);
 			
 			set_app (null);
@@ -161,7 +161,7 @@ namespace Plank.Items
 			update_indicator ();
 		}
 		
-		public override void launch ()
+		public void launch ()
 		{
 			Services.System.launch (File.new_for_path (Prefs.Launcher));
 		}
@@ -199,7 +199,7 @@ namespace Plank.Items
 		
 		public override ArrayList<MenuItem> get_menu_items ()
 		{
-			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
+			var items = new ArrayList<MenuItem> ();
 			
 			if (!is_window ()) {
 				var item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
@@ -253,7 +253,7 @@ namespace Plank.Items
 			if (!is_window () && shortcuts.size > 0) {
 				items.add (new SeparatorMenuItem ());
 				
-				foreach (string s in shortcuts) {
+				foreach (var s in shortcuts) {
 					var item = new MenuItem.with_mnemonic (s);
 					item.activate.connect (() => {
 						try {
@@ -265,14 +265,14 @@ namespace Plank.Items
 			}
 			
 			if (!closed) {
-				ArrayList<Bamf.Window> windows = WindowControl.get_windows (App);
+				var windows = WindowControl.get_windows (App);
 				if (windows.size > 0) {
 					items.add (new SeparatorMenuItem ());
 					
 					int width, height;
 					icon_size_lookup (IconSize.MENU, out width, out height);
 					
-					for (int i = 0; i < windows.size; i++) {
+					for (var i = 0; i < windows.size; i++) {
 						var window = windows.get (i);
 						
 						var pbuf = WindowControl.get_window_icon (window);
@@ -348,7 +348,7 @@ namespace Plank.Items
 			text = "";
 			
 			try {
-				KeyFile file = new KeyFile ();
+				var file = new KeyFile ();
 				file.load_from_file (launcher, 0);
 				
 				icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
@@ -406,10 +406,9 @@ namespace Plank.Items
 			
 			try {
 				monitor = File.new_for_path (Prefs.Launcher).monitor (0);
-				monitor.set_rate_limit (500);
 				monitor.changed.connect (monitor_changed);
 			} catch {
-				Logger.warn<ApplicationDockItem> ("Unable to watch the launcher file '%s'".printf (Prefs.Launcher));
+				warning ("Unable to watch the launcher file '%s'", Prefs.Launcher);
 			}
 		}
 		
@@ -419,7 +418,7 @@ namespace Plank.Items
 				(event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
 				return;
 			
-			Logger.debug<ApplicationDockItem> ("Launcher file '%s' changed, reloading".printf (Prefs.Launcher));
+			debug ("Launcher file '%s' changed, reloading", Prefs.Launcher);
 			load_from_launcher ();
 		}
 		

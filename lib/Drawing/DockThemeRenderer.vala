@@ -57,8 +57,8 @@ namespace Plank.Drawing
 		[Description(nick = "active-time", blurb = "The amount of time (in ms) for active window indicator animations.")]
 		public int ActiveTime { get; set; default = 300; }
 		
-		[Description(nick = "slide-time", blurb = "NOT USED YET")]
-		public int SlideTime { get; set; default = 200; }
+		[Description(nick = "slide-time", blurb = "The amount of time (in ms) to slide icons into/out of the dock.")]
+		public int SlideTime { get; set; default = 300; }
 		
 		[Description(nick = "fade-time", blurb = "NOT USED YET")]
 		public int FadeTime { get; set; default = 200; }
@@ -77,7 +77,7 @@ namespace Plank.Drawing
 		
 		public DockSurface create_indicator (DockSurface background, int size, Color color)
 		{
-			DockSurface surface = new DockSurface.with_dock_surface (size, size, background);
+			var surface = new DockSurface.with_dock_surface (size, size, background);
 			surface.clear ();
 
 			var cr = surface.Context;

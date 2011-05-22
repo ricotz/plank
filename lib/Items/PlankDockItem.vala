@@ -38,7 +38,12 @@ namespace Plank.Items
 		
 		public override ArrayList<MenuItem> get_menu_items ()
 		{
-			ArrayList<MenuItem> items = new ArrayList<MenuItem> ();
+			return get_plank_menu_items ();
+		}
+		
+		public static ArrayList<MenuItem> get_plank_menu_items ()
+		{
+			var items = new ArrayList<MenuItem> ();
 			
 			var item = create_menu_item (_("Get _Help Online..."), "help");
 			item.activate.connect (() => {
