@@ -1,0 +1,71 @@
+# Polish translation for plank package
+# Copyright (C) 2011 Plank Developers
+# This file is distributed under the same license as the plank package.
+# Piotr Sokół <psokol@jabster.pl>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: plank 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-04-11 08:16+0200\n"
+"PO-Revision-Date: 2011-04-05 03:31+0000\n"
+"Last-Translator: Piotr Sokół <Unknown>\n"
+"Language-Team: Polish <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-05-30 17:04+0000\n"
+"X-Generator: Launchpad (build 13117)\n"
+"Language: \n"
+
+#: ../data/plank.desktop.in.h:1
+msgid "Plank. Stupidly simple."
+msgstr "Przechowuje aktywatory i ikony uruchomionych programów."
+
+#: ../lib/Items/ApplicationDockItem.vala:203
+msgid "_Keep in Dock"
+msgstr "_Dodaj aktywator"
+
+#: ../lib/Items/ApplicationDockItem.vala:221
+msgid "_Open New Window"
+msgstr "_Otwórz nowe okno"
+
+#: ../lib/Items/ApplicationDockItem.vala:227
+msgid "Unma_ximize"
+msgstr "_Przywróć zwykły rozmiar"
+
+#: ../lib/Items/ApplicationDockItem.vala:231
+msgid "Ma_ximize"
+msgstr "Zm_aksymalizuj"
+
+#: ../lib/Items/ApplicationDockItem.vala:237
+msgid "_Restore"
+msgstr "_Przywróć"
+
+#: ../lib/Items/ApplicationDockItem.vala:241
+msgid "Mi_nimize"
+msgstr "Zm_inimalizuj"
+
+#: ../lib/Items/ApplicationDockItem.vala:246
+msgid "_Close All"
+msgstr "Za_mknij wszystkie"
+
+#: ../lib/Items/FileDockItem.vala:216
+msgid "_Open in File Browser"
+msgstr "_Otwórz w menedżerze plików"
+
+#: ../lib/Items/FileDockItem.vala:229
+msgid "_Open"
+msgstr "_Otwórz"
+
+#: ../lib/Items/FileDockItem.vala:233
+msgid "Open Containing _Folder"
+msgstr "Otwórz katalog _docelowy"
+
+#: ../lib/Items/PlankDockItem.vala:43
+msgid "Get _Help Online..."
+msgstr "Uzyskaj p_omoc online..."
+
+#: ../lib/Items/PlankDockItem.vala:49
+msgid "_Translate This Application..."
+msgstr "_Przetłumacz ten program..."

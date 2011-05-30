@@ -1,0 +1,70 @@
+# Bulgarian translation for plank
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the plank package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: plank\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-04-11 08:16+0200\n"
+"PO-Revision-Date: 2011-04-12 15:46+0000\n"
+"Last-Translator: Svetoslav Stefanov <svetlisashkov@yahoo.com>\n"
+"Language-Team: Bulgarian <bg@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-05-30 17:04+0000\n"
+"X-Generator: Launchpad (build 13117)\n"
+
+#: ../data/plank.desktop.in.h:1
+msgid "Plank. Stupidly simple."
+msgstr "Plank. Пределно прост."
+
+#: ../lib/Items/ApplicationDockItem.vala:203
+msgid "_Keep in Dock"
+msgstr "_Запазване в дока"
+
+#: ../lib/Items/ApplicationDockItem.vala:221
+msgid "_Open New Window"
+msgstr "_Отваряне на нов прозорец"
+
+#: ../lib/Items/ApplicationDockItem.vala:227
+msgid "Unma_ximize"
+msgstr "_Демаксимизиране"
+
+#: ../lib/Items/ApplicationDockItem.vala:231
+msgid "Ma_ximize"
+msgstr "_Максимизиране"
+
+#: ../lib/Items/ApplicationDockItem.vala:237
+msgid "_Restore"
+msgstr "_Възстановяване"
+
+#: ../lib/Items/ApplicationDockItem.vala:241
+msgid "Mi_nimize"
+msgstr "_Минимизиране"
+
+#: ../lib/Items/ApplicationDockItem.vala:246
+msgid "_Close All"
+msgstr "_Затваряне на всички"
+
+#: ../lib/Items/FileDockItem.vala:216
+msgid "_Open in File Browser"
+msgstr "Отваряне във _файловия браузър"
+
+#: ../lib/Items/FileDockItem.vala:229
+msgid "_Open"
+msgstr "О_тваряне"
+
+#: ../lib/Items/FileDockItem.vala:233
+msgid "Open Containing _Folder"
+msgstr "Отваряне на _съдържаща папка"
+
+#: ../lib/Items/PlankDockItem.vala:43
+msgid "Get _Help Online..."
+msgstr "Получаване на помо_щ онлайн..."
+
+#: ../lib/Items/PlankDockItem.vala:49
+msgid "_Translate This Application..."
+msgstr "_Превеждане на това приложение..."
