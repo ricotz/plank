@@ -55,17 +55,7 @@ namespace Plank
 		
 		// width+height of the dock window
 		public int DockWidth {
-			// add space for urgent glow indicator
-			get {
-				double size = 2 * HorizPadding + 4 * theme.LineWidth + (int) (theme.GlowSize / 10.0 * Prefs.IconSize);
-				var now = new DateTime.now_utc ();
-				foreach (var item in window.Items.Items)
-					if (item.RemoveTime.to_unix () > 0)
-						size += ItemPadding + Prefs.IconSize * (1 - double.min (1, now.difference (item.RemoveTime) / (double) (theme.SlideTime * 1000)));
-					else
-						size += ItemPadding + Prefs.IconSize;
-				return (int) size;
-			}
+			get { return VisibleDockWidth + Prefs.IconSize + ItemPadding; }
 		}
 		
 		public int DockHeight {
@@ -75,16 +65,7 @@ namespace Plank
 		
 		// width+height of the dock background image, as drawn
 		int DockBackgroundWidth {
-			get {
-				double size = 2 * HorizPadding + 4 * theme.LineWidth;
-				var now = new DateTime.now_utc ();
-				foreach (var item in window.Items.Items)
-					if (item.RemoveTime.to_unix () > 0)
-						size += ItemPadding + Prefs.IconSize * (1 - double.min (1, now.difference (item.RemoveTime) / (double) (theme.SlideTime * 1000)));
-					else
-						size += ItemPadding + Prefs.IconSize * double.min (1, now.difference (item.AddTime) / (double) (theme.SlideTime * 1000));
-				return (int) size;
-			}
+			get { return (int) window.Items.Items.size * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
 		}
 		
 		int DockBackgroundHeight {
@@ -218,17 +199,7 @@ namespace Plank
 		{
 			var rect = Gdk.Rectangle ();
 			
-			rect.x = 2 * theme.LineWidth + (HorizPadding > 0 ? HorizPadding : 0);
-			var now = new DateTime.now_utc ();
-			foreach (var i in window.Items.Items) {
-				if (i == item)
-					break;
-				
-				if (i.RemoveTime.to_unix () > 0)
-					rect.x += ItemPadding + (int) (Prefs.IconSize * (1 - double.min (1, now.difference (i.RemoveTime) / (double) (theme.SlideTime * 1000))));
-				else
-					rect.x += ItemPadding + (int) (Prefs.IconSize * double.min (1, now.difference (i.AddTime) / (double) (theme.SlideTime * 1000)));
-			}
+			rect.x = 2 * theme.LineWidth + (HorizPadding > 0 ? HorizPadding : 0) + item.Position * (ItemPadding + Prefs.IconSize);
 			rect.y = DockHeight - VisibleDockHeight;
 			rect.width = Prefs.IconSize + ItemPadding;
 			rect.height = VisibleDockHeight;
@@ -294,23 +265,18 @@ namespace Plank
 		
 		void draw_item (DockSurface surface, DockItem item)
 		{
-			if (item.RemoveTime.to_unix () > 0)
-				return;
-			
 			var icon_surface = new DockSurface.with_dock_surface (Prefs.IconSize, Prefs.IconSize, surface);
 			
 			// load the icon
 			var item_surface = item.get_surface (icon_surface);
 			icon_surface.Context.set_source_surface (item_surface.Internal, 0, 0);
-			;
-			var icon_opacity = double.max (0, double.min (1, new DateTime.now_utc ().difference (item.AddTime) / (double) (theme.SlideTime * 1000)));
-			icon_surface.Context.paint_with_alpha (icon_opacity);
+			icon_surface.Context.paint ();
 			
 			// get draw regions
 			var draw_rect = item_draw_region (item);
 			var hover_rect = draw_rect;
 			
-			draw_rect.x += (ItemPadding - (int) ((1 - icon_opacity) * draw_rect.width)) / 2;
+			draw_rect.x += ItemPadding / 2;
 			draw_rect.y += 2 * theme.get_top_offset () + (TopPadding > 0 ? TopPadding : 0);
 			draw_rect.height -= TopPadding;
 			
@@ -563,10 +529,6 @@ namespace Plank
 				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)
 					return true;
 				if (render_time.difference (item.LastUrgent) <= (HideOffset == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
-					return true;
-				if (render_time.difference (item.AddTime) <= theme.SlideTime * 1000)
-					return true;
-				if (render_time.difference (item.RemoveTime) <= theme.SlideTime * 1000)
 					return true;
 			}
 				
