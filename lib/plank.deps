@@ -1,0 +1,11 @@
+glib-2.0
+gobject-2.0
+x11
+posix
+gio-unix-2.0
+gdk-x11-2.0 
+gtk+-2.0
+gee-1.0
+libwnck-1.0
+unique-1.0
+bamf

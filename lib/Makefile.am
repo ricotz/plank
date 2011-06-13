@@ -11,7 +11,10 @@ libplankincludedir = $(includedir)/plank
 libplankinclude_HEADERS = plank.h
 
 vapidir = $(datadir)/vala/vapi
-dist_vapi_DATA = plank.vapi
+dist_vapi_DATA = \
+	plank.vapi \
+	plank.deps \
+	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libplank.pc
