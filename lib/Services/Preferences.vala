@@ -302,7 +302,7 @@ namespace Plank.Services
 				
 				stream.put_string (file.to_data ());
 			} catch {
-				error ("Unable to create the preferences file '%s'", backing_file.get_path ());
+				warning ("Unable to create the preferences file '%s'", backing_file.get_path ());
 			}
 			
 			start_monitor ();
