@@ -61,7 +61,6 @@ namespace Plank.Factories
 			if (browser == null && terminal == null && calendar == null && media == null)
 				return false;
 			
-			make_dock_item (Factory.main.build_data_dir + "/applications/plank.desktop", 0);
 			if (browser != null)
 				make_dock_item (new DesktopAppInfo (browser.get_id ()).get_filename (), 1);
 			if (terminal != null)
@@ -76,11 +75,11 @@ namespace Plank.Factories
 		
 		public void make_default_items ()
 		{
-			if (Factory.item_factory.make_default_gnome_items ())
-				return;
-			
 			// add plank item!
 			make_dock_item (Factory.main.build_data_dir + "/applications/plank.desktop", 0);
+			
+			if (Factory.item_factory.make_default_gnome_items ())
+				return;
 			
 			// add browser
 			if (make_dock_item ("/usr/share/applications/chromium-browser.desktop", 1) == "")

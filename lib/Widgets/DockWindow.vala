@@ -434,7 +434,7 @@ namespace Plank.Widgets
 			for (var i = 0; i < first_struts.length; i++)
 				first_struts [i] = struts [i];
 			
-			var display = x11_drawable_get_xdisplay (get_window ());
+			unowned X.Display display = x11_drawable_get_xdisplay (get_window ());
 			var xid = x11_drawable_get_xid (get_window ());
 			
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,

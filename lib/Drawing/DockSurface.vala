@@ -324,6 +324,7 @@ namespace Plank.Drawing
 				unowned Thread th = Thread.create<void*> (() => {
 #endif
 					exponential_blur_rows (pixels, width, height, 0, height / 2, 0, width, alpha);
+					return null;
 				}, true);
 				
 				exponential_blur_rows (pixels, width, height, height / 2, height, 0, width, alpha);
@@ -332,6 +333,7 @@ namespace Plank.Drawing
 				// Process Columns
 				th = Thread.create<void*> (() => {
 					exponential_blur_columns (pixels, width, height, 0, width / 2, 0, height, alpha);
+					return null;
 				}, true);
 				
 				exponential_blur_columns (pixels, width, height, width / 2, width, 0, height, alpha);
@@ -447,6 +449,7 @@ namespace Plank.Drawing
 				unowned Thread th = Thread.create<void*> (() => {
 #endif
 					gaussian_blur_horizontal (abuffer, bbuffer, kernel, gaussWidth, width, height, 0, height / 2, shiftar);
+					return null;
 				}, true);
 				
 				gaussian_blur_horizontal (abuffer, bbuffer, kernel, gaussWidth, width, height, height / 2, height, shiftar);
@@ -469,6 +472,7 @@ namespace Plank.Drawing
 				// Vertical Pass
 				th = Thread.create<void*> (() => {
 					gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, 0, width / 2, shiftar);
+					return null;
 				}, true);
 				
 				gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, width / 2, width, shiftar);

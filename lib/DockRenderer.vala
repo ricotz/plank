@@ -508,6 +508,7 @@ namespace Plank
 		void hidden_changed ()
 		{
 			var now = new DateTime.now_utc ();
+			// TODO update last_fade here too
 			var diff = now.difference (last_hide);
 			
 			if (diff < theme.HideTime * 1000)

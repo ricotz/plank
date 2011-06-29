@@ -17,19 +17,54 @@
 
 namespace Plank.Services
 {
+	/**
+	 * This interface is used by objects that need to be serialized in a Preferences.
+	 * The object must have a string representation and provide these methods to
+	 * translate between the string and object representations.
+	 */
 	public interface PrefsSerializable : GLib.Object
 	{
+		/**
+		 * Serializes the object into a string representation.
+		 *
+		 * @return the string representation of the object
+		 */
 		public abstract string prefs_serialize ();
+		
+		/**
+		 * Un-serializes the object from a string representation.
+		 *
+		 * @param s the string representation of the object
+		 */
 		public abstract void prefs_deserialize (string s);
 	}
 	
+	/**
+	 * Clients of this class should not connect to the {@link GLib.Object.notify()} signal.
+	 * Instead, they should connect to the {@link Plank.Services.Preferences.changed()} signal.
+	 */
 	public abstract class Preferences : GLib.Object
 	{
+		/**
+		 * This signal is to be used in place of the standard {@link GLib.Object.notify()} signal.
+		 *
+		 * This signal ''only'' emits after a property's value was verified.
+		 *
+		 * Note that in the case where a property was set to an invalid value,
+		 * (and thus, sanitized to a valid value), the {@link GLib.Object.notify()} signal will emit 
+		 * twice: once with the invalid value and once with the sanitized value.
+		 */
 		[Signal (no_recurse = true, run = "first", action = true, no_hooks = true, detailed = true)]
 		public signal void changed ();
 		
+		/**
+		 * This signal indicates that the backing file for this preferences was deleted.
+		 */
 		public signal void deleted ();
 		
+		/**
+		 * Creates a new preferences object with no backing file.
+		 */
 		public Preferences ()
 		{
 			notify.connect (handle_notify);
@@ -58,7 +93,7 @@ namespace Plank.Services
 				save_prefs ();
 		}
 		
-		private void call_verify (string prop)
+		void call_verify (string prop)
 		{
 			notify.connect (handle_verify_notify);
 			verify (prop);
@@ -66,6 +101,12 @@ namespace Plank.Services
 			notify.disconnect (handle_verify_notify);
 		}
 		
+		/**
+		 * This method will verify the value of a property.
+		 * If the value is wrong, this method should replace it with a sanitized value.
+		 *
+		 * @param prop the name of the property that needs verified
+		 */
 		protected virtual void verify (string prop)
 		{
 			// do nothing, this isnt abstract because we dont
@@ -75,11 +116,21 @@ namespace Plank.Services
 		File backing_file;
 		FileMonitor backing_monitor;
 		
+		/**
+		 * Creates a preferences object with a backing file.
+		 *
+		 * @param filename the path to the backing file for this preferences
+		 */
 		public Preferences.with_file (string filename)
 		{
 			init_from_file (filename);
 		}
 		
+		/**
+		 * Initializes this preferences with a backing file.
+		 *
+		 * @param filename the path to the backing file for this preferences
+		 */
 		protected void init_from_file (string filename)
 		{
 			backing_file = Paths.UserConfigFolder.get_child (filename);
@@ -94,6 +145,9 @@ namespace Plank.Services
 			start_monitor ();
 		}
 		
+		/**
+		 * This forces the deletion of the backing file for this preferences.
+		 */
 		public void delete ()
 		{
 			try {
@@ -248,7 +302,7 @@ namespace Plank.Services
 				
 				stream.put_string (file.to_data ());
 			} catch {
-				error ("Unable to create the preferences file '%s'", backing_file.get_path ());
+				warning ("Unable to create the preferences file '%s'", backing_file.get_path ());
 			}
 			
 			start_monitor ();

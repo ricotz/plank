@@ -1,1 +1,1 @@
-SUBDIRS = Matte Transparent
+SUBDIRS = Default Matte Transparent
