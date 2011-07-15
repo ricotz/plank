@@ -29,11 +29,24 @@ namespace Plank
 	{
 		DockWindow window;
 		
+		DockPreferences Prefs {
+			get { return window.Prefs; }
+		}
+		
+		DockThemeRenderer theme;
+		
 		DockSurface background_buffer;
 		DockSurface main_buffer;
 		DockSurface indicator_buffer;
 		DockSurface urgent_indicator_buffer;
 		DockSurface urgent_glow_buffer;
+		
+		DateTime last_hide = new DateTime.from_unix_utc (0);
+		DateTime last_fade = new DateTime.from_unix_utc (0);
+		
+		int UrgentHueShift {
+			get { return 150; }
+		}
 		
 		public bool Hidden { get; protected set; default = true; }
 		
@@ -44,58 +57,6 @@ namespace Plank
 			}
 		}
 		
-		// width+height of the visible (cursor) rect of the dock
-		public int VisibleDockWidth {
-			get { return HorizPadding < 0 ? DockBackgroundWidth - 2 * HorizPadding : DockBackgroundWidth; }
-		}
-		
-		public int VisibleDockHeight {
-			get { return 2 * theme.get_top_offset () + (TopPadding > 0 ? TopPadding : 0) + (BottomPadding > 0 ? BottomPadding : 0) + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
-		}
-		
-		// width+height of the dock window
-		public int DockWidth {
-			get { return VisibleDockWidth + Prefs.IconSize + ItemPadding; }
-		}
-		
-		public int DockHeight {
-			// FIXME zoom disabled
-			get { return VisibleDockHeight + (int) (Prefs.IconSize * theme.UrgentBounceHeight) /*+ (int) ((Prefs.Zoom - 1) * Prefs.IconSize)*/; }
-		}
-		
-		// width+height of the dock background image, as drawn
-		int DockBackgroundWidth {
-			get { return (int) window.Items.Items.size * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
-		}
-		
-		int DockBackgroundHeight {
-			get { return VisibleDockHeight + (TopPadding < 0 ? TopPadding : 0); }
-		}
-		
-		int IndicatorSize {
-			get { return (int) (theme.IndicatorSize / 10.0 * Prefs.IconSize); }
-		}
-		
-		int HorizPadding {
-			get { return (int) (theme.HorizPadding / 10.0 * Prefs.IconSize); }
-		}
-		
-		int TopPadding {
-			get { return (int) (theme.TopPadding / 10.0 * Prefs.IconSize); }
-		}
-		
-		int BottomPadding {
-			get { return (int) (theme.BottomPadding / 10.0 * Prefs.IconSize); }
-		}
-		
-		int ItemPadding {
-			get { return (int) (theme.ItemPadding / 10.0 * Prefs.IconSize); }
-		}
-		
-		int UrgentHueShift {
-			get { return 150; }
-		}
-		
 		double Opacity {
 			get {
 				var diff = double.min (1, new DateTime.now_utc ().difference (last_fade) / (double) (theme.FadeTime * 1000));
@@ -103,14 +64,60 @@ namespace Plank
 			}
 		}
 		
-		DateTime last_hide = new DateTime.from_unix_utc (0);
-		DateTime last_fade = new DateTime.from_unix_utc (0);
-		
-		DockPreferences Prefs {
-			get { return window.Prefs; }
+		// width of the visible (cursor) rect of the dock
+		public int VisibleDockWidth {
+			get { return HorizPadding < 0 ? DockBackgroundWidth - 2 * HorizPadding : DockBackgroundWidth; }
 		}
 		
-		DockThemeRenderer theme;
+		// width of the dock window
+		public int DockWidth {
+			get { return VisibleDockWidth + Prefs.IconSize + ItemPadding; }
+		}
+		
+		// width of the dock background image, as drawn
+		int DockBackgroundWidth {
+			get { return (int) window.Items.Items.size * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
+		}
+		
+		// used to cache various sizes calculated from the theme and preferences
+		int IndicatorSize { get; set; }
+		int HorizPadding  { get; set; }
+		int TopPadding    { get; set; }
+		int BottomPadding { get; set; }
+		int ItemPadding   { get; set; }
+		
+		public int VisibleDockHeight { get; protected set; }
+		public int DockHeight { get; protected set; }
+		int DockBackgroundHeight { get; set; }
+		
+		void reset_caches ()
+		{
+			var icon_size = Prefs.IconSize;
+			
+			IndicatorSize = (int) (theme.IndicatorSize / 10.0 * icon_size);
+			HorizPadding  = (int) (theme.HorizPadding  / 10.0 * icon_size);
+			TopPadding    = (int) (theme.TopPadding    / 10.0 * icon_size);
+			BottomPadding = (int) (theme.BottomPadding / 10.0 * icon_size);
+			ItemPadding   = (int) (theme.ItemPadding   / 10.0 * icon_size);
+			
+			// height of the visible (cursor) rect of the dock
+			// use a temporary to avoid (possibly) doing more than 1 notify signal
+			var tmp = icon_size + 2 * (theme.get_top_offset () + theme.get_bottom_offset ());
+			if (TopPadding > 0)
+				tmp += TopPadding;
+			if (BottomPadding > 0)
+				tmp += BottomPadding;
+			VisibleDockHeight = tmp;
+			
+			// height of the dock window
+			// FIXME zoom disabled
+			DockHeight = VisibleDockHeight + (int) (icon_size * theme.UrgentBounceHeight) /*+ (int) ((Prefs.Zoom - 1) * icon_size)*/;
+			
+			// height of the dock background image, as drawn
+			DockBackgroundHeight = VisibleDockHeight;
+			if (TopPadding < 0)
+				DockBackgroundHeight += TopPadding;
+		}
 		
 		public DockRenderer (DockWindow window)
 		{
@@ -121,7 +128,10 @@ namespace Plank
 			theme.TopRoundness = 4;
 			theme.BottomRoundness = 0;
 			theme.load ("dock");
+			
+			Prefs.notify["IconSize"].connect (icon_size_changed);
 			theme.changed.connect (theme_changed);
+			reset_caches ();
 			
 			window.notify["HoveredItem"].connect (animated_draw);
 			window.Items.item_state_changed.connect (animated_draw);
@@ -131,12 +141,24 @@ namespace Plank
 		
 		~DockRenderer ()
 		{
+			Prefs.notify["IconSize"].disconnect (icon_size_changed);
 			theme.changed.disconnect (theme_changed);
 			
 			window.notify["HoveredItem"].disconnect (animated_draw);
 			window.Items.item_state_changed.disconnect (animated_draw);
 			
 			notify["Hidden"].disconnect (hidden_changed);
+		}
+		
+		void icon_size_changed ()
+		{
+			reset_caches ();
+		}
+		
+		void theme_changed ()
+		{
+			reset_caches ();
+			window.set_size ();
 		}
 		
 		public void show ()
@@ -169,7 +191,7 @@ namespace Plank
 			var rect = Gdk.Rectangle ();
 			
 			rect.width = VisibleDockWidth;
-			rect.height = (int) double.max (1, (1 - HideOffset) * VisibleDockHeight);
+			rect.height = int.max (1, (int) ((1 - HideOffset) * VisibleDockHeight));
 			rect.x = (window.width_request - rect.width) / 2;
 			rect.y = window.height_request - rect.height;
 			
@@ -285,9 +307,10 @@ namespace Plank
 			var darken = 0.0;
 			
 			var max_click_time = item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
+			max_click_time *= 1000;
 			var click_time = new DateTime.now_utc ().difference (item.LastClicked);
-			if (click_time < max_click_time * 1000) {
-				var clickAnimationProgress = click_time / (double) (max_click_time * 1000);
+			if (click_time < max_click_time) {
+				var clickAnimationProgress = click_time / (double) max_click_time;
 				
 				switch (item.ClickedAnimation) {
 				case ClickAnimation.BOUNCE:
@@ -494,11 +517,6 @@ namespace Plank
 			surface.Context.set_source_rgba (1, 1, 1, 1);
 			surface.Context.fill ();
 			surface.Context.restore ();
-		}
-		
-		void theme_changed ()
-		{
-			window.set_size ();
 		}
 		
 		void hidden_changed ()
