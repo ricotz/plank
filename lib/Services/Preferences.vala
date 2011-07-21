@@ -140,7 +140,6 @@ namespace Plank.Services
 			backing_file = Paths.UserConfigFolder.get_child (filename);
 			
 			// ensure the preferences file exists
-			Paths.ensure_directory_exists (backing_file.get_parent ());
 			if (!backing_file.query_exists ())
 				save_prefs ();
 			
