@@ -81,6 +81,8 @@ namespace Plank.Services
 			call_verify (property.name);
 			notify.connect (handle_notify);
 			
+			// FIXME save_prefs() might be called twice in this path (if verification failed)
+			//       need to figure out a way to only call it once
 			if (backing_file != null)
 				save_prefs ();
 		}
