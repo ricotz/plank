@@ -155,7 +155,9 @@ namespace Plank.Services
 		{
 			try {
 				backing_file.delete ();
-			} catch { }
+			} catch {
+				warning ("Unable to delete the preferences file '%s'", backing_file.get_path ());
+			}
 		}
 		
 		void stop_monitor ()
