@@ -87,10 +87,12 @@ namespace Plank.Services
 		
 		void handle_verify_notify (Object sender, ParamSpec property)
 		{
-			warning ("Key '%s' failed verification in preferences file '%s', changing value", property.name, backing_file.get_path ());
-			
-			if (backing_file != null)
+			if (backing_file != null) {
+				warning ("Key '%s' failed verification in preferences file '%s', changing value", property.name, backing_file.get_path ());
 				save_prefs ();
+			} else {
+				warning ("Key '%s' failed verification, changing value", property.name);
+			}
 		}
 		
 		void call_verify (string prop)
