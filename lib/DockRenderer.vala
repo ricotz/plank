@@ -96,10 +96,10 @@ namespace Plank
 			
 			// height of the dock window
 			// FIXME zoom disabled
-			DockHeight = VisibleDockHeight + (int) (icon_size * theme.UrgentBounceHeight) /*+ (int) ((Prefs.Zoom - 1) * icon_size)*/;
+			DockHeight = tmp + (int) (icon_size * theme.UrgentBounceHeight) /*+ (int) ((Prefs.Zoom - 1) * icon_size)*/;
 			
 			// height of the dock background image, as drawn
-			DockBackgroundHeight = VisibleDockHeight;
+			DockBackgroundHeight = tmp;
 			if (TopPadding < 0)
 				DockBackgroundHeight += TopPadding;
 		}
