@@ -42,7 +42,6 @@ namespace Plank
 		DockSurface urgent_glow_buffer;
 		
 		DateTime last_hide = new DateTime.from_unix_utc (0);
-		DateTime last_fade = new DateTime.from_unix_utc (0);
 		
 		int UrgentHueShift {
 			get { return 150; }
@@ -58,10 +57,7 @@ namespace Plank
 		}
 		
 		double Opacity {
-			get {
-				var diff = double.min (1, new DateTime.now_utc ().difference (last_fade) / (double) (theme.FadeTime * 1000));
-				return Hidden ? diff : 1 - diff;
-			}
+			get { return double.min (1, (1 - HideOffset) + theme.FadeOpacity); }
 		}
 		
 		public Gdk.Rectangle CursorRegion { get; protected set; }
@@ -273,12 +269,15 @@ namespace Plank
 			var x_offset = (window.width_request - main_buffer.Width) / 2;
 			
 			cr.set_operator (Operator.SOURCE);
-			cr.set_source_surface (main_buffer.Internal, x_offset, VisibleDockHeight * HideOffset);
+			var y_offset = 0.0;
+			if (theme.FadeOpacity == 1.0)
+				y_offset = VisibleDockHeight * HideOffset;
+			cr.set_source_surface (main_buffer.Internal, x_offset, y_offset);
 			cr.paint ();
 			
 			if (Opacity < 1.0) {
 				cr.set_source_rgba (0, 0, 0, 0);
-				cr.paint_with_alpha (Opacity);
+				cr.paint_with_alpha (1 - Opacity);
 			}
 			
 			if (HideOffset == 1) {
@@ -548,7 +547,6 @@ namespace Plank
 		void hidden_changed ()
 		{
 			var now = new DateTime.now_utc ();
-			// TODO update last_fade here too
 			var diff = now.difference (last_hide);
 			
 			if (diff < theme.HideTime * 1000)
@@ -561,11 +559,13 @@ namespace Plank
 		
 		protected override bool animation_needed (DateTime render_time)
 		{
-			if (render_time.difference (last_hide) <= theme.HideTime * 1000)
-				return true;
-			
-			if (render_time.difference (last_fade) <= theme.FadeTime * 1000)
-				return true;
+			if (theme.FadeOpacity == 1.0) {
+				if (render_time.difference (last_hide) <= theme.HideTime * 1000)
+					return true;
+			} else {
+				if (render_time.difference (last_hide) <= theme.FadeTime * 1000)
+					return true;
+			}
 			
 			foreach (DockItem item in window.Items.Items) {
 				if (render_time.difference (item.LastClicked) <= (item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
