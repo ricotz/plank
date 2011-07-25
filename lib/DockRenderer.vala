@@ -64,6 +64,9 @@ namespace Plank
 			}
 		}
 		
+		public Gdk.Rectangle CursorRegion { get; protected set; }
+		public Gdk.Rectangle StaticDockRegion { get; protected set; }
+		
 		// used to cache various sizes calculated from the theme and preferences
 		int IndicatorSize { get; set; }
 		int HorizPadding  { get; set; }
@@ -133,6 +136,9 @@ namespace Plank
 			base (window);
 			this.window = window;
 			
+			CursorRegion = Gdk.Rectangle ();
+			StaticDockRegion = Gdk.Rectangle ();
+			
 			theme = new DockThemeRenderer ();
 			theme.TopRoundness = 4;
 			theme.BottomRoundness = 0;
@@ -140,7 +146,7 @@ namespace Plank
 			
 			Prefs.notify["IconSize"].connect (icon_size_changed);
 			theme.changed.connect (theme_changed);
-			reset_item_caches ();
+			items_changed ();
 			
 			window.notify["HoveredItem"].connect (animated_draw);
 			window.Items.item_removed.connect (items_changed);
@@ -166,16 +172,19 @@ namespace Plank
 		void items_changed ()
 		{
 			reset_item_caches ();
+			update_regions ();
 		}
 		
 		void icon_size_changed ()
 		{
 			reset_caches ();
+			update_regions ();
 		}
 		
 		void theme_changed ()
 		{
 			reset_caches ();
+			update_regions ();
 			window.set_size ();
 		}
 		
@@ -206,26 +215,25 @@ namespace Plank
 		
 		public Gdk.Rectangle cursor_region ()
 		{
-			var rect = Gdk.Rectangle ();
+			CursorRegion.width = VisibleDockWidth;
+			CursorRegion.height = int.max (1, (int) ((1 - HideOffset) * VisibleDockHeight));
+			CursorRegion.x = (window.width_request - CursorRegion.width) / 2;
+			CursorRegion.y = window.height_request - CursorRegion.height;
 			
-			rect.width = VisibleDockWidth;
-			rect.height = int.max (1, (int) ((1 - HideOffset) * VisibleDockHeight));
-			rect.x = (window.width_request - rect.width) / 2;
-			rect.y = window.height_request - rect.height;
-			
-			return rect;
+			return CursorRegion;
 		}
 		
 		public Gdk.Rectangle static_dock_region ()
 		{
-			var rect = Gdk.Rectangle ();
-			
-			rect.width = VisibleDockWidth;
-			rect.height = VisibleDockHeight;
-			rect.x = (window.width_request - rect.width) / 2;
-			rect.y = window.height_request - rect.height;
-			
-			return rect;
+			return StaticDockRegion;
+		}
+		
+		void update_regions ()
+		{
+			StaticDockRegion.width = VisibleDockWidth;
+			StaticDockRegion.height = VisibleDockHeight;
+			StaticDockRegion.x = (window.width_request - StaticDockRegion.width) / 2;
+			StaticDockRegion.y = window.height_request - StaticDockRegion.height;
 		}
 		
 		public Gdk.Rectangle item_hover_region (DockItem item)
