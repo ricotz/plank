@@ -49,9 +49,14 @@ namespace Plank
 		
 		public bool Hidden { get; protected set; default = true; }
 		
-		public double HideOffset {
+		public int Offset {
+			get { return int.max (1, (int) ((1 - HideOffset) * VisibleDockHeight)); }
+		}
+		
+		double HideOffset {
 			get {
-				var diff = double.min (1, new DateTime.now_utc ().difference (last_hide) / (double) ((theme.FadeOpacity == 1.0 ? theme.HideTime : theme.FadeTime) * 1000));
+				var time = theme.FadeOpacity == 1.0 ? theme.HideTime : theme.FadeTime;
+				var diff = double.min (1, new DateTime.now_utc ().difference (last_hide) / (double) (time * 1000));
 				return Hidden ? diff : 1 - diff;
 			}
 		}
@@ -212,7 +217,7 @@ namespace Plank
 		public Gdk.Rectangle cursor_region ()
 		{
 			CursorRegion.width = VisibleDockWidth;
-			CursorRegion.height = int.max (1, (int) ((1 - HideOffset) * VisibleDockHeight));
+			CursorRegion.height = Offset;
 			CursorRegion.x = (window.width_request - CursorRegion.width) / 2;
 			CursorRegion.y = window.height_request - CursorRegion.height;
 			
