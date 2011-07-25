@@ -21,6 +21,9 @@ namespace Plank
 {
 	public abstract class AnimatedRenderer : GLib.Object
 	{
+		// how many frames per second we want (roughly)
+		private const uint FPS = 60;
+		
 		private Widget widget;
 		
 		private uint animation_timer = 0;
@@ -40,7 +43,7 @@ namespace Plank
 			widget.queue_draw ();
 			
 			if (animation_needed (new DateTime.now_utc ()))
-				animation_timer = GLib.Timeout.add (1000 / 60, draw_timeout);
+				animation_timer = GLib.Timeout.add (1000 / FPS, draw_timeout);
 		}
 		
 		private bool draw_timeout ()
