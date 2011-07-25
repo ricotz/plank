@@ -64,7 +64,7 @@ namespace Plank.Drawing
 		public int SlideTime { get; set; default = 300; }
 		
 		[Description(nick = "fade-time", blurb = "The time (in ms) to fade the dock in/out on a hide (if FadeOpacity is < 1).")]
-		public int FadeTime { get; set; default = 200; }
+		public int FadeTime { get; set; default = 250; }
 		
 		[Description(nick = "hide-time", blurb = "The time (in ms) to slide the dock in/out on a hide (if FadeOpacity is 1).")]
 		public int HideTime { get; set; default = 150; }
