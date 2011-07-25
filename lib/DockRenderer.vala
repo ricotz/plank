@@ -124,6 +124,8 @@ namespace Plank
 			
 			// width of the dock window
 			DockWidth = width + Prefs.IconSize + ItemPadding;
+			
+			animated_draw ();
 		}
 		
 		public DockRenderer (DockWindow window)
