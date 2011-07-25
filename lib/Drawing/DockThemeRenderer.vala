@@ -63,10 +63,10 @@ namespace Plank.Drawing
 		[Description(nick = "slide-time", blurb = "The amount of time (in ms) to slide icons into/out of the dock.")]
 		public int SlideTime { get; set; default = 300; }
 		
-		[Description(nick = "fade-time", blurb = "NOT USED YET")]
+		[Description(nick = "fade-time", blurb = "The time (in ms) to fade the dock in/out on a hide (if FadeOpacity is < 1).")]
 		public int FadeTime { get; set; default = 200; }
 		
-		[Description(nick = "hide-time", blurb = "The time (in ms) to slide the dock in/out on a hide.")]
+		[Description(nick = "hide-time", blurb = "The time (in ms) to slide the dock in/out on a hide (if FadeOpacity is 1).")]
 		public int HideTime { get; set; default = 150; }
 		
 		[Description(nick = "glow-size", blurb = "The size of the urgent glow (shown when dock is hidden), in tenths of a percent of IconSize.")]
