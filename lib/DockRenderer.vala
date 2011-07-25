@@ -51,7 +51,7 @@ namespace Plank
 		
 		public double HideOffset {
 			get {
-				var diff = double.min (1, new DateTime.now_utc ().difference (last_hide) / (double) (theme.HideTime * 1000));
+				var diff = double.min (1, new DateTime.now_utc ().difference (last_hide) / (double) ((theme.FadeOpacity == 1.0 ? theme.HideTime : theme.FadeTime) * 1000));
 				return Hidden ? diff : 1 - diff;
 			}
 		}
