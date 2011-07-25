@@ -64,21 +64,6 @@ namespace Plank
 			}
 		}
 		
-		// width of the visible (cursor) rect of the dock
-		public int VisibleDockWidth {
-			get { return HorizPadding < 0 ? DockBackgroundWidth - 2 * HorizPadding : DockBackgroundWidth; }
-		}
-		
-		// width of the dock window
-		public int DockWidth {
-			get { return VisibleDockWidth + Prefs.IconSize + ItemPadding; }
-		}
-		
-		// width of the dock background image, as drawn
-		int DockBackgroundWidth {
-			get { return (int) window.Items.Items.size * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
-		}
-		
 		// used to cache various sizes calculated from the theme and preferences
 		int IndicatorSize { get; set; }
 		int HorizPadding  { get; set; }
@@ -119,6 +104,28 @@ namespace Plank
 				DockBackgroundHeight += TopPadding;
 		}
 		
+		public int VisibleDockWidth { get; protected set; }
+		public int DockWidth { get; protected set; }
+		int DockBackgroundWidth { get; set; }
+		
+		void reset_item_caches ()
+		{
+			reset_caches ();
+			
+			var width = (int) window.Items.Items.size * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth;
+			
+			// width of the dock background image, as drawn
+			DockBackgroundWidth = width;
+			
+			// width of the visible (cursor) rect of the dock
+			if (HorizPadding < 0)
+				width -= 2 * HorizPadding;
+			VisibleDockWidth = width;
+			
+			// width of the dock window
+			DockWidth = width + Prefs.IconSize + ItemPadding;
+		}
+		
 		public DockRenderer (DockWindow window)
 		{
 			base (window);
@@ -131,10 +138,12 @@ namespace Plank
 			
 			Prefs.notify["IconSize"].connect (icon_size_changed);
 			theme.changed.connect (theme_changed);
-			reset_caches ();
+			reset_item_caches ();
 			
 			window.notify["HoveredItem"].connect (animated_draw);
-			window.Items.item_state_changed.connect (animated_draw);
+			window.Items.item_removed.connect (items_changed);
+			window.Items.item_added.connect (items_changed);
+			window.Items.item_state_changed.connect (items_changed);
 			
 			notify["Hidden"].connect (hidden_changed);
 		}
@@ -145,9 +154,16 @@ namespace Plank
 			theme.changed.disconnect (theme_changed);
 			
 			window.notify["HoveredItem"].disconnect (animated_draw);
-			window.Items.item_state_changed.disconnect (animated_draw);
+			window.Items.item_removed.disconnect (items_changed);
+			window.Items.item_added.disconnect (items_changed);
+			window.Items.item_state_changed.disconnect (items_changed);
 			
 			notify["Hidden"].disconnect (hidden_changed);
+		}
+		
+		void items_changed ()
+		{
+			reset_item_caches ();
 		}
 		
 		void icon_size_changed ()
