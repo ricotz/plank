@@ -81,16 +81,20 @@ namespace Plank.Services
 			call_verify (property.name);
 			notify.connect (handle_notify);
 			
+			// FIXME save_prefs() might be called twice in this path (if verification failed)
+			//       need to figure out a way to only call it once
 			if (backing_file != null)
 				save_prefs ();
 		}
 		
 		void handle_verify_notify (Object sender, ParamSpec property)
 		{
-			warning ("Key '%s' failed verification in preferences file '%s', changing value", property.name, backing_file.get_path ());
-			
-			if (backing_file != null)
+			if (backing_file != null) {
+				warning ("Key '%s' failed verification in preferences file '%s', changing value", property.name, backing_file.get_path ());
 				save_prefs ();
+			} else {
+				warning ("Key '%s' failed verification, changing value", property.name);
+			}
 		}
 		
 		void call_verify (string prop)
@@ -136,7 +140,6 @@ namespace Plank.Services
 			backing_file = Paths.UserConfigFolder.get_child (filename);
 			
 			// ensure the preferences file exists
-			Paths.ensure_directory_exists (backing_file.get_parent ());
 			if (!backing_file.query_exists ())
 				save_prefs ();
 			
@@ -152,7 +155,9 @@ namespace Plank.Services
 		{
 			try {
 				backing_file.delete ();
-			} catch { }
+			} catch {
+				warning ("Unable to delete the preferences file '%s'", backing_file.get_path ());
+			}
 		}
 		
 		void stop_monitor ()

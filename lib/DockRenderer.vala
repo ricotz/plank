@@ -29,114 +29,164 @@ namespace Plank
 	{
 		DockWindow window;
 		
-		DockSurface background_buffer;
-		DockSurface main_buffer;
-		DockSurface indicator_buffer;
-		DockSurface urgent_indicator_buffer;
-		DockSurface urgent_glow_buffer;
-		
-		public bool Hidden { get; protected set; default = true; }
-		
-		public double HideOffset {
-			get {
-				var diff = double.min (1, new DateTime.now_utc ().difference (last_hide) / (double) (theme.HideTime * 1000));
-				return Hidden ? diff : 1 - diff;
-			}
-		}
-		
-		// width+height of the visible (cursor) rect of the dock
-		public int VisibleDockWidth {
-			get { return HorizPadding < 0 ? DockBackgroundWidth - 2 * HorizPadding : DockBackgroundWidth; }
-		}
-		
-		public int VisibleDockHeight {
-			get { return 2 * theme.get_top_offset () + (TopPadding > 0 ? TopPadding : 0) + (BottomPadding > 0 ? BottomPadding : 0) + Prefs.IconSize + 2 * theme.get_bottom_offset (); }
-		}
-		
-		// width+height of the dock window
-		public int DockWidth {
-			get { return VisibleDockWidth + Prefs.IconSize + ItemPadding; }
-		}
-		
-		public int DockHeight {
-			// FIXME zoom disabled
-			get { return VisibleDockHeight + (int) (Prefs.IconSize * theme.UrgentBounceHeight) /*+ (int) ((Prefs.Zoom - 1) * Prefs.IconSize)*/; }
-		}
-		
-		// width+height of the dock background image, as drawn
-		int DockBackgroundWidth {
-			get { return (int) window.Items.Items.size * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth; }
-		}
-		
-		int DockBackgroundHeight {
-			get { return VisibleDockHeight + (TopPadding < 0 ? TopPadding : 0); }
-		}
-		
-		int IndicatorSize {
-			get { return (int) (theme.IndicatorSize / 10.0 * Prefs.IconSize); }
-		}
-		
-		int HorizPadding {
-			get { return (int) (theme.HorizPadding / 10.0 * Prefs.IconSize); }
-		}
-		
-		int TopPadding {
-			get { return (int) (theme.TopPadding / 10.0 * Prefs.IconSize); }
-		}
-		
-		int BottomPadding {
-			get { return (int) (theme.BottomPadding / 10.0 * Prefs.IconSize); }
-		}
-		
-		int ItemPadding {
-			get { return (int) (theme.ItemPadding / 10.0 * Prefs.IconSize); }
-		}
-		
-		int UrgentHueShift {
-			get { return 150; }
-		}
-		
-		double Opacity {
-			get {
-				var diff = double.min (1, new DateTime.now_utc ().difference (last_fade) / (double) (theme.FadeTime * 1000));
-				return Hidden ? diff : 1 - diff;
-			}
-		}
-		
-		DateTime last_hide = new DateTime.from_unix_utc (0);
-		DateTime last_fade = new DateTime.from_unix_utc (0);
-		
 		DockPreferences Prefs {
 			get { return window.Prefs; }
 		}
 		
 		DockThemeRenderer theme;
 		
+		DockSurface background_buffer;
+		DockSurface main_buffer;
+		DockSurface indicator_buffer;
+		DockSurface urgent_indicator_buffer;
+		DockSurface urgent_glow_buffer;
+		
+		DateTime last_hide = new DateTime.from_unix_utc (0);
+		
+		int UrgentHueShift {
+			get { return 150; }
+		}
+		
+		public bool Hidden { get; protected set; default = true; }
+		
+		public int Offset {
+			get { return int.max (1, (int) ((1 - HideOffset) * VisibleDockHeight)); }
+		}
+		
+		double HideOffset {
+			get {
+				var time = theme.FadeOpacity == 1.0 ? theme.HideTime : theme.FadeTime;
+				var diff = double.min (1, new DateTime.now_utc ().difference (last_hide) / (double) (time * 1000));
+				return Hidden ? diff : 1 - diff;
+			}
+		}
+		
+		double Opacity {
+			get { return double.min (1, (1 - HideOffset) + theme.FadeOpacity); }
+		}
+		
+		public Gdk.Rectangle CursorRegion { get; protected set; }
+		public Gdk.Rectangle StaticDockRegion { get; protected set; }
+		
+		// used to cache various sizes calculated from the theme and preferences
+		int IndicatorSize { get; set; }
+		int HorizPadding  { get; set; }
+		int TopPadding    { get; set; }
+		int BottomPadding { get; set; }
+		int ItemPadding   { get; set; }
+		
+		public int VisibleDockHeight { get; protected set; }
+		public int DockHeight { get; protected set; }
+		int DockBackgroundHeight { get; set; }
+		
+		void reset_caches ()
+		{
+			var icon_size = Prefs.IconSize;
+			
+			IndicatorSize = (int) (theme.IndicatorSize / 10.0 * icon_size);
+			HorizPadding  = (int) (theme.HorizPadding  / 10.0 * icon_size);
+			TopPadding    = (int) (theme.TopPadding    / 10.0 * icon_size);
+			BottomPadding = (int) (theme.BottomPadding / 10.0 * icon_size);
+			ItemPadding   = (int) (theme.ItemPadding   / 10.0 * icon_size);
+			
+			// height of the visible (cursor) rect of the dock
+			// use a temporary to avoid (possibly) doing more than 1 notify signal
+			var tmp = icon_size + 2 * (theme.get_top_offset () + theme.get_bottom_offset ());
+			if (TopPadding > 0)
+				tmp += TopPadding;
+			if (BottomPadding > 0)
+				tmp += BottomPadding;
+			VisibleDockHeight = tmp;
+			
+			// height of the dock window
+			// FIXME zoom disabled
+			DockHeight = tmp + (int) (icon_size * theme.UrgentBounceHeight) /*+ (int) ((Prefs.Zoom - 1) * icon_size)*/;
+			
+			// height of the dock background image, as drawn
+			DockBackgroundHeight = tmp;
+			if (TopPadding < 0)
+				DockBackgroundHeight += TopPadding;
+		}
+		
+		public int VisibleDockWidth { get; protected set; }
+		public int DockWidth { get; protected set; }
+		int DockBackgroundWidth { get; set; }
+		
+		void reset_item_caches ()
+		{
+			reset_caches ();
+			
+			var width = (int) window.Items.Items.size * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth;
+			
+			// width of the dock background image, as drawn
+			DockBackgroundWidth = width;
+			
+			// width of the visible (cursor) rect of the dock
+			if (HorizPadding < 0)
+				width -= 2 * HorizPadding;
+			VisibleDockWidth = width;
+			
+			// width of the dock window
+			DockWidth = width + Prefs.IconSize + ItemPadding;
+			
+			animated_draw ();
+		}
+		
 		public DockRenderer (DockWindow window)
 		{
 			base (window);
 			this.window = window;
 			
+			CursorRegion = Gdk.Rectangle ();
+			StaticDockRegion = Gdk.Rectangle ();
+			
 			theme = new DockThemeRenderer ();
 			theme.TopRoundness = 4;
 			theme.BottomRoundness = 0;
 			theme.load ("dock");
+			
+			Prefs.notify["IconSize"].connect (icon_size_changed);
 			theme.changed.connect (theme_changed);
+			items_changed ();
 			
 			window.notify["HoveredItem"].connect (animated_draw);
-			window.Items.item_state_changed.connect (animated_draw);
+			window.Items.item_removed.connect (items_changed);
+			window.Items.item_added.connect (items_changed);
+			window.Items.item_state_changed.connect (items_changed);
 			
 			notify["Hidden"].connect (hidden_changed);
 		}
 		
 		~DockRenderer ()
 		{
+			Prefs.notify["IconSize"].disconnect (icon_size_changed);
 			theme.changed.disconnect (theme_changed);
 			
 			window.notify["HoveredItem"].disconnect (animated_draw);
-			window.Items.item_state_changed.disconnect (animated_draw);
+			window.Items.item_removed.disconnect (items_changed);
+			window.Items.item_added.disconnect (items_changed);
+			window.Items.item_state_changed.disconnect (items_changed);
 			
 			notify["Hidden"].disconnect (hidden_changed);
+		}
+		
+		void items_changed ()
+		{
+			reset_item_caches ();
+			update_regions ();
+		}
+		
+		void icon_size_changed ()
+		{
+			reset_caches ();
+			update_regions ();
+		}
+		
+		void theme_changed ()
+		{
+			reset_caches ();
+			update_regions ();
+			window.set_size ();
 		}
 		
 		public void show ()
@@ -166,26 +216,25 @@ namespace Plank
 		
 		public Gdk.Rectangle cursor_region ()
 		{
-			var rect = Gdk.Rectangle ();
+			CursorRegion.width = VisibleDockWidth;
+			CursorRegion.height = Offset;
+			CursorRegion.x = (window.width_request - CursorRegion.width) / 2;
+			CursorRegion.y = window.height_request - CursorRegion.height;
 			
-			rect.width = VisibleDockWidth;
-			rect.height = int.max (1, (int) ((1 - HideOffset) * VisibleDockHeight));
-			rect.x = (window.width_request - rect.width) / 2;
-			rect.y = window.height_request - rect.height;
-			
-			return rect;
+			return CursorRegion;
 		}
 		
 		public Gdk.Rectangle static_dock_region ()
 		{
-			var rect = Gdk.Rectangle ();
-			
-			rect.width = VisibleDockWidth;
-			rect.height = VisibleDockHeight;
-			rect.x = (window.width_request - rect.width) / 2;
-			rect.y = window.height_request - rect.height;
-			
-			return rect;
+			return StaticDockRegion;
+		}
+		
+		void update_regions ()
+		{
+			StaticDockRegion.width = VisibleDockWidth;
+			StaticDockRegion.height = VisibleDockHeight;
+			StaticDockRegion.x = (window.width_request - StaticDockRegion.width) / 2;
+			StaticDockRegion.y = window.height_request - StaticDockRegion.height;
 		}
 		
 		public Gdk.Rectangle item_hover_region (DockItem item)
@@ -227,12 +276,15 @@ namespace Plank
 			var x_offset = (window.width_request - main_buffer.Width) / 2;
 			
 			cr.set_operator (Operator.SOURCE);
-			cr.set_source_surface (main_buffer.Internal, x_offset, VisibleDockHeight * HideOffset);
+			var y_offset = 0.0;
+			if (theme.FadeOpacity == 1.0)
+				y_offset = VisibleDockHeight * HideOffset;
+			cr.set_source_surface (main_buffer.Internal, x_offset, y_offset);
 			cr.paint ();
 			
 			if (Opacity < 1.0) {
 				cr.set_source_rgba (0, 0, 0, 0);
-				cr.paint_with_alpha (Opacity);
+				cr.paint_with_alpha (1 - Opacity);
 			}
 			
 			if (HideOffset == 1) {
@@ -287,9 +339,10 @@ namespace Plank
 			var darken = 0.0;
 			
 			var max_click_time = item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
+			max_click_time *= 1000;
 			var click_time = new DateTime.now_utc ().difference (item.LastClicked);
-			if (click_time < max_click_time * 1000) {
-				var clickAnimationProgress = click_time / (double) (max_click_time * 1000);
+			if (click_time < max_click_time) {
+				var clickAnimationProgress = click_time / (double) max_click_time;
 				
 				switch (item.ClickedAnimation) {
 				case ClickAnimation.BOUNCE:
@@ -500,15 +553,9 @@ namespace Plank
 			surface.Context.restore ();
 		}
 		
-		void theme_changed ()
-		{
-			window.set_size ();
-		}
-		
 		void hidden_changed ()
 		{
 			var now = new DateTime.now_utc ();
-			// TODO update last_fade here too
 			var diff = now.difference (last_hide);
 			
 			if (diff < theme.HideTime * 1000)
@@ -521,11 +568,13 @@ namespace Plank
 		
 		protected override bool animation_needed (DateTime render_time)
 		{
-			if (render_time.difference (last_hide) <= theme.HideTime * 1000)
-				return true;
-			
-			if (render_time.difference (last_fade) <= theme.FadeTime * 1000)
-				return true;
+			if (theme.FadeOpacity == 1.0) {
+				if (render_time.difference (last_hide) <= theme.HideTime * 1000)
+					return true;
+			} else {
+				if (render_time.difference (last_hide) <= theme.FadeTime * 1000)
+					return true;
+			}
 			
 			foreach (DockItem item in window.Items.Items) {
 				if (render_time.difference (item.LastClicked) <= (item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)

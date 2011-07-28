@@ -45,6 +45,9 @@ namespace Plank.Drawing
 		[Description(nick = "launch-bounce", blurb = "The height (in percent of IconSize) to bounce an icon when launching an application.")]
 		public double LaunchBounceHeight { get; set; default = 0.625; }
 		
+		[Description(nick = "fade-opacity", blurb = "The opacity value (0 to 1) to fade the dock to when hiding it.")]
+		public double FadeOpacity { get; set; default = 1.0; }
+		
 		[Description(nick = "click-time", blurb = "The amount of time (in ms) for click animations.")]
 		public int ClickTime { get; set; default = 300; }
 		
@@ -60,10 +63,10 @@ namespace Plank.Drawing
 		[Description(nick = "slide-time", blurb = "The amount of time (in ms) to slide icons into/out of the dock.")]
 		public int SlideTime { get; set; default = 300; }
 		
-		[Description(nick = "fade-time", blurb = "NOT USED YET")]
-		public int FadeTime { get; set; default = 200; }
+		[Description(nick = "fade-time", blurb = "The time (in ms) to fade the dock in/out on a hide (if FadeOpacity is < 1).")]
+		public int FadeTime { get; set; default = 250; }
 		
-		[Description(nick = "hide-time", blurb = "The time (in ms) to slide the dock in/out on a hide.")]
+		[Description(nick = "hide-time", blurb = "The time (in ms) to slide the dock in/out on a hide (if FadeOpacity is 1).")]
 		public int HideTime { get; set; default = 150; }
 		
 		[Description(nick = "glow-size", blurb = "The size of the urgent glow (shown when dock is hidden), in tenths of a percent of IconSize.")]
@@ -156,6 +159,13 @@ namespace Plank.Drawing
 			case "GlowSize":
 				if (GlowSize < 0)
 					GlowSize = 0;
+				break;
+			
+			case "FadeOpacity":
+				if (FadeOpacity < 0)
+					FadeOpacity = 0;
+				else if (FadeOpacity > 1)
+					FadeOpacity = 1;
 				break;
 			
 			case "ClickTime":

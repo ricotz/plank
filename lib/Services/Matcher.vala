@@ -38,12 +38,20 @@ namespace Plank.Services.Windows
 			return matcher;
 		}
 		
-		public Matcher ()
+		private Matcher ()
 		{
 			Bamf.Matcher.get_default ().active_application_changed.connect (handle_app_changed);
 			Bamf.Matcher.get_default ().active_window_changed.connect (handle_window_changed);
 			Bamf.Matcher.get_default ().view_opened.connect (view_opened);
 			Bamf.Matcher.get_default ().view_closed.connect (view_closed);
+		}
+		
+		~Matcher ()
+		{
+			Bamf.Matcher.get_default ().active_application_changed.disconnect (handle_app_changed);
+			Bamf.Matcher.get_default ().active_window_changed.disconnect (handle_window_changed);
+			Bamf.Matcher.get_default ().view_opened.disconnect (view_opened);
+			Bamf.Matcher.get_default ().view_closed.disconnect (view_closed);
 		}
 		
 		void handle_app_changed (Object? arg1, Object? arg2)
