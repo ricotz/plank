@@ -1,71 +1,70 @@
-# Polish translation for plank package
-# Copyright (C) 2011 Plank Developers
+# Greek translation for plank
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the plank package.
-# Piotr Sokół <psokol@jabster.pl>, 2011.
+# Kostas Milonas <milonas.ko@gmail.com>, 2011.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: plank 0.1.0\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: plank\n"
+"Report-Msgid-Bugs-To: Kostas Milonas <milonas.ko@gmail.com>\n"
 "POT-Creation-Date: 2011-04-11 08:16+0200\n"
-"PO-Revision-Date: 2011-07-21 11:54+0000\n"
-"Last-Translator: Piotr Sokół <Unknown>\n"
-"Language-Team: Polish <>\n"
+"PO-Revision-Date: 2011-07-27 00:48+0000\n"
+"Last-Translator: Kostas Milonas <milonas.ko@gmail.com>\n"
+"Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-28 07:02+0000\n"
+"X-Launchpad-Export-Date: 2011-07-28 07:03+0000\n"
 "X-Generator: Launchpad (build 13535)\n"
-"Language: \n"
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "Przechowuje aktywatory i ikony uruchomionych programów."
+msgstr "Plank. Βλακωδώς απλό."
 
 #: ../lib/Items/ApplicationDockItem.vala:203
 msgid "_Keep in Dock"
-msgstr "_Przechowywanie aktywatora"
+msgstr "Παραμονή _στο dock"
 
 #: ../lib/Items/ApplicationDockItem.vala:221
 msgid "_Open New Window"
-msgstr "_Otwórz nowe okno"
+msgstr "Άνοιγμα νέου _παραθύρου"
 
 #: ../lib/Items/ApplicationDockItem.vala:227
 msgid "Unma_ximize"
-msgstr "_Przywróć zwykły rozmiar"
+msgstr "_Απομεγιστοποίηση"
 
 #: ../lib/Items/ApplicationDockItem.vala:231
 msgid "Ma_ximize"
-msgstr "Zm_aksymalizuj"
+msgstr "_Μεγιστοποίηση"
 
 #: ../lib/Items/ApplicationDockItem.vala:237
 msgid "_Restore"
-msgstr "_Przywróć"
+msgstr "_Επαναφορά"
 
 #: ../lib/Items/ApplicationDockItem.vala:241
 msgid "Mi_nimize"
-msgstr "Zm_inimalizuj"
+msgstr "Ελα_χιστοποίηση"
 
 #: ../lib/Items/ApplicationDockItem.vala:246
 msgid "_Close All"
-msgstr "Za_mknij wszystkie"
+msgstr "_Κλείσιμο όλων"
 
 #: ../lib/Items/FileDockItem.vala:216
 msgid "_Open in File Browser"
-msgstr "_Otwórz w menedżerze plików"
+msgstr "Άνοιγμα στον πε_ριηγητή αρχείων"
 
 #: ../lib/Items/FileDockItem.vala:229
 msgid "_Open"
-msgstr "_Uruchom"
+msgstr "Ά_νοιγμα"
 
 #: ../lib/Items/FileDockItem.vala:233
 msgid "Open Containing _Folder"
-msgstr "Otwórz katalog _docelowy"
+msgstr "Άνοιγμα του _φακέλου που περιέχει"
 
 #: ../lib/Items/PlankDockItem.vala:43
 msgid "Get _Help Online..."
-msgstr "Uzyskaj p_omoc online..."
+msgstr "Λήψη online _βοήθειας..."
 
 #: ../lib/Items/PlankDockItem.vala:49
 msgid "_Translate This Application..."
-msgstr "_Przetłumacz ten program..."
+msgstr "Με_ταφράστε αυτήν την εφαρμογή..."
