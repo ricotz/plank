@@ -105,6 +105,9 @@ namespace Plank
 					IconSize = MAX_ICON_SIZE;
 				break;
 			
+			case "HideMode":
+				break;
+			
 			case "Monitor":
 				var max = Screen.get_default ().get_n_monitors ();
 				if (Monitor >= max)

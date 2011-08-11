@@ -134,6 +134,11 @@ namespace Plank.Drawing
 			base.verify (prop);
 			
 			switch (prop) {
+			case "HorizPadding":
+			case "TopPadding":
+			case "BottomPadding":
+				break;
+			
 			case "ItemPadding":
 				if (ItemPadding < 0)
 					ItemPadding = 0;
@@ -156,9 +161,11 @@ namespace Plank.Drawing
 					LaunchBounceHeight = 0;
 				break;
 			
-			case "GlowSize":
-				if (GlowSize < 0)
-					GlowSize = 0;
+			case "FadeOpacity":
+				if (FadeOpacity < 0)
+					FadeOpacity = 0;
+				else if (FadeOpacity > 1)
+					FadeOpacity = 1;
 				break;
 			
 			case "FadeOpacity":
@@ -178,9 +185,44 @@ namespace Plank.Drawing
 					UrgentBounceTime = 0;
 				break;
 			
+			case "LaunchBounceTime":
+				if (LaunchBounceTime < 0)
+					LaunchBounceTime = 0;
+				break;
+			
 			case "ActiveTime":
 				if (ActiveTime < 0)
 					ActiveTime = 0;
+				break;
+			
+			case "SlideTime":
+				if (SlideTime < 0)
+					SlideTime = 0;
+				break;
+			
+			case "FadeTime":
+				if (FadeTime < 0)
+					FadeTime = 0;
+				break;
+			
+			case "HideTime":
+				if (HideTime < 0)
+					HideTime = 0;
+				break;
+			
+			case "GlowSize":
+				if (GlowSize < 0)
+					GlowSize = 0;
+				break;
+			
+			case "GlowTime":
+				if (GlowTime < 0)
+					GlowTime = 0;
+				break;
+			
+			case "GlowPulseTime":
+				if (GlowPulseTime < 0)
+					GlowPulseTime = 0;
 				break;
 			}
 		}

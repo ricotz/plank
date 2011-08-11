@@ -61,6 +61,7 @@ namespace Plank.Drawing
 		
 		public void load (string type)
 		{
+			Paths.ensure_directory_exists (Paths.AppConfigFolder.get_child ("theme"));
 			init_from_file ("theme/" + type + ".theme");
 		}
 		

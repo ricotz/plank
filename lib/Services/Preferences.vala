@@ -137,7 +137,7 @@ namespace Plank.Services
 		 */
 		protected void init_from_file (string filename)
 		{
-			backing_file = Paths.UserConfigFolder.get_child (filename);
+			backing_file = Paths.AppConfigFolder.get_child (filename);
 			
 			// ensure the preferences file exists
 			if (!backing_file.query_exists ())
