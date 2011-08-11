@@ -168,13 +168,6 @@ namespace Plank.Drawing
 					FadeOpacity = 1;
 				break;
 			
-			case "FadeOpacity":
-				if (FadeOpacity < 0)
-					FadeOpacity = 0;
-				else if (FadeOpacity > 1)
-					FadeOpacity = 1;
-				break;
-			
 			case "ClickTime":
 				if (ClickTime < 0)
 					ClickTime = 0;
