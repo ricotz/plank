@@ -32,16 +32,16 @@ namespace Plank
 		//const double MAX_ZOOM = 4.0;
 		
 		//[Description(nick = "zoom", blurb = "How much to zoom dock icons when hovered (percentage).")]
-		//public double Zoom { get; set; default = 2.0; }
+		//public double Zoom { get; set; }
 		
 		[Description(nick = "icon-size", blurb = "The size of dock icons (in pixels).")]
-		public int IconSize { get; set; default = 48; }
+		public int IconSize { get; set; }
 		
 		[Description(nick = "hide-mode", blurb = "If 0, the dock won't hide.  If 1, the dock intelligently hides.  If 2, the dock auto-hides.")]
-		public HideType HideMode { get; set; default = HideType.INTELLIGENT; }
+		public HideType HideMode { get; set; }
 		
 		[Description(nick = "monitor", blurb = "The monitor number for the dock.")]
-		public int Monitor { get; set; default = 0; }
+		public int Monitor { get; set; }
 		
 		public DockPreferences ()
 		{
@@ -58,6 +58,15 @@ namespace Plank
 		~DockPreferences ()
 		{
 			Screen.get_default ().monitors_changed.disconnect (monitors_changed);
+		}
+		
+		protected override void reset_properties ()
+		{
+			// FIXME zoom disabled
+			//Zoom = 2.0;
+			IconSize = 48;
+			HideMode = HideType.INTELLIGENT;
+			Monitor = 0;
 		}
 		
 		private void monitors_changed ()
