@@ -1,4 +1,5 @@
-mattethemedir = $(datadir)/plank/themes/Matte
+mattethemedir = $(pkgdatadir)/themes/Matte
+
 mattetheme_DATA = \
 	dock.theme \
 	hover.theme \

@@ -1,4 +1,5 @@
-transparentthemedir = $(datadir)/plank/themes/Transparent
+transparentthemedir = $(pkgdatadir)/themes/Transparent
+
 transparenttheme_DATA = \
 	dock.theme \
 	hover.theme \
