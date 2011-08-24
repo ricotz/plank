@@ -148,6 +148,11 @@ namespace Plank.Factories
 		
 		protected AboutDialog about_dlg;
 		
+		public virtual void on_item_clicked ()
+		{
+			show_about ();
+		}
+		
 		public virtual void show_about ()
 		{
 			if (about_dlg != null) {
