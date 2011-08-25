@@ -85,7 +85,7 @@ PLANK_CORE_VALA_PKGS="--pkg gdk-x11-2.0 \
                       --pkg x11"
 AC_SUBST(PLANK_CORE_VALA_PKGS)
 
-PLANK_CORE_VALAFLAGS="--thread $PLANK_CORE_VALA_PKGS"
+PLANK_CORE_VALAFLAGS="--thread --target-glib=2.26 $PLANK_CORE_VALA_PKGS"
 AC_SUBST(PLANK_CORE_VALAFLAGS)
 
 dnl Expansions
