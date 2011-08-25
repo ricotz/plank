@@ -312,10 +312,9 @@ namespace Plank.Widgets
 		protected void do_popup (uint button, bool show_plank_menu)
 		{
 			foreach (var w in menu.get_children ()) {
-				menu.remove (w);
 				if (w is ImageMenuItem)
 					(w as ImageMenuItem).get_image ().destroy ();
-				w.destroy ();
+				menu.remove (w);
 			}
 			
 			ArrayList<MenuItem> items;
