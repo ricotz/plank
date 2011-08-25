@@ -209,10 +209,10 @@ namespace Plank
 					}
 				}
 			
-			if (windows_intersect != intersect) {
+			if (windows_intersect != intersect)
 				windows_intersect = intersect;
-				update_hidden ();
-			}
+			
+			update_hidden ();
 		}
 		
 		void handle_window_changed (Wnck.Window? previous)
