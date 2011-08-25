@@ -41,8 +41,6 @@ namespace Plank.Widgets
 			base.with_type (Gtk.WindowType.POPUP);
 			
 			theme = new ThemeRenderer ();
-			theme.TopRoundness = 3;
-			theme.BottomRoundness = 3;
 			theme.load ("hover");
 			theme.changed.connect (theme_changed);
 			

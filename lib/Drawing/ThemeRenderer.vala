@@ -26,13 +26,13 @@ namespace Plank.Drawing
 	public class ThemeRenderer : Preferences
 	{
 		[Description(nick = "top-roundness", blurb = "The roundness of the top corners.")]
-		public int TopRoundness { get; set; default = 6; }
+		public int TopRoundness { get; set; }
 		
 		[Description(nick = "bottom-roundness", blurb = "The roundness of the bottom corners.")]
-		public int BottomRoundness { get; set; default = 6; }
+		public int BottomRoundness { get; set; }
 		
 		[Description(nick = "line-width", blurb = "The thickness (in pixels) of lines drawn.")]
-		public int LineWidth { get; set; default = 1; }
+		public int LineWidth { get; set; }
 		
 		[Description(nick = "outer-stroke-color", blurb = "The color (RGBA) of the outer stroke.")]
 		public Color OuterStrokeColor { get; set; }
@@ -46,17 +46,20 @@ namespace Plank.Drawing
 		[Description(nick = "inner-stroke-color", blurb = "The color (RGBA) of the inner stroke.")]
 		public Color InnerStrokeColor { get; set; }
 		
-		construct
+		public ThemeRenderer ()
 		{
+			base ();
+		}
+		
+		protected override void reset_properties ()
+		{
+			TopRoundness = 6;
+			BottomRoundness = 6;
+			LineWidth = 1;
 			OuterStrokeColor = new Color (0.1647, 0.1647, 0.1647, 1);
 			FillStartColor = new Color (0.1647, 0.1647, 0.1647, 1);
 			FillEndColor = new Color (0.3176, 0.3176, 0.3176, 1);
 			InnerStrokeColor = new Color (1, 1, 1, 1);
-		}
-		
-		public ThemeRenderer ()
-		{
-			base ();
 		}
 		
 		public void load (string type)

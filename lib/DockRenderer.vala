@@ -141,8 +141,6 @@ namespace Plank
 			StaticDockRegion = Gdk.Rectangle ();
 			
 			theme = new DockThemeRenderer ();
-			theme.TopRoundness = 4;
-			theme.BottomRoundness = 0;
 			theme.load ("dock");
 			
 			Prefs.notify["IconSize"].connect (icon_size_changed);

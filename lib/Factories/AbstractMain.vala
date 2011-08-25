@@ -36,6 +36,8 @@ namespace Plank.Factories
 	
 	public abstract class AbstractMain : GLib.Object
 	{
+		protected signal void initialized ();
+		
 		public string build_data_dir;
 		public string build_pkg_data_dir;
 		public string build_release_name;
@@ -103,6 +105,8 @@ namespace Plank.Factories
 			Paths.initialize (exec_name, build_pkg_data_dir);
 			WindowControl.initialize ();
 			
+			initialized ();
+			
 			new DockWindow ().show_all ();
 			
 			Gdk.threads_enter ();
@@ -143,6 +147,11 @@ namespace Plank.Factories
 		}
 		
 		protected AboutDialog about_dlg;
+		
+		public virtual void on_item_clicked ()
+		{
+			show_about ();
+		}
 		
 		public virtual void show_about ()
 		{

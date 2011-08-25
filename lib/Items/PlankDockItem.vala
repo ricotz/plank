@@ -32,7 +32,7 @@ namespace Plank.Items
 		
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
-			Factory.main.show_about ();
+			Factory.main.on_item_clicked ();
 			return ClickAnimation.DARKEN;
 		}
 		

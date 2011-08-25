@@ -67,6 +67,7 @@ namespace Plank.Services
 		 */
 		public Preferences ()
 		{
+			reset_properties ();
 			notify.connect (handle_notify);
 		}
 		
@@ -116,6 +117,12 @@ namespace Plank.Services
 			// do nothing, this isnt abstract because we dont
 			// want to force subclasses to implement this
 		}
+		
+		/**
+		 * Resets all properties to their default values.  Called from construct and before
+		 * loading from the backing file.
+		 */
+		protected abstract void reset_properties ();
 		
 		File backing_file;
 		FileMonitor backing_monitor;
@@ -203,6 +210,7 @@ namespace Plank.Services
 			var missing_keys = false;
 			
 			notify.disconnect (handle_notify);
+			reset_properties ();
 			try {
 				var file = new KeyFile ();
 				file.load_from_file (backing_file.get_path (), 0);

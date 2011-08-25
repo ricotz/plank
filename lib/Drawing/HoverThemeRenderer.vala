@@ -15,25 +15,17 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using Plank.Services;
+using Cairo;
 
-namespace Plank.Items
+namespace Plank.Drawing
 {
-	public class DockItemPreferences : Preferences
+	public class HoverThemeRenderer : ThemeRenderer
 	{
-		public string Launcher { get; set; }
-		
-		public int Sort { get; set; }
-		
-		public DockItemPreferences.with_file (string filename)
-		{
-			base.with_file (filename);
-		}
-		
 		protected override void reset_properties ()
 		{
-			Launcher = "";
-			Sort = 0;
+			base.reset_properties ();
+			TopRoundness = 3;
+			BottomRoundness = 3;
 		}
 	}
 }

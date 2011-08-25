@@ -1,4 +1,5 @@
-defaultthemedir = $(datadir)/plank/themes/Default
+defaultthemedir = $(pkgdatadir)/themes/Default
+
 defaulttheme_DATA = \
 	dock.theme \
 	hover.theme \

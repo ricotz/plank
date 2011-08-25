@@ -5,7 +5,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([.])
 AC_CONFIG_HEADERS([config.h])
 
-AM_INIT_AUTOMAKE([1.11 foreign tar-pax])
+AM_INIT_AUTOMAKE([1.11 foreign tar-ustar dist-xz no-dist-gzip])
 
 dnl -- Populate top_srcdir variable
 top_srcdir=$(readlink -f $0 | sed -e s/configure$//)
@@ -103,7 +103,7 @@ dnl {{{ enable debug release configuration
 AC_ARG_ENABLE(debug,
 	AC_HELP_STRING([--enable-debug],
 		[Use 'DEBUG' Configuration [default=YES]]),
-		enable_debug=yes, enable_debug=no)
+		enable_debug=no, enable_debug=yes)
 AM_CONDITIONAL(ENABLE_DEBUG, test "x$enable_debug" = "xyes")
 if test "x$enable_debug" = "xyes" ; then
 	PLANK_CORE_VALAFLAGS+=" -g"
@@ -167,6 +167,7 @@ ${PACKAGE}-${VERSION}
     Install Prefix:     ${prefix}
 
   Build/Development
+    Debug Build:        ${enable_debug}
     Release Build:      ${enable_release}
 
 EOF

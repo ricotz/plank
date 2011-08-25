@@ -155,6 +155,11 @@ namespace Plank.Items
 		
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
+			if (button == PopupButton.MIDDLE) {
+				launch ();
+				return ClickAnimation.BOUNCE;
+			}
+			
 			// this actually only happens if its a file, not a directory
 			if (button == PopupButton.LEFT) {
 				launch ();

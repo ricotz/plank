@@ -4,7 +4,7 @@ VAPIDIR = $(top_srcdir)/vapi
 
 plank_VALAFLAGS = \
 	$(PLANK_CORE_VALAFLAGS) \
-	$(top_builddir)/lib/plank.vapi \
+	$(top_srcdir)/lib/plank.vapi \
 	--vapidir $(VAPIDIR) \
 	$(VAPIDIR)/config.vapi \
 	$(NULL)
@@ -18,7 +18,7 @@ plank_PROGRAMS = plank
 plank_CFLAGS = \
 	$(PLANK_CORE_CFLAGS) \
 	-include config.h \
-	-I$(top_builddir)/lib \
+	-I$(top_srcdir)/lib \
 	$(NULL)
 	
 plank_LDADD = \
