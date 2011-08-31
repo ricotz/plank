@@ -32,7 +32,6 @@ namespace Plank
 		
 		bool drag_known;
 		bool drag_data_requested;
-		bool drag_is_desktop_file;
 		uint marker = 0;
 		uint drag_hover_timer = 0;
 		uint hover_timer = 0;
@@ -60,7 +59,6 @@ namespace Plank
 					drag_known = false;
 					drag_data = null;
 					drag_data_requested = false;
-					drag_is_desktop_file = false;
 				}
 			} 
 		}
@@ -142,15 +140,10 @@ namespace Plank
 			if (drag_data_requested) {
 				string uris = (string) selection_data.get_data ();
 				
-				drag_is_desktop_file = false;
-				
 				drag_data = new ArrayList<string> ();
 				foreach (string s in uris.split ("\r\n"))
-					if (s.has_prefix ("file://")) {
+					if (s.has_prefix ("file://"))
 						drag_data.add (s);
-						if (s.has_suffix (".desktop"))
-							drag_is_desktop_file = true;
-					}
 				
 				drag_data_requested = false;
 				// TODO
@@ -171,13 +164,18 @@ namespace Plank
 			
 			var item = Owner.HoveredItem;
 			
-			if (drag_is_desktop_file) {
-				var pos = item.Sort + 1;
-				foreach (var uri in drag_data)
-					if (uri.has_prefix ("file://") && uri.has_suffix (".desktop"))
-						Factory.item_factory.make_dock_item (uri.replace ("file://", ""), pos++);
-			} else if (item != null && item.can_accept_drop (drag_data)) {
+			if (item != null && item.can_accept_drop (drag_data)) {
 				item.accept_drop (drag_data);
+			} else {
+				var pos = 0;
+				if (item != null)
+					pos = item.Sort + 1;
+				
+				foreach (var uri in drag_data) {
+					if (!uri.has_prefix ("file://"))
+						continue;
+					Factory.item_factory.make_dock_item (uri.replace ("file://", ""), pos++);
+				}
 			}
 			
 			ExternalDragActive = false;
