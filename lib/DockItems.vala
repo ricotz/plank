@@ -126,6 +126,7 @@ namespace Plank
 			debug ("Reloading dock items...");
 			var existing_items = new ArrayList<DockItem> ();
 			var new_items = new ArrayList<DockItem> ();
+			var favs = new ArrayList<string> ();
 			
 			try {
 				var enumerator = Factory.item_factory.launchers_dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_STANDARD_IS_HIDDEN, 0);
@@ -144,6 +145,9 @@ namespace Plank
 							existing_items.add (item);
 						else
 							new_items.add (item);
+						
+						if ((item is ApplicationDockItem) && !(item is TransientDockItem))
+							favs.add (item.Launcher);
 					}
 			} catch {
 				error ("Error loading dock items");
@@ -153,12 +157,6 @@ namespace Plank
 				add_item (item, true);
 			foreach (var item in new_items)
 				add_item (item);
-			
-			var favs = new ArrayList<string> ();
-			
-			foreach (var item in Items)
-				if ((item is ApplicationDockItem) && !(item is TransientDockItem))
-					favs.add (item.Launcher);
 			
 			Matcher.get_default ().set_favorites (favs);
 			
