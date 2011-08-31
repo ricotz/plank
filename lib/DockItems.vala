@@ -260,8 +260,6 @@ namespace Plank
 					}
 				}
 				
-				debug("using position '%d'", pos);
-				
 				//
 				// update all positions
 				//
