@@ -124,6 +124,8 @@ namespace Plank
 		void load_items ()
 		{
 			debug ("Reloading dock items...");
+			var existing_items = new ArrayList<DockItem> ();
+			var new_items = new ArrayList<DockItem> ();
 			
 			try {
 				var enumerator = Factory.item_factory.launchers_dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_STANDARD_IS_HIDDEN, 0);
@@ -133,14 +135,24 @@ namespace Plank
 						var filename = Factory.item_factory.launchers_dir.get_path () + "/" + info.get_name ();
 						var item = Factory.item_factory.make_item (filename);
 						
-						if (item.ValidItem)
-							add_item (item, true);
-						else
+						if (!item.ValidItem) {
 							warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, filename);
+							continue;
+						}
+						
+						if (owner.Prefs.DockItems.contains (info.get_name ()))
+							existing_items.add (item);
+						else
+							new_items.add (item);
 					}
 			} catch {
 				error ("Error loading dock items");
 			}
+			
+			foreach (var item in existing_items)
+				add_item (item, true);
+			foreach (var item in new_items)
+				add_item (item);
 			
 			var favs = new ArrayList<string> ();
 			
