@@ -307,6 +307,10 @@ namespace Plank
 			
 			Items.remove (item);
 			
+			foreach (var i in Items)
+				if (i.Position > item.Position)
+					i.Position--;
+			
 			serialize_positions ();
 		}
 		
