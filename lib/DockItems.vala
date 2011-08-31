@@ -43,12 +43,9 @@ namespace Plank
 		FileMonitor items_monitor;
 		DockWindow owner;
 		
-		bool is_initializing;
-		
 		public DockItems (DockWindow owner)
 		{
 			this.owner = owner;
-			is_initializing = true;
 			
 			Factory.item_factory.launchers_dir = Paths.AppConfigFolder.get_child ("launchers");
 			
@@ -67,8 +64,6 @@ namespace Plank
 			}
 			
 			load_items ();
-			is_initializing = false;
-			add_running_apps ();
 			
 			Matcher.get_default ().app_opened.connect (app_opened);
 		}
@@ -90,9 +85,9 @@ namespace Plank
 			}
 		}
 		
-		public void add_item (DockItem item)
+		public void add_item (DockItem item, bool is_initializing = false)
 		{
-			add_item_without_signaling (item);
+			add_item_without_signaling (item, is_initializing);
 			item_added (item);
 		}
 		
@@ -139,7 +134,7 @@ namespace Plank
 						var item = Factory.item_factory.make_item (filename);
 						
 						if (item.ValidItem)
-							add_item (item);
+							add_item (item, true);
 						else
 							warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, filename);
 					}
@@ -156,6 +151,8 @@ namespace Plank
 			Matcher.get_default ().set_favorites (favs);
 			
 			debug ("done.");
+			
+			add_running_apps ();
 		}
 		
 		void add_running_apps ()
@@ -223,7 +220,6 @@ namespace Plank
 				remove_item_without_signaling (item);
 			
 			load_items ();
-			add_running_apps ();
 			
 			item_state_changed ();
 		}
@@ -234,7 +230,7 @@ namespace Plank
 			Items.sort ((CompareFunc) compare_items);
 		}
 		
-		void add_item_without_signaling (DockItem item)
+		void add_item_without_signaling (DockItem item, bool is_initializing = false)
 		{
 			if (item.Position == -1) {
 				var pos = 0;
