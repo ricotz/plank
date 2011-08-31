@@ -155,6 +155,13 @@ namespace Plank.Services
 			start_monitor ();
 		}
 		
+		public string get_backing_path ()
+		{
+			if (backing_file == null)
+				return "";
+			return backing_file.get_basename ();
+		}
+		
 		/**
 		 * This forces the deletion of the backing file for this preferences.
 		 */

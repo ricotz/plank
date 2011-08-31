@@ -70,7 +70,7 @@ namespace Plank.Widgets
 			base ();
 			
 			Prefs = new DockPreferences.with_file ("settings");
-			Items = new DockItems ();
+			Items = new DockItems (this);
 			Renderer = new DockRenderer (this);
 			DragTracker = new DragManager (this);
 			HideTracker = new HideManager (this);
@@ -94,6 +94,7 @@ namespace Plank.Widgets
 						EventMask.POINTER_MOTION_MASK |
 						EventMask.SCROLL_MASK);
 			
+			Items.item_position_changed.connect (serialize_item_positions);
 			Items.item_added.connect (set_size);
 			Items.item_removed.connect (set_size);
 			Prefs.changed.connect (set_size);
@@ -118,6 +119,7 @@ namespace Plank.Widgets
 			menu.show.disconnect (on_menu_show);
 			menu.hide.disconnect (on_menu_hide);
 			
+			Items.item_position_changed.disconnect (serialize_item_positions);
 			Items.item_added.disconnect (set_size);
 			Items.item_removed.disconnect (set_size);
 			Prefs.changed.disconnect (set_size);
@@ -273,6 +275,19 @@ namespace Plank.Widgets
 		{
 			var rect = Renderer.item_hover_region (HoveredItem);
 			hover.move_hover (win_x + rect.x + rect.width / 2, win_y + rect.y);
+		}
+		
+		public void serialize_item_positions ()
+		{
+			var item_list = "";
+			foreach (var item in Items.Items) {
+				if (!(item is TransientDockItem) && item.DockItemPath.length > 0) {
+					if (item_list.length > 0)
+						item_list += ";;";
+					item_list += item.DockItemPath;
+				}
+			}
+			Prefs.DockItems = item_list;
 		}
 		
 		protected void drag_item_changed ()

@@ -86,7 +86,7 @@ namespace Plank.Items
 		
 		public string BadgeText { get; set; default = ""; }
 		
-		public int Position { get; set; default = 0; }
+		public int Position { get; set; default = -1; }
 		
 		public PopupButton Button { get; protected set; default = PopupButton.RIGHT; }
 		
@@ -117,6 +117,10 @@ namespace Plank.Items
 		}
 		
 		public Drawing.Color AverageIconColor { get; protected set; }
+		
+		public string DockItemPath {
+			owned get { return Prefs.get_backing_path (); }
+		}
 		
 		public string Launcher {
 			get { return Prefs.Launcher; }

@@ -19,6 +19,7 @@ using Gee;
 
 using Plank.Factories;
 using Plank.Items;
+using Plank.Widgets;
 
 using Plank.Services;
 using Plank.Services.Windows;
@@ -29,6 +30,8 @@ namespace Plank
 	{
 		// triggered when the state of an item changes
 		public signal void item_state_changed ();
+		// triggered anytime an item's Position changes
+		public signal void item_position_changed ();
 		
 		// triggered when a new item is added to the collection
 		public signal void item_added (DockItem item);
@@ -38,9 +41,15 @@ namespace Plank
 		public ArrayList<DockItem> Items = new ArrayList<DockItem> ();
 		
 		FileMonitor items_monitor;
+		DockWindow owner;
 		
-		public DockItems ()
+		bool is_initializing;
+		
+		public DockItems (DockWindow owner)
 		{
+			this.owner = owner;
+			is_initializing = true;
+			
 			Factory.item_factory.launchers_dir = Paths.AppConfigFolder.get_child ("launchers");
 			
 			// if we made the launcher directory, assume a first run and pre-populate with launchers
@@ -58,8 +67,8 @@ namespace Plank
 			}
 			
 			load_items ();
+			is_initializing = false;
 			add_running_apps ();
-			set_item_positions ();
 			
 			Matcher.get_default ().app_opened.connect (app_opened);
 		}
@@ -84,17 +93,18 @@ namespace Plank
 		public void add_item (DockItem item)
 		{
 			add_item_without_signaling (item);
-			set_item_positions ();
-
 			item_added (item);
 		}
 		
 		public void remove_item (DockItem item)
 		{
 			remove_item_without_signaling (item);
-			set_item_positions ();
-			
 			item_removed (item);
+		}
+		
+		public void serialize_positions ()
+		{
+			item_position_changed ();
 		}
 		
 		void signal_item_state_changed ()
@@ -185,13 +195,6 @@ namespace Plank
 				(remove as ApplicationDockItem).set_app (null);
 		}
 		
-		void set_item_positions ()
-		{
-			int pos = 0;
-			foreach (var i in Items)
-				i.Position = pos++;
-		}
-		
 		bool file_is_dockitem (FileInfo info)
 		{
 			return !info.get_is_hidden () && info.get_name ().has_suffix (".dockitem");
@@ -221,15 +224,59 @@ namespace Plank
 			
 			load_items ();
 			add_running_apps ();
-			set_item_positions ();
 			
 			item_state_changed ();
 		}
 		
+		public void update_item_position (DockItem item, int position)
+		{
+			item.Position = position;
+			Items.sort ((CompareFunc) compare_items);
+		}
+		
 		void add_item_without_signaling (DockItem item)
 		{
+			if (item.Position == -1) {
+				var pos = 0;
+				
+				//
+				// find a new position for the item
+				//
+				var positions = owner.Prefs.DockItems.split (";;");
+				
+				// see if the position was serialized
+				if (item.DockItemPath.length > 0)
+					for (; pos < positions.length; pos++)
+						if (positions[pos] == item.DockItemPath)
+							break;
+				
+				// if we walked past, find a position based on Sort
+				if (item.DockItemPath.length == 0 || pos == positions.length) {
+					pos = 0;
+					foreach (var i in Items) {
+						pos = i.Position;
+						if (i.Sort >= item.Sort)
+							break;
+					}
+				}
+				
+				debug("using position '%d'", pos);
+				
+				//
+				// update all positions
+				//
+				item.Position = pos;
+				
+				if (!is_initializing)
+					foreach (var i in Items)
+						if (i != item && i.Position >= pos)
+							i.Position++;
+			}
+			
 			Items.add (item);
 			Items.sort ((CompareFunc) compare_items);
+			
+			serialize_positions ();
 			
 			item.AddTime = new DateTime.now_utc ();
 			item.notify["Icon"].connect (signal_item_state_changed);
@@ -261,6 +308,8 @@ namespace Plank
 			}
 			
 			Items.remove (item);
+			
+			serialize_positions ();
 		}
 		
 		void handle_item_deleted (DockItem item)
@@ -277,7 +326,6 @@ namespace Plank
 				add_item_without_signaling (new_item);
 			}
 			
-			set_item_positions ();
 			item_state_changed ();
 		}
 		
@@ -301,9 +349,9 @@ namespace Plank
 		
 		static int compare_items (DockItem left, DockItem right)
 		{
-			if (left.Sort == right.Sort)
+			if (left.Position == right.Position)
 				return 0;
-			if (left.Sort < right.Sort)
+			if (left.Position < right.Position)
 				return -1;
 			return 1;
 		}

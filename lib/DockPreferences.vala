@@ -43,6 +43,9 @@ namespace Plank
 		[Description(nick = "monitor", blurb = "The monitor number for the dock.")]
 		public int Monitor { get; set; }
 		
+		[Description(nick = "dock-items", blurb = "List of *.dockitem files on this dock. DO NOT MODIFY")]
+		public string DockItems { get; set; }
+		
 		public DockPreferences ()
 		{
 			base ();
@@ -67,6 +70,7 @@ namespace Plank
 			IconSize = 48;
 			HideMode = HideType.INTELLIGENT;
 			Monitor = 0;
+			DockItems = "";
 		}
 		
 		private void monitors_changed ()
@@ -121,6 +125,9 @@ namespace Plank
 				var max = Screen.get_default ().get_n_monitors ();
 				if (Monitor >= max)
 					Monitor = 0;
+				break;
+			
+			case "DockItems":
 				break;
 			}
 		}

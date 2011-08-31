@@ -193,6 +193,7 @@ namespace Plank
 					if (DragItem.CanBeRemoved) {
 						// Remove from dock
 						Owner.Items.remove_item (DragItem);
+						DragItem.delete ();
 						
 						int x, y;
 						ModifierType mod;
@@ -235,7 +236,7 @@ namespace Plank
 			
 			if (drag_canceled)
 				foreach (var entry in original_item_pos.entries)
-					entry.key.Sort = entry.value;
+					Owner.Items.update_item_position (entry.key, entry.value);
 			
 			return !drag_canceled;
 		}
@@ -270,20 +271,21 @@ namespace Plank
 		void hovered_item_changed ()
 		{
 			if (InternalDragActive && Owner.HoveredItem != null && DragItem != Owner.HoveredItem) {
-				int destPos = Owner.HoveredItem.Position;
+				var destPos = Owner.HoveredItem.Position;
 				
 				// drag right
 				if (DragItem.Position < destPos) {
 					foreach (DockItem item in Owner.Items.Items)
 						if (item.Position > DragItem.Position && item.Position <= destPos)
-							item.Position--;
+							Owner.Items.update_item_position (item, item.Position - 1);
 				// drag left
 				} else if (DragItem.Position > destPos) {
 					foreach (DockItem item in Owner.Items.Items)
 						if (item.Position < DragItem.Position && item.Position >= destPos)
-							item.Position++;
+							Owner.Items.update_item_position (item, item.Position + 1);
 				}
-				DragItem.Position = destPos;
+				Owner.Items.update_item_position (DragItem, destPos);
+				Owner.serialize_item_positions ();
 			}
 			
 			if (drag_hover_timer > 0)
