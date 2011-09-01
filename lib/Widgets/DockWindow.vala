@@ -357,14 +357,17 @@ namespace Plank.Widgets
 			if (!is_realized ())
 				return;
 			
-			var offset = Renderer.Offset;
-			var pixmap = new Pixmap (null, Renderer.VisibleDockWidth, offset, 1);
-			var cr = cairo_create (pixmap);
+			var cursor = Renderer.cursor_region ();
+			// FIXME bug 768722 - this fixes the crash, but not WHY this happens
+			return_if_fail (cursor.width > 0);
+			return_if_fail (cursor.height > 0);
 			
+			var pixmap = new Pixmap (null, cursor.width, cursor.height, 1);
+			var cr = cairo_create (pixmap);
 			cr.set_source_rgba (0, 0, 0, 1);
 			cr.paint ();
 			
-			input_shape_combine_mask ((Bitmap*) pixmap, (width_request - Renderer.VisibleDockWidth) / 2, height_request - offset);
+			input_shape_combine_mask ((Bitmap*) pixmap, cursor.x, cursor.y);
 		}
 		
 		protected enum Struts 
