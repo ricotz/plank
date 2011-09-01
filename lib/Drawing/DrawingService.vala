@@ -82,7 +82,7 @@ namespace Plank.Drawing
 						break;
 				}
 				
-				pbuf = load_pixbuf (name, (int) double.max (width, height));
+				pbuf = load_pixbuf (name, int.max (width, height));
 				if (pbuf != null)
 					break;
 				

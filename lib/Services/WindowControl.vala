@@ -111,7 +111,7 @@ namespace Plank.Services.Windows
 				return;
 			
 			if (rect == null)
-				rect = Gdk.Rectangle () {x = 0, y = 0, width = 0, height = 0};
+				rect = Gdk.Rectangle () { x = 0, y = 0, width = 0, height = 0 };
 			
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();

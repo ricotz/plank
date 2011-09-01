@@ -78,8 +78,8 @@ namespace Plank.Widgets
 			Gdk.Rectangle monitor;
 			screen.get_monitor_geometry (screen.get_monitor_at_point (item_x, item_y), out monitor);
 			
-			x = (int) double.max (monitor.x, double.min (x, monitor.x + monitor.width - width_request));
-			y = (int) double.max (monitor.y, double.min (y, monitor.y + monitor.height - height_request));
+			x = int.max (monitor.x, int.min (x, monitor.x + monitor.width - width_request));
+			y = int.max (monitor.y, int.min (y, monitor.y + monitor.height - height_request));
 			
 			move (x, y);
 		}
@@ -120,7 +120,7 @@ namespace Plank.Widgets
 			var buffer = HOVER_HEIGHT - logical_rect.height;
 			text_offset = buffer / 2;
 			
-			set_size_request ((int) double.max (HOVER_HEIGHT, buffer + logical_rect.width), HOVER_HEIGHT);
+			set_size_request (int.max (HOVER_HEIGHT, buffer + logical_rect.width), HOVER_HEIGHT);
 		}
 		
 		void draw_background ()
