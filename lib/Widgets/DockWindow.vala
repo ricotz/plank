@@ -405,9 +405,12 @@ namespace Plank.Widgets
 				return;
 			
 			var cursor = Renderer.cursor_region ();
+			// FIXME bug 768722 - this fixes the crash, but not WHY this happens
+			return_if_fail (cursor.width > 0);
+			return_if_fail (cursor.height > 0);
+			
 			var pixmap = new Pixmap (null, cursor.width, cursor.height, 1);
 			var cr = cairo_create (pixmap);
-			
 			cr.set_source_rgba (0, 0, 0, 1);
 			cr.paint ();
 			
