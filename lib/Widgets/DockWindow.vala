@@ -404,17 +404,10 @@ namespace Plank.Widgets
 			if (!is_realized ())
 				return;
 			
-			var cursor = Renderer.cursor_region ();
-			// FIXME bug 768722 - this fixes the crash, but not WHY this happens
-			return_if_fail (cursor.width > 0);
-			return_if_fail (cursor.height > 0);
+			var cursor = Renderer.get_cursor_region ();
+			var region = Gdk.Region.rectangle (Gdk.Rectangle () {x = 0, y = 0, width = cursor.width, height = cursor.height});
 			
-			var pixmap = new Pixmap (null, cursor.width, cursor.height, 1);
-			var cr = cairo_create (pixmap);
-			cr.set_source_rgba (0, 0, 0, 1);
-			cr.paint ();
-			
-			input_shape_combine_mask ((Bitmap*) pixmap, cursor.x, cursor.y);
+			get_window ().input_shape_combine_region (region, cursor.x, cursor.y);
 		}
 		
 		protected enum Struts 
