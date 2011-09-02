@@ -405,8 +405,11 @@ namespace Plank.Widgets
 				return;
 			
 			var cursor = Renderer.get_cursor_region ();
-			var region = Gdk.Region.rectangle (Gdk.Rectangle () {x = 0, y = 0, width = cursor.width, height = cursor.height});
+			// FIXME bug 768722 - this fixes the crash, but not WHY this happens
+			return_if_fail (cursor.width > 0);
+			return_if_fail (cursor.height > 0);
 			
+			var region = Gdk.Region.rectangle (Gdk.Rectangle () {x = 0, y = 0, width = cursor.width, height = cursor.height});
 			get_window ().input_shape_combine_region (region, cursor.x, cursor.y);
 		}
 		
