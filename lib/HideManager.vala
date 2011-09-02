@@ -103,7 +103,7 @@ namespace Plank
 			var win_y = window.win_y;
 			
 			// compute rect of the window
-			var dock_rect = window.Renderer.cursor_region ();
+			var dock_rect = window.Renderer.get_cursor_region ();
 			dock_rect.x += win_x;
 			dock_rect.y += win_y;
 			
@@ -177,7 +177,7 @@ namespace Plank
 			var win_y = window.win_y;
 			
 			// compute rect of the window
-			var dock_rect = window.Renderer.static_dock_region ();
+			var dock_rect = window.Renderer.get_static_dock_region ();
 			dock_rect.x += win_x;
 			dock_rect.y += win_y;
 			
