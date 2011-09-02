@@ -231,6 +231,8 @@ namespace Plank.Services
 					
 					if (type == typeof (int))
 						val.set_int (file.get_integer (group_name, prop.name));
+					else if (type == typeof (uint))
+						val.set_uint ((uint) file.get_integer (group_name, prop.name));
 					else if (type == typeof (double))
 						val.set_double (file.get_double (group_name, prop.name));
 					else if (type == typeof (string))
@@ -282,6 +284,8 @@ namespace Plank.Services
 				
 				if (type == typeof (int))
 					file.set_integer (group_name, prop.name, val.get_int ());
+				else if (type == typeof (uint))
+					file.set_integer (group_name, prop.name, (int) val.get_uint ());
 				else if (type == typeof (double))
 					file.set_double (group_name, prop.name, val.get_double ());
 				else if (type == typeof (string))
