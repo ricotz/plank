@@ -257,14 +257,12 @@ namespace Plank
 							break;
 				
 				// if we walked past, find a position based on Sort
-				if (item.DockItemPath.length == 0 || pos == positions.length) {
-					pos = 0;
+				if (item.DockItemPath.length == 0 || pos == positions.length)
 					foreach (var i in Items) {
 						pos = i.Position;
 						if (i.Sort >= item.Sort)
 							break;
 					}
-				}
 				
 				//
 				// update all positions
