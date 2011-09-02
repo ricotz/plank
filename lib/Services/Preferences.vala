@@ -244,7 +244,7 @@ namespace Plank.Services
 						(val.get_object () as PrefsSerializable).prefs_deserialize (file.get_string (group_name, prop.name));
 						continue;
 					} else {
-						debug ("Unsupported preferences type '%s' for property '%' in file '%s'", type.name (), prop.name, backing_file.get_path ());
+						debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path ());
 						continue;
 					}
 					
