@@ -2,11 +2,6 @@ include $(top_srcdir)/Makefile.common
 
 VAPIDIR = $(top_srcdir)/vapi
 
-LIB_CURRENT=0
-LIB_REVISION=0
-LIB_AGE=0
-LIB_VERSION_INFO="$(LIB_CURRENT):$(LIB_REVISION):$(LIB_AGE)"
-
 libplankincludedir = $(includedir)/plank
 libplankinclude_HEADERS = plank.h
 
@@ -32,7 +27,7 @@ libplank_la_CFLAGS = \
 	$(NULL)
 
 libplank_la_LDFLAGS = \
-	-version-info $(LIB_VERSION_INFO) \
+	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)"
 	$(PLANK_CORE_LDFLAGS) \
 	$(NULL)
 
