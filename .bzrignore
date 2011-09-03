@@ -2,6 +2,7 @@ aclocal.m4
 autom4te.cache
 bin
 build
+ChangeLog
 compile
 config.guess
 config.h
@@ -25,6 +26,7 @@ stamp-h1
 py-compile
 Makefile
 Makefile.in
+.version
 po/*.gmo
 po/.intltool-merge-cache
 po/Makefile.in.in
@@ -50,7 +52,9 @@ src/plank
 src/*.c
 src/*.stamp
 data/plank.desktop
+m4/intltool.m4
 m4/libtool.m4
 m4/ltoptions.m4
+m4/ltsugar.m4
 m4/ltversion.m4
 m4/lt~obsolete.m4
