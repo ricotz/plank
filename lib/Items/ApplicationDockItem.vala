@@ -211,7 +211,11 @@ namespace Plank.Items
 			var closed = App == null || App.get_children ().length () == 0;
 			
 			if (closed) {
+#if VALA_0_12
+				var item = new ImageMenuItem.from_stock (Gtk.Stock.OPEN, null);
+#else
 				var item = new ImageMenuItem.from_stock (STOCK_OPEN, null);
+#endif
 				item.activate.connect (() => launch ());
 				items.add (item);
 			}

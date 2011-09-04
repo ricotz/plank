@@ -317,10 +317,17 @@ namespace Plank.Drawing
 		{
 			var parts = s.split (";;");
 			
+#if VALA_0_12
+			R = double.min (uint8.MAX, double.max (0, int.parse (parts [0]))) / uint8.MAX;
+			G = double.min (uint8.MAX, double.max (0, int.parse (parts [1]))) / uint8.MAX;
+			B = double.min (uint8.MAX, double.max (0, int.parse (parts [2]))) / uint8.MAX;
+			A = double.min (uint8.MAX, double.max (0, int.parse (parts [3]))) / uint8.MAX;
+#else
 			R = double.min (uint8.MAX, double.max (0, parts [0].to_int ())) / uint8.MAX;
 			G = double.min (uint8.MAX, double.max (0, parts [1].to_int ())) / uint8.MAX;
 			B = double.min (uint8.MAX, double.max (0, parts [2].to_int ())) / uint8.MAX;
 			A = double.min (uint8.MAX, double.max (0, parts [3].to_int ())) / uint8.MAX;
+#endif
 		}
 	}
 }
