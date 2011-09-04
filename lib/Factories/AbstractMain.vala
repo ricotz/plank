@@ -17,6 +17,9 @@
 
 using Gtk;
 using Unique;
+#if VALA_0_12
+using Posix;
+#endif
 
 using Plank.Services;
 using Plank.Services.Windows;
@@ -24,6 +27,8 @@ using Plank.Widgets;
 
 namespace Plank.Factories
 {
+#if VALA_0_12
+#else
 	public struct utsname
 	{
 		char sysname [65];
@@ -33,6 +38,7 @@ namespace Plank.Factories
 		char machine [65];
 		char domainname [65];
 	}
+#endif
 	
 	public abstract class AbstractMain : GLib.Object
 	{
@@ -73,8 +79,12 @@ namespace Plank.Factories
 			Logger.initialize (program_name);
 			Logger.DisplayLevel = LogLevel.INFO;
 			message ("%s version: %s", program_name, build_version);
+#if VALA_0_12
+			var un = Posix.utsname ();
+#else
 			var un = utsname ();
 			uname (un);
+#endif
 			message ("Kernel version: %s", (string) un.release);
 			Logger.DisplayLevel = LogLevel.WARN;
 			
@@ -124,8 +134,11 @@ namespace Plank.Factories
 		[CCode (cheader_filename = "sys/prctl.h", cname = "prctl")]
 		protected extern static int prctl (int option, string arg2, ulong arg3, ulong arg4, ulong arg5);
 		
+#if VALA_0_12
+#else
 		[CCode (cheader_filename = "sys/utsname.h", cname = "uname")]
 		protected extern static int uname (utsname buf);
+#endif
 		
 		protected static bool DEBUG = false;
 		
