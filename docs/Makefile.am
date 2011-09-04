@@ -42,15 +42,23 @@ valadoc_flags = \
 # plank documentation
 plank_doc_files = \
 	$(top_srcdir)/lib/*.vala \
+	$(top_srcdir)/lib/Drawing/*.vala \
+	$(top_srcdir)/lib/Factories/*.vala \
+	$(top_srcdir)/lib/Items/*.vala \
+	$(top_srcdir)/lib/Services/*.vala \
+	$(top_srcdir)/lib/Widgets/*.vala \
 	$(NULL)
 
 plank_doc_deps = \
-	gconf-2.0 \
-	gmodule-2.0 \
-	gio-2.0 \
-	gee-1.0 \
+	gdk-x11-2.0 \
+	gtk+-2.0 \
+	gio-unix-2.0 \
 	bamf \
-	wnck-1.0 \
+	gee-1.0 \
+	libwnck-1.0 \
+	posix \
+	unique-1.0 \
+	x11 \
 	$(NULL)
 
 valadoc_flags_plank = \
@@ -58,6 +66,7 @@ valadoc_flags_plank = \
 	-X $(top_srcdir)/lib/plank.h \
 	$(addprefix --pkg=,$(plank_doc_deps)) \
 	--vapidir=$(top_srcdir)/lib \
+	--vapidir=$(top_srcdir)/vapi \
 	$(plank_doc_files) \
 	$(NULL)
 
