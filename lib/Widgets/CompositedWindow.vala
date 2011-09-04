@@ -35,7 +35,7 @@ namespace Plank.Widgets
 			resizable = false;
 			double_buffered = false;
 			
-            set_default_colormap (get_screen ().get_rgba_colormap () ?? get_screen ().get_rgb_colormap ());
+			set_default_colormap (get_screen ().get_rgba_colormap () ?? get_screen ().get_rgb_colormap ());
 			
 			realize.connect (() => {
 				get_window ().set_back_pixmap (null, false);
