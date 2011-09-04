@@ -59,13 +59,21 @@ namespace Plank.Items
 			
 			items.add (new SeparatorMenuItem ());
 			
+#if VALA_0_12
+			item = new ImageMenuItem.from_stock (Gtk.Stock.ABOUT, null);
+#else
 			item = new ImageMenuItem.from_stock (STOCK_ABOUT, null);
+#endif
 			item.activate.connect (() => Factory.main.show_about ());
 			items.add (item);
 			
 			items.add (new SeparatorMenuItem ());
 			
+#if VALA_0_12
+			item = new ImageMenuItem.from_stock (Gtk.Stock.QUIT, null);
+#else
 			item = new ImageMenuItem.from_stock (STOCK_QUIT, null);
+#endif
 			item.activate.connect (() => Factory.main.quit ());
 			items.add (item);
 			
