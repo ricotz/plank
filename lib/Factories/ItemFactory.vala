@@ -31,7 +31,7 @@ namespace Plank.Factories
 		
 		protected DockItem default_make_item (string dock_item_filename, string launcher)
 		{
-			if (launcher.has_suffix (Factory.main.app_launcher))
+			if (Factory.main.is_launcher_for_dock (launcher))
 				return new PlankDockItem.with_dockitem (dock_item_filename);
 			if (launcher.has_suffix (".desktop"))
 				return new ApplicationDockItem.with_dockitem (dock_item_filename);
@@ -76,7 +76,7 @@ namespace Plank.Factories
 		public void make_default_items ()
 		{
 			// add plank item!
-			make_dock_item (Factory.main.build_data_dir + "/applications/plank.desktop", 0);
+			make_dock_item (Paths.DataFolder.get_parent ().get_path () + "/applications/plank.desktop", 0);
 			
 			if (Factory.item_factory.make_default_gnome_items ())
 				return;

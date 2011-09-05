@@ -29,7 +29,7 @@ namespace Plank.Factories
 {
 #if VALA_0_12
 #else
-	public struct utsname
+	struct utsname
 	{
 		char sysname [65];
 		char nodename [65];
@@ -44,30 +44,58 @@ namespace Plank.Factories
 	{
 		protected signal void initialized ();
 		
-		public string build_data_dir;
-		public string build_pkg_data_dir;
-		public string build_release_name;
-		public string build_version;
-		public string build_version_info;
+		protected string build_data_dir;
+		protected string build_pkg_data_dir;
+		protected string build_release_name;
+		protected string build_version;
+		protected string build_version_info;
 		
-		public string program_name;
-		public string exec_name;
+		protected string program_name;
+		protected string exec_name;
 		
-		public string app_copyright;
-		public string app_dbus;
-		public string app_icon;
-		public string app_launcher;
+		protected string app_copyright;
+		protected string app_dbus;
+		protected string app_icon;
+		protected string app_launcher;
 
-		public string main_url;
-		public string help_url;
-		public string translate_url;
+		protected string main_url;
+		protected string help_url;
+		protected string translate_url;
 		
-		public string[] about_authors;
-		public string[] about_documenters;
-		public string[] about_artists;
-		public string about_translators;
+		protected string[] about_authors;
+		protected string[] about_documenters;
+		protected string[] about_artists;
+		protected string about_translators;
 		
 		protected virtual int start (string[] args)
+		{
+			initialize_program ();
+			
+			args = parse_commandline (args);
+			
+			args = initialize_libraries (args);
+			
+			set_options ();
+			
+			initialize_services ();
+			
+			initialized ();
+			
+			start_dock ();
+			
+			return 0;
+		}
+		
+		[CCode (cheader_filename = "sys/prctl.h", cname = "prctl")]
+		protected extern static int prctl (int option, string arg2, ulong arg3, ulong arg4, ulong arg5);
+		
+#if VALA_0_12
+#else
+		[CCode (cheader_filename = "sys/utsname.h", cname = "uname")]
+		extern static int uname (utsname buf);
+#endif
+		
+		protected virtual void initialize_program ()
 		{
 			// set program name
 			prctl (15, exec_name, 0, 0, 0);
@@ -87,7 +115,16 @@ namespace Plank.Factories
 #endif
 			message ("Kernel version: %s", (string) un.release);
 			Logger.DisplayLevel = LogLevel.WARN;
-			
+		}
+		
+		static void sig_handler (int sig)
+		{
+			warning ("Caught signal (%d), exiting", sig);
+			Factory.main.quit ();
+		}
+		
+		protected virtual unowned string[] parse_commandline (string[] args)
+		{
 			// parse commandline options
 			var context = new OptionContext ("");
 			
@@ -98,6 +135,24 @@ namespace Plank.Factories
 				context.parse (ref args);
 			} catch { }
 			
+			return args;
+		}
+		
+		protected static bool DEBUG = false;
+		
+		protected const OptionEntry[] options = {
+			{ "debug", 'd', 0, OptionArg.NONE, out DEBUG, "Enable debug logging", null },
+			{ null }
+		};
+		
+		protected virtual void set_options ()
+		{
+			if (DEBUG)
+				Logger.DisplayLevel = LogLevel.DEBUG;
+		}
+		
+		protected virtual unowned string[] initialize_libraries (string[] args)
+		{
 			Intl.bindtextdomain (exec_name, build_data_dir + "/locale");
 			
 			if (!Thread.supported ())
@@ -110,20 +165,37 @@ namespace Plank.Factories
 			if (new App (app_dbus, null).is_running)
 				error ("Exiting because another instance is already running.");
 			
-			set_options ();
-			
+			return args;
+		}
+		
+		protected virtual void initialize_services ()
+		{
 			Paths.initialize (exec_name, build_pkg_data_dir);
 			WindowControl.initialize ();
-			
-			initialized ();
-			
+		}
+		
+		protected virtual void start_dock ()
+		{
 			new DockWindow ().show_all ();
 			
 			Gdk.threads_enter ();
 			Gtk.main ();
 			Gdk.threads_leave ();
-			
-			return 0;
+		}
+		
+		public bool is_launcher_for_dock (string launcher)
+		{
+			return launcher.has_suffix (app_launcher);
+		}
+		
+		public virtual void help ()
+		{
+			Services.System.open_uri (help_url);
+		}
+		
+		public virtual void translate ()
+		{
+			Services.System.open_uri (translate_url);
 		}
 		
 		public virtual void quit ()
@@ -131,40 +203,12 @@ namespace Plank.Factories
 			Gtk.main_quit ();
 		}
 		
-		[CCode (cheader_filename = "sys/prctl.h", cname = "prctl")]
-		protected extern static int prctl (int option, string arg2, ulong arg3, ulong arg4, ulong arg5);
-		
-#if VALA_0_12
-#else
-		[CCode (cheader_filename = "sys/utsname.h", cname = "uname")]
-		protected extern static int uname (utsname buf);
-#endif
-		
-		protected static bool DEBUG = false;
-		
-		protected const OptionEntry[] options = {
-			{ "debug", 'd', 0, OptionArg.NONE, out DEBUG, "Enable debug logging", null },
-			{ null }
-		};
-		
-		protected static void sig_handler (int sig)
-		{
-			warning ("Caught signal (%d), exiting", sig);
-			Factory.main.quit ();
-		}
-		
-		protected virtual void set_options ()
-		{
-			if (DEBUG)
-				Logger.DisplayLevel = LogLevel.DEBUG;
-		}
-		
-		protected AboutDialog about_dlg;
-		
 		public virtual void on_item_clicked ()
 		{
 			show_about ();
 		}
+		
+		protected static AboutDialog about_dlg;
 		
 		public virtual void show_about ()
 		{
