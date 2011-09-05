@@ -25,37 +25,71 @@ using Plank.Services.Windows;
 
 namespace Plank.Items
 {
+	/**
+	 * What item indicator to show.
+	 */
 	public enum IndicatorState
 	{
+		/** None - no windows for this item. */
 		NONE,
+		/** Show a single indicator - there is 1 window for this item. */
 		SINGLE,
+		/** Show multiple indicators - there are more than 1 window for this item. */
 		SINGLE_PLUS
 	}
 	
+	/**
+	 * The current activity state of an item.  The item has several
+	 * states to track and can be in any combination of them.
+	 */
 	[Flags]
 	public enum ItemState
 	{
+		/** The item is in a normal state. */
 		NORMAL = 1 << 0,
+		/** The item is currently active (a window in the group is focused). */
 		ACTIVE = 1 << 1,
+		/** The item is currently urgent (a window in the group has the urgent flag). */
 		URGENT = 1 << 2
 	}
 	
+	/**
+	 * What type of animation to perform when an item is clicked.
+	 */
 	public enum ClickAnimation
 	{
+		/** No animation. */
 		NONE,
+		/** Bounce the icon. */
 		BOUNCE,
+		/** Darken the icon, then restore it. */
 		DARKEN,
+		/** Brighten the icon, then restore it. */
 		LIGHTEN
 	}
 	
+	/**
+	 * What mouse button pops up the context menu on an item.
+	 * Can be multiple buttons.
+	 */
 	[Flags]
 	public enum PopupButton
 	{
-		NONE,
-		LEFT = 2,
-		MIDDLE = 4,
-		RIGHT = 8;
+		/** No button pops up the context. */
+		NONE = 1 << 0,
+		/** Left button pops up the context. */
+		LEFT = 1 << 1,
+		/** Middle button pops up the context. */
+		MIDDLE = 1 << 2,
+		/** Right button pops up the context. */
+		RIGHT = 1 << 3;
 		
+		/**
+		 * Convenience method to map {@link Gdk.EventButton} to this enum.
+		 *
+		 * @param event the event to map
+		 * @return the PopupButton representation of the event
+		 */
 		public static PopupButton from_event_button (EventButton event)
 		{
 			switch (event.button) {
