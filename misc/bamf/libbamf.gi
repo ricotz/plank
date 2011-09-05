@@ -1,6 +1,16 @@
 <?xml version="1.0"?>
 <api version="1.0">
-	<namespace name="bamf">
+	<namespace name="Bamf">
+		<enum name="BamfClickBehavior">
+			<member name="BAMF_CLICK_BEHAVIOR_NONE" value="0"/>
+			<member name="BAMF_CLICK_BEHAVIOR_OPEN" value="1"/>
+			<member name="BAMF_CLICK_BEHAVIOR_FOCUS" value="2"/>
+			<member name="BAMF_CLICK_BEHAVIOR_FOCUS_ALL" value="3"/>
+			<member name="BAMF_CLICK_BEHAVIOR_MINIMIZE" value="4"/>
+			<member name="BAMF_CLICK_BEHAVIOR_RESTORE" value="5"/>
+			<member name="BAMF_CLICK_BEHAVIOR_RESTORE_ALL" value="6"/>
+			<member name="BAMF_CLICK_BEHAVIOR_PICKER" value="7"/>
+		</enum>
 		<enum name="BamfWindowType">
 			<member name="BAMF_WINDOW_NORMAL" value="0"/>
 			<member name="BAMF_WINDOW_DESKTOP" value="1"/>
@@ -129,6 +139,14 @@
 				<return-type type="BamfWindow*"/>
 				<parameters>
 					<parameter name="matcher" type="BamfMatcher*"/>
+				</parameters>
+			</method>
+			<method name="get_application_for_desktop_file" symbol="bamf_matcher_get_application_for_desktop_file">
+				<return-type type="BamfApplication*"/>
+				<parameters>
+					<parameter name="matcher" type="BamfMatcher*"/>
+					<parameter name="desktop_file_path" type="gchar*"/>
+					<parameter name="create_if_not_found" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="get_application_for_window" symbol="bamf_matcher_get_application_for_window">
@@ -312,9 +330,15 @@
 				</parameters>
 			</vfunc>
 		</object>
-		<object name="BamfView" parent="GObject" type-name="BamfView" get-type="bamf_view_get_type">
+		<object name="BamfView" parent="GInitiallyUnowned" type-name="BamfView" get-type="bamf_view_get_type">
 			<method name="get_children" symbol="bamf_view_get_children">
 				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="view" type="BamfView*"/>
+				</parameters>
+			</method>
+			<method name="get_click_suggestion" symbol="bamf_view_get_click_suggestion">
+				<return-type type="BamfClickBehavior"/>
 				<parameters>
 					<parameter name="view" type="BamfView*"/>
 				</parameters>
@@ -355,20 +379,33 @@
 					<parameter name="view" type="BamfView*"/>
 				</parameters>
 			</method>
+			<method name="is_sticky" symbol="bamf_view_is_sticky">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="view" type="BamfView*"/>
+				</parameters>
+			</method>
 			<method name="is_urgent" symbol="bamf_view_is_urgent">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="view" type="BamfView*"/>
 				</parameters>
 			</method>
-			<method name="is_user_visible" symbol="bamf_view_user_visible">
+			<method name="set_sticky" symbol="bamf_view_set_sticky">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="view" type="BamfView*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="user_visible" symbol="bamf_view_user_visible">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="view" type="BamfView*"/>
 				</parameters>
 			</method>
 			<property name="active" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="path" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="path" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="running" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="urgent" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="user-visible" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -399,6 +436,14 @@
 					<parameter name="view" type="BamfView*"/>
 				</parameters>
 			</signal>
+			<signal name="name-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="view" type="BamfView*"/>
+					<parameter name="old_name" type="char*"/>
+					<parameter name="new_name" type="char*"/>
+				</parameters>
+			</signal>
 			<signal name="running-changed" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -420,6 +465,12 @@
 					<parameter name="user_visible" type="gboolean"/>
 				</parameters>
 			</signal>
+			<vfunc name="click_behavior">
+				<return-type type="BamfClickBehavior"/>
+				<parameters>
+					<parameter name="view" type="BamfView*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="get_children">
 				<return-type type="GList*"/>
 				<parameters>
@@ -454,6 +505,13 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="view" type="BamfView*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_path">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="view" type="BamfView*"/>
+					<parameter name="path" type="gchar*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="view_type">
