@@ -1,2 +1,2 @@
-include/libbamf/libbamf/
-/usr/lib/libbamf.so
+include/libbamf/libbamf
+/usr/lib/x86_64-linux-gnu/libbamf.so

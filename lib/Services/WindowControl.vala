@@ -44,7 +44,7 @@ namespace Plank.Services.Windows
 				unowned GLib.List<Bamf.View> children = app.get_children ();
 				for (var i = 0; i < children.length (); i++) {
 					var view = children.nth_data (i);
-					if (!(view is Bamf.Window && view.user_visible ()))
+					if (!(view is Bamf.Window && view.is_user_visible ()))
 						continue;
 					count++;
 				}

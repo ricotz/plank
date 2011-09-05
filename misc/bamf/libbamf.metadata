@@ -1,4 +1,4 @@
-* cheader_filename="libbamf/libbamf.h"
+Bamf cprefix="Bamf" lower_case_cprefix="bamf_" cheader_filename="libbamf/libbamf.h"
 
 BamfApplication type_check_function="BAMF_IS_APPLICATION"
 
@@ -7,17 +7,11 @@ BamfControl type_check_function="BAMF_IS_CONTROL"
 BamfIndicator type_check_function="BAMF_IS_INDICATOR"
 
 BamfMatcher type_check_function="BAMF_IS_MATCHER"
+bamf_matcher_register_favorites.favorites is_array="1" no_array_length="1"
 
 BamfTabSource type_check_function="BAMF_IS_TAB_SOURCE"
 
 BamfView type_check_function="BAMF_IS_VIEW"
-bamf_view_get_children.view hidden="1"
-bamf_view_get_icon.view hidden="1"
-bamf_view_get_name.view hidden="1"
-bamf_view_get_view_type.view hidden="1"
-bamf_view_is_active.view hidden="1"
-bamf_view_is_closed.view hidden="1"
-bamf_view_is_running.view hidden="1"
-bamf_view_is_urgent.view hidden="1"
+bamf_view_user_visible name="is_user_visible"
 
 BamfWindow type_check_function="BAMF_IS_WINDOW"
