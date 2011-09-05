@@ -46,15 +46,11 @@ namespace Plank.Items
 			var items = new ArrayList<MenuItem> ();
 			
 			var item = create_menu_item (_("Get _Help Online..."), "help");
-			item.activate.connect (() => {
-				Services.System.open_uri (Factory.main.help_url);
-			});
+			item.activate.connect (() => Factory.main.help ());
 			items.add (item);
 			
 			item = create_menu_item (_("_Translate This Application..."), "locale");
-			item.activate.connect (() => {
-				Services.System.open_uri (Factory.main.translate_url);
-			});
+			item.activate.connect (() => Factory.main.translate ());
 			items.add (item);
 			
 			items.add (new SeparatorMenuItem ());

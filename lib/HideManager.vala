@@ -23,23 +23,42 @@ using Plank.Widgets;
 
 namespace Plank
 {
+	/**
+	 * If/How the dock should hide itself.
+	 */
 	public enum HideType
 	{
+		/** The dock does not hide.  It should set struts to reserve space for it. */
 		NONE,
+		/** The dock hides if a window in the active window group overlaps it. */
 		INTELLIGENT,
+		/** The dock hides if the mouse is not over it. */
 		AUTO
 	}
 	
+	/**
+	 * Class to handle checking if a dock should hide or not.
+	 */
 	public class HideManager : GLib.Object
 	{
+		// a delay between window changes and updating our data
+		// this allows window animations to occur, which might change
+		// the results of our update
 		const uint UPDATE_TIMEOUT = 200;
 		
 		DockWindow window;
 		
 		bool disabled;
 		
+		/** If the dock is currently hovered by the mouse cursor. */
 		public bool DockHovered { get; set; default = false; }
 		
+		/**
+		 * Creates a new instance of a HideManager, which handles
+		 * checking if a dock should hide or not.
+		 *
+		 * @param window the {@link DockWindow} to manage hiding for
+		 */
 		public HideManager (DockWindow window)
 		{
 			this.window = window;
@@ -85,22 +104,9 @@ namespace Plank
 			stop_timers ();
 		}
 		
-		uint timer_prefs_changed = 0;
-		
-		void prefs_changed ()
-		{
-			if (timer_prefs_changed > 0) {
-				GLib.Source.remove (timer_prefs_changed);
-				timer_prefs_changed = 0;
-			}
-			
-			timer_prefs_changed = GLib.Timeout.add (UPDATE_TIMEOUT, () => {
-				update_window_intersect ();
-				timer_prefs_changed = 0;
-				return false;
-			});
-		}
-		
+		/**
+		 * Checks to see if the dock is being hovered by the mouse cursor.
+		 */
 		public void update_dock_hovered ()
 		{
 			// disable hiding if drags are active
@@ -122,6 +128,22 @@ namespace Plank
 			// use the dock rect and cursor location to determine if dock is hovered
 			DockHovered = x >= dock_rect.x && x <= dock_rect.x + dock_rect.width &&
 						  y >= dock_rect.y && y <= dock_rect.y + dock_rect.height;
+		}
+		
+		uint timer_prefs_changed = 0;
+		
+		void prefs_changed ()
+		{
+			if (timer_prefs_changed > 0) {
+				GLib.Source.remove (timer_prefs_changed);
+				timer_prefs_changed = 0;
+			}
+			
+			timer_prefs_changed = GLib.Timeout.add (UPDATE_TIMEOUT, () => {
+				update_window_intersect ();
+				timer_prefs_changed = 0;
+				return false;
+			});
 		}
 		
 		void update_hidden ()

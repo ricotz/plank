@@ -19,39 +19,51 @@ using Gee;
 
 namespace Plank.Services
 {
+	/**
+	 * A wrapper class that gives static instances of {@link GLib.File}
+	 * for commonly used paths.  Most paths are retrieved from
+	 * {@link GLib.Environment}, which on Linux uses the XDG Base Directory
+	 * specification (see [[http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html]]).
+	 *
+	 * Initializing this class also ensures any writable directories exist.
+	 */
 	public class Paths : GLib.Object
 	{
-		// User's home folder - $HOME
+		/** User's home folder - $HOME */
 		public static File HomeFolder { get; protected set; }
 		
-		// path passed in to initialize method
-		// should be Build.PKGDATADIR
+		/** Path passed in to initialize method
+		 *  should be Build.PKGDATADIR */
 		public static File DataFolder { get; protected set; }
 		
 		
-		// $HOME/.config
+		/** HomeFolder/.config */
 		public static File ConfigHomeFolder { get; protected set; }
 		
-		// $HOME/.local/share
+		/** HomeFolder/.local/share */
 		public static File DataHomeFolder { get; protected set; }
 		
-		// $HOME/.cache
+		/** HomeFolder/.cache */
 		public static File CacheHomeFolder { get; protected set; }
 		
-		// /usr/local/share/:/usr/share/
+		/** /usr/local/share/:/usr/share/ */
 		public static ArrayList<File> DataDirFolders { get; protected set; }
 		
 		
-		// defaults to ConfigHomeFolder/app_name
+		/** defaults to ConfigHomeFolder/app_name */
 		public static File AppConfigFolder { get; protected set; }
 		
-		// defaults to DataHomeFolder/app_name
+		/** defaults to DataHomeFolder/app_name */
 		public static File AppDataFolder { get; protected set; }
 		
-		// defaults to CacheHomeFolder/app_name
+		/** defaults to CacheHomeFolder/app_name */
 		public static File AppCacheFolder { get; protected set; }
 		
 		
+		/**
+		 * Initialize the class, creating the {@link GLib.File} instances for all
+		 * common paths.  Also ensure that any writable directory exists.
+		 */
 		public static void initialize (string app_name, string data_folder)
 		{
 			// get environment-based settings
@@ -82,6 +94,12 @@ namespace Plank.Services
 			ensure_directory_exists (AppCacheFolder);
 		}
 		
+		/**
+		 * Creates the directory if it does not already exist
+		 *
+		 * @param dir the directory to ensure exists
+		 * @return true if a directory was created, false otherwise
+		 */
 		public static bool ensure_directory_exists (File dir)
 		{
 			if (!dir.query_exists ())
