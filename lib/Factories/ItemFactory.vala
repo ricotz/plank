@@ -21,7 +21,7 @@ using Plank.Services;
 namespace Plank.Factories
 {
 	/**
-	 * An item factory.  Creates {@link Plank.Item.DockItem}s based on .dockitem files.
+	 * An item factory.  Creates {@link Items.DockItem}s based on .dockitem files.
 	 */
 	public class ItemFactory : GLib.Object
 	{

@@ -255,7 +255,7 @@ namespace Plank.Factories
 		}
 		
 		/**
-		 * Called when a {@link Plank.Items.PlankDockItem} is clicked.
+		 * Called when a {@link Items.PlankDockItem} is clicked.
 		 */
 		public virtual void on_item_clicked ()
 		{
