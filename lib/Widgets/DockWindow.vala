@@ -104,6 +104,7 @@ namespace Plank.Widgets
 			Items.item_added.connect (set_size);
 			Items.item_removed.connect (set_size);
 			Prefs.changed.connect (set_size);
+			
 			Renderer.notify["Hidden"].connect (update_icon_regions);
 			
 			get_screen ().size_changed.connect (update_monitor_geo);
@@ -125,6 +126,7 @@ namespace Plank.Widgets
 			Items.item_added.disconnect (set_size);
 			Items.item_removed.disconnect (set_size);
 			Prefs.changed.disconnect (set_size);
+			
 			Renderer.notify["Hidden"].disconnect (update_icon_regions);
 			
 			get_screen ().size_changed.disconnect (update_monitor_geo);
