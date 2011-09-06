@@ -29,34 +29,52 @@ namespace Plank.Services
 	 */
 	public class Paths : GLib.Object
 	{
-		/** User's home folder - $HOME */
+		/**
+		 * User's home folder - $HOME
+		 */
 		public static File HomeFolder { get; protected set; }
 		
-		/** Path passed in to initialize method
-		 *  should be Build.PKGDATADIR */
+		/**
+		 * Path passed in to initialize method
+		 * should be Build.PKGDATADIR
+		 */
 		public static File DataFolder { get; protected set; }
 		
 		
-		/** HomeFolder/.config */
+		/**
+		 * HomeFolder/.config
+		 */
 		public static File ConfigHomeFolder { get; protected set; }
 		
-		/** HomeFolder/.local/share */
+		/**
+		 * HomeFolder/.local/share
+		 */
 		public static File DataHomeFolder { get; protected set; }
 		
-		/** HomeFolder/.cache */
+		/**
+		 * HomeFolder/.cache
+		 */
 		public static File CacheHomeFolder { get; protected set; }
 		
-		/** /usr/local/share/:/usr/share/ */
+		/**
+		 * /usr/local/share/:/usr/share/
+		 */
 		public static ArrayList<File> DataDirFolders { get; protected set; }
 		
 		
-		/** defaults to ConfigHomeFolder/app_name */
+		/**
+		 * defaults to ConfigHomeFolder/app_name
+		 */
 		public static File AppConfigFolder { get; protected set; }
 		
-		/** defaults to DataHomeFolder/app_name */
+		/**
+		 * defaults to DataHomeFolder/app_name
+		 */
 		public static File AppDataFolder { get; protected set; }
 		
-		/** defaults to CacheHomeFolder/app_name */
+		/**
+		 * defaults to CacheHomeFolder/app_name
+		 */
 		public static File AppCacheFolder { get; protected set; }
 		
 		

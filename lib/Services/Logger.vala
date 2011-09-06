@@ -24,17 +24,29 @@ namespace Plank.Services
 	 */
 	public enum LogLevel
 	{
-		/** Debugging messages that help track what the application is doing. */
+		/**
+		 * Debugging messages that help track what the application is doing.
+		 */
 		DEBUG,
-		/** General information messages. Similar to debug but perhaps useful to non-debug users. */
+		/**
+		 * General information messages. Similar to debug but perhaps useful to non-debug users.
+		 */
 		INFO,
-		/** Messages that also show a libnotify message. */
+		/**
+		 * Messages that also show a libnotify message.
+		 */
 		NOTIFY,
-		/** Any messsage that is a warning. */
+		/**
+		 * Any messsage that is a warning.
+		 */
 		WARN,
-		/** Any message considered an error.  These can be recovered from but might make the application function abnormally. */
+		/**
+		 * Any message considered an error.  These can be recovered from but might make the application function abnormally.
+		 */
 		ERROR,
-		/** Any message considered fatal.  These generally break the application. */
+		/**
+		 * Any message considered fatal.  These generally break the application.
+		 */
 		FATAL,
 	}
 	

@@ -32,13 +32,21 @@ namespace Plank.Widgets
 	 */
 	public enum DockPosition
 	{
-		/** The dock is on the bottom of the screen (and is horizontal). */
+		/**
+		 * The dock is on the bottom of the screen (and is horizontal).
+		 */
 		BOTTOM,
-		/** The dock is on the top of the screen (and is horizontal). */
+		/**
+		 * The dock is on the top of the screen (and is horizontal).
+		 */
 		TOP,
-		/** The dock is on the left side of the screen (and is vertical). */
+		/**
+		 * The dock is on the left side of the screen (and is vertical).
+		 */
 		LEFT,
-		/** The dock is on the right side of the screen (and is vertical). */
+		/**
+		 * The dock is on the right side of the screen (and is vertical).
+		 */
 		RIGHT
 	}
 	

@@ -22,7 +22,7 @@ using Plank.Drawing;
 
 namespace Plank.Items
 {
-	public class TransientDockItem : ApplicationDockItem
+	internal class TransientDockItem : ApplicationDockItem
 	{
 		public override bool CanBeRemoved {
 			get { return false; }

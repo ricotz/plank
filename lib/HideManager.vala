@@ -28,11 +28,17 @@ namespace Plank
 	 */
 	public enum HideType
 	{
-		/** The dock does not hide.  It should set struts to reserve space for it. */
+		/**
+		 * The dock does not hide.  It should set struts to reserve space for it.
+		 */
 		NONE,
-		/** The dock hides if a window in the active window group overlaps it. */
+		/**
+		 * The dock hides if a window in the active window group overlaps it.
+		 */
 		INTELLIGENT,
-		/** The dock hides if the mouse is not over it. */
+		/**
+		 * The dock hides if the mouse is not over it.
+		 */
 		AUTO
 	}
 	
@@ -50,7 +56,9 @@ namespace Plank
 		
 		bool disabled;
 		
-		/** If the dock is currently hovered by the mouse cursor. */
+		/**
+		 * If the dock is currently hovered by the mouse cursor.
+		 */
 		public bool DockHovered { get; set; default = false; }
 		
 		/**
