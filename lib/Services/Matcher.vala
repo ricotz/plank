@@ -19,7 +19,7 @@ using Gee;
 
 namespace Plank.Services.Windows
 {
-	public class Matcher : GLib.Object
+	internal class Matcher : GLib.Object
 	{
 		public signal void window_changed (Bamf.Window? old_win, Bamf.Window? new_win);
 		public signal void window_opened (Bamf.Window w);

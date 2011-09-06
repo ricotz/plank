@@ -22,7 +22,7 @@ using Plank.Drawing;
 
 namespace Plank.Items
 {
-	public class TransientDockItem : ApplicationDockItem
+	internal class TransientDockItem : ApplicationDockItem
 	{
 		public TransientDockItem.with_application (Bamf.Application app)
 		{

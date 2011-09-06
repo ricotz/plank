@@ -40,7 +40,7 @@ namespace Plank.Items
 		
 		public signal void app_closed ();
 		
-		public Bamf.Application? App { get; private set; }
+		internal Bamf.Application? App { get; private set; }
 		
 		ArrayList<string> shortcuts = new ArrayList<string> ();
 		HashMap<string, string> shortcut_map = new HashMap<string, string> (str_hash, str_equal);
@@ -66,7 +66,7 @@ namespace Plank.Items
 			stop_monitor ();
 		}
 		
-		public void set_app (Bamf.Application? app)
+		internal void set_app (Bamf.Application? app)
 		{
 			if (App != null) {
 				App.active_changed.disconnect (update_active);
