@@ -58,7 +58,7 @@ namespace Plank.Widgets
 		
 		protected HoverWindow hover = new HoverWindow ();
 
-		protected HideManager hide_manager;
+		protected HideManager HideTracker;
 		
 		protected Menu menu = new Menu ();
 		
@@ -80,7 +80,7 @@ namespace Plank.Widgets
 			Prefs = new DockPreferences.with_file ("settings");
 			Items = new DockItems ();
 			Renderer = new DockRenderer (this);
-			hide_manager = new HideManager (this);
+			HideTracker = new HideManager (this);
 			
 			set_accept_focus (false);
 			can_focus = false;
@@ -205,7 +205,7 @@ namespace Plank.Widgets
 				
 				// slide the dock in, if it shouldnt start hidden
 				GLib.Timeout.add (400, () => {
-					hide_manager.update_dock_hovered ();
+					HideTracker.update_dock_hovered ();
 					return false;
 				});
 			}
@@ -348,8 +348,8 @@ namespace Plank.Widgets
 		
 		protected void on_menu_hide ()
 		{
-			hide_manager.update_dock_hovered ();
-			if (!hide_manager.DockHovered)
+			HideTracker.update_dock_hovered ();
+			if (!HideTracker.DockHovered)
 				set_hovered (null);
 		}
 		
