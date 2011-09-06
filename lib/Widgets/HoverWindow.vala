@@ -80,8 +80,8 @@ namespace Plank.Widgets
 		/**
 		 * Centers the window at the x/y location specified.
 		 *
-		 * @param item_x
-		 * @param item_y
+		 * @param item_x the x location
+		 * @param item_y the y location
 		 */
 		public void move_hover (int item_x, int item_y)
 		{
