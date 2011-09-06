@@ -17,11 +17,27 @@
 
 namespace Plank.Factories
 {
+	/**
+	 * The main factory class for the dock.
+	 */
 	public class Factory : GLib.Object
 	{
+		/**
+		 * The main class.
+		 */
 		public static AbstractMain main;
+		
+		/**
+		 * The item factory.
+		 */
 		public static ItemFactory item_factory;
 		
+		/**
+		 * Initializes the factory class.
+		 *
+		 * @param main_class the main class
+		 * @param item the item factory
+		 */
 		public static void init (AbstractMain main_class, ItemFactory item)
 		{
 			main = main_class;

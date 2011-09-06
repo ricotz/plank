@@ -22,16 +22,26 @@ using Plank.Services;
 
 namespace Plank.Widgets
 {
+	/**
+	 * An animated window that draws a 'poof' animation.
+	 * Used when dragging items off the dock.
+	 */
 	public class PoofWindow : CompositedWindow
 	{
 		const int POOF_SIZE = 128;
 		const int POOF_FRAMES = 5;
 		const double RUN_LENGTH = 300 * 1000;
-
+		
 		Gdk.Pixbuf poof_image;
-
+		
 		DateTime start_time;
-
+		
+		/**
+		 * Creates a new poof window at the screen-relative coordinates specified.
+		 *
+		 * @param x the x position of the poof window
+		 * @param y the y position of the poof window
+		 */
 		public PoofWindow (int x, int y)
 		{
 			base ();
@@ -63,12 +73,12 @@ namespace Plank.Widgets
 			start_time = new DateTime.now_utc (); 
 			show_all ();
 		}
-
+		
 		double get_animation_state ()
 		{
 			return double.max (0, double.min (1, (double) new DateTime.now_utc ().difference (start_time) / RUN_LENGTH));
 		}
-
+		
 		public override bool expose_event (EventExpose event)
 		{
 			var cr = cairo_create (event.window);

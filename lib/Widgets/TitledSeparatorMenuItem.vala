@@ -26,6 +26,10 @@ using Pango;
 
 namespace Plank.Widgets
 {
+	/**
+	 * A {@link Gtk.SeparatorMenuItem} with a title on it.
+	 * The separator can be drawn with or without a line.
+	 */
 	public class TitledSeparatorMenuItem : SeparatorMenuItem
 	{
 		bool draw_line = true;

@@ -24,10 +24,19 @@ using Plank.Drawing;
 
 namespace Plank.Widgets
 {
+	/**
+	 * A hover window that shows labels for dock items.
+	 * This window floats outside (but near) the dock.
+	 * The window uses a themed renderer and has its own theme file.
+	 */
 	public class HoverWindow : CompositedWindow
 	{
 		const int HOVER_HEIGHT = 26;
+		const int PADDING = 10;
 		
+		/**
+		 * The text to display in the window.
+		 */
 		public string Text { get; set; }
 		
 		ThemeRenderer theme;
@@ -68,15 +77,21 @@ namespace Plank.Widgets
 			queue_draw ();
 		}
 		
+		/**
+		 * Centers the window at the x/y location specified.
+		 *
+		 * @param item_x
+		 * @param item_y
+		 */
 		public void move_hover (int item_x, int item_y)
 		{
 #if VALA_0_14
 			var requisition = get_requisition ();
 			var x = item_x - requisition.width / 2;
-			var y = item_y - requisition.height - 10;
+			var y = item_y - requisition.height - PADDING;
 #else
 			var x = item_x - width_request / 2;
-			var y = item_y - height_request - 10;
+			var y = item_y - height_request - PADDING;
 #endif
 			
 			var screen = get_screen ();

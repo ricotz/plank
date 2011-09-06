@@ -392,7 +392,7 @@ namespace Plank.Widgets
 			get_window ().input_shape_combine_region (region, cursor.x, cursor.y);
 		}
 		
-		protected enum Struts 
+		enum Struts 
 		{
 			LEFT,
 			RIGHT,
