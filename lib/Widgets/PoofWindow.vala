@@ -73,12 +73,11 @@ namespace Plank.Widgets
 		{
 			var cr = cairo_create (event.window);
 			
-			cr.save ();
 			cr.set_operator (Operator.SOURCE);
 			cr.set_source_rgba (0, 0, 0, 0);
 			cr.paint ();
-			cr.restore ();
 			
+			cr.set_operator (Operator.OVER);
 			cairo_set_source_pixbuf (cr, poof_image, 0, -POOF_SIZE * (int) (POOF_FRAMES * get_animation_state ()));
 			cr.paint ();
 			
