@@ -30,11 +30,17 @@ namespace Plank.Items
 	 */
 	public enum IndicatorState
 	{
-		/** None - no windows for this item. */
+		/**
+		 * None - no windows for this item.
+		 */
 		NONE,
-		/** Show a single indicator - there is 1 window for this item. */
+		/**
+		 * Show a single indicator - there is 1 window for this item.
+		 */
 		SINGLE,
-		/** Show multiple indicators - there are more than 1 window for this item. */
+		/**
+		 * Show multiple indicators - there are more than 1 window for this item.
+		 */
 		SINGLE_PLUS
 	}
 	
@@ -45,11 +51,17 @@ namespace Plank.Items
 	[Flags]
 	public enum ItemState
 	{
-		/** The item is in a normal state. */
+		/**
+		 * The item is in a normal state.
+		 */
 		NORMAL = 1 << 0,
-		/** The item is currently active (a window in the group is focused). */
+		/**
+		 * The item is currently active (a window in the group is focused).
+		 */
 		ACTIVE = 1 << 1,
-		/** The item is currently urgent (a window in the group has the urgent flag). */
+		/**
+		 * The item is currently urgent (a window in the group has the urgent flag).
+		 */
 		URGENT = 1 << 2
 	}
 	
@@ -58,13 +70,21 @@ namespace Plank.Items
 	 */
 	public enum ClickAnimation
 	{
-		/** No animation. */
+		/**
+		 * No animation.
+		 */
 		NONE,
-		/** Bounce the icon. */
+		/**
+		 * Bounce the icon.
+		 */
 		BOUNCE,
-		/** Darken the icon, then restore it. */
+		/**
+		 * Darken the icon, then restore it.
+		 */
 		DARKEN,
-		/** Brighten the icon, then restore it. */
+		/**
+		 * Brighten the icon, then restore it.
+		 */
 		LIGHTEN
 	}
 	
@@ -75,13 +95,21 @@ namespace Plank.Items
 	[Flags]
 	public enum PopupButton
 	{
-		/** No button pops up the context. */
+		/**
+		 * No button pops up the context.
+		 */
 		NONE = 1 << 0,
-		/** Left button pops up the context. */
+		/**
+		 * Left button pops up the context.
+		 */
 		LEFT = 1 << 1,
-		/** Middle button pops up the context. */
+		/**
+		 * Middle button pops up the context.
+		 */
 		MIDDLE = 1 << 2,
-		/** Right button pops up the context. */
+		/**
+		 * Right button pops up the context.
+		 */
 		RIGHT = 1 << 3;
 		
 		/**

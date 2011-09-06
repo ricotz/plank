@@ -94,6 +94,9 @@ namespace Plank
 				IconSize--;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override void verify (string prop)
 		{
 			switch (prop) {
