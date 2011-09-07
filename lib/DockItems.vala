@@ -35,7 +35,9 @@ namespace Plank
 		 * Triggered when the state of an item changes.
 		 */
 		public signal void item_state_changed ();
-		// triggered anytime an item's Position changes
+		/**
+		 * Triggered anytime an item's Position changes.
+		 */
 		public signal void item_position_changed ();
 		
 		/**
@@ -123,11 +125,6 @@ namespace Plank
 		{
 			remove_item_without_signaling (item);
 			item_removed (item);
-		}
-		
-		public void serialize_positions ()
-		{
-			item_position_changed ();
 		}
 		
 		void signal_item_state_changed ()
@@ -262,6 +259,12 @@ namespace Plank
 			item_state_changed ();
 		}
 		
+		/**
+		 * Updates an item's position.
+		 *
+		 * @param item the item to update
+		 * @param position the new position
+		 */
 		public void update_item_position (DockItem item, int position)
 		{
 			item.Position = position;
@@ -306,7 +309,7 @@ namespace Plank
 			Items.add (item);
 			Items.sort ((CompareFunc) compare_items);
 			
-			serialize_positions ();
+			item_position_changed ();
 			
 			item.AddTime = new DateTime.now_utc ();
 			item.notify["Icon"].connect (signal_item_state_changed);
@@ -343,7 +346,7 @@ namespace Plank
 				if (i.Position > item.Position)
 					i.Position--;
 			
-			serialize_positions ();
+			item_position_changed ();
 		}
 		
 		void handle_item_deleted (DockItem item)

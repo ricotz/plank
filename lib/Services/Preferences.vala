@@ -160,6 +160,11 @@ namespace Plank.Services
 			start_monitor ();
 		}
 		
+		/**
+		 * Returns the path to the backing file.
+		 *
+		 * @return the path to the backing file
+		 */
 		public string get_backing_path ()
 		{
 			if (backing_file == null)

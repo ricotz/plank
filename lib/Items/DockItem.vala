@@ -224,6 +224,9 @@ namespace Plank.Items
 		 */
 		public DateTime LastActive { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
+		/**
+		 * If this item can be removed from the dock.
+		 */
 		public virtual bool CanBeRemoved {
 			get { return true; }
 		}
@@ -240,6 +243,9 @@ namespace Plank.Items
 		 */
 		public Drawing.Color AverageIconColor { get; protected set; }
 		
+		/**
+		 * The path to the preferences backing file.
+		 */
 		public string DockItemPath {
 			owned get { return Prefs.get_backing_path (); }
 		}
@@ -400,11 +406,23 @@ namespace Plank.Items
 			return new ArrayList<MenuItem> ();
 		}
 		
+		/**
+		 * Returns if the item accepts a drop of the given URIs.
+		 *
+		 * @param uris the URIs to check
+		 * @return if the item accepts a drop of the given URIs
+		 */
 		public virtual bool can_accept_drop (ArrayList<string> uris)
 		{
 			return false;
 		}
 		
+		/**
+		 * Accepts a drop of the given URIs.
+		 *
+		 * @param uris the URIs to accept
+		 * @return if the item accepted a drop of the given URIs
+		 */
 		public virtual bool accept_drop (ArrayList<string> uris)
 		{
 			return false;

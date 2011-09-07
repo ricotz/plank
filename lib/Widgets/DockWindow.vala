@@ -80,6 +80,9 @@ namespace Plank.Widgets
 		 */
 		public HideManager HideTracker { get; protected set; }
 		
+		/**
+		 * The drag manager for this dock.
+		 */
 		public DragManager DragTracker { get; protected set; }
 		
 		
@@ -367,6 +370,9 @@ namespace Plank.Widgets
 			hover.move_hover (win_x + rect.x + rect.width / 2, win_y + rect.y);
 		}
 		
+		/**
+		 * Serializes the item positions to the preferences.
+		 */
 		public void serialize_item_positions ()
 		{
 			var item_list = "";
@@ -380,6 +386,9 @@ namespace Plank.Widgets
 			Prefs.DockItems = item_list;
 		}
 		
+		/**
+		 * Called when a dragged item changes.
+		 */
 		protected void drag_item_changed ()
 		{
 			if (DragTracker.DragItem != null)
@@ -485,7 +494,7 @@ namespace Plank.Widgets
 				menu.popup (null, null, position_menu, button, get_current_event_time ());
 		}
 		
-		protected void on_menu_show ()
+		void on_menu_show ()
 		{
 			update_icon_regions ();
 			hover.hide ();

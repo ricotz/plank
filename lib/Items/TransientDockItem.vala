@@ -24,6 +24,9 @@ namespace Plank.Items
 {
 	internal class TransientDockItem : ApplicationDockItem
 	{
+		/**
+		 * {@inheritDoc}
+		 */
 		public override bool CanBeRemoved {
 			get { return false; }
 		}
