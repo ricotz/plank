@@ -49,7 +49,7 @@ namespace Plank
 		 */
 		public ArrayList<DockItem> Items = new ArrayList<DockItem> ();
 		
-		FileMonitor items_monitor;
+		FileMonitor? items_monitor = null;
 		
 		/**
 		 * Creates a new container for dock items.
@@ -130,7 +130,7 @@ namespace Plank
 		ApplicationDockItem? item_for_application (Bamf.Application app)
 		{
 			foreach (var item in Items) {
-				unowned ApplicationDockItem appitem = (item as ApplicationDockItem);
+				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 				if (appitem == null)
 					continue;
 				if ((appitem.App != null && appitem.App == app) || (appitem.Launcher != null
@@ -314,7 +314,7 @@ namespace Plank
 					return;
 				
 				remove_item_without_signaling (item);
-				var new_item = new ApplicationDockItem.with_dockitem (Factory.item_factory.launchers_dir.get_child (dockitem).get_path ());
+				var new_item = new ApplicationDockItem.with_dockitem (Factory.item_factory.launchers_dir.get_child (dockitem).get_path () ?? "");
 				new_item.Position = item.Position;
 				add_item_without_signaling (new_item);
 				

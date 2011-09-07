@@ -86,12 +86,12 @@ namespace Plank.Services
 		
 		static string AppName { get; set; }
 		
-		static Object queue_lock = null;
+		static Object? queue_lock = null;
 		
 		static ArrayList<LogMessage> log_queue;
 		static bool is_writing;
 		
-		static Regex re;
+		static Regex? re = null;
 		
 		/**
 		 * Initializes the logger for the application.
@@ -224,7 +224,7 @@ namespace Plank.Services
 		{
 			var domain = "";
 			if (d != null)
-				domain = "[%s] ".printf (d);
+				domain = "[%s] ".printf (d ?? "");
 			
 			var message = msg.replace ("\n", "").replace ("\r", "");
 			message = "%s%s".printf (domain, message);

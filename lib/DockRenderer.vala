@@ -38,11 +38,11 @@ namespace Plank
 		
 		DockThemeRenderer theme;
 		
-		DockSurface background_buffer;
-		DockSurface main_buffer;
-		DockSurface indicator_buffer;
-		DockSurface urgent_indicator_buffer;
-		DockSurface urgent_glow_buffer;
+		DockSurface? background_buffer;
+		DockSurface? main_buffer;
+		DockSurface? indicator_buffer;
+		DockSurface? urgent_indicator_buffer;
+		DockSurface? urgent_glow_buffer;
 		
 		DateTime last_hide = new DateTime.from_unix_utc (0);
 		

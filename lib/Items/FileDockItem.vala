@@ -34,7 +34,7 @@ namespace Plank.Items
 		const string DEFAULT_ICON = "inode-directory;;gnome-mime-inode-directory;;inode-x-generic;;folder";
 		
 		File OwnedFile { get; set; }
-		FileMonitor dir_monitor;
+		FileMonitor? dir_monitor;
 		
 		/**
 		 * {@inheritDoc}
@@ -50,7 +50,7 @@ namespace Plank.Items
 			OwnedFile = File.new_for_path (Prefs.Launcher);
 			
 			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? DEFAULT_ICON;
-			Text = OwnedFile.get_basename ();
+			Text = OwnedFile.get_basename () ?? "";
 			
 			// pop up the dir contents on a left click too
 			if (OwnedFile.query_file_type (0) == FileType.DIRECTORY) {
@@ -60,7 +60,7 @@ namespace Plank.Items
 					dir_monitor = OwnedFile.monitor (0);
 					dir_monitor.changed.connect (handle_dir_changed);
 				} catch {
-					error ("Unable to watch the stack directory '%s'.", OwnedFile.get_path ());
+					error ("Unable to watch the stack directory '%s'.", OwnedFile.get_path () ?? "");
 				}
 			}
 		}
@@ -120,10 +120,10 @@ namespace Plank.Items
 				string icon, text;
 				
 				if (file.get_basename ().has_suffix (".desktop")) {
-					ApplicationDockItem.parse_launcher (file.get_path (), out icon, out text, null, null);
+					ApplicationDockItem.parse_launcher (file.get_path () ?? "", out icon, out text, null, null);
 				} else {
 					icon = DrawingService.get_icon_from_file (file) ?? "";
-					text = file.get_basename ();
+					text = file.get_basename () ?? "";
 				}
 				
 				icons.set (text, icon);
@@ -206,7 +206,7 @@ namespace Plank.Items
 			foreach (var file in get_files ()) {
 				if (file.get_basename ().has_suffix (".desktop")) {
 					string icon, text;
-					ApplicationDockItem.parse_launcher (file.get_path (), out icon, out text, null, null);
+					ApplicationDockItem.parse_launcher (file.get_path () ?? "", out icon, out text, null, null);
 					
 					var item = create_menu_item (text, icon);
 					item.activate.connect (() => {
@@ -219,14 +219,14 @@ namespace Plank.Items
 				} else {
 					var icon = DrawingService.get_icon_from_file (file) ?? "";
 					
-					var item = create_menu_item (file.get_basename (), icon);
+					var item = create_menu_item (file.get_basename () ?? "", icon);
 					item.activate.connect (() => {
 						Services.System.open (file);
 						ClickedAnimation = ClickAnimation.BOUNCE;
 						LastClicked = new DateTime.now_utc ();
 					});
-					menu_items.set (file.get_basename (), item);
-					keys.add (file.get_basename ());
+					menu_items.set (file.get_basename () ?? "", item);
+					keys.add (file.get_basename () ?? "");
 				}
 			}
 			

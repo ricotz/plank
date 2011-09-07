@@ -58,7 +58,7 @@ namespace Plank.Drawing
 				// otherwise try to get the icon from the fileinfo
 				return get_icon_from_gicon (info.get_icon ());
 			} catch {
-				debug ("Could not get file info for '%s'", file.get_path ());
+				debug ("Could not get file info for '%s'", file.get_path () ?? "");
 			}
 			
 			return null;
@@ -96,7 +96,7 @@ namespace Plank.Drawing
 			foreach (var s in MISSING_ICONS.split (";;"))
 				all_names.add (s);
 			
-			Pixbuf pbuf = null;
+			Pixbuf? pbuf = null;
 			
 			foreach (var name in all_names) {
 				if (icon_is_file (name)) {
@@ -136,11 +136,11 @@ namespace Plank.Drawing
 		
 		static Pixbuf? load_pixbuf_from_file (string name, int width, int height)
 		{
-			Pixbuf pbuf = null;
+			Pixbuf? pbuf = null;
 			
 			var filename = name;
 			if (name.has_prefix ("~/"))
-				filename = name.replace ("~/", Paths.HomeFolder.get_path ());
+				filename = name.replace ("~/", Paths.HomeFolder.get_path () ?? "");
 			
 			try {
 				if (filename.has_prefix ("file://"))
@@ -155,9 +155,9 @@ namespace Plank.Drawing
 		static Pixbuf? load_pixbuf (string icon, int size)
 		{
 #if VALA_0_12
-			Pixbuf pbuf = null;
+			Pixbuf? pbuf = null;
 #else
-			unowned Pixbuf pbuf = null;
+			unowned Pixbuf? pbuf = null;
 #endif
 			try {
 				if (IconTheme.get_default ().has_icon (icon))

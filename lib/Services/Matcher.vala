@@ -29,7 +29,7 @@ namespace Plank.Services.Windows
 		public signal void app_opened (Bamf.Application app);
 		public signal void app_closed (Bamf.Application app);
 		
-		static Matcher matcher;
+		static Matcher? matcher = null;
 		
 		public static Matcher get_default ()
 		{

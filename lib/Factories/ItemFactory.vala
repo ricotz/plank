@@ -104,7 +104,7 @@ namespace Plank.Factories
 		public void make_default_items ()
 		{
 			// add plank item!
-			make_dock_item (Paths.DataFolder.get_parent ().get_path () + "/applications/" + Factory.main.app_launcher, 0);
+			make_dock_item (Paths.DataFolder.get_parent ().get_path () ?? "" + "/applications/" + Factory.main.app_launcher, 0);
 			
 			if (make_default_gnome_items ())
 				return;
@@ -150,7 +150,7 @@ namespace Plank.Factories
 				
 				try {
 					// find a unique file name, based on the name of the launcher
-					var launcher_base = File.new_for_path (launcher).get_basename ().split (".") [0];
+					var launcher_base = (File.new_for_path (launcher).get_basename () ?? "").split (".") [0];
 					var dockitem = launcher_base + ".dockitem";
 					var counter = 1;
 					

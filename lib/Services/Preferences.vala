@@ -96,7 +96,7 @@ namespace Plank.Services
 		void handle_verify_notify (Object sender, ParamSpec property)
 		{
 			if (backing_file != null) {
-				warning ("Key '%s' failed verification in preferences file '%s', changing value", property.name, backing_file.get_path ());
+				warning ("Key '%s' failed verification in preferences file '%s', changing value", property.name, backing_file.get_path () ?? "");
 				save_prefs ();
 			} else {
 				warning ("Key '%s' failed verification, changing value", property.name);
@@ -129,7 +129,7 @@ namespace Plank.Services
 		 */
 		protected abstract void reset_properties ();
 		
-		File backing_file;
+		File? backing_file;
 		FileMonitor backing_monitor;
 		
 		/**
@@ -168,7 +168,7 @@ namespace Plank.Services
 			try {
 				backing_file.delete ();
 			} catch {
-				warning ("Unable to delete the preferences file '%s'", backing_file.get_path ());
+				warning ("Unable to delete the preferences file '%s'", backing_file.get_path () ?? "");
 			}
 		}
 		
@@ -191,7 +191,7 @@ namespace Plank.Services
 				backing_monitor = backing_file.monitor (0);
 				backing_monitor.changed.connect (backing_file_changed);
 			} catch {
-				error ("Unable to watch the preferences file '%s'", backing_file.get_path ());
+				error ("Unable to watch the preferences file '%s'", backing_file.get_path () ?? "");
 			}
 		}
 		
@@ -210,7 +210,7 @@ namespace Plank.Services
 		
 		void load_prefs ()
 		{
-			debug ("Loading preferences from file '%s'", backing_file.get_path ());
+			debug ("Loading preferences from file '%s'", backing_file.get_path () ?? "");
 			
 			var missing_keys = false;
 			
@@ -218,7 +218,7 @@ namespace Plank.Services
 			reset_properties ();
 			try {
 				var file = new KeyFile ();
-				file.load_from_file (backing_file.get_path (), 0);
+				file.load_from_file (backing_file.get_path () ?? "", 0);
 				
 				var obj_class = (ObjectClass) get_type ().class_ref ();
 				var properties = obj_class.list_properties ();
@@ -226,7 +226,7 @@ namespace Plank.Services
 					var group_name = prop.owner_type.name ();
 					
 					if (!file.has_group (group_name) || !file.has_key (group_name, prop.name)) {
-						warning ("Missing key '%s' for group '%s' in preferences file '%s' - using default value", prop.name, group_name, backing_file.get_path ());
+						warning ("Missing key '%s' for group '%s' in preferences file '%s' - using default value", prop.name, group_name, backing_file.get_path () ?? "");
 						missing_keys = true;
 						continue;
 					}
@@ -251,7 +251,7 @@ namespace Plank.Services
 						(val.get_object () as PrefsSerializable).prefs_deserialize (file.get_string (group_name, prop.name));
 						continue;
 					} else {
-						debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path ());
+						debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
 						continue;
 					}
 					
@@ -259,7 +259,7 @@ namespace Plank.Services
 					call_verify (prop.name);
 				}
 			} catch {
-				warning ("Unable to load preferences from file '%s'", backing_file.get_path ());
+				warning ("Unable to load preferences from file '%s'", backing_file.get_path () ?? "");
 				deleted ();
 			}
 			notify.connect (handle_notify);
@@ -302,7 +302,7 @@ namespace Plank.Services
 				else if (type.is_a (typeof (PrefsSerializable)))
 					file.set_string (group_name, prop.name, (val.get_object () as PrefsSerializable).prefs_serialize ());
 				else {
-					debug ("Unsupported preferences type '%s' for property '%' in file '%s'", type.name (), prop.name, backing_file.get_path ());
+					debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
 					continue;
 				}
 				
@@ -313,7 +313,7 @@ namespace Plank.Services
 					} catch { }
 			}
 			
-			debug ("Saving preferences '%s'", backing_file.get_path ());
+			debug ("Saving preferences '%s'", backing_file.get_path () ?? "");
 			
 			try {
 				DataOutputStream stream;
@@ -324,7 +324,7 @@ namespace Plank.Services
 				
 				stream.put_string (file.to_data ());
 			} catch {
-				warning ("Unable to create the preferences file '%s'", backing_file.get_path ());
+				warning ("Unable to create the preferences file '%s'", backing_file.get_path () ?? "");
 			}
 			
 			start_monitor ();

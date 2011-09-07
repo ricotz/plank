@@ -37,7 +37,7 @@ namespace Plank.Widgets
 		/**
 		 * The text to display in the window.
 		 */
-		public string Text { get; set; }
+		public string Text { get; set; default = ""; }
 		
 		ThemeRenderer theme;
 		
@@ -123,13 +123,13 @@ namespace Plank.Widgets
 			invalidate ();
 		}
 		
-		DockSurface background_buffer;
+		DockSurface? background_buffer = null;
 		
 		void invalidate ()
 		{
 			background_buffer = null;
 			
-			if (Text == "" || Text == null)
+			if (Text == "")
 				Text = " ";
 			
 			// calculate the text layout to find the size
@@ -171,9 +171,6 @@ namespace Plank.Widgets
 		{
 			if (background_buffer == null || background_buffer.Height != height_request || background_buffer.Width != width_request)
 				draw_background ();
-			
-			if (background_buffer == null)
-				return base.expose_event (event);
 			
 			var cr = cairo_create (event.window);
 			

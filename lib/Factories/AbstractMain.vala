@@ -322,7 +322,7 @@ namespace Plank.Factories
 		/**
 		 * The about dialog for the program.
 		 */
-		protected static AboutDialog about_dlg;
+		protected static AboutDialog? about_dlg;
 		
 		/**
 		 * Displays the about dialog.

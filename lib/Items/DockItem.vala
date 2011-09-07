@@ -261,7 +261,7 @@ namespace Plank.Items
 		 */
 		protected DockItemPreferences Prefs { get; set; }
 		
-		DockSurface surface;
+		DockSurface? surface = null;
 		
 		/**
 		 * Creates a new dock item.
