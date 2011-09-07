@@ -25,20 +25,35 @@ using Plank.Services.Windows;
 
 namespace Plank
 {
+	/**
+	 * A container and controller class for managing dock items on a dock.
+	 */
 	public class DockItems : GLib.Object
 	{
-		// triggered when the state of an item changes
+		/**
+		 * Triggered when the state of an item changes.
+		 */
 		public signal void item_state_changed ();
 		
-		// triggered when a new item is added to the collection
+		/**
+		 * Triggered when a new item is added to the collection.
+		 */
 		public signal void item_added (DockItem item);
-		// triggered when an item is removed from the collection
+		/**
+		 * Triggered when an item is removed from the collection.
+		 */
 		public signal void item_removed (DockItem item);
 		
+		/**
+		 * A list of the dock items.
+		 */
 		public ArrayList<DockItem> Items = new ArrayList<DockItem> ();
 		
 		FileMonitor items_monitor;
 		
+		/**
+		 * Creates a new container for dock items.
+		 */
 		public DockItems ()
 		{
 			Factory.item_factory.launchers_dir = Paths.AppConfigFolder.get_child ("launchers");
@@ -81,6 +96,11 @@ namespace Plank
 			}
 		}
 		
+		/**
+		 * Adds a dock item to the collection.
+		 *
+		 * @param item the dock item to add
+		 */
 		public void add_item (DockItem item)
 		{
 			add_item_without_signaling (item);
@@ -89,6 +109,11 @@ namespace Plank
 			item_added (item);
 		}
 		
+		/**
+		 * Removes a dock item from the collection.
+		 *
+		 * @param item the dock item to remove
+		 */
 		public void remove_item (DockItem item)
 		{
 			remove_item_without_signaling (item);

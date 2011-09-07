@@ -21,13 +21,37 @@ using Plank.Services;
 
 namespace Plank.Drawing
 {
+	/**
+	 * Represents a RGBA color and has methods for manipulating
+	 * the color to create similar colors.
+	 */
 	public class Color : GLib.Object, PrefsSerializable
 	{
+		/**
+		 * The red value for the color.
+		 */
 		public double R;
+		/**
+		 * The green value for the color.
+		 */
 		public double G;
+		/**
+		 * The blue value for the color.
+		 */
 		public double B;
+		/**
+		 * The alpha value for the color.
+		 */
 		public double A;
 		
+		/**
+		 * Creates a new color object.
+		 *
+		 * @param R the red value
+		 * @param G the green value
+		 * @param B the blue value
+		 * @param A the alpha value
+		 */
 		public Color (double R, double G, double B, double A)
 		{
 			this.R = R;
@@ -36,6 +60,11 @@ namespace Plank.Drawing
 			this.A = A;
 		}
 		
+		/**
+		 * Creates a new color object from a {@link Gdk.Color}.
+		 *
+		 * @param color the color to use
+		 */
 		public Color.from_gdk (Gdk.Color color)
 		{
 			R = color.red / (double) uint16.MAX;
@@ -44,6 +73,12 @@ namespace Plank.Drawing
 			A = 1.0;
 		}
 		
+		/**
+		 * Sets the hue for the color.
+		 *
+		 * @param hue the new hue for the color
+		 * @return the new color
+		 */
 		public Color set_hue (double hue)
 			requires (hue >= 0 && hue <= 360)
 		{
@@ -55,6 +90,12 @@ namespace Plank.Drawing
 			return this;
 		}
 		
+		/**
+		 * Sets the saturation for the color.
+		 *
+		 * @param sat the new saturation for the color
+		 * @return the new color
+		 */
 		public Color set_sat (double sat)
 			requires (sat >= 0 && sat <= 1)
 		{
@@ -66,6 +107,12 @@ namespace Plank.Drawing
 			return this;
 		}
 		
+		/**
+		 * Sets the value for the color.
+		 *
+		 * @param val the new value for the color
+		 * @return the new color
+		 */
 		public Color set_val (double val)
 			requires (val >= 0 && val <= 1)
 		{
@@ -77,6 +124,12 @@ namespace Plank.Drawing
 			return this;
 		}
 		
+		/**
+		 * Sets the alpha for the color.
+		 *
+		 * @param alpha the new alpha for the color
+		 * @return the new color
+		 */
 		public Color set_alpha (double alpha)
 			requires (alpha >= 0 && alpha <= 1)
 		{
@@ -84,20 +137,35 @@ namespace Plank.Drawing
 			return this;
 		}
 		
+		/**
+		 * Returns the hue for the color.
+		 *
+		 * @return the hue for the color
+		 */
 		public double get_hue ()
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			return h;
 		}
-
+		
+		/**
+		 * Returns the saturation for the color.
+		 *
+		 * @return the saturation for the color
+		 */
 		public double get_sat ()
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			return s;
 		}
-
+		
+		/**
+		 * Returns the value for the color.
+		 *
+		 * @return the value for the color
+		 */
 		public double get_val ()
 		{
 			double h, s, v;
@@ -105,6 +173,12 @@ namespace Plank.Drawing
 			return v;
 		}
 		
+		/**
+		 * Increases the color's hue.
+		 *
+		 * @param val the amount to add to the hue
+		 * @return the new color
+		 */
 		public Color add_hue (double val)
 		{
 			double h, s, v;
@@ -115,6 +189,12 @@ namespace Plank.Drawing
 			return this;
 		}
 		
+		/**
+		 * Limits the color's saturation.
+		 *
+		 * @param val the minimum saturation allowed
+		 * @return the new color
+		 */
 		public Color set_min_sat (double sat)
 			requires (sat >= 0 && sat <= 1)
 		{
@@ -126,6 +206,12 @@ namespace Plank.Drawing
 			return this;
 		}
 		
+		/**
+		 * Limits the color's value.
+		 *
+		 * @param val the minimum value allowed
+		 * @return the new color
+		 */
 		public Color set_min_value (double val)
 			requires (val >= 0 && val <= 1)
 		{
@@ -137,6 +223,12 @@ namespace Plank.Drawing
 			return this;
 		}
 		
+		/**
+		 * Limits the color's saturation.
+		 *
+		 * @param val the maximum saturation allowed
+		 * @return the new color
+		 */
 		public Color set_max_sat (double sat)
 			requires (sat >= 0 && sat <= 1)
 		{
@@ -148,6 +240,12 @@ namespace Plank.Drawing
 			return this;
 		}
 
+		/**
+		 * Limits the color's value.
+		 *
+		 * @param val the maximum value allowed
+		 * @return the new color
+		 */
 		public Color set_max_val (double val)
 			requires (val >= 0 && val <= 1)
 		{
@@ -159,6 +257,12 @@ namespace Plank.Drawing
 			return this;
 		}
 		
+		/**
+		 * Multiplies the color's saturation using the amount.
+		 *
+		 * @param amount amount to multiply the saturation by
+		 * @return the new color
+		 */
 		public Color multiply_sat (double amount)
 			requires (amount >= 0)
 		{
@@ -170,6 +274,12 @@ namespace Plank.Drawing
 			return this;
 		}
 		
+		/**
+		 * Brighten the color's value using the value.
+		 *
+		 * @param amount percent of the value to brighten by
+		 * @return the new color
+		 */
 		public Color brighten_val (double amount)
 			requires (amount >= 0 && amount <= 1)
 		{
@@ -181,6 +291,12 @@ namespace Plank.Drawing
 			return this;
 		}
 		
+		/**
+		 * Darkens the color's value using the value.
+		 *
+		 * @param amount percent of the value to darken by
+		 * @return the new color
+		 */
 		public Color darken_val (double amount)
 			requires (amount >= 0 && amount <= 1)
 		{
@@ -192,6 +308,12 @@ namespace Plank.Drawing
 			return this;
 		}
 		
+		/**
+		 * Darkens the color's value using the saturtion.
+		 *
+		 * @param amount percent of the saturation to darken by
+		 * @return the new color
+		 */
 		public Color darken_by_sat (double amount)
 			requires (amount >= 0 && amount <= 1)
 		{
@@ -305,6 +427,9 @@ namespace Plank.Drawing
 			}
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public string prefs_serialize ()
 		{
 			return "%d;;%d;;%d;;%d".printf ((int) (R * uint8.MAX),
@@ -313,6 +438,9 @@ namespace Plank.Drawing
 				(int) (A * uint8.MAX));
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public void prefs_deserialize (string s)
 		{
 			var parts = s.split (";;");

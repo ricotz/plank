@@ -19,8 +19,14 @@ using Cairo;
 
 namespace Plank.Drawing
 {
+	/**
+	 * A themed renderer for hover windows.
+	 */
 	public class HoverThemeRenderer : ThemeRenderer
 	{
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override void reset_properties ()
 		{
 			base.reset_properties ();

@@ -19,6 +19,9 @@ using Cairo;
 
 namespace Plank.Drawing
 {
+	/**
+	 * A themed renderer for dock windows.
+	 */
 	public class DockThemeRenderer : ThemeRenderer
 	{
 		const double MIN_INDICATOR_SIZE = 0.0;
@@ -78,6 +81,9 @@ namespace Plank.Drawing
 		[Description(nick = "glow-pulse-time", blurb = "The time (in ms) of each pulse of the hidden-dock urgent glow.")]
 		public int GlowPulseTime { get; set; }
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override void reset_properties ()
 		{
 			base.reset_properties ();
@@ -103,6 +109,14 @@ namespace Plank.Drawing
 			GlowPulseTime = 2000;
 		}
 		
+		/**
+		 * Creates a surface for an indicator.
+		 *
+		 * @param background a similar surface
+		 * @param size the size of the indicator
+		 * @param color the color of the indicator
+		 * @return a new dock surface with the indicator drawn on it
+		 */
 		public DockSurface create_indicator (DockSurface background, int size, Color color)
 		{
 			var surface = new DockSurface.with_dock_surface (size, size, background);
@@ -130,6 +144,16 @@ namespace Plank.Drawing
 			return surface;
 		}
 		
+		/**
+		 * Draws an active glow for an item.
+		 *
+		 * @param surface the surface to draw onto
+		 * @param horiz_pad any horizontal padding to account for
+		 * @param clip_buffer a region to clip the glow to
+		 * @param rect the rect for the glow
+		 * @param color the color of the glow
+		 * @param opacity the opacity of the glow
+		 */
 		public void draw_active_glow (DockSurface surface, int horiz_pad, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity)
 		{
 			if (opacity == 0)
@@ -137,7 +161,7 @@ namespace Plank.Drawing
 			
 			var xoffset = horiz_pad < 0 ? -horiz_pad : 0;
 			surface.Context.translate (xoffset, surface.Height - clip_buffer.Height + LineWidth);
-			draw_inner_rect (surface.Context, clip_buffer);
+			draw_inner_rect (surface.Context, clip_buffer.Width, clip_buffer.Height);
 			surface.Context.clip ();
 			surface.Context.translate (-xoffset, clip_buffer.Height - surface.Height - LineWidth);
 			
@@ -154,6 +178,9 @@ namespace Plank.Drawing
 			surface.Context.reset_clip ();
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override void verify (string prop)
 		{
 			base.verify (prop);

@@ -28,7 +28,7 @@ namespace Plank.Items
 	public class ApplicationDockItem : DockItem
 	{
 		// for the Unity static quicklists
-		// see https://wiki.edubuntu.org/Unity/LauncherAPI#Static Quicklist entries
+		// see https://wiki.edubuntu.org/Unity/LauncherAPI#Static_Quicklist_entries
 		private const string UNITY_QUICKLISTS_KEY = "X-Ayatana-Desktop-Shortcuts";
 		private const string UNITY_QUICKLISTS_SHORTCUT_GROUP_NAME = "%s Shortcut Group";
 		private const string UNITY_QUICKLISTS_TARGET_KEY = "TargetEnvironment";
@@ -36,8 +36,14 @@ namespace Plank.Items
 		private const string UNITY_QUICKLISTS_NAME_KEY = "Name";
 		private const string UNITY_QUICKLISTS_EXEC_KEY = "Exec";
 		
+		/**
+		 * Signal fired when the item's 'keep in dock' menu item is pressed.
+		 */
 		public signal void pin_launcher ();
 		
+		/**
+		 * Signal fired when the application associated with this item closes.
+		 */
 		public signal void app_closed ();
 		
 		internal Bamf.Application? App { get; private set; }
@@ -45,6 +51,9 @@ namespace Plank.Items
 		ArrayList<string> shortcuts = new ArrayList<string> ();
 		HashMap<string, string> shortcut_map = new HashMap<string, string> (str_hash, str_equal);
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public ApplicationDockItem.with_dockitem (string dockitem)
 		{
 			Prefs = new DockItemPreferences.with_file (dockitem);
@@ -95,22 +104,22 @@ namespace Plank.Items
 			launcher_changed ();
 		}
 		
-		public void signal_app_closed ()
+		void signal_app_closed ()
 		{
 			app_closed ();
 		}
 		
-		protected bool is_window ()
+		bool is_window ()
 		{
 			return (App != null && App.get_desktop_file () == "");
 		}
 		
-		public void update_app ()
+		void update_app ()
 		{
 			set_app (Matcher.get_default ().app_for_launcher (Prefs.Launcher));
 		}
 		
-		public void update_urgent (bool is_urgent)
+		void update_urgent (bool is_urgent)
 		{
 			var was_urgent = (State & ItemState.URGENT) == ItemState.URGENT;
 			
@@ -122,7 +131,7 @@ namespace Plank.Items
 			}
 		}
 		
-		public void update_indicator ()
+		void update_indicator ()
 		{
 			if (App == null || App.is_closed () || !App.is_running ()) {
 				if (Indicator != IndicatorState.NONE)
@@ -136,7 +145,7 @@ namespace Plank.Items
 			}
 		}
 		
-		public void update_active (bool is_active)
+		void update_active (bool is_active)
 		{
 			var was_active = (State & ItemState.ACTIVE) == ItemState.ACTIVE;
 			
@@ -149,7 +158,7 @@ namespace Plank.Items
 			}
 		}
 		
-		public void update_states ()
+		void update_states ()
 		{
 			if (App == null || App.is_closed () || !App.is_running ()) {
 				update_urgent (false);
@@ -161,11 +170,14 @@ namespace Plank.Items
 			update_indicator ();
 		}
 		
-		public void launch ()
+		void launch ()
 		{
 			Services.System.launch (File.new_for_path (Prefs.Launcher));
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
 			if (!is_window ())
@@ -183,6 +195,9 @@ namespace Plank.Items
 			return ClickAnimation.NONE;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override void on_scrolled (ScrollDirection direction, ModifierType mod)
 		{
 			if (WindowControl.get_num_windows (App) == 0 ||
@@ -197,6 +212,9 @@ namespace Plank.Items
 				WindowControl.focus_next (App);
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public override ArrayList<MenuItem> get_menu_items ()
 		{
 			var items = new ArrayList<MenuItem> ();
@@ -296,6 +314,9 @@ namespace Plank.Items
 			return items;
 		}
 		
+		/**
+		 * Parses the associated launcher and sets the icon and text from it.
+		 */
 		protected void load_from_launcher ()
 		{
 			stop_monitor ();
@@ -308,6 +329,15 @@ namespace Plank.Items
 			start_monitor ();
 		}
 		
+		/**
+		 * Parses a launcher to get the text, icon and Unity static quicklist shortcuts.
+		 *
+		 * @param launcher the launcher file (.desktop file) to parse
+		 * @param icon the icon key from the launcher
+		 * @param text the text key from the launcher
+		 * @param shortcuts a list of all Unity static quicklist shortcuts by name
+		 * @param shortcut_map a map of Unity static quicklist shortcuts from name to exec
+		 */
 		public static void parse_launcher (string launcher, out string icon, out string text, ArrayList<string>? shortcuts, HashMap<string, string>? shortcut_map)
 		{
 			icon = "";
@@ -363,9 +393,9 @@ namespace Plank.Items
 			} catch { }
 		}
 		
-		protected FileMonitor monitor;
+		FileMonitor monitor;
 		
-		protected void start_monitor ()
+		void start_monitor ()
 		{
 			if (monitor != null)
 				return;
@@ -378,7 +408,7 @@ namespace Plank.Items
 			}
 		}
 		
-		protected void monitor_changed (File f, File? other, FileMonitorEvent event)
+		void monitor_changed (File f, File? other, FileMonitorEvent event)
 		{
 			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) != FileMonitorEvent.CHANGES_DONE_HINT &&
 				(event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
@@ -388,7 +418,7 @@ namespace Plank.Items
 			load_from_launcher ();
 		}
 		
-		protected void stop_monitor ()
+		void stop_monitor ()
 		{
 			if (monitor == null)
 				return;

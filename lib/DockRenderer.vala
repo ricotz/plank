@@ -25,6 +25,9 @@ using Plank.Widgets;
 
 namespace Plank
 {
+	/**
+	 * Handles all of the drawing for a dock.
+	 */
 	public class DockRenderer : AnimatedRenderer
 	{
 		DockWindow window;
@@ -47,8 +50,14 @@ namespace Plank
 			get { return 150; }
 		}
 		
+		/**
+		 * If the dock is currently hidden.
+		 */
 		public bool Hidden { get; protected set; default = true; }
 		
+		/**
+		 * How far from the screen edge the dock currently is.
+		 */
 		public int Offset {
 			get { return int.max (1, (int) ((1 - HideOffset) * VisibleDockHeight)); }
 		}
@@ -75,7 +84,13 @@ namespace Plank
 		int BottomPadding { get; set; }
 		int ItemPadding   { get; set; }
 		
+		/**
+		 * The currently visible height of the dock.
+		 */
 		public int VisibleDockHeight { get; protected set; }
+		/**
+		 * The static height of the dock.
+		 */
 		public int DockHeight { get; protected set; }
 		int DockBackgroundHeight { get; set; }
 		
@@ -108,7 +123,13 @@ namespace Plank
 				DockBackgroundHeight += TopPadding;
 		}
 		
+		/**
+		 * The currently visible width of the dock.
+		 */
 		public int VisibleDockWidth { get; protected set; }
+		/**
+		 * The static width of the dock.
+		 */
 		public int DockWidth { get; protected set; }
 		int DockBackgroundWidth { get; set; }
 		
@@ -132,6 +153,11 @@ namespace Plank
 			animated_draw ();
 		}
 		
+		/**
+		 * Create a new dock renderer for a dock window.
+		 *
+		 * @param window the dock window to manage drawing for
+		 */
 		public DockRenderer (DockWindow window)
 		{
 			base (window);
@@ -187,6 +213,9 @@ namespace Plank
 			window.set_size ();
 		}
 		
+		/**
+		 * The dock should be shown.
+		 */
 		public void show ()
 		{
 			if (!Hidden)
@@ -194,6 +223,9 @@ namespace Plank
 			Hidden = false;
 		}
 		
+		/**
+		 * The dock should be hidden.
+		 */
 		public void hide ()
 		{
 			if (Hidden)
@@ -201,6 +233,9 @@ namespace Plank
 			Hidden = true;
 		}
 		
+		/**
+		 * Resets all internal buffers and forces a redraw.
+		 */
 		public void reset_buffers ()
 		{
 			main_buffer = null;
@@ -212,6 +247,12 @@ namespace Plank
 			animated_draw ();
 		}
 		
+		/**
+		 * Returns the cursor region for the dock.
+		 * This is the region that the cursor can interact with the dock.
+		 *
+		 * @return the cursor region for the dock
+		 */
 		public Gdk.Rectangle get_cursor_region ()
 		{
 			cursor_region.width = VisibleDockWidth;
@@ -222,6 +263,12 @@ namespace Plank
 			return cursor_region;
 		}
 		
+		/**
+		 * Returns the static dock region for the dock.
+		 * This is the region that the dock occupies when not hidden.
+		 *
+		 * @return the static dock region for the dock
+		 */
 		public Gdk.Rectangle get_static_dock_region ()
 		{
 			return static_dock_region;
@@ -235,6 +282,12 @@ namespace Plank
 			static_dock_region.y = window.height_request - static_dock_region.height;
 		}
 		
+		/**
+		 * The cursor region for interacting with a dock item.
+		 *
+		 * @param item the dock item to find a region for
+		 * @return the region for the dock item
+		 */
 		public Gdk.Rectangle item_hover_region (DockItem item)
 		{
 			var rect = item_draw_region (item);
@@ -242,6 +295,12 @@ namespace Plank
 			return rect;
 		}
 		
+		/**
+		 * The region for drawing a dock item.
+		 *
+		 * @param item the dock item to find a region for
+		 * @return the region for the dock item
+		 */
 		public Gdk.Rectangle item_draw_region (DockItem item)
 		{
 			var rect = Gdk.Rectangle ();
@@ -254,6 +313,11 @@ namespace Plank
 			return rect;
 		}
 		
+		/**
+		 * Draws the dock onto a context.
+		 *
+		 * @param cr the context to use for drawing
+		 */
 		public void draw_dock (Context cr)
 		{
 			if (main_buffer != null && (main_buffer.Width != VisibleDockWidth || main_buffer.Height != DockHeight))
@@ -462,6 +526,12 @@ namespace Plank
 			cr.fill ();
 		}
 		
+		/**
+		 * Draws a badge for an item.
+		 *
+		 * @param surface the surface to draw the badge onto
+		 * @param badge_text the text for the badge
+		 */
 		public void draw_badge (DockSurface surface, string badge_text)
 		{
 			var theme_color = new Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
@@ -560,6 +630,9 @@ namespace Plank
 			animated_draw ();
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override bool animation_needed (DateTime render_time)
 		{
 			if (theme.FadeOpacity == 1.0) {

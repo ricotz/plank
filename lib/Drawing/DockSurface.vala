@@ -22,7 +22,10 @@ namespace Plank.Drawing
 {
 	public class DockSurface : GLib.Object
 	{
-		private Surface surface;
+		Surface surface;
+		/**
+		 * The internal {@link Cairo.Surface} backing the dock surface.
+		 */
 		public Surface Internal {
 			get {
 				if (surface == null)
@@ -32,11 +35,20 @@ namespace Plank.Drawing
 			private set { surface = value; }
 		}
 		
+		/**
+		 * The width of the surface.
+		 */
 		public int Width { get; private set; }
 		
+		/**
+		 * The height of the surface.
+		 */
 		public int Height { get; private set; }
 		
-		private Context context;
+		Context context;
+		/**
+		 * A {@link Cairo.Context} for the dock surface.
+		 */
 		public Cairo.Context Context {
 			get {
 				if (context == null)
@@ -45,12 +57,25 @@ namespace Plank.Drawing
 			}
 		}
 		
+		/**
+		 * Creates a new dock surface.
+		 *
+		 * @param width width of the new surface
+		 * @param height height of the new surface
+		 */
 		public DockSurface (int width, int height)
 		{
 			Width = width;
 			Height = height;
 		}
 		
+		/**
+		 * Creates a new dock surface compatible with an existing {@link Cairo.Surface}.
+		 *
+		 * @param width width of the new surface
+		 * @param height height of the new surface
+		 * @param model existing {@link Cairo.Surface} to be similar to
+		 */
 		public DockSurface.with_surface (int width, int height, Surface model)
 		{
 			this (width, height);
@@ -58,6 +83,13 @@ namespace Plank.Drawing
 				Internal = new Surface.similar (model, Content.COLOR_ALPHA, Width, Height);
 		}
 
+		/**
+		 * Creates a new dock surface compatible with an existing {@link Drawing.DockSurface}.
+		 *
+		 * @param width width of the new surface
+		 * @param height height of the new surface
+		 * @param model existing {@link Drawing.DockSurface} to be similar to
+		 */
 		public DockSurface.with_dock_surface (int width, int height, DockSurface model)
 		{
 			this (width, height);
@@ -65,6 +97,9 @@ namespace Plank.Drawing
 				Internal = new Surface.similar (model.Internal, Content.COLOR_ALPHA, Width, Height);
 		}
 		
+		/**
+		 * Clears the entire surface.
+		 */
 		public void clear ()
 		{
 			Context.save ();
@@ -76,6 +111,11 @@ namespace Plank.Drawing
 			context.restore ();
 		}
 		
+		/**
+		 * Saves the current dock surface to a {@link Gdk.Pixbuf}.
+		 *
+		 * @return the {@link Gdk.Pixbuf}
+		 */
 		public Gdk.Pixbuf load_to_pixbuf ()
 		{
 			var image_surface = new ImageSurface (Format.ARGB32, Width, Height);
@@ -123,6 +163,11 @@ namespace Plank.Drawing
 			return pb;
 		}
 		
+		/**
+		 * Computes and returns the average color of the surface.
+		 *
+		 * @return the average color of the surface
+		 */
 		public Drawing.Color average_color ()
 		{
 			var bTotal = 0.0;
@@ -167,6 +212,12 @@ namespace Plank.Drawing
 							 1).set_val (0.8).multiply_sat (1.15);
 		}
 		
+		/**
+		 * Performs a fast blur on the surface.
+		 *
+		 * @param radius the radius of the blur
+		 * @param process_count how many iterations to blur
+		 */
 		public void fast_blur (int radius, int process_count = 1)
 		{
 			if (radius < 1 || process_count < 1)
@@ -298,6 +349,11 @@ namespace Plank.Drawing
 		const int AlphaPrecision = 16;
 		const int ParamPrecision = 7;
 		
+		/**
+		 * Performs an exponential blur on the surface.
+		 *
+		 * @param radius the radius of the blur
+		 */
 		public void exponential_blur (int radius)
 		{
 			if (radius < 1)
@@ -390,7 +446,7 @@ namespace Plank.Drawing
 			}
 		}
 		
-		private static inline void exponential_blur_inner (uint8* pixel, ref int zA, ref int zR, ref int zG, ref int zB, int alpha)
+		static inline void exponential_blur_inner (uint8* pixel, ref int zA, ref int zR, ref int zG, ref int zB, int alpha)
 		{
 			zA += (alpha * ((pixel[0] << ParamPrecision) - zA)) >> AlphaPrecision;
 			zR += (alpha * ((pixel[1] << ParamPrecision) - zR)) >> AlphaPrecision;
@@ -403,7 +459,12 @@ namespace Plank.Drawing
 			pixel[3] = (uint8) (zB >> ParamPrecision);
 		}
 		
-		// Note: This method is wickedly slow
+		/**
+		 * Performs a gaussian blur on the surface.
+		 * ''Note: This method is wickedly slow''
+		 *
+		 * @param radius the radius of the blur
+		 */
 		public void gaussian_blur (int radius)
 		{
 			var gaussWidth = radius * 2 + 1;

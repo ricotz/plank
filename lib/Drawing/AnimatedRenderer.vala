@@ -17,24 +17,44 @@
 
 using Gtk;
 
-namespace Plank
+namespace Plank.Drawing
 {
+	/**
+	 * Handles animated rendering.  Uses a timer and continues requesting
+	 * redraws for a widget until no more animation is needed.
+	 */
 	public abstract class AnimatedRenderer : GLib.Object
 	{
-		// how many frames per second we want (roughly)
-		private const uint FPS = 60;
+		/**
+		 * How many frames per second (roughly) we want while animating.
+		 */
+		const uint FPS = 60;
 		
-		private Widget widget;
+		Widget widget;
 		
-		private uint animation_timer = 0;
+		uint animation_timer = 0;
 		
+		/**
+		 * Creates a new animation renderer for a widget.
+		 *
+		 * @param widget the widget to handle animations for
+		 */
 		public AnimatedRenderer (Widget widget)
 		{
 			this.widget = widget;
 		}
 		
+		/**
+		 * Determines if animation should continue.
+		 *
+		 * @param render_time the current time for this frame's render
+		 * @return if another animation frame is needed
+		 */
 		protected abstract bool animation_needed (DateTime render_time);
 		
+		/**
+		 * Request re-drawing.
+		 */
 		public void animated_draw ()
 		{
 			if (animation_timer > 0) 
@@ -46,7 +66,7 @@ namespace Plank
 				animation_timer = GLib.Timeout.add (1000 / FPS, draw_timeout);
 		}
 		
-		private bool draw_timeout ()
+		bool draw_timeout ()
 		{
 			widget.queue_draw ();
 			

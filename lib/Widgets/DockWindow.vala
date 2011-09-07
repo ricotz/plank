@@ -55,25 +55,55 @@ namespace Plank.Widgets
 	 */
 	public class DockWindow : CompositedWindow
 	{
+		/**
+		 * The preferences for this dock.
+		 */
 		public DockPreferences Prefs { get; protected set; }
 		
+		/**
+		 * The currently hovered item (if any).
+		 */
 		public DockItem? HoveredItem { get; protected set; }
 		
+		/**
+		 * The items on this dock.
+		 */
 		public DockItems Items { get; protected set; }
 		
+		/**
+		 * The renderer for this dock.
+		 */
 		public DockRenderer Renderer { get; protected set; }
 		
 		
+		/**
+		 * A hover window to use with this dock.
+		 */
 		protected HoverWindow hover = new HoverWindow ();
-
+		
+		/**
+		 * The autohide manager for this dock.
+		 */
 		protected HideManager HideTracker;
 		
+		/**
+		 * The popup menu for this dock.
+		 */
 		protected Menu menu = new Menu ();
 		
 		
+		/**
+		 * The monitor's geometry - this is cached.
+		 */
 		protected Gdk.Rectangle monitor_geo;
 		
+		/**
+		 * Cached x position of the dock window.
+		 */
 		public int win_x { get; protected set; }
+		/**
+		 * Cached y position of the dock window.
+		 */
 		public int win_y { get; protected set; }
 		
 		uint reposition_timer = 0;
@@ -81,6 +111,9 @@ namespace Plank.Widgets
 		bool dock_is_starting = true;
 		
 		
+		/**
+		 * Creates a new dock window.
+		 */
 		public DockWindow ()
 		{
 			base ();
@@ -141,6 +174,9 @@ namespace Plank.Widgets
 			Prefs.changed["Monitor"].disconnect (update_monitor_geo);
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public override bool button_press_event (EventButton event)
 		{
 			if (HoveredItem == null)
@@ -156,6 +192,9 @@ namespace Plank.Widgets
 			return true;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public override bool button_release_event (EventButton event)
 		{
 			if (HoveredItem != null && !menu_is_visible ())
@@ -164,6 +203,9 @@ namespace Plank.Widgets
 			return true;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public override bool enter_notify_event (EventCrossing event)
 		{
 			update_hovered ((int) event.x, (int) event.y);
@@ -171,6 +213,9 @@ namespace Plank.Widgets
 			return true;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public override bool leave_notify_event (EventCrossing event)
 		{
 			if (!menu_is_visible ())
@@ -181,6 +226,9 @@ namespace Plank.Widgets
 			return true;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public override bool motion_notify_event (EventMotion event)
 		{
 			if (update_hovered ((int) event.x, (int) event.y))
@@ -190,6 +238,9 @@ namespace Plank.Widgets
 			return true;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public override bool scroll_event (EventScroll event)
 		{
 			if ((event.state & ModifierType.CONTROL_MASK) != 0) {
@@ -207,6 +258,9 @@ namespace Plank.Widgets
 			return true;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public override bool expose_event (EventExpose event)
 		{
 			if (dock_is_starting) {
@@ -226,6 +280,11 @@ namespace Plank.Widgets
 			return true;
 		}
 		
+		/**
+		 * Sets the currently hovered item for this dock.
+		 *
+		 * @param item the hovered item (if any) for this dock
+		 */
 		protected void set_hovered (DockItem? item)
 		{
 			if (HoveredItem == item)
@@ -248,6 +307,13 @@ namespace Plank.Widgets
 				hover.show ();
 		}
 		
+		/**
+		 * Determines if an item is hovered by the cursor at the x/y position.
+		 *
+		 * @param x the cursor x position
+		 * @param y the cursor x position
+		 * @return if a dock item is hovered
+		 */
 		protected bool update_hovered (int x, int y)
 		{
 			foreach (var item in Items.Items) {
@@ -262,6 +328,9 @@ namespace Plank.Widgets
 			return false;
 		}
 		
+		/**
+		 * Updates the monitor geometry cache.
+		 */
 		protected void update_monitor_geo ()
 		{
 			get_screen ().get_monitor_geometry (Prefs.Monitor, out monitor_geo);
@@ -269,12 +338,18 @@ namespace Plank.Widgets
 			set_size ();
 		}
 		
+		/**
+		 * Repositions the hover window for the hovered item.
+		 */
 		protected void position_hover ()
 		{
 			var rect = Renderer.item_hover_region (HoveredItem);
 			hover.move_hover (win_x + rect.x + rect.width / 2, win_y + rect.y);
 		}
 		
+		/**
+		 * Sets the size of the dock window.
+		 */
 		public void set_size ()
 		{
 			set_size_request (Renderer.DockWidth, Renderer.DockHeight);
@@ -285,6 +360,9 @@ namespace Plank.Widgets
 			Renderer.reset_buffers ();
 		}
 		
+		/**
+		 * Repositions the dock to keep it centered on the screen edge.
+		 */
 		protected void reposition ()
 		{
 			if (reposition_timer != 0) {
@@ -308,6 +386,9 @@ namespace Plank.Widgets
 			});
 		}
 		
+		/**
+		 * Updates the icon regions for all items on the dock.
+		 */
 		protected void update_icon_regions ()
 		{
 			foreach (var item in Items.Items) {
@@ -324,11 +405,20 @@ namespace Plank.Widgets
 			Renderer.animated_draw ();
 		}
 		
+		/**
+		 * If the popup menu is currently visible.
+		 */
 		public bool menu_is_visible ()
 		{
 			return menu.get_visible ();
 		}
 		
+		/**
+		 * Shows the popup menu.
+		 *
+		 * @param button the button used to trigger the popup
+		 * @param show_plank_menu if the 'global' menu should be shown
+		 */
 		protected void do_popup (uint button, bool show_plank_menu)
 		{
 			foreach (var w in menu.get_children ()) {
@@ -356,6 +446,9 @@ namespace Plank.Widgets
 				menu.popup (null, null, position_menu, button, get_current_event_time ());
 		}
 		
+		/**
+		 * Called when the popup menu hides.
+		 */
 		protected void on_menu_hide ()
 		{
 			HideTracker.update_dock_hovered ();
@@ -363,6 +456,14 @@ namespace Plank.Widgets
 				set_hovered (null);
 		}
 		
+		/**
+		 * Positions the popup menu.
+		 *
+		 * @param menu the popup menu to show
+		 * @param x the x location to show the menu
+		 * @param y the y location to show the menu
+		 * @param push_in if the menu should push into the screen
+		 */
 		protected void position_menu (Menu menu, out int x, out int y, out bool push_in)
 		{
 			var rect = Renderer.item_hover_region (HoveredItem);
@@ -378,7 +479,7 @@ namespace Plank.Widgets
 			push_in = false;
 		}
 		
-		private void set_input_mask ()
+		void set_input_mask ()
 		{
 			if (!is_realized ())
 				return;
@@ -409,7 +510,7 @@ namespace Plank.Widgets
 			N_VALUES
 		}
 		
-		private void set_struts ()
+		void set_struts ()
 		{
 			if (!is_realized ())
 				return;

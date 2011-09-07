@@ -46,29 +46,86 @@ namespace Plank.Factories
 	 */
 	public abstract class AbstractMain : GLib.Object
 	{
+		/**
+		 * Signal fired when the program is fully initialized, before creating and showing the dock.
+		 */
 		protected signal void initialized ();
 		
+		/**
+		 * Should be Build.DATADIR
+		 */
 		protected string build_data_dir;
+		/**
+		 * Should be Build.PKGDATADIR
+		 */
 		protected string build_pkg_data_dir;
+		/**
+		 * Should be Build.RELEASE_NAME
+		 */
 		protected string build_release_name;
+		/**
+		 * Should be Build.VERSION
+		 */
 		protected string build_version;
+		/**
+		 * Should be Build.VERSION_INFO
+		 */
 		protected string build_version_info;
 		
+		/**
+		 * The displayed name of the program.
+		 */
 		protected string program_name;
+		/**
+		 * The executable name of the program.
+		 */
 		protected string exec_name;
 		
+		/**
+		 * The copyright year(s).
+		 */
 		protected string app_copyright;
+		/**
+		 * The (unique) dbus path for this program.
+		 */
 		protected string app_dbus;
+		/**
+		 * The name of this program's icon.
+		 */
 		protected string app_icon;
-		protected string app_launcher;
+		/**
+		 * The name of the launcher (.desktop file) for this program.
+		 */
+		public string app_launcher;
 
+		/**
+		 * The URL for this program's website.
+		 */
 		protected string main_url;
+		/**
+		 * The URL for this program's help.
+		 */
 		protected string help_url;
+		/**
+		 * The URL for translating this program.
+		 */
 		protected string translate_url;
 		
+		/**
+		 * The list of authors (to show in about dialog).
+		 */
 		protected string[] about_authors;
+		/**
+		 * The list of documenters (to show in about dialog).
+		 */
 		protected string[] about_documenters;
+		/**
+		 * The list of artists (to show in about dialog).
+		 */
 		protected string[] about_artists;
+		/**
+		 * The list of translators (to show in about dialog).
+		 */
 		protected string about_translators;
 		
 		/**
