@@ -65,7 +65,7 @@ namespace Plank
 		 * Creates a new instance of a HideManager, which handles
 		 * checking if a dock should hide or not.
 		 *
-		 * @param window the {@link DockWindow} to manage hiding for
+		 * @param window the {@link Widgets.DockWindow} to manage hiding for
 		 */
 		public HideManager (DockWindow window)
 		{

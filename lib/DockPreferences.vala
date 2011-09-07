@@ -22,6 +22,9 @@ using Plank.Widgets;
 
 namespace Plank
 {
+	/**
+	 * Contains all preferences for docks.
+	 */
 	public class DockPreferences : Preferences
 	{
 		const int MIN_ICON_SIZE = 24;
@@ -46,12 +49,18 @@ namespace Plank
 		[Description(nick = "dock-items", blurb = "List of *.dockitem files on this dock. DO NOT MODIFY")]
 		public string DockItems { get; set; }
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public DockPreferences ()
 		{
 			base ();
 			Screen.get_default ().monitors_changed.connect (monitors_changed);
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public DockPreferences.with_file (string filename)
 		{
 			base.with_file (filename);
@@ -63,6 +72,9 @@ namespace Plank
 			Screen.get_default ().monitors_changed.disconnect (monitors_changed);
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override void reset_properties ()
 		{
 			// FIXME zoom disabled
@@ -73,7 +85,7 @@ namespace Plank
 			DockItems = "";
 		}
 		
-		private void monitors_changed ()
+		void monitors_changed ()
 		{
 			verify ("Monitor");
 		}
@@ -86,12 +98,18 @@ namespace Plank
 		}
 		*/
 		
+		/**
+		 * Increases the IconSize, if it is not already at its max.
+		 */
 		public void increase_icon_size ()
 		{
 			if (IconSize < MAX_ICON_SIZE)
 				IconSize++;
 		}
 		
+		/**
+		 * Decreases the IconSize, if it is not already at its min.
+		 */
 		public void decrease_icon_size ()
 		{
 			if (IconSize > MIN_ICON_SIZE)

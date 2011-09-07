@@ -23,6 +23,9 @@ using Plank.Services;
 
 namespace Plank.Drawing
 {
+	/**
+	 * A themed renderer for windows.
+	 */
 	public class ThemeRenderer : Preferences
 	{
 		[Description(nick = "top-roundness", blurb = "The roundness of the top corners.")]
@@ -51,41 +54,67 @@ namespace Plank.Drawing
 			base ();
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override void reset_properties ()
 		{
-			TopRoundness = 6;
+			TopRoundness    = 6;
 			BottomRoundness = 6;
+			
 			LineWidth = 1;
+			
 			OuterStrokeColor = new Color (0.1647, 0.1647, 0.1647, 1);
-			FillStartColor = new Color (0.1647, 0.1647, 0.1647, 1);
-			FillEndColor = new Color (0.3176, 0.3176, 0.3176, 1);
+			FillStartColor   = new Color (0.1647, 0.1647, 0.1647, 1);
+			FillEndColor     = new Color (0.3176, 0.3176, 0.3176, 1);
 			InnerStrokeColor = new Color (1, 1, 1, 1);
 		}
 		
+		/**
+		 * Loads a theme for the renderer to use.
+		 *
+		 * @param type the type of theme to load
+		 */
 		public void load (string type)
 		{
 			Paths.ensure_directory_exists (Paths.AppConfigFolder.get_child ("theme"));
 			init_from_file ("theme/" + type + ".theme");
 		}
 		
+		/**
+		 * Returns the top offset.
+		 *
+		 * @return the top offset
+		 */
 		public int get_top_offset ()
 		{
 			return TopRoundness > 0 ? LineWidth : 0;
 		}
 		
+		/**
+		 * Returns the bottom offset.
+		 *
+		 * @return the bottom offset
+		 */
 		public int get_bottom_offset ()
 		{
 			return BottomRoundness > 0 ? LineWidth : 0;
 		}
 		
+		/**
+		 * Draws a background onto the surface.
+		 *
+		 * @param surface the dock surface to draw on
+		 */
 		public void draw_background (DockSurface surface)
 		{
 			var cr = surface.Context;
 			
-			var top_offset = get_top_offset ();
+			var top_offset    = get_top_offset ();
 			var bottom_offset = get_bottom_offset ();
 			
 			var gradient = new Pattern.linear (0, 0, 0, surface.Height);
+			
 			gradient.add_color_stop_rgba (0, FillStartColor.R, FillStartColor.G, FillStartColor.B, FillStartColor.A);
 			gradient.add_color_stop_rgba (1, FillEndColor.R, FillEndColor.G, FillEndColor.B, FillEndColor.A);
 			
@@ -106,8 +135,7 @@ namespace Plank.Drawing
 			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			
-			gradient = new Pattern.linear (0, top_offset,
-				0, surface.Height - top_offset - bottom_offset);
+			gradient = new Pattern.linear (0, top_offset, 0, surface.Height - top_offset - bottom_offset);
 			
 			gradient.add_color_stop_rgba (0, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.5);
 			gradient.add_color_stop_rgba ((TopRoundness > 0 ? TopRoundness : LineWidth) / (double) surface.Height, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.12);
@@ -117,38 +145,51 @@ namespace Plank.Drawing
 			cr.save ();
 			cr.set_source (gradient);
 			
-			draw_inner_rect (cr, surface);
+			draw_inner_rect (cr, surface.Width, surface.Height);
 			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			cr.restore ();
 		}
 		
-		public void draw_inner_rect (Context cr, DockSurface surface)
+		/**
+		 * TODO
+		 *
+		 * @param cr the context to draw with
+		 * @param width the width of the rect
+		 * @param height the height of the rect
+		 */
+		public void draw_inner_rect (Context cr, int width, int height)
 		{
-			var top_offset = get_top_offset ();
+			var top_offset    = get_top_offset ();
 			var bottom_offset = get_bottom_offset ();
 			
 			draw_rounded_rect (cr,
 				3 * LineWidth / 2.0,
 				3 * top_offset / 2.0,
-				surface.Width - 3 * LineWidth,
-				surface.Height - 3 * top_offset / 2.0 - 3 * bottom_offset / 2.0,
+				width - 3 * LineWidth,
+				height - 3 * top_offset / 2.0 - 3 * bottom_offset / 2.0,
 				TopRoundness,
 				BottomRoundness);
 		}
 		
 		void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
 		{
-			top_radius = double.min (top_radius, double.min (width, height));
-			bottom_radius = double.min (bottom_radius, double.min (width, height) - top_radius);
+			var min_size  = double.min (width, height);
+			
+			top_radius    = double.min (top_radius, min_size);
+			bottom_radius = double.min (bottom_radius, min_size - top_radius);
 			
 			cr.move_to (x + top_radius, y);
-			cr.arc (x + width - top_radius, y + top_radius, top_radius, Math.PI * 1.5, Math.PI * 2.0);
-			cr.arc (x + width - bottom_radius, y + height - bottom_radius, bottom_radius, 0, Math.PI * 0.5);
-			cr.arc (x + bottom_radius, y + height - bottom_radius, bottom_radius, Math.PI * 0.5, Math.PI);
-			cr.arc (x + top_radius, y + top_radius, top_radius, Math.PI, Math.PI * 1.5);
+			
+			cr.arc (x + width - top_radius,    y + top_radius,             top_radius,    Math.PI * 1.5, Math.PI * 2.0);
+			cr.arc (x + width - bottom_radius, y + height - bottom_radius, bottom_radius, 0,             Math.PI * 0.5);
+			cr.arc (x + bottom_radius,         y + height - bottom_radius, bottom_radius, Math.PI * 0.5, Math.PI);
+			cr.arc (x + top_radius,            y + top_radius,             top_radius,    Math.PI,       Math.PI * 1.5);
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override void verify (string prop)
 		{
 			base.verify (prop);
@@ -167,6 +208,12 @@ namespace Plank.Drawing
 			case "LineWidth":
 				if (LineWidth < 0)
 					LineWidth = 0;
+				break;
+			
+			case "OuterStrokeColor":
+			case "FillStartColor":
+			case "FillEndColor":
+			case "InnerStrokeColor":
 				break;
 			}
 		}

@@ -19,17 +19,28 @@ using Plank.Services;
 
 namespace Plank.Items
 {
+	/**
+	 * Contains preference keys for a dock item.
+	 */
 	public class DockItemPreferences : Preferences
 	{
+		[Description(nick = "launcher", blurb = "The path to the launcher for this item.")]
 		public string Launcher { get; set; }
 		
+		[Description(nick = "sort", blurb = "The sort value for this item (lower sort values are left of higher values).")]
 		public int Sort { get; set; }
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public DockItemPreferences.with_file (string filename)
 		{
 			base.with_file (filename);
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override void reset_properties ()
 		{
 			Launcher = "";

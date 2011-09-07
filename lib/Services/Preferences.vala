@@ -45,8 +45,8 @@ namespace Plank.Services
 	 * any public property of a sub-class is changed, the public properties are serialized to
 	 * the backing file.
 	 *
-	 * NOTE: Clients of this class should not connect to the {@link GLib.Object.notify()} signal.
-	 * Instead, they should connect to the {@link Plank.Services.Preferences.changed()} signal.
+	 * ''NOTE: Clients of this class should not connect to the {@link GLib.Object.notify()} signal.
+	 * Instead, they should connect to the {@link Services.Preferences.changed()} signal.''
 	 */
 	public abstract class Preferences : GLib.Object
 	{

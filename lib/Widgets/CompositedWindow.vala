@@ -19,6 +19,10 @@ using Gdk;
 
 namespace Plank.Widgets
 {
+	/**
+	 * A {@link Gtk.Window} with compositing support enabled.
+	 * The default expose event will draw a completely transparent window.
+	 */
 	public class CompositedWindow : Gtk.Window
 	{
 		public CompositedWindow ()

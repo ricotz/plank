@@ -23,24 +23,41 @@ using Plank.Factories;
 
 namespace Plank.Items
 {
+	/**
+	 * A dock item for the dock itself.  Has things like about, help, quit etc.
+	 */
 	public class PlankDockItem : ApplicationDockItem
 	{
+		/**
+		 * {@inheritDoc}
+		 */
 		public PlankDockItem.with_dockitem (string dockitem)
 		{
 			base.with_dockitem (dockitem);
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
 			Factory.main.on_item_clicked ();
 			return ClickAnimation.DARKEN;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public override ArrayList<MenuItem> get_menu_items ()
 		{
 			return get_plank_menu_items ();
 		}
 		
+		/**
+		 * Returns a list of {@link Gtk.MenuItem}s to display in the popup menu for this item
+		 *
+		 * @return the {@link Gtk.MenuItem}s to display
+		 */
 		public static ArrayList<MenuItem> get_plank_menu_items ()
 		{
 			var items = new ArrayList<MenuItem> ();

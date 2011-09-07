@@ -20,15 +20,34 @@ using Plank.Services;
 
 namespace Plank.Factories
 {
+	/**
+	 * An item factory.  Creates {@link Items.DockItem}s based on .dockitem files.
+	 */
 	public class ItemFactory : GLib.Object
 	{
+		/**
+		 * The directory containing .dockitem files.
+		 */
 		public File launchers_dir;
 		
+		/**
+		 * Creates a new {@link Items.DockItem} from a .dockitem.
+		 *
+		 * @param dock_item_filename the .dockitem file to parse
+		 * @return the new {@link Items.DockItem} created
+		 */
 		public virtual DockItem make_item (string dock_item_filename)
 		{
 			return default_make_item (dock_item_filename, get_launcher_from_dockitem (dock_item_filename));
 		}
 		
+		/**
+		 * Creates a new {@link Items.DockItem} for a launcher parsed from a .dockitem.
+		 *
+		 * @param dock_item_filename the .dockitem file that was parsed
+		 * @param launcher the launcher name from the .dockitem
+		 * @return the new {@link Items.DockItem} created
+		 */
 		protected DockItem default_make_item (string dock_item_filename, string launcher)
 		{
 			if (Factory.main.is_launcher_for_dock (launcher))
@@ -38,6 +57,12 @@ namespace Plank.Factories
 			return new FileDockItem.with_dockitem (dock_item_filename);
 		}
 		
+		/**
+		 * Parses a .dockitem to get the launcher from it.
+		 *
+		 * @param dockitem the .dockitem to parse
+		 * @return the launcher from the .dockitem
+		 */
 		protected string get_launcher_from_dockitem (string dockitem)
 		{
 			try {
@@ -53,7 +78,7 @@ namespace Plank.Factories
 		bool make_default_gnome_items ()
 		{
 			var browser = AppInfo.get_default_for_type ("text/html", false);
-			// TODO dont know how to get terminal...
+			// FIXME dont know how to get terminal...
 			var terminal = AppInfo.get_default_for_uri_scheme ("ssh");
 			var calendar = AppInfo.get_default_for_type ("text/calendar", false);
 			var media = AppInfo.get_default_for_type ("video/mpeg", false);
@@ -73,12 +98,15 @@ namespace Plank.Factories
 			return true;
 		}
 		
+		/**
+		 * Creates a bunch of default .dockitem's.
+		 */
 		public void make_default_items ()
 		{
 			// add plank item!
-			make_dock_item (Paths.DataFolder.get_parent ().get_path () + "/applications/plank.desktop", 0);
+			make_dock_item (Paths.DataFolder.get_parent ().get_path () + "/applications/" + Factory.main.app_launcher, 0);
 			
-			if (Factory.item_factory.make_default_gnome_items ())
+			if (make_default_gnome_items ())
 				return;
 			
 			// add browser
@@ -105,6 +133,13 @@ namespace Plank.Factories
 				make_dock_item ("/usr/share/applications/empathy.desktop", 4);
 		}
 		
+		/**
+		 * Creates a new .dockitem for a launcher.
+		 *
+		 * @param launcher the launcher to create a .dockitem for
+		 * @param sort the Sort value in the new .dockitem
+		 * @return the name of the new .dockitem created
+		 */
 		public string make_dock_item (string launcher, int sort)
 		{
 			if (File.new_for_path (launcher).query_exists ()) {

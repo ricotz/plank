@@ -24,10 +24,19 @@ using Plank.Services;
 
 namespace Plank.Drawing
 {
+	/**
+	 * Utility service for loading icons and working with pixbufs.
+	 */
 	public class DrawingService : GLib.Object
 	{
 		const string MISSING_ICONS = "application-default-icon;;application-x-executable";
 		
+		/**
+		 * Gets the icon name from a {@link GLib.File}.
+		 *
+		 * @param file the file to get the icon name for
+		 * @return the icon name for the file, or null if none exists
+		 */
 		public static string? get_icon_from_file (File file)
 		{
 			try {
@@ -55,6 +64,12 @@ namespace Plank.Drawing
 			return null;
 		}
 		
+		/**
+		 * Gets an icon from a {@link Gdk.Icon}.
+		 *
+		 * @param icon the icon to get the name for
+		 * @return the icon name, or null if none exists
+		 */
 		public static string? get_icon_from_gicon (Icon? icon)
 		{
 			if (icon is ThemedIcon)
@@ -64,6 +79,14 @@ namespace Plank.Drawing
 			return null;
 		}
 		
+		/**
+		 * Loads an icon based on names and the given width/height
+		 *
+		 * @param names a delimited (with ";;") list of icon names, first one found is used
+		 * @param width the requested width of the icon
+		 * @param height the requested height of the icon
+		 * @return the pixbuf representing the requested icon
+		 */
 		public static Pixbuf load_icon (string names, int width, int height)
 		{
 			var all_names = new ArrayList<string> ();
@@ -158,6 +181,14 @@ namespace Plank.Drawing
 #endif
 		}
 		
+		/**
+		 * Scales a {@link Gdk.Pixbuf}, maintaining the original aspect ratio.
+		 *
+		 * @param source the pixbuf to scale
+		 * @param width the width of the scaled pixbuf
+		 * @param height the height of the scaled pixbuf
+		 * @return the scaled pixbuf
+		 */
 		public static Pixbuf ar_scale (Pixbuf source, int width, int height)
 		{
 			var xScale = (double) width / (double) source.width;
@@ -174,6 +205,12 @@ namespace Plank.Drawing
 			return tmp;
 		}
 		
+		/**
+		 * Computes and returns the average color of a {@link Gdk.Pixbuf}.
+		 *
+		 * @param source the pixbuf to use
+		 * @return the average color of the pixbuf
+		 */
 		public static Drawing.Color average_color (Pixbuf source)
 		{
 			var rTotal = 0.0;

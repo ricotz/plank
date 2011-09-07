@@ -134,60 +134,126 @@ namespace Plank.Items
 		}
 	}
 	
+	/**
+	 * The base class for all dock items.
+	 */
 	public class DockItem : GLib.Object
 	{
+		/**
+		 * Signal fired when the .dockitem for this item was deleted.
+		 */
 		public signal void deleted ();
 		
+		/**
+		 * Signal fired when the launcher associated with the dock item changed.
+		 */
 		public signal void launcher_changed ();
 		
+		/**
+		 * Signal fired when the dock item needs redrawn.
+		 */
 		public signal void needs_redraw ();
 		
+		/**
+		 * The dock item's icon.
+		 */
 		public string Icon { get; set; default = ""; }
 		
+		/**
+		 * The dock item's text.
+		 */
 		public string Text { get; set; default = ""; }
 		
+		/**
+		 * The text for the dock item's badge (if any).
+		 */
 		public string BadgeText { get; set; default = ""; }
 		
+		/**
+		 * The dock item's position on the dock.
+		 */
 		public int Position { get; set; default = -1; }
 		
+		/**
+		 * The buttons this item shows popup menus for.
+		 */
 		public PopupButton Button { get; protected set; default = PopupButton.RIGHT; }
 		
+		/**
+		 * The item's current state.
+		 */
 		public ItemState State { get; protected set; default = ItemState.NORMAL; }
 		
+		/**
+		 * The indicator shown for the item.
+		 */
 		public IndicatorState Indicator { get; protected set; default = IndicatorState.NONE; }
 		
+		/**
+		 * The animation to show for the item's last click event.
+		 */
 		public ClickAnimation ClickedAnimation { get; protected set; default = ClickAnimation.NONE; }
 		
+		/**
+		 * The time the item was added to the dock.
+		 */
 		public DateTime AddTime { get; set; default = new DateTime.from_unix_utc (0); }
 		
+		/**
+		 * The time the item was removed from the dock.
+		 */
 		public DateTime RemoveTime { get; set; default = new DateTime.from_unix_utc (0); }
 		
+		/**
+		 * The last time the item was clicked.
+		 */
 		public DateTime LastClicked { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
+		/**
+		 * The last time the item was scrolled.
+		 */
 		public DateTime LastScrolled { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
+		/**
+		 * The last time the item changed its urgent status.
+		 */
 		public DateTime LastUrgent { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
+		/**
+		 * The last time the item changed its active status.
+		 */
 		public DateTime LastActive { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
 		public virtual bool CanBeRemoved {
 			get { return true; }
 		}
 		
+		/**
+		 * Whether or not this item is valid for the .dockitem given.
+		 */
 		public virtual bool ValidItem {
 			get { return File.new_for_path (Prefs.Launcher).query_exists (); }
 		}
 		
+		/**
+		 * The average color of this item's icon.
+		 */
 		public Drawing.Color AverageIconColor { get; protected set; }
 		
 		public string DockItemPath {
 			owned get { return Prefs.get_backing_path (); }
 		}
 		
+		/**
+		 * The launcher associated with this item.
+		 */
 		public string Launcher {
 			get { return Prefs.Launcher; }
 		}
 		
+		/**
+		 * The sort value for this item.
+		 */
 		public int Sort {
 			get {
 				return Prefs.Sort;
@@ -198,10 +264,16 @@ namespace Plank.Items
 			}
 		}
 		
+		/**
+		 * The underlying preferences for this item.
+		 */
 		protected DockItemPreferences Prefs { get; set; }
 		
-		private DockSurface surface;
+		DockSurface surface;
 		
+		/**
+		 * Creates a new dock item.
+		 */
 		public DockItem ()
 		{
 			Prefs = new DockItemPreferences ();
@@ -219,16 +291,25 @@ namespace Plank.Items
 			Prefs.changed["Icon"].disconnect (reset_icon_buffer);
 		}
 		
+		/**
+		 * Signal handler called when the underlying preferences file is deleted.
+		 */
 		protected void handle_deleted ()
 		{
 			deleted ();
 		}
 		
+		/**
+		 * Deletes the underlying preferences file.
+		 */
 		public void delete ()
 		{
 			Prefs.delete ();
 		}
 		
+		/**
+		 * Resets the buffer for this item's icon and requests a redraw.
+		 */
 		protected void reset_icon_buffer ()
 		{
 			surface = null;
@@ -236,6 +317,12 @@ namespace Plank.Items
 			needs_redraw ();
 		}
 		
+		/**
+		 * Returns the dock surface for this item.
+		 *
+		 * @param surface existing surface to use as basis of new surface
+		 * @return the dock surface for this item
+		 */
 		public DockSurface get_surface (DockSurface surface)
 		{
 			if (this.surface == null || surface.Width != this.surface.Width || surface.Height != this.surface.Height) {
@@ -247,6 +334,11 @@ namespace Plank.Items
 			return this.surface;
 		}
 		
+		/**
+		 * Draws the item's icon onto a surface.
+		 *
+		 * @param surface the surface to draw on
+		 */
 		protected virtual void draw_icon (DockSurface surface)
 		{
 			var pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
@@ -254,26 +346,55 @@ namespace Plank.Items
 			surface.Context.paint ();
 		}
 		
+		/**
+		 * Called when an item is clicked on.
+		 *
+		 * @param button the button clicked
+		 * @param mod the modifiers
+		 */
 		public void clicked (PopupButton button, ModifierType mod)
 		{
 			ClickedAnimation = on_clicked (button, mod);
 			LastClicked = new DateTime.now_utc ();
 		}
 		
+		/**
+		 * Called when an item is clicked on.
+		 *
+		 * @param button the button clicked
+		 * @param mod the modifiers
+		 */
 		protected virtual ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
 			return ClickAnimation.NONE;
 		}
 		
+		/**
+		 * Called when an item is scrolled over.
+		 *
+		 * @param direction the scroll direction
+		 * @param mod the modifiers
+		 */
 		public void scrolled (ScrollDirection direction, ModifierType mod)
 		{
 			on_scrolled (direction, mod);
 		}
 		
+		/**
+		 * Called when an item is scrolled over.
+		 *
+		 * @param direction the scroll direction
+		 * @param mod the modifiers
+		 */
 		protected virtual void on_scrolled (ScrollDirection direction, ModifierType mod)
 		{
 		}
 		
+		/**
+		 * Returns a list of the item's menu items.
+		 *
+		 * @return the item's menu items
+		 */
 		public virtual ArrayList<MenuItem> get_menu_items ()
 		{
 			return new ArrayList<MenuItem> ();
@@ -289,6 +410,11 @@ namespace Plank.Items
 			return false;
 		}
 		
+		/**
+		 * Returns a unique ID for this dock item.
+		 *
+		 * @return a unique ID for this dock item
+		 */
 		public virtual string unique_id ()
 		{
 			// TODO this is a unique ID, but it is not stable!
@@ -296,11 +422,23 @@ namespace Plank.Items
 			return "dockitem%d".printf ((int) this);
 		}
 		
+		/**
+		 * Returns a unique URI for this dock item.
+		 *
+		 * @return a unique URI for this dock item
+		 */
 		public string as_uri ()
 		{
 			return "plank://" + unique_id ();
 		}
 		
+		/**
+		 * Creates a new menu item.
+		 *
+		 * @param title the title of the menu item
+		 * @param icon the icon of the menu item
+		 * @return the new menu item
+		 */
 		protected static MenuItem create_menu_item (string title, string icon)
 		{
 			int width, height;

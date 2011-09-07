@@ -17,28 +17,57 @@
 
 namespace Plank.Services
 {
+	/**
+	 * A utility class for launching applications and opening files/URIs.
+	 */
 	public class System : GLib.Object
 	{
+		/**
+		 * Opens a file based on a URI.
+		 *
+		 * @param uri the URI to open
+		 */
 		public static void open_uri (string uri)
 		{
 			open (File.new_for_uri (uri));
 		}
 		
+		/**
+		 * Opens a file based on a {@link GLib.File}.
+		 *
+		 * @param file the {@link GLib.File} to open
+		 */
 		public static void open (File file)
 		{
 			launch_with_files (null, { file });
 		}
 		
+		/**
+		 * Opens multiple files based on {@link GLib.File}.
+		 *
+		 * @param files the {@link GLib.File}s to open
+		 */
 		public static void open_files (File[] files)
 		{
 			launch_with_files (null, files);
 		}
 		
+		/**
+		 * Launches an application.
+		 *
+		 * @param app the application to launch
+		 */
 		public static void launch (File app)
 		{
 			launch_with_files (app, new File[] {});
 		}
 		
+		/**
+		 * Launches an application and opens files.
+		 *
+		 * @param app the application to launch
+		 * @param files the files to open with the application
+		 */
 		public static void launch_with_files (File? app, File[] files)
 		{
 			if (app != null && !app.query_exists ()) {

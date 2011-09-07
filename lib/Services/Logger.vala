@@ -62,6 +62,9 @@ namespace Plank.Services
 		WHITE,
 	}
 	
+	/**
+	 * A logging class to display all console messages in a nice colored format.
+	 */
 	public class Logger : GLib.Object
 	{
 		class LogMessage : GLib.Object
@@ -76,6 +79,9 @@ namespace Plank.Services
 			}
 		}
 		
+		/**
+		 * The current log level.  Controls what log messages actually appear on the console.
+		 */
 		public static LogLevel DisplayLevel { get; set; default = LogLevel.WARN; }
 		
 		static string AppName { get; set; }
@@ -87,6 +93,11 @@ namespace Plank.Services
 		
 		static Regex re;
 		
+		/**
+		 * Initializes the logger for the application.
+		 *
+		 * @param app_name the name of the application
+		 */
 		public static void initialize (string app_name)
 		{
 			AppName = app_name;
@@ -108,8 +119,15 @@ namespace Plank.Services
 			return msg;
 		}
 		
-		public static void notification (string msg)
+		/**
+		 * Displays a log message using libnotify.  Also displays on the console.
+		 *
+		 * @param msg the log message to display
+		 * @param icon the icon to display in the notification
+		 */
+		public static void notification (string msg, string icon = "")
 		{
+			// TODO display the message using libnotify
 			write (LogLevel.NOTIFY, format_message (msg));
 		}
 		

@@ -25,6 +25,10 @@ using Plank.Services;
 
 namespace Plank.Items
 {
+	/**
+	 * A dock item for files or folders on the dock.  Folders act like stacks and display the contents
+	 * of the folder in the popup menu.  Files just open the associated file.
+	 */
 	public class FileDockItem : DockItem
 	{
 		const string DEFAULT_ICON = "inode-directory;;gnome-mime-inode-directory;;inode-x-generic;;folder";
@@ -32,6 +36,9 @@ namespace Plank.Items
 		File OwnedFile { get; set; }
 		FileMonitor dir_monitor;
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public FileDockItem.with_dockitem (string dockitem)
 		{
 			Prefs = new DockItemPreferences.with_file (dockitem);
@@ -75,6 +82,9 @@ namespace Plank.Items
 			reset_icon_buffer ();
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override void draw_icon (DockSurface surface)
 		{
 			if (Icon != DEFAULT_ICON) {
@@ -146,6 +156,9 @@ namespace Plank.Items
 			launcher_changed ();
 		}
 		
+		/**
+		 * Launches the application associated with this item.
+		 */
 		public void launch ()
 		{
 			Services.System.open (OwnedFile);
@@ -153,6 +166,9 @@ namespace Plank.Items
 			LastClicked = new DateTime.now_utc ();
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
 			if (button == PopupButton.MIDDLE) {
@@ -169,6 +185,9 @@ namespace Plank.Items
 			return ClickAnimation.NONE;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		public override ArrayList<MenuItem> get_menu_items ()
 		{
 			if (OwnedFile.query_file_type (0) == FileType.DIRECTORY)
