@@ -65,7 +65,7 @@ namespace Plank.Drawing
 		}
 		
 		/**
-		 * Gets an icon from a {@link Gdk.Icon}.
+		 * Gets an icon from a {@link GLib.Icon}.
 		 *
 		 * @param icon the icon to get the name for
 		 * @return the icon name, or null if none exists
