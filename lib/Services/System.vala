@@ -71,7 +71,7 @@ namespace Plank.Services
 		public static void launch_with_files (File? app, File[] files)
 		{
 			if (app != null && !app.query_exists ()) {
-				warning ("Application '%s' doesn't exist", app.get_path ());
+				warning ("Application '%s' doesn't exist", app.get_path () ?? "");
 				return;
 			}
 			
@@ -112,7 +112,7 @@ namespace Plank.Services
 			
 			AppInfo info;
 			if (app != null)
-				info = new DesktopAppInfo.from_filename (app.get_path ());
+				info = new DesktopAppInfo.from_filename (app.get_path () ?? "");
 			else
 				try {
 					info = files.first ().data.query_default_handler ();

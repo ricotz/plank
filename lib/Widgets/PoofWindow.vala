@@ -50,7 +50,7 @@ namespace Plank.Widgets
 			set_keep_above (true);
 			type_hint = WindowTypeHint.SPLASHSCREEN;
 			
-			var poof_file = Paths.DataFolder.get_child ("poof.png").get_path ();
+			var poof_file = Paths.DataFolder.get_child ("poof.png").get_path () ?? "";
 			try {
 				poof_image = new Pixbuf.from_file (poof_file);
 			} catch {

@@ -397,7 +397,7 @@ namespace Plank.Items
 				
 				// get the Unity static quicklists
 				// see https://wiki.edubuntu.org/Unity/LauncherAPI#Static Quicklist entries
-				if (shortcuts != null) {
+				if (shortcuts != null && shortcut_map != null) {
 					shortcuts.clear ();
 					shortcut_map.clear ();
 					
@@ -437,7 +437,7 @@ namespace Plank.Items
 			} catch { }
 		}
 		
-		FileMonitor monitor;
+		FileMonitor? monitor = null;
 		
 		void start_monitor ()
 		{

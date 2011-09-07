@@ -27,12 +27,11 @@ namespace Plank.Drawing
 		 * The internal {@link Cairo.Surface} backing the dock surface.
 		 */
 		public Surface Internal {
-			get {
-				if (surface == null)
-					surface = new ImageSurface (Format.ARGB32, Width, Height);
-				return surface;
+			get { return surface; }
+			private set {
+				surface = value;
+				Context = new Cairo.Context (surface);
 			}
-			private set { surface = value; }
 		}
 		
 		/**
@@ -45,17 +44,10 @@ namespace Plank.Drawing
 		 */
 		public int Height { get; private set; }
 		
-		Context context;
 		/**
 		 * A {@link Cairo.Context} for the dock surface.
 		 */
-		public Cairo.Context Context {
-			get {
-				if (context == null)
-					context = new Cairo.Context (Internal);
-				return context;
-			}
-		}
+		public Cairo.Context Context { get; private set; }
 		
 		/**
 		 * Creates a new dock surface.
@@ -67,6 +59,7 @@ namespace Plank.Drawing
 		{
 			Width = width;
 			Height = height;
+			Internal = new ImageSurface (Format.ARGB32, Width, Height);
 		}
 		
 		/**
@@ -78,9 +71,9 @@ namespace Plank.Drawing
 		 */
 		public DockSurface.with_surface (int width, int height, Surface model)
 		{
-			this (width, height);
-			if (model != null)
-				Internal = new Surface.similar (model, Content.COLOR_ALPHA, Width, Height);
+			Width = width;
+			Height = height;
+			Internal = new Surface.similar (model, Content.COLOR_ALPHA, Width, Height);
 		}
 
 		/**
@@ -92,9 +85,9 @@ namespace Plank.Drawing
 		 */
 		public DockSurface.with_dock_surface (int width, int height, DockSurface model)
 		{
-			this (width, height);
-			if (model != null)
-				Internal = new Surface.similar (model.Internal, Content.COLOR_ALPHA, Width, Height);
+			Width = width;
+			Height = height;
+			Internal = new Surface.similar (model.Internal, Content.COLOR_ALPHA, Width, Height);
 		}
 		
 		/**
@@ -104,11 +97,11 @@ namespace Plank.Drawing
 		{
 			Context.save ();
 			
-			context.set_source_rgba (0, 0, 0, 0);
-			context.set_operator (Operator.SOURCE);
-			context.paint ();
+			Context.set_source_rgba (0, 0, 0, 0);
+			Context.set_operator (Operator.SOURCE);
+			Context.paint ();
 			
-			context.restore ();
+			Context.restore ();
 		}
 		
 		/**

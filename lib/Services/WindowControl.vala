@@ -97,9 +97,8 @@ namespace Plank.Services.Windows
 			unowned GLib.List<Bamf.View> children = app.get_children ();
 			for (var i = 0; i < children.length (); i++) {
 				var view = children.nth_data (i);
-				if (!(view is Bamf.Window))
-					continue;
-				windows.add (view as Bamf.Window);
+				if (view is Bamf.Window)
+					windows.add (view as Bamf.Window);
 			}
 			
 			return windows;
@@ -118,9 +117,8 @@ namespace Plank.Services.Windows
 			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
-				if (window == null)
-					continue;
-				window.set_icon_geometry (x + rect.x, y + rect.y, rect.width, rect.height);
+				if (window != null)
+					window.set_icon_geometry (x + rect.x, y + rect.y, rect.width, rect.height);
 			}
 		}
 		

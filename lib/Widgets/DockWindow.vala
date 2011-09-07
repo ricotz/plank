@@ -365,6 +365,7 @@ namespace Plank.Widgets
 		 * Repositions the hover window for the hovered item.
 		 */
 		protected void position_hover ()
+			requires (HoveredItem != null)
 		{
 			var rect = Renderer.item_hover_region (HoveredItem);
 			hover.move_hover (win_x + rect.x + rect.width / 2, win_y + rect.y);
@@ -440,7 +441,7 @@ namespace Plank.Widgets
 		protected void update_icon_regions ()
 		{
 			foreach (var item in Items.Items) {
-				unowned ApplicationDockItem appitem = (item as ApplicationDockItem);
+				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 				if (appitem == null || appitem.App == null)
 					continue;
 				
