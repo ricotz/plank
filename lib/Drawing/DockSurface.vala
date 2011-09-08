@@ -20,6 +20,10 @@ using Posix;
 
 namespace Plank.Drawing
 {
+	/**
+	 * A dock surface is a wrapper class for a {@link Cairo.Surface}.
+	 * It encapsulates a surface/context and provides utility methods.
+	 */
 	public class DockSurface : GLib.Object
 	{
 		Surface surface;

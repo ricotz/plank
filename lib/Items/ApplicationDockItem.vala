@@ -25,6 +25,9 @@ using Plank.Services.Windows;
 
 namespace Plank.Items
 {
+	/**
+	 * A dock item for applications (with .desktop launchers).
+	 */
 	public class ApplicationDockItem : DockItem
 	{
 		// for the Unity static quicklists
