@@ -152,8 +152,10 @@ namespace Plank.Services
 			backing_file = Paths.AppConfigFolder.get_child (filename);
 			
 			// ensure the preferences file exists
-			if (!backing_file.query_exists ())
+			if (!backing_file.query_exists ()) {
+				reset_properties ();
 				save_prefs ();
+			}
 			
 			load_prefs ();
 			
