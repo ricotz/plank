@@ -104,7 +104,7 @@ namespace Plank.Factories
 		public void make_default_items ()
 		{
 			// add plank item!
-			make_dock_item (Paths.DataFolder.get_parent ().get_path () ?? "" + "/applications/" + Factory.main.app_launcher, 0);
+			make_dock_item ((Paths.DataFolder.get_parent ().get_path () ?? "") + "/applications/" + Factory.main.app_launcher, 0);
 			
 			if (make_default_gnome_items ())
 				return;
