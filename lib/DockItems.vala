@@ -56,7 +56,7 @@ namespace Plank
 		 */
 		public DockItems ()
 		{
-			Factory.item_factory.launchers_dir = Paths.AppConfigFolder.get_child ("launchers");
+			Factory.item_factory.launchers_dir = Paths.AppConfigFolder.get_child (Factory.main.dock_path + "/launchers");
 			
 			// if we made the launcher directory, assume a first run and pre-populate with launchers
 			if (Paths.ensure_directory_exists (Factory.item_factory.launchers_dir)) {

@@ -118,7 +118,7 @@ namespace Plank.Widgets
 		{
 			base ();
 			
-			Prefs = new DockPreferences.with_file ("settings");
+			Prefs = new DockPreferences.with_file (Factory.main.dock_path + "/settings");
 			Items = new DockItems ();
 			Renderer = new DockRenderer (this);
 			HideTracker = new HideManager (this);
