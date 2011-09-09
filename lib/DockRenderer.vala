@@ -255,9 +255,7 @@ namespace Plank
 		 */
 		public Gdk.Rectangle get_cursor_region ()
 		{
-			cursor_region.width = VisibleDockWidth;
 			cursor_region.height = Offset;
-			cursor_region.x = (window.width_request - cursor_region.width) / 2;
 			cursor_region.y = window.height_request - cursor_region.height;
 			
 			return cursor_region;
@@ -280,6 +278,9 @@ namespace Plank
 			static_dock_region.height = VisibleDockHeight;
 			static_dock_region.x = (window.width_request - static_dock_region.width) / 2;
 			static_dock_region.y = window.height_request - static_dock_region.height;
+			
+			cursor_region.width = static_dock_region.width;
+			cursor_region.x = static_dock_region.x;
 		}
 		
 		/**
