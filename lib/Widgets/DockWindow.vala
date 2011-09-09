@@ -123,7 +123,7 @@ namespace Plank.Widgets
 		{
 			base ();
 			
-			Prefs = new DockPreferences.with_file ("settings");
+			Prefs = new DockPreferences.with_file (Factory.main.dock_path + "/settings");
 			Items = new DockItems (this);
 			Renderer = new DockRenderer (this);
 			DragTracker = new DragManager (this);
