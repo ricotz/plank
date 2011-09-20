@@ -7,7 +7,7 @@ m4_define([plank_micro_version], [0])
 m4_define([plank_nano_version], [0])
 
 # If library source has changed since last release, increment revision
-# If interfaces have been removed or changed since last release,
+# If interfaces have been added, removed or changed since last release,
 #  increment current and set revision to 0
 # If interfaces have been added since last release, increment age
 # If interfaces have been removed since last release, set age to 0
