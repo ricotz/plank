@@ -148,8 +148,9 @@ fi
 
 # Force Vala if generated source is missing or outdated
 if test \
-    ! -e ${builddir}/lib/libplank3_la_vala.stamp -o \
-    ! -e ${builddir}/src/plank_vala.stamp ; then
+    ! -e ${srcdir}/lib/libplank_la_vala.stamp -o \
+    ! -e ${srcdir}/lib/libplank3_la_vala.stamp -o \
+    ! -e ${srcdir}/src/plank_vala.stamp; then
     enable_vala=yes
     echo "Vala source needs to be re-compiled; requiring Vala..."
 fi

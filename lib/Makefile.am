@@ -84,9 +84,14 @@ libplank_la_VALASOURCES = \
 libplank3_la_valasource.stamp: $(libplank_la_VALASOURCES)
 	for f in $(filter %.vala,$^); do \
 		cd $(abs_srcdir)/$$(dirname $$f); \
-		if test -L $$(basename $$f .vala).3.vala; then \
-			rm $$(basename $$f .vala).3.vala; fi; \
-		ln -s $$(basename $$f) $$(basename $$f .vala).3.vala; done
+		if test \
+			-f $$(basename $$f .vala).3.vala -a \
+			! -L $$(basename $$f .vala).3.vala; then \
+			rm $$(dirname $$f)/$$(basename $$f .vala).3.vala; fi; \
+		if test \
+			! -e $$(basename $$f .vala).3.vala; then \
+			ln -s $$(basename $$f) $$(basename $$f .vala).3.vala; fi; \
+	done
 	$(AM_V_at)touch $@
 
 libplank3_la_VALASOURCES = \
