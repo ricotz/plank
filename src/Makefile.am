@@ -2,9 +2,15 @@ include $(top_srcdir)/Makefile.common
 
 VAPIDIR = $(top_srcdir)/vapi
 
+if USE_GTK3
+SUFFIX=3
+else
+SUFFIX=
+endif
+
 plank_VALAFLAGS = \
 	$(PLANK_CORE_VALAFLAGS) \
-	$(top_srcdir)/lib/plank.vapi \
+	$(top_srcdir)/lib/plank$(SUFFIX).vapi \
 	--vapidir $(VAPIDIR) \
 	$(VAPIDIR)/config.vapi \
 	$(NULL)
@@ -23,7 +29,7 @@ plank_CFLAGS = \
 	
 plank_LDADD = \
 	$(PLANK_CORE_LIBS) \
-	$(top_builddir)/lib/libplank.la \
+	$(top_builddir)/lib/libplank$(SUFFIX).la \
 	$(NULL)
 
 plank_VALASOURCES = \

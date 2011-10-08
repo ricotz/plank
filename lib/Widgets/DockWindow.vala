@@ -261,7 +261,11 @@ namespace Plank.Widgets
 		/**
 		 * {@inheritDoc}
 		 */
+#if USE_GTK3
+		public override bool draw (Context cr)
+#else
 		public override bool expose_event (EventExpose event)
+#endif
 		{
 			if (dock_is_starting) {
 				debug ("dock window loaded");
@@ -275,7 +279,11 @@ namespace Plank.Widgets
 			}
 			
 			set_input_mask ();
+#if USE_GTK3
+			Renderer.draw_dock (cr);
+#else
 			Renderer.draw_dock (cairo_create (event.window));
+#endif
 			
 			return true;
 		}
@@ -482,7 +490,11 @@ namespace Plank.Widgets
 		
 		void set_input_mask ()
 		{
+#if USE_GTK3
+			if (!get_realized ())
+#else
 			if (!is_realized ())
+#endif
 				return;
 			
 			var cursor = Renderer.get_cursor_region ();
@@ -490,7 +502,11 @@ namespace Plank.Widgets
 			return_if_fail (cursor.width > 0);
 			return_if_fail (cursor.height > 0);
 			
+#if USE_GTK3
+			var region = new Region.rectangle (RectangleInt () {x = 0, y = 0, width = cursor.width, height = cursor.height});
+#else
 			var region = Gdk.Region.rectangle (Gdk.Rectangle () {x = 0, y = 0, width = cursor.width, height = cursor.height});
+#endif
 			get_window ().input_shape_combine_region (region, cursor.x, cursor.y);
 		}
 		
@@ -513,7 +529,11 @@ namespace Plank.Widgets
 		
 		void set_struts ()
 		{
+#if USE_GTK3
+			if (!get_realized ())
+#else
 			if (!is_realized ())
+#endif
 				return;
 			
 			var struts = new ulong [Struts.N_VALUES];
@@ -528,6 +548,15 @@ namespace Plank.Widgets
 			for (var i = 0; i < first_struts.length; i++)
 				first_struts [i] = struts [i];
 			
+#if USE_GTK3
+			unowned X.Display display = X11Display.get_xdisplay (get_display ());
+			var window = X11Window.get_xid (get_window ());
+			
+			display.change_property (window, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,
+			                      32, X.PropMode.Replace, (uchar[]) struts, struts.length);
+			display.change_property (window, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL, 
+			                      32, X.PropMode.Replace, (uchar[]) first_struts, first_struts.length);
+#else
 			unowned X.Display display = x11_drawable_get_xdisplay (get_window ());
 			var xid = x11_drawable_get_xid (get_window ());
 			
@@ -535,6 +564,7 @@ namespace Plank.Widgets
 			                      32, X.PropMode.Replace, (uchar[]) struts, struts.length);
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL, 
 			                      32, X.PropMode.Replace, (uchar[]) first_struts, first_struts.length);
+#endif
 		}
 	}
 }

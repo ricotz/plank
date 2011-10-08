@@ -47,8 +47,14 @@ namespace Plank.Widgets
 			draw_line = false;
 		}
 		
-		protected override bool expose_event (Gdk.EventExpose event)
+#if USE_GTK3
+		protected override bool draw (Cairo.Context cr)
 		{
+#else
+		protected override bool expose_event (EventExpose event)
+		{
+			var cr = cairo_create (event.window);
+#endif
 			Gtk.Allocation alloc;
 			get_allocation (out alloc);
 			
@@ -67,15 +73,23 @@ namespace Plank.Widgets
 				var ythickness = style.ythickness;
 				
 				if (wide_separators)
-					Gtk.paint_box (style, get_window (), StateType.NORMAL,
-						ShadowType.ETCHED_OUT, event.area, this, "hseparator",
+#if USE_GTK3
+					Gtk.paint_box (style, cr, StateType.NORMAL, ShadowType.ETCHED_OUT,
+#else
+					Gtk.paint_box (style, get_window (), StateType.NORMAL, ShadowType.ETCHED_OUT, event.area,
+#endif
+						this, "hseparator",
 						alloc.x + horizontal_padding + xthickness,
 						alloc.y + (alloc.height - separator_height - ythickness)/2,
 						alloc.width - 2 * (horizontal_padding + xthickness),
 						separator_height);
 				else
-					Gtk.paint_hline (style, get_window (), StateType.NORMAL,
-						event.area, this, "menuitem",
+#if USE_GTK3
+					Gtk.paint_hline (style, cr, StateType.NORMAL,
+#else
+					Gtk.paint_hline (style, get_window (), StateType.NORMAL, event.area,
+#endif
+						this, "menuitem",
 						alloc.x + horizontal_padding + xthickness,
 						alloc.x + alloc.width - horizontal_padding - xthickness - 1,
 						alloc.y + (alloc.height - ythickness) / 2);
@@ -93,13 +107,15 @@ namespace Plank.Widgets
 			Pango.Rectangle ink_rect, logical_rect;
 			layout.get_pixel_extents (out ink_rect, out logical_rect);
 			
-			Gtk.paint_flat_box (parent.get_style (), get_window (),
-				StateType.NORMAL, ShadowType.NONE,
-				null, this, null,
+#if USE_GTK3
+			Gtk.paint_flat_box (parent.get_style (), cr, StateType.NORMAL, ShadowType.NONE,
+#else
+			Gtk.paint_flat_box (parent.get_style (), get_window (), StateType.NORMAL, ShadowType.NONE, null,
+#endif
+				this, null,
 				0, alloc.y,
 				alloc.x + logical_rect.width + 2 * horizontal_padding, alloc.height);
 			
-			var cr = cairo_create (event.window);
 			var color = style.fg[StateType.NORMAL];
 			
 			cr.move_to (alloc.x + horizontal_padding, alloc.y + (alloc.height - logical_rect.height) / 2);

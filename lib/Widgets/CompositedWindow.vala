@@ -15,6 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using Cairo;
 using Gdk;
 
 namespace Plank.Widgets
@@ -39,18 +40,26 @@ namespace Plank.Widgets
 			resizable = false;
 			double_buffered = false;
 			
+#if USE_GTK3
+			set_visual (get_screen ().get_rgba_visual () ?? get_screen ().get_system_visual ());
+#else
 			set_default_colormap (get_screen ().get_rgba_colormap () ?? get_screen ().get_rgb_colormap ());
 			
 			realize.connect (() => {
 				get_window ().set_back_pixmap (null, false);
 			});
+#endif
 		}
 		
+#if USE_GTK3
+		public override bool draw (Context cr)
+		{
+#else
 		public override bool expose_event (EventExpose event)
 		{
 			var cr = cairo_create (event.window);
-			
-			cr.set_operator (Cairo.Operator.CLEAR);
+#endif
+			cr.set_operator (Operator.CLEAR);
 			cr.rectangle (0, 0, width_request, height_request);
 			cr.fill ();
 			

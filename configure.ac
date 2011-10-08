@@ -68,27 +68,59 @@ AC_SUBST([PLANK_MAJOR_MINOR_VERSION])
 API_VERSION=0.2
 AC_SUBST([API_VERSION])
 
+
+# -----------------------------------------------------------
+# GTK+ version (default to GTK+2.0)
+# -----------------------------------------------------------
+AC_ARG_WITH([gtk],
+            [AS_HELP_STRING([--with-gtk],
+            [Which version of gtk to use @<:@default=2@:>@])],
+            [],
+            [with_gtk=2])
+
+AM_CONDITIONAL(USE_GTK3, [test "x$with_gtk" = x3])
+
+
 # -----------------------------------------------------------
 # Dependencies
 # -----------------------------------------------------------
-GTK_MIN_VERSION=2.22.0
-GLIB_MIN_VERSION=2.26.0
-VALA_MIN_VERSION=0.10.0
-VALADOC_MIN_VERSION=0.3.1
-BAMF_MIN_VERSION=0.2.58
+if test "x$with_gtk" = "x3"; then
+    GTK_MIN_VERSION=3.0.0
+    GLIB_MIN_VERSION=2.28.0
+    VALA_MIN_VERSION=0.14.0
+    VALADOC_MIN_VERSION=0.3.1
+    BAMF_MIN_VERSION=0.2.92
+else
+    GTK_MIN_VERSION=2.22.0
+    GLIB_MIN_VERSION=2.26.0
+    VALA_MIN_VERSION=0.10.0
+    VALADOC_MIN_VERSION=0.3.1
+    BAMF_MIN_VERSION=0.2.58
+fi
 
-PKG_CHECK_MODULES(PLANK_CORE, gobject-2.0 >= $GLIB_MIN_VERSION
-                              glib-2.0 >= $GLIB_MIN_VERSION
-                              gio-2.0 >= $GLIB_MIN_VERSION
-                              gio-unix-2.0 >= $GLIB_MIN_VERSION
-                              gtk+-2.0 >= $GTK_MIN_VERSION
-                              gdk-x11-2.0 >= $GTK_MIN_VERSION
-                              libbamf >= $BAMF_MIN_VERSION
-                              gee-1.0
-                              libwnck-1.0
-                              unique-1.0
-                              x11
-)
+PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
+                 glib-2.0 >= $GLIB_MIN_VERSION \
+                 gio-2.0 >= $GLIB_MIN_VERSION \
+                 gio-unix-2.0 >= $GLIB_MIN_VERSION \
+                 gee-1.0 \
+                 x11"
+
+if test "x$with_gtk" = "x3"; then
+    PLANK_CORE_PKGS="$PLANK_CORE_PKGS \
+                     gtk+-3.0 >= $GTK_MIN_VERSION \
+                     gdk-x11-3.0 >= $GTK_MIN_VERSION \
+                     libbamf3 >= $BAMF_MIN_VERSION \
+                     libwnck-3.0"
+else
+    PLANK_CORE_PKGS="$PLANK_CORE_PKGS \
+                     gtk+-2.0 >= $GTK_MIN_VERSION \
+                     gdk-x11-2.0 >= $GTK_MIN_VERSION \
+                     libbamf >= $BAMF_MIN_VERSION \
+                     libwnck-1.0 \
+                     unique-1.0"
+fi
+
+PKG_CHECK_MODULES(PLANK_CORE, $PLANK_CORE_PKGS)
 
 #
 # Vala building options -- allows tarball builds without installing Vala
@@ -116,8 +148,8 @@ fi
 
 # Force Vala if generated source is missing or outdated
 if test \
-    ! -e ${srcdir}/lib/libplank_la_vala.stamp -o \
-    ! -e ${srcdir}/src/plank_vala.stamp ; then
+    ! -e ${builddir}/lib/libplank3_la_vala.stamp -o \
+    ! -e ${builddir}/src/plank_vala.stamp ; then
     enable_vala=yes
     echo "Vala source needs to be re-compiled; requiring Vala..."
 fi
@@ -133,21 +165,27 @@ if test "x$enable_vala" = "xyes" ; then
         AC_MSG_ERROR([Vala must be built with --enable-vapigen])
     fi
 
-    PLANK_CORE_VALA_PKGS="--pkg gdk-x11-2.0 \
-                          --pkg gtk+-2.0 \
-                          --pkg gio-unix-2.0 \
+    PLANK_CORE_COMMON_VALA_PKGS="--pkg gio-unix-2.0 \
+                                 --pkg gee-1.0 \
+                                 --pkg posix \
+                                 --pkg x11"
+
+    PLANK_CORE_3_VALA_PKGS="--pkg gtk+-3.0 \
+                            --pkg gdk-x11-3.0 \
+                            --pkg bamf \
+                            --pkg libwnck-3.0"
+    VALAFLAGS_3="$VALAFLAGS --thread --target-glib=2.28 --define=USE_GTK3"
+    
+    PLANK_CORE_VALA_PKGS="--pkg gtk+-2.0 \
+                          --pkg gdk-x11-2.0 \
                           --pkg bamf \
-                          --pkg gee-1.0 \
                           --pkg libwnck-1.0 \
-                          --pkg posix \
-                          --pkg unique-1.0 \
-                          --pkg x11"
-    AC_SUBST(PLANK_CORE_VALA_PKGS)
-
+                          --pkg unique-1.0"
     VALAFLAGS="$VALAFLAGS --thread --target-glib=2.26"
-    AC_SUBST(VALAFLAGS)
 
-    PLANK_CORE_VALAFLAGS="$VALAFLAGS $PLANK_CORE_VALA_PKGS"
+    PLANK_CORE_3_VALAFLAGS="$VALAFLAGS_3 $PLANK_CORE_COMMON_VALA_PKGS $PLANK_CORE_3_VALA_PKGS"
+    AC_SUBST(PLANK_CORE_3_VALAFLAGS)
+    PLANK_CORE_VALAFLAGS="$VALAFLAGS $PLANK_CORE_COMMON_VALA_PKGS $PLANK_CORE_VALA_PKGS"
     AC_SUBST(PLANK_CORE_VALAFLAGS)
 fi
 
@@ -211,6 +249,7 @@ data/themes/Matte/Makefile
 data/themes/Transparent/Makefile
 lib/Makefile
 lib/libplank.pc
+lib/libplank3.pc
 m4/Makefile
 man/Makefile
 src/Makefile
@@ -225,6 +264,7 @@ echo "
 ${PACKAGE} ${VERSION}
 
     Prefix......................:  ${prefix}
+    GTK+ Version................:  ${with_gtk}
     Vala........................:  ${enable_vala}
     Vala Compiler...............:  ${VALAC}
     Vala Flags..................:  ${VALAFLAGS}
