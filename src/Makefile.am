@@ -4,12 +4,15 @@ VAPIDIR = $(top_srcdir)/vapi
 
 if USE_GTK3
 SUFFIX=3
+plank_VALAFLAGS = \
+	$(PLANK_CORE_3_VALAFLAGS)
 else
 SUFFIX=
+plank_VALAFLAGS = \
+	$(PLANK_CORE_VALAFLAGS)
 endif
 
-plank_VALAFLAGS = \
-	$(PLANK_CORE_VALAFLAGS) \
+plank_VALAFLAGS += \
 	$(top_srcdir)/lib/plank$(SUFFIX).vapi \
 	--vapidir $(VAPIDIR) \
 	$(VAPIDIR)/config.vapi \

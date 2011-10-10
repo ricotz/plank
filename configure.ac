@@ -188,6 +188,10 @@ if test "x$enable_vala" = "xyes" ; then
     AC_SUBST(PLANK_CORE_3_VALAFLAGS)
     PLANK_CORE_VALAFLAGS="$VALAFLAGS $PLANK_CORE_COMMON_VALA_PKGS $PLANK_CORE_VALA_PKGS"
     AC_SUBST(PLANK_CORE_VALAFLAGS)
+
+    if test "x$with_gtk" = "x3"; then
+        VALAFLAGS="$VALAFLAGS_3"
+    fi
 fi
 
 
