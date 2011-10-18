@@ -79,6 +79,7 @@ BAMF_MIN_VERSION=0.2.58
 
 PKG_CHECK_MODULES(PLANK_CORE, gobject-2.0 >= $GLIB_MIN_VERSION
                               glib-2.0 >= $GLIB_MIN_VERSION
+                              gthread-2.0 >= $GLIB_MIN_VERSION
                               gio-2.0 >= $GLIB_MIN_VERSION
                               gio-unix-2.0 >= $GLIB_MIN_VERSION
                               gtk+-2.0 >= $GTK_MIN_VERSION
