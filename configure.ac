@@ -100,6 +100,7 @@ fi
 
 PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  glib-2.0 >= $GLIB_MIN_VERSION \
+                 gthread-2.0 >= $GLIB_MIN_VERSION \
                  gio-2.0 >= $GLIB_MIN_VERSION \
                  gio-unix-2.0 >= $GLIB_MIN_VERSION \
                  gee-1.0 \
