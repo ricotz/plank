@@ -89,7 +89,7 @@ namespace Plank.Widgets
 		/**
 		 * The popup menu for this dock.
 		 */
-		protected Menu menu = new Menu ();
+		protected Gtk.Menu menu = new Gtk.Menu ();
 		
 		
 		/**
@@ -428,7 +428,7 @@ namespace Plank.Widgets
 				menu.remove (w);
 			}
 			
-			ArrayList<MenuItem> items;
+			ArrayList<Gtk.MenuItem> items;
 			if (show_plank_menu)
 				items = PlankDockItem.get_plank_menu_items ();
 			else
@@ -465,7 +465,7 @@ namespace Plank.Widgets
 		 * @param y the y location to show the menu
 		 * @param push_in if the menu should push into the screen
 		 */
-		protected void position_menu (Menu menu, out int x, out int y, out bool push_in)
+		protected void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in)
 		{
 			var rect = Renderer.item_hover_region (HoveredItem);
 			
