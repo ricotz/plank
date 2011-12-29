@@ -78,7 +78,7 @@ namespace Plank
 			//Zoom = 2.0;
 			IconSize = 48;
 			HideMode = HideType.INTELLIGENT;
-			Monitor = 0;
+			Monitor = Screen.get_default ().get_primary_monitor ();
 		}
 		
 		void monitors_changed ()
@@ -139,9 +139,8 @@ namespace Plank
 				break;
 			
 			case "Monitor":
-				var max = Screen.get_default ().get_n_monitors ();
-				if (Monitor >= max)
-					Monitor = 0;
+				if (Monitor >= Screen.get_default ().get_n_monitors ())
+					Monitor = Screen.get_default ().get_primary_monitor ();
 				break;
 			}
 		}
