@@ -52,7 +52,7 @@ namespace Plank
 		// the results of our update
 		const uint UPDATE_TIMEOUT = 200;
 		
-		DockWindow window;
+		DockController controller;
 		
 		/**
 		 * If the dock is currently hovered by the mouse cursor.
@@ -63,21 +63,27 @@ namespace Plank
 		 * Creates a new instance of a HideManager, which handles
 		 * checking if a dock should hide or not.
 		 *
-		 * @param window the {@link Widgets.DockWindow} to manage hiding for
+		 * @param controller the {@link DockController} to manage hiding for
 		 */
-		public HideManager (DockWindow window)
+		public HideManager (DockController controller)
 		{
-			this.window = window;
+			this.controller = controller;
 			
 			windows_intersect = false;
-			window.Renderer.hide ();
+			controller.renderer.hide ();
 			
 			notify["DockHovered"].connect (update_hidden);
-			window.Prefs.changed.connect (prefs_changed);
-			
-			window.enter_notify_event.connect (enter_notify_event);
-			window.leave_notify_event.connect (leave_notify_event);
-			window.motion_notify_event.connect (motion_notify_event);
+			controller.prefs.changed.connect (prefs_changed);
+		}
+		
+		/**
+		 * Initializes the hide manager.  Call after the DockWindow is constructed.
+		 */
+		public void initialize ()
+		{
+			controller.window.enter_notify_event.connect (enter_notify_event);
+			controller.window.leave_notify_event.connect (leave_notify_event);
+			controller.window.motion_notify_event.connect (motion_notify_event);
 			
 			Matcher.get_default ().window_opened.connect (update_window_intersect);
 			Matcher.get_default ().window_closed.connect (update_window_intersect);
@@ -89,11 +95,11 @@ namespace Plank
 		~HideManager ()
 		{
 			notify["DockHovered"].disconnect (update_hidden);
-			window.Prefs.changed.disconnect (prefs_changed);
+			controller.prefs.changed.disconnect (prefs_changed);
 			
-			window.enter_notify_event.disconnect (enter_notify_event);
-			window.leave_notify_event.disconnect (leave_notify_event);
-			window.motion_notify_event.disconnect (motion_notify_event);
+			controller.window.enter_notify_event.disconnect (enter_notify_event);
+			controller.window.leave_notify_event.disconnect (leave_notify_event);
+			controller.window.motion_notify_event.disconnect (motion_notify_event);
 			
 			Matcher.get_default ().window_opened.disconnect (update_window_intersect);
 			Matcher.get_default ().window_closed.disconnect (update_window_intersect);
@@ -110,14 +116,14 @@ namespace Plank
 		{
 			// get current mouse pointer location
 			int x, y;
-			window.get_display ().get_pointer (null, out x, out y, null);
+			controller.window.get_display ().get_pointer (null, out x, out y, null);
 			
 			// get window location
-			var win_x = window.win_x;
-			var win_y = window.win_y;
+			var win_x = controller.window.win_x;
+			var win_y = controller.window.win_y;
 			
 			// compute rect of the window
-			var dock_rect = window.Renderer.get_cursor_region ();
+			var dock_rect = controller.renderer.get_cursor_region ();
 			dock_rect.x += win_x;
 			dock_rect.y += win_y;
 			
@@ -144,23 +150,23 @@ namespace Plank
 		
 		void update_hidden ()
 		{
-			switch (window.Prefs.HideMode) {
+			switch (controller.prefs.HideMode) {
 			case HideType.NONE:
-				window.Renderer.show ();
+				controller.renderer.show ();
 				break;
 			
 			case HideType.INTELLIGENT:
 				if (DockHovered || !windows_intersect)
-					window.Renderer.show ();
+					controller.renderer.show ();
 				else
-					window.Renderer.hide ();
+					controller.renderer.hide ();
 				break;
 			
 			case HideType.AUTO:
 				if (DockHovered)
-					window.Renderer.show ();
+					controller.renderer.show ();
 				else
-					window.Renderer.hide ();
+					controller.renderer.hide ();
 				break;
 			}
 		}
@@ -172,12 +178,12 @@ namespace Plank
 			else
 				update_dock_hovered ();
 			
-			return window.Renderer.Hidden;
+			return controller.renderer.Hidden;
 		}
 		
 		bool leave_notify_event (EventCrossing event)
 		{
-			if (DockHovered && !window.menu_is_visible ())
+			if (DockHovered && !controller.window.menu_is_visible ())
 				DockHovered = false;
 			
 			return false;
@@ -187,7 +193,7 @@ namespace Plank
 		{
 			update_dock_hovered ();
 			
-			return window.Renderer.Hidden;
+			return controller.renderer.Hidden;
 		}
 		
 		//
@@ -203,11 +209,11 @@ namespace Plank
 		void update_window_intersect ()
 		{
 			// get window location
-			var win_x = window.win_x;
-			var win_y = window.win_y;
+			var win_x = controller.window.win_x;
+			var win_y = controller.window.win_y;
 			
 			// compute rect of the window
-			var dock_rect = window.Renderer.get_static_dock_region ();
+			var dock_rect = controller.renderer.get_static_dock_region ();
 			dock_rect.x += win_x;
 			dock_rect.y += win_y;
 			
