@@ -56,24 +56,14 @@ namespace Plank.Widgets
 	public class DockWindow : CompositedWindow
 	{
 		/**
-		 * The preferences for this dock.
+		 * The controller for this dock.
 		 */
-		public DockPreferences Prefs { get; protected set; }
+		DockController controller { get; set; }
 		
 		/**
 		 * The currently hovered item (if any).
 		 */
 		public DockItem? HoveredItem { get; protected set; }
-		
-		/**
-		 * The items on this dock.
-		 */
-		public DockItems Items { get; protected set; }
-		
-		/**
-		 * The renderer for this dock.
-		 */
-		public DockRenderer Renderer { get; protected set; }
 		
 		
 		/**
@@ -82,14 +72,9 @@ namespace Plank.Widgets
 		protected HoverWindow hover = new HoverWindow ();
 		
 		/**
-		 * The autohide manager for this dock.
-		 */
-		protected HideManager HideTracker;
-		
-		/**
 		 * The popup menu for this dock.
 		 */
-		protected Menu menu = new Menu ();
+		protected Gtk.Menu menu = new Gtk.Menu ();
 		
 		
 		/**
@@ -114,14 +99,11 @@ namespace Plank.Widgets
 		/**
 		 * Creates a new dock window.
 		 */
-		public DockWindow ()
+		public DockWindow (DockController controller)
 		{
 			base ();
 			
-			Prefs = new DockPreferences.with_file (Factory.main.dock_path + "/settings");
-			Items = new DockItems ();
-			Renderer = new DockRenderer (this);
-			HideTracker = new HideManager (this);
+			this.controller = controller;
 			
 			set_accept_focus (false);
 			can_focus = false;
@@ -142,20 +124,26 @@ namespace Plank.Widgets
 						EventMask.POINTER_MOTION_MASK |
 						EventMask.SCROLL_MASK);
 			
-			Items.item_added.connect (set_size);
-			Items.item_removed.connect (set_size);
-			Prefs.changed.connect (set_size);
+			controller.items.item_added.connect (set_size);
+			controller.items.item_removed.connect (set_size);
+			controller.prefs.changed.connect (set_size);
 			
-			Renderer.notify["Hidden"].connect (update_icon_regions);
+			controller.renderer.notify["Hidden"].connect (update_icon_regions);
 			
 			get_screen ().size_changed.connect (update_monitor_geo);
-			Prefs.changed["Monitor"].connect (update_monitor_geo);
+			controller.prefs.changed["Monitor"].connect (update_monitor_geo);
 			
 			int x, y;
 			get_position (out x, out y);
 			win_x = x;
 			win_y = y;
-			
+		}
+		
+		/**
+		 * Initializes the window.
+		 */
+		public void initialize ()
+		{
 			update_monitor_geo ();
 		}
 		
@@ -164,14 +152,14 @@ namespace Plank.Widgets
 			menu.show.disconnect (update_icon_regions);
 			menu.hide.disconnect (on_menu_hide);
 			
-			Items.item_added.disconnect (set_size);
-			Items.item_removed.disconnect (set_size);
-			Prefs.changed.disconnect (set_size);
+			controller.items.item_added.disconnect (set_size);
+			controller.items.item_removed.disconnect (set_size);
+			controller.prefs.changed.disconnect (set_size);
 			
-			Renderer.notify["Hidden"].disconnect (update_icon_regions);
+			controller.renderer.notify["Hidden"].disconnect (update_icon_regions);
 			
 			get_screen ().size_changed.disconnect (update_monitor_geo);
-			Prefs.changed["Monitor"].disconnect (update_monitor_geo);
+			controller.prefs.changed["Monitor"].disconnect (update_monitor_geo);
 		}
 		
 		/**
@@ -245,9 +233,9 @@ namespace Plank.Widgets
 		{
 			if ((event.state & ModifierType.CONTROL_MASK) != 0) {
 				if (event.direction == ScrollDirection.UP)
-					Prefs.increase_icon_size ();
+					controller.prefs.increase_icon_size ();
 				else if (event.direction == ScrollDirection.DOWN)
-					Prefs.decrease_icon_size ();
+					controller.prefs.decrease_icon_size ();
 				
 				return true;
 			}
@@ -273,16 +261,16 @@ namespace Plank.Widgets
 				
 				// slide the dock in, if it shouldnt start hidden
 				GLib.Timeout.add (400, () => {
-					HideTracker.update_dock_hovered ();
+					controller.hide_manager.update_dock_hovered ();
 					return false;
 				});
 			}
 			
 			set_input_mask ();
 #if USE_GTK3
-			Renderer.draw_dock (cr);
+			controller.renderer.draw_dock (cr);
 #else
-			Renderer.draw_dock (cairo_create (event.window));
+			controller.renderer.draw_dock (cairo_create (event.window));
 #endif
 			
 			return true;
@@ -324,8 +312,8 @@ namespace Plank.Widgets
 		 */
 		protected bool update_hovered (int x, int y)
 		{
-			foreach (var item in Items.Items) {
-				var rect = Renderer.item_hover_region (item);
+			foreach (var item in controller.items.Items) {
+				var rect = controller.renderer.item_hover_region (item);
 				
 				if (y >= rect.y && y <= rect.y + rect.height && x >= rect.x && x <= rect.x + rect.width) {
 					set_hovered (item);
@@ -341,7 +329,7 @@ namespace Plank.Widgets
 		 */
 		protected void update_monitor_geo ()
 		{
-			get_screen ().get_monitor_geometry (Prefs.Monitor, out monitor_geo);
+			get_screen ().get_monitor_geometry (controller.prefs.Monitor, out monitor_geo);
 			
 			set_size ();
 		}
@@ -352,7 +340,7 @@ namespace Plank.Widgets
 		protected void position_hover ()
 			requires (HoveredItem != null)
 		{
-			var rect = Renderer.item_hover_region (HoveredItem);
+			var rect = controller.renderer.item_hover_region (HoveredItem);
 			hover.move_hover (win_x + rect.x + rect.width / 2, win_y + rect.y);
 		}
 		
@@ -361,12 +349,12 @@ namespace Plank.Widgets
 		 */
 		public void set_size ()
 		{
-			set_size_request (Renderer.DockWidth, Renderer.DockHeight);
+			set_size_request (controller.renderer.DockWidth, controller.renderer.DockHeight);
 			reposition ();
 			if (HoveredItem != null)
 				position_hover ();
 			
-			Renderer.reset_buffers ();
+			controller.renderer.reset_buffers ();
 		}
 		
 		/**
@@ -400,18 +388,18 @@ namespace Plank.Widgets
 		 */
 		protected void update_icon_regions ()
 		{
-			foreach (var item in Items.Items) {
+			foreach (var item in controller.items.Items) {
 				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 				if (appitem == null || appitem.App == null)
 					continue;
 				
-				if (menu_is_visible () || Renderer.Hidden)
+				if (menu_is_visible () || controller.renderer.Hidden)
 					WindowControl.update_icon_regions (appitem.App, null, win_x, win_y);
 				else
-					WindowControl.update_icon_regions (appitem.App, Renderer.item_hover_region (appitem), win_x, win_y);
+					WindowControl.update_icon_regions (appitem.App, controller.renderer.item_hover_region (appitem), win_x, win_y);
 			}
 			
-			Renderer.animated_draw ();
+			controller.renderer.animated_draw ();
 		}
 		
 		/**
@@ -436,7 +424,7 @@ namespace Plank.Widgets
 				menu.remove (w);
 			}
 			
-			ArrayList<MenuItem> items;
+			ArrayList<Gtk.MenuItem> items;
 			if (show_plank_menu)
 				items = PlankDockItem.get_plank_menu_items ();
 			else
@@ -460,8 +448,8 @@ namespace Plank.Widgets
 		 */
 		protected void on_menu_hide ()
 		{
-			HideTracker.update_dock_hovered ();
-			if (!HideTracker.DockHovered)
+			controller.hide_manager.update_dock_hovered ();
+			if (!controller.hide_manager.DockHovered)
 				set_hovered (null);
 		}
 		
@@ -473,9 +461,9 @@ namespace Plank.Widgets
 		 * @param y the y location to show the menu
 		 * @param push_in if the menu should push into the screen
 		 */
-		protected void position_menu (Menu menu, out int x, out int y, out bool push_in)
+		protected void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in)
 		{
-			var rect = Renderer.item_hover_region (HoveredItem);
+			var rect = controller.renderer.item_hover_region (HoveredItem);
 			
 #if VALA_0_14
 			var requisition = menu.get_requisition ();
@@ -497,7 +485,7 @@ namespace Plank.Widgets
 #endif
 				return;
 			
-			var cursor = Renderer.get_cursor_region ();
+			var cursor = controller.renderer.get_cursor_region ();
 			// FIXME bug 768722 - this fixes the crash, but not WHY this happens
 			return_if_fail (cursor.width > 0);
 			return_if_fail (cursor.height > 0);
@@ -538,8 +526,8 @@ namespace Plank.Widgets
 			
 			var struts = new ulong [Struts.N_VALUES];
 			
-			if (Prefs.HideMode == HideType.NONE) {
-				struts [Struts.BOTTOM] = Renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
+			if (controller.prefs.HideMode == HideType.NONE) {
+				struts [Struts.BOTTOM] = controller.renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
 				struts [Struts.BOTTOM_START] = monitor_geo.x;
 				struts [Struts.BOTTOM_END] = monitor_geo.x + monitor_geo.width - 1;
 			}

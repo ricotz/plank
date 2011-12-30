@@ -30,11 +30,7 @@ namespace Plank
 	 */
 	public class DockRenderer : AnimatedRenderer
 	{
-		DockWindow window;
-		
-		DockPreferences Prefs {
-			get { return window.Prefs; }
-		}
+		DockController controller;
 		
 		DockThemeRenderer theme;
 		
@@ -46,10 +42,6 @@ namespace Plank
 		
 		DateTime last_hide = new DateTime.from_unix_utc (0);
 		
-		int UrgentHueShift {
-			get { return 150; }
-		}
-		
 		/**
 		 * If the dock is currently hidden.
 		 */
@@ -58,20 +50,21 @@ namespace Plank
 		/**
 		 * How far from the screen edge the dock currently is.
 		 */
-		public int Offset {
-			get { return int.max (1, (int) ((1 - HideOffset) * VisibleDockHeight)); }
+		int get_offset ()
+		{
+			return int.max (1, (int) ((1 - get_hide_offset ()) * VisibleDockHeight));
 		}
 		
-		double HideOffset {
-			get {
-				var time = theme.FadeOpacity == 1.0 ? theme.HideTime : theme.FadeTime;
-				var diff = double.min (1, new DateTime.now_utc ().difference (last_hide) / (double) (time * 1000));
-				return Hidden ? diff : 1 - diff;
-			}
+		double get_hide_offset ()
+		{
+			var time = theme.FadeOpacity == 1.0 ? theme.HideTime : theme.FadeTime;
+			var diff = double.min (1, new DateTime.now_utc ().difference (last_hide) / (double) (time * 1000));
+			return Hidden ? diff : 1 - diff;
 		}
 		
-		double Opacity {
-			get { return double.min (1, (1 - HideOffset) + theme.FadeOpacity); }
+		double get_opacity ()
+		{
+			return double.min (1, (1 - get_hide_offset ()) + theme.FadeOpacity);
 		}
 		
 		Gdk.Rectangle cursor_region;
@@ -96,7 +89,7 @@ namespace Plank
 		
 		void reset_caches ()
 		{
-			var icon_size = Prefs.IconSize;
+			var icon_size = controller.prefs.IconSize;
 			
 			IndicatorSize = (int) (theme.IndicatorSize / 10.0 * icon_size);
 			HorizPadding  = (int) (theme.HorizPadding  / 10.0 * icon_size);
@@ -115,7 +108,7 @@ namespace Plank
 			
 			// height of the dock window
 			// FIXME zoom disabled
-			DockHeight = tmp + (int) (icon_size * theme.UrgentBounceHeight) /*+ (int) ((Prefs.Zoom - 1) * icon_size)*/;
+			DockHeight = tmp + (int) (icon_size * theme.UrgentBounceHeight) /*+ (int) ((controller.prefs.Zoom - 1) * icon_size)*/;
 			
 			// height of the dock background image, as drawn
 			DockBackgroundHeight = tmp;
@@ -137,7 +130,7 @@ namespace Plank
 		{
 			reset_caches ();
 			
-			var width = (int) window.Items.Items.size * (ItemPadding + Prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth;
+			var width = (int) controller.items.Items.size * (ItemPadding + controller.prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth;
 			
 			// width of the dock background image, as drawn
 			DockBackgroundWidth = width;
@@ -148,20 +141,17 @@ namespace Plank
 			VisibleDockWidth = width;
 			
 			// width of the dock window
-			DockWidth = width + Prefs.IconSize + ItemPadding;
-			
-			animated_draw ();
+			DockWidth = width + controller.prefs.IconSize + ItemPadding;
 		}
 		
 		/**
-		 * Create a new dock renderer for a dock window.
+		 * Create a new dock renderer for a dock.
 		 *
-		 * @param window the dock window to manage drawing for
+		 * @param controller the dock controller to manage drawing for
 		 */
-		public DockRenderer (DockWindow window)
+		public DockRenderer (DockController controller)
 		{
-			base (window);
-			this.window = window;
+			this.controller = controller;
 			
 			cursor_region = Gdk.Rectangle ();
 			static_dock_region = Gdk.Rectangle ();
@@ -169,48 +159,61 @@ namespace Plank
 			theme = new DockThemeRenderer ();
 			theme.load ("dock");
 			
-			Prefs.notify["IconSize"].connect (icon_size_changed);
+			controller.prefs.notify["IconSize"].connect (icon_size_changed);
 			theme.changed.connect (theme_changed);
-			items_changed ();
+			reset_item_caches ();
 			
-			window.notify["HoveredItem"].connect (animated_draw);
-			window.Items.item_removed.connect (items_changed);
-			window.Items.item_added.connect (items_changed);
-			window.Items.item_state_changed.connect (items_changed);
+			controller.items.item_removed.connect (items_changed);
+			controller.items.item_added.connect (items_changed);
+			controller.items.item_state_changed.connect (items_changed);
 			
 			notify["Hidden"].connect (hidden_changed);
 		}
 		
+		/**
+		 * Initializes the renderer.  Call after the DockWindow is constructed.
+		 */
+		public void initialize ()
+		{
+			set_widget (controller.window);
+			update_regions ();
+			controller.window.notify["HoveredItem"].connect (animated_draw);
+		}
+		
 		~DockRenderer ()
 		{
-			Prefs.notify["IconSize"].disconnect (icon_size_changed);
+			controller.prefs.notify["IconSize"].disconnect (icon_size_changed);
 			theme.changed.disconnect (theme_changed);
 			
-			window.notify["HoveredItem"].disconnect (animated_draw);
-			window.Items.item_removed.disconnect (items_changed);
-			window.Items.item_added.disconnect (items_changed);
-			window.Items.item_state_changed.disconnect (items_changed);
+			controller.items.item_removed.disconnect (items_changed);
+			controller.items.item_added.disconnect (items_changed);
+			controller.items.item_state_changed.disconnect (items_changed);
 			
 			notify["Hidden"].disconnect (hidden_changed);
+			
+			controller.window.notify["HoveredItem"].disconnect (animated_draw);
 		}
 		
 		void items_changed ()
 		{
 			reset_item_caches ();
 			update_regions ();
+			animated_draw ();
 		}
 		
 		void icon_size_changed ()
 		{
 			reset_caches ();
 			update_regions ();
+			animated_draw ();
 		}
 		
 		void theme_changed ()
 		{
 			reset_caches ();
 			update_regions ();
-			window.set_size ();
+			controller.window.set_size ();
+			animated_draw ();
 		}
 		
 		/**
@@ -255,8 +258,8 @@ namespace Plank
 		 */
 		public Gdk.Rectangle get_cursor_region ()
 		{
-			cursor_region.height = Offset;
-			cursor_region.y = window.height_request - cursor_region.height;
+			cursor_region.height = get_offset ();
+			cursor_region.y = controller.window.height_request - cursor_region.height;
 			
 			return cursor_region;
 		}
@@ -276,8 +279,8 @@ namespace Plank
 		{
 			static_dock_region.width = VisibleDockWidth;
 			static_dock_region.height = VisibleDockHeight;
-			static_dock_region.x = (window.width_request - static_dock_region.width) / 2;
-			static_dock_region.y = window.height_request - static_dock_region.height;
+			static_dock_region.x = (controller.window.width_request - static_dock_region.width) / 2;
+			static_dock_region.y = controller.window.height_request - static_dock_region.height;
 			
 			cursor_region.width = static_dock_region.width;
 			cursor_region.x = static_dock_region.x;
@@ -292,7 +295,7 @@ namespace Plank
 		public Gdk.Rectangle item_hover_region (DockItem item)
 		{
 			var rect = item_draw_region (item);
-			rect.x += (window.width_request - VisibleDockWidth) / 2;
+			rect.x += (controller.window.width_request - VisibleDockWidth) / 2;
 			return rect;
 		}
 		
@@ -306,9 +309,9 @@ namespace Plank
 		{
 			var rect = Gdk.Rectangle ();
 			
-			rect.x = 2 * theme.LineWidth + (HorizPadding > 0 ? HorizPadding : 0) + item.Position * (ItemPadding + Prefs.IconSize);
+			rect.x = 2 * theme.LineWidth + (HorizPadding > 0 ? HorizPadding : 0) + item.Position * (ItemPadding + controller.prefs.IconSize);
 			rect.y = DockHeight - VisibleDockHeight;
-			rect.width = Prefs.IconSize + ItemPadding;
+			rect.width = controller.prefs.IconSize + ItemPadding;
 			rect.height = VisibleDockHeight;
 			
 			return rect;
@@ -331,28 +334,28 @@ namespace Plank
 			
 			draw_dock_background (main_buffer);
 			
-			foreach (var item in window.Items.Items)
+			foreach (var item in controller.items.Items)
 				draw_item (main_buffer, item);
 			
-			var x_offset = (window.width_request - main_buffer.Width) / 2;
+			var x_offset = (controller.window.width_request - main_buffer.Width) / 2;
 			
 			cr.set_operator (Operator.SOURCE);
 			var y_offset = 0.0;
 			if (theme.FadeOpacity == 1.0)
-				y_offset = VisibleDockHeight * HideOffset;
+				y_offset = VisibleDockHeight * get_hide_offset ();
 			cr.set_source_surface (main_buffer.Internal, x_offset, y_offset);
 			cr.paint ();
 			
-			if (Opacity < 1.0) {
+			if (get_opacity () < 1.0) {
 				cr.set_source_rgba (0, 0, 0, 0);
-				cr.paint_with_alpha (1 - Opacity);
+				cr.paint_with_alpha (1 - get_opacity ());
 			}
 			
-			if (HideOffset == 1) {
+			if (get_hide_offset () == 1) {
 				if (urgent_glow_buffer == null)
 					create_urgent_glow (background_buffer);
 				
-				foreach (var item in window.Items.Items) {
+				foreach (var item in controller.items.Items) {
 					var diff = new DateTime.now_utc ().difference (item.LastUrgent);
 					
 					if ((item.State & ItemState.URGENT) == ItemState.URGENT && diff < theme.GlowTime * 1000) {
@@ -380,7 +383,7 @@ namespace Plank
 		
 		void draw_item (DockSurface surface, DockItem item)
 		{
-			var icon_surface = new DockSurface.with_dock_surface (Prefs.IconSize, Prefs.IconSize, surface);
+			var icon_surface = new DockSurface.with_dock_surface (controller.prefs.IconSize, controller.prefs.IconSize, surface);
 			
 			// load the icon
 			var item_surface = item.get_surface (icon_surface);
@@ -408,7 +411,7 @@ namespace Plank
 				switch (item.ClickedAnimation) {
 				case ClickAnimation.BOUNCE:
 					if (Gdk.Screen.get_default ().is_composited ())
-						draw_rect.y -= ((int) (Math.sin (2 * Math.PI * clickAnimationProgress) * Prefs.IconSize * theme.LaunchBounceHeight)).abs ();
+						draw_rect.y -= ((int) (Math.sin (2 * Math.PI * clickAnimationProgress) * controller.prefs.IconSize * theme.LaunchBounceHeight)).abs ();
 					break;
 				case ClickAnimation.DARKEN:
 					darken = double.max (0, Math.sin (Math.PI * clickAnimationProgress)) * 0.5;
@@ -420,10 +423,10 @@ namespace Plank
 			}
 			
 			// FIXME zoom disabled
-			if (window.HoveredItem == item /*&& !Prefs.zoom_enabled ()*/)
+			if (controller.window.HoveredItem == item /*&& !controller.prefs.zoom_enabled ()*/)
 				lighten = 0.2;
 			
-			if (window.HoveredItem == item && window.menu_is_visible ())
+			if (controller.window.HoveredItem == item && controller.window.menu_is_visible ())
 				darken += 0.4;
 			
 			// glow the icon
@@ -450,7 +453,7 @@ namespace Plank
 			// bounce icon on urgent state
 			var urgent_time = new DateTime.now_utc ().difference (item.LastUrgent);
 			if (Gdk.Screen.get_default().is_composited () && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.UrgentBounceTime * 1000)
-				draw_rect.y -= (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * Prefs.IconSize * theme.UrgentBounceHeight);
+				draw_rect.y -= (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * controller.prefs.IconSize * theme.UrgentBounceHeight);
 			
 			// draw active glow
 			var active_time = new DateTime.now_utc ().difference (item.LastActive);
@@ -480,9 +483,9 @@ namespace Plank
 					surface.Context.set_source_surface (indicator.Internal, x, y);
 					surface.Context.paint ();
 				} else {
-					surface.Context.set_source_surface (indicator.Internal, x - Prefs.IconSize / 16.0, y);
+					surface.Context.set_source_surface (indicator.Internal, x - controller.prefs.IconSize / 16.0, y);
 					surface.Context.paint ();
-					surface.Context.set_source_surface (indicator.Internal, x + Prefs.IconSize / 16.0, y);
+					surface.Context.set_source_surface (indicator.Internal, x + controller.prefs.IconSize / 16.0, y);
 					surface.Context.paint ();
 				}
 			}
@@ -490,7 +493,7 @@ namespace Plank
 		
 		Drawing.Color get_styled_color ()
 		{
-			return new Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]).set_min_value (90 / (double) uint16.MAX);
+			return new Drawing.Color.from_gdk (controller.window.get_style ().bg [StateType.SELECTED]).set_min_value (90 / (double) uint16.MAX);
 		}
 		
 		void create_normal_indicator ()
@@ -498,16 +501,18 @@ namespace Plank
 			indicator_buffer = theme.create_indicator (background_buffer, IndicatorSize, get_styled_color ().set_min_sat (0.4));
 		}
 		
+		int urgent_hue_shift = 150;
+		
 		void create_urgent_indicator ()
 		{
-			urgent_indicator_buffer = theme.create_indicator (background_buffer, IndicatorSize, get_styled_color ().add_hue (UrgentHueShift).set_sat (1));
+			urgent_indicator_buffer = theme.create_indicator (background_buffer, IndicatorSize, get_styled_color ().add_hue (urgent_hue_shift).set_sat (1));
 		}
 		
 		void create_urgent_glow (DockSurface surface)
 		{
-			var color = get_styled_color ().add_hue (UrgentHueShift).set_sat (1);
+			var color = get_styled_color ().add_hue (urgent_hue_shift).set_sat (1);
 			
-			var size = (int) (theme.GlowSize / 10.0 * Prefs.IconSize);
+			var size = (int) (theme.GlowSize / 10.0 * controller.prefs.IconSize);
 			urgent_glow_buffer = new DockSurface.with_dock_surface (size, size, surface);
 			
 			var cr = urgent_glow_buffer.Context;
@@ -535,11 +540,11 @@ namespace Plank
 		 */
 		public void draw_badge (DockSurface surface, string badge_text)
 		{
-			var theme_color = new Drawing.Color.from_gdk (window.get_style ().bg [StateType.SELECTED]);
+			var theme_color = new Drawing.Color.from_gdk (controller.window.get_style ().bg [StateType.SELECTED]);
 			var badge_color_start = theme_color.set_val (1).set_sat (0.47);
 			var badge_color_end = theme_color.set_val (0.5).set_sat (0.51);
 			
-			var is_small = Prefs.IconSize < 32;
+			var is_small = controller.prefs.IconSize < 32;
 			var padding = 4;
 			var lineWidth = 2;
 			var size = (is_small ? 0.9 : 0.65) * double.min (surface.Width, surface.Height);
@@ -644,12 +649,12 @@ namespace Plank
 					return true;
 			}
 			
-			foreach (DockItem item in window.Items.Items) {
+			foreach (DockItem item in controller.items.Items) {
 				if (render_time.difference (item.LastClicked) <= (item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
 					return true;
 				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)
 					return true;
-				if (render_time.difference (item.LastUrgent) <= (HideOffset == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
+				if (render_time.difference (item.LastUrgent) <= (get_hide_offset () == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
 					return true;
 			}
 				

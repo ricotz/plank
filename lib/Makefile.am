@@ -48,6 +48,7 @@ libplank_la_LIBADD = \
 	$(NULL)
 
 libplank_la_VALASOURCES = \
+	DockController.vala \
 	DockItems.vala \
 	DockPreferences.vala \
 	DockRenderer.vala \
