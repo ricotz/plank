@@ -141,7 +141,7 @@ namespace Plank
 			VisibleDockWidth = width;
 			
 			// width of the dock window
-			DockWidth = width + controller.prefs.IconSize + ItemPadding;
+			DockWidth = width + controller.prefs.IconSize + ItemPadding + urgent_glow_size () / 2;
 		}
 		
 		/**
@@ -508,11 +508,16 @@ namespace Plank
 			urgent_indicator_buffer = theme.create_indicator (background_buffer, IndicatorSize, get_styled_color ().add_hue (urgent_hue_shift).set_sat (1));
 		}
 		
+		int urgent_glow_size ()
+		{
+			return (int) (theme.GlowSize / 10.0 * controller.prefs.IconSize);
+		}
+		
 		void create_urgent_glow (DockSurface surface)
 		{
 			var color = get_styled_color ().add_hue (urgent_hue_shift).set_sat (1);
 			
-			var size = (int) (theme.GlowSize / 10.0 * controller.prefs.IconSize);
+			var size = urgent_glow_size ();
 			urgent_glow_buffer = new DockSurface.with_dock_surface (size, size, surface);
 			
 			var cr = urgent_glow_buffer.Context;
