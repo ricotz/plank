@@ -29,6 +29,7 @@ namespace Plank
 		public DockItems items;
 		public DockRenderer renderer;
 		public DockWindow window;
+		public DragManager drag_manager;
 		public HideManager hide_manager;
 		
 		public DockController ()
@@ -36,10 +37,12 @@ namespace Plank
 			prefs = new DockPreferences.with_file (Factory.main.dock_path + "/settings");
 			items = new DockItems (this);
 			renderer = new DockRenderer (this);
+			drag_manager = new DragManager (this);
 			hide_manager = new HideManager (this);
 			window = new DockWindow (this);
 			
 			renderer.initialize ();
+			drag_manager.initialize ();
 			hide_manager.initialize ();
 			window.initialize ();
 		}

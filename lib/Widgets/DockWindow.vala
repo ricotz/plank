@@ -66,11 +66,6 @@ namespace Plank.Widgets
 		public DockItem? HoveredItem { get; protected set; }
 		
 		/**
-		 * The drag manager for this dock.
-		 */
-		public DragManager DragTracker { get; protected set; }
-		
-		/**
 		 * A hover window to use with this dock.
 		 */
 		protected HoverWindow hover = new HoverWindow ();
@@ -108,7 +103,6 @@ namespace Plank.Widgets
 			base ();
 			
 			this.controller = controller;
-			DragTracker = new DragManager (controller, this);
 			
 			set_accept_focus (false);
 			can_focus = false;
@@ -136,7 +130,7 @@ namespace Plank.Widgets
 			
 			controller.renderer.notify["Hidden"].connect (update_icon_regions);
 			
-			DragTracker.notify["DragItem"].connect (drag_item_changed);
+			controller.drag_manager.notify["DragItem"].connect (drag_item_changed);
 			
 			get_screen ().size_changed.connect (update_monitor_geo);
 			controller.prefs.changed["Monitor"].connect (update_monitor_geo);
@@ -167,7 +161,7 @@ namespace Plank.Widgets
 			
 			controller.renderer.notify["Hidden"].disconnect (update_icon_regions);
 			
-			DragTracker.notify["DragItem"].disconnect (drag_item_changed);
+			controller.drag_manager.notify["DragItem"].disconnect (drag_item_changed);
 			
 			get_screen ().size_changed.disconnect (update_monitor_geo);
 			controller.prefs.changed["Monitor"].disconnect (update_monitor_geo);
@@ -180,7 +174,7 @@ namespace Plank.Widgets
 		{
 			// This event gets fired before the drag end event, 
 			// in this case we ignore it.
-			if (DragTracker.InternalDragActive)
+			if (controller.drag_manager.InternalDragActive)
 				return true;
 				
 			if (HoveredItem == null)
@@ -201,7 +195,7 @@ namespace Plank.Widgets
 		 */
 		public override bool button_release_event (EventButton event)
 		{
-			if (DragTracker.InternalDragActive)
+			if (controller.drag_manager.InternalDragActive)
 				return true;
 
 			if (HoveredItem != null && !menu_is_visible ())
@@ -249,7 +243,7 @@ namespace Plank.Widgets
 		 */
 		public override bool scroll_event (EventScroll event)
 		{
-			if (DragTracker.InternalDragActive)
+			if (controller.drag_manager.InternalDragActive)
 				return true;
 			
 			if ((event.state & ModifierType.CONTROL_MASK) != 0) {
@@ -301,7 +295,7 @@ namespace Plank.Widgets
 			
 			HoveredItem = item;
 			
-			if (HoveredItem == null || DragTracker.InternalDragActive) {
+			if (HoveredItem == null || controller.drag_manager.InternalDragActive) {
 				hover.hide ();
 				return;
 			}
@@ -379,7 +373,7 @@ namespace Plank.Widgets
 		 */
 		protected void drag_item_changed ()
 		{
-			if (DragTracker.DragItem != null)
+			if (controller.drag_manager.DragItem != null)
 				set_hovered (null);
 		}
 		

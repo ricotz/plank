@@ -359,7 +359,7 @@ namespace Plank
 				start2 = new DateTime.now_local ();
 #endif
 				// Do not draw the currently dragged item
-				if (controller.window.DragTracker.DragItem != item)
+				if (controller.drag_manager.DragItem != item)
 					draw_item (main_buffer, item);
 #if BENCHMARK == 1
 				end2 = new DateTime.now_local ();
@@ -473,7 +473,7 @@ namespace Plank
 			
 			if (controller.window.HoveredItem == item && controller.window.menu_is_visible ())
 				darken += 0.4;
-			else if (controller.window.DragTracker.ExternalDragActive && controller.window.DragTracker.drag_data != null && !item.can_accept_drop (controller.window.DragTracker.drag_data))
+			else if (controller.drag_manager.ExternalDragActive && controller.drag_manager.drag_data != null && !item.can_accept_drop (controller.drag_manager.drag_data))
 				darken += 0.6;
 			
 			// glow the icon
