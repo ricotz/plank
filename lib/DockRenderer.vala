@@ -206,7 +206,7 @@ namespace Plank
 		
 		void icon_size_changed ()
 		{
-			reset_caches ();
+			reset_item_caches ();
 			update_regions ();
 			animated_draw ();
 		}
