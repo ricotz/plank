@@ -273,14 +273,14 @@ namespace Plank.Items
 			
 			Prefs.deleted.connect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.connect (reset_icon_buffer);
-			Prefs.changed["Icon"].connect (reset_icon_buffer);
+			notify["Icon"].connect (reset_icon_buffer);
 		}
 		
 		~DockItem ()
 		{
 			Prefs.deleted.disconnect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.disconnect (reset_icon_buffer);
-			Prefs.changed["Icon"].disconnect (reset_icon_buffer);
+			notify["Icon"].disconnect (reset_icon_buffer);
 		}
 		
 		/**

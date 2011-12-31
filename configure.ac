@@ -147,6 +147,16 @@ if test "x$enable_debug" = "xyes" ; then
     VALAFLAGS="$VALAFLAGS -g"
 fi
 
+# Enable output of benchmarking data
+AC_ARG_ENABLE([benchmark],
+              AS_HELP_STRING([--enable-benchmark],
+                             [Enable output of benchmarking data in logs]),
+              [enable_benchmark=$enableval],
+              [enable_benchmark=no])
+if test "x$enable_benchmark" = "xyes" ; then
+    VALAFLAGS="$VALAFLAGS --define BENCHMARK"
+fi
+
 # Force Vala if generated source is missing or outdated
 if test \
     ! -e ${srcdir}/lib/libplank_la_vala.stamp -o \
@@ -194,7 +204,6 @@ if test "x$enable_vala" = "xyes" ; then
         VALAFLAGS="$VALAFLAGS_3"
     fi
 fi
-
 
 # -----------------------------------------------------------
 # Documentation

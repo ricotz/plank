@@ -18,6 +18,9 @@
 using Cairo;
 using Gdk;
 using Gtk;
+#if BENCHMARK
+using Gee;
+#endif
 
 using Plank.Items;
 using Plank.Drawing;
@@ -141,7 +144,7 @@ namespace Plank
 			VisibleDockWidth = width;
 			
 			// width of the dock window
-			DockWidth = width + controller.prefs.IconSize + ItemPadding;
+			DockWidth = width + controller.prefs.IconSize + ItemPadding + urgent_glow_size () / 2;
 		}
 		
 		/**
@@ -203,7 +206,7 @@ namespace Plank
 		
 		void icon_size_changed ()
 		{
-			reset_caches ();
+			reset_item_caches ();
 			update_regions ();
 			animated_draw ();
 		}
@@ -317,6 +320,10 @@ namespace Plank
 			return rect;
 		}
 		
+#if BENCHMARK
+		ArrayList<string> benchmark = new ArrayList<string> ();
+#endif
+		
 		/**
 		 * Draws the dock onto a context.
 		 *
@@ -324,6 +331,10 @@ namespace Plank
 		 */
 		public void draw_dock (Context cr)
 		{
+#if BENCHMARK
+			benchmark.clear ();
+			var start = new DateTime.now_local ();
+#endif
 			if (main_buffer != null && (main_buffer.Width != VisibleDockWidth || main_buffer.Height != DockHeight))
 				reset_buffers ();
 			
@@ -332,10 +343,27 @@ namespace Plank
 			
 			main_buffer.clear ();
 			
+#if BENCHMARK
+			var start2 = new DateTime.now_local ();
+#endif
 			draw_dock_background (main_buffer);
+#if BENCHMARK
+			var end2 = new DateTime.now_local ();
+			benchmark.add ("background render time - %f ms".printf (end2.difference (start2) / 1000.0));
+#endif
+			
 			
 			foreach (var item in controller.items.Items)
+			{
+#if BENCHMARK
+				start2 = new DateTime.now_local ();
+#endif
 				draw_item (main_buffer, item);
+#if BENCHMARK
+				end2 = new DateTime.now_local ();
+				benchmark.add ("item render time - %f ms".printf (end2.difference (start2) / 1000.0));
+#endif
+			}
 			
 			var x_offset = (controller.window.width_request - main_buffer.Width) / 2;
 			
@@ -368,6 +396,14 @@ namespace Plank
 					}
 				}
 			}
+#if BENCHMARK
+			var end = new DateTime.now_local ();
+			var diff = end.difference (start) / 1000.0;
+			if (diff > 5.0)
+				foreach (var s in benchmark)
+					message ("	" + s);
+			message ("render time - %f ms", diff);
+#endif
 		}
 		
 		void draw_dock_background (DockSurface surface)
@@ -386,7 +422,14 @@ namespace Plank
 			var icon_surface = new DockSurface.with_dock_surface (controller.prefs.IconSize, controller.prefs.IconSize, surface);
 			
 			// load the icon
+#if BENCHMARK
+			var start = new DateTime.now_local ();
+#endif
 			var item_surface = item.get_surface (icon_surface);
+#if BENCHMARK
+			var end = new DateTime.now_local ();
+			benchmark.add ("	item.get_surface time - %f ms".printf (end.difference (start) / 1000.0));
+#endif
 			icon_surface.Context.set_source_surface (item_surface.Internal, 0, 0);
 			icon_surface.Context.paint ();
 			
@@ -460,7 +503,8 @@ namespace Plank
 			var opacity = double.min (1, active_time / (double) (theme.ActiveTime * 1000));
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
-			theme.draw_active_glow (surface, HorizPadding, background_buffer, hover_rect, item.AverageIconColor, opacity);
+			if (opacity > 0)
+				theme.draw_active_glow (surface, HorizPadding, background_buffer, hover_rect, item.AverageIconColor, opacity);
 			
 			// draw the icon
 			surface.Context.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);
@@ -508,11 +552,16 @@ namespace Plank
 			urgent_indicator_buffer = theme.create_indicator (background_buffer, IndicatorSize, get_styled_color ().add_hue (urgent_hue_shift).set_sat (1));
 		}
 		
+		int urgent_glow_size ()
+		{
+			return (int) (theme.GlowSize / 10.0 * controller.prefs.IconSize);
+		}
+		
 		void create_urgent_glow (DockSurface surface)
 		{
 			var color = get_styled_color ().add_hue (urgent_hue_shift).set_sat (1);
 			
-			var size = (int) (theme.GlowSize / 10.0 * controller.prefs.IconSize);
+			var size = urgent_glow_size ();
 			urgent_glow_buffer = new DockSurface.with_dock_surface (size, size, surface);
 			
 			var cr = urgent_glow_buffer.Context;

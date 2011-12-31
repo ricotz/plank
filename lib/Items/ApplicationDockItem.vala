@@ -302,7 +302,7 @@ namespace Plank.Items
 						
 						var pbuf = WindowControl.get_window_icon (window);
 						if (pbuf == null)
-							DrawingService.load_icon (Icon, width, height);
+							pbuf = DrawingService.load_icon (Icon, width, height);
 						else
 							pbuf = DrawingService.ar_scale (pbuf, width, height);
 						
