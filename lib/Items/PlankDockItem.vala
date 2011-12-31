@@ -48,7 +48,7 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		public override ArrayList<MenuItem> get_menu_items ()
+		public override ArrayList<Gtk.MenuItem> get_menu_items ()
 		{
 			return get_plank_menu_items ();
 		}
@@ -58,9 +58,9 @@ namespace Plank.Items
 		 *
 		 * @return the {@link Gtk.MenuItem}s to display
 		 */
-		public static ArrayList<MenuItem> get_plank_menu_items ()
+		public static ArrayList<Gtk.MenuItem> get_plank_menu_items ()
 		{
-			var items = new ArrayList<MenuItem> ();
+			var items = new ArrayList<Gtk.MenuItem> ();
 			
 			var item = create_menu_item (_("Get _Help Online..."), "help");
 			item.activate.connect (() => Factory.main.help ());

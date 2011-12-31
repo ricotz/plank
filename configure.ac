@@ -7,7 +7,7 @@ m4_define([plank_micro_version], [0])
 m4_define([plank_nano_version], [0])
 
 # If library source has changed since last release, increment revision
-# If interfaces have been removed or changed since last release,
+# If interfaces have been added, removed or changed since last release,
 #  increment current and set revision to 0
 # If interfaces have been added since last release, increment age
 # If interfaces have been removed since last release, set age to 0
@@ -79,6 +79,7 @@ BAMF_MIN_VERSION=0.2.58
 
 PKG_CHECK_MODULES(PLANK_CORE, gobject-2.0 >= $GLIB_MIN_VERSION
                               glib-2.0 >= $GLIB_MIN_VERSION
+                              gthread-2.0 >= $GLIB_MIN_VERSION
                               gio-2.0 >= $GLIB_MIN_VERSION
                               gio-unix-2.0 >= $GLIB_MIN_VERSION
                               gtk+-2.0 >= $GTK_MIN_VERSION
@@ -113,6 +114,13 @@ AC_ARG_ENABLE([debug],
 if test "x$enable_debug" = "xyes" ; then
     VALAFLAGS="$VALAFLAGS -g"
 fi
+
+# Enable output of benchmarking data
+AC_ARG_ENABLE([benchmark],
+              AS_HELP_STRING([--enable-benchmark],
+                             [Enable output of benchmarking data in logs]),
+              [enable_benchmark=$enableval],
+              [enable_benchmark=no])
 
 # Force Vala if generated source is missing or outdated
 if test \
@@ -151,6 +159,10 @@ if test "x$enable_vala" = "xyes" ; then
     AC_SUBST(PLANK_CORE_VALAFLAGS)
 fi
 
+if test "x$enable_benchmark" = "xyes" ; then
+    VALAFLAGS="$VALAFLAGS -D BENCHMARK"
+    AC_SUBST(VALAFLAGS)
+fi
 
 # -----------------------------------------------------------
 # Documentation

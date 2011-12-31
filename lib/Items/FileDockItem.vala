@@ -188,7 +188,7 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		public override ArrayList<MenuItem> get_menu_items ()
+		public override ArrayList<Gtk.MenuItem> get_menu_items ()
 		{
 			if (OwnedFile.query_file_type (0) == FileType.DIRECTORY)
 				return get_dir_menu_items ();
@@ -196,11 +196,11 @@ namespace Plank.Items
 			return get_file_menu_items ();
 		}
 		
-		ArrayList<MenuItem> get_dir_menu_items ()
+		ArrayList<Gtk.MenuItem> get_dir_menu_items ()
 		{
-			var items = new ArrayList<MenuItem> ();
+			var items = new ArrayList<Gtk.MenuItem> ();
 		
-			var menu_items = new HashMap<string, MenuItem> (str_hash, str_equal);
+			var menu_items = new HashMap<string, Gtk.MenuItem> (str_hash, str_equal);
 			var keys = new ArrayList<string> ();
 			
 			foreach (var file in get_files ()) {
@@ -245,9 +245,9 @@ namespace Plank.Items
 			return items;
 		}
 		
-		ArrayList<MenuItem> get_file_menu_items ()
+		ArrayList<Gtk.MenuItem> get_file_menu_items ()
 		{
-			var items = new ArrayList<MenuItem> ();
+			var items = new ArrayList<Gtk.MenuItem> ();
 			
 			var item = create_menu_item (_("_Open"), "gtk-open");
 			item.activate.connect (launch);

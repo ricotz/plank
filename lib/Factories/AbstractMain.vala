@@ -276,7 +276,8 @@ namespace Plank.Factories
 		 */
 		protected virtual void start_dock ()
 		{
-			new DockWindow ().show_all ();
+			var controller = new DockController ();
+			controller.window.show_all ();
 			
 			Gdk.threads_enter ();
 			Gtk.main ();

@@ -218,9 +218,9 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		public override ArrayList<MenuItem> get_menu_items ()
+		public override ArrayList<Gtk.MenuItem> get_menu_items ()
 		{
-			var items = new ArrayList<MenuItem> ();
+			var items = new ArrayList<Gtk.MenuItem> ();
 			
 			if (!is_window ()) {
 				var item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
@@ -242,7 +242,7 @@ namespace Plank.Items
 			}
 			
 			if (!closed) {
-				MenuItem item;
+				Gtk.MenuItem item;
 				
 				if (!is_window ()) {
 					item = create_menu_item (_("_Open New Window"), "document-open-symbolic;;document-open");
@@ -279,7 +279,7 @@ namespace Plank.Items
 				items.add (new SeparatorMenuItem ());
 				
 				foreach (var s in shortcuts) {
-					var item = new MenuItem.with_mnemonic (s);
+					var item = new Gtk.MenuItem.with_mnemonic (s);
 					item.activate.connect (() => {
 						try {
 							AppInfo.create_from_commandline (shortcut_map.get (s), null, AppInfoCreateFlags.NONE).launch (null, null);

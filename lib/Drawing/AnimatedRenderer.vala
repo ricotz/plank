@@ -35,11 +35,28 @@ namespace Plank.Drawing
 		uint animation_timer = 0;
 		
 		/**
+		 * Creates a new animation renderer. Must call set_widget() later.
+		 */
+		public AnimatedRenderer ()
+		{
+		}
+		
+		/**
 		 * Creates a new animation renderer for a widget.
 		 *
 		 * @param widget the widget to handle animations for
 		 */
-		public AnimatedRenderer (Widget widget)
+		public AnimatedRenderer.with_widget (Widget widget)
+		{
+			set_widget (widget);
+		}
+		
+		/**
+		 * Sets the widget to handle animations for.
+		 *
+		 * @param widget the widget to handle animations for
+		 */
+		public void set_widget (Widget widget)
 		{
 			this.widget = widget;
 		}

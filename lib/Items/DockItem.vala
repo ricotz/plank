@@ -348,6 +348,7 @@ namespace Plank.Items
 		protected virtual void draw_icon (DockSurface surface)
 		{
 			var pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
+			return_if_fail(pbuf != null);
 			cairo_set_source_pixbuf (surface.Context, pbuf, 0, 0);
 			surface.Context.paint ();
 		}
@@ -401,9 +402,9 @@ namespace Plank.Items
 		 *
 		 * @return the item's menu items
 		 */
-		public virtual ArrayList<MenuItem> get_menu_items ()
+		public virtual ArrayList<Gtk.MenuItem> get_menu_items ()
 		{
-			return new ArrayList<MenuItem> ();
+			return new ArrayList<Gtk.MenuItem> ();
 		}
 		
 		/**
@@ -457,7 +458,7 @@ namespace Plank.Items
 		 * @param icon the icon of the menu item
 		 * @return the new menu item
 		 */
-		protected static MenuItem create_menu_item (string title, string icon)
+		protected static Gtk.MenuItem create_menu_item (string title, string icon)
 		{
 			int width, height;
 			icon_size_lookup (IconSize.MENU, out width, out height);
