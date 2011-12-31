@@ -47,7 +47,7 @@ namespace Plank.Widgets
 		
 		public HoverWindow ()
 		{
-			base.with_type (Gtk.WindowType.POPUP);
+			base.with_type (Gtk.WindowType.TOPLEVEL);
 			
 			theme = new ThemeRenderer ();
 			theme.load ("hover");
