@@ -18,7 +18,7 @@
 using Cairo;
 using Gdk;
 using Gtk;
-#if BENCHMARK == 1
+#if BENCHMARK
 using Gee;
 #endif
 
@@ -320,7 +320,7 @@ namespace Plank
 			return rect;
 		}
 		
-#if BENCHMARK == 1
+#if BENCHMARK
 		ArrayList<string> benchmark = new ArrayList<string> ();
 #endif
 		
@@ -331,7 +331,7 @@ namespace Plank
 		 */
 		public void draw_dock (Context cr)
 		{
-#if BENCHMARK == 1
+#if BENCHMARK
 			benchmark.clear ();
 			var start = new DateTime.now_local ();
 #endif
@@ -343,11 +343,11 @@ namespace Plank
 			
 			main_buffer.clear ();
 			
-#if BENCHMARK == 1
+#if BENCHMARK
 			var start2 = new DateTime.now_local ();
 #endif
 			draw_dock_background (main_buffer);
-#if BENCHMARK == 1
+#if BENCHMARK
 			var end2 = new DateTime.now_local ();
 			benchmark.add ("background render time - %f ms".printf (end2.difference (start2) / 1000.0));
 #endif
@@ -355,11 +355,11 @@ namespace Plank
 			
 			foreach (var item in controller.items.Items)
 			{
-#if BENCHMARK == 1
+#if BENCHMARK
 				start2 = new DateTime.now_local ();
 #endif
 				draw_item (main_buffer, item);
-#if BENCHMARK == 1
+#if BENCHMARK
 				end2 = new DateTime.now_local ();
 				benchmark.add ("item render time - %f ms".printf (end2.difference (start2) / 1000.0));
 #endif
@@ -396,7 +396,7 @@ namespace Plank
 					}
 				}
 			}
-#if BENCHMARK == 1
+#if BENCHMARK
 			var end = new DateTime.now_local ();
 			var diff = end.difference (start) / 1000.0;
 			if (diff > 5.0)
@@ -422,11 +422,11 @@ namespace Plank
 			var icon_surface = new DockSurface.with_dock_surface (controller.prefs.IconSize, controller.prefs.IconSize, surface);
 			
 			// load the icon
-#if BENCHMARK == 1
+#if BENCHMARK
 			var start = new DateTime.now_local ();
 #endif
 			var item_surface = item.get_surface (icon_surface);
-#if BENCHMARK == 1
+#if BENCHMARK
 			var end = new DateTime.now_local ();
 			benchmark.add ("	item.get_surface time - %f ms".printf (end.difference (start) / 1000.0));
 #endif
