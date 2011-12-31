@@ -147,6 +147,9 @@ namespace Plank.Widgets
 			text_offset = buffer / 2;
 			
 			set_size_request (int.max (HOVER_HEIGHT, buffer + logical_rect.width), HOVER_HEIGHT);
+#if USE_GTK3
+			queue_resize ();
+#endif
 		}
 		
 		void draw_background ()
