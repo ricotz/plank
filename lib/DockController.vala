@@ -34,7 +34,7 @@ namespace Plank
 		public DockController ()
 		{
 			prefs = new DockPreferences.with_file (Factory.main.dock_path + "/settings");
-			items = new DockItems ();
+			items = new DockItems (this);
 			renderer = new DockRenderer (this);
 			hide_manager = new HideManager (this);
 			window = new DockWindow (this);

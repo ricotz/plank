@@ -108,7 +108,7 @@ namespace Plank.Widgets
 			base ();
 			
 			this.controller = controller;
-			DragTracker = new DragManager (this);
+			DragTracker = new DragManager (controller, this);
 			
 			set_accept_focus (false);
 			can_focus = false;
@@ -364,14 +364,14 @@ namespace Plank.Widgets
 		public void serialize_item_positions ()
 		{
 			var item_list = "";
-			foreach (var item in Items.Items) {
+			foreach (var item in controller.items.Items) {
 				if (!(item is TransientDockItem) && item.DockItemPath.length > 0) {
 					if (item_list.length > 0)
 						item_list += ";;";
 					item_list += item.DockItemPath;
 				}
 			}
-			Prefs.DockItems = item_list;
+			controller.prefs.DockItems = item_list;
 		}
 		
 		/**

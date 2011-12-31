@@ -55,16 +55,16 @@ namespace Plank
 		public ArrayList<DockItem> Items = new ArrayList<DockItem> ();
 		
 		FileMonitor? items_monitor = null;
-		DockWindow owner;
+		DockController controller;
 		
 		/**
 		 * Creates a new container for dock items.
 		 *
-		 * @param owner the dock window that owns these items
+		 * @param controller the dock controller that owns these items
 		 */
-		public DockItems (DockWindow owner)
+		public DockItems (DockController controller)
 		{
-			this.owner = owner;
+			this.controller = controller;
 			
 			Factory.item_factory.launchers_dir = Paths.AppConfigFolder.get_child (Factory.main.dock_path + "/launchers");
 			
@@ -166,7 +166,7 @@ namespace Plank
 							continue;
 						}
 						
-						if (owner.Prefs.DockItems.contains (info.get_name ()))
+						if (controller.prefs.DockItems.contains (info.get_name ()))
 							existing_items.add (item);
 						else
 							new_items.add (item);
@@ -279,7 +279,7 @@ namespace Plank
 				//
 				// find a new position for the item
 				//
-				var positions = owner.Prefs.DockItems.split (";;");
+				var positions = controller.prefs.DockItems.split (";;");
 				
 				// see if the position was serialized
 				if (item.DockItemPath.length > 0)

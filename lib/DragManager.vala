@@ -37,6 +37,8 @@ namespace Plank
 		uint hover_timer = 0;
 		Gee.Map<DockItem, int> original_item_pos = new HashMap<DockItem, int> ();
 		
+		DockController controller;
+		
 		public DockWindow Owner { get; private set; }
 		
 		public bool InternalDragActive { get; private set; }
@@ -63,8 +65,9 @@ namespace Plank
 			} 
 		}
 
-		public DragManager (DockWindow owner)
+		public DragManager (DockController controller, DockWindow owner)
 		{
+			this.controller = controller;
 			Owner = owner;
 			
 			owner.drag_motion.connect (drag_motion);
@@ -104,7 +107,7 @@ namespace Plank
 			// if we don't get a (drag-)motion-event
 			if (hover_timer == 0)
 				hover_timer = GLib.Timeout.add (50, () => {
-					Owner.HideTracker.update_dock_hovered ();
+					controller.hide_manager.update_dock_hovered ();
 					return true;
 				});
 			
@@ -122,12 +125,12 @@ namespace Plank
 			original_item_pos.clear ();
 			
 			if (DragItem != null) {
-				foreach (DockItem item in Owner.Items.Items)
+				foreach (DockItem item in controller.items.Items)
 					original_item_pos [item] = item.Position;
 				
-				var icon_surface = new DockSurface ((int) (1.2 * Owner.Prefs.IconSize), (int) (1.2 * Owner.Prefs.IconSize));
+				var icon_surface = new DockSurface ((int) (1.2 * controller.prefs.IconSize), (int) (1.2 * controller.prefs.IconSize));
 				pbuf = DragItem.get_surface (icon_surface).load_to_pixbuf ();
-				Owner.Renderer.animated_draw ();
+				controller.renderer.animated_draw ();
 			} else {
 				pbuf = new Pixbuf (Colorspace.RGB, true, 8, 1, 1);
 			}
@@ -187,10 +190,10 @@ namespace Plank
 		void drag_end (Widget w, DragContext context)
 		{
 			if (!drag_canceled && DragItem != null) {
-				if (!Owner.HideTracker.DockHovered) {
+				if (!controller.hide_manager.DockHovered) {
 					if (DragItem.CanBeRemoved) {
 						// Remove from dock
-						Owner.Items.remove_item (DragItem);
+						controller.items.remove_item (DragItem);
 						DragItem.delete ();
 						
 						int x, y;
@@ -219,7 +222,7 @@ namespace Plank
 				GLib.Source.remove (hover_timer);
 			hover_timer = 0;
 			
-			Owner.Renderer.animated_draw ();
+			controller.renderer.animated_draw ();
 		}
 
 		void drag_leave (Widget w, DragContext context, uint time_)
@@ -234,7 +237,7 @@ namespace Plank
 			
 			if (drag_canceled)
 				foreach (var entry in original_item_pos.entries)
-					Owner.Items.update_item_position (entry.key, entry.value);
+					controller.items.update_item_position (entry.key, entry.value);
 			
 			return !drag_canceled;
 		}
@@ -273,16 +276,16 @@ namespace Plank
 				
 				// drag right
 				if (DragItem.Position < destPos) {
-					foreach (DockItem item in Owner.Items.Items)
+					foreach (DockItem item in controller.items.Items)
 						if (item.Position > DragItem.Position && item.Position <= destPos)
-							Owner.Items.update_item_position (item, item.Position - 1);
+							controller.items.update_item_position (item, item.Position - 1);
 				// drag left
 				} else if (DragItem.Position > destPos) {
-					foreach (DockItem item in Owner.Items.Items)
+					foreach (DockItem item in controller.items.Items)
 						if (item.Position < DragItem.Position && item.Position >= destPos)
-							Owner.Items.update_item_position (item, item.Position + 1);
+							controller.items.update_item_position (item, item.Position + 1);
 				}
-				Owner.Items.update_item_position (DragItem, destPos);
+				controller.items.update_item_position (DragItem, destPos);
 				Owner.serialize_item_positions ();
 			}
 			
@@ -328,7 +331,7 @@ namespace Plank
 			if (InternalDragActive)
 				return;
 			
-			if (Owner.HideTracker.DockHovered) {
+			if (controller.hide_manager.DockHovered) {
 				if (proxy_window == null)
 					return;
 				proxy_window = null;

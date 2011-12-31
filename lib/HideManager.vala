@@ -88,8 +88,8 @@ namespace Plank
 			controller.window.leave_notify_event.connect (leave_notify_event);
 			controller.window.motion_notify_event.connect (motion_notify_event);
 			
-			window.DragTracker.notify["ExternalDragActive"].connect (update_dock_hovered);
-			window.DragTracker.notify["InternalDragActive"].connect (update_dock_hovered);
+			controller.window.DragTracker.notify["ExternalDragActive"].connect (update_dock_hovered);
+			controller.window.DragTracker.notify["InternalDragActive"].connect (update_dock_hovered);
 			
 			Matcher.get_default ().window_opened.connect (update_window_intersect);
 			Matcher.get_default ().window_closed.connect (update_window_intersect);
@@ -107,8 +107,8 @@ namespace Plank
 			controller.window.leave_notify_event.disconnect (leave_notify_event);
 			controller.window.motion_notify_event.disconnect (motion_notify_event);
 			
-			window.DragTracker.notify["ExternalDragActive"].disconnect (update_dock_hovered);
-			window.DragTracker.notify["InternalDragActive"].disconnect (update_dock_hovered);
+			controller.window.DragTracker.notify["ExternalDragActive"].disconnect (update_dock_hovered);
+			controller.window.DragTracker.notify["InternalDragActive"].disconnect (update_dock_hovered);
 			
 			Matcher.get_default ().window_opened.disconnect (update_window_intersect);
 			Matcher.get_default ().window_closed.disconnect (update_window_intersect);
@@ -124,7 +124,7 @@ namespace Plank
 		public void update_dock_hovered ()
 		{
 			// disable hiding if drags are active
-			disabled = window.DragTracker.InternalDragActive || window.DragTracker.ExternalDragActive;
+			disabled = controller.window.DragTracker.InternalDragActive || controller.window.DragTracker.ExternalDragActive;
 			
 			// get current mouse pointer location
 			int x, y;
@@ -163,7 +163,7 @@ namespace Plank
 		void update_hidden ()
 		{
 			if (disabled) {
-				window.Renderer.show ();
+				controller.renderer.show ();
 				return;
 			}
 			
