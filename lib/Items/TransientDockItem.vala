@@ -19,6 +19,7 @@ using Gee;
 using Gtk;
 
 using Plank.Drawing;
+using Plank.Services.Windows;
 
 namespace Plank.Items
 {
@@ -32,6 +33,7 @@ namespace Plank.Items
 			var launcher = app.get_desktop_file ();
 			if (launcher == "") {
 				Text = app.get_name ();
+				ForcePixbuf = WindowControl.get_app_icon (app);
 			} else {
 				Prefs.Launcher = launcher;
 				load_from_launcher ();

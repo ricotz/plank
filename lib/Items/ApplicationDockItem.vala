@@ -327,6 +327,7 @@ namespace Plank.Items
 			string icon, text;
 			parse_launcher (Prefs.Launcher, out icon, out text, shortcuts, shortcut_map);
 			Icon = icon;
+			ForcePixbuf = null;
 			Text = text;
 			
 			start_monitor ();
