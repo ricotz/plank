@@ -28,6 +28,22 @@ namespace Plank.Services.Windows
 		// when changing a viewport, wait this time (for viewport change animations) before continuing
 		public static const uint VIEWPORT_CHANGE_DELAY = 200;
 		
+		public static unowned Gdk.Pixbuf? get_app_icon (Bamf.Application app)
+		{
+			unowned Gdk.Pixbuf? pbuf = null;
+			
+			Screen.get_default ();
+			unowned Array<uint32> xids = app.get_xids ();
+			
+			for (var i = 0; xids != null && i < xids.length && pbuf == null; i++) {
+				var window = Wnck.Window.@get (xids.index (i));
+				if (window != null)
+					pbuf = window.get_icon ();
+			}
+			
+			return pbuf;
+		}
+		
 		public static unowned Gdk.Pixbuf? get_window_icon (Bamf.Window window)
 		{
 			var w = Wnck.Window.@get (window.get_xid ());
@@ -125,6 +141,7 @@ namespace Plank.Services.Windows
 		public static void initialize ()
 		{
 			set_client_type (ClientType.PAGER);
+			Screen.get_default ().force_update ();
 		}
 		
 		public static void close_all (Bamf.Application? app)

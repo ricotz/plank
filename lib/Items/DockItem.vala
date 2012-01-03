@@ -159,6 +159,8 @@ namespace Plank.Items
 		 */
 		public string Icon { get; set; default = ""; }
 		
+		protected Pixbuf? ForcePixbuf { get; set; default = null; }
+		
 		/**
 		 * The dock item's text.
 		 */
@@ -274,6 +276,7 @@ namespace Plank.Items
 			Prefs.deleted.connect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.connect (reset_icon_buffer);
 			notify["Icon"].connect (reset_icon_buffer);
+			notify["ForcePixbuf"].connect (reset_icon_buffer);
 		}
 		
 		~DockItem ()
@@ -281,6 +284,7 @@ namespace Plank.Items
 			Prefs.deleted.disconnect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.disconnect (reset_icon_buffer);
 			notify["Icon"].disconnect (reset_icon_buffer);
+			notify["ForcePixbuf"].disconnect (reset_icon_buffer);
 		}
 		
 		/**
@@ -333,8 +337,13 @@ namespace Plank.Items
 		 */
 		protected virtual void draw_icon (DockSurface surface)
 		{
-			var pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
-			return_if_fail(pbuf != null);
+			Pixbuf? pbuf = ForcePixbuf;
+			if (pbuf == null) {
+				pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
+				return_if_fail(pbuf != null);
+			} else {
+				pbuf = DrawingService.ar_scale (pbuf, surface.Width, surface.Height);
+			}
 			cairo_set_source_pixbuf (surface.Context, pbuf, 0, 0);
 			surface.Context.paint ();
 		}

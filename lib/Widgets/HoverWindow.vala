@@ -85,27 +85,15 @@ namespace Plank.Widgets
 		 */
 		public void move_hover (int item_x, int item_y)
 		{
-#if VALA_0_14
-			var requisition = get_requisition ();
-			var x = item_x - requisition.width / 2;
-			var y = item_y - requisition.height - PADDING;
-#else
 			var x = item_x - width_request / 2;
 			var y = item_y - height_request - PADDING;
-#endif
-			
 			var screen = get_screen ();
 			
 			Gdk.Rectangle monitor;
 			screen.get_monitor_geometry (screen.get_monitor_at_point (item_x, item_y), out monitor);
 			
-#if VALA_0_14
-			x = int.max (monitor.x, int.min (x, monitor.x + monitor.width - requisition.width));
-			y = int.max (monitor.y, int.min (y, monitor.y + monitor.height - requisition.height));
-#else
 			x = int.max (monitor.x, int.min (x, monitor.x + monitor.width - width_request));
 			y = int.max (monitor.y, int.min (y, monitor.y + monitor.height - height_request));
-#endif
 			
 			move (x, y);
 		}
@@ -154,12 +142,7 @@ namespace Plank.Widgets
 		
 		void draw_background ()
 		{
-#if VALA_0_14
-			var requisition = get_requisition ();
-			background_buffer = new DockSurface (requisition.width, requisition.height);
-#else
 			background_buffer = new DockSurface (width_request, height_request);
-#endif
 			
 			// draw the background
 			theme.draw_background (background_buffer);
