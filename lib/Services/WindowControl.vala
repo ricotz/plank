@@ -136,6 +136,7 @@ namespace Plank.Services.Windows
 		public static void initialize ()
 		{
 			set_client_type (ClientType.PAGER);
+			// FIXME this causes the dock to not initially show until a window switch
 			Screen.get_default ().force_update ();
 		}
 		
