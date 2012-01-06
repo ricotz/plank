@@ -70,8 +70,8 @@ namespace Plank.Services.Windows
 		
 		void view_opened (Object? arg1)
 		{
-			if (arg1 == null)
-				return;
+			return_if_fail (arg1 != null);
+			
 			if (arg1 is Bamf.Window)
 				window_opened (arg1 as Bamf.Window);
 			else if (arg1 is Bamf.Application)
@@ -80,8 +80,8 @@ namespace Plank.Services.Windows
 		
 		void view_closed (Object? arg1)
 		{
-			if (arg1 == null)
-				return;
+			return_if_fail (arg1 != null);
+			
 			if (arg1 is Bamf.Window)
 				window_closed (arg1 as Bamf.Window);
 			else if (arg1 is Bamf.Application)

@@ -47,8 +47,8 @@ namespace Plank.Services.Windows
 		public static unowned Gdk.Pixbuf? get_window_icon (Bamf.Window window)
 		{
 			var w = Wnck.Window.@get (window.get_xid ());
-			if (w == null)
-				return null;
+			return_val_if_fail (w != null, null);
+			
 			return w.get_icon ();
 		}
 		
@@ -71,8 +71,7 @@ namespace Plank.Services.Windows
 		
 		public static bool has_maximized_window (Bamf.Application? app)
 		{
-			if (app == null)
-				return false;
+			return_val_if_fail (app != null, false);
 			
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
@@ -88,8 +87,7 @@ namespace Plank.Services.Windows
 		
 		public static bool has_minimized_window (Bamf.Application? app)
 		{
-			if (app == null)
-				return false;
+			return_val_if_fail (app != null, false);
 			
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
@@ -105,10 +103,8 @@ namespace Plank.Services.Windows
 		
 		public static ArrayList<Bamf.Window> get_windows (Bamf.Application? app)
 		{
-			if (app == null)
-				return new ArrayList<Bamf.Window> ();
-			
 			var windows = new ArrayList<Bamf.Window> ();
+			return_val_if_fail (app != null, windows);
 			
 			unowned GLib.List<Bamf.View> children = app.get_children ();
 			for (var i = 0; i < children.length (); i++) {
@@ -122,8 +118,7 @@ namespace Plank.Services.Windows
 		
 		public static void update_icon_regions (Bamf.Application? app, Gdk.Rectangle? rect, int x, int y)
 		{
-			if (app == null)
-				return;
+			return_if_fail (app != null);
 			
 			if (rect == null)
 				rect = Gdk.Rectangle () { x = 0, y = 0, width = 0, height = 0 };
@@ -146,8 +141,7 @@ namespace Plank.Services.Windows
 		
 		public static void close_all (Bamf.Application? app)
 		{
-			if (app == null)
-				return;
+			return_if_fail (app != null);
 			
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
@@ -163,22 +157,23 @@ namespace Plank.Services.Windows
 		{
 			Screen.get_default ();
 			var w = Wnck.Window.@get (window.get_xid ());
-			if (w != null)
-				center_and_focus_window (w);
+			return_if_fail (w != null);
+			
+			center_and_focus_window (w);
 		}
 		
 		public static void focus_window_by_xid (uint32 xid)
 		{
 			Screen.get_default ();
 			var window = Wnck.Window.@get (xid);
-			if (window != null)
-				center_and_focus_window (window);
+			return_if_fail (window != null);
+			
+			center_and_focus_window (window);
 		}
 		
 		public static void focus (Bamf.Application? app)
 		{
-			if (app == null)
-				return;
+			return_if_fail (app != null);
 			
 			foreach (var window in get_ordered_window_stack (app)) {
 				center_and_focus_window (window);
@@ -199,8 +194,7 @@ namespace Plank.Services.Windows
 		
 		public static void focus_previous (Bamf.Application? app)
 		{
-			if (app == null)
-				return;
+			return_if_fail (app != null);
 			
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
@@ -216,8 +210,7 @@ namespace Plank.Services.Windows
 		
 		public static void focus_next (Bamf.Application? app)
 		{
-			if (app == null)
-				return;
+			return_if_fail (app != null);
 			
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
@@ -233,8 +226,7 @@ namespace Plank.Services.Windows
 		
 		public static void minimize (Bamf.Application? app)
 		{
-			if (app == null)
-				return;
+			return_if_fail (app != null);
 			
 			foreach (var window in get_ordered_window_stack (app))
 				if (!window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
@@ -245,8 +237,7 @@ namespace Plank.Services.Windows
 		
 		public static void restore (Bamf.Application? app)
 		{
-			if (app == null)
-				return;
+			return_if_fail (app != null);
 			
 			var stack = get_ordered_window_stack (app);
 			for (var i = (int) stack.size - 1; i >= 0; i--) {
@@ -260,8 +251,7 @@ namespace Plank.Services.Windows
 		
 		public static void maximize (Bamf.Application? app)
 		{
-			if (app == null)
-				return;
+			return_if_fail (app != null);
 			
 			foreach (var window in get_ordered_window_stack (app))
 				if (!window.is_maximized ())
@@ -270,8 +260,7 @@ namespace Plank.Services.Windows
 		
 		public static void unmaximize (Bamf.Application? app)
 		{
-			if (app == null)
-				return;
+			return_if_fail (app != null);
 			
 			foreach (var window in get_ordered_window_stack (app))
 				if (window.is_maximized ())
@@ -281,9 +270,7 @@ namespace Plank.Services.Windows
 		public static ArrayList<Wnck.Window> get_ordered_window_stack (Bamf.Application? app)
 		{
 			var windows = new ArrayList<Wnck.Window> ();
-			
-			if (app == null)
-				return windows;
+			return_val_if_fail (app != null, windows);
 			
 			Screen.get_default ();
 			unowned Array<uint32> xids = app.get_xids ();
@@ -299,8 +286,7 @@ namespace Plank.Services.Windows
 		
 		public static void smart_focus (Bamf.Application? app)
 		{
-			if (app == null)
-				return;
+			return_if_fail (app != null);
 
 			var windows = get_ordered_window_stack (app);
 			

@@ -310,8 +310,7 @@ namespace Plank
 		
 		void handle_geometry_changed (Wnck.Window? w)
 		{
-			if (w == null)
-				return;
+			return_if_fail (w != null);
 			
 			var geo = window_geometry (w);
 			if (geo == last_window_rect)
