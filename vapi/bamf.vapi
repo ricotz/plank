@@ -9,8 +9,8 @@ namespace Bamf {
 		public unowned string get_application_type ();
 		public unowned string get_desktop_file ();
 		public bool get_show_menu_stubs ();
-		public unowned GLib.List get_windows ();
-		public unowned GLib.Array get_xids ();
+		public unowned GLib.List<Bamf.View> get_windows ();
+		public unowned GLib.Array<uint32> get_xids ();
 		public virtual signal void window_added (Bamf.View p0);
 		public virtual signal void window_removed (Bamf.View p0);
 	}
@@ -37,22 +37,22 @@ namespace Bamf {
 		[CCode (has_construct_function = false)]
 		protected Matcher ();
 		public bool application_is_running (string application);
-		public unowned Bamf.Application get_active_application ();
-		public unowned Bamf.Window get_active_window ();
-		public unowned Bamf.Application get_application_for_desktop_file (string desktop_file_path, bool create_if_not_found);
-		public unowned Bamf.Application get_application_for_window (Bamf.Window window);
-		public unowned Bamf.Application get_application_for_xid (uint32 xid);
-		public unowned GLib.List get_applications ();
+		public unowned Bamf.Application? get_active_application ();
+		public unowned Bamf.Window? get_active_window ();
+		public unowned Bamf.Application? get_application_for_desktop_file (string desktop_file_path, bool create_if_not_found);
+		public unowned Bamf.Application? get_application_for_window (Bamf.Window window);
+		public unowned Bamf.Application? get_application_for_xid (uint32 xid);
+		public unowned GLib.List<Bamf.View>? get_applications ();
 		public static unowned Bamf.Matcher get_default ();
-		public unowned GLib.List get_running_applications ();
-		public unowned GLib.List get_tabs ();
-		public unowned GLib.List get_windows ();
-		public unowned GLib.Array get_xids_for_application (string application);
+		public unowned GLib.List<Bamf.View>? get_running_applications ();
+		public unowned GLib.List<Bamf.View>? get_tabs ();
+		public unowned GLib.List<Bamf.View>? get_windows ();
+		public unowned GLib.Array<uint32>? get_xids_for_application (string application);
 		public void register_favorites ([CCode (array_length = false)] string[] favorites);
-		public virtual signal void active_application_changed (GLib.Object p0, GLib.Object p1);
-		public virtual signal void active_window_changed (GLib.Object p0, GLib.Object p1);
-		public virtual signal void view_closed (GLib.Object p0);
-		public virtual signal void view_opened (GLib.Object p0);
+		public virtual signal void active_application_changed (Bamf.View? p0, Bamf.View? p1);
+		public virtual signal void active_window_changed (Bamf.View? p0, Bamf.View? p1);
+		public virtual signal void view_closed (Bamf.View p0);
+		public virtual signal void view_opened (Bamf.View p0);
 	}
 	[CCode (cheader_filename = "libbamf/libbamf.h", type_check_function = "BAMF_IS_TAB_SOURCE")]
 	public class TabSource : GLib.Object {
@@ -83,11 +83,11 @@ namespace Bamf {
 		protected View ();
 		[NoWrapper]
 		public virtual Bamf.ClickBehavior click_behavior ();
-		public virtual unowned GLib.List get_children ();
+		public virtual unowned GLib.List<Bamf.View>? get_children ();
 		public Bamf.ClickBehavior get_click_suggestion ();
-		public virtual unowned string get_icon ();
-		public virtual unowned string get_name ();
-		public unowned string get_view_type ();
+		public virtual unowned string? get_icon ();
+		public virtual unowned string? get_name ();
+		public unowned string? get_view_type ();
 		public virtual bool is_active ();
 		public bool is_closed ();
 		public virtual bool is_running ();
@@ -111,8 +111,8 @@ namespace Bamf {
 		[NoAccessorMethod]
 		public bool user_visible { get; }
 		public virtual signal void active_changed (bool active);
-		public virtual signal void child_added (Bamf.View child);
-		public virtual signal void child_removed (Bamf.View child);
+		public virtual signal void child_added (Bamf.View? child);
+		public virtual signal void child_removed (Bamf.View? child);
 		public virtual signal void closed ();
 		public virtual signal void name_changed (string old_name, string new_name);
 		public virtual signal void running_changed (bool running);

@@ -1,17 +1,41 @@
 Bamf cprefix="Bamf" lower_case_cprefix="bamf_" cheader_filename="libbamf/libbamf.h"
 
 BamfApplication type_check_function="BAMF_IS_APPLICATION"
+bamf_application_get_windows type_name="GLib.List<Bamf.View>"
+bamf_application_get_xids type_name="GLib.Array<uint32>"
 
 BamfControl type_check_function="BAMF_IS_CONTROL"
 
 BamfIndicator type_check_function="BAMF_IS_INDICATOR"
 
 BamfMatcher type_check_function="BAMF_IS_MATCHER"
+bamf_matcher_get_active_application nullable="1"
+bamf_matcher_get_active_window nullable="1"
+bamf_matcher_get_applications type_name="GLib.List<Bamf.View>" nullable="1"
+bamf_matcher_get_application_for_desktop_file nullable="1"
+bamf_matcher_get_application_for_window nullable="1"
+bamf_matcher_get_application_for_xid nullable="1"
+bamf_matcher_get_running_applications type_name="GLib.List<Bamf.View>" nullable="1"
+bamf_matcher_get_tabs type_name="GLib.List<Bamf.View>" nullable="1"
+bamf_matcher_get_windows type_name="GLib.List<Bamf.View>" nullable="1"
+bamf_matcher_get_xids_for_application type_name="GLib.Array<uint32>" nullable="1"
 bamf_matcher_register_favorites.favorites is_array="1" no_array_length="1"
+BamfMatcher::active_application_changed.p0 type_name="Bamf.View" nullable="1"
+BamfMatcher::active_application_changed.p1 type_name="Bamf.View" nullable="1"
+BamfMatcher::active_window_changed.p0 type_name="Bamf.View" nullable="1"
+BamfMatcher::active_window_changed.p1 type_name="Bamf.View" nullable="1"
+BamfMatcher::view_closed.p0 type_name="Bamf.View"
+BamfMatcher::view_opened.p0 type_name="Bamf.View"
 
 BamfTabSource type_check_function="BAMF_IS_TAB_SOURCE"
 
 BamfView type_check_function="BAMF_IS_VIEW"
+bamf_view_get_children type_name="GLib.List<Bamf.View>" nullable="1"
+bamf_view_get_icon nullable="1"
+bamf_view_get_name nullable="1"
+bamf_view_get_view_type nullable="1"
 bamf_view_user_visible name="is_user_visible"
+BamfView::child_added.child nullable="1"
+BamfView::child_removed.child nullable="1"
 
 BamfWindow type_check_function="BAMF_IS_WINDOW"
