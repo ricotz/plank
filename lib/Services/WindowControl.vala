@@ -28,8 +28,10 @@ namespace Plank.Services.Windows
 		// when changing a viewport, wait this time (for viewport change animations) before continuing
 		public static const uint VIEWPORT_CHANGE_DELAY = 200;
 		
-		public static unowned Gdk.Pixbuf? get_app_icon (Bamf.Application app)
+		public static unowned Gdk.Pixbuf? get_app_icon (Bamf.Application? app)
 		{
+			return_val_if_fail (app != null, null);
+
 			unowned Gdk.Pixbuf? pbuf = null;
 			
 			Screen.get_default ();
