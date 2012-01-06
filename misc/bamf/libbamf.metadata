@@ -1,12 +1,15 @@
 Bamf cprefix="Bamf" lower_case_cprefix="bamf_" cheader_filename="libbamf/libbamf.h"
 
 BamfApplication type_check_function="BAMF_IS_APPLICATION"
-bamf_application_get_windows type_name="GLib.List<Bamf.View>"
-bamf_application_get_xids type_name="GLib.Array<uint32>"
+bamf_application_get_application_type nullable="1"
+bamf_application_get_desktop_file nullable="1"
+bamf_application_get_windows type_name="GLib.List<Bamf.View>" nullable="1"
+bamf_application_get_xids type_name="GLib.Array<uint32>" nullable="1"
 
 BamfControl type_check_function="BAMF_IS_CONTROL"
 
 BamfIndicator type_check_function="BAMF_IS_INDICATOR"
+bamf_indicator_get_* nullable="1"
 
 BamfMatcher type_check_function="BAMF_IS_MATCHER"
 bamf_matcher_get_active_application nullable="1"
@@ -39,3 +42,4 @@ BamfView::child_added.child nullable="1"
 BamfView::child_removed.child nullable="1"
 
 BamfWindow type_check_function="BAMF_IS_WINDOW"
+bamf_window_get_transient nullable="1"

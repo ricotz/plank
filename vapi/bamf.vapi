@@ -6,11 +6,11 @@ namespace Bamf {
 	public class Application : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Application ();
-		public unowned string get_application_type ();
-		public unowned string get_desktop_file ();
+		public unowned string? get_application_type ();
+		public unowned string? get_desktop_file ();
 		public bool get_show_menu_stubs ();
-		public unowned GLib.List<Bamf.View> get_windows ();
-		public unowned GLib.Array<uint32> get_xids ();
+		public unowned GLib.List<Bamf.View>? get_windows ();
+		public unowned GLib.Array<uint32>? get_xids ();
 		public virtual signal void window_added (Bamf.View p0);
 		public virtual signal void window_removed (Bamf.View p0);
 	}
@@ -28,9 +28,9 @@ namespace Bamf {
 	public class Indicator : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Indicator ();
-		public unowned string get_dbus_menu_path ();
-		public unowned string get_remote_address ();
-		public unowned string get_remote_path ();
+		public unowned string? get_dbus_menu_path ();
+		public unowned string? get_remote_address ();
+		public unowned string? get_remote_path ();
 	}
 	[CCode (cheader_filename = "libbamf/libbamf.h", type_check_function = "BAMF_IS_MATCHER")]
 	public class Matcher : GLib.Object {
@@ -123,7 +123,7 @@ namespace Bamf {
 	public class Window : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Window ();
-		public unowned Bamf.Window get_transient ();
+		public unowned Bamf.Window? get_transient ();
 		public Bamf.WindowType get_window_type ();
 		public uint32 get_xid ();
 		public ulong last_active ();
