@@ -58,30 +58,26 @@ namespace Plank.Services.Windows
 			bamf_matcher = null;
 		}
 		
-		void handle_app_changed (Object? arg1, Object? arg2)
+		void handle_app_changed (Bamf.View? arg1, Bamf.View? arg2)
 		{
 			app_changed (arg1 as Bamf.Application, arg2 as Bamf.Application);
 		}
 		
-		void handle_window_changed (Object? arg1, Object? arg2)
+		void handle_window_changed (Bamf.View? arg1, Bamf.View? arg2)
 		{
 			window_changed (arg1 as Bamf.Window, arg2 as Bamf.Window);
 		}
 		
-		void view_opened (Object? arg1)
+		void view_opened (Bamf.View arg1)
 		{
-			return_if_fail (arg1 != null);
-			
 			if (arg1 is Bamf.Window)
 				window_opened (arg1 as Bamf.Window);
 			else if (arg1 is Bamf.Application)
 				app_opened (arg1 as Bamf.Application);		
 		}
 		
-		void view_closed (Object? arg1)
+		void view_closed (Bamf.View arg1)
 		{
-			return_if_fail (arg1 != null);
-			
 			if (arg1 is Bamf.Window)
 				window_closed (arg1 as Bamf.Window);
 			else if (arg1 is Bamf.Application)
@@ -90,19 +86,25 @@ namespace Plank.Services.Windows
 		
 		public ArrayList<Bamf.Application> active_launchers ()
 		{
-			unowned GLib.List<Bamf.Application> apps = bamf_matcher.get_applications ();
+			unowned GLib.List<Bamf.View>? apps = bamf_matcher.get_applications ();
 			var list = new ArrayList<Bamf.Application> ();
-			foreach (var a in apps)
-				list.add (a);
+			return_val_if_fail (apps != null, list);
+			
+			foreach (var app in apps)
+				if (app is Bamf.Application)
+					list.add (app as Bamf.Application);
+			
 			return list;
 		}
 		
 		public Bamf.Application? app_for_launcher (string launcher)
 		{
-			unowned GLib.List<Bamf.Application> apps = bamf_matcher.get_applications ();
+			unowned GLib.List<Bamf.View>? apps = bamf_matcher.get_applications ();
+			return_val_if_fail (apps != null, null);
+			
 			foreach (var app in apps)
-				if (app.get_desktop_file () == launcher)
-					return app;
+				if (app is Bamf.Application && (app as Bamf.Application).get_desktop_file () == launcher)
+					return app as Bamf.Application;
 			
 			return null;
 		}
