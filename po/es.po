@@ -7,64 +7,64 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-04-11 08:16+0200\n"
+"POT-Creation-Date: 2012-01-09 13:07+0000\n"
 "PO-Revision-Date: 2011-04-24 12:47+0000\n"
 "Last-Translator: Fitoschido <fitoschido@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-30 17:04+0000\n"
-"X-Generator: Launchpad (build 13117)\n"
+"X-Launchpad-Export-Date: 2012-01-09 23:00+0000\n"
+"X-Generator: Launchpad (build 14640)\n"
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
 msgstr "Plank. Estúpidamente simple."
 
-#: ../lib/Items/ApplicationDockItem.vala:203
+#: ../lib/Items/ApplicationDockItem.vala:226
 msgid "_Keep in Dock"
 msgstr "_Mantener en el dock"
 
-#: ../lib/Items/ApplicationDockItem.vala:221
+#: ../lib/Items/ApplicationDockItem.vala:248
 msgid "_Open New Window"
 msgstr "_Abrir nueva ventana"
 
-#: ../lib/Items/ApplicationDockItem.vala:227
+#: ../lib/Items/ApplicationDockItem.vala:254
 msgid "Unma_ximize"
 msgstr "Desma_ximizar"
 
-#: ../lib/Items/ApplicationDockItem.vala:231
+#: ../lib/Items/ApplicationDockItem.vala:258
 msgid "Ma_ximize"
 msgstr "Ma_ximizar"
 
-#: ../lib/Items/ApplicationDockItem.vala:237
+#: ../lib/Items/ApplicationDockItem.vala:264
 msgid "_Restore"
 msgstr "_Restaurar"
 
-#: ../lib/Items/ApplicationDockItem.vala:241
+#: ../lib/Items/ApplicationDockItem.vala:268
 msgid "Mi_nimize"
 msgstr "Mi_nimizar"
 
-#: ../lib/Items/ApplicationDockItem.vala:246
+#: ../lib/Items/ApplicationDockItem.vala:273
 msgid "_Close All"
 msgstr "_Cerrar todo"
 
-#: ../lib/Items/FileDockItem.vala:216
+#: ../lib/Items/FileDockItem.vala:239
 msgid "_Open in File Browser"
 msgstr "A_brir en el navegador de archivos"
 
-#: ../lib/Items/FileDockItem.vala:229
+#: ../lib/Items/FileDockItem.vala:252
 msgid "_Open"
 msgstr "_Abrir"
 
-#: ../lib/Items/FileDockItem.vala:233
+#: ../lib/Items/FileDockItem.vala:256
 msgid "Open Containing _Folder"
 msgstr "Abrir _carpeta contenedora"
 
-#: ../lib/Items/PlankDockItem.vala:43
+#: ../lib/Items/PlankDockItem.vala:65
 msgid "Get _Help Online..."
 msgstr "Obtener _ayuda en línea..."
 
-#: ../lib/Items/PlankDockItem.vala:49
+#: ../lib/Items/PlankDockItem.vala:69
 msgid "_Translate This Application..."
 msgstr "_Traducir esta aplicación..."
