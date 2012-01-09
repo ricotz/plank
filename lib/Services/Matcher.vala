@@ -88,7 +88,10 @@ namespace Plank.Services.Windows
 		{
 			unowned GLib.List<Bamf.View>? apps = bamf_matcher.get_running_applications ();
 			var list = new ArrayList<Bamf.Application> ();
-			return_val_if_fail (apps != null, list);
+			
+			warn_if_fail (apps != null);
+			if (apps == null)
+				return list;
 			
 			foreach (var app in apps)
 				if (app is Bamf.Application)
@@ -100,7 +103,10 @@ namespace Plank.Services.Windows
 		public Bamf.Application? app_for_launcher (string launcher)
 		{
 			unowned GLib.List<Bamf.View>? apps = bamf_matcher.get_applications ();
-			return_val_if_fail (apps != null, null);
+			
+			warn_if_fail (apps != null);
+			if (apps == null)
+				return null;
 			
 			foreach (var app in apps)
 				if (app is Bamf.Application && (app as Bamf.Application).get_desktop_file () == launcher)
