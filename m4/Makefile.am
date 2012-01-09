@@ -1,5 +1,0 @@
-EXTRA_DIST = \
-	$(NULL)
-
-MAINTAINERCLEANFILES = Makefile.in
-
