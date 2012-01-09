@@ -206,8 +206,6 @@ namespace Plank
 		{
 			if (remove is TransientDockItem)
 				remove_item (remove);
-			else if (remove is ApplicationDockItem)
-				(remove as ApplicationDockItem).set_app (null);
 		}
 		
 		void set_item_positions ()
