@@ -33,10 +33,6 @@ msgstr "_Ouvrir Une Nouvelle Fenêtre"
 msgid "Unma_ximize"
 msgstr "R_estaurer"
 
-#: ../lib/Items/ApplicationDockItem.vala:258
-msgid "Ma_ximize"
-msgstr ""
-
 #: ../lib/Items/ApplicationDockItem.vala:264
 msgid "_Restore"
 msgstr "Re_staurer"
@@ -56,15 +52,3 @@ msgstr "_Ouvrir dans le Navigateur de Fichiers"
 #: ../lib/Items/FileDockItem.vala:252
 msgid "_Open"
 msgstr "_Ouvrir"
-
-#: ../lib/Items/FileDockItem.vala:256
-msgid "Open Containing _Folder"
-msgstr ""
-
-#: ../lib/Items/PlankDockItem.vala:65
-msgid "Get _Help Online..."
-msgstr ""
-
-#: ../lib/Items/PlankDockItem.vala:69
-msgid "_Translate This Application..."
-msgstr ""
