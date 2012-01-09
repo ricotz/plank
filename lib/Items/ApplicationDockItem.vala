@@ -203,7 +203,7 @@ namespace Plank.Items
 		 */
 		protected override void on_scrolled (ScrollDirection direction, ModifierType mod)
 		{
-			if (WindowControl.get_num_windows (App) == 0 ||
+			if (App == null || WindowControl.get_num_windows (App) == 0 ||
 				(new DateTime.now_utc ().difference (LastScrolled) < WindowControl.VIEWPORT_CHANGE_DELAY * 1000))
 				return;
 			
