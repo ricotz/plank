@@ -223,8 +223,6 @@ namespace Plank
 		{
 			if (remove is TransientDockItem)
 				remove_item (remove);
-			else if (remove is ApplicationDockItem)
-				(remove as ApplicationDockItem).set_app (null);
 		}
 		
 		bool file_is_dockitem (FileInfo info)

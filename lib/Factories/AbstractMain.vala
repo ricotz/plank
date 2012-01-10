@@ -17,9 +17,7 @@
 
 using Gtk;
 using Unique;
-#if VALA_0_12
 using Posix;
-#endif
 
 using Plank.Services;
 using Plank.Services.Windows;
@@ -27,8 +25,7 @@ using Plank.Widgets;
 
 namespace Plank.Factories
 {
-#if VALA_0_12
-#else
+#if !VALA_0_12
 	struct utsname
 	{
 		char sysname [65];
@@ -159,8 +156,7 @@ namespace Plank.Factories
 		[CCode (cheader_filename = "sys/prctl.h", cname = "prctl")]
 		extern static int prctl (int option, string arg2, ulong arg3, ulong arg4, ulong arg5);
 		
-#if VALA_0_12
-#else
+#if !VALA_0_12
 		[CCode (cheader_filename = "sys/utsname.h", cname = "uname")]
 		extern static int uname (utsname buf);
 #endif

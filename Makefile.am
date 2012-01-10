@@ -1,11 +1,8 @@
 include $(top_srcdir)/Makefile.common
 
-ACLOCAL_AMFLAGS = -I m4
-
 SUBDIRS = \
 	data \
 	lib \
-	m4 \
 	man \
 	po \
 	vapi \

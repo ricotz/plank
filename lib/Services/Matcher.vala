@@ -38,46 +38,46 @@ namespace Plank.Services.Windows
 			return matcher;
 		}
 		
+		Bamf.Matcher? bamf_matcher;
+		
 		private Matcher ()
 		{
-			Bamf.Matcher.get_default ().active_application_changed.connect (handle_app_changed);
-			Bamf.Matcher.get_default ().active_window_changed.connect (handle_window_changed);
-			Bamf.Matcher.get_default ().view_opened.connect (view_opened);
-			Bamf.Matcher.get_default ().view_closed.connect (view_closed);
+			bamf_matcher = Bamf.Matcher.get_default ();
+			bamf_matcher.active_application_changed.connect (handle_app_changed);
+			bamf_matcher.active_window_changed.connect (handle_window_changed);
+			bamf_matcher.view_opened.connect (view_opened);
+			bamf_matcher.view_closed.connect (view_closed);
 		}
 		
 		~Matcher ()
 		{
-			Bamf.Matcher.get_default ().active_application_changed.disconnect (handle_app_changed);
-			Bamf.Matcher.get_default ().active_window_changed.disconnect (handle_window_changed);
-			Bamf.Matcher.get_default ().view_opened.disconnect (view_opened);
-			Bamf.Matcher.get_default ().view_closed.disconnect (view_closed);
+			bamf_matcher.active_application_changed.disconnect (handle_app_changed);
+			bamf_matcher.active_window_changed.disconnect (handle_window_changed);
+			bamf_matcher.view_opened.disconnect (view_opened);
+			bamf_matcher.view_closed.disconnect (view_closed);
+			bamf_matcher = null;
 		}
 		
-		void handle_app_changed (Object? arg1, Object? arg2)
+		void handle_app_changed (Bamf.View? arg1, Bamf.View? arg2)
 		{
 			app_changed (arg1 as Bamf.Application, arg2 as Bamf.Application);
 		}
 		
-		void handle_window_changed (Object? arg1, Object? arg2)
+		void handle_window_changed (Bamf.View? arg1, Bamf.View? arg2)
 		{
 			window_changed (arg1 as Bamf.Window, arg2 as Bamf.Window);
 		}
 		
-		void view_opened (Object? arg1)
+		void view_opened (Bamf.View arg1)
 		{
-			if (arg1 == null)
-				return;
 			if (arg1 is Bamf.Window)
 				window_opened (arg1 as Bamf.Window);
 			else if (arg1 is Bamf.Application)
 				app_opened (arg1 as Bamf.Application);		
 		}
 		
-		void view_closed (Object? arg1)
+		void view_closed (Bamf.View arg1)
 		{
-			if (arg1 == null)
-				return;
 			if (arg1 is Bamf.Window)
 				window_closed (arg1 as Bamf.Window);
 			else if (arg1 is Bamf.Application)
@@ -86,19 +86,31 @@ namespace Plank.Services.Windows
 		
 		public ArrayList<Bamf.Application> active_launchers ()
 		{
-			unowned GLib.List<Bamf.Application> apps = Bamf.Matcher.get_default ().get_applications ();
+			unowned GLib.List<Bamf.View>? apps = bamf_matcher.get_running_applications ();
 			var list = new ArrayList<Bamf.Application> ();
-			foreach (var a in apps)
-				list.add (a);
+			
+			warn_if_fail (apps != null);
+			if (apps == null)
+				return list;
+			
+			foreach (var app in apps)
+				if (app is Bamf.Application)
+					list.add (app as Bamf.Application);
+			
 			return list;
 		}
 		
 		public Bamf.Application? app_for_launcher (string launcher)
 		{
-			unowned GLib.List<Bamf.Application> apps = Bamf.Matcher.get_default ().get_applications ();
+			unowned GLib.List<Bamf.View>? apps = bamf_matcher.get_applications ();
+			
+			warn_if_fail (apps != null);
+			if (apps == null)
+				return null;
+			
 			foreach (var app in apps)
-				if (app.get_desktop_file () == launcher)
-					return app;
+				if (app is Bamf.Application && (app as Bamf.Application).get_desktop_file () == launcher)
+					return app as Bamf.Application;
 			
 			return null;
 		}
@@ -110,7 +122,7 @@ namespace Plank.Services.Windows
 			for (var i = 0; i < favs.size; i++)
 				paths [i] = favs.get (i);
 			
-			Bamf.Matcher.get_default ().register_favorites (paths);
+			bamf_matcher.register_favorites (paths);
 		}
 	}
 }

@@ -61,6 +61,9 @@ namespace Plank
 		 */
 		public bool DockHovered { get; set; default = false; }
 		
+		uint timer_unhide = 0;
+		bool pointer_update = true;
+		
 		/**
 		 * Creates a new instance of a HideManager, which handles
 		 * checking if a dock should hide or not.
@@ -73,7 +76,7 @@ namespace Plank
 			
 			disabled = false;
 			windows_intersect = false;
-			controller.renderer.hide ();
+			hide ();
 			
 			notify["DockHovered"].connect (update_hidden);
 			controller.prefs.changed.connect (prefs_changed);
@@ -169,23 +172,49 @@ namespace Plank
 			
 			switch (controller.prefs.HideMode) {
 			case HideType.NONE:
-				controller.renderer.show ();
+				show ();
 				break;
 			
 			case HideType.INTELLIGENT:
 				if (DockHovered || !windows_intersect)
-					controller.renderer.show ();
+					show ();
 				else
-					controller.renderer.hide ();
+					hide ();
 				break;
 			
 			case HideType.AUTO:
 				if (DockHovered)
-					controller.renderer.show ();
+					show ();
 				else
-					controller.renderer.hide ();
+					hide ();
 				break;
 			}
+			pointer_update = true;
+		}
+		
+		void hide ()
+		{
+			if (timer_unhide > 0) {
+				GLib.Source.remove (timer_unhide);
+				timer_unhide = 0;
+			}
+			controller.renderer.hide ();
+		}
+
+		void show ()
+		{
+			if (!pointer_update || controller.prefs.UnhideDelay == 0) {
+				controller.renderer.show ();
+				return;
+			}
+			
+			if (timer_unhide > 0)
+				return;
+			timer_unhide = GLib.Timeout.add (controller.prefs.UnhideDelay, () => {
+				controller.renderer.show ();
+				timer_unhide = 0;
+				return false;
+			});
 		}
 		
 		bool enter_notify_event (EventCrossing event)
@@ -269,6 +298,7 @@ namespace Plank
 			if (windows_intersect != intersect)
 				windows_intersect = intersect;
 			
+			pointer_update = false;
 			update_hidden ();
 		}
 		
@@ -301,8 +331,7 @@ namespace Plank
 		
 		void handle_geometry_changed (Wnck.Window? w)
 		{
-			if (w == null)
-				return;
+			return_if_fail (w != null);
 			
 			var geo = window_geometry (w);
 			if (geo == last_window_rect)
@@ -342,6 +371,11 @@ namespace Plank
 			if (timer_prefs_changed > 0) {
 				GLib.Source.remove (timer_prefs_changed);
 				timer_prefs_changed = 0;
+			}
+			
+			if (timer_unhide > 0) {
+				GLib.Source.remove (timer_unhide);
+				timer_unhide = 0;
 			}
 		}
 	}

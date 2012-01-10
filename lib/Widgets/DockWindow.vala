@@ -58,7 +58,8 @@ namespace Plank.Widgets
 		/**
 		 * The controller for this dock.
 		 */
-		DockController controller { get; set; }
+		protected DockController controller;
+		
 		
 		/**
 		 * The currently hovered item (if any).

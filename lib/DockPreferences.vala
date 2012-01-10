@@ -43,6 +43,9 @@ namespace Plank
 		[Description(nick = "hide-mode", blurb = "If 0, the dock won't hide.  If 1, the dock intelligently hides.  If 2, the dock auto-hides.")]
 		public HideType HideMode { get; set; }
 		
+		[Description(nick = "unhide-delay", blurb = "Time (in ms) to wait before unhiding the dock.")]
+		public uint UnhideDelay { get; set; }
+		
 		[Description(nick = "monitor", blurb = "The monitor number for the dock.")]
 		public int Monitor { get; set; }
 		
@@ -81,6 +84,7 @@ namespace Plank
 			//Zoom = 2.0;
 			IconSize = 48;
 			HideMode = HideType.INTELLIGENT;
+			UnhideDelay = 0;
 			Monitor = Screen.get_default ().get_primary_monitor ();
 			DockItems = "";
 		}
@@ -140,6 +144,9 @@ namespace Plank
 				break;
 			
 			case "HideMode":
+				break;
+			
+			case "UnhideDelay":
 				break;
 			
 			case "Monitor":

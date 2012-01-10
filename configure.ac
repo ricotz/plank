@@ -121,6 +121,9 @@ AC_ARG_ENABLE([benchmark],
                              [Enable output of benchmarking data in logs]),
               [enable_benchmark=$enableval],
               [enable_benchmark=no])
+if test "x$enable_benchmark" = "xyes" ; then
+    VALAFLAGS="$VALAFLAGS --define BENCHMARK"
+fi
 
 # Force Vala if generated source is missing or outdated
 if test \
@@ -157,11 +160,6 @@ if test "x$enable_vala" = "xyes" ; then
 
     PLANK_CORE_VALAFLAGS="$VALAFLAGS $PLANK_CORE_VALA_PKGS"
     AC_SUBST(PLANK_CORE_VALAFLAGS)
-fi
-
-if test "x$enable_benchmark" = "xyes" ; then
-    VALAFLAGS="$VALAFLAGS -D BENCHMARK"
-    AC_SUBST(VALAFLAGS)
 fi
 
 # -----------------------------------------------------------
@@ -223,7 +221,6 @@ data/themes/Matte/Makefile
 data/themes/Transparent/Makefile
 lib/Makefile
 lib/libplank.pc
-m4/Makefile
 man/Makefile
 src/Makefile
 docs/Makefile

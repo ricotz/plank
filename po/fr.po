@@ -1,4 +1,4 @@
-# German translation for plank
+# French translation for plank
 # Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the plank package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-01-09 13:07+0000\n"
-"PO-Revision-Date: 2011-06-21 08:48+0000\n"
-"Last-Translator: grrrk <Unknown>\n"
-"Language-Team: German <de@li.org>\n"
+"PO-Revision-Date: 2011-09-14 09:15+0000\n"
+"Last-Translator: Devil505 <Unknown>\n"
+"Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,52 +19,36 @@ msgstr ""
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "Plank. Lächerlich einfach."
+msgstr "Plank. Stupidement simple."
 
 #: ../lib/Items/ApplicationDockItem.vala:226
 msgid "_Keep in Dock"
-msgstr "Im Dock behalten"
+msgstr "_Épingler au Dock"
 
 #: ../lib/Items/ApplicationDockItem.vala:248
 msgid "_Open New Window"
-msgstr "_Neues Fenster öffnen"
+msgstr "_Ouvrir Une Nouvelle Fenêtre"
 
 #: ../lib/Items/ApplicationDockItem.vala:254
 msgid "Unma_ximize"
-msgstr "Ma_ximierung aufheben"
-
-#: ../lib/Items/ApplicationDockItem.vala:258
-msgid "Ma_ximize"
-msgstr "Ma_ximieren"
+msgstr "R_estaurer"
 
 #: ../lib/Items/ApplicationDockItem.vala:264
 msgid "_Restore"
-msgstr "_Wiederherstellen"
+msgstr "Re_staurer"
 
 #: ../lib/Items/ApplicationDockItem.vala:268
 msgid "Mi_nimize"
-msgstr "Mi_nimieren"
+msgstr "Réd_uire"
 
 #: ../lib/Items/ApplicationDockItem.vala:273
 msgid "_Close All"
-msgstr "_Alle schließen"
+msgstr "_Fermer tout"
 
 #: ../lib/Items/FileDockItem.vala:239
 msgid "_Open in File Browser"
-msgstr "Im _Dateimanager öffnen"
+msgstr "_Ouvrir dans le Navigateur de Fichiers"
 
 #: ../lib/Items/FileDockItem.vala:252
 msgid "_Open"
-msgstr "Ö_ffnen"
-
-#: ../lib/Items/FileDockItem.vala:256
-msgid "Open Containing _Folder"
-msgstr "Öffne enthaltenen _Ordner"
-
-#: ../lib/Items/PlankDockItem.vala:65
-msgid "Get _Help Online..."
-msgstr "_Hilfe Online bekommen..."
-
-#: ../lib/Items/PlankDockItem.vala:69
-msgid "_Translate This Application..."
-msgstr "Diese Anwendung überse_tzen..."
+msgstr "_Ouvrir"

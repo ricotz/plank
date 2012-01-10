@@ -49,7 +49,7 @@ namespace Plank.Items
 		 */
 		public signal void app_closed ();
 		
-		internal Bamf.Application? App { get; private set; }
+		internal Bamf.Application? App { get; private set; default = null; }
 		
 		ArrayList<string> shortcuts = new ArrayList<string> ();
 		HashMap<string, string> shortcut_map = new HashMap<string, string> (str_hash, str_equal);
@@ -74,30 +74,42 @@ namespace Plank.Items
 			Prefs.changed["Launcher"].disconnect (handle_launcher_changed);
 			Prefs.deleted.disconnect (handle_deleted);
 			
-			set_app (null);
+			unset_app ();
 			stop_monitor ();
 		}
 		
-		internal void set_app (Bamf.Application? app)
+		internal void set_app (Bamf.Application app)
 		{
-			if (App != null) {
-				App.active_changed.disconnect (update_active);
-				App.urgent_changed.disconnect (update_urgent);
-				App.child_added.disconnect (update_indicator);
-				App.child_removed.disconnect (update_indicator);
-				App.closed.disconnect (signal_app_closed);
-			}
+			if (App == app)
+				return;
+			
+			unset_app ();
 			
 			App = app;
-			update_states ();
 			
-			if (app != null) {
-				app.active_changed.connect (update_active);
-				app.urgent_changed.connect (update_urgent);
-				app.child_added.connect (update_indicator);
-				app.child_removed.connect (update_indicator);
-				app.closed.connect (signal_app_closed);
-			}
+			App.active_changed.connect (update_active);
+			App.urgent_changed.connect (update_urgent);
+			App.child_added.connect (update_indicator);
+			App.child_removed.connect (update_indicator);
+			App.closed.connect (signal_app_closed);
+				
+			update_states ();
+		}
+		
+		void unset_app ()
+		{	
+			if (App == null)
+				return;
+			
+			App.active_changed.disconnect (update_active);
+			App.urgent_changed.disconnect (update_urgent);
+			App.child_added.disconnect (update_indicator);
+			App.child_removed.disconnect (update_indicator);
+			App.closed.disconnect (signal_app_closed);
+			
+			App = null;
+			
+			update_states ();
 		}
 		
 		void handle_launcher_changed ()
@@ -109,6 +121,8 @@ namespace Plank.Items
 		
 		void signal_app_closed ()
 		{
+			unset_app ();
+			
 			app_closed ();
 		}
 		
@@ -119,6 +133,7 @@ namespace Plank.Items
 		
 		void update_app ()
 		{
+			unset_app ();
 			set_app (Matcher.get_default ().app_for_launcher (Prefs.Launcher));
 		}
 		
@@ -203,7 +218,7 @@ namespace Plank.Items
 		 */
 		protected override void on_scrolled (ScrollDirection direction, ModifierType mod)
 		{
-			if (WindowControl.get_num_windows (App) == 0 ||
+			if (App == null || WindowControl.get_num_windows (App) == 0 ||
 				(new DateTime.now_utc ().difference (LastScrolled) < WindowControl.VIEWPORT_CHANGE_DELAY * 1000))
 				return;
 			
@@ -302,7 +317,7 @@ namespace Plank.Items
 						
 						var pbuf = WindowControl.get_window_icon (window);
 						if (pbuf == null)
-							DrawingService.load_icon (Icon, width, height);
+							pbuf = DrawingService.load_icon (Icon, width, height);
 						else
 							pbuf = DrawingService.ar_scale (pbuf, width, height);
 						
@@ -371,6 +386,7 @@ namespace Plank.Items
 			string icon, text;
 			parse_launcher (Prefs.Launcher, out icon, out text, shortcuts, shortcut_map);
 			Icon = icon;
+			ForcePixbuf = null;
 			Text = text;
 			
 			start_monitor ();
