@@ -49,7 +49,11 @@ namespace Plank.Services.Windows
 		public static unowned Gdk.Pixbuf? get_window_icon (Bamf.Window window)
 		{
 			var w = Wnck.Window.@get (window.get_xid ());
-			return_val_if_fail (w != null, null);
+			
+			warn_if_fail (w != null);
+			
+			if (w == null)
+				return null;
 			
 			return w.get_icon ();
 		}
@@ -155,7 +159,11 @@ namespace Plank.Services.Windows
 		{
 			Screen.get_default ();
 			var w = Wnck.Window.@get (window.get_xid ());
-			return_if_fail (w != null);
+			
+			warn_if_fail (w != null);
+			
+			if (w == null)
+				return;
 			
 			center_and_focus_window (w);
 		}
@@ -163,10 +171,14 @@ namespace Plank.Services.Windows
 		public static void focus_window_by_xid (uint32 xid)
 		{
 			Screen.get_default ();
-			var window = Wnck.Window.@get (xid);
-			return_if_fail (window != null);
+			var w = Wnck.Window.@get (xid);
 			
-			center_and_focus_window (window);
+			warn_if_fail (w != null);
+			
+			if (w == null)
+				return;
+			
+			center_and_focus_window (w);
 		}
 		
 		public static void focus (Bamf.Application app)
