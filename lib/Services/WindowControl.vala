@@ -35,6 +35,8 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
+			warn_if_fail (xids != null);
+			
 			for (var i = 0; xids != null && i < xids.length && pbuf == null; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null)
@@ -71,6 +73,8 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
+			warn_if_fail (xids != null);
+			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null && window.is_maximized ())
@@ -84,6 +88,8 @@ namespace Plank.Services.Windows
 		{
 			Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
 			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -115,6 +121,8 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
+			warn_if_fail (xids != null);
+			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null)
@@ -133,6 +141,8 @@ namespace Plank.Services.Windows
 		{
 			Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
 			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -183,6 +193,11 @@ namespace Plank.Services.Windows
 			Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
+			warn_if_fail (xids != null);
+			
+			if (xids == null)
+				return;
+			
 			var i = find_active_xid_index (xids);
 			i = i < xids.length ? i - 1 : 0;
 			
@@ -196,6 +211,11 @@ namespace Plank.Services.Windows
 		{
 			Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
+			
+			if (xids == null)
+				return;
 			
 			var i = find_active_xid_index (xids);
 			i = i < xids.length ? i + 1 : 0;
@@ -247,6 +267,12 @@ namespace Plank.Services.Windows
 			
 			Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
+			
+			if (xids == null)
+				return windows;
+			
 			unowned GLib.List<Wnck.Window> stack = Screen.get_default ().get_windows_stacked ();
 			
 			foreach (var window in stack)
