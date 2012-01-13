@@ -33,7 +33,7 @@ namespace Plank.Services.Windows
 			unowned Gdk.Pixbuf? pbuf = null;
 			
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
 			
 			for (var i = 0; xids != null && i < xids.length && pbuf == null; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -56,9 +56,8 @@ namespace Plank.Services.Windows
 		{
 			uint count = 0;
 			
-			unowned GLib.List<Bamf.View> children = app.get_children ();
-			for (var i = 0; i < children.length (); i++) {
-				var view = children.nth_data (i);
+			GLib.List<unowned Bamf.View>? children = app.get_children ();
+			foreach (unowned Bamf.View view in children) {
 				if (!(view is Bamf.Window && view.is_user_visible ()))
 					continue;
 				count++;
@@ -70,7 +69,7 @@ namespace Plank.Services.Windows
 		public static bool has_maximized_window (Bamf.Application app)
 		{
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
 			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -84,7 +83,7 @@ namespace Plank.Services.Windows
 		public static bool has_minimized_window (Bamf.Application app)
 		{
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
 			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -99,9 +98,8 @@ namespace Plank.Services.Windows
 		{
 			var windows = new ArrayList<Bamf.Window> ();
 			
-			unowned GLib.List<Bamf.View> children = app.get_children ();
-			for (var i = 0; i < children.length (); i++) {
-				var view = children.nth_data (i);
+			GLib.List<unowned Bamf.View> children = app.get_children ();
+			foreach (unowned Bamf.View view in children) {
 				if (view is Bamf.Window)
 					windows.add (view as Bamf.Window);
 			}
@@ -115,7 +113,7 @@ namespace Plank.Services.Windows
 				rect = Gdk.Rectangle () { x = 0, y = 0, width = 0, height = 0 };
 			
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
 			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -134,7 +132,7 @@ namespace Plank.Services.Windows
 		public static void close_all (Bamf.Application app)
 		{
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
 			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -169,7 +167,7 @@ namespace Plank.Services.Windows
 			}
 		}
 		
-		static int find_active_xid_index (Array<uint32> xids)
+		static int find_active_xid_index (Array<uint32>? xids)
 		{
 			var i = 0;
 			for (; xids != null && i < xids.length; i++) {
@@ -183,7 +181,7 @@ namespace Plank.Services.Windows
 		public static void focus_previous (Bamf.Application app)
 		{
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
 			
 			var i = find_active_xid_index (xids);
 			i = i < xids.length ? i - 1 : 0;
@@ -197,7 +195,7 @@ namespace Plank.Services.Windows
 		public static void focus_next (Bamf.Application app)
 		{
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
 			
 			var i = find_active_xid_index (xids);
 			i = i < xids.length ? i + 1 : 0;
@@ -248,7 +246,7 @@ namespace Plank.Services.Windows
 			var windows = new ArrayList<Wnck.Window> ();
 			
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
 			unowned GLib.List<Wnck.Window> stack = Screen.get_default ().get_windows_stacked ();
 			
 			foreach (var window in stack)
