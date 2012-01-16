@@ -83,7 +83,14 @@ libplank_la_SOURCES = \
 plank.h plank.vapi: libplank_la_vala.stamp
 
 libplank_la_vala.stamp: $(libplank_la_VALASOURCES)
-	$(AM_V_VALA)$(VALAC) $(libplank_la_VALAFLAGS) -C -H plank.h --vapi plank.vapi --library plank --symbols libplank.symbols $(filter %.vala %.c,$^)
+	$(AM_V_VALA)$(VALAC) \
+		$(libplank_la_VALAFLAGS) \
+		-C \
+		-H plank.h \
+		--library plank \
+		--symbols libplank.symbols \
+		--vapi plank.vapi \
+		$(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
 
 DISTCLEANFILES = \
