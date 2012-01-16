@@ -481,8 +481,8 @@ namespace Plank.Drawing
 			
 			var size = height * original.get_stride ();
 			
-			double *abuffer = new double[size];
-			double *bbuffer = new double[size];
+			var abuffer = new double[size];
+			var bbuffer = new double[size];
 			
 			// Copy image to double[] for faster horizontal pass
 			for (var i = 0; i < size; i++)
