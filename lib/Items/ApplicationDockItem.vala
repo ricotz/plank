@@ -246,24 +246,8 @@ namespace Plank.Items
 			
 			var closed = App == null || App.get_children ().length () == 0;
 			
-			if (closed) {
-#if VALA_0_12
-				var item = new ImageMenuItem.from_stock (Gtk.Stock.OPEN, null);
-#else
-				var item = new ImageMenuItem.from_stock (STOCK_OPEN, null);
-#endif
-				item.activate.connect (() => launch ());
-				items.add (item);
-			}
-			
 			if (!closed) {
 				Gtk.MenuItem item;
-				
-				if (!is_window ()) {
-					item = create_menu_item (_("_Open New Window"), "document-open-symbolic;;document-open");
-					item.activate.connect (() => launch ());
-					items.add (item);
-				}
 				
 				if (WindowControl.has_maximized_window (App)) {
 					item = create_menu_item (_("Unma_ximize"), "view-fullscreen");
