@@ -275,16 +275,6 @@ namespace Plank.Items
 					items.add (item);
 				}
 				
-				if (WindowControl.has_minimized_window (App)) {
-					item = create_menu_item (_("_Restore"), "view-restore");
-					item.activate.connect (() => WindowControl.restore (App));
-					items.add (item);
-				} else {
-					item = create_menu_item (_("Mi_nimize"), "view-restore");
-					item.activate.connect (() => WindowControl.minimize (App));
-					items.add (item);
-				}
-				
 				item = create_menu_item (_("_Close All"), "window-close-symbolic;;window-close");
 				item.activate.connect (() => WindowControl.close_all (App));
 				items.add (item);
