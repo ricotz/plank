@@ -222,8 +222,7 @@ namespace Plank.Services
 				var file = new KeyFile ();
 				file.load_from_file (backing_file.get_path () ?? "", 0);
 				
-				var obj_class = (ObjectClass) get_type ().class_ref ();
-				var properties = obj_class.list_properties ();
+				var properties = get_class ().list_properties ();
 				foreach (var prop in properties) {
 					var group_name = prop.owner_type.name ();
 					
