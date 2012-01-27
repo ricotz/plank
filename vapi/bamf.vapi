@@ -46,11 +46,13 @@ namespace Bamf {
 		public static unowned Bamf.Matcher get_default ();
 		public GLib.List<weak Bamf.View>? get_running_applications ();
 		public GLib.List<weak Bamf.View>? get_tabs ();
+		public GLib.List<weak Bamf.View>? get_window_stack_for_monitor (int monitor);
 		public GLib.List<weak Bamf.View>? get_windows ();
 		public GLib.Array<uint32>? get_xids_for_application (string application);
 		public void register_favorites ([CCode (array_length = false)] string[] favorites);
 		public virtual signal void active_application_changed (Bamf.View? p0, Bamf.View? p1);
 		public virtual signal void active_window_changed (Bamf.View? p0, Bamf.View? p1);
+		public virtual signal void stacking_order_changed ();
 		public virtual signal void view_closed (Bamf.View p0);
 		public virtual signal void view_opened (Bamf.View p0);
 	}
@@ -123,10 +125,17 @@ namespace Bamf {
 	public class Window : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Window ();
+		public unowned string? get_application_id ();
+		public unowned string? get_dbus_menu_object_path ();
+		public int get_monitor ();
 		public unowned Bamf.Window? get_transient ();
+		public unowned string? get_unique_bus_name ();
 		public Bamf.WindowType get_window_type ();
 		public uint32 get_xid ();
 		public ulong last_active ();
+		public Bamf.WindowMaximizationType maximized ();
+		public virtual signal void maximized_changed (int old_value, int new_value);
+		public virtual signal void monitor_changed (int old_value, int new_value);
 	}
 	[CCode (cheader_filename = "libbamf/libbamf.h", cprefix = "BAMF_CLICK_BEHAVIOR_", has_type_id = false)]
 	public enum ClickBehavior {
@@ -138,6 +147,13 @@ namespace Bamf {
 		RESTORE,
 		RESTORE_ALL,
 		PICKER
+	}
+	[CCode (cheader_filename = "libbamf/libbamf.h", cprefix = "BAMF_WINDOW_", has_type_id = false)]
+	public enum WindowMaximizationType {
+		FLOATING,
+		HORIZONTAL_MAXIMIZED,
+		VERTICAL_MAXIMIZED,
+		MAXIMIZED
 	}
 	[CCode (cheader_filename = "libbamf/libbamf.h", cprefix = "BAMF_WINDOW_", has_type_id = false)]
 	public enum WindowType {

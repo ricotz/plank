@@ -11,6 +11,12 @@
 			<member name="BAMF_CLICK_BEHAVIOR_RESTORE_ALL" value="6"/>
 			<member name="BAMF_CLICK_BEHAVIOR_PICKER" value="7"/>
 		</enum>
+		<enum name="BamfWindowMaximizationType">
+			<member name="BAMF_WINDOW_FLOATING" value="0"/>
+			<member name="BAMF_WINDOW_HORIZONTAL_MAXIMIZED" value="1"/>
+			<member name="BAMF_WINDOW_VERTICAL_MAXIMIZED" value="2"/>
+			<member name="BAMF_WINDOW_MAXIMIZED" value="3"/>
+		</enum>
 		<enum name="BamfWindowType">
 			<member name="BAMF_WINDOW_NORMAL" value="0"/>
 			<member name="BAMF_WINDOW_DESKTOP" value="1"/>
@@ -184,6 +190,13 @@
 					<parameter name="matcher" type="BamfMatcher*"/>
 				</parameters>
 			</method>
+			<method name="get_window_stack_for_monitor" symbol="bamf_matcher_get_window_stack_for_monitor">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="matcher" type="BamfMatcher*"/>
+					<parameter name="monitor" type="gint"/>
+				</parameters>
+			</method>
 			<method name="get_windows" symbol="bamf_matcher_get_windows">
 				<return-type type="GList*"/>
 				<parameters>
@@ -218,6 +231,12 @@
 					<parameter name="object" type="BamfMatcher*"/>
 					<parameter name="p0" type="GObject*"/>
 					<parameter name="p1" type="GObject*"/>
+				</parameters>
+			</signal>
+			<signal name="stacking-order-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="BamfMatcher*"/>
 				</parameters>
 			</signal>
 			<signal name="view-closed" when="LAST">
@@ -522,8 +541,32 @@
 			</vfunc>
 		</object>
 		<object name="BamfWindow" parent="BamfView" type-name="BamfWindow" get-type="bamf_window_get_type">
+			<method name="get_application_id" symbol="bamf_window_get_application_id">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="BamfWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_dbus_menu_object_path" symbol="bamf_window_get_dbus_menu_object_path">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="self" type="BamfWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_monitor" symbol="bamf_window_get_monitor">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="self" type="BamfWindow*"/>
+				</parameters>
+			</method>
 			<method name="get_transient" symbol="bamf_window_get_transient">
 				<return-type type="BamfWindow*"/>
+				<parameters>
+					<parameter name="self" type="BamfWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_unique_bus_name" symbol="bamf_window_get_unique_bus_name">
+				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="BamfWindow*"/>
 				</parameters>
@@ -546,6 +589,28 @@
 					<parameter name="self" type="BamfWindow*"/>
 				</parameters>
 			</method>
+			<method name="maximized" symbol="bamf_window_maximized">
+				<return-type type="BamfWindowMaximizationType"/>
+				<parameters>
+					<parameter name="self" type="BamfWindow*"/>
+				</parameters>
+			</method>
+			<signal name="maximized-changed" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="BamfWindow*"/>
+					<parameter name="old_value" type="gint"/>
+					<parameter name="new_value" type="gint"/>
+				</parameters>
+			</signal>
+			<signal name="monitor-changed" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="BamfWindow*"/>
+					<parameter name="old_value" type="gint"/>
+					<parameter name="new_value" type="gint"/>
+				</parameters>
+			</signal>
 		</object>
 	</namespace>
 </api>
