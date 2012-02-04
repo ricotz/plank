@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -83,6 +83,7 @@ namespace Plank
 		 * Initializes the hide manager.  Call after the DockWindow is constructed.
 		 */
 		public void initialize ()
+			requires (controller.window != null)
 		{
 			controller.window.enter_notify_event.connect (enter_notify_event);
 			controller.window.leave_notify_event.connect (leave_notify_event);

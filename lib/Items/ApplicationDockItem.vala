@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -246,24 +246,8 @@ namespace Plank.Items
 			
 			var closed = App == null || App.get_children ().length () == 0;
 			
-			if (closed) {
-#if VALA_0_12
-				var item = new ImageMenuItem.from_stock (Gtk.Stock.OPEN, null);
-#else
-				var item = new ImageMenuItem.from_stock (STOCK_OPEN, null);
-#endif
-				item.activate.connect (() => launch ());
-				items.add (item);
-			}
-			
 			if (!closed) {
 				Gtk.MenuItem item;
-				
-				if (!is_window ()) {
-					item = create_menu_item (_("_Open New Window"), "document-open-symbolic;;document-open");
-					item.activate.connect (() => launch ());
-					items.add (item);
-				}
 				
 				if (WindowControl.has_maximized_window (App)) {
 					item = create_menu_item (_("Unma_ximize"), "view-fullscreen");
@@ -272,16 +256,6 @@ namespace Plank.Items
 				} else {
 					item = create_menu_item (_("Ma_ximize"), "view-fullscreen");
 					item.activate.connect (() => WindowControl.maximize (App));
-					items.add (item);
-				}
-				
-				if (WindowControl.has_minimized_window (App)) {
-					item = create_menu_item (_("_Restore"), "view-restore");
-					item.activate.connect (() => WindowControl.restore (App));
-					items.add (item);
-				} else {
-					item = create_menu_item (_("Mi_nimize"), "view-restore");
-					item.activate.connect (() => WindowControl.minimize (App));
 					items.add (item);
 				}
 				

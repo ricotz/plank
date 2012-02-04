@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -159,13 +159,15 @@ namespace Plank.Drawing
 #else
 			unowned Pixbuf? pbuf = null;
 #endif
+			unowned IconTheme icon_theme = IconTheme.get_default ();
+			
 			try {
-				if (IconTheme.get_default ().has_icon (icon))
-					pbuf = IconTheme.get_default ().load_icon (icon, size, 0);
+				if (icon_theme.has_icon (icon))
+					pbuf = icon_theme.load_icon (icon, size, 0);
 				else if (icon.contains (".")) {
 					var parts = icon.split (".");
-					if (IconTheme.get_default ().has_icon (parts [0]))
-						pbuf = IconTheme.get_default ().load_icon (parts [0], size, 0);
+					if (icon_theme.has_icon (parts [0]))
+						pbuf = icon_theme.load_icon (parts [0], size, 0);
 				}
 			} catch { }
 			
