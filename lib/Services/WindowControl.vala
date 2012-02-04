@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -33,7 +33,9 @@ namespace Plank.Services.Windows
 			unowned Gdk.Pixbuf? pbuf = null;
 			
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
 			
 			for (var i = 0; xids != null && i < xids.length && pbuf == null; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -47,7 +49,11 @@ namespace Plank.Services.Windows
 		public static unowned Gdk.Pixbuf? get_window_icon (Bamf.Window window)
 		{
 			var w = Wnck.Window.@get (window.get_xid ());
-			return_val_if_fail (w != null, null);
+			
+			warn_if_fail (w != null);
+			
+			if (w == null)
+				return null;
 			
 			return w.get_icon ();
 		}
@@ -56,9 +62,8 @@ namespace Plank.Services.Windows
 		{
 			uint count = 0;
 			
-			unowned GLib.List<Bamf.View> children = app.get_children ();
-			for (var i = 0; i < children.length (); i++) {
-				var view = children.nth_data (i);
+			GLib.List<unowned Bamf.View>? children = app.get_children ();
+			foreach (unowned Bamf.View view in children) {
 				if (!(view is Bamf.Window && view.is_user_visible ()))
 					continue;
 				count++;
@@ -70,7 +75,9 @@ namespace Plank.Services.Windows
 		public static bool has_maximized_window (Bamf.Application app)
 		{
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
 			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -84,7 +91,9 @@ namespace Plank.Services.Windows
 		public static bool has_minimized_window (Bamf.Application app)
 		{
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
 			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -99,9 +108,8 @@ namespace Plank.Services.Windows
 		{
 			var windows = new ArrayList<Bamf.Window> ();
 			
-			unowned GLib.List<Bamf.View> children = app.get_children ();
-			for (var i = 0; i < children.length (); i++) {
-				var view = children.nth_data (i);
+			GLib.List<unowned Bamf.View> children = app.get_children ();
+			foreach (unowned Bamf.View view in children) {
 				if (view is Bamf.Window)
 					windows.add (view as Bamf.Window);
 			}
@@ -115,7 +123,9 @@ namespace Plank.Services.Windows
 				rect = Gdk.Rectangle () { x = 0, y = 0, width = 0, height = 0 };
 			
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
 			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -134,7 +144,9 @@ namespace Plank.Services.Windows
 		public static void close_all (Bamf.Application app)
 		{
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
 			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
@@ -147,7 +159,11 @@ namespace Plank.Services.Windows
 		{
 			Screen.get_default ();
 			var w = Wnck.Window.@get (window.get_xid ());
-			return_if_fail (w != null);
+			
+			warn_if_fail (w != null);
+			
+			if (w == null)
+				return;
 			
 			center_and_focus_window (w);
 		}
@@ -155,10 +171,14 @@ namespace Plank.Services.Windows
 		public static void focus_window_by_xid (uint32 xid)
 		{
 			Screen.get_default ();
-			var window = Wnck.Window.@get (xid);
-			return_if_fail (window != null);
+			var w = Wnck.Window.@get (xid);
 			
-			center_and_focus_window (window);
+			warn_if_fail (w != null);
+			
+			if (w == null)
+				return;
+			
+			center_and_focus_window (w);
 		}
 		
 		public static void focus (Bamf.Application app)
@@ -169,7 +189,7 @@ namespace Plank.Services.Windows
 			}
 		}
 		
-		static int find_active_xid_index (Array<uint32> xids)
+		static int find_active_xid_index (Array<uint32>? xids)
 		{
 			var i = 0;
 			for (; xids != null && i < xids.length; i++) {
@@ -183,7 +203,12 @@ namespace Plank.Services.Windows
 		public static void focus_previous (Bamf.Application app)
 		{
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
+			
+			if (xids == null)
+				return;
 			
 			var i = find_active_xid_index (xids);
 			i = i < xids.length ? i - 1 : 0;
@@ -197,7 +222,12 @@ namespace Plank.Services.Windows
 		public static void focus_next (Bamf.Application app)
 		{
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
+			
+			if (xids == null)
+				return;
 			
 			var i = find_active_xid_index (xids);
 			i = i < xids.length ? i + 1 : 0;
@@ -248,7 +278,13 @@ namespace Plank.Services.Windows
 			var windows = new ArrayList<Wnck.Window> ();
 			
 			Screen.get_default ();
-			unowned Array<uint32> xids = app.get_xids ();
+			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
+			
+			if (xids == null)
+				return windows;
+			
 			unowned GLib.List<Wnck.Window> stack = Screen.get_default ().get_windows_stacked ();
 			
 			foreach (var window in stack)

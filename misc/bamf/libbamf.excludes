@@ -1,1 +1,2 @@
+include/libbamf/libbamf/bamf-marshal.h
 include/libbamf/libbamf/bamf-tab.h

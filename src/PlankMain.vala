@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ namespace PlankMain
 			program_name = "Plank";
 			exec_name = "plank";
 			
-			app_copyright = "2011";
+			app_copyright = "2011-2012";
 			app_dbus = "net.launchpad.plank";
 			app_icon = "plank";
 			app_launcher = "plank.desktop";

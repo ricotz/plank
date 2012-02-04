@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -115,6 +115,7 @@ namespace Plank.Widgets
 		
 		void invalidate ()
 		{
+			var screen = get_screen ();
 			background_buffer = null;
 			
 			if (Text == "")
@@ -126,8 +127,8 @@ namespace Plank.Widgets
 			// make the buffer
 			Pango.Rectangle ink_rect, logical_rect;
 			layout.get_pixel_extents (out ink_rect, out logical_rect);
-			if (logical_rect.width > 0.8 * Screen.get_default ().width ()) {
-				layout.set_width ((int) (0.8 * Screen.get_default ().width () * Pango.SCALE));
+			if (logical_rect.width > 0.8 * screen.width ()) {
+				layout.set_width ((int) (0.8 * screen.width () * Pango.SCALE));
 				layout.get_pixel_extents (out ink_rect, out logical_rect);
 			}
 			
