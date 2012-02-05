@@ -315,7 +315,7 @@ namespace Plank.Widgets
 		protected bool update_hovered (int x, int y)
 		{
 			foreach (var item in controller.items.Items) {
-				var rect = controller.renderer.item_hover_region (item);
+				var rect = controller.position_manager.item_hover_region (item);
 				
 				if (y >= rect.y && y <= rect.y + rect.height && x >= rect.x && x <= rect.x + rect.width) {
 					set_hovered (item);
@@ -342,7 +342,7 @@ namespace Plank.Widgets
 		protected void position_hover ()
 			requires (HoveredItem != null)
 		{
-			var rect = controller.renderer.item_hover_region (HoveredItem);
+			var rect = controller.position_manager.item_hover_region (HoveredItem);
 			hover.move_hover (win_x + rect.x + rect.width / 2, win_y + rect.y);
 		}
 		
@@ -351,7 +351,7 @@ namespace Plank.Widgets
 		 */
 		public void set_size ()
 		{
-			set_size_request (controller.renderer.DockWidth, controller.renderer.DockHeight);
+			set_size_request (controller.position_manager.DockWidth, controller.position_manager.DockHeight);
 			reposition ();
 			if (HoveredItem != null)
 				position_hover ();
@@ -398,7 +398,7 @@ namespace Plank.Widgets
 				if (menu_is_visible () || controller.renderer.Hidden)
 					WindowControl.update_icon_regions (appitem.App, null, win_x, win_y);
 				else
-					WindowControl.update_icon_regions (appitem.App, controller.renderer.item_hover_region (appitem), win_x, win_y);
+					WindowControl.update_icon_regions (appitem.App, controller.position_manager.item_hover_region (appitem), win_x, win_y);
 			}
 			
 			controller.renderer.animated_draw ();
@@ -465,7 +465,7 @@ namespace Plank.Widgets
 		 */
 		protected void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in)
 		{
-			var rect = controller.renderer.item_hover_region (HoveredItem);
+			var rect = controller.position_manager.item_hover_region (HoveredItem);
 			
 #if VALA_0_14
 			var requisition = menu.get_requisition ();
@@ -487,7 +487,7 @@ namespace Plank.Widgets
 #endif
 				return;
 			
-			var cursor = controller.renderer.get_cursor_region ();
+			var cursor = controller.position_manager.get_cursor_region ();
 			// FIXME bug 768722 - this fixes the crash, but not WHY this happens
 			return_if_fail (cursor.width > 0);
 			return_if_fail (cursor.height > 0);
@@ -529,7 +529,7 @@ namespace Plank.Widgets
 			var struts = new ulong [Struts.N_VALUES];
 			
 			if (controller.prefs.HideMode == HideType.NONE) {
-				struts [Struts.BOTTOM] = controller.renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
+				struts [Struts.BOTTOM] = controller.position_manager.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
 				struts [Struts.BOTTOM_START] = monitor_geo.x;
 				struts [Struts.BOTTOM_END] = monitor_geo.x + monitor_geo.width - 1;
 			}
