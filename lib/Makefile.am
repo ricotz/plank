@@ -124,7 +124,14 @@ libplank3_la_SOURCES = \
 plank3.h plank3.vapi: libplank3_la_vala.stamp
 
 libplank3_la_vala.stamp: libplank3_la_valasource.stamp $(libplank3_la_VALASOURCES)
-	$(AM_V_VALA)$(VALAC) $(libplank3_la_VALAFLAGS) -C -H plank3.h --vapi plank3.vapi --library plank3 $(filter %.vala %.c,$^)
+	$(AM_V_VALA)$(VALAC) \
+		$(libplank3_la_VALAFLAGS) \
+		-C \
+		-H plank3.h \
+		--library plank3 \
+		--symbols libplank3.symbols \
+		--vapi plank3.vapi \
+		$(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
 
 libplank_la_vala.stamp: $(libplank_la_VALASOURCES)
