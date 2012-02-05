@@ -521,10 +521,12 @@ namespace Plank.Widgets
 			unowned X.Display display = x11_drawable_get_xdisplay (get_window ());
 			var xid = x11_drawable_get_xid (get_window ());
 			
+			Gdk.error_trap_push ();
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,
 			                      32, X.PropMode.Replace, (uchar[]) struts, struts.length);
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL, 
 			                      32, X.PropMode.Replace, (uchar[]) first_struts, first_struts.length);
+			Gdk.error_trap_pop ();
 		}
 	}
 }
