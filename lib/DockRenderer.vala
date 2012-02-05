@@ -317,8 +317,7 @@ namespace Plank
 				}
 			}
 			
-			// FIXME zoom disabled
-			if (controller.window.HoveredItem == item /*&& !controller.prefs.zoom_enabled ()*/)
+			if (controller.window.HoveredItem == item)
 				lighten = 0.2;
 			
 			if (controller.window.HoveredItem == item && controller.window.menu_is_visible ())
