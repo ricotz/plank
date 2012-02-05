@@ -133,11 +133,6 @@ namespace Plank.Widgets
 			
 			get_screen ().size_changed.connect (update_monitor_geo);
 			controller.prefs.changed["Monitor"].connect (update_monitor_geo);
-			
-			int x, y;
-			get_position (out x, out y);
-			win_x = x;
-			win_y = y;
 		}
 		
 		/**
@@ -382,15 +377,19 @@ namespace Plank.Widgets
 		 */
 		protected void update_icon_regions ()
 		{
+			Gdk.Rectangle? region = null;
+			
 			foreach (var item in controller.items.Items) {
 				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 				if (appitem == null || appitem.App == null)
 					continue;
 				
 				if (menu_is_visible () || controller.renderer.Hidden)
-					WindowControl.update_icon_regions (appitem.App, null, win_x, win_y);
+					region = null;
 				else
-					WindowControl.update_icon_regions (appitem.App, controller.position_manager.item_hover_region (appitem), win_x, win_y);
+					region = controller.position_manager.item_hover_region (appitem);
+				
+				WindowControl.update_icon_regions (appitem.App, region, win_x, win_y);
 			}
 			
 			controller.renderer.animated_draw ();
