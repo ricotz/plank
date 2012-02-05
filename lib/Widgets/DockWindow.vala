@@ -460,12 +460,11 @@ namespace Plank.Widgets
 			
 #if VALA_0_14
 			var requisition = menu.get_requisition ();
+#else
+			var requisition = menu.requisition;
+#endif
 			x = win_x + rect.x + rect.width / 2 - requisition.width / 2;
 			y = win_y + rect.y - requisition.height - 10;
-#else
-			x = win_x + rect.x + rect.width / 2 - menu.requisition.width / 2;
-			y = win_y + rect.y - menu.requisition.height - 10;
-#endif
 			push_in = false;
 		}
 		
