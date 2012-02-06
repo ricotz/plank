@@ -28,29 +28,6 @@ using Plank.Services.Windows;
 namespace Plank.Widgets
 {
 	/**
-	 * Which side of the screen the dock sits on.
-	 */
-	public enum DockPosition
-	{
-		/**
-		 * The dock is on the bottom of the screen (and is horizontal).
-		 */
-		BOTTOM,
-		/**
-		 * The dock is on the top of the screen (and is horizontal).
-		 */
-		TOP,
-		/**
-		 * The dock is on the left side of the screen (and is vertical).
-		 */
-		LEFT,
-		/**
-		 * The dock is on the right side of the screen (and is vertical).
-		 */
-		RIGHT
-	}
-	
-	/**
 	 * The main window for all docks.
 	 */
 	public class DockWindow : CompositedWindow
@@ -66,11 +43,11 @@ namespace Plank.Widgets
 		 */
 		public DockItem? HoveredItem { get; protected set; }
 		
-		
 		/**
 		 * A hover window to use with this dock.
 		 */
 		protected HoverWindow hover = new HoverWindow ();
+		
 		
 		/**
 		 * The popup menu for this dock.
