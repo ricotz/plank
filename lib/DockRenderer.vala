@@ -244,22 +244,27 @@ namespace Plank
 #endif
 			}
 			
-			var x_offset = (controller.window.width_request - main_buffer.Width) / 2.0;
-			var y_offset = 0.0;
-			if (theme.FadeOpacity == 1.0) {
-				if (controller.prefs.Position == PositionType.TOP)
-					y_offset = -controller.position_manager.VisibleDockHeight * get_hide_offset ();
-				else
-					y_offset = controller.position_manager.VisibleDockHeight * get_hide_offset ();
-			}
-			if (!controller.prefs.is_horizontal_dock ()) {
+			// calculate drawing offset
+			var x_offset = 0.0, y_offset = 0.0;
+			if (controller.prefs.is_horizontal_dock ())
+				x_offset = (controller.window.width_request - main_buffer.Width) / 2.0;
+			else
 				y_offset = (controller.window.height_request - main_buffer.Height) / 2.0;
-				x_offset = 0.0;
-				if (theme.FadeOpacity == 1.0) {
-					if (controller.prefs.Position == PositionType.LEFT)
-						x_offset = -controller.position_manager.VisibleDockWidth * get_hide_offset ();
-					else
-						x_offset = controller.position_manager.VisibleDockWidth * get_hide_offset ();
+			
+			if (theme.FadeOpacity == 1.0) {
+				switch (controller.prefs.Position) {
+				case PositionType.TOP:
+					y_offset = -controller.position_manager.VisibleDockHeight * get_hide_offset ();
+					break;
+				case PositionType.BOTTOM:
+					y_offset = controller.position_manager.VisibleDockHeight * get_hide_offset ();
+					break;
+				case PositionType.LEFT:
+					x_offset = -controller.position_manager.VisibleDockWidth * get_hide_offset ();
+					break;
+				case PositionType.RIGHT:
+					x_offset = controller.position_manager.VisibleDockWidth * get_hide_offset ();
+					break;
 				}
 			}
 			
@@ -369,24 +374,28 @@ namespace Plank
 			
 			var top_padding = controller.position_manager.TopPadding;
 			var bottom_padding = controller.position_manager.BottomPadding;
-			if (controller.prefs.is_horizontal_dock ()) {
+
+			switch (controller.prefs.Position) {
+			case PositionType.TOP:
 				draw_rect.x += controller.position_manager.ItemPadding / 2;
-				if (controller.prefs.Position == PositionType.BOTTOM) {
-					draw_rect.y += 2 * theme.get_top_offset () + (top_padding > 0 ? top_padding : 0);
-					draw_rect.height -= top_padding;
-				} else {
-					draw_rect.y += 2 * theme.get_bottom_offset () + (bottom_padding > 0 ? bottom_padding : 0);
-					draw_rect.height -= bottom_padding;
-				}
-			} else {
+				draw_rect.y += 2 * theme.get_bottom_offset () + (bottom_padding > 0 ? bottom_padding : 0);
+				draw_rect.height -= bottom_padding;
+				break;
+			case PositionType.BOTTOM:
+				draw_rect.x += controller.position_manager.ItemPadding / 2;
+				draw_rect.y += 2 * theme.get_top_offset () + (top_padding > 0 ? top_padding : 0);
+				draw_rect.height -= top_padding;
+				break;
+			case PositionType.LEFT:
+				draw_rect.x += 2 * theme.get_bottom_offset () + (bottom_padding > 0 ? bottom_padding : 0);
 				draw_rect.y += controller.position_manager.ItemPadding / 2;
-				if (controller.prefs.Position == PositionType.RIGHT) {
-					draw_rect.x += 2 * theme.get_top_offset () + (top_padding > 0 ? top_padding : 0);
-					draw_rect.width -= top_padding;
-				} else {
-					draw_rect.x += 2 * theme.get_bottom_offset () + (bottom_padding > 0 ? bottom_padding : 0);
-					draw_rect.width -= bottom_padding;
-				}
+				draw_rect.width -= bottom_padding;
+				break;
+			case PositionType.RIGHT:
+				draw_rect.x += 2 * theme.get_top_offset () + (top_padding > 0 ? top_padding : 0);
+				draw_rect.y += controller.position_manager.ItemPadding / 2;
+				draw_rect.width -= top_padding;
+				break;
 			}
 			
 			// lighten or darken the icon
@@ -504,23 +513,28 @@ namespace Plank
 			
 			var indicator = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 			
-			double x, y;
-			if (controller.prefs.is_horizontal_dock ()) {
-				x = item_rect.x + item_rect.width / 2 - indicator.Width / 2;
-				if (controller.prefs.Position == PositionType.BOTTOM)
-					// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-					y = main_buffer.Height - indicator.Height / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
-				else
-					// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-					y = - indicator.Height / 2 + 2 * (int) theme.get_bottom_offset () + indicator_size / 24.0;
-			} else {
-				y = item_rect.y + item_rect.height / 2 - indicator.Height / 2;
-				if (controller.prefs.Position == PositionType.RIGHT)
-					// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-					x = main_buffer.Width - indicator.Width / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
-				else
-					// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-					x = - indicator.Width / 2 + 2 * (int) theme.get_bottom_offset () + indicator_size / 24.0;
+			double x = 0.0, y = 0.0;
+			switch (controller.prefs.Position) {
+			case PositionType.TOP:
+				x = item_rect.x + item_rect.width / 2.0 - indicator.Width / 2.0;
+				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+				y = - indicator.Height / 2 + 2 * (int) theme.get_bottom_offset () + indicator_size / 24.0;
+				break;
+			case PositionType.BOTTOM:
+				x = item_rect.x + item_rect.width / 2.0 - indicator.Width / 2.0;
+				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+				y = main_buffer.Height - indicator.Height / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
+				break;
+			case PositionType.LEFT:
+				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+				x = - indicator.Width / 2 + 2 * (int) theme.get_bottom_offset () + indicator_size / 24.0;
+				y = item_rect.y + item_rect.height / 2.0 - indicator.Height / 2.0;
+				break;
+			case PositionType.RIGHT:
+				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+				x = main_buffer.Width - indicator.Width / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
+				y = item_rect.y + item_rect.height / 2.0 - indicator.Height / 2.0;
+				break;
 			}
 			
 			if (state == IndicatorState.SINGLE) {
