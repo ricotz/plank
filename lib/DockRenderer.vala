@@ -79,9 +79,10 @@ namespace Plank
 			theme = new DockThemeRenderer ();
 			theme.load ("dock");
 			
-			controller.prefs.notify["IconSize"].connect (icon_size_changed);
+			controller.prefs.notify["IconSize"].connect (prefs_changed);
+			controller.prefs.notify["Position"].connect (prefs_changed);
 			theme.changed.connect (theme_changed);
-			controller.position_manager.reset_item_caches (theme, urgent_glow_size ());
+			controller.position_manager.reset_caches (theme, urgent_glow_size ());
 			
 			controller.items.item_removed.connect (items_changed);
 			controller.items.item_added.connect (items_changed);
@@ -103,7 +104,8 @@ namespace Plank
 		
 		~DockRenderer ()
 		{
-			controller.prefs.notify["IconSize"].disconnect (icon_size_changed);
+			controller.prefs.notify["IconSize"].disconnect (prefs_changed);
+			controller.prefs.notify["Position"].disconnect (prefs_changed);
 			theme.changed.disconnect (theme_changed);
 			
 			controller.items.item_removed.disconnect (items_changed);
@@ -117,21 +119,21 @@ namespace Plank
 		
 		void items_changed ()
 		{
-			controller.position_manager.reset_item_caches (theme, urgent_glow_size ());
+			controller.position_manager.reset_caches (theme, urgent_glow_size ());
 			controller.position_manager.update_regions ();
 			animated_draw ();
 		}
 		
-		void icon_size_changed ()
+		void prefs_changed ()
 		{
-			controller.position_manager.reset_item_caches (theme, urgent_glow_size ());
+			controller.position_manager.reset_caches (theme, urgent_glow_size ());
 			controller.position_manager.update_regions ();
 			animated_draw ();
 		}
 		
 		void theme_changed ()
 		{
-			controller.position_manager.reset_caches (theme);
+			controller.position_manager.reset_caches (theme, urgent_glow_size ());
 			controller.position_manager.update_regions ();
 			controller.window.set_size ();
 			animated_draw ();
@@ -182,15 +184,23 @@ namespace Plank
 		 */
 		public void draw_dock (Context cr)
 		{
+			var height = controller.position_manager.DockHeight;
+			var width = controller.position_manager.VisibleDockWidth;
+			
+			if (!controller.prefs.is_horizontal_dock ()) {
+				height = controller.position_manager.VisibleDockHeight;
+				width = controller.position_manager.DockWidth;
+			}
+			
 #if BENCHMARK
 			benchmark.clear ();
 			var start = new DateTime.now_local ();
 #endif
-			if (main_buffer != null && (main_buffer.Width != controller.position_manager.VisibleDockWidth || main_buffer.Height != controller.position_manager.DockHeight))
+			if (main_buffer != null && (main_buffer.Width != width || main_buffer.Height != height))
 				reset_buffers ();
 			
 			if (main_buffer == null)
-				main_buffer = new DockSurface.with_surface (controller.position_manager.VisibleDockWidth, controller.position_manager.DockHeight, cr.get_target ());
+				main_buffer = new DockSurface.with_surface (width, height, cr.get_target ());
 			
 			main_buffer.clear ();
 			
@@ -204,6 +214,7 @@ namespace Plank
 #endif
 			
 			
+			// draw each item onto the dock buffer
 			foreach (var item in controller.items.Items)
 			{
 #if BENCHMARK
@@ -216,20 +227,37 @@ namespace Plank
 #endif
 			}
 			
-			var x_offset = (controller.window.width_request - main_buffer.Width) / 2;
-			
-			cr.set_operator (Operator.SOURCE);
+			var x_offset = (controller.window.width_request - main_buffer.Width) / 2.0;
 			var y_offset = 0.0;
-			if (theme.FadeOpacity == 1.0)
-				y_offset = controller.position_manager.VisibleDockHeight * get_hide_offset ();
+			if (theme.FadeOpacity == 1.0) {
+				if (controller.prefs.Position == PositionType.TOP)
+					y_offset = -controller.position_manager.VisibleDockHeight * get_hide_offset ();
+				else
+					y_offset = controller.position_manager.VisibleDockHeight * get_hide_offset ();
+			}
+			if (!controller.prefs.is_horizontal_dock ()) {
+				y_offset = (controller.window.height_request - main_buffer.Height) / 2.0;
+				x_offset = 0.0;
+				if (theme.FadeOpacity == 1.0) {
+					if (controller.prefs.Position == PositionType.LEFT)
+						x_offset = -controller.position_manager.VisibleDockWidth * get_hide_offset ();
+					else
+						x_offset = controller.position_manager.VisibleDockWidth * get_hide_offset ();
+				}
+			}
+			
+			// draw the dock on the window
+			cr.set_operator (Operator.SOURCE);
 			cr.set_source_surface (main_buffer.Internal, x_offset, y_offset);
 			cr.paint ();
 			
+			// fade the dock if need be
 			if (get_opacity () < 1.0) {
 				cr.set_source_rgba (0, 0, 0, 0);
 				cr.paint_with_alpha (1 - get_opacity ());
 			}
 			
+			// dock is completely hidden
 			if (get_hide_offset () == 1) {
 				if (urgent_glow_buffer == null)
 					create_urgent_glow (background_buffer);
@@ -239,6 +267,7 @@ namespace Plank
 					
 					if ((item.State & ItemState.URGENT) == ItemState.URGENT && diff < theme.GlowTime * 1000) {
 						var rect = controller.position_manager.item_draw_region (item);
+						// TODO update pos
 						cr.set_source_surface (urgent_glow_buffer.Internal,
 							x_offset + rect.x + rect.width / 2.0 - urgent_glow_buffer.Width / 2.0,
 							main_buffer.Height - urgent_glow_buffer.Height / 2.0);
@@ -259,13 +288,46 @@ namespace Plank
 		
 		void draw_dock_background (DockSurface surface)
 		{
-			if (background_buffer == null || background_buffer.Width != controller.position_manager.DockBackgroundWidth || background_buffer.Height != controller.position_manager.DockBackgroundHeight) {
-				background_buffer = new DockSurface.with_dock_surface (controller.position_manager.DockBackgroundWidth, controller.position_manager.DockBackgroundHeight, surface);
+			var width = controller.position_manager.DockBackgroundWidth;
+			var height = controller.position_manager.DockBackgroundHeight;
+			
+			if (!controller.prefs.is_horizontal_dock ()) {
+				width = controller.position_manager.DockBackgroundHeight;
+				height = controller.position_manager.DockBackgroundWidth;
+			}
+			
+			if (background_buffer == null || background_buffer.Width != width || background_buffer.Height != height) {
+				background_buffer = new DockSurface.with_dock_surface (width, height, surface);
 				theme.draw_background (background_buffer);
 			}
 			
-			surface.Context.set_source_surface (background_buffer.Internal, (surface.Width - background_buffer.Width) / 2.0, surface.Height - background_buffer.Height);
+			var x_offset = (surface.Width - background_buffer.Width) / 2.0;
+			double y_offset = surface.Height - background_buffer.Height;
+			
+			surface.Context.save ();
+			switch (controller.prefs.Position) {
+			case PositionType.TOP:
+				y_offset = 0;
+				surface.Context.scale (1, -1);
+				surface.Context.translate (0, -background_buffer.Height);
+				break;
+			case PositionType.LEFT:
+				y_offset = (surface.Height - background_buffer.Height) / 2.0;
+				x_offset = 0;
+				surface.Context.rotate (Math.PI * 0.5);
+				surface.Context.translate (0, -background_buffer.Height);
+				break;
+			case PositionType.RIGHT:
+				y_offset = (surface.Height - background_buffer.Height) / 2.0;
+				x_offset = surface.Width - background_buffer.Width;
+				surface.Context.rotate (Math.PI * -0.5);
+				surface.Context.translate (-background_buffer.Width, 0);
+				break;
+			}
+			
+			surface.Context.set_source_surface (background_buffer.Internal, x_offset, y_offset);
 			surface.Context.paint ();
+			surface.Context.restore ();
 		}
 		
 		void draw_item (DockSurface surface, DockItem item)
@@ -289,9 +351,26 @@ namespace Plank
 			var hover_rect = draw_rect;
 			
 			var top_padding = controller.position_manager.TopPadding;
-			draw_rect.x += controller.position_manager.ItemPadding / 2;
-			draw_rect.y += 2 * theme.get_top_offset () + (top_padding > 0 ? top_padding : 0);
-			draw_rect.height -= top_padding;
+			var bottom_padding = controller.position_manager.BottomPadding;
+			if (controller.prefs.is_horizontal_dock ()) {
+				draw_rect.x += controller.position_manager.ItemPadding / 2;
+				if (controller.prefs.Position == PositionType.BOTTOM) {
+					draw_rect.y += 2 * theme.get_top_offset () + (top_padding > 0 ? top_padding : 0);
+					draw_rect.height -= top_padding;
+				} else {
+					draw_rect.y += 2 * theme.get_bottom_offset () + (bottom_padding > 0 ? bottom_padding : 0);
+					draw_rect.height -= bottom_padding;
+				}
+			} else {
+				draw_rect.y += controller.position_manager.ItemPadding / 2;
+				if (controller.prefs.Position == PositionType.RIGHT) {
+					draw_rect.x += 2 * theme.get_top_offset () + (top_padding > 0 ? top_padding : 0);
+					draw_rect.width -= top_padding;
+				} else {
+					draw_rect.x += 2 * theme.get_bottom_offset () + (bottom_padding > 0 ? bottom_padding : 0);
+					draw_rect.width -= bottom_padding;
+				}
+			}
 			
 			// lighten or darken the icon
 			var lighten = 0.0;
@@ -305,8 +384,23 @@ namespace Plank
 				
 				switch (item.ClickedAnimation) {
 				case ClickAnimation.BOUNCE:
-					if (Gdk.Screen.get_default ().is_composited ())
-						draw_rect.y -= ((int) (Math.sin (2 * Math.PI * clickAnimationProgress) * controller.prefs.IconSize * theme.LaunchBounceHeight)).abs ();
+					if (Gdk.Screen.get_default ().is_composited ()) {
+						var change = ((int) (Math.sin (2 * Math.PI * clickAnimationProgress) * controller.prefs.IconSize * theme.LaunchBounceHeight)).abs ();
+						switch (controller.prefs.Position) {
+						case PositionType.BOTTOM:
+							draw_rect.y -= change;
+							break;
+						case PositionType.TOP:
+							draw_rect.y += change;
+							break;
+						case PositionType.LEFT:
+							draw_rect.x += change;
+							break;
+						case PositionType.RIGHT:
+							draw_rect.x -= change;
+							break;
+						}
+					}
 					break;
 				case ClickAnimation.DARKEN:
 					darken = double.max (0, Math.sin (Math.PI * clickAnimationProgress)) * 0.5;
@@ -346,8 +440,23 @@ namespace Plank
 			
 			// bounce icon on urgent state
 			var urgent_time = new DateTime.now_utc ().difference (item.LastUrgent);
-			if (Gdk.Screen.get_default().is_composited () && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.UrgentBounceTime * 1000)
-				draw_rect.y -= (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * controller.prefs.IconSize * theme.UrgentBounceHeight);
+			if (Gdk.Screen.get_default().is_composited () && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.UrgentBounceTime * 1000) {
+				var change = (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * controller.prefs.IconSize * theme.UrgentBounceHeight);
+				switch (controller.prefs.Position) {
+				case PositionType.BOTTOM:
+					draw_rect.y -= change;
+					break;
+				case PositionType.TOP:
+					draw_rect.y += change;
+					break;
+				case PositionType.LEFT:
+					draw_rect.x += change;
+					break;
+				case PositionType.RIGHT:
+					draw_rect.x -= change;
+					break;
+				}
+			}
 			
 			// draw active glow
 			var active_time = new DateTime.now_utc ().difference (item.LastActive);
@@ -371,14 +480,30 @@ namespace Plank
 				
 				var indicator = (item.State & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 				
-				var x = hover_rect.x + hover_rect.width / 2 - indicator.Width / 2;
-				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
- 				var y = main_buffer.Height - indicator.Height / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
+				double x, y;
+				if (controller.prefs.is_horizontal_dock ()) {
+					x = hover_rect.x + hover_rect.width / 2 - indicator.Width / 2;
+					if (controller.prefs.Position == PositionType.BOTTOM)
+						// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+						y = main_buffer.Height - indicator.Height / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
+					else
+						// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+						y = - indicator.Height / 2 + 2 * (int) theme.get_bottom_offset () + indicator_size / 24.0;
+				} else {
+					y = hover_rect.y + hover_rect.height / 2 - indicator.Height / 2;
+					if (controller.prefs.Position == PositionType.RIGHT)
+						// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+						x = main_buffer.Width - indicator.Width / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
+					else
+						// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+						x = - indicator.Width / 2 + 2 * (int) theme.get_bottom_offset () + indicator_size / 24.0;
+				}
 				
 				if (item.Indicator == IndicatorState.SINGLE) {
 					surface.Context.set_source_surface (indicator.Internal, x, y);
 					surface.Context.paint ();
 				} else {
+					// TODO update pos
 					surface.Context.set_source_surface (indicator.Internal, x - controller.prefs.IconSize / 16.0, y);
 					surface.Context.paint ();
 					surface.Context.set_source_surface (indicator.Internal, x + controller.prefs.IconSize / 16.0, y);
