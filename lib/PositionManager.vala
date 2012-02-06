@@ -82,6 +82,10 @@ namespace Plank
 		 */
 		public int IndicatorSize { get; private set; }
 		/**
+		 * Theme-based urgent glow size, scaled by icon size.
+		 */
+		public int GlowSize { get; private set; }
+		/**
 		 * Theme-based horizontal padding, scaled by icon size.
 		 */
 		public int HorizPadding  { get; private set; }
@@ -98,7 +102,7 @@ namespace Plank
 		 */
 		public int ItemPadding   { get; private set; }
 		
-		int ItemsOffset   { get; set; }
+		int items_offset;
 		
 		/**
 		 * The currently visible height of the dock.
@@ -130,20 +134,21 @@ namespace Plank
 		 * Resets all internal caches.
 		 *
 		 * @param theme the current dock theme
-		 * @param urgent_glow_size the size of the urgent glow
 		 */
-		public void reset_caches (DockThemeRenderer theme, int urgent_glow_size)
+		public void reset_caches (DockThemeRenderer theme)
 		{
 			var icon_size = controller.prefs.IconSize;
 			var scaled_icon_size = icon_size / 10.0;
 			
 			IndicatorSize = (int) (theme.IndicatorSize * scaled_icon_size);
+			GlowSize      = (int) (theme.GlowSize      * scaled_icon_size);
 			HorizPadding  = (int) (theme.HorizPadding  * scaled_icon_size);
 			TopPadding    = (int) (theme.TopPadding    * scaled_icon_size);
 			BottomPadding = (int) (theme.BottomPadding * scaled_icon_size);
 			ItemPadding   = (int) (theme.ItemPadding   * scaled_icon_size);
 			
-			ItemsOffset   = (int) (2 * theme.LineWidth + (HorizPadding > 0 ? HorizPadding : 0));
+			items_offset  = (int) (2 * theme.LineWidth + (HorizPadding > 0 ? HorizPadding : 0));
+			
 			
 			// height of the visible (cursor) rect of the dock
 			var height = icon_size + 2 * (theme.get_top_offset () + theme.get_bottom_offset ());
@@ -152,15 +157,16 @@ namespace Plank
 			if (BottomPadding > 0)
 				height += BottomPadding;
 			
-			// height of the dock window
-			var dock_height = height + (int) (icon_size * theme.UrgentBounceHeight);
-			
 			// height of the dock background image, as drawn
 			var background_height = height;
 			if (TopPadding < 0)
 				background_height += TopPadding;
 			
-			var width = (int) controller.items.Items.size * (ItemPadding + icon_size) + 2 * ItemsOffset;
+			// height of the dock window
+			var dock_height = height + (int) (icon_size * theme.UrgentBounceHeight);
+			
+			
+			var width = controller.items.Items.size * (ItemPadding + icon_size) + 2 * items_offset;
 			
 			// width of the dock background image, as drawn
 			var background_width = width;
@@ -170,7 +176,8 @@ namespace Plank
 				width -= 2 * HorizPadding;
 			
 			// width of the dock window
-			var dock_width = width + icon_size + ItemPadding + urgent_glow_size / 2;
+			var dock_width = width + icon_size + ItemPadding + GlowSize / 2;
+			
 			
 			if (controller.prefs.is_horizontal_dock ()) {
 				VisibleDockHeight = height;
@@ -197,18 +204,24 @@ namespace Plank
 		 */
 		public Gdk.Rectangle get_cursor_region ()
 		{
-			if (controller.prefs.is_horizontal_dock ()) {
+			if (controller.prefs.is_horizontal_dock ())
 				cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
-				if (controller.prefs.Position == PositionType.BOTTOM)
-					cursor_region.y = controller.window.height_request - cursor_region.height;
-				else
-					cursor_region.y = 0;
-			} else {
+			else
 				cursor_region.width = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockWidth));
-				if (controller.prefs.Position == PositionType.RIGHT)
-					cursor_region.x = controller.window.width_request - cursor_region.width;
-				else
-					cursor_region.x = 0;
+			
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				cursor_region.y = controller.window.height_request - cursor_region.height;
+				break;
+			case PositionType.TOP:
+				cursor_region.y = 0;
+				break;
+			case PositionType.LEFT:
+				cursor_region.x = 0;
+				break;
+			case PositionType.RIGHT:
+				cursor_region.x = controller.window.width_request - cursor_region.width;
+				break;
 			}
 			
 			return cursor_region;
@@ -234,24 +247,29 @@ namespace Plank
 			static_dock_region.height = VisibleDockHeight;
 			if (controller.prefs.is_horizontal_dock ()) {
 				static_dock_region.x = (controller.window.width_request - static_dock_region.width) / 2;
-				if (controller.prefs.Position == PositionType.TOP)
-					static_dock_region.y = 0;
-				else
-					static_dock_region.y = controller.window.height_request - static_dock_region.height;
-			} else {
-				static_dock_region.y = (controller.window.height_request - static_dock_region.height) / 2;
-				if (controller.prefs.Position == PositionType.LEFT)
-					static_dock_region.x = 0;
-				else
-					static_dock_region.x = controller.window.width_request - static_dock_region.width;
-			}
-			
-			if (controller.prefs.is_horizontal_dock ()) {
+				
 				cursor_region.x = static_dock_region.x;
 				cursor_region.width = static_dock_region.width;
 			} else {
+				static_dock_region.y = (controller.window.height_request - static_dock_region.height) / 2;
+				
 				cursor_region.y = static_dock_region.y;
 				cursor_region.height = static_dock_region.height;
+			}
+			
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				static_dock_region.y = controller.window.height_request - static_dock_region.height;
+				break;
+			case PositionType.TOP:
+				static_dock_region.y = 0;
+				break;
+			case PositionType.LEFT:
+				static_dock_region.x = 0;
+				break;
+			case PositionType.RIGHT:
+				static_dock_region.x = controller.window.width_request - static_dock_region.width;
+				break;
 			}
 		}
 		
@@ -282,21 +300,28 @@ namespace Plank
 			var rect = Gdk.Rectangle ();
 			
 			if (controller.prefs.is_horizontal_dock ()) {
-				rect.x = ItemsOffset + item.Position * (ItemPadding + controller.prefs.IconSize);
+				rect.x = items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
 				rect.width = controller.prefs.IconSize + ItemPadding;
 				rect.height = VisibleDockHeight;
-				if (controller.prefs.Position == PositionType.TOP)
-					rect.y = 0;
-				else
-					rect.y = DockHeight - VisibleDockHeight;
 			} else {
-				rect.y = ItemsOffset + item.Position * (ItemPadding + controller.prefs.IconSize);
+				rect.y = items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
 				rect.height = controller.prefs.IconSize + ItemPadding;
 				rect.width = VisibleDockWidth;
-				if (controller.prefs.Position == PositionType.LEFT)
-					rect.x = 0;
-				else
-					rect.x = DockWidth - VisibleDockWidth;
+			}
+			
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				rect.y = DockHeight - VisibleDockHeight;
+				break;
+			case PositionType.TOP:
+				rect.y = 0;
+				break;
+			case PositionType.LEFT:
+				rect.x = 0;
+				break;
+			case PositionType.RIGHT:
+				rect.x = DockWidth - VisibleDockWidth;
+				break;
 			}
 			
 			return rect;
@@ -315,22 +340,29 @@ namespace Plank
 		public void get_menu_position (DockItem hovered, Requisition requisition, int win_x, int win_y, out int x, out int y)
 		{
 			var rect = item_hover_region (hovered);
-			var offset = 10;
 			
 			if (controller.prefs.is_horizontal_dock ()) {
 				x = win_x + rect.x + (rect.width - requisition.width) / 2;
 				y = win_y;
-				if (controller.prefs.Position == PositionType.TOP)
-					y += rect.height + offset;
-				else
-					y += rect.y - requisition.height - offset;
 			} else {
 				y = win_y + rect.y + rect.width / 2;
 				x = win_x + rect.x;
-				if (controller.prefs.Position == PositionType.LEFT)
-					x += rect.width + offset;
-				else
-					x -= requisition.width + offset;
+			}
+			
+			var offset = 10;
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				y += rect.y - requisition.height - offset;
+				break;
+			case PositionType.TOP:
+				y += rect.height + offset;
+				break;
+			case PositionType.LEFT:
+				x += rect.width + offset;
+				break;
+			case PositionType.RIGHT:
+				x -= requisition.width + offset;
+				break;
 			}
 		}
 		
@@ -389,19 +421,26 @@ namespace Plank
 		public void get_struts (ref ulong[] struts)
 		{
 			if (controller.prefs.is_horizontal_dock ()) {
-				if (controller.prefs.Position == PositionType.BOTTOM)
-					struts [controller.prefs.Position] = VisibleDockHeight + controller.window.get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
-				else
-					struts [controller.prefs.Position] = monitor_geo.y + VisibleDockHeight;
 				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.x;
 				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.x + monitor_geo.width - 1;
 			} else {
-				if (controller.prefs.Position == PositionType.RIGHT)
-					struts [controller.prefs.Position] = VisibleDockWidth + controller.window.get_screen ().get_width () - monitor_geo.x - monitor_geo.width;
-				else
-					struts [controller.prefs.Position] = monitor_geo.x + VisibleDockWidth;
 				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.y;
 				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.y + monitor_geo.height - 1;
+			}
+			
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				struts [controller.prefs.Position] = VisibleDockHeight + controller.window.get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
+				break;
+			case PositionType.TOP:
+				struts [controller.prefs.Position] = monitor_geo.y + VisibleDockHeight;
+				break;
+			case PositionType.LEFT:
+				struts [controller.prefs.Position] = monitor_geo.x + VisibleDockWidth;
+				break;
+			case PositionType.RIGHT:
+				struts [controller.prefs.Position] = VisibleDockWidth + controller.window.get_screen ().get_width () - monitor_geo.x - monitor_geo.width;
+				break;
 			}
 		}
 	}

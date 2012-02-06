@@ -84,7 +84,7 @@ namespace Plank
 			controller.prefs.notify["IconSize"].connect (prefs_changed);
 			controller.prefs.notify["Position"].connect (prefs_changed);
 			theme.changed.connect (theme_changed);
-			controller.position_manager.reset_caches (theme, urgent_glow_size ());
+			controller.position_manager.reset_caches (theme);
 			
 			controller.items.item_removed.connect (items_changed);
 			controller.items.item_added.connect (items_changed);
@@ -128,7 +128,7 @@ namespace Plank
 		{
 			screen_is_composited = Gdk.Screen.get_default ().is_composited ();
 			
-			controller.position_manager.reset_caches (theme, urgent_glow_size ());
+			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
 			controller.window.set_size ();
 			animated_draw ();
@@ -136,21 +136,21 @@ namespace Plank
 		
 		void items_changed ()
 		{
-			controller.position_manager.reset_caches (theme, urgent_glow_size ());
+			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
 			animated_draw ();
 		}
 		
 		void prefs_changed ()
 		{
-			controller.position_manager.reset_caches (theme, urgent_glow_size ());
+			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
 			animated_draw ();
 		}
 		
 		void theme_changed ()
 		{
-			controller.position_manager.reset_caches (theme, urgent_glow_size ());
+			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
 			controller.window.set_size ();
 			animated_draw ();
@@ -282,7 +282,7 @@ namespace Plank
 			// dock is completely hidden
 			if (get_hide_offset () == 1) {
 				if (urgent_glow_buffer == null)
-					create_urgent_glow (background_buffer);
+					create_urgent_glow ();
 				
 				foreach (var item in controller.items.Items) {
 					var diff = new DateTime.now_utc ().difference (item.LastUrgent);
@@ -325,33 +325,25 @@ namespace Plank
 			
 			surface.Context.save ();
 			
-			var x_offset = 0.0, y_offset = 0.0;
 			switch (controller.prefs.Position) {
 			case PositionType.TOP:
-				x_offset = (surface.Width - background_buffer.Width) / 2.0;
-				y_offset = 0;
 				surface.Context.scale (1, -1);
-				surface.Context.translate (0, -background_buffer.Height);
+				surface.Context.translate ((surface.Width - background_buffer.Width) / 2.0, -background_buffer.Height);
 				break;
 			case PositionType.BOTTOM:
-				x_offset = (surface.Width - background_buffer.Width) / 2.0;
-				y_offset = surface.Height - background_buffer.Height;
+				surface.Context.translate ((surface.Width - background_buffer.Width) / 2.0, surface.Height - background_buffer.Height);
 				break;
 			case PositionType.LEFT:
-				x_offset = 0;
-				y_offset = 0;
 				surface.Context.rotate (Math.PI * 0.5);
 				surface.Context.translate (0, -background_buffer.Height);
 				break;
 			case PositionType.RIGHT:
-				x_offset = surface.Height - background_buffer.Width;
-				y_offset = surface.Width - background_buffer.Height;
 				surface.Context.rotate (Math.PI * -0.5);
-				surface.Context.translate (-background_buffer.Width, 0);
+				surface.Context.translate (surface.Height - 2 * background_buffer.Width, surface.Width - background_buffer.Height);
 				break;
 			}
 			
-			surface.Context.set_source_surface (background_buffer.Internal, x_offset, y_offset);
+			surface.Context.set_source_surface (background_buffer.Internal, 0, 0);
 			surface.Context.paint ();
 			surface.Context.restore ();
 		}
@@ -391,20 +383,19 @@ namespace Plank
 				draw_rect.height -= top_padding;
 				break;
 			case PositionType.LEFT:
-				draw_rect.x += 2 * theme.get_bottom_offset () + (bottom_padding > 0 ? bottom_padding : 0);
 				draw_rect.y += controller.position_manager.ItemPadding / 2;
+				draw_rect.x += 2 * theme.get_bottom_offset () + (bottom_padding > 0 ? bottom_padding : 0);
 				draw_rect.width -= bottom_padding;
 				break;
 			case PositionType.RIGHT:
-				draw_rect.x += 2 * theme.get_top_offset () + (top_padding > 0 ? top_padding : 0);
 				draw_rect.y += controller.position_manager.ItemPadding / 2;
+				draw_rect.x += 2 * theme.get_top_offset () + (top_padding > 0 ? top_padding : 0);
 				draw_rect.width -= top_padding;
 				break;
 			}
 			
 			// lighten or darken the icon
-			var lighten = 0.0;
-			var darken = 0.0;
+			var lighten = 0.0, darken = 0.0;
 			
 			var max_click_time = item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
 			max_click_time *= 1000;
@@ -414,22 +405,22 @@ namespace Plank
 				
 				switch (item.ClickedAnimation) {
 				case ClickAnimation.BOUNCE:
-					if (screen_is_composited) {
-						var change = ((int) (Math.sin (2 * Math.PI * clickAnimationProgress) * controller.prefs.IconSize * theme.LaunchBounceHeight)).abs ();
-						switch (controller.prefs.Position) {
-						case PositionType.BOTTOM:
-							draw_rect.y -= change;
-							break;
-						case PositionType.TOP:
-							draw_rect.y += change;
-							break;
-						case PositionType.LEFT:
-							draw_rect.x += change;
-							break;
-						case PositionType.RIGHT:
-							draw_rect.x -= change;
-							break;
-						}
+					if (!screen_is_composited)
+						break;
+					var change = ((int) (Math.sin (2 * Math.PI * clickAnimationProgress) * controller.prefs.IconSize * theme.LaunchBounceHeight)).abs ();
+					switch (controller.prefs.Position) {
+					case PositionType.BOTTOM:
+						draw_rect.y -= change;
+						break;
+					case PositionType.TOP:
+						draw_rect.y += change;
+						break;
+					case PositionType.LEFT:
+						draw_rect.x += change;
+						break;
+					case PositionType.RIGHT:
+						draw_rect.x -= change;
+						break;
 					}
 					break;
 				case ClickAnimation.DARKEN:
@@ -501,60 +492,56 @@ namespace Plank
 			surface.Context.paint ();
 			
 			// draw indicators
-			draw_indicator (surface, hover_rect, item.Indicator, item.State);
+			if (item.Indicator != IndicatorState.NONE)
+				draw_indicator_state (surface, hover_rect, item.Indicator, item.State);
 		}
 		
-		void draw_indicator (DockSurface surface, Gdk.Rectangle item_rect, IndicatorState state, ItemState item_state)
+		void draw_indicator_state (DockSurface surface, Gdk.Rectangle item_rect, IndicatorState indicator, ItemState item_state)
 		{
-			if (state == IndicatorState.NONE)
-				return;
-			
-			var indicator_size = controller.position_manager.IndicatorSize;
 			if (indicator_buffer == null)
-				create_normal_indicator (indicator_size);
+				create_normal_indicator ();
 			if (urgent_indicator_buffer == null)
-				create_urgent_indicator (indicator_size);
+				create_urgent_indicator ();
 			
-			var indicator = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
+			var indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 			
 			var x = 0.0, y = 0.0;
 			switch (controller.prefs.Position) {
 			case PositionType.TOP:
-				x = item_rect.x + item_rect.width / 2.0 - indicator.Width / 2.0;
+				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
 				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-				y = - indicator.Height / 2 + 2 * (int) theme.get_bottom_offset () + indicator_size / 24.0;
+				y = - indicator_surface.Height / 2 + 2 * (int) theme.get_bottom_offset () + indicator_surface.Height / 24.0;
 				break;
 			case PositionType.BOTTOM:
-				x = item_rect.x + item_rect.width / 2.0 - indicator.Width / 2.0;
+				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
 				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-				y = main_buffer.Height - indicator.Height / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
+				y = main_buffer.Height - indicator_surface.Height / 2 - 2 * (int) theme.get_bottom_offset () - indicator_surface.Height / 24.0;
 				break;
 			case PositionType.LEFT:
 				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-				x = - indicator.Width / 2 + 2 * (int) theme.get_bottom_offset () + indicator_size / 24.0;
-				y = item_rect.y + item_rect.height / 2.0 - indicator.Height / 2.0;
+				x = - indicator_surface.Width / 2 + 2 * (int) theme.get_bottom_offset () + indicator_surface.Width / 24.0;
+				y = item_rect.y + item_rect.height / 2.0 - indicator_surface.Height / 2.0;
 				break;
 			case PositionType.RIGHT:
 				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-				x = main_buffer.Width - indicator.Width / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
-				y = item_rect.y + item_rect.height / 2.0 - indicator.Height / 2.0;
+				x = main_buffer.Width - indicator_surface.Width / 2 - 2 * (int) theme.get_bottom_offset () - indicator_surface.Width / 24.0;
+				y = item_rect.y + item_rect.height / 2.0 - indicator_surface.Height / 2.0;
 				break;
 			}
 			
-			if (state == IndicatorState.SINGLE) {
-				surface.Context.set_source_surface (indicator.Internal, x, y);
+			if (indicator == IndicatorState.SINGLE) {
+				surface.Context.set_source_surface (indicator_surface.Internal, x, y);
 				surface.Context.paint ();
 			} else {
-				var offset = controller.prefs.IconSize / 16.0;
-				double x_offset = 0, y_offset = 0;
+				var x_offset = 0.0, y_offset = 0.0;
 				if (controller.prefs.is_horizontal_dock ())
-					x_offset = offset;
+					x_offset = controller.prefs.IconSize / 16.0;
 				else
-					y_offset = offset;
+					y_offset = controller.prefs.IconSize / 16.0;
 				
-				surface.Context.set_source_surface (indicator.Internal, x - x_offset, y - y_offset);
+				surface.Context.set_source_surface (indicator_surface.Internal, x - x_offset, y - y_offset);
 				surface.Context.paint ();
-				surface.Context.set_source_surface (indicator.Internal, x + x_offset, y + y_offset);
+				surface.Context.set_source_surface (indicator_surface.Internal, x + x_offset, y + y_offset);
 				surface.Context.paint ();
 			}
 		}
@@ -564,36 +551,29 @@ namespace Plank
 			return new Drawing.Color.from_gdk (controller.window.get_style ().bg [StateType.SELECTED]).set_min_value (90 / (double) uint16.MAX);
 		}
 		
-		void create_normal_indicator (int size)
+		void create_normal_indicator ()
 		{
-			indicator_buffer = theme.create_indicator (background_buffer, size, get_styled_color ().set_min_sat (0.4));
+			indicator_buffer = theme.create_indicator (background_buffer, controller.position_manager.IndicatorSize, get_styled_color ().set_min_sat (0.4));
 		}
 		
 		int urgent_hue_shift = 150;
 		
-		void create_urgent_indicator (int size)
+		void create_urgent_indicator ()
 		{
-			urgent_indicator_buffer = theme.create_indicator (background_buffer, size, get_styled_color ().add_hue (urgent_hue_shift).set_sat (1));
+			urgent_indicator_buffer = theme.create_indicator (background_buffer, controller.position_manager.IndicatorSize, get_styled_color ().add_hue (urgent_hue_shift).set_sat (1));
 		}
 		
-		int urgent_glow_size ()
-		{
-			return (int) (theme.GlowSize / 10.0 * controller.prefs.IconSize);
-		}
-		
-		void create_urgent_glow (DockSurface surface)
+		void create_urgent_glow ()
 		{
 			var color = get_styled_color ().add_hue (urgent_hue_shift).set_sat (1);
 			
-			var size = urgent_glow_size ();
-			urgent_glow_buffer = new DockSurface.with_dock_surface (size, size, surface);
-			
-			var cr = urgent_glow_buffer.Context;
+			var size = controller.position_manager.GlowSize;
+			urgent_glow_buffer = new DockSurface.with_dock_surface (size, size, background_buffer);
 			
 			var x = size / 2.0;
 			
-			cr.move_to (x, x);
-			cr.arc (x, x, size / 2, 0, Math.PI * 2);
+			urgent_glow_buffer.Context.move_to (x, x);
+			urgent_glow_buffer.Context.arc (x, x, size / 2, 0, Math.PI * 2);
 			
 			var rg = new Pattern.radial (x, x, 0, x, x, size / 2);
 			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
@@ -601,8 +581,8 @@ namespace Plank
 			rg.add_color_stop_rgba (0.66, color.R, color.G, color.B, 0.33);
 			rg.add_color_stop_rgba (1.0, color.R, color.G, color.B, 0.0);
 			
-			cr.set_source (rg);
-			cr.fill ();
+			urgent_glow_buffer.Context.set_source (rg);
+			urgent_glow_buffer.Context.fill ();
 		}
 		
 		/**
@@ -613,7 +593,7 @@ namespace Plank
 		 */
 		public void draw_badge (DockSurface surface, string badge_text)
 		{
-			var theme_color = new Drawing.Color.from_gdk (controller.window.get_style ().bg [StateType.SELECTED]);
+			var theme_color = get_styled_color ();
 			var badge_color_start = theme_color.set_val (1).set_sat (0.47);
 			var badge_color_end = theme_color.set_val (0.5).set_sat (0.51);
 			
