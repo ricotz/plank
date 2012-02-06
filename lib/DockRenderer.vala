@@ -323,15 +323,19 @@ namespace Plank
 				theme.draw_background (background_buffer);
 			}
 			
-			var x_offset = (surface.Width - background_buffer.Width) / 2.0;
-			double y_offset = surface.Height - background_buffer.Height;
-			
 			surface.Context.save ();
+			
+			var x_offset = 0.0, y_offset = 0.0;
 			switch (controller.prefs.Position) {
 			case PositionType.TOP:
+				x_offset = (surface.Width - background_buffer.Width) / 2.0;
 				y_offset = 0;
 				surface.Context.scale (1, -1);
 				surface.Context.translate (0, -background_buffer.Height);
+				break;
+			case PositionType.BOTTOM:
+				x_offset = (surface.Width - background_buffer.Width) / 2.0;
+				y_offset = surface.Height - background_buffer.Height;
 				break;
 			case PositionType.LEFT:
 				x_offset = 0;
@@ -513,7 +517,7 @@ namespace Plank
 			
 			var indicator = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 			
-			double x = 0.0, y = 0.0;
+			var x = 0.0, y = 0.0;
 			switch (controller.prefs.Position) {
 			case PositionType.TOP:
 				x = item_rect.x + item_rect.width / 2.0 - indicator.Width / 2.0;
