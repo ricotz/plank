@@ -471,44 +471,56 @@ namespace Plank
 			surface.Context.paint ();
 			
 			// draw indicators
-			if (item.Indicator != IndicatorState.NONE) {
-				var indicator_size = controller.position_manager.IndicatorSize;
-				if (indicator_buffer == null)
-					create_normal_indicator (indicator_size);
-				if (urgent_indicator_buffer == null)
-					create_urgent_indicator (indicator_size);
+			draw_indicator (surface, hover_rect, item.Indicator, item.State);
+		}
+		
+		void draw_indicator (DockSurface surface, Gdk.Rectangle item_rect, IndicatorState state, ItemState item_state)
+		{
+			if (state == IndicatorState.NONE)
+				return;
+			
+			var indicator_size = controller.position_manager.IndicatorSize;
+			if (indicator_buffer == null)
+				create_normal_indicator (indicator_size);
+			if (urgent_indicator_buffer == null)
+				create_urgent_indicator (indicator_size);
+			
+			var indicator = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
+			
+			double x, y;
+			if (controller.prefs.is_horizontal_dock ()) {
+				x = item_rect.x + item_rect.width / 2 - indicator.Width / 2;
+				if (controller.prefs.Position == PositionType.BOTTOM)
+					// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+					y = main_buffer.Height - indicator.Height / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
+				else
+					// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+					y = - indicator.Height / 2 + 2 * (int) theme.get_bottom_offset () + indicator_size / 24.0;
+			} else {
+				y = item_rect.y + item_rect.height / 2 - indicator.Height / 2;
+				if (controller.prefs.Position == PositionType.RIGHT)
+					// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+					x = main_buffer.Width - indicator.Width / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
+				else
+					// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
+					x = - indicator.Width / 2 + 2 * (int) theme.get_bottom_offset () + indicator_size / 24.0;
+			}
+			
+			if (state == IndicatorState.SINGLE) {
+				surface.Context.set_source_surface (indicator.Internal, x, y);
+				surface.Context.paint ();
+			} else {
+				var offset = controller.prefs.IconSize / 16.0;
+				double x_offset = 0, y_offset = 0;
+				if (controller.prefs.is_horizontal_dock ())
+					x_offset = offset;
+				else
+					y_offset = offset;
 				
-				var indicator = (item.State & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
-				
-				double x, y;
-				if (controller.prefs.is_horizontal_dock ()) {
-					x = hover_rect.x + hover_rect.width / 2 - indicator.Width / 2;
-					if (controller.prefs.Position == PositionType.BOTTOM)
-						// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-						y = main_buffer.Height - indicator.Height / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
-					else
-						// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-						y = - indicator.Height / 2 + 2 * (int) theme.get_bottom_offset () + indicator_size / 24.0;
-				} else {
-					y = hover_rect.y + hover_rect.height / 2 - indicator.Height / 2;
-					if (controller.prefs.Position == PositionType.RIGHT)
-						// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-						x = main_buffer.Width - indicator.Width / 2 - 2 * (int) theme.get_bottom_offset () - indicator_size / 24.0;
-					else
-						// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-						x = - indicator.Width / 2 + 2 * (int) theme.get_bottom_offset () + indicator_size / 24.0;
-				}
-				
-				if (item.Indicator == IndicatorState.SINGLE) {
-					surface.Context.set_source_surface (indicator.Internal, x, y);
-					surface.Context.paint ();
-				} else {
-					// TODO update pos
-					surface.Context.set_source_surface (indicator.Internal, x - controller.prefs.IconSize / 16.0, y);
-					surface.Context.paint ();
-					surface.Context.set_source_surface (indicator.Internal, x + controller.prefs.IconSize / 16.0, y);
-					surface.Context.paint ();
-				}
+				surface.Context.set_source_surface (indicator.Internal, x - x_offset, y - y_offset);
+				surface.Context.paint ();
+				surface.Context.set_source_surface (indicator.Internal, x + x_offset, y + y_offset);
+				surface.Context.paint ();
 			}
 		}
 		
