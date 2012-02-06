@@ -45,6 +45,8 @@ namespace Plank
 		
 		DateTime last_hide = new DateTime.from_unix_utc (0);
 		
+		bool screen_is_composited;
+		
 		/**
 		 * If the dock is currently hidden.
 		 */
@@ -88,6 +90,9 @@ namespace Plank
 			controller.items.item_added.connect (items_changed);
 			controller.items.item_state_changed.connect (items_changed);
 			
+			screen_is_composited = Gdk.Screen.get_default ().is_composited ();
+			Gdk.Screen.get_default ().composited_changed.connect (composited_changed);
+
 			notify["Hidden"].connect (hidden_changed);
 		}
 		
@@ -112,9 +117,21 @@ namespace Plank
 			controller.items.item_added.disconnect (items_changed);
 			controller.items.item_state_changed.disconnect (items_changed);
 			
+			Gdk.Screen.get_default ().composited_changed.disconnect (composited_changed);
+
 			notify["Hidden"].disconnect (hidden_changed);
 			
 			controller.window.notify["HoveredItem"].disconnect (animated_draw);
+		}
+		
+		void composited_changed ()
+		{
+			screen_is_composited = Gdk.Screen.get_default ().is_composited ();
+			
+			controller.position_manager.reset_caches (theme, urgent_glow_size ());
+			controller.position_manager.update_regions ();
+			controller.window.set_size ();
+			animated_draw ();
 		}
 		
 		void items_changed ()
@@ -384,7 +401,7 @@ namespace Plank
 				
 				switch (item.ClickedAnimation) {
 				case ClickAnimation.BOUNCE:
-					if (Gdk.Screen.get_default ().is_composited ()) {
+					if (screen_is_composited) {
 						var change = ((int) (Math.sin (2 * Math.PI * clickAnimationProgress) * controller.prefs.IconSize * theme.LaunchBounceHeight)).abs ();
 						switch (controller.prefs.Position) {
 						case PositionType.BOTTOM:
@@ -440,7 +457,7 @@ namespace Plank
 			
 			// bounce icon on urgent state
 			var urgent_time = new DateTime.now_utc ().difference (item.LastUrgent);
-			if (Gdk.Screen.get_default().is_composited () && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.UrgentBounceTime * 1000) {
+			if (screen_is_composited && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.UrgentBounceTime * 1000) {
 				var change = (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * controller.prefs.IconSize * theme.UrgentBounceHeight);
 				switch (controller.prefs.Position) {
 				case PositionType.BOTTOM:
