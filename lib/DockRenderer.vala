@@ -329,14 +329,14 @@ namespace Plank
 				surface.Context.translate (0, -background_buffer.Height);
 				break;
 			case PositionType.LEFT:
-				y_offset = (surface.Height - background_buffer.Height) / 2.0;
 				x_offset = 0;
+				y_offset = 0;
 				surface.Context.rotate (Math.PI * 0.5);
 				surface.Context.translate (0, -background_buffer.Height);
 				break;
 			case PositionType.RIGHT:
-				y_offset = (surface.Height - background_buffer.Height) / 2.0;
-				x_offset = surface.Width - background_buffer.Width;
+				x_offset = surface.Height - background_buffer.Width;
+				y_offset = surface.Width - background_buffer.Height;
 				surface.Context.rotate (Math.PI * -0.5);
 				surface.Context.translate (-background_buffer.Width, 0);
 				break;
