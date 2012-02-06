@@ -141,12 +141,10 @@ namespace Plank.Widgets
 		 */
 		public override bool button_press_event (EventButton event)
 		{
-			if (HoveredItem == null)
-				return true;
-			
 			var button = PopupButton.from_event_button (event);
-			if ((event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK
-					&& (button & PopupButton.RIGHT) == PopupButton.RIGHT)
+			if (HoveredItem == null ||
+				    ((event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK
+					&& (button & PopupButton.RIGHT) == PopupButton.RIGHT))
 				do_popup (event.button, true);
 			else if ((HoveredItem.Button & button) == button)
 				do_popup (event.button, false);
