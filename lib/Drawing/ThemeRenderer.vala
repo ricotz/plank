@@ -179,6 +179,9 @@ namespace Plank.Drawing
 			top_radius    = double.min (top_radius, min_size);
 			bottom_radius = double.min (bottom_radius, min_size - top_radius);
 			
+			if (!Gdk.Screen.get_default ().is_composited ())
+				top_radius = bottom_radius = 0.0;
+			
 			cr.move_to (x + top_radius, y);
 			
 			cr.arc (x + width - top_radius,    y + top_radius,             top_radius,    Math.PI * 1.5, Math.PI * 2.0);
