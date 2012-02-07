@@ -158,37 +158,39 @@ namespace Plank.Drawing
 		{
 			Pattern gradient = null;
 			var xoffset = 0, yoffset = 0;
+			var top_offset = get_top_offset ();
+			var bottom_offset = get_bottom_offset ();
 			
 			if (pos == Gtk.PositionType.BOTTOM || pos == Gtk.PositionType.TOP) {
 				xoffset = horiz_pad < 0 ? -horiz_pad : 0;
-				rect.height -= 2 * get_top_offset () + 2 * get_bottom_offset ();
+				rect.height -= 2 * (top_offset + bottom_offset);
 			} else {
 				yoffset = horiz_pad < 0 ? -horiz_pad : 0;
-				rect.width -= 2 * get_top_offset () + 2 * get_bottom_offset ();
+				rect.width -= 2 * (top_offset + bottom_offset);
 			}
 			
 			switch (pos) {
 			case Gtk.PositionType.BOTTOM:
-				yoffset = surface.Height - clip_buffer.Height + get_top_offset ();
-				rect.y += 2 * get_top_offset ();
+				yoffset = surface.Height - clip_buffer.Height + top_offset;
+				rect.y += 2 * top_offset;
 				
 				gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
 				break;
 			case Gtk.PositionType.TOP:
-				yoffset = get_bottom_offset ();
-				rect.y += 2 * get_bottom_offset ();
+				yoffset = bottom_offset;
+				rect.y += 2 * bottom_offset;
 				
 				gradient = new Pattern.linear (0, rect.y + rect.height, 0, rect.y);
 				break;
 			case Gtk.PositionType.LEFT:
-				xoffset = get_bottom_offset ();
-				rect.x += 2 * get_bottom_offset ();
+				xoffset = bottom_offset;
+				rect.x += 2 * bottom_offset;
 				
 				gradient = new Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
 				break;
 			case Gtk.PositionType.RIGHT:
-				xoffset = surface.Width - clip_buffer.Height + get_top_offset ();
-				rect.x += 2 * get_top_offset ();
+				xoffset = surface.Width - clip_buffer.Height + top_offset;
+				rect.x += 2 * top_offset;
 				
 				gradient = new Pattern.linear (rect.x, 0, rect.x + rect.width, 0);
 				break;
