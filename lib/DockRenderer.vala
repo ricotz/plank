@@ -525,22 +525,18 @@ namespace Plank
 			switch (controller.prefs.Position) {
 			case PositionType.TOP:
 				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
-				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-				y = - indicator_surface.Height / 2 + 2 * (int) theme.get_bottom_offset () + indicator_surface.Height / 24.0;
+				y = - indicator_surface.Height / 2 + 2 * theme.get_bottom_offset () + indicator_surface.Height / 24.0;
 				break;
 			case PositionType.BOTTOM:
 				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
-				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-				y = main_buffer.Height - indicator_surface.Height / 2 - 2 * (int) theme.get_bottom_offset () - indicator_surface.Height / 24.0;
+				y = main_buffer.Height - indicator_surface.Height / 2 - 2 * theme.get_bottom_offset () - indicator_surface.Height / 24.0;
 				break;
 			case PositionType.LEFT:
-				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-				x = - indicator_surface.Width / 2 + 2 * (int) theme.get_bottom_offset () + indicator_surface.Width / 24.0;
+				x = - indicator_surface.Width / 2 + 2 * theme.get_bottom_offset () + indicator_surface.Width / 24.0;
 				y = item_rect.y + item_rect.height / 2.0 - indicator_surface.Height / 2.0;
 				break;
 			case PositionType.RIGHT:
-				// have to do the (int) cast to avoid valac segfault (valac 0.11.4)
-				x = main_buffer.Width - indicator_surface.Width / 2 - 2 * (int) theme.get_bottom_offset () - indicator_surface.Width / 24.0;
+				x = main_buffer.Width - indicator_surface.Width / 2 - 2 * theme.get_bottom_offset () - indicator_surface.Width / 24.0;
 				y = item_rect.y + item_rect.height / 2.0 - indicator_surface.Height / 2.0;
 				break;
 			}
