@@ -193,7 +193,11 @@ namespace Plank.Drawing
 			if (!Gdk.Screen.get_default ().is_composited ())
 				top_radius = bottom_radius = 0.0;
 			
-			cr.move_to (x + top_radius, y);
+			// if the top isnt round, we have to adjust the starting point a bit
+			if (top_radius == 0.0)
+				cr.move_to (x - LineWidth / 2.0, y);
+			else
+				cr.move_to (x + top_radius, y);
 			
 			cr.arc (x + width - top_radius,    y + top_radius,             top_radius,    Math.PI * 1.5, Math.PI * 2.0);
 			cr.arc (x + width - bottom_radius, y + height - bottom_radius, bottom_radius, 0,             Math.PI * 0.5);
