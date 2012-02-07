@@ -172,7 +172,18 @@ namespace Plank.Drawing
 				BottomRoundness);
 		}
 		
-		void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
+		/**
+		 * Draws a rounded rectangle.  If compositing is disabled, just draws a normal rectangle.
+		 *
+		 * @param cr the context to draw with
+		 * @param x the x location of the rect
+		 * @param y the y location of the rect
+		 * @param width the width of the rect
+		 * @param height the height of the rect
+		 * @param top_radius the roundedness of the top edge
+		 * @param bottom_radius the roundedness of the bottom edge
+		 */
+		protected void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
 		{
 			var min_size  = double.min (width, height);
 			
