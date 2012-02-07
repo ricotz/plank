@@ -152,13 +152,13 @@ namespace Plank.Drawing
 		}
 		
 		/**
-		 * TODO
+		 * Similar to draw_rounded_rect, but moves in to avoid a containing rounded rect's lines.
 		 *
 		 * @param cr the context to draw with
 		 * @param width the width of the rect
 		 * @param height the height of the rect
 		 */
-		public void draw_inner_rect (Context cr, int width, int height)
+		protected void draw_inner_rect (Context cr, int width, int height)
 		{
 			var top_offset    = get_top_offset ();
 			var bottom_offset = get_bottom_offset ();
