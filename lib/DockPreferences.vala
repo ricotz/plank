@@ -30,13 +30,6 @@ namespace Plank
 		const int MIN_ICON_SIZE = 24;
 		const int MAX_ICON_SIZE = 128;
 		
-		// FIXME zoom disabled
-		//const double MIN_ZOOM = 1.0;
-		//const double MAX_ZOOM = 4.0;
-		
-		//[Description(nick = "zoom", blurb = "How much to zoom dock icons when hovered (percentage).")]
-		//public double Zoom { get; set; }
-		
 		[Description(nick = "icon-size", blurb = "The size of dock icons (in pixels).")]
 		public int IconSize { get; set; }
 		
@@ -80,8 +73,6 @@ namespace Plank
 		 */
 		protected override void reset_properties ()
 		{
-			// FIXME zoom disabled
-			//Zoom = 2.0;
 			IconSize = 48;
 			HideMode = HideType.INTELLIGENT;
 			UnhideDelay = 0;
@@ -93,14 +84,6 @@ namespace Plank
 		{
 			verify ("Monitor");
 		}
-		
-		/*
-		// FIXME zoom disabled
-		public bool zoom_enabled ()
-		{
-			return Zoom > MIN_ZOOM;
-		}
-		*/
 		
 		/**
 		 * Increases the IconSize, if it is not already at its max.
@@ -126,16 +109,6 @@ namespace Plank
 		protected override void verify (string prop)
 		{
 			switch (prop) {
-			/*
-			// FIXME zoom disabled
-			case "Zoom":
-				if (Zoom < MIN_ZOOM)
-					Zoom = MIN_ZOOM;
-				else if (Zoom > MAX_ZOOM)
-					Zoom = MAX_ZOOM;
-				break;
-			*/
-			
 			case "IconSize":
 				if (IconSize < MIN_ICON_SIZE)
 					IconSize = MIN_ICON_SIZE;

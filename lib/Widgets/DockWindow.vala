@@ -28,29 +28,6 @@ using Plank.Services.Windows;
 namespace Plank.Widgets
 {
 	/**
-	 * Which side of the screen the dock sits on.
-	 */
-	public enum DockPosition
-	{
-		/**
-		 * The dock is on the bottom of the screen (and is horizontal).
-		 */
-		BOTTOM,
-		/**
-		 * The dock is on the top of the screen (and is horizontal).
-		 */
-		TOP,
-		/**
-		 * The dock is on the left side of the screen (and is vertical).
-		 */
-		LEFT,
-		/**
-		 * The dock is on the right side of the screen (and is vertical).
-		 */
-		RIGHT
-	}
-	
-	/**
 	 * The main window for all docks.
 	 */
 	public class DockWindow : CompositedWindow
@@ -70,6 +47,7 @@ namespace Plank.Widgets
 		 * A hover window to use with this dock.
 		 */
 		protected HoverWindow hover = new HoverWindow ();
+		
 		
 		/**
 		 * The popup menu for this dock.
@@ -135,11 +113,6 @@ namespace Plank.Widgets
 			
 			get_screen ().size_changed.connect (update_monitor_geo);
 			controller.prefs.changed["Monitor"].connect (update_monitor_geo);
-			
-			int x, y;
-			get_position (out x, out y);
-			win_x = x;
-			win_y = y;
 		}
 		
 		/**
@@ -178,13 +151,11 @@ namespace Plank.Widgets
 			// in this case we ignore it.
 			if (controller.drag_manager.InternalDragActive)
 				return true;
-				
-			if (HoveredItem == null)
-				return true;
 			
 			var button = PopupButton.from_event_button (event);
-			if ((event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK
-					&& (button & PopupButton.RIGHT) == PopupButton.RIGHT)
+			if (HoveredItem == null ||
+				    ((event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK
+					&& (button & PopupButton.RIGHT) == PopupButton.RIGHT))
 				do_popup (event.button, true);
 			else if ((HoveredItem.Button & button) == button)
 				do_popup (event.button, false);
@@ -322,7 +293,7 @@ namespace Plank.Widgets
 		public bool update_hovered (int x, int y)
 		{
 			foreach (var item in controller.items.Items) {
-				var rect = controller.renderer.item_hover_region (item);
+				var rect = controller.position_manager.item_hover_region (item);
 				
 				if (y >= rect.y && y <= rect.y + rect.height && x >= rect.x && x <= rect.x + rect.width) {
 					set_hovered (item);
@@ -350,7 +321,7 @@ namespace Plank.Widgets
 		protected void position_hover ()
 			requires (HoveredItem != null)
 		{
-			var rect = controller.renderer.item_hover_region (HoveredItem);
+			var rect = controller.position_manager.item_hover_region (HoveredItem);
 			hover.move_hover (win_x + rect.x + rect.width / 2, win_y + rect.y);
 		}
 		
@@ -384,7 +355,7 @@ namespace Plank.Widgets
 		 */
 		public void set_size ()
 		{
-			set_size_request (controller.renderer.DockWidth, controller.renderer.DockHeight);
+			set_size_request (controller.position_manager.DockWidth, controller.position_manager.DockHeight);
 			reposition ();
 			if (HoveredItem != null)
 				position_hover ();
@@ -423,15 +394,19 @@ namespace Plank.Widgets
 		 */
 		protected void update_icon_regions ()
 		{
+			Gdk.Rectangle? region = null;
+			
 			foreach (var item in controller.items.Items) {
 				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 				if (appitem == null || appitem.App == null)
 					continue;
 				
 				if (menu_is_visible () || controller.renderer.Hidden)
-					WindowControl.update_icon_regions (appitem.App, null, win_x, win_y);
+					region = null;
 				else
-					WindowControl.update_icon_regions (appitem.App, controller.renderer.item_hover_region (appitem), win_x, win_y);
+					region = controller.position_manager.item_hover_region (appitem);
+				
+				WindowControl.update_icon_regions (appitem.App, region, win_x, win_y);
 			}
 			
 			controller.renderer.animated_draw ();
@@ -504,16 +479,15 @@ namespace Plank.Widgets
 		 */
 		protected void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in)
 		{
-			var rect = controller.renderer.item_hover_region (HoveredItem);
+			var rect = controller.position_manager.item_hover_region (HoveredItem);
 			
 #if VALA_0_14
 			var requisition = menu.get_requisition ();
+#else
+			var requisition = menu.requisition;
+#endif
 			x = win_x + rect.x + rect.width / 2 - requisition.width / 2;
 			y = win_y + rect.y - requisition.height - 10;
-#else
-			x = win_x + rect.x + rect.width / 2 - menu.requisition.width / 2;
-			y = win_y + rect.y - menu.requisition.height - 10;
-#endif
 			push_in = false;
 		}
 		
@@ -522,7 +496,7 @@ namespace Plank.Widgets
 			if (!is_realized ())
 				return;
 			
-			var cursor = controller.renderer.get_cursor_region ();
+			var cursor = controller.position_manager.get_cursor_region ();
 			// FIXME bug 768722 - this fixes the crash, but not WHY this happens
 			return_if_fail (cursor.width > 0);
 			return_if_fail (cursor.height > 0);
@@ -556,7 +530,7 @@ namespace Plank.Widgets
 			var struts = new ulong [Struts.N_VALUES];
 			
 			if (controller.prefs.HideMode == HideType.NONE) {
-				struts [Struts.BOTTOM] = controller.renderer.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
+				struts [Struts.BOTTOM] = controller.position_manager.VisibleDockHeight + get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
 				struts [Struts.BOTTOM_START] = monitor_geo.x;
 				struts [Struts.BOTTOM_END] = monitor_geo.x + monitor_geo.width - 1;
 			}
@@ -568,10 +542,12 @@ namespace Plank.Widgets
 			unowned X.Display display = x11_drawable_get_xdisplay (get_window ());
 			var xid = x11_drawable_get_xid (get_window ());
 			
+			Gdk.error_trap_push ();
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,
 			                      32, X.PropMode.Replace, (uchar[]) struts, struts.length);
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL, 
 			                      32, X.PropMode.Replace, (uchar[]) first_struts, first_struts.length);
+			Gdk.error_trap_pop ();
 		}
 	}
 }
