@@ -88,7 +88,7 @@ namespace Plank.Drawing
 		 */
 		public int get_top_offset ()
 		{
-			return TopRoundness > 0 ? LineWidth : 0;
+			return LineWidth;
 		}
 		
 		/**
@@ -111,7 +111,7 @@ namespace Plank.Drawing
 			var cr = surface.Context;
 			
 			var top_offset    = get_top_offset ();
-			var bottom_offset = get_bottom_offset ();
+			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			
 			var gradient = new Pattern.linear (0, 0, 0, surface.Height);
 			
@@ -161,7 +161,7 @@ namespace Plank.Drawing
 		protected void draw_inner_rect (Context cr, int width, int height)
 		{
 			var top_offset    = get_top_offset ();
-			var bottom_offset = get_bottom_offset ();
+			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			
 			draw_rounded_rect (cr,
 				3 * LineWidth / 2.0,
