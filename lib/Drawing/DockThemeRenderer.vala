@@ -154,19 +154,43 @@ namespace Plank.Drawing
 		 * @param color the color of the glow
 		 * @param opacity the opacity of the glow
 		 */
-		public void draw_active_glow (DockSurface surface, int horiz_pad, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity)
+		public void draw_active_glow (DockSurface surface, int horiz_pad, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
 		{
-			if (opacity == 0)
-				return;
+			var xoffset = 0, yoffset = 0;
 			
-			var xoffset = horiz_pad < 0 ? -horiz_pad : 0;
-			surface.Context.translate (xoffset, surface.Height - clip_buffer.Height + LineWidth);
+			// TODO update pos
+			if (pos == Gtk.PositionType.BOTTOM || pos == Gtk.PositionType.TOP) {
+				xoffset = horiz_pad < 0 ? -horiz_pad : 0;
+				rect.height -= 2 * get_top_offset () + 2 * get_bottom_offset ();
+			} else {
+				yoffset = horiz_pad < 0 ? -horiz_pad : 0;
+				rect.width -= 2 * get_top_offset () + 2 * get_bottom_offset ();
+			}
+			
+			switch (pos) {
+			case Gtk.PositionType.BOTTOM:
+				yoffset = surface.Height - clip_buffer.Height + get_top_offset ();
+				rect.y += 2 * get_top_offset ();
+				break;
+			case Gtk.PositionType.TOP:
+				yoffset = get_bottom_offset ();
+				rect.y += 2 * get_bottom_offset ();
+				break;
+			case Gtk.PositionType.LEFT:
+				xoffset = get_bottom_offset ();
+				rect.x += 2 * get_bottom_offset ();
+				break;
+			case Gtk.PositionType.RIGHT:
+				xoffset = surface.Width - clip_buffer.Height + get_top_offset ();
+				rect.x += 2 * get_top_offset ();
+				break;
+			}
+			
+			surface.Context.translate (xoffset, yoffset);
 			draw_inner_rect (surface.Context, clip_buffer.Width, clip_buffer.Height);
 			surface.Context.clip ();
-			surface.Context.translate (-xoffset, clip_buffer.Height - surface.Height - LineWidth);
+			surface.Context.translate (-xoffset, -yoffset);
 			
-			rect.y += 2 * get_top_offset ();
-			rect.height -= 2 * get_top_offset () + 2 * get_bottom_offset ();
 			surface.Context.rectangle (rect.x, rect.y, rect.width, rect.height);
 			
 			var gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);

@@ -224,7 +224,7 @@ namespace Plank
 #if BENCHMARK
 			var start2 = new DateTime.now_local ();
 #endif
-			draw_dock_background (main_buffer);
+			draw_dock_background ();
 #if BENCHMARK
 			var end2 = new DateTime.now_local ();
 			benchmark.add ("background render time - %f ms".printf (end2.difference (start2) / 1000.0));
@@ -237,7 +237,7 @@ namespace Plank
 #if BENCHMARK
 				start2 = new DateTime.now_local ();
 #endif
-				draw_item (main_buffer, item);
+				draw_item (item);
 #if BENCHMARK
 				end2 = new DateTime.now_local ();
 				benchmark.add ("item render time - %f ms".printf (end2.difference (start2) / 1000.0));
@@ -308,7 +308,7 @@ namespace Plank
 #endif
 		}
 		
-		void draw_dock_background (DockSurface surface)
+		void draw_dock_background ()
 		{
 			var width = controller.position_manager.DockBackgroundWidth;
 			var height = controller.position_manager.DockBackgroundHeight;
@@ -319,38 +319,38 @@ namespace Plank
 			}
 			
 			if (background_buffer == null || background_buffer.Width != width || background_buffer.Height != height) {
-				background_buffer = new DockSurface.with_dock_surface (width, height, surface);
+				background_buffer = new DockSurface.with_dock_surface (width, height, main_buffer);
 				theme.draw_background (background_buffer);
 			}
 			
-			surface.Context.save ();
+			main_buffer.Context.save ();
 			
 			switch (controller.prefs.Position) {
 			case PositionType.TOP:
-				surface.Context.scale (1, -1);
-				surface.Context.translate ((surface.Width - background_buffer.Width) / 2.0, -background_buffer.Height);
+				main_buffer.Context.scale (1, -1);
+				main_buffer.Context.translate ((main_buffer.Width - background_buffer.Width) / 2.0, -background_buffer.Height);
 				break;
 			case PositionType.BOTTOM:
-				surface.Context.translate ((surface.Width - background_buffer.Width) / 2.0, surface.Height - background_buffer.Height);
+				main_buffer.Context.translate ((main_buffer.Width - background_buffer.Width) / 2.0, main_buffer.Height - background_buffer.Height);
 				break;
 			case PositionType.LEFT:
-				surface.Context.rotate (Math.PI * 0.5);
-				surface.Context.translate (0, -background_buffer.Height);
+				main_buffer.Context.rotate (Math.PI * 0.5);
+				main_buffer.Context.translate (0, -background_buffer.Height);
 				break;
 			case PositionType.RIGHT:
-				surface.Context.rotate (Math.PI * -0.5);
-				surface.Context.translate (surface.Height - 2 * background_buffer.Width, surface.Width - background_buffer.Height);
+				main_buffer.Context.rotate (Math.PI * -0.5);
+				main_buffer.Context.translate (main_buffer.Height - 2 * background_buffer.Width, main_buffer.Width - background_buffer.Height);
 				break;
 			}
 			
-			surface.Context.set_source_surface (background_buffer.Internal, 0, 0);
-			surface.Context.paint ();
-			surface.Context.restore ();
+			main_buffer.Context.set_source_surface (background_buffer.Internal, 0, 0);
+			main_buffer.Context.paint ();
+			main_buffer.Context.restore ();
 		}
 		
-		void draw_item (DockSurface surface, DockItem item)
+		void draw_item (DockItem item)
 		{
-			var icon_surface = new DockSurface.with_dock_surface (controller.prefs.IconSize, controller.prefs.IconSize, surface);
+			var icon_surface = new DockSurface.with_dock_surface (controller.prefs.IconSize, controller.prefs.IconSize, main_buffer);
 			
 			// load the icon
 #if BENCHMARK
@@ -485,18 +485,18 @@ namespace Plank
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
 			if (opacity > 0)
-				theme.draw_active_glow (surface, controller.position_manager.HorizPadding, background_buffer, hover_rect, item.AverageIconColor, opacity);
+				theme.draw_active_glow (main_buffer, controller.position_manager.HorizPadding, background_buffer, hover_rect, item.AverageIconColor, opacity, controller.prefs.Position);
 			
 			// draw the icon
-			surface.Context.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);
-			surface.Context.paint ();
+			main_buffer.Context.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);
+			main_buffer.Context.paint ();
 			
 			// draw indicators
 			if (item.Indicator != IndicatorState.NONE)
-				draw_indicator_state (surface, hover_rect, item.Indicator, item.State);
+				draw_indicator_state (hover_rect, item.Indicator, item.State);
 		}
 		
-		void draw_indicator_state (DockSurface surface, Gdk.Rectangle item_rect, IndicatorState indicator, ItemState item_state)
+		void draw_indicator_state (Gdk.Rectangle item_rect, IndicatorState indicator, ItemState item_state)
 		{
 			if (indicator_buffer == null)
 				create_normal_indicator ();
@@ -530,8 +530,8 @@ namespace Plank
 			}
 			
 			if (indicator == IndicatorState.SINGLE) {
-				surface.Context.set_source_surface (indicator_surface.Internal, x, y);
-				surface.Context.paint ();
+				main_buffer.Context.set_source_surface (indicator_surface.Internal, x, y);
+				main_buffer.Context.paint ();
 			} else {
 				var x_offset = 0.0, y_offset = 0.0;
 				if (controller.prefs.is_horizontal_dock ())
@@ -539,10 +539,10 @@ namespace Plank
 				else
 					y_offset = controller.prefs.IconSize / 16.0;
 				
-				surface.Context.set_source_surface (indicator_surface.Internal, x - x_offset, y - y_offset);
-				surface.Context.paint ();
-				surface.Context.set_source_surface (indicator_surface.Internal, x + x_offset, y + y_offset);
-				surface.Context.paint ();
+				main_buffer.Context.set_source_surface (indicator_surface.Internal, x - x_offset, y - y_offset);
+				main_buffer.Context.paint ();
+				main_buffer.Context.set_source_surface (indicator_surface.Internal, x + x_offset, y + y_offset);
+				main_buffer.Context.paint ();
 			}
 		}
 		
