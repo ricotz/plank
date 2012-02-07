@@ -282,10 +282,12 @@ namespace Plank
 		public Gdk.Rectangle item_hover_region (DockItem item)
 		{
 			var rect = item_draw_region (item);
+			
 			if (controller.prefs.is_horizontal_dock ())
 				rect.x += (controller.window.width_request - VisibleDockWidth) / 2;
 			else
 				rect.y += (controller.window.height_request - VisibleDockHeight) / 2;
+			
 			return rect;
 		}
 		

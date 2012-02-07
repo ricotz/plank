@@ -172,28 +172,24 @@ namespace Plank.Drawing
 				yoffset = surface.Height - clip_buffer.Height + get_top_offset ();
 				rect.y += 2 * get_top_offset ();
 				
-				draw_inner_rect (surface.Context, clip_buffer.Width + xoffset, clip_buffer.Height + yoffset);
 				gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
 				break;
 			case Gtk.PositionType.TOP:
 				yoffset = get_bottom_offset ();
 				rect.y += 2 * get_bottom_offset ();
 				
-				draw_inner_rect (surface.Context, clip_buffer.Width + xoffset, clip_buffer.Height + yoffset);
 				gradient = new Pattern.linear (0, rect.y + rect.height, 0, rect.y);
 				break;
 			case Gtk.PositionType.LEFT:
 				xoffset = get_bottom_offset ();
 				rect.x += 2 * get_bottom_offset ();
 				
-				draw_inner_rect (surface.Context, clip_buffer.Height + xoffset, clip_buffer.Width + yoffset);
 				gradient = new Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
 				break;
 			case Gtk.PositionType.RIGHT:
 				xoffset = surface.Width - clip_buffer.Height + get_top_offset ();
 				rect.x += 2 * get_top_offset ();
 				
-				draw_inner_rect (surface.Context, clip_buffer.Height + xoffset, clip_buffer.Width + yoffset);
 				gradient = new Pattern.linear (rect.x, 0, rect.x + rect.width, 0);
 				break;
 			}
@@ -201,7 +197,13 @@ namespace Plank.Drawing
 			gradient.add_color_stop_rgba (0, color.R, color.G, color.B, 0);
 			gradient.add_color_stop_rgba (1, color.R, color.G, color.B, 0.6 * opacity);
 			
+			surface.Context.translate (xoffset, yoffset);
+			if (pos == Gtk.PositionType.BOTTOM || pos == Gtk.PositionType.TOP)
+				draw_inner_rect (surface.Context, clip_buffer.Width, clip_buffer.Height);
+			else
+				draw_inner_rect (surface.Context, clip_buffer.Height, clip_buffer.Width);
 			surface.Context.clip ();
+			surface.Context.translate (-xoffset, -yoffset);
 			
 			surface.Context.rectangle (rect.x, rect.y, rect.width, rect.height);
 			surface.Context.set_source (gradient);
