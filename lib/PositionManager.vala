@@ -166,7 +166,7 @@ namespace Plank
 			var dock_height = height + (int) (icon_size * theme.UrgentBounceHeight);
 			
 			
-			var width = controller.items.Items.size * (ItemPadding + icon_size) + 2 * items_offset;
+			var width = controller.items.Items.size * (ItemPadding + icon_size) + 2 * HorizPadding + 4 * theme.LineWidth;
 			
 			// width of the dock background image, as drawn
 			var background_width = width;
