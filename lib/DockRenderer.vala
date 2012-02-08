@@ -357,11 +357,8 @@ namespace Plank
 				break;
 			case PositionType.RIGHT:
 				main_buffer.Context.rotate (Math.PI * -0.5);
-				// FIXME im sure this can be simplified
-				if (controller.position_manager.HorizPadding < 0)
-					main_buffer.Context.translate (main_buffer.Height - 2.5 * background_buffer.Width, main_buffer.Width - background_buffer.Height);
-				else
-					main_buffer.Context.translate (main_buffer.Height - 2 * background_buffer.Width, main_buffer.Width - background_buffer.Height);
+				// FIXME fails for HorizPadding < 0
+				main_buffer.Context.translate (main_buffer.Height - 2 * background_buffer.Width, main_buffer.Width - background_buffer.Height);
 				break;
 			}
 			
