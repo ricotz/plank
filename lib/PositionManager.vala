@@ -151,11 +151,9 @@ namespace Plank
 			
 			
 			// height of the visible (cursor) rect of the dock
-			var height = icon_size + 2 * (theme.get_top_offset () + theme.get_bottom_offset ());
+			var height = icon_size + 2 * (theme.get_top_offset () + theme.get_bottom_offset ()) + BottomPadding;
 			if (TopPadding > 0)
 				height += TopPadding;
-			if (BottomPadding > 0)
-				height += BottomPadding;
 			
 			// height of the dock background image, as drawn
 			var background_height = height;
@@ -176,7 +174,7 @@ namespace Plank
 				width -= 2 * HorizPadding;
 			
 			// width of the dock window
-			var dock_width = width + icon_size + ItemPadding + GlowSize / 2;
+			var dock_width = width + GlowSize / 2;
 			
 			
 			if (controller.prefs.is_horizontal_dock ()) {

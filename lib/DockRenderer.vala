@@ -326,10 +326,13 @@ namespace Plank
 		
 		void draw_dock_background ()
 		{
-			var width = controller.position_manager.DockBackgroundWidth;
-			var height = controller.position_manager.DockBackgroundHeight;
+			var width = 0, height = 0;
+			var yoffset = 0.0;
 			
-			if (!controller.prefs.is_horizontal_dock ()) {
+			if (controller.prefs.is_horizontal_dock ()) {
+				width = controller.position_manager.DockBackgroundWidth;
+				height = controller.position_manager.DockBackgroundHeight;
+			} else {
 				width = controller.position_manager.DockBackgroundHeight;
 				height = controller.position_manager.DockBackgroundWidth;
 			}
@@ -351,15 +354,17 @@ namespace Plank
 				break;
 			case PositionType.LEFT:
 				main_buffer.Context.rotate (Math.PI * 0.5);
+				yoffset = (main_buffer.Height - background_buffer.Width) / 2.0;
 				main_buffer.Context.translate (0, -background_buffer.Height);
 				break;
 			case PositionType.RIGHT:
 				main_buffer.Context.rotate (Math.PI * -0.5);
+				//yoffset = (main_buffer.Height - background_buffer.Width) / 2.0;
 				main_buffer.Context.translate (main_buffer.Height - 2 * background_buffer.Width, main_buffer.Width - background_buffer.Height);
 				break;
 			}
 			
-			main_buffer.Context.set_source_surface (background_buffer.Internal, 0, 0);
+			main_buffer.Context.set_source_surface (background_buffer.Internal, yoffset, 0);
 			main_buffer.Context.paint ();
 			main_buffer.Context.restore ();
 		}
@@ -501,7 +506,7 @@ namespace Plank
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
 			if (opacity > 0)
-				theme.draw_active_glow (main_buffer, controller.position_manager.HorizPadding, background_buffer, hover_rect, item.AverageIconColor, opacity, controller.prefs.Position);
+				theme.draw_active_glow (main_buffer, controller.position_manager.HorizPadding, controller.position_manager.TopPadding, background_buffer, hover_rect, item.AverageIconColor, opacity, controller.prefs.Position);
 			
 			// draw the icon
 			main_buffer.Context.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);

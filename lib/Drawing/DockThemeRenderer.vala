@@ -149,63 +149,64 @@ namespace Plank.Drawing
 		 *
 		 * @param surface the surface to draw onto
 		 * @param horiz_pad any horizontal padding to account for
+		 * @param top_pad any vertical padding to account for
 		 * @param clip_buffer a region to clip the glow to
 		 * @param rect the rect for the glow
 		 * @param color the color of the glow
 		 * @param opacity the opacity of the glow
 		 */
-		public void draw_active_glow (DockSurface surface, int horiz_pad, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
+		public void draw_active_glow (DockSurface surface, int horiz_pad, int top_pad, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
 		{
-			Pattern gradient = null;
-			var xoffset = 0, yoffset = 0;
 			var top_offset = get_top_offset ();
 			var bottom_offset = get_bottom_offset ();
+			top_pad = top_pad < 0 ? top_pad : 0;
+			
+			Pattern gradient = null;
+			var clip_rect = Gdk.Rectangle ();
 			
 			if (pos == Gtk.PositionType.BOTTOM || pos == Gtk.PositionType.TOP) {
-				xoffset = horiz_pad < 0 ? -horiz_pad : 0;
-				rect.height -= 2 * (top_offset + bottom_offset);
+				clip_rect.x = (surface.Width - clip_buffer.Width) / 2 + 2 * top_offset;
+				clip_rect.width = surface.Width - 2 * clip_rect.x;
+				clip_rect.height = clip_buffer.Height;
+				
+				rect.height -= 2 * (top_offset + bottom_offset) - top_pad;
 			} else {
-				yoffset = horiz_pad < 0 ? -horiz_pad : 0;
-				rect.width -= 2 * (top_offset + bottom_offset);
+				clip_rect.y = (surface.Height - clip_buffer.Width) / 2 + 2 * top_offset;
+				clip_rect.height = surface.Height - 2 * clip_rect.y;
+				clip_rect.width = clip_buffer.Height;
+				
+				rect.width -= 2 * (top_offset + bottom_offset) - top_pad;
 			}
 			
 			switch (pos) {
 			case Gtk.PositionType.BOTTOM:
-				yoffset = surface.Height - clip_buffer.Height + top_offset;
-				rect.y += 2 * top_offset;
+				clip_rect.y = surface.Height - clip_buffer.Height;
 				
+				rect.y += 2 * top_offset - top_pad;
 				gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
 				break;
 			case Gtk.PositionType.TOP:
-				yoffset = bottom_offset;
-				rect.y += 2 * bottom_offset;
-				
+				clip_rect.y = 0;
 				gradient = new Pattern.linear (0, rect.y + rect.height, 0, rect.y);
 				break;
 			case Gtk.PositionType.LEFT:
-				xoffset = bottom_offset;
-				rect.x += 2 * bottom_offset;
-				
+				clip_rect.x = 0;
 				gradient = new Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
 				break;
 			case Gtk.PositionType.RIGHT:
-				xoffset = surface.Width - clip_buffer.Height + top_offset;
-				rect.x += 2 * top_offset;
+				clip_rect.x = surface.Width - clip_buffer.Height;
 				
+				rect.x += 2 * top_offset - top_pad;
 				gradient = new Pattern.linear (rect.x, 0, rect.x + rect.width, 0);
 				break;
 			}
+			
+			surface.Context.rectangle (clip_rect.x, clip_rect.y, clip_rect.width, clip_rect.height);
+			surface.Context.set_line_width (LineWidth);
+			surface.Context.clip ();
 
 			gradient.add_color_stop_rgba (0, color.R, color.G, color.B, 0);
 			gradient.add_color_stop_rgba (1, color.R, color.G, color.B, 0.6 * opacity);
-			
-			surface.Context.translate (xoffset, yoffset);
-			if (pos == Gtk.PositionType.BOTTOM || pos == Gtk.PositionType.TOP)
-				draw_inner_rect (surface.Context, clip_buffer.Width, clip_buffer.Height);
-			else
-				draw_inner_rect (surface.Context, clip_buffer.Height, clip_buffer.Width);
-			surface.Context.clip ();
-			surface.Context.translate (-xoffset, -yoffset);
 			
 			surface.Context.rectangle (rect.x, rect.y, rect.width, rect.height);
 			surface.Context.set_source (gradient);
@@ -224,7 +225,11 @@ namespace Plank.Drawing
 			switch (prop) {
 			case "HorizPadding":
 			case "TopPadding":
+				break;
+			
 			case "BottomPadding":
+				if (BottomPadding < 0)
+					BottomPadding = 0;
 				break;
 			
 			case "ItemPadding":
