@@ -298,28 +298,28 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
+				rect.width = controller.prefs.IconSize + ItemPadding;
+				rect.height = VisibleDockHeight;
 				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
 				rect.y = DockHeight - rect.height;
-				rect.width = controller.prefs.IconSize + ItemPadding;
-				rect.height = VisibleDockHeight;
 				break;
 			case PositionType.TOP:
-				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
-				rect.y = 0;
 				rect.width = controller.prefs.IconSize + ItemPadding;
 				rect.height = VisibleDockHeight;
+				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
+				rect.y = 0;
 				break;
 			case PositionType.LEFT:
+				rect.height = controller.prefs.IconSize + ItemPadding;
+				rect.width = VisibleDockWidth;
 				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
 				rect.x = 0;
-				rect.height = controller.prefs.IconSize + ItemPadding;
-				rect.width = VisibleDockWidth;
 				break;
 			case PositionType.RIGHT:
-				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
-				rect.x = DockWidth - rect.width;
 				rect.height = controller.prefs.IconSize + ItemPadding;
 				rect.width = VisibleDockWidth;
+				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
+				rect.x = DockWidth - rect.width;
 				break;
 			}
 			
