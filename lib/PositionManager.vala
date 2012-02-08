@@ -375,16 +375,23 @@ namespace Plank
 		{
 			var rect = item_hover_region (hovered);
 			
-			if (controller.prefs.is_horizontal_dock ()) {
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
 				x = rect.x + win_x + rect.width / 2;
 				y = rect.y + win_y;
-				if (controller.prefs.Position == PositionType.TOP)
-					y += rect.height;
-			} else {
+				break;
+			case PositionType.TOP:
+				x = rect.x + win_x + rect.width / 2;
+				y = rect.y + win_y + rect.height;
+				break;
+			case PositionType.LEFT:
+				y = rect.y + win_y + rect.height / 2;
+				x = rect.x + win_x + rect.width;
+				break;
+			case PositionType.RIGHT:
 				y = rect.y + win_y + rect.height / 2;
 				x = rect.x + win_x;
-				if (controller.prefs.Position == PositionType.LEFT)
-					x += rect.width;
+				break;
 			}
 		}
 		
@@ -396,16 +403,23 @@ namespace Plank
 		 */
 		public void get_dock_position (out int win_x, out int win_y)
 		{
-			if (controller.prefs.is_horizontal_dock ()) {
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				win_x = monitor_geo.x + (monitor_geo.width - controller.window.width_request) / 2;
+				win_y = monitor_geo.y + monitor_geo.height - controller.window.height_request;
+				break;
+			case PositionType.TOP:
 				win_x = monitor_geo.x + (monitor_geo.width - controller.window.width_request) / 2;
 				win_y = monitor_geo.y;
-				if (controller.prefs.Position == PositionType.BOTTOM)
-					win_y += monitor_geo.height - controller.window.height_request;
-			} else {
+				break;
+			case PositionType.LEFT:
 				win_y = monitor_geo.y + (monitor_geo.height - controller.window.height_request) / 2;
 				win_x = monitor_geo.x;
-				if (controller.prefs.Position == PositionType.RIGHT)
-					win_x += monitor_geo.width - controller.window.width_request;
+				break;
+			case PositionType.RIGHT:
+				win_y = monitor_geo.y + (monitor_geo.height - controller.window.height_request) / 2;
+				win_x = monitor_geo.x + monitor_geo.width - controller.window.width_request;
+				break;
 			}
 		}
 		
