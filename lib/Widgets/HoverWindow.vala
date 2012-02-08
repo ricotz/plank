@@ -89,20 +89,25 @@ namespace Plank.Widgets
 		 */
 		public void move_hover (int item_x, int item_y)
 		{
-			int x, y;
+			var x = 0, y = 0;
 			
-			if (controller.prefs.is_horizontal_dock ()) {
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
 				x = item_x - width_request / 2;
-				if (controller.prefs.Position == PositionType.BOTTOM)
-					y = item_y - height_request - PADDING;
-				else
-					y = item_y + PADDING;
-			} else {
+				y = item_y - height_request - PADDING;
+				break;
+			case PositionType.TOP:
+				x = item_x - width_request / 2;
+				y = item_y + PADDING;
+				break;
+			case PositionType.LEFT:
 				y = item_y - height_request / 2;
-				if (controller.prefs.Position == PositionType.RIGHT)
-					x = item_x - width_request - PADDING;
-				else
-					x = item_x + PADDING;
+				x = item_x + PADDING;
+				break;
+			case PositionType.RIGHT:
+				y = item_y - height_request / 2;
+				x = item_x - width_request - PADDING;
+				break;
 			}
 			
 			var screen = get_screen ();
