@@ -362,8 +362,7 @@ namespace Plank
 				break;
 			case PositionType.RIGHT:
 				main_buffer.Context.rotate (Math.PI * -0.5);
-				// FIXME fails for HorizPadding < 0
-				main_buffer.Context.translate (main_buffer.Height - 2 * background_buffer.Width, main_buffer.Width - background_buffer.Height);
+				main_buffer.Context.translate ((-main_buffer.Height - background_buffer.Width) / 2.0, main_buffer.Width - background_buffer.Height);
 				break;
 			}
 			
