@@ -327,7 +327,6 @@ namespace Plank
 		void draw_dock_background ()
 		{
 			var width = 0, height = 0;
-			var yoffset = 0.0;
 			
 			if (controller.prefs.is_horizontal_dock ()) {
 				width = controller.position_manager.DockBackgroundWidth;
@@ -354,17 +353,19 @@ namespace Plank
 				break;
 			case PositionType.LEFT:
 				main_buffer.Context.rotate (Math.PI * 0.5);
-				yoffset = (main_buffer.Height - background_buffer.Width) / 2.0;
-				main_buffer.Context.translate (0, -background_buffer.Height);
+				main_buffer.Context.translate ((main_buffer.Height - background_buffer.Width) / 2.0, -background_buffer.Height);
 				break;
 			case PositionType.RIGHT:
 				main_buffer.Context.rotate (Math.PI * -0.5);
-				//yoffset = (main_buffer.Height - background_buffer.Width) / 2.0;
-				main_buffer.Context.translate (main_buffer.Height - 2 * background_buffer.Width, main_buffer.Width - background_buffer.Height);
+				// FIXME im sure this can be simplified
+				if (controller.position_manager.HorizPadding < 0)
+					main_buffer.Context.translate (main_buffer.Height - 2.5 * background_buffer.Width, main_buffer.Width - background_buffer.Height);
+				else
+					main_buffer.Context.translate (main_buffer.Height - 2 * background_buffer.Width, main_buffer.Width - background_buffer.Height);
 				break;
 			}
 			
-			main_buffer.Context.set_source_surface (background_buffer.Internal, yoffset, 0);
+			main_buffer.Context.set_source_surface (background_buffer.Internal, 0, 0);
 			main_buffer.Context.paint ();
 			main_buffer.Context.restore ();
 		}
