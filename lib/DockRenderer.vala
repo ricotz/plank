@@ -283,19 +283,19 @@ namespace Plank
 					var rect = controller.position_manager.item_draw_region (item);
 					switch (controller.prefs.Position) {
 					case PositionType.BOTTOM:
-						x_offset += rect.x + rect.width / 2.0 - urgent_glow_buffer.Width / 2.0;
+						x_offset = rect.x + rect.width / 2.0 - urgent_glow_buffer.Width / 2.0;
 						y_offset = main_buffer.Height - urgent_glow_buffer.Height / 2.0;
 						break;
 					case PositionType.TOP:
-						x_offset += rect.x + rect.width / 2.0 - urgent_glow_buffer.Width / 2.0;
+						x_offset = rect.x + rect.width / 2.0 - urgent_glow_buffer.Width / 2.0;
 						y_offset = - urgent_glow_buffer.Height / 2.0;
 						break;
 					case PositionType.LEFT:
-						y_offset += rect.y + rect.height / 2.0 - urgent_glow_buffer.Height / 2.0;
-						x_offset = - urgent_glow_buffer.Height / 2.0;
+						y_offset = rect.y + rect.height / 2.0 - urgent_glow_buffer.Height / 2.0;
+						x_offset = - urgent_glow_buffer.Width / 2.0;
 						break;
 					case PositionType.RIGHT:
-						y_offset += rect.y + rect.height / 2.0 - urgent_glow_buffer.Height / 2.0;
+						y_offset = rect.y + rect.height / 2.0 - urgent_glow_buffer.Height / 2.0;
 						x_offset = main_buffer.Width - urgent_glow_buffer.Width / 2.0;
 						break;
 					}

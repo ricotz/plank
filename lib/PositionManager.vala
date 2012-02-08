@@ -202,22 +202,21 @@ namespace Plank
 		 */
 		public Gdk.Rectangle get_cursor_region ()
 		{
-			if (controller.prefs.is_horizontal_dock ())
-				cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
-			else
-				cursor_region.width = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockWidth));
-			
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
+				cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
 				cursor_region.y = controller.window.height_request - cursor_region.height;
 				break;
 			case PositionType.TOP:
+				cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
 				cursor_region.y = 0;
 				break;
 			case PositionType.LEFT:
+				cursor_region.width = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockWidth));
 				cursor_region.x = 0;
 				break;
 			case PositionType.RIGHT:
+				cursor_region.width = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockWidth));
 				cursor_region.x = controller.window.width_request - cursor_region.width;
 				break;
 			}
@@ -243,30 +242,35 @@ namespace Plank
 		{
 			static_dock_region.width = VisibleDockWidth;
 			static_dock_region.height = VisibleDockHeight;
-			if (controller.prefs.is_horizontal_dock ()) {
-				static_dock_region.x = (controller.window.width_request - static_dock_region.width) / 2;
-				
-				cursor_region.x = static_dock_region.x;
-				cursor_region.width = static_dock_region.width;
-			} else {
-				static_dock_region.y = (controller.window.height_request - static_dock_region.height) / 2;
-				
-				cursor_region.y = static_dock_region.y;
-				cursor_region.height = static_dock_region.height;
-			}
 			
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
+				static_dock_region.x = (controller.window.width_request - static_dock_region.width) / 2;
 				static_dock_region.y = controller.window.height_request - static_dock_region.height;
+				
+				cursor_region.x = static_dock_region.x;
+				cursor_region.width = static_dock_region.width;
 				break;
 			case PositionType.TOP:
+				static_dock_region.x = (controller.window.width_request - static_dock_region.width) / 2;
 				static_dock_region.y = 0;
+				
+				cursor_region.x = static_dock_region.x;
+				cursor_region.width = static_dock_region.width;
 				break;
 			case PositionType.LEFT:
+				static_dock_region.y = (controller.window.height_request - static_dock_region.height) / 2;
 				static_dock_region.x = 0;
+				
+				cursor_region.y = static_dock_region.y;
+				cursor_region.height = static_dock_region.height;
 				break;
 			case PositionType.RIGHT:
+				static_dock_region.y = (controller.window.height_request - static_dock_region.height) / 2;
 				static_dock_region.x = controller.window.width_request - static_dock_region.width;
+				
+				cursor_region.y = static_dock_region.y;
+				cursor_region.height = static_dock_region.height;
 				break;
 			}
 		}
@@ -292,28 +296,30 @@ namespace Plank
 		{
 			var rect = Gdk.Rectangle ();
 			
-			if (controller.prefs.is_horizontal_dock ()) {
-				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
-				rect.width = controller.prefs.IconSize + ItemPadding;
-				rect.height = VisibleDockHeight;
-			} else {
-				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
-				rect.height = controller.prefs.IconSize + ItemPadding;
-				rect.width = VisibleDockWidth;
-			}
-			
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
+				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
 				rect.y = DockHeight - rect.height;
+				rect.width = controller.prefs.IconSize + ItemPadding;
+				rect.height = VisibleDockHeight;
 				break;
 			case PositionType.TOP:
+				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
 				rect.y = 0;
+				rect.width = controller.prefs.IconSize + ItemPadding;
+				rect.height = VisibleDockHeight;
 				break;
 			case PositionType.LEFT:
+				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
 				rect.x = 0;
+				rect.height = controller.prefs.IconSize + ItemPadding;
+				rect.width = VisibleDockWidth;
 				break;
 			case PositionType.RIGHT:
+				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
 				rect.x = DockWidth - rect.width;
+				rect.height = controller.prefs.IconSize + ItemPadding;
+				rect.width = VisibleDockWidth;
 				break;
 			}
 			
@@ -334,27 +340,24 @@ namespace Plank
 		{
 			var rect = item_hover_region (hovered);
 			
-			if (controller.prefs.is_horizontal_dock ()) {
-				x = win_x + rect.x + (rect.width - requisition.width) / 2;
-				y = win_y;
-			} else {
-				y = win_y + rect.y + rect.width / 2;
-				x = win_x + rect.x;
-			}
-			
 			var offset = 10;
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
-				y += rect.y - requisition.height - offset;
+				x = win_x + rect.x + (rect.width - requisition.width) / 2;
+				y = win_y + rect.y - requisition.height - offset;
 				break;
 			case PositionType.TOP:
-				y += rect.height + offset;
+				x = win_x + rect.x + (rect.width - requisition.width) / 2;
+				y = win_y + rect.height + offset;
 				break;
 			case PositionType.LEFT:
-				x += rect.width + offset;
+				y = win_y + rect.y + rect.width / 2;
+				x = win_x + rect.x + rect.width + offset;
 				break;
 			case PositionType.RIGHT:
-				x -= requisition.width + offset;
+				y = win_y + rect.y + rect.width / 2;
+				x = win_x + rect.x - requisition.width - offset;
 				break;
 			}
 		}
@@ -413,26 +416,26 @@ namespace Plank
 		 */
 		public void get_struts (ref ulong[] struts)
 		{
-			if (controller.prefs.is_horizontal_dock ()) {
-				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.x;
-				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.x + monitor_geo.width - 1;
-			} else {
-				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.y;
-				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.y + monitor_geo.height - 1;
-			}
-			
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
 				struts [controller.prefs.Position] = VisibleDockHeight + controller.window.get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
+				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.x;
+				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.x + monitor_geo.width - 1;
 				break;
 			case PositionType.TOP:
 				struts [controller.prefs.Position] = monitor_geo.y + VisibleDockHeight;
+				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.x;
+				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.x + monitor_geo.width - 1;
 				break;
 			case PositionType.LEFT:
 				struts [controller.prefs.Position] = monitor_geo.x + VisibleDockWidth;
+				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.y;
+				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.y + monitor_geo.height - 1;
 				break;
 			case PositionType.RIGHT:
 				struts [controller.prefs.Position] = VisibleDockWidth + controller.window.get_screen ().get_width () - monitor_geo.x - monitor_geo.width;
+				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.y;
+				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.y + monitor_geo.height - 1;
 				break;
 			}
 		}
