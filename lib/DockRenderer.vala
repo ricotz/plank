@@ -201,25 +201,15 @@ namespace Plank
 		 */
 		public void draw_dock (Context cr)
 		{
-			var width = 0, height = 0;
-			
-			if (controller.prefs.is_horizontal_dock ()) {
-				height = controller.position_manager.DockHeight;
-				width = controller.position_manager.VisibleDockWidth;
-			} else {
-				height = controller.position_manager.VisibleDockHeight;
-				width = controller.position_manager.DockWidth;
-			}
-			
 #if BENCHMARK
 			benchmark.clear ();
 			var start = new DateTime.now_local ();
 #endif
-			if (main_buffer != null && (main_buffer.Width != width || main_buffer.Height != height))
+			if (main_buffer != null && (main_buffer.Width != controller.position_manager.DockWidth || main_buffer.Height != controller.position_manager.DockHeight))
 				reset_buffers ();
 			
 			if (main_buffer == null)
-				main_buffer = new DockSurface.with_surface (width, height, cr.get_target ());
+				main_buffer = new DockSurface.with_surface (controller.position_manager.DockWidth, controller.position_manager.DockHeight, cr.get_target ());
 			
 			main_buffer.clear ();
 			
@@ -248,10 +238,6 @@ namespace Plank
 			
 			// calculate drawing offset
 			var x_offset = 0.0, y_offset = 0.0;
-			if (controller.prefs.is_horizontal_dock ())
-				x_offset = (controller.window.width_request - main_buffer.Width) / 2.0;
-			else
-				y_offset = (controller.window.height_request - main_buffer.Height) / 2.0;
 			
 			if (theme.FadeOpacity == 1.0) {
 				switch (controller.prefs.Position) {

@@ -279,14 +279,7 @@ namespace Plank
 		 */
 		public Gdk.Rectangle item_hover_region (DockItem item)
 		{
-			var rect = item_draw_region (item);
-			
-			if (controller.prefs.is_horizontal_dock ())
-				rect.x += (controller.window.width_request - VisibleDockWidth) / 2;
-			else
-				rect.y += (controller.window.height_request - VisibleDockHeight) / 2;
-			
-			return rect;
+			return item_draw_region (item);
 		}
 		
 		/**
@@ -300,11 +293,11 @@ namespace Plank
 			var rect = Gdk.Rectangle ();
 			
 			if (controller.prefs.is_horizontal_dock ()) {
-				rect.x = items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
+				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
 				rect.width = controller.prefs.IconSize + ItemPadding;
 				rect.height = VisibleDockHeight;
 			} else {
-				rect.y = items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
+				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
 				rect.height = controller.prefs.IconSize + ItemPadding;
 				rect.width = VisibleDockWidth;
 			}
