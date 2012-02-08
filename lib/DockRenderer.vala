@@ -393,7 +393,7 @@ namespace Plank
 			switch (controller.prefs.Position) {
 			case PositionType.TOP:
 				draw_rect.x += controller.position_manager.ItemPadding / 2;
-				draw_rect.y += 2 * theme.get_bottom_offset () + (bottom_padding > 0 ? bottom_padding : 0);
+				draw_rect.y += 2 * theme.get_bottom_offset () + bottom_padding;
 				draw_rect.height -= bottom_padding;
 				break;
 			case PositionType.BOTTOM:
@@ -403,7 +403,7 @@ namespace Plank
 				break;
 			case PositionType.LEFT:
 				draw_rect.y += controller.position_manager.ItemPadding / 2;
-				draw_rect.x += 2 * theme.get_bottom_offset () + (bottom_padding > 0 ? bottom_padding : 0);
+				draw_rect.x += 2 * theme.get_bottom_offset () + bottom_padding;
 				draw_rect.width -= bottom_padding;
 				break;
 			case PositionType.RIGHT:

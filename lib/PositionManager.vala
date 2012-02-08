@@ -311,7 +311,7 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
-				rect.y = DockHeight - VisibleDockHeight;
+				rect.y = DockHeight - rect.height;
 				break;
 			case PositionType.TOP:
 				rect.y = 0;
@@ -320,7 +320,7 @@ namespace Plank
 				rect.x = 0;
 				break;
 			case PositionType.RIGHT:
-				rect.x = DockWidth - VisibleDockWidth;
+				rect.x = DockWidth - rect.width;
 				break;
 			}
 			
