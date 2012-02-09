@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011-2012 Robert Dyer
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -224,6 +224,8 @@ namespace Plank.Drawing
 			
 			switch (prop) {
 			case "HorizPadding":
+				break;
+			
 			case "TopPadding":
 				break;
 			

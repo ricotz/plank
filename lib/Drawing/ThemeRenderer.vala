@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -226,8 +226,14 @@ namespace Plank.Drawing
 				break;
 			
 			case "OuterStrokeColor":
+				break;
+			
 			case "FillStartColor":
+				break;
+			
 			case "FillEndColor":
+				break;
+			
 			case "InnerStrokeColor":
 				break;
 			}
