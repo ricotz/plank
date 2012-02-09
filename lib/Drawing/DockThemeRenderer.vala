@@ -200,10 +200,10 @@ namespace Plank.Drawing
 				rect.x += 2 * top_offset - top_pad;
 				gradient = new Pattern.linear (rect.x, 0, rect.x + rect.width, 0);
 				
-				surface.Context.rotate (Math.PI * 0.5);
+				surface.Context.rotate (Math.PI * -0.5);
 				surface.Context.translate ((-surface.Height - clip_buffer.Width) / 2.0, surface.Width - clip_buffer.Height);
 				draw_inner_rect (surface.Context, clip_buffer.Width, clip_buffer.Height);
-				surface.Context.rotate (Math.PI * -0.5);
+				surface.Context.rotate (Math.PI * 0.5);
 				surface.Context.translate (-(-surface.Height - clip_buffer.Width) / 2.0, -surface.Width + clip_buffer.Height);
 				break;
 			}
