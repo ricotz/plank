@@ -78,6 +78,17 @@ namespace Plank
 		//
 		
 		/**
+		 * Cached x position of the dock window.
+		 */
+		public int win_x { get; protected set; }
+		
+		/**
+		 * Cached y position of the dock window.
+		 */
+		public int win_y { get; protected set; }
+		
+		
+		/**
 		 * Theme-based indicator size, scaled by icon size.
 		 */
 		public int IndicatorSize { get; private set; }
@@ -331,12 +342,10 @@ namespace Plank
 		 *
 		 * @param hovered the item that is hovered
 		 * @param requisition the menu's requisition
-		 * @param win_x the dock window's x position
-		 * @param win_y the dock window's y position
 		 * @param x the resulting x position
 		 * @param y the resulting y position
 		 */
-		public void get_menu_position (DockItem hovered, Requisition requisition, int win_x, int win_y, out int x, out int y)
+		public void get_menu_position (DockItem hovered, Requisition requisition, out int x, out int y)
 		{
 			var rect = item_hover_region (hovered);
 			
@@ -366,16 +375,15 @@ namespace Plank
 		 * Get's the x and y position to display a hover window for a dock item.
 		 *
 		 * @param hovered the item that is hovered
-		 * @param win_x the dock window's x position
-		 * @param win_y the dock window's y position
 		 * @param x the resulting x position
 		 * @param y the resulting y position
 		 */
-		public void get_hover_position (DockItem hovered, int win_x, int win_y, out int x, out int y)
+		public void get_hover_position (DockItem hovered, out int x, out int y)
 		{
 			var rect = item_hover_region (hovered);
 			
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				x = rect.x + win_x + rect.width / 2;
 				y = rect.y + win_y;
@@ -396,12 +404,9 @@ namespace Plank
 		}
 		
 		/**
-		 * Get's the x and y position to display a hover window for a dock item.
-		 *
-		 * @param win_x the dock window's x position
-		 * @param win_y the dock window's y position
+		 * Caches the x and y position of the dock window.
 		 */
-		public void get_dock_position (out int win_x, out int win_y)
+		public void update_dock_position ()
 		{
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:

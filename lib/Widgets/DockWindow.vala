@@ -50,17 +50,6 @@ namespace Plank.Widgets
 		protected Gtk.Menu menu = new Gtk.Menu ();
 		
 		
-		/**
-		 * Cached x position of the dock window.
-		 */
-		public int win_x { get; protected set; }
-		
-		/**
-		 * Cached y position of the dock window.
-		 */
-		public int win_y { get; protected set; }
-		
-		
 		uint reposition_timer = 0;
 		
 		bool dock_is_starting = true;
@@ -272,7 +261,7 @@ namespace Plank.Widgets
 			requires (HoveredItem != null)
 		{
 			int x, y;
-			controller.position_manager.get_hover_position (HoveredItem, win_x, win_y, out x, out y);
+			controller.position_manager.get_hover_position (HoveredItem, out x, out y);
 			controller.hover.move_hover (x, y);
 		}
 		
@@ -302,11 +291,8 @@ namespace Plank.Widgets
 			reposition_timer = GLib.Timeout.add (50, () => {
 				reposition_timer = 0;
 				
-				int x, y;
-				controller.position_manager.get_dock_position (out x, out y);
-				win_x = x;
-				win_y = y;
-				move (win_x, win_y);
+				controller.position_manager.update_dock_position ();
+				move (controller.position_manager.win_x, controller.position_manager.win_y);
 				
 				update_icon_regions ();
 				set_struts ();
@@ -333,7 +319,7 @@ namespace Plank.Widgets
 				else
 					region = controller.position_manager.item_hover_region (appitem);
 				
-				WindowControl.update_icon_regions (appitem.App, region, win_x, win_y);
+				WindowControl.update_icon_regions (appitem.App, region, controller.position_manager.win_x, controller.position_manager.win_y);
 			}
 			
 			controller.renderer.animated_draw ();
@@ -405,7 +391,7 @@ namespace Plank.Widgets
 #else
 			var requisition = menu.requisition;
 #endif
-			controller.position_manager.get_menu_position (HoveredItem, requisition, win_x, win_y, out x, out y);
+			controller.position_manager.get_menu_position (HoveredItem, requisition, out x, out y);
 			push_in = false;
 		}
 		
