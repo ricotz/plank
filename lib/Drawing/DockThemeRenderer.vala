@@ -162,46 +162,53 @@ namespace Plank.Drawing
 			top_pad = top_pad < 0 ? top_pad : 0;
 			
 			Pattern gradient = null;
-			var clip_rect = Gdk.Rectangle ();
 			
-			if (pos == Gtk.PositionType.BOTTOM || pos == Gtk.PositionType.TOP) {
-				clip_rect.x = (surface.Width - clip_buffer.Width) / 2 + 2 * top_offset;
-				clip_rect.width = surface.Width - 2 * clip_rect.x;
-				clip_rect.height = clip_buffer.Height;
-				
+			if (pos == Gtk.PositionType.BOTTOM || pos == Gtk.PositionType.TOP)
 				rect.height -= 2 * (top_offset + bottom_offset) - top_pad;
-			} else {
-				clip_rect.y = (surface.Height - clip_buffer.Width) / 2 + 2 * top_offset;
-				clip_rect.height = surface.Height - 2 * clip_rect.y;
-				clip_rect.width = clip_buffer.Height;
-				
+			else
 				rect.width -= 2 * (top_offset + bottom_offset) - top_pad;
-			}
 			
+			surface.Context.save ();
 			switch (pos) {
 			case Gtk.PositionType.BOTTOM:
-				clip_rect.y = surface.Height - clip_buffer.Height;
-				
 				rect.y += 2 * top_offset - top_pad;
 				gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
+				
+				surface.Context.translate ((surface.Width - clip_buffer.Width) / 2.0, surface.Height - clip_buffer.Height);
+				draw_inner_rect (surface.Context, clip_buffer.Width, clip_buffer.Height);
+				surface.Context.translate (-(surface.Width - clip_buffer.Width) / 2.0, -surface.Height + clip_buffer.Height);
 				break;
 			case Gtk.PositionType.TOP:
-				clip_rect.y = 0;
 				gradient = new Pattern.linear (0, rect.y + rect.height, 0, rect.y);
+				
+				surface.Context.scale (1, -1);
+				surface.Context.translate ((surface.Width - clip_buffer.Width) / 2.0, -clip_buffer.Height);
+				draw_inner_rect (surface.Context, clip_buffer.Width, clip_buffer.Height);
+				surface.Context.scale (1, -1);
+				surface.Context.translate (-(surface.Width - clip_buffer.Width) / 2.0, clip_buffer.Height);
 				break;
 			case Gtk.PositionType.LEFT:
-				clip_rect.x = 0;
 				gradient = new Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
+				
+				surface.Context.rotate (Math.PI * 0.5);
+				surface.Context.translate ((surface.Height - clip_buffer.Width) / 2.0, -clip_buffer.Height);
+				draw_inner_rect (surface.Context, clip_buffer.Width, clip_buffer.Height);
+				surface.Context.rotate (Math.PI * -0.5);
+				surface.Context.translate (-(surface.Height - clip_buffer.Width) / 2.0, clip_buffer.Height);
 				break;
 			case Gtk.PositionType.RIGHT:
-				clip_rect.x = surface.Width - clip_buffer.Height;
-				
 				rect.x += 2 * top_offset - top_pad;
 				gradient = new Pattern.linear (rect.x, 0, rect.x + rect.width, 0);
+				
+				surface.Context.rotate (Math.PI * 0.5);
+				surface.Context.translate ((-surface.Height - clip_buffer.Width) / 2.0, surface.Width - clip_buffer.Height);
+				draw_inner_rect (surface.Context, clip_buffer.Width, clip_buffer.Height);
+				surface.Context.rotate (Math.PI * -0.5);
+				surface.Context.translate (-(-surface.Height - clip_buffer.Width) / 2.0, -surface.Width + clip_buffer.Height);
 				break;
 			}
+			surface.Context.restore ();
 			
-			surface.Context.rectangle (clip_rect.x, clip_rect.y, clip_rect.width, clip_rect.height);
 			surface.Context.set_line_width (LineWidth);
 			surface.Context.clip ();
 
