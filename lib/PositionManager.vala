@@ -300,33 +300,34 @@ namespace Plank
 		 */
 		public Gdk.Rectangle item_draw_region (Gdk.Rectangle hover_rect)
 		{
-			var top_padding = controller.position_manager.TopPadding;
-			var bottom_padding = controller.position_manager.BottomPadding;
+			var item_padding = ItemPadding;
+			var top_padding = TopPadding;
+			var bottom_padding = BottomPadding;
 
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
-				hover_rect.x += ItemPadding / 2;
+				hover_rect.x += item_padding / 2;
 				hover_rect.y += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
 				hover_rect.height -= top_padding;
-				hover_rect.width -= ItemPadding;
+				hover_rect.width -= item_padding;
 				break;
 			case PositionType.TOP:
-				hover_rect.x += ItemPadding / 2;
+				hover_rect.x += item_padding / 2;
 				hover_rect.y += 2 * bottom_offset + bottom_padding;
 				hover_rect.height -= bottom_padding;
-				hover_rect.width -= ItemPadding;
+				hover_rect.width -= item_padding;
 				break;
 			case PositionType.LEFT:
-				hover_rect.y += ItemPadding / 2;
+				hover_rect.y += item_padding / 2;
 				hover_rect.x += 2 * bottom_offset + bottom_padding;
 				hover_rect.width -= bottom_padding;
-				hover_rect.height -= ItemPadding;
+				hover_rect.height -= item_padding;
 				break;
 			case PositionType.RIGHT:
-				hover_rect.y += ItemPadding / 2;
+				hover_rect.y += item_padding / 2;
 				hover_rect.x += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
 				hover_rect.width -= top_padding;
-				hover_rect.height -= ItemPadding;
+				hover_rect.height -= item_padding;
 				break;
 			}
 			
