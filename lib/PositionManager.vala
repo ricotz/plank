@@ -295,11 +295,10 @@ namespace Plank
 		/**
 		 * The region for drawing a dock item.
 		 *
-		 * @param item the dock item to find a region for
 		 * @param hover_rect the item's hover region
 		 * @return the region for the dock item
 		 */
-		public Gdk.Rectangle item_draw_region (DockItem item, Gdk.Rectangle hover_rect)
+		public Gdk.Rectangle item_draw_region (Gdk.Rectangle hover_rect)
 		{
 			var top_padding = controller.position_manager.TopPadding;
 			var bottom_padding = controller.position_manager.BottomPadding;

@@ -379,7 +379,7 @@ namespace Plank
 			
 			// get regions
 			var hover_rect = controller.position_manager.item_hover_region (item);
-			var draw_rect = controller.position_manager.item_draw_region (item, hover_rect);
+			var draw_rect = controller.position_manager.item_draw_region (hover_rect);
 			
 			// lighten or darken the icon
 			var lighten = 0.0, darken = 0.0;
