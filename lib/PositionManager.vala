@@ -115,6 +115,9 @@ namespace Plank
 		
 		int items_offset;
 		
+		int top_offset;
+		int bottom_offset;
+		
 		/**
 		 * The currently visible height of the dock.
 		 */
@@ -160,6 +163,8 @@ namespace Plank
 			
 			items_offset  = (int) (2 * theme.LineWidth + (HorizPadding > 0 ? HorizPadding : 0));
 			
+			top_offset = theme.get_top_offset ();
+			bottom_offset = theme.get_bottom_offset ();
 			
 			// height of the visible (cursor) rect of the dock
 			var height = icon_size + 2 * (theme.get_top_offset () + theme.get_bottom_offset ()) + BottomPadding;
@@ -289,23 +294,51 @@ namespace Plank
 		}
 		
 		/**
-		 * The cursor region for interacting with a dock item.
-		 *
-		 * @param item the dock item to find a region for
-		 * @return the region for the dock item
-		 */
-		public Gdk.Rectangle item_hover_region (DockItem item)
-		{
-			return item_draw_region (item);
-		}
-		
-		/**
 		 * The region for drawing a dock item.
 		 *
 		 * @param item the dock item to find a region for
 		 * @return the region for the dock item
 		 */
 		public Gdk.Rectangle item_draw_region (DockItem item)
+		{
+			var rect = item_hover_region (item);
+			
+			var top_padding = controller.position_manager.TopPadding;
+			var bottom_padding = controller.position_manager.BottomPadding;
+
+			switch (controller.prefs.Position) {
+			case PositionType.TOP:
+				rect.x += controller.position_manager.ItemPadding / 2;
+				rect.y += 2 * bottom_offset + bottom_padding;
+				rect.height -= bottom_padding;
+				break;
+			case PositionType.BOTTOM:
+				rect.x += controller.position_manager.ItemPadding / 2;
+				rect.y += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
+				rect.height -= top_padding;
+				break;
+			case PositionType.LEFT:
+				rect.y += controller.position_manager.ItemPadding / 2;
+				rect.x += 2 * bottom_offset + bottom_padding;
+				rect.width -= bottom_padding;
+				break;
+			case PositionType.RIGHT:
+				rect.y += controller.position_manager.ItemPadding / 2;
+				rect.x += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
+				rect.width -= top_padding;
+				break;
+			}
+			
+			return rect;
+		}
+		
+		/**
+		 * The cursor region for interacting with a dock item.
+		 *
+		 * @param item the dock item to find a region for
+		 * @return the region for the dock item
+		 */
+		public Gdk.Rectangle item_hover_region (DockItem item)
 		{
 			var rect = Gdk.Rectangle ();
 			

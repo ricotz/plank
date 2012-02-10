@@ -274,7 +274,7 @@ namespace Plank
 					if (diff >= theme.GlowTime * 1000)
 						continue;
 					
-					var rect = controller.position_manager.item_draw_region (item);
+					var rect = controller.position_manager.item_hover_region (item);
 					switch (controller.prefs.Position) {
 					case PositionType.BOTTOM:
 						x_offset = rect.x + rect.width / 2.0 - urgent_glow_buffer.Width / 2.0;
@@ -379,33 +379,7 @@ namespace Plank
 			
 			// get draw regions
 			var draw_rect = controller.position_manager.item_draw_region (item);
-			var hover_rect = draw_rect;
-			
-			var top_padding = controller.position_manager.TopPadding;
-			var bottom_padding = controller.position_manager.BottomPadding;
-
-			switch (controller.prefs.Position) {
-			case PositionType.TOP:
-				draw_rect.x += controller.position_manager.ItemPadding / 2;
-				draw_rect.y += 2 * theme.get_bottom_offset () + bottom_padding;
-				draw_rect.height -= bottom_padding;
-				break;
-			case PositionType.BOTTOM:
-				draw_rect.x += controller.position_manager.ItemPadding / 2;
-				draw_rect.y += 2 * theme.get_top_offset () + (top_padding > 0 ? top_padding : 0);
-				draw_rect.height -= top_padding;
-				break;
-			case PositionType.LEFT:
-				draw_rect.y += controller.position_manager.ItemPadding / 2;
-				draw_rect.x += 2 * theme.get_bottom_offset () + bottom_padding;
-				draw_rect.width -= bottom_padding;
-				break;
-			case PositionType.RIGHT:
-				draw_rect.y += controller.position_manager.ItemPadding / 2;
-				draw_rect.x += 2 * theme.get_top_offset () + (top_padding > 0 ? top_padding : 0);
-				draw_rect.width -= top_padding;
-				break;
-			}
+			var hover_rect = controller.position_manager.item_hover_region (item);
 			
 			// lighten or darken the icon
 			var lighten = 0.0, darken = 0.0;
