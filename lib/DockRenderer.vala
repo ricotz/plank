@@ -130,30 +130,24 @@ namespace Plank
 			
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
-			controller.window.set_size ();
-			animated_draw ();
 		}
 		
 		void items_changed ()
 		{
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
-			animated_draw ();
 		}
 		
 		void prefs_changed ()
 		{
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
-			animated_draw ();
 		}
 		
 		void theme_changed ()
 		{
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
-			controller.window.set_size ();
-			animated_draw ();
 		}
 		
 		/**

@@ -256,34 +256,36 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
-				static_dock_region.x = (controller.window.width_request - static_dock_region.width) / 2;
-				static_dock_region.y = controller.window.height_request - static_dock_region.height;
+				static_dock_region.x = (DockWidth - static_dock_region.width) / 2;
+				static_dock_region.y = DockHeight - static_dock_region.height;
 				
 				cursor_region.x = static_dock_region.x;
 				cursor_region.width = static_dock_region.width;
 				break;
 			case PositionType.TOP:
-				static_dock_region.x = (controller.window.width_request - static_dock_region.width) / 2;
+				static_dock_region.x = (DockWidth - static_dock_region.width) / 2;
 				static_dock_region.y = 0;
 				
 				cursor_region.x = static_dock_region.x;
 				cursor_region.width = static_dock_region.width;
 				break;
 			case PositionType.LEFT:
-				static_dock_region.y = (controller.window.height_request - static_dock_region.height) / 2;
+				static_dock_region.y = (DockHeight - static_dock_region.height) / 2;
 				static_dock_region.x = 0;
 				
 				cursor_region.y = static_dock_region.y;
 				cursor_region.height = static_dock_region.height;
 				break;
 			case PositionType.RIGHT:
-				static_dock_region.y = (controller.window.height_request - static_dock_region.height) / 2;
-				static_dock_region.x = controller.window.width_request - static_dock_region.width;
+				static_dock_region.y = (DockHeight - static_dock_region.height) / 2;
+				static_dock_region.x = DockWidth - static_dock_region.width;
 				
 				cursor_region.y = static_dock_region.y;
 				cursor_region.height = static_dock_region.height;
 				break;
 			}
+			
+			controller.window.set_size ();
 		}
 		
 		/**
