@@ -114,7 +114,6 @@ namespace Plank
 		public int ItemPadding   { get; private set; }
 		
 		int items_offset;
-		
 		int top_offset;
 		int bottom_offset;
 		
@@ -167,7 +166,7 @@ namespace Plank
 			bottom_offset = theme.get_bottom_offset ();
 			
 			// height of the visible (cursor) rect of the dock
-			var height = icon_size + 2 * (theme.get_top_offset () + theme.get_bottom_offset ()) + BottomPadding;
+			var height = icon_size + 2 * (top_offset + bottom_offset) + BottomPadding;
 			if (TopPadding > 0)
 				height += TopPadding;
 			
@@ -297,39 +296,42 @@ namespace Plank
 		 * The region for drawing a dock item.
 		 *
 		 * @param item the dock item to find a region for
+		 * @param hover_rect the item's hover region
 		 * @return the region for the dock item
 		 */
-		public Gdk.Rectangle item_draw_region (DockItem item)
+		public Gdk.Rectangle item_draw_region (DockItem item, Gdk.Rectangle hover_rect)
 		{
-			var rect = item_hover_region (item);
-			
 			var top_padding = controller.position_manager.TopPadding;
 			var bottom_padding = controller.position_manager.BottomPadding;
 
 			switch (controller.prefs.Position) {
-			case PositionType.TOP:
-				rect.x += controller.position_manager.ItemPadding / 2;
-				rect.y += 2 * bottom_offset + bottom_padding;
-				rect.height -= bottom_padding;
-				break;
 			case PositionType.BOTTOM:
-				rect.x += controller.position_manager.ItemPadding / 2;
-				rect.y += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
-				rect.height -= top_padding;
+				hover_rect.x += ItemPadding / 2;
+				hover_rect.y += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
+				hover_rect.height -= top_padding;
+				hover_rect.width -= ItemPadding;
+				break;
+			case PositionType.TOP:
+				hover_rect.x += ItemPadding / 2;
+				hover_rect.y += 2 * bottom_offset + bottom_padding;
+				hover_rect.height -= bottom_padding;
+				hover_rect.width -= ItemPadding;
 				break;
 			case PositionType.LEFT:
-				rect.y += controller.position_manager.ItemPadding / 2;
-				rect.x += 2 * bottom_offset + bottom_padding;
-				rect.width -= bottom_padding;
+				hover_rect.y += ItemPadding / 2;
+				hover_rect.x += 2 * bottom_offset + bottom_padding;
+				hover_rect.width -= bottom_padding;
+				hover_rect.height -= ItemPadding;
 				break;
 			case PositionType.RIGHT:
-				rect.y += controller.position_manager.ItemPadding / 2;
-				rect.x += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
-				rect.width -= top_padding;
+				hover_rect.y += ItemPadding / 2;
+				hover_rect.x += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
+				hover_rect.width -= top_padding;
+				hover_rect.height -= ItemPadding;
 				break;
 			}
 			
-			return rect;
+			return hover_rect;
 		}
 		
 		/**

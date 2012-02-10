@@ -377,9 +377,9 @@ namespace Plank
 			icon_cr.set_source_surface (item_surface.Internal, 0, 0);
 			icon_cr.paint ();
 			
-			// get draw regions
-			var draw_rect = controller.position_manager.item_draw_region (item);
+			// get regions
 			var hover_rect = controller.position_manager.item_hover_region (item);
+			var draw_rect = controller.position_manager.item_draw_region (item, hover_rect);
 			
 			// lighten or darken the icon
 			var lighten = 0.0, darken = 0.0;
