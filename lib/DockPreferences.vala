@@ -47,7 +47,7 @@ namespace Plank
 		public PositionType Position { get; set; }
 		
 		[Description(nick = "offset", blurb = "The dock's position offset from center (in percent).")]
-		public double Offset { get; set; }
+		public int Offset { get; set; }
 		
 		/**
 		 * {@inheritDoc}
@@ -82,7 +82,7 @@ namespace Plank
 			UnhideDelay = 0;
 			Monitor = Screen.get_default ().get_primary_monitor ();
 			Position = PositionType.BOTTOM;
-			Offset = 0.0;
+			Offset = 0;
 		}
 		
 		void monitors_changed ()
@@ -146,10 +146,10 @@ namespace Plank
 				break;
 			
 			case "Offset":
-				if (Offset < -1)
-					Offset = -1;
-				else if (Offset > 1)
-					Offset = 1;
+				if (Offset < -100)
+					Offset = -100;
+				else if (Offset > 100)
+					Offset = 100;
 				break;
 			}
 		}

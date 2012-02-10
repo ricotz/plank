@@ -415,19 +415,19 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
-				win_x = monitor_geo.x + xoffset + (int) (controller.prefs.Offset * xoffset);
+				win_x = monitor_geo.x + xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
 				win_y = monitor_geo.y + monitor_geo.height - controller.window.height_request;
 				break;
 			case PositionType.TOP:
-				win_x = monitor_geo.x + xoffset + (int) (controller.prefs.Offset * xoffset);
+				win_x = monitor_geo.x + xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
 				win_y = monitor_geo.y;
 				break;
 			case PositionType.LEFT:
-				win_y = monitor_geo.y + yoffset + (int) (controller.prefs.Offset * yoffset);
+				win_y = monitor_geo.y + yoffset + (int) (controller.prefs.Offset / 100.0 * yoffset);
 				win_x = monitor_geo.x;
 				break;
 			case PositionType.RIGHT:
-				win_y = monitor_geo.y + yoffset + (int) (controller.prefs.Offset * yoffset);
+				win_y = monitor_geo.y + yoffset + (int) (controller.prefs.Offset / 100.0 * yoffset);
 				win_x = monitor_geo.x + monitor_geo.width - controller.window.width_request;
 				break;
 			}
