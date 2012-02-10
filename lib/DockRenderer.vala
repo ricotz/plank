@@ -326,30 +326,30 @@ namespace Plank
 				theme.draw_background (background_buffer);
 			}
 			
-			var main_cr = main_buffer.Context;
-			main_cr.save ();
+			var cr = main_buffer.Context;
+			cr.save ();
 			
 			switch (controller.prefs.Position) {
 			case PositionType.TOP:
-				main_buffer.Context.scale (1, -1);
-				main_buffer.Context.translate ((main_buffer.Width - background_buffer.Width) / 2.0, -background_buffer.Height);
+				cr.scale (1, -1);
+				cr.translate ((main_buffer.Width - background_buffer.Width) / 2.0, -background_buffer.Height);
 				break;
 			case PositionType.BOTTOM:
-				main_buffer.Context.translate ((main_buffer.Width - background_buffer.Width) / 2.0, main_buffer.Height - background_buffer.Height);
+				cr.translate ((main_buffer.Width - background_buffer.Width) / 2.0, main_buffer.Height - background_buffer.Height);
 				break;
 			case PositionType.LEFT:
-				main_buffer.Context.rotate (Math.PI * 0.5);
-				main_buffer.Context.translate ((main_buffer.Height - background_buffer.Width) / 2.0, -background_buffer.Height);
+				cr.rotate (Math.PI * 0.5);
+				cr.translate ((main_buffer.Height - background_buffer.Width) / 2.0, -background_buffer.Height);
 				break;
 			case PositionType.RIGHT:
-				main_buffer.Context.rotate (Math.PI * -0.5);
-				main_buffer.Context.translate ((-main_buffer.Height - background_buffer.Width) / 2.0, main_buffer.Width - background_buffer.Height);
+				cr.rotate (Math.PI * -0.5);
+				cr.translate ((-main_buffer.Height - background_buffer.Width) / 2.0, main_buffer.Width - background_buffer.Height);
 				break;
 			}
 			
-			main_cr.set_source_surface (background_buffer.Internal, 0, 0);
-			main_cr.paint ();
-			main_cr.restore ();
+			cr.set_source_surface (background_buffer.Internal, 0, 0);
+			cr.paint ();
+			cr.restore ();
 		}
 		
 		void draw_item (DockItem item)
