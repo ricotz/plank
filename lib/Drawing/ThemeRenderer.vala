@@ -108,6 +108,8 @@ namespace Plank.Drawing
 		 */
 		public void draw_background (DockSurface surface)
 		{
+			var cr = surface.Context;
+			
 			var top_offset    = get_top_offset ();
 			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			
@@ -116,36 +118,36 @@ namespace Plank.Drawing
 			gradient.add_color_stop_rgba (0, FillStartColor.R, FillStartColor.G, FillStartColor.B, FillStartColor.A);
 			gradient.add_color_stop_rgba (1, FillEndColor.R, FillEndColor.G, FillEndColor.B, FillEndColor.A);
 			
-			surface.Context.save ();
-			surface.Context.set_source (gradient);
+			cr.save ();
+			cr.set_source (gradient);
 			
-			draw_rounded_rect (surface.Context,
+			draw_rounded_rect (cr,
 				LineWidth / 2.0,
 				top_offset / 2.0,
 				surface.Width - LineWidth,
 				surface.Height - top_offset / 2.0 - bottom_offset / 2.0,
 				TopRoundness,
 				BottomRoundness);
-			surface.Context.fill_preserve ();
-			surface.Context.restore ();
+			cr.fill_preserve ();
+			cr.restore ();
 			
-			surface.Context.set_source_rgba (OuterStrokeColor.R, OuterStrokeColor.G, OuterStrokeColor.B, OuterStrokeColor.A);
-			surface.Context.set_line_width (LineWidth);
-			surface.Context.stroke ();
+			cr.set_source_rgba (OuterStrokeColor.R, OuterStrokeColor.G, OuterStrokeColor.B, OuterStrokeColor.A);
+			cr.set_line_width (LineWidth);
+			cr.stroke ();
 			
 			gradient = new Pattern.linear (0, top_offset, 0, surface.Height - top_offset - bottom_offset);
 			
 			gradient.add_color_stop_rgba (0, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.5);
 			gradient.add_color_stop_rgba ((TopRoundness > 0 ? TopRoundness : LineWidth) / (double) surface.Height, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.12);
-			gradient.add_color_stop_rgba ((surface.Height - (BottomRoundness > 0 ? BottomRoundness : LineWidth)) / (double) surface.Height, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.08);
+			gradient.add_color_stop_rgba (1 - (BottomRoundness > 0 ? BottomRoundness : LineWidth) / (double) surface.Height, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.08);
 			gradient.add_color_stop_rgba (1, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.19);
 			
-			surface.Context.save ();
-			surface.Context.set_source (gradient);
+			cr.save ();
+			cr.set_source (gradient);
 			
-			draw_inner_rect (surface.Context, surface.Width, surface.Height);
-			surface.Context.stroke ();
-			surface.Context.restore ();
+			draw_inner_rect (cr, surface.Width, surface.Height);
+			cr.stroke ();
+			cr.restore ();
 		}
 		
 		/**
