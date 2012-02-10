@@ -148,20 +148,18 @@ namespace Plank.Drawing
 		 * Draws an active glow for an item.
 		 *
 		 * @param surface the surface to draw onto
-		 * @param horiz_pad any horizontal padding to account for
-		 * @param top_pad any vertical padding to account for
 		 * @param clip_buffer a region to clip the glow to
 		 * @param rect the rect for the glow
 		 * @param color the color of the glow
 		 * @param opacity the opacity of the glow
 		 */
-		public void draw_active_glow (DockSurface surface, int horiz_pad, int top_pad, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
+		public void draw_active_glow (DockSurface surface, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
 		{
 			var cr = surface.Context;
 			
 			var top_offset = get_top_offset ();
 			var bottom_offset = get_bottom_offset ();
-			top_pad = top_pad < 0 ? top_pad : 0;
+			var top_padding = clip_buffer.Height - rect.height - bottom_offset - top_offset;
 			
 			var rotate = 0.0;
 			var xoffset = 0.0, yoffset = 0.0;
@@ -173,8 +171,8 @@ namespace Plank.Drawing
 				xoffset = (surface.Width - clip_buffer.Width) / 2.0;
 				yoffset = surface.Height - clip_buffer.Height;
 				
-				rect.y += 2 * top_offset - top_pad;
-				rect.height -= 2 * (top_offset + bottom_offset) - top_pad;
+				rect.y += 2 * top_offset - top_padding;
+				rect.height -= 2 * (top_offset + bottom_offset) - top_padding;
 				gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
 				break;
 			case Gtk.PositionType.TOP:
@@ -182,7 +180,7 @@ namespace Plank.Drawing
 				xoffset = (-surface.Width - clip_buffer.Width) / 2.0;
 				yoffset = -clip_buffer.Height;
 				
-				rect.height -= 2 * (top_offset + bottom_offset) - top_pad;
+				rect.height -= 2 * (top_offset + bottom_offset) - top_padding;
 				gradient = new Pattern.linear (0, rect.y + rect.height, 0, rect.y);
 				break;
 			case Gtk.PositionType.LEFT:
@@ -190,7 +188,7 @@ namespace Plank.Drawing
 				xoffset = (surface.Height - clip_buffer.Width) / 2.0;
 				yoffset = -clip_buffer.Height;
 				
-				rect.width -= 2 * (top_offset + bottom_offset) - top_pad;
+				rect.width -= 2 * (top_offset + bottom_offset) - top_padding;
 				gradient = new Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
 				break;
 			case Gtk.PositionType.RIGHT:
@@ -198,8 +196,8 @@ namespace Plank.Drawing
 				xoffset = (-surface.Height - clip_buffer.Width) / 2.0;
 				yoffset = surface.Width - clip_buffer.Height;
 				
-				rect.x += 2 * top_offset - top_pad;
-				rect.width -= 2 * (top_offset + bottom_offset) - top_pad;
+				rect.x += 2 * top_offset - top_padding;
+				rect.width -= 2 * (top_offset + bottom_offset) - top_padding;
 				gradient = new Pattern.linear (rect.x, 0, rect.x + rect.width, 0);
 				break;
 			}

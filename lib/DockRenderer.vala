@@ -472,7 +472,7 @@ namespace Plank
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
 			if (opacity > 0)
-				theme.draw_active_glow (main_buffer, controller.position_manager.HorizPadding, controller.position_manager.TopPadding, background_buffer, hover_rect, item.AverageIconColor, opacity, controller.prefs.Position);
+				theme.draw_active_glow (main_buffer, background_buffer, hover_rect, item.AverageIconColor, opacity, controller.prefs.Position);
 			
 			// draw the icon
 			main_cr.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);
