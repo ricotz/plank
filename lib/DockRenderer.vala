@@ -332,6 +332,7 @@ namespace Plank
 				theme.draw_background (background_buffer);
 			}
 			
+			var main_cr = main_buffer.Context;
 			var rotate = 0.0;
 			var xoffset = 0.0, yoffset = 0.0;
 			
@@ -357,17 +358,19 @@ namespace Plank
 				break;
 			}
 			
-			main_buffer.Context.save ();
-			main_buffer.Context.rotate (rotate);
-			main_buffer.Context.translate (xoffset, yoffset);
-			main_buffer.Context.set_source_surface (background_buffer.Internal, 0, 0);
-			main_buffer.Context.paint ();
-			main_buffer.Context.restore ();
+			main_cr.save ();
+			main_cr.rotate (rotate);
+			main_cr.translate (xoffset, yoffset);
+			main_cr.set_source_surface (background_buffer.Internal, 0, 0);
+			main_cr.paint ();
+			main_cr.restore ();
 		}
 		
 		void draw_item (DockItem item)
 		{
 			var icon_surface = new DockSurface.with_dock_surface (controller.prefs.IconSize, controller.prefs.IconSize, main_buffer);
+			var icon_cr = icon_surface.Context;
+			var main_cr = main_buffer.Context;
 			
 			// load the icon
 #if BENCHMARK
@@ -378,8 +381,8 @@ namespace Plank
 			var end = new DateTime.now_local ();
 			benchmark.add ("	item.get_surface time - %f ms".printf (end.difference (start) / 1000.0));
 #endif
-			icon_surface.Context.set_source_surface (item_surface.Internal, 0, 0);
-			icon_surface.Context.paint ();
+			icon_cr.set_source_surface (item_surface.Internal, 0, 0);
+			icon_cr.paint ();
 			
 			// get draw regions
 			var draw_rect = controller.position_manager.item_draw_region (item);
@@ -457,9 +460,9 @@ namespace Plank
 			
 			// glow the icon
 			if (lighten > 0) {
-				icon_surface.Context.set_operator (Cairo.Operator.ADD);
-				icon_surface.Context.paint_with_alpha (lighten);
-				icon_surface.Context.set_operator (Cairo.Operator.OVER);
+				icon_cr.set_operator (Cairo.Operator.ADD);
+				icon_cr.paint_with_alpha (lighten);
+				icon_cr.set_operator (Cairo.Operator.OVER);
 			}
 			
 			// draw badge text
@@ -468,12 +471,12 @@ namespace Plank
 			
 			// darken the icon
 			if (darken > 0) {
-				icon_surface.Context.rectangle (0, 0, icon_surface.Width, icon_surface.Height);
-				icon_surface.Context.set_source_rgba (0, 0, 0, darken);
+				icon_cr.rectangle (0, 0, icon_surface.Width, icon_surface.Height);
+				icon_cr.set_source_rgba (0, 0, 0, darken);
 				
-				icon_surface.Context.set_operator (Cairo.Operator.ATOP);
-				icon_surface.Context.fill ();
-				icon_surface.Context.set_operator (Cairo.Operator.OVER);
+				icon_cr.set_operator (Cairo.Operator.ATOP);
+				icon_cr.fill ();
+				icon_cr.set_operator (Cairo.Operator.OVER);
 			}
 			
 			// bounce icon on urgent state
@@ -505,8 +508,8 @@ namespace Plank
 				theme.draw_active_glow (main_buffer, controller.position_manager.HorizPadding, controller.position_manager.TopPadding, background_buffer, hover_rect, item.AverageIconColor, opacity, controller.prefs.Position);
 			
 			// draw the icon
-			main_buffer.Context.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);
-			main_buffer.Context.paint ();
+			main_cr.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);
+			main_cr.paint ();
 			
 			// draw indicators
 			if (item.Indicator != IndicatorState.NONE)
@@ -521,6 +524,7 @@ namespace Plank
 				create_urgent_indicator ();
 			
 			var indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
+			var main_cr = main_buffer.Context;
 			
 			var x = 0.0, y = 0.0;
 			switch (controller.prefs.Position) {
@@ -543,8 +547,8 @@ namespace Plank
 			}
 			
 			if (indicator == IndicatorState.SINGLE) {
-				main_buffer.Context.set_source_surface (indicator_surface.Internal, x, y);
-				main_buffer.Context.paint ();
+				main_cr.set_source_surface (indicator_surface.Internal, x, y);
+				main_cr.paint ();
 			} else {
 				var x_offset = 0.0, y_offset = 0.0;
 				if (controller.prefs.is_horizontal_dock ())
@@ -552,10 +556,10 @@ namespace Plank
 				else
 					y_offset = controller.prefs.IconSize / 16.0;
 				
-				main_buffer.Context.set_source_surface (indicator_surface.Internal, x - x_offset, y - y_offset);
-				main_buffer.Context.paint ();
-				main_buffer.Context.set_source_surface (indicator_surface.Internal, x + x_offset, y + y_offset);
-				main_buffer.Context.paint ();
+				main_cr.set_source_surface (indicator_surface.Internal, x - x_offset, y - y_offset);
+				main_cr.paint ();
+				main_cr.set_source_surface (indicator_surface.Internal, x + x_offset, y + y_offset);
+				main_cr.paint ();
 			}
 		}
 		
@@ -582,11 +586,12 @@ namespace Plank
 			
 			var size = controller.position_manager.GlowSize;
 			urgent_glow_buffer = new DockSurface.with_dock_surface (size, size, background_buffer);
+			var cr = urgent_glow_buffer.Context;
 			
 			var x = size / 2.0;
 			
-			urgent_glow_buffer.Context.move_to (x, x);
-			urgent_glow_buffer.Context.arc (x, x, size / 2, 0, Math.PI * 2);
+			cr.move_to (x, x);
+			cr.arc (x, x, size / 2, 0, Math.PI * 2);
 			
 			var rg = new Pattern.radial (x, x, 0, x, x, size / 2);
 			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
@@ -594,8 +599,8 @@ namespace Plank
 			rg.add_color_stop_rgba (0.66, color.R, color.G, color.B, 0.33);
 			rg.add_color_stop_rgba (1.0, color.R, color.G, color.B, 0.0);
 			
-			urgent_glow_buffer.Context.set_source (rg);
-			urgent_glow_buffer.Context.fill ();
+			cr.set_source (rg);
+			cr.fill ();
 		}
 		
 		/**
@@ -606,6 +611,8 @@ namespace Plank
 		 */
 		public void draw_badge (DockSurface surface, string badge_text)
 		{
+			var cr = surface.Context;
+			
 			var theme_color = get_styled_color ();
 			var badge_color_start = theme_color.set_val (1).set_sat (0.47);
 			var badge_color_end = theme_color.set_val (0.5).set_sat (0.51);
@@ -619,31 +626,31 @@ namespace Plank
 			
 			if (!is_small) {
 				// draw outline shadow
-				surface.Context.set_line_width (lineWidth);
-				surface.Context.set_source_rgba (0, 0, 0, 0.5);
-				surface.Context.arc (x, y + 1, size / 2 - lineWidth, 0, Math.PI * 2);
-				surface.Context.stroke ();
+				cr.set_line_width (lineWidth);
+				cr.set_source_rgba (0, 0, 0, 0.5);
+				cr.arc (x, y + 1, size / 2 - lineWidth, 0, Math.PI * 2);
+				cr.stroke ();
 				
 				// draw filled gradient
 				var rg = new Pattern.radial (x, lineWidth, 0, x, lineWidth, size);
 				rg.add_color_stop_rgba (0, badge_color_start.R, badge_color_start.G, badge_color_start.B, badge_color_start.A);
 				rg.add_color_stop_rgba (1.0, badge_color_end.R, badge_color_end.G, badge_color_end.B, badge_color_end.A);
 				
-				surface.Context.set_source (rg);
-				surface.Context.arc (x, y, size / 2 - lineWidth, 0, Math.PI * 2);
-				surface.Context.fill ();
+				cr.set_source (rg);
+				cr.arc (x, y, size / 2 - lineWidth, 0, Math.PI * 2);
+				cr.fill ();
 				
 				// draw outline
-				surface.Context.set_source_rgba (1, 1, 1, 1);
-				surface.Context.arc (x, y, size / 2 - lineWidth, 0, Math.PI * 2);
-				surface.Context.stroke ();
+				cr.set_source_rgba (1, 1, 1, 1);
+				cr.arc (x, y, size / 2 - lineWidth, 0, Math.PI * 2);
+				cr.stroke ();
 				
-				surface.Context.set_line_width (lineWidth / 2);
-				surface.Context.set_source_rgba (badge_color_end.R, badge_color_end.G, badge_color_end.B, badge_color_end.A);
-				surface.Context.arc (x, y, size / 2 - 2 * lineWidth, 0, Math.PI * 2);
-				surface.Context.stroke ();
+				cr.set_line_width (lineWidth / 2);
+				cr.set_source_rgba (badge_color_end.R, badge_color_end.G, badge_color_end.B, badge_color_end.A);
+				cr.arc (x, y, size / 2 - 2 * lineWidth, 0, Math.PI * 2);
+				cr.stroke ();
 				
-				surface.Context.set_source_rgba (0, 0, 0, 0.2);
+				cr.set_source_rgba (0, 0, 0, 0.2);
 			} else {
 				lineWidth = 0;
 				padding = 2;
@@ -667,26 +674,26 @@ namespace Plank
 			var scale = double.min (1, double.min (size / (double) logical_rect.width, size / (double) logical_rect.height));
 			
 			if (!is_small) {
-				surface.Context.set_source_rgba (0, 0, 0, 0.2);
+				cr.set_source_rgba (0, 0, 0, 0.2);
 			} else {
-				surface.Context.set_source_rgba (0, 0, 0, 0.6);
+				cr.set_source_rgba (0, 0, 0, 0.6);
 				x = surface.Width - scale * logical_rect.width / 2;
 				y = scale * logical_rect.height / 2;
 			}
 			
-			surface.Context.move_to (x - scale * logical_rect.width / 2, y - scale * logical_rect.height / 2);
+			cr.move_to (x - scale * logical_rect.width / 2, y - scale * logical_rect.height / 2);
 			
 			// draw text
-			surface.Context.save ();
+			cr.save ();
 			if (scale < 1)
-				surface.Context.scale (scale, scale);
+				cr.scale (scale, scale);
 			
-			surface.Context.set_line_width (2);
-			Pango.cairo_layout_path (surface.Context, layout);
-			surface.Context.stroke_preserve ();
-			surface.Context.set_source_rgba (1, 1, 1, 1);
-			surface.Context.fill ();
-			surface.Context.restore ();
+			cr.set_line_width (2);
+			Pango.cairo_layout_path (cr, layout);
+			cr.stroke_preserve ();
+			cr.set_source_rgba (1, 1, 1, 1);
+			cr.fill ();
+			cr.restore ();
 		}
 		
 		void hidden_changed ()
