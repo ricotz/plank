@@ -157,6 +157,8 @@ namespace Plank.Drawing
 		 */
 		public void draw_active_glow (DockSurface surface, int horiz_pad, int top_pad, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
 		{
+			var cr = surface.Context;
+			
 			var top_offset = get_top_offset ();
 			var bottom_offset = get_bottom_offset ();
 			top_pad = top_pad < 0 ? top_pad : 0;
@@ -202,23 +204,23 @@ namespace Plank.Drawing
 				break;
 			}
 			
-			surface.Context.save ();
-			surface.Context.rotate (rotate);
-			surface.Context.translate (xoffset, yoffset);
-			draw_inner_rect (surface.Context, clip_buffer.Width, clip_buffer.Height);
-			surface.Context.restore ();
+			cr.save ();
+			cr.rotate (rotate);
+			cr.translate (xoffset, yoffset);
+			draw_inner_rect (cr, clip_buffer.Width, clip_buffer.Height);
+			cr.restore ();
 			
-			surface.Context.set_line_width (LineWidth);
-			surface.Context.clip ();
+			cr.set_line_width (LineWidth);
+			cr.clip ();
 
 			gradient.add_color_stop_rgba (0, color.R, color.G, color.B, 0);
 			gradient.add_color_stop_rgba (1, color.R, color.G, color.B, 0.6 * opacity);
 			
-			surface.Context.rectangle (rect.x, rect.y, rect.width, rect.height);
-			surface.Context.set_source (gradient);
-			surface.Context.fill ();
+			cr.rectangle (rect.x, rect.y, rect.width, rect.height);
+			cr.set_source (gradient);
+			cr.fill ();
 			
-			surface.Context.reset_clip ();
+			cr.reset_clip ();
 		}
 		
 		/**
