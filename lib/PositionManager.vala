@@ -220,7 +220,7 @@ namespace Plank
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
 				cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
-				cursor_region.y = controller.window.height_request - cursor_region.height;
+				cursor_region.y = DockHeight - cursor_region.height;
 				break;
 			case PositionType.TOP:
 				cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
@@ -232,7 +232,7 @@ namespace Plank
 				break;
 			case PositionType.RIGHT:
 				cursor_region.width = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockWidth));
-				cursor_region.x = controller.window.width_request - cursor_region.width;
+				cursor_region.x = DockWidth - cursor_region.width;
 				break;
 			}
 			
@@ -344,29 +344,31 @@ namespace Plank
 		{
 			var rect = Gdk.Rectangle ();
 			
+			var icon_size = controller.prefs.IconSize;
+			
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
-				rect.width = controller.prefs.IconSize + ItemPadding;
+				rect.width = icon_size + ItemPadding;
 				rect.height = VisibleDockHeight;
-				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
+				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + icon_size);
 				rect.y = DockHeight - rect.height;
 				break;
 			case PositionType.TOP:
-				rect.width = controller.prefs.IconSize + ItemPadding;
+				rect.width = icon_size + ItemPadding;
 				rect.height = VisibleDockHeight;
-				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
+				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + icon_size);
 				rect.y = 0;
 				break;
 			case PositionType.LEFT:
-				rect.height = controller.prefs.IconSize + ItemPadding;
+				rect.height = icon_size + ItemPadding;
 				rect.width = VisibleDockWidth;
-				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
+				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + icon_size);
 				rect.x = 0;
 				break;
 			case PositionType.RIGHT:
-				rect.height = controller.prefs.IconSize + ItemPadding;
+				rect.height = icon_size + ItemPadding;
 				rect.width = VisibleDockWidth;
-				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + controller.prefs.IconSize);
+				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + icon_size);
 				rect.x = DockWidth - rect.width;
 				break;
 			}
@@ -445,13 +447,13 @@ namespace Plank
 		 */
 		public void update_dock_position ()
 		{
-			var xoffset = (monitor_geo.width - controller.window.width_request) / 2;
-			var yoffset = (monitor_geo.height - controller.window.height_request) / 2;
+			var xoffset = (monitor_geo.width - DockWidth) / 2;
+			var yoffset = (monitor_geo.height - DockHeight) / 2;
 			
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
 				win_x = monitor_geo.x + xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
-				win_y = monitor_geo.y + monitor_geo.height - controller.window.height_request;
+				win_y = monitor_geo.y + monitor_geo.height - DockHeight;
 				break;
 			case PositionType.TOP:
 				win_x = monitor_geo.x + xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
@@ -463,7 +465,7 @@ namespace Plank
 				break;
 			case PositionType.RIGHT:
 				win_y = monitor_geo.y + yoffset + (int) (controller.prefs.Offset / 100.0 * yoffset);
-				win_x = monitor_geo.x + monitor_geo.width - controller.window.width_request;
+				win_x = monitor_geo.x + monitor_geo.width - DockWidth;
 				break;
 			}
 		}
