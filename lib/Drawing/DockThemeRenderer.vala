@@ -177,7 +177,7 @@ namespace Plank.Drawing
 				break;
 			case Gtk.PositionType.TOP:
 				rotate = Math.PI;
-				xoffset = (surface.Width - clip_buffer.Width) / 2.0;
+				xoffset = (-surface.Width - clip_buffer.Width) / 2.0;
 				yoffset = -clip_buffer.Height;
 				
 				rect.height -= 2 * (top_offset + bottom_offset) - top_pad;
