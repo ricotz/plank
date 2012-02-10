@@ -327,27 +327,34 @@ namespace Plank
 			}
 			
 			var cr = main_buffer.Context;
-			cr.save ();
+			var rotate = 0.0;
+			var xoffset = 0.0, yoffset = 0.0;
 			
 			switch (controller.prefs.Position) {
-			case PositionType.TOP:
-				cr.scale (1, -1);
-				cr.translate ((main_buffer.Width - background_buffer.Width) / 2.0, -background_buffer.Height);
-				break;
 			case PositionType.BOTTOM:
-				cr.translate ((main_buffer.Width - background_buffer.Width) / 2.0, main_buffer.Height - background_buffer.Height);
+				xoffset = (main_buffer.Width - background_buffer.Width) / 2.0;
+				yoffset = main_buffer.Height - background_buffer.Height;
+				break;
+			case PositionType.TOP:
+				rotate = Math.PI;
+				xoffset = (-main_buffer.Width - background_buffer.Width) / 2.0;
+				yoffset = -background_buffer.Height;
 				break;
 			case PositionType.LEFT:
-				cr.rotate (Math.PI * 0.5);
-				cr.translate ((main_buffer.Height - background_buffer.Width) / 2.0, -background_buffer.Height);
+				rotate = Math.PI * 0.5;
+				xoffset = (main_buffer.Height - background_buffer.Width) / 2.0;
+				yoffset = -background_buffer.Height;
 				break;
 			case PositionType.RIGHT:
-				cr.rotate (Math.PI * -0.5);
-				cr.translate ((-main_buffer.Height - background_buffer.Width) / 2.0, main_buffer.Width - background_buffer.Height);
+				rotate = Math.PI * -0.5;
+				xoffset = (-main_buffer.Height - background_buffer.Width) / 2.0;
+				yoffset = main_buffer.Width - background_buffer.Height;
 				break;
 			}
 			
-			cr.set_source_surface (background_buffer.Internal, 0, 0);
+			cr.save ();
+			cr.rotate (rotate);
+			cr.set_source_surface (background_buffer.Internal, xoffset, yoffset);
 			cr.paint ();
 			cr.restore ();
 		}
