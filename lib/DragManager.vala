@@ -101,6 +101,23 @@ namespace Plank
 			enable_drag_from ();
 		}
 		
+		~DragManager ()
+		{
+			controller.window.drag_motion.disconnect (drag_motion);
+			controller.window.drag_begin.disconnect (drag_begin);
+			controller.window.drag_data_received.disconnect (drag_data_received);
+			controller.window.drag_data_get.disconnect (drag_data_get);
+			controller.window.drag_drop.disconnect (drag_drop);
+			controller.window.drag_end.disconnect (drag_end);
+			controller.window.drag_leave.disconnect (drag_leave);
+			controller.window.drag_failed.disconnect (drag_failed);
+			
+			controller.window.motion_notify_event.disconnect (window_motion_notify_event);
+			
+			disable_drag_to ();
+			disable_drag_from ();
+		}
+		
 		bool window_motion_notify_event (Widget w, EventMotion event)
 		{
 			ExternalDragActive = false;
@@ -397,6 +414,11 @@ namespace Plank
 			// we dont really want to offer the drag to anything, merely pretend to, so we set a mimetype nothing takes
 			var te = TargetEntry () { target = "text/plank-uri-list", flags = TargetFlags.SAME_APP, info = 0 };
 			drag_source_set (controller.window, ModifierType.BUTTON1_MASK, { te }, DragAction.PRIVATE);
+		}
+		
+		void disable_drag_from ()
+		{
+			drag_source_unset (controller.window);
 		}
 	}
 }
