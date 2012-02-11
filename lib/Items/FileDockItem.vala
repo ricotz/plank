@@ -92,26 +92,27 @@ namespace Plank.Items
 				return;
 			}
 			
+			var cr = surface.Context;
 			var width = surface.Width;
 			var height = surface.Height;
 			var radius = 3 + 6 * height / (128 - 48);
 			
-			surface.Context.move_to (radius, 0.5);
-			surface.Context.arc (width - radius - 0.5, radius + 0.5, radius, Math.PI * 1.5, Math.PI * 2.0);
-			surface.Context.arc (width - radius - 0.5, height - radius - 0.5, radius, 0, Math.PI * 0.5);
-			surface.Context.arc (radius + 0.5, height - radius - 0.5, radius, Math.PI * 0.5, Math.PI);
-			surface.Context.arc (radius + 0.5, radius + 0.5, radius, Math.PI, Math.PI * 1.5);
+			cr.move_to (radius, 0.5);
+			cr.arc (width - radius - 0.5, radius + 0.5, radius, Math.PI * 1.5, Math.PI * 2.0);
+			cr.arc (width - radius - 0.5, height - radius - 0.5, radius, 0, Math.PI * 0.5);
+			cr.arc (radius + 0.5, height - radius - 0.5, radius, Math.PI * 0.5, Math.PI);
+			cr.arc (radius + 0.5, radius + 0.5, radius, Math.PI, Math.PI * 1.5);
 			
-			surface.Context.set_source_rgba (1, 1, 1, 0.6);
-			surface.Context.set_line_width (1);
-			surface.Context.stroke_preserve ();
+			cr.set_source_rgba (1, 1, 1, 0.6);
+			cr.set_line_width (1);
+			cr.stroke_preserve ();
 			
 			var rg = new Pattern.radial (width / 2, height, height / 8, width / 2, height, height);
 			rg.add_color_stop_rgba (0, 0, 0, 0, 1);
 			rg.add_color_stop_rgba (1, 0, 0, 0, 0.6);
 			
-			surface.Context.set_source (rg);
-			surface.Context.fill ();
+			cr.set_source (rg);
+			cr.fill ();
 			
 			var icons = new HashMap<string, string> (str_hash, str_equal);
 			var keys = new ArrayList<string> ();
@@ -144,8 +145,8 @@ namespace Plank.Items
 					break;
 				
 				var pbuf = DrawingService.load_icon (icons.get (s), icon_width, icon_height);
-				cairo_set_source_pixbuf (surface.Context, pbuf, x * (icon_width + offset) + offset, y * (icon_height + offset) + offset);
-				surface.Context.paint ();
+				cairo_set_source_pixbuf (cr, pbuf, x * (icon_width + offset) + offset, y * (icon_height + offset) + offset);
+				cr.paint ();
 			}
 		}
 		

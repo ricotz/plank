@@ -34,6 +34,8 @@ namespace Plank.Widgets
 		const int HOVER_HEIGHT = 26;
 		const int PADDING = 10;
 		
+		DockController controller;
+		
 		/**
 		 * The text to display in the window.
 		 */
@@ -45,9 +47,11 @@ namespace Plank.Widgets
 		
 		double text_offset;
 		
-		public HoverWindow ()
+		public HoverWindow (DockController controller)
 		{
 			base.with_type (Gtk.WindowType.POPUP);
+			
+			this.controller = controller;
 			
 			theme = new ThemeRenderer ();
 			theme.load ("hover");
@@ -85,10 +89,28 @@ namespace Plank.Widgets
 		 */
 		public void move_hover (int item_x, int item_y)
 		{
-			var x = item_x - width_request / 2;
-			var y = item_y - height_request - PADDING;
-			var screen = get_screen ();
+			var x = 0, y = 0;
 			
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				x = item_x - width_request / 2;
+				y = item_y - height_request - PADDING;
+				break;
+			case PositionType.TOP:
+				x = item_x - width_request / 2;
+				y = item_y + PADDING;
+				break;
+			case PositionType.LEFT:
+				y = item_y - height_request / 2;
+				x = item_x + PADDING;
+				break;
+			case PositionType.RIGHT:
+				y = item_y - height_request / 2;
+				x = item_x - width_request - PADDING;
+				break;
+			}
+			
+			var screen = get_screen ();
 			Gdk.Rectangle monitor;
 			screen.get_monitor_geometry (screen.get_monitor_at_point (item_x, item_y), out monitor);
 			
