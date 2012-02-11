@@ -22,6 +22,7 @@ using Gtk;
 using Plank.Drawing;
 using Plank.Factories;
 using Plank.Items;
+using Plank.Services.Windows;
 using Plank.Widgets;
 
 namespace Plank
@@ -62,7 +63,22 @@ namespace Plank
 				}
 			} 
 		}
-
+		
+		bool repositionMode = false;
+		public bool RepositionMode {
+			get { return repositionMode; }
+			private set {
+				if (repositionMode == value)
+					return;
+				repositionMode = value;
+				
+				if (repositionMode)
+					disable_drag_to ();
+				else
+					enable_drag_to ();
+			}
+		}
+		
 		public DragManager (DockController controller)
 		{
 			this.controller = controller;
@@ -197,9 +213,13 @@ namespace Plank
 						DragItem.delete ();
 						
 						int x, y;
+#if VALA_0_12
+						controller.window.get_display ().get_pointer (null, out x, out y, null);
+#else
 						ModifierType mod;
-						Screen screen;
-						controller.window.get_display ().get_pointer (out screen, out x, out y, out mod);
+						Gdk.Screen gdk_screen;
+						controller.window.get_display ().get_pointer (out gdk_screen, out x, out y, out mod);
+#endif
 						new PoofWindow (x, y);
 					}
 				} else {
@@ -304,25 +324,26 @@ namespace Plank
 		
 		Gdk.Window? best_proxy_window ()
 		{
-			try {
-				/* TODO
-				int pid = System.Diagnostics.Process.GetCurrentProcess ().Id;
-				IEnumerable<ulong> xids = Wnck.Screen.Default.WindowsStacked
-					.Reverse () // top to bottom order
-					.Where (wnk => wnk.IsVisibleOnWorkspace (Wnck.Screen.Default.ActiveWorkspace) && 
-							                                 wnk.Pid != pid &&
-							                                 wnk.EasyGeometry ().Contains (controller.window.CursorTracker.Cursor))
-					.Select (wnk => wnk.Xid);
+			var screen = Wnck.Screen.get_default ();
+			unowned GLib.List<Wnck.Window> stack = screen.get_windows_stacked ();
+			
+			for (var i = (int) stack.length - 1; i >= 0; i--) {
+				var w = stack.nth_data (i);
 				
-				if (!xids.Any ())
-					return null;
-				
-				return Gdk.Window.ForeignNew ((uint) xids.First ());
-				*/
-				return null;
-			} catch {
-				return null;
+				int x, y;
+#if VALA_0_12
+				controller.window.get_display ().get_pointer (null, out x, out y, null);
+#else
+				ModifierType mod;
+				Gdk.Screen gdk_screen;
+				controller.window.get_display ().get_pointer (out gdk_screen, out x, out y, out mod);
+#endif
+				if (w.is_visible_on_workspace (screen.get_active_workspace ())
+					&& WindowControl.get_easy_geometry (w).intersect (Gdk.Rectangle () {x = x, y = y}, null))
+					return Gdk.Window.foreign_new ((Gdk.NativeWindow) w.get_xid ());
 			}
+			
+			return null;
 		}
 		
 		public void ensure_proxy ()
@@ -339,14 +360,22 @@ namespace Plank
 				return;
 			}
 			
-		// FIXME
-		//	if ((controller.window.CursorTracker.Modifier & ModifierType.BUTTON1_MASK) == ModifierType.BUTTON1_MASK) {
+			ModifierType mod;
+#if VALA_0_12
+			controller.window.get_display ().get_pointer (null, null, null, out mod);
+#else
+			int x, y;
+			Gdk.Screen gdk_screen;
+			controller.window.get_display ().get_pointer (out gdk_screen, out x, out y, out mod);
+#endif
+			
+			if ((mod & ModifierType.BUTTON1_MASK) == ModifierType.BUTTON1_MASK) {
 				Gdk.Window bestProxy = best_proxy_window ();
 				if (bestProxy != null && proxy_window != bestProxy) {
 					proxy_window = bestProxy;
 					drag_dest_set_proxy (controller.window, proxy_window, DragProtocol.XDND, true);
 				}
-		//	}
+			}
 		}
 
 		void enable_drag_to ()
@@ -356,6 +385,11 @@ namespace Plank
 				TargetEntry () { target = "text/plank-uri-list", flags = 0, info = 0 }
 			};
 			drag_dest_set (controller.window, 0, dest, DragAction.COPY);
+		}
+		
+		void disable_drag_to ()
+		{
+			drag_dest_unset (controller.window);
 		}
 		
 		void enable_drag_from ()
