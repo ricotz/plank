@@ -549,25 +549,7 @@ namespace Plank
 		
 		void create_urgent_glow ()
 		{
-			var color = get_styled_color ().add_hue (urgent_hue_shift).set_sat (1);
-			
-			var size = controller.position_manager.GlowSize;
-			urgent_glow_buffer = new DockSurface.with_dock_surface (size, size, background_buffer);
-			var cr = urgent_glow_buffer.Context;
-			
-			var x = size / 2.0;
-			
-			cr.move_to (x, x);
-			cr.arc (x, x, size / 2, 0, Math.PI * 2);
-			
-			var rg = new Pattern.radial (x, x, 0, x, x, size / 2);
-			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
-			rg.add_color_stop_rgba (0.33, color.R, color.G, color.B, 0.66);
-			rg.add_color_stop_rgba (0.66, color.R, color.G, color.B, 0.33);
-			rg.add_color_stop_rgba (1.0, color.R, color.G, color.B, 0.0);
-			
-			cr.set_source (rg);
-			cr.fill ();
+			urgent_glow_buffer = theme.create_urgent_glow (background_buffer, controller.position_manager.GlowSize, get_styled_color ().add_hue (urgent_hue_shift).set_sat (1));
 		}
 		
 		/**

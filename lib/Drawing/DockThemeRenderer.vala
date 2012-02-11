@@ -145,6 +145,38 @@ namespace Plank.Drawing
 		}
 		
 		/**
+		 * Creates a surface for an urgent glow.
+		 *
+		 * @param background a similar surface
+		 * @param size the size of the urgent glow
+		 * @param color the color of the urgent glow
+		 * @return a new dock surface with the urgent glow drawn on it
+		 */
+		public DockSurface create_urgent_glow (DockSurface background, int size, Color color)
+		{
+			var surface = new DockSurface.with_dock_surface (size, size, background);
+			surface.clear ();
+			
+			var cr = surface.Context;
+			
+			var x = size / 2.0;
+			
+			cr.move_to (x, x);
+			cr.arc (x, x, size / 2, 0, Math.PI * 2);
+			
+			var rg = new Pattern.radial (x, x, 0, x, x, size / 2);
+			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
+			rg.add_color_stop_rgba (0.33, color.R, color.G, color.B, 0.66);
+			rg.add_color_stop_rgba (0.66, color.R, color.G, color.B, 0.33);
+			rg.add_color_stop_rgba (1.0, color.R, color.G, color.B, 0.0);
+			
+			cr.set_source (rg);
+			cr.fill ();
+			
+			return surface;
+		}
+
+		/**
 		 * Draws an active glow for an item.
 		 *
 		 * @param surface the surface to draw onto
