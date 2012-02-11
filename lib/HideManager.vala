@@ -135,8 +135,8 @@ namespace Plank
 			controller.window.get_display ().get_pointer (null, out x, out y, null);
 			
 			// get window location
-			var win_x = controller.window.win_x;
-			var win_y = controller.window.win_y;
+			var win_x = controller.position_manager.win_x;
+			var win_y = controller.position_manager.win_y;
 			
 			// compute rect of the window
 			var dock_rect = controller.position_manager.get_cursor_region ();
@@ -260,8 +260,8 @@ namespace Plank
 		void update_window_intersect ()
 		{
 			// get window location
-			var win_x = controller.window.win_x;
-			var win_y = controller.window.win_y;
+			var win_x = controller.position_manager.win_x;
+			var win_y = controller.position_manager.win_y;
 			
 			// compute rect of the window
 			var dock_rect = controller.position_manager.get_static_dock_region ();

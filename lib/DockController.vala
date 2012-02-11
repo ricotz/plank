@@ -29,9 +29,10 @@ namespace Plank
 		public DockItems items;
 		public PositionManager position_manager;
 		public DockRenderer renderer;
-		public DockWindow window;
 		public DragManager drag_manager;
 		public HideManager hide_manager;
+		public HoverWindow hover;
+		public DockWindow window;
 		
 		public DockController ()
 		{
@@ -41,12 +42,13 @@ namespace Plank
 			renderer = new DockRenderer (this);
 			drag_manager = new DragManager (this);
 			hide_manager = new HideManager (this);
+			hover = new HoverWindow (this);
 			window = new DockWindow (this);
 			
 			renderer.initialize ();
 			drag_manager.initialize ();
 			hide_manager.initialize ();
-			window.initialize ();
+			position_manager.initialize ();
 		}
 	}
 }

@@ -36,6 +36,8 @@ $(plankgtkdoc_DATA): plank-gtk-doc
 
 valadoc_flags = \
 	--force \
+	--verbose \
+	--package-name $(PACKAGE_NAME) \
 	--package-version $(PACKAGE_VERSION) \
 	$(NULL)
 
@@ -73,7 +75,7 @@ valadoc_flags_plank = \
 plank-doc: $(plank_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-o plank/ \
-		--doclet=devhelp \
+		--doclet=html \
 		$(valadoc_flags_plank) \
 		$(NULL)
 

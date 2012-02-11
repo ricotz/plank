@@ -21,6 +21,23 @@ using Wnck;
 
 namespace Plank.Services.Windows
 {
+	internal enum Struts 
+	{
+		LEFT,
+		RIGHT,
+		TOP,
+		BOTTOM,
+		LEFT_START,
+		LEFT_END,
+		RIGHT_START,
+		RIGHT_END,
+		TOP_START,
+		TOP_END,
+		BOTTOM_START,
+		BOTTOM_END,
+		N_VALUES
+	}
+	
 	internal class WindowControl : GLib.Object
 	{
 		// when working on a group of windows, wait this amount between each action

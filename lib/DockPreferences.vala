@@ -16,6 +16,7 @@
 // 
 
 using Gdk;
+using Gtk;
 
 using Plank.Services;
 using Plank.Widgets;
@@ -44,6 +45,12 @@ namespace Plank
 		
 		[Description(nick = "dock-items", blurb = "List of *.dockitem files on this dock. DO NOT MODIFY")]
 		public string DockItems { get; set; }
+		
+		[Description(nick = "position", blurb = "The position for the dock on the monitor.")]
+		public PositionType Position { get; set; }
+		
+		[Description(nick = "offset", blurb = "The dock's position offset from center (in percent).")]
+		public int Offset { get; set; }
 		
 		/**
 		 * {@inheritDoc}
@@ -78,6 +85,8 @@ namespace Plank
 			UnhideDelay = 0;
 			Monitor = Screen.get_default ().get_primary_monitor ();
 			DockItems = "";
+			Position = PositionType.BOTTOM;
+			Offset = 0;
 		}
 		
 		void monitors_changed ()
@@ -101,6 +110,16 @@ namespace Plank
 		{
 			if (IconSize > MIN_ICON_SIZE)
 				IconSize--;
+		}
+		
+		/**
+		 * Return whether or not a dock is a horizontal dock.
+		 *
+		 * @return true if the dock's position indicates it is horizontal
+		 */
+		public bool is_horizontal_dock ()
+		{
+			return Position == PositionType.TOP || Position == PositionType.BOTTOM;
 		}
 		
 		/**
@@ -128,6 +147,16 @@ namespace Plank
 				break;
 			
 			case "DockItems":
+				break;
+			
+			case "Position":
+				break;
+			
+			case "Offset":
+				if (Offset < -100)
+					Offset = -100;
+				else if (Offset > 100)
+					Offset = 100;
 				break;
 			}
 		}
