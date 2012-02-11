@@ -51,7 +51,7 @@ namespace Plank.Widgets
 		protected override bool draw (Cairo.Context cr)
 		{
 #else
-		protected override bool expose_event (EventExpose event)
+		protected override bool expose_event (Gdk.EventExpose event)
 		{
 			var cr = cairo_create (event.window);
 #endif

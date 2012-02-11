@@ -52,14 +52,14 @@ namespace Plank.Widgets
 		}
 		
 #if USE_GTK3
-		public override bool draw (Context cr)
+		public override bool draw (Cairo.Context cr)
 		{
 #else
 		public override bool expose_event (EventExpose event)
 		{
 			var cr = cairo_create (event.window);
 #endif
-			cr.set_operator (Operator.CLEAR);
+			cr.set_operator (Cairo.Operator.CLEAR);
 			cr.rectangle (0, 0, width_request, height_request);
 			cr.fill ();
 			
