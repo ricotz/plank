@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011-2012 Robert Dyer
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -148,34 +148,77 @@ namespace Plank.Drawing
 		 * Draws an active glow for an item.
 		 *
 		 * @param surface the surface to draw onto
-		 * @param horiz_pad any horizontal padding to account for
 		 * @param clip_buffer a region to clip the glow to
 		 * @param rect the rect for the glow
 		 * @param color the color of the glow
 		 * @param opacity the opacity of the glow
 		 */
-		public void draw_active_glow (DockSurface surface, int horiz_pad, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity)
+		public void draw_active_glow (DockSurface surface, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
 		{
-			if (opacity == 0)
-				return;
+			var cr = surface.Context;
 			
-			var xoffset = horiz_pad < 0 ? -horiz_pad : 0;
-			surface.Context.translate (xoffset, surface.Height - clip_buffer.Height + LineWidth);
-			draw_inner_rect (surface.Context, clip_buffer.Width, clip_buffer.Height);
-			surface.Context.clip ();
-			surface.Context.translate (-xoffset, clip_buffer.Height - surface.Height - LineWidth);
+			var top_offset = get_top_offset ();
+			var bottom_offset = get_bottom_offset ();
+			var top_padding = clip_buffer.Height - rect.height - bottom_offset - top_offset;
 			
-			rect.y += 2 * get_top_offset ();
-			rect.height -= 2 * get_top_offset () + 2 * get_bottom_offset ();
-			surface.Context.rectangle (rect.x, rect.y, rect.width, rect.height);
+			var rotate = 0.0;
+			var xoffset = 0.0, yoffset = 0.0;
 			
-			var gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
+			Pattern gradient = null;
+			
+			switch (pos) {
+			case Gtk.PositionType.BOTTOM:
+				xoffset = (surface.Width - clip_buffer.Width) / 2.0;
+				yoffset = surface.Height - clip_buffer.Height;
+				
+				rect.y += 2 * top_offset - top_padding;
+				rect.height -= 2 * (top_offset + bottom_offset) - top_padding;
+				gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
+				break;
+			case Gtk.PositionType.TOP:
+				rotate = Math.PI;
+				xoffset = (-surface.Width - clip_buffer.Width) / 2.0;
+				yoffset = -clip_buffer.Height;
+				
+				rect.height -= 2 * (top_offset + bottom_offset) - top_padding;
+				gradient = new Pattern.linear (0, rect.y + rect.height, 0, rect.y);
+				break;
+			case Gtk.PositionType.LEFT:
+				rotate = Math.PI * 0.5;
+				xoffset = (surface.Height - clip_buffer.Width) / 2.0;
+				yoffset = -clip_buffer.Height;
+				
+				rect.width -= 2 * (top_offset + bottom_offset) - top_padding;
+				gradient = new Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
+				break;
+			case Gtk.PositionType.RIGHT:
+				rotate = Math.PI * -0.5;
+				xoffset = (-surface.Height - clip_buffer.Width) / 2.0;
+				yoffset = surface.Width - clip_buffer.Height;
+				
+				rect.x += 2 * top_offset - top_padding;
+				rect.width -= 2 * (top_offset + bottom_offset) - top_padding;
+				gradient = new Pattern.linear (rect.x, 0, rect.x + rect.width, 0);
+				break;
+			}
+			
+			cr.save ();
+			cr.rotate (rotate);
+			cr.translate (xoffset, yoffset);
+			draw_inner_rect (cr, clip_buffer.Width, clip_buffer.Height);
+			cr.restore ();
+			
+			cr.set_line_width (LineWidth);
+			cr.clip ();
+
 			gradient.add_color_stop_rgba (0, color.R, color.G, color.B, 0);
 			gradient.add_color_stop_rgba (1, color.R, color.G, color.B, 0.6 * opacity);
 			
-			surface.Context.set_source (gradient);
-			surface.Context.fill ();
-			surface.Context.reset_clip ();
+			cr.rectangle (rect.x, rect.y, rect.width, rect.height);
+			cr.set_source (gradient);
+			cr.fill ();
+			
+			cr.reset_clip ();
 		}
 		
 		/**
@@ -187,8 +230,14 @@ namespace Plank.Drawing
 			
 			switch (prop) {
 			case "HorizPadding":
+				break;
+			
 			case "TopPadding":
+				break;
+			
 			case "BottomPadding":
+				if (BottomPadding < 0)
+					BottomPadding = 0;
 				break;
 			
 			case "ItemPadding":

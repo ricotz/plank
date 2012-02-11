@@ -15,8 +15,12 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using Gdk;
+using Gtk;
+
 using Plank.Items;
 using Plank.Drawing;
+using Plank.Services.Windows;
 
 namespace Plank
 {
@@ -30,6 +34,8 @@ namespace Plank
 		Gdk.Rectangle cursor_region;
 		Gdk.Rectangle static_dock_region;
 		
+		Gdk.Rectangle monitor_geo;
+		
 		/**
 		 * Creates a new position manager.
 		 *
@@ -41,6 +47,30 @@ namespace Plank
 			
 			cursor_region = Gdk.Rectangle ();
 			static_dock_region = Gdk.Rectangle ();
+			
+			controller.prefs.changed["Monitor"].connect (update_monitor_geo);
+		}
+		
+		/**
+		 * Initializes the position manager.
+		 */
+		public void initialize ()
+			requires (controller.renderer != null && controller.window != null)
+		{
+			controller.window.get_screen ().size_changed.connect (update_monitor_geo);
+			update_monitor_geo ();
+		}
+		
+		~PositionManager ()
+		{
+			controller.window.get_screen ().size_changed.disconnect (update_monitor_geo);
+			controller.prefs.changed["Monitor"].disconnect (update_monitor_geo);
+		}
+		
+		void update_monitor_geo ()
+		{
+			controller.window.get_screen ().get_monitor_geometry (controller.prefs.Monitor, out monitor_geo);
+			controller.window.set_size ();
 		}
 		
 		//
@@ -48,9 +78,24 @@ namespace Plank
 		//
 		
 		/**
+		 * Cached x position of the dock window.
+		 */
+		public int win_x { get; protected set; }
+		
+		/**
+		 * Cached y position of the dock window.
+		 */
+		public int win_y { get; protected set; }
+		
+		
+		/**
 		 * Theme-based indicator size, scaled by icon size.
 		 */
 		public int IndicatorSize { get; private set; }
+		/**
+		 * Theme-based urgent glow size, scaled by icon size.
+		 */
+		public int GlowSize { get; private set; }
 		/**
 		 * Theme-based horizontal padding, scaled by icon size.
 		 */
@@ -60,12 +105,17 @@ namespace Plank
 		 */
 		public int TopPadding    { get; private set; }
 		/**
+		 * Theme-based bottom padding, scaled by icon size.
+		 */
+		public int BottomPadding { get; private set; }
+		/**
 		 * Theme-based item padding, scaled by icon size.
 		 */
 		public int ItemPadding   { get; private set; }
 		
-		int BottomPadding { get; set; }
-		int ItemsOffset   { get; set; }
+		int items_offset;
+		int top_offset;
+		int bottom_offset;
 		
 		/**
 		 * The currently visible height of the dock.
@@ -81,40 +131,6 @@ namespace Plank
 		public int DockBackgroundHeight { get; private set; }
 		
 		/**
-		 * Resets any cache that doesn't rely on the current set of items.
-		 *
-		 * @param theme the current dock theme
-		 */
-		public void reset_caches (DockThemeRenderer theme)
-		{
-			var icon_size = controller.prefs.IconSize;
-			
-			IndicatorSize = (int) (theme.IndicatorSize / 10.0 * icon_size);
-			HorizPadding  = (int) (theme.HorizPadding  / 10.0 * icon_size);
-			TopPadding    = (int) (theme.TopPadding    / 10.0 * icon_size);
-			ItemPadding   = (int) (theme.ItemPadding   / 10.0 * icon_size);
-			BottomPadding = (int) (theme.BottomPadding / 10.0 * icon_size);
-			ItemsOffset   = (int) (2 * theme.LineWidth + (HorizPadding > 0 ? HorizPadding : 0));
-			
-			// height of the visible (cursor) rect of the dock
-			// use a temporary to avoid (possibly) doing more than 1 notify signal
-			var tmp = icon_size + 2 * (theme.get_top_offset () + theme.get_bottom_offset ());
-			if (TopPadding > 0)
-				tmp += TopPadding;
-			if (BottomPadding > 0)
-				tmp += BottomPadding;
-			VisibleDockHeight = tmp;
-			
-			// height of the dock window
-			DockHeight = tmp + (int) (icon_size * theme.UrgentBounceHeight);
-			
-			// height of the dock background image, as drawn
-			DockBackgroundHeight = tmp;
-			if (TopPadding < 0)
-				DockBackgroundHeight += TopPadding;
-		}
-		
-		/**
 		 * The currently visible width of the dock.
 		 */
 		public int VisibleDockWidth { get; private set; }
@@ -128,27 +144,69 @@ namespace Plank
 		public int DockBackgroundWidth { get; private set; }
 		
 		/**
-		 * Resets any cache that relies on the current set of items.
+		 * Resets all internal caches.
 		 *
 		 * @param theme the current dock theme
-		 * @param urgent_glow_size the size of the urgent glow
 		 */
-		public void reset_item_caches (DockThemeRenderer theme, int urgent_glow_size)
+		public void reset_caches (DockThemeRenderer theme)
 		{
-			reset_caches (theme);
+			var icon_size = controller.prefs.IconSize;
+			var scaled_icon_size = icon_size / 10.0;
 			
-			var width = (int) controller.items.Items.size * (ItemPadding + controller.prefs.IconSize) + 2 * HorizPadding + 4 * theme.LineWidth;
+			IndicatorSize = (int) (theme.IndicatorSize * scaled_icon_size);
+			GlowSize      = (int) (theme.GlowSize      * scaled_icon_size);
+			HorizPadding  = (int) (theme.HorizPadding  * scaled_icon_size);
+			TopPadding    = (int) (theme.TopPadding    * scaled_icon_size);
+			BottomPadding = (int) (theme.BottomPadding * scaled_icon_size);
+			ItemPadding   = (int) (theme.ItemPadding   * scaled_icon_size);
+			
+			items_offset  = (int) (2 * theme.LineWidth + (HorizPadding > 0 ? HorizPadding : 0));
+			
+			top_offset = theme.get_top_offset ();
+			bottom_offset = theme.get_bottom_offset ();
+			
+			// height of the visible (cursor) rect of the dock
+			var height = icon_size + 2 * (top_offset + bottom_offset) + BottomPadding;
+			if (TopPadding > 0)
+				height += TopPadding;
+			
+			// height of the dock background image, as drawn
+			var background_height = height;
+			if (TopPadding < 0)
+				background_height += TopPadding;
+			
+			// height of the dock window
+			var dock_height = height + (int) (icon_size * theme.UrgentBounceHeight);
+			
+			
+			var width = controller.items.Items.size * (ItemPadding + icon_size) + 2 * HorizPadding + 4 * theme.LineWidth;
 			
 			// width of the dock background image, as drawn
-			DockBackgroundWidth = width;
+			var background_width = width;
 			
 			// width of the visible (cursor) rect of the dock
 			if (HorizPadding < 0)
 				width -= 2 * HorizPadding;
-			VisibleDockWidth = width;
 			
 			// width of the dock window
-			DockWidth = width + controller.prefs.IconSize + ItemPadding + urgent_glow_size / 2;
+			var dock_width = width + GlowSize / 2;
+			
+			
+			if (controller.prefs.is_horizontal_dock ()) {
+				VisibleDockHeight = height;
+				VisibleDockWidth = width;
+				DockHeight = dock_height;
+				DockWidth = dock_width;
+				DockBackgroundHeight = background_height;
+				DockBackgroundWidth = background_width;
+			} else {
+				VisibleDockHeight = width;
+				VisibleDockWidth = height;
+				DockHeight = dock_width;
+				DockWidth = dock_height;
+				DockBackgroundHeight = background_width;
+				DockBackgroundWidth = background_height;
+			}
 		}
 		
 		/**
@@ -159,8 +217,24 @@ namespace Plank
 		 */
 		public Gdk.Rectangle get_cursor_region ()
 		{
-			cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
-			cursor_region.y = controller.window.height_request - cursor_region.height;
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
+				cursor_region.y = DockHeight - cursor_region.height;
+				break;
+			case PositionType.TOP:
+				cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
+				cursor_region.y = 0;
+				break;
+			case PositionType.LEFT:
+				cursor_region.width = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockWidth));
+				cursor_region.x = 0;
+				break;
+			case PositionType.RIGHT:
+				cursor_region.width = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockWidth));
+				cursor_region.x = DockWidth - cursor_region.width;
+				break;
+			}
 			
 			return cursor_region;
 		}
@@ -183,11 +257,81 @@ namespace Plank
 		{
 			static_dock_region.width = VisibleDockWidth;
 			static_dock_region.height = VisibleDockHeight;
-			static_dock_region.x = (controller.window.width_request - static_dock_region.width) / 2;
-			static_dock_region.y = controller.window.height_request - static_dock_region.height;
 			
-			cursor_region.width = static_dock_region.width;
-			cursor_region.x = static_dock_region.x;
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				static_dock_region.x = (DockWidth - static_dock_region.width) / 2;
+				static_dock_region.y = DockHeight - static_dock_region.height;
+				
+				cursor_region.x = static_dock_region.x;
+				cursor_region.width = static_dock_region.width;
+				break;
+			case PositionType.TOP:
+				static_dock_region.x = (DockWidth - static_dock_region.width) / 2;
+				static_dock_region.y = 0;
+				
+				cursor_region.x = static_dock_region.x;
+				cursor_region.width = static_dock_region.width;
+				break;
+			case PositionType.LEFT:
+				static_dock_region.y = (DockHeight - static_dock_region.height) / 2;
+				static_dock_region.x = 0;
+				
+				cursor_region.y = static_dock_region.y;
+				cursor_region.height = static_dock_region.height;
+				break;
+			case PositionType.RIGHT:
+				static_dock_region.y = (DockHeight - static_dock_region.height) / 2;
+				static_dock_region.x = DockWidth - static_dock_region.width;
+				
+				cursor_region.y = static_dock_region.y;
+				cursor_region.height = static_dock_region.height;
+				break;
+			}
+			
+			controller.window.set_size ();
+		}
+		
+		/**
+		 * The region for drawing a dock item.
+		 *
+		 * @param hover_rect the item's hover region
+		 * @return the region for the dock item
+		 */
+		public Gdk.Rectangle item_draw_region (Gdk.Rectangle hover_rect)
+		{
+			var item_padding = ItemPadding;
+			var top_padding = TopPadding;
+			var bottom_padding = BottomPadding;
+
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				hover_rect.x += item_padding / 2;
+				hover_rect.y += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
+				hover_rect.height -= top_padding;
+				hover_rect.width -= item_padding;
+				break;
+			case PositionType.TOP:
+				hover_rect.x += item_padding / 2;
+				hover_rect.y += 2 * bottom_offset + bottom_padding;
+				hover_rect.height -= bottom_padding;
+				hover_rect.width -= item_padding;
+				break;
+			case PositionType.LEFT:
+				hover_rect.y += item_padding / 2;
+				hover_rect.x += 2 * bottom_offset + bottom_padding;
+				hover_rect.width -= bottom_padding;
+				hover_rect.height -= item_padding;
+				break;
+			case PositionType.RIGHT:
+				hover_rect.y += item_padding / 2;
+				hover_rect.x += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
+				hover_rect.width -= top_padding;
+				hover_rect.height -= item_padding;
+				break;
+			}
+			
+			return hover_rect;
 		}
 		
 		/**
@@ -198,27 +342,163 @@ namespace Plank
 		 */
 		public Gdk.Rectangle item_hover_region (DockItem item)
 		{
-			var rect = item_draw_region (item);
-			rect.x += (controller.window.width_request - VisibleDockWidth) / 2;
+			var rect = Gdk.Rectangle ();
+			
+			var icon_size = controller.prefs.IconSize;
+			
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				rect.width = icon_size + ItemPadding;
+				rect.height = VisibleDockHeight;
+				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + icon_size);
+				rect.y = DockHeight - rect.height;
+				break;
+			case PositionType.TOP:
+				rect.width = icon_size + ItemPadding;
+				rect.height = VisibleDockHeight;
+				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + icon_size);
+				rect.y = 0;
+				break;
+			case PositionType.LEFT:
+				rect.height = icon_size + ItemPadding;
+				rect.width = VisibleDockWidth;
+				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + icon_size);
+				rect.x = 0;
+				break;
+			case PositionType.RIGHT:
+				rect.height = icon_size + ItemPadding;
+				rect.width = VisibleDockWidth;
+				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + icon_size);
+				rect.x = DockWidth - rect.width;
+				break;
+			}
+			
 			return rect;
 		}
 		
 		/**
-		 * The region for drawing a dock item.
+		 * Get's the x and y position to display a menu for a dock item.
 		 *
-		 * @param item the dock item to find a region for
-		 * @return the region for the dock item
+		 * @param hovered the item that is hovered
+		 * @param requisition the menu's requisition
+		 * @param x the resulting x position
+		 * @param y the resulting y position
 		 */
-		public Gdk.Rectangle item_draw_region (DockItem item)
+		public void get_menu_position (DockItem hovered, Requisition requisition, out int x, out int y)
 		{
-			var rect = Gdk.Rectangle ();
+			var rect = item_hover_region (hovered);
 			
-			rect.x = ItemsOffset + item.Position * (ItemPadding + controller.prefs.IconSize);
-			rect.y = DockHeight - VisibleDockHeight;
-			rect.width = controller.prefs.IconSize + ItemPadding;
-			rect.height = VisibleDockHeight;
+			var offset = 10;
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				x = win_x + rect.x + (rect.width - requisition.width) / 2;
+				y = win_y + rect.y - requisition.height - offset;
+				break;
+			case PositionType.TOP:
+				x = win_x + rect.x + (rect.width - requisition.width) / 2;
+				y = win_y + rect.height + offset;
+				break;
+			case PositionType.LEFT:
+				y = win_y + rect.y + rect.width / 2;
+				x = win_x + rect.x + rect.width + offset;
+				break;
+			case PositionType.RIGHT:
+				y = win_y + rect.y + rect.width / 2;
+				x = win_x + rect.x - requisition.width - offset;
+				break;
+			}
+		}
+		
+		/**
+		 * Get's the x and y position to display a hover window for a dock item.
+		 *
+		 * @param hovered the item that is hovered
+		 * @param x the resulting x position
+		 * @param y the resulting y position
+		 */
+		public void get_hover_position (DockItem hovered, out int x, out int y)
+		{
+			var rect = item_hover_region (hovered);
 			
-			return rect;
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				x = rect.x + win_x + rect.width / 2;
+				y = rect.y + win_y;
+				break;
+			case PositionType.TOP:
+				x = rect.x + win_x + rect.width / 2;
+				y = rect.y + win_y + rect.height;
+				break;
+			case PositionType.LEFT:
+				y = rect.y + win_y + rect.height / 2;
+				x = rect.x + win_x + rect.width;
+				break;
+			case PositionType.RIGHT:
+				y = rect.y + win_y + rect.height / 2;
+				x = rect.x + win_x;
+				break;
+			}
+		}
+		
+		/**
+		 * Caches the x and y position of the dock window.
+		 */
+		public void update_dock_position ()
+		{
+			var xoffset = (monitor_geo.width - DockWidth) / 2;
+			var yoffset = (monitor_geo.height - DockHeight) / 2;
+			
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				win_x = monitor_geo.x + xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
+				win_y = monitor_geo.y + monitor_geo.height - DockHeight;
+				break;
+			case PositionType.TOP:
+				win_x = monitor_geo.x + xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
+				win_y = monitor_geo.y;
+				break;
+			case PositionType.LEFT:
+				win_y = monitor_geo.y + yoffset + (int) (controller.prefs.Offset / 100.0 * yoffset);
+				win_x = monitor_geo.x;
+				break;
+			case PositionType.RIGHT:
+				win_y = monitor_geo.y + yoffset + (int) (controller.prefs.Offset / 100.0 * yoffset);
+				win_x = monitor_geo.x + monitor_geo.width - DockWidth;
+				break;
+			}
+		}
+		
+		/**
+		 * Computes the struts for the dock.
+		 *
+		 * @param struts the array to contain the struts
+		 */
+		public void get_struts (ref ulong[] struts)
+		{
+			switch (controller.prefs.Position) {
+			case PositionType.BOTTOM:
+				struts [controller.prefs.Position] = VisibleDockHeight + controller.window.get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
+				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.x;
+				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.x + monitor_geo.width - 1;
+				break;
+			case PositionType.TOP:
+				struts [controller.prefs.Position] = monitor_geo.y + VisibleDockHeight;
+				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.x;
+				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.x + monitor_geo.width - 1;
+				break;
+			case PositionType.LEFT:
+				struts [controller.prefs.Position] = monitor_geo.x + VisibleDockWidth;
+				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.y;
+				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.y + monitor_geo.height - 1;
+				break;
+			case PositionType.RIGHT:
+				struts [controller.prefs.Position] = VisibleDockWidth + controller.window.get_screen ().get_width () - monitor_geo.x - monitor_geo.width;
+				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.y;
+				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.y + monitor_geo.height - 1;
+				break;
+			}
 		}
 	}
 }

@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ namespace Plank.Drawing
 		 */
 		public int get_top_offset ()
 		{
-			return TopRoundness > 0 ? LineWidth : 0;
+			return LineWidth;
 		}
 		
 		/**
@@ -111,7 +111,7 @@ namespace Plank.Drawing
 			var cr = surface.Context;
 			
 			var top_offset    = get_top_offset ();
-			var bottom_offset = get_bottom_offset ();
+			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			
 			var gradient = new Pattern.linear (0, 0, 0, surface.Height);
 			
@@ -139,29 +139,28 @@ namespace Plank.Drawing
 			
 			gradient.add_color_stop_rgba (0, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.5);
 			gradient.add_color_stop_rgba ((TopRoundness > 0 ? TopRoundness : LineWidth) / (double) surface.Height, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.12);
-			gradient.add_color_stop_rgba ((surface.Height - (BottomRoundness > 0 ? BottomRoundness : LineWidth)) / (double) surface.Height, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.08);
+			gradient.add_color_stop_rgba (1 - (BottomRoundness > 0 ? BottomRoundness : LineWidth) / (double) surface.Height, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.08);
 			gradient.add_color_stop_rgba (1, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.19);
 			
 			cr.save ();
 			cr.set_source (gradient);
 			
 			draw_inner_rect (cr, surface.Width, surface.Height);
-			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			cr.restore ();
 		}
 		
 		/**
-		 * TODO
+		 * Similar to draw_rounded_rect, but moves in to avoid a containing rounded rect's lines.
 		 *
 		 * @param cr the context to draw with
 		 * @param width the width of the rect
 		 * @param height the height of the rect
 		 */
-		public void draw_inner_rect (Context cr, int width, int height)
+		protected void draw_inner_rect (Context cr, int width, int height)
 		{
 			var top_offset    = get_top_offset ();
-			var bottom_offset = get_bottom_offset ();
+			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			
 			draw_rounded_rect (cr,
 				3 * LineWidth / 2.0,
@@ -172,7 +171,18 @@ namespace Plank.Drawing
 				BottomRoundness);
 		}
 		
-		void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
+		/**
+		 * Draws a rounded rectangle.  If compositing is disabled, just draws a normal rectangle.
+		 *
+		 * @param cr the context to draw with
+		 * @param x the x location of the rect
+		 * @param y the y location of the rect
+		 * @param width the width of the rect
+		 * @param height the height of the rect
+		 * @param top_radius the roundedness of the top edge
+		 * @param bottom_radius the roundedness of the bottom edge
+		 */
+		protected void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
 		{
 			var min_size  = double.min (width, height);
 			
@@ -182,9 +192,13 @@ namespace Plank.Drawing
 			if (!Gdk.Screen.get_default ().is_composited ())
 				top_radius = bottom_radius = 0.0;
 			
-			cr.move_to (x + top_radius, y);
+			// if the top isnt round, we have to adjust the starting point a bit
+			if (top_radius == 0.0)
+				cr.move_to (x - LineWidth / 2.0, y);
+			else
+				cr.move_to (x + top_radius, y);
 			
-			cr.arc (x + width - top_radius,    y + top_radius,             top_radius,    Math.PI * 1.5, Math.PI * 2.0);
+			cr.arc (x + width - top_radius,    y + top_radius,             top_radius,    Math.PI * 1.5, 0);
 			cr.arc (x + width - bottom_radius, y + height - bottom_radius, bottom_radius, 0,             Math.PI * 0.5);
 			cr.arc (x + bottom_radius,         y + height - bottom_radius, bottom_radius, Math.PI * 0.5, Math.PI);
 			cr.arc (x + top_radius,            y + top_radius,             top_radius,    Math.PI,       Math.PI * 1.5);
@@ -214,8 +228,14 @@ namespace Plank.Drawing
 				break;
 			
 			case "OuterStrokeColor":
+				break;
+			
 			case "FillStartColor":
+				break;
+			
 			case "FillEndColor":
+				break;
+			
 			case "InnerStrokeColor":
 				break;
 			}

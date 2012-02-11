@@ -16,6 +16,7 @@
 // 
 
 using Gdk;
+using Gtk;
 
 using Plank.Services;
 using Plank.Widgets;
@@ -41,6 +42,12 @@ namespace Plank
 		
 		[Description(nick = "monitor", blurb = "The monitor number for the dock.")]
 		public int Monitor { get; set; }
+		
+		[Description(nick = "position", blurb = "The position for the dock on the monitor.")]
+		public PositionType Position { get; set; }
+		
+		[Description(nick = "offset", blurb = "The dock's position offset from center (in percent).")]
+		public int Offset { get; set; }
 		
 		/**
 		 * {@inheritDoc}
@@ -74,6 +81,8 @@ namespace Plank
 			HideMode = HideType.INTELLIGENT;
 			UnhideDelay = 0;
 			Monitor = Screen.get_default ().get_primary_monitor ();
+			Position = PositionType.BOTTOM;
+			Offset = 0;
 		}
 		
 		void monitors_changed ()
@@ -100,6 +109,16 @@ namespace Plank
 		}
 		
 		/**
+		 * Return whether or not a dock is a horizontal dock.
+		 *
+		 * @return true if the dock's position indicates it is horizontal
+		 */
+		public bool is_horizontal_dock ()
+		{
+			return Position == PositionType.TOP || Position == PositionType.BOTTOM;
+		}
+		
+		/**
 		 * {@inheritDoc}
 		 */
 		protected override void verify (string prop)
@@ -121,6 +140,16 @@ namespace Plank
 			case "Monitor":
 				if (Monitor >= Screen.get_default ().get_n_monitors ())
 					Monitor = Screen.get_default ().get_primary_monitor ();
+				break;
+			
+			case "Position":
+				break;
+			
+			case "Offset":
+				if (Offset < -100)
+					Offset = -100;
+				else if (Offset > 100)
+					Offset = 100;
 				break;
 			}
 		}
