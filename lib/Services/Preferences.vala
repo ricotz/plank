@@ -83,14 +83,11 @@ namespace Plank.Services
 		
 		void handle_notify (Object sender, ParamSpec property)
 		{
+			delay ();
 			notify.disconnect (handle_notify);
 			call_verify (property.name);
 			notify.connect (handle_notify);
-			
-			// FIXME save_prefs() might be called twice in this path (if verification failed)
-			//       need to figure out a way to only call it once
-			if (backing_file != null)
-				save_prefs ();
+			apply ();
 		}
 		
 		void handle_verify_notify (Object sender, ParamSpec property)
@@ -160,6 +157,29 @@ namespace Plank.Services
 			load_prefs ();
 			
 			start_monitor ();
+		}
+		
+		bool is_delayed = false;
+		bool is_changed = false;
+		
+		/**
+		 * Delays saving changes to the backing file until apply() is called.
+		 */
+		public void delay ()
+		{
+			is_delayed = true;
+			is_changed = false;
+		}
+		
+		/**
+		 * If any settings were changed, apply them now.
+		 */
+		public void apply ()
+		{
+			is_delayed = false;
+			if (is_changed && backing_file != null)
+				save_prefs ();
+			is_changed = false;
 		}
 		
 		/**
@@ -279,6 +299,11 @@ namespace Plank.Services
 		
 		void save_prefs ()
 		{
+			if (is_delayed) {
+				is_changed = true;
+				return;
+			}
+			
 			stop_monitor ();
 			
 			var file = new KeyFile ();
