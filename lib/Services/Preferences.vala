@@ -194,8 +194,8 @@ namespace Plank.Services
 				backing_monitor = backing_file.monitor (0);
 				backing_monitor.changed.connect (backing_file_changed);
 			} catch (Error e) {
-				error ("Unable to watch the preferences file '%s'", backing_file.get_path () ?? "");
 				debug (e.message);
+				error ("Unable to watch the preferences file '%s'", backing_file.get_path () ?? "");
 			}
 		}
 		
@@ -237,29 +237,34 @@ namespace Plank.Services
 					var type = prop.value_type;
 					var val = Value (type);
 					
-					if (type == typeof (int))
-						val.set_int (file.get_integer (group_name, prop.name));
-					else if (type == typeof (uint))
-						val.set_uint ((uint) file.get_integer (group_name, prop.name));
-					else if (type == typeof (double))
-						val.set_double (file.get_double (group_name, prop.name));
-					else if (type == typeof (string))
-						val.set_string (file.get_string (group_name, prop.name));
-					else if (type == typeof (bool))
-						val.set_boolean (file.get_boolean (group_name, prop.name));
-					else if (type.is_enum ())
-						val.set_enum (file.get_integer (group_name, prop.name));
-					else if (type.is_a (typeof (PrefsSerializable))) {
-						get_property (prop.name, ref val);
-						(val.get_object () as PrefsSerializable).prefs_deserialize (file.get_string (group_name, prop.name));
-						continue;
-					} else {
-						debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
-						continue;
+					try {
+						if (type == typeof (int))
+							val.set_int (file.get_integer (group_name, prop.name));
+						else if (type == typeof (uint))
+							val.set_uint ((uint) file.get_integer (group_name, prop.name));
+						else if (type == typeof (double))
+							val.set_double (file.get_double (group_name, prop.name));
+						else if (type == typeof (string))
+							val.set_string (file.get_string (group_name, prop.name));
+						else if (type == typeof (bool))
+							val.set_boolean (file.get_boolean (group_name, prop.name));
+						else if (type.is_enum ())
+							val.set_enum (file.get_integer (group_name, prop.name));
+						else if (type.is_a (typeof (PrefsSerializable))) {
+							get_property (prop.name, ref val);
+							(val.get_object () as PrefsSerializable).prefs_deserialize (file.get_string (group_name, prop.name));
+							continue;
+						} else {
+							debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
+							continue;
+						}
+						
+						set_property (prop.name, val);
+						call_verify (prop.name);
+					} catch (KeyFileError e) {
+						warning ("Problem loading preferences from file '%s' for property '%s'", backing_file.get_path () ?? "", prop.name);
+						debug (e.message);
 					}
-					
-					set_property (prop.name, val);
-					call_verify (prop.name);
 				}
 			} catch (Error e) {
 				warning ("Unable to load preferences from file '%s'", backing_file.get_path () ?? "");
