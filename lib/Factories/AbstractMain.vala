@@ -156,6 +156,13 @@ namespace Plank.Factories
 		[CCode (cheader_filename = "sys/prctl.h", cname = "prctl")]
 		extern static int prctl (int option, string arg2, ulong arg3, ulong arg4, ulong arg5);
 		
+		[CCode (cheader_filename = "glib/glib.h", cname = "glib_major_version")]
+		extern const uint glib_major_version;
+		[CCode (cheader_filename = "glib/glib.h", cname = "glib_minor_version")]
+		extern const uint glib_minor_version;
+		[CCode (cheader_filename = "glib/glib.h", cname = "glib_micro_version")]
+		extern const uint glib_micro_version;
+
 #if !VALA_0_12
 		[CCode (cheader_filename = "sys/utsname.h", cname = "uname")]
 		extern static int uname (utsname buf);
@@ -183,6 +190,7 @@ namespace Plank.Factories
 			uname (un);
 #endif
 			message ("Kernel version: %s", (string) un.release);
+			message ("GLib version: %u.%u.%u", glib_major_version, glib_minor_version, glib_micro_version);
 			message ("GTK version: %d.%d.%d", Gtk.MAJOR_VERSION, Gtk.MINOR_VERSION, Gtk.MICRO_VERSION);
 			message ("Cairo version: %s", Cairo.version_string ());
 			message ("Pango version: %s", Pango.VERSION_STRING);
