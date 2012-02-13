@@ -169,8 +169,9 @@ namespace Plank.Services
 		{
 			try {
 				backing_file.delete ();
-			} catch {
+			} catch (Error e) {
 				warning ("Unable to delete the preferences file '%s'", backing_file.get_path () ?? "");
+				debug (e.message);
 			}
 		}
 		
@@ -192,8 +193,9 @@ namespace Plank.Services
 			try {
 				backing_monitor = backing_file.monitor (0);
 				backing_monitor.changed.connect (backing_file_changed);
-			} catch {
+			} catch (Error e) {
 				error ("Unable to watch the preferences file '%s'", backing_file.get_path () ?? "");
+				debug (e.message);
 			}
 		}
 		
@@ -259,8 +261,9 @@ namespace Plank.Services
 					set_property (prop.name, val);
 					call_verify (prop.name);
 				}
-			} catch {
+			} catch (Error e) {
 				warning ("Unable to load preferences from file '%s'", backing_file.get_path () ?? "");
+				debug (e.message);
 				deleted ();
 			}
 			notify.connect (handle_notify);
@@ -323,8 +326,9 @@ namespace Plank.Services
 					stream = new DataOutputStream (backing_file.create (0));
 				
 				stream.put_string (file.to_data ());
-			} catch {
+			} catch (Error e) {
 				warning ("Unable to create the preferences file '%s'", backing_file.get_path () ?? "");
+				debug (e.message);
 			}
 			
 			start_monitor ();
