@@ -183,6 +183,9 @@ namespace Plank.Factories
 			uname (un);
 #endif
 			message ("Kernel version: %s", (string) un.release);
+			message ("GTK version: %d.%d.%d", Gtk.MAJOR_VERSION, Gtk.MINOR_VERSION, Gtk.MICRO_VERSION);
+			message ("Cairo version: %s", Cairo.version_string ());
+			message ("Pango version: %s", Pango.VERSION_STRING);
 			Logger.DisplayLevel = LogLevel.WARN;
 		}
 		
