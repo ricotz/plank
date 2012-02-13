@@ -104,7 +104,7 @@ namespace Plank.Services
 			is_writing = false;
 			log_queue = new ArrayList<LogMessage> ();
 			try {
-				re = new Regex ("""(.*)\.vala(:\d+): (.*)""");
+				re = new Regex ("""[(]?(.*)\.vala(:\d+)[)]?:\s*(.*)""");
 			} catch { }
 			
 			Log.set_default_handler (glib_log_func);
