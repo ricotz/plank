@@ -296,6 +296,8 @@ namespace Plank
 				|| old_region.width != static_dock_region.width
 				|| old_region.height != static_dock_region.height)
 				controller.window.set_size ();
+			else
+				controller.renderer.animated_draw ();
 		}
 		
 		/**
