@@ -167,6 +167,9 @@ namespace Plank.Services
 		 */
 		public void delay ()
 		{
+			if (is_delayed)
+				return;
+			
 			is_delayed = true;
 			is_changed = false;
 		}
@@ -176,6 +179,9 @@ namespace Plank.Services
 		 */
 		public void apply ()
 		{
+			if (!is_delayed)
+				return;
+			
 			is_delayed = false;
 			if (is_changed && backing_file != null)
 				save_prefs ();
