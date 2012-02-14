@@ -152,9 +152,9 @@ namespace Plank.Services
 			if (!backing_file.query_exists ()) {
 				reset_properties ();
 				save_prefs ();
+			} else {
+				load_prefs ();
 			}
-			
-			load_prefs ();
 			
 			start_monitor ();
 		}
