@@ -355,8 +355,9 @@ namespace Plank
 				Gdk.Screen gdk_screen;
 				controller.window.get_display ().get_pointer (out gdk_screen, out x, out y, out mod);
 #endif
+				var dest = Gdk.Rectangle ();
 				if (w.is_visible_on_workspace (screen.get_active_workspace ())
-					&& WindowControl.get_easy_geometry (w).intersect (Gdk.Rectangle () {x = x, y = y}, null))
+					&& WindowControl.get_easy_geometry (w).intersect (Gdk.Rectangle () {x = x, y = y}, dest))
 					return Gdk.Window.foreign_new ((Gdk.NativeWindow) w.get_xid ());
 			}
 			
