@@ -83,10 +83,6 @@ namespace Plank.Widgets
 						EventMask.POINTER_MOTION_MASK |
 						EventMask.SCROLL_MASK);
 			
-			controller.items.item_added.connect (set_size);
-			controller.items.item_removed.connect (set_size);
-			controller.prefs.changed.connect (set_size);
-			
 			controller.renderer.notify["Hidden"].connect (update_icon_regions);
 		}
 		
@@ -94,10 +90,6 @@ namespace Plank.Widgets
 		{
 			menu.show.disconnect (update_icon_regions);
 			menu.hide.disconnect (on_menu_hide);
-			
-			controller.items.item_added.disconnect (set_size);
-			controller.items.item_removed.disconnect (set_size);
-			controller.prefs.changed.disconnect (set_size);
 			
 			controller.renderer.notify["Hidden"].disconnect (update_icon_regions);
 		}
