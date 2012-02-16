@@ -83,10 +83,6 @@ namespace Plank.Widgets
 						EventMask.POINTER_MOTION_MASK |
 						EventMask.SCROLL_MASK);
 			
-			controller.items.item_added.connect (set_size);
-			controller.items.item_removed.connect (set_size);
-			controller.prefs.changed.connect (set_size);
-			
 			controller.renderer.notify["Hidden"].connect (update_icon_regions);
 		}
 		
@@ -94,10 +90,6 @@ namespace Plank.Widgets
 		{
 			menu.show.disconnect (update_icon_regions);
 			menu.hide.disconnect (on_menu_hide);
-			
-			controller.items.item_added.disconnect (set_size);
-			controller.items.item_removed.disconnect (set_size);
-			controller.prefs.changed.disconnect (set_size);
 			
 			controller.renderer.notify["Hidden"].disconnect (update_icon_regions);
 		}
@@ -108,9 +100,8 @@ namespace Plank.Widgets
 		public override bool button_press_event (EventButton event)
 		{
 			var button = PopupButton.from_event_button (event);
-			if (HoveredItem == null ||
-				    ((event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK
-					&& (button & PopupButton.RIGHT) == PopupButton.RIGHT))
+			if ((button & PopupButton.RIGHT) == PopupButton.RIGHT &&
+					(HoveredItem == null || (event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))
 				do_popup (event.button, true);
 			else if ((HoveredItem.Button & button) == button)
 				do_popup (event.button, false);
@@ -379,6 +370,7 @@ namespace Plank.Widgets
 		 */
 		protected void on_menu_hide ()
 		{
+			update_icon_regions ();
 			controller.hide_manager.update_dock_hovered ();
 			if (!controller.hide_manager.DockHovered)
 				set_hovered (null);

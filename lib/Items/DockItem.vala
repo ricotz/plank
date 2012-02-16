@@ -338,12 +338,13 @@ namespace Plank.Items
 		protected virtual void draw_icon (DockSurface surface)
 		{
 			Pixbuf? pbuf = ForcePixbuf;
-			if (pbuf == null) {
+			if (pbuf == null)
 				pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
-				return_if_fail(pbuf != null);
-			} else {
+			else
 				pbuf = DrawingService.ar_scale (pbuf, surface.Width, surface.Height);
-			}
+			assert (pbuf != null);
+			if (pbuf == null)
+				return;
 			cairo_set_source_pixbuf (surface.Context, pbuf, 0, 0);
 			surface.Context.paint ();
 		}
