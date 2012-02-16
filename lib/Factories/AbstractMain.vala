@@ -148,6 +148,8 @@ namespace Plank.Factories
 			
 			initialized ();
 			
+			create_controller ();
+			
 			Gdk.threads_enter ();
 			Gtk.main ();
 			Gdk.threads_leave ();
