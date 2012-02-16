@@ -148,7 +148,9 @@ namespace Plank.Factories
 			
 			initialized ();
 			
-			start_dock ();
+			Gdk.threads_enter ();
+			Gtk.main ();
+			Gdk.threads_leave ();
 			
 			return 0;
 		}
@@ -279,16 +281,11 @@ namespace Plank.Factories
 		}
 		
 		/**
-		 * Creates and displays the dock window.
+		 * Creates the dock controller.
 		 */
-		protected virtual void start_dock ()
+		protected virtual void create_controller ()
 		{
-			var controller = new DockController ();
-			controller.window.show_all ();
-			
-			Gdk.threads_enter ();
-			Gtk.main ();
-			Gdk.threads_leave ();
+			new DockController ();
 		}
 		
 		/**
