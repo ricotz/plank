@@ -57,31 +57,24 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Widgets/*.vala \
 	$(NULL)
 
-if USE_GTK3
 plank_doc_deps = \
+if USE_GTK3
 	gdk-x11-3.0 \
 	gtk+-3.0 \
-	gio-unix-2.0 \
-	bamf \
-	gee-1.0 \
 	libwnck-3.0 \
-	posix \
 	unique-3.0 \
-	x11 \
-	$(NULL)
 else
-plank_doc_deps = \
 	gdk-x11-2.0 \
 	gtk+-2.0 \
+	libwnck-1.0 \
+	unique-1.0 \
+endif
 	gio-unix-2.0 \
 	bamf \
 	gee-1.0 \
-	libwnck-1.0 \
 	posix \
-	unique-1.0 \
 	x11 \
 	$(NULL)
-endif
 
 valadoc_flags_plank = \
 	$(valadoc_flags) \

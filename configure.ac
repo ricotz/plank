@@ -72,19 +72,19 @@ AC_SUBST([API_VERSION])
 # -----------------------------------------------------------
 # GTK+ version (default to GTK+2.0)
 # -----------------------------------------------------------
-AC_ARG_WITH([gtk],
-            [AS_HELP_STRING([--with-gtk],
-            [Which version of gtk to use @<:@default=2@:>@])],
+AC_ARG_WITH([gtk3],
+            [AS_HELP_STRING([--with-gtk3],
+            [Use GTK+ version 3 @<:@default=no@:>@])],
             [],
-            [with_gtk=2])
+            [with_gtk3=no])
 
-AM_CONDITIONAL(USE_GTK3, [test "x$with_gtk" = x3])
+AM_CONDITIONAL(USE_GTK3, [test "x$with_gtk3" = "xyes"])
 
 
 # -----------------------------------------------------------
 # Dependencies
 # -----------------------------------------------------------
-if test "x$with_gtk" = "x3"; then
+if test "x$with_gtk3" = "xyes"; then
     GTK_MIN_VERSION=3.0.0
     GLIB_MIN_VERSION=2.28.0
     VALA_MIN_VERSION=0.14.1
@@ -106,7 +106,7 @@ PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  gee-1.0 \
                  x11"
 
-if test "x$with_gtk" = "x3"; then
+if test "x$with_gtk3" = "xyes"; then
     PLANK_CORE_PKGS="$PLANK_CORE_PKGS \
                      gtk+-3.0 >= $GTK_MIN_VERSION \
                      gdk-x11-3.0 >= $GTK_MIN_VERSION \
@@ -200,7 +200,7 @@ if test "x$enable_vala" = "xyes" ; then
     PLANK_CORE_VALAFLAGS="$VALAFLAGS $PLANK_CORE_COMMON_VALA_PKGS $PLANK_CORE_VALA_PKGS"
     AC_SUBST(PLANK_CORE_VALAFLAGS)
 
-    if test "x$with_gtk" = "x3"; then
+    if test "x$with_gtk3" = "xyes"; then
         VALAFLAGS="$VALAFLAGS_3"
     fi
 fi
@@ -211,16 +211,16 @@ fi
 AC_ARG_ENABLE([docs],
               AS_HELP_STRING([--enable-docs],[Enable documentation generation]),
               [enable_docs=$enableval], [enable_docs=no])
-AM_CONDITIONAL([ENABLE_DOCS], [test x$enable_docs = xyes])
+AM_CONDITIONAL([ENABLE_DOCS], [test "x$enable_docs" = "xyes"])
 
 have_valadoc=no
-if test x$enable_docs = xyes; then
+if test "x$enable_docs" = "xyes"; then
     # make sure the library is new enough and the program exists
     PKG_CHECK_MODULES([VALADOC], [valadoc-1.0 >= $VALADOC_MIN_VERSION])
     AC_PATH_PROG([VALADOC], [valadoc], [:])
     AS_IF([test "$VALADOC" != :], have_valadoc=yes)
 fi
-AM_CONDITIONAL([HAVE_VALADOC], [test x$have_valadoc = xyes])
+AM_CONDITIONAL([HAVE_VALADOC], [test "x$have_valadoc" = "xyes"])
 
 if test "x$enable_docs" = "xyes" -a "x$have_valadoc" != "xyes"; then
     AC_MSG_ERROR([Doc building requested but valadoc not installed.])
@@ -278,7 +278,7 @@ echo "
 ${PACKAGE} ${VERSION}
 
     Prefix......................:  ${prefix}
-    GTK+ Version................:  ${with_gtk}
+    Use GTK+ 3..................:  ${with_gtk3}
     Vala........................:  ${enable_vala}
     Vala Compiler...............:  ${VALAC}
     Vala Flags..................:  ${VALAFLAGS}

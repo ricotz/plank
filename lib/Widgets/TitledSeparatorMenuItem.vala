@@ -1,6 +1,6 @@
 //
 //  Copyright (C) 2010 Michal Hruby <michal.mhr@gmail.com>
-//  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 //
 //  This library is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //  Authored by Michal Hruby <michal.mhr@gmail.com>
-//  Modified by Robert Dyer
+//  Modified by Robert Dyer, Rico Tzschichholz
 //
 
 using Cairo;
@@ -73,10 +73,11 @@ namespace Plank.Widgets
 				var ythickness = style.ythickness;
 				
 				if (wide_separators)
+					Gtk.paint_box (style,
 #if USE_GTK3
-					Gtk.paint_box (style, cr, StateType.NORMAL, ShadowType.ETCHED_OUT,
+						cr, StateType.NORMAL, ShadowType.ETCHED_OUT,
 #else
-					Gtk.paint_box (style, get_window (), StateType.NORMAL, ShadowType.ETCHED_OUT, event.area,
+						get_window (), StateType.NORMAL, ShadowType.ETCHED_OUT, event.area,
 #endif
 						this, "hseparator",
 						alloc.x + horizontal_padding + xthickness,
@@ -84,10 +85,11 @@ namespace Plank.Widgets
 						alloc.width - 2 * (horizontal_padding + xthickness),
 						separator_height);
 				else
+					Gtk.paint_hline (style,
 #if USE_GTK3
-					Gtk.paint_hline (style, cr, StateType.NORMAL,
+						cr, StateType.NORMAL,
 #else
-					Gtk.paint_hline (style, get_window (), StateType.NORMAL, event.area,
+						get_window (), StateType.NORMAL, event.area,
 #endif
 						this, "menuitem",
 						alloc.x + horizontal_padding + xthickness,
@@ -107,10 +109,11 @@ namespace Plank.Widgets
 			Pango.Rectangle ink_rect, logical_rect;
 			layout.get_pixel_extents (out ink_rect, out logical_rect);
 			
+			Gtk.paint_flat_box (parent.get_style (),
 #if USE_GTK3
-			Gtk.paint_flat_box (parent.get_style (), cr, StateType.NORMAL, ShadowType.NONE,
+				cr, StateType.NORMAL, ShadowType.NONE,
 #else
-			Gtk.paint_flat_box (parent.get_style (), get_window (), StateType.NORMAL, ShadowType.NONE, null,
+				get_window (), StateType.NORMAL, ShadowType.NONE, null,
 #endif
 				this, null,
 				0, alloc.y,

@@ -268,10 +268,11 @@ namespace Plank.Factories
 			Gtk.init (ref args);
 			
 			// ensure only one instance per dock_path
+			var path = app_dbus + "." + dock_path;
 #if USE_GTK3
-			if (new Gtk.Application (app_dbus + "." + dock_path, ApplicationFlags.IS_LAUNCHER).is_registered)
+			if (new Gtk.Application (path, ApplicationFlags.IS_LAUNCHER).is_registered)
 #else
-			if (new App (app_dbus + "." + dock_path, null).is_running)
+			if (new App (path, null).is_running)
 #endif
 				error ("Exiting because another instance of this application is already running with the name '%s'.".printf (dock_path));
 			

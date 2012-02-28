@@ -180,10 +180,12 @@ namespace Plank.Widgets
 		 */
 #if USE_GTK3
 		public override bool draw (Context cr)
+		{
 #else
 		public override bool expose_event (EventExpose event)
-#endif
 		{
+			var cr = cairo_create (event.window);
+#endif
 			if (dock_is_starting) {
 				debug ("dock window loaded");
 				dock_is_starting = false;
@@ -196,11 +198,7 @@ namespace Plank.Widgets
 			}
 			
 			set_input_mask ();
-#if USE_GTK3
 			controller.renderer.draw_dock (cr);
-#else
-			controller.renderer.draw_dock (cairo_create (event.window));
-#endif
 			
 			return true;
 		}
@@ -437,17 +435,11 @@ namespace Plank.Widgets
 			
 #if USE_GTK3
 			unowned X.Display display = X11Display.get_xdisplay (get_display ());
-			var window = X11Window.get_xid (get_window ());
-			
-			Gdk.error_trap_push ();
-			display.change_property (window, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,
-			                      32, X.PropMode.Replace, (uchar[]) struts, struts.length);
-			display.change_property (window, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL, 
-			                      32, X.PropMode.Replace, (uchar[]) first_struts, first_struts.length);
-			Gdk.error_trap_pop ();
+			var xid = X11Window.get_xid (get_window ());
 #else
 			unowned X.Display display = x11_drawable_get_xdisplay (get_window ());
 			var xid = x11_drawable_get_xid (get_window ());
+#endif
 			
 			Gdk.error_trap_push ();
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,
@@ -455,7 +447,6 @@ namespace Plank.Widgets
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL, 
 			                      32, X.PropMode.Replace, (uchar[]) first_struts, first_struts.length);
 			Gdk.error_trap_pop ();
-#endif
 		}
 	}
 }

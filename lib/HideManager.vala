@@ -120,10 +120,12 @@ namespace Plank
 		{
 			// get current mouse pointer location
 			int x, y;
+			
+			controller.window.get_display ().
 #if USE_GTK3
-			controller.window.get_display ().get_device_manager ().get_client_pointer ().get_position (null, out x, out y);
+			get_device_manager ().get_client_pointer ().get_position (null, out x, out y);
 #else
-			controller.window.get_display ().get_pointer (null, out x, out y, null);
+			get_pointer (null, out x, out y, null);
 #endif
 			
 			// get window location

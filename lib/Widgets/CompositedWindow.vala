@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -15,7 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using Cairo;
 using Gdk;
 
 namespace Plank.Widgets
@@ -40,10 +39,11 @@ namespace Plank.Widgets
 			resizable = false;
 			double_buffered = false;
 			
+			var screen = get_screen ();
 #if USE_GTK3
-			set_visual (get_screen ().get_rgba_visual () ?? get_screen ().get_system_visual ());
+			set_visual (screen.get_rgba_visual () ?? screen.get_system_visual ());
 #else
-			set_default_colormap (get_screen ().get_rgba_colormap () ?? get_screen ().get_rgb_colormap ());
+			set_default_colormap (screen.get_rgba_colormap () ?? screen.get_rgb_colormap ());
 			
 			realize.connect (() => {
 				get_window ().set_back_pixmap (null, false);
