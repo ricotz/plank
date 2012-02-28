@@ -2,12 +2,12 @@ include $(top_srcdir)/Makefile.common
 
 VAPIDIR = $(top_srcdir)/vapi
 
-if USE_GTK3
-SUFFIX=3
-plank_VALAFLAGS = \
-	$(PLANK_CORE_3_VALAFLAGS)
-else
+if USE_GTK2
 SUFFIX=
+plank_VALAFLAGS = \
+	$(PLANK_CORE_2_VALAFLAGS)
+else
+SUFFIX=3
 plank_VALAFLAGS = \
 	$(PLANK_CORE_VALAFLAGS)
 endif

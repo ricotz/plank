@@ -178,13 +178,13 @@ namespace Plank.Widgets
 		/**
 		 * {@inheritDoc}
 		 */
-#if USE_GTK3
-		public override bool draw (Context cr)
-		{
-#else
+#if USE_GTK2
 		public override bool expose_event (EventExpose event)
 		{
 			var cr = cairo_create (event.window);
+#else
+		public override bool draw (Context cr)
+		{
 #endif
 			if (dock_is_starting) {
 				debug ("dock window loaded");
@@ -395,10 +395,10 @@ namespace Plank.Widgets
 		
 		void set_input_mask ()
 		{
-#if USE_GTK3
-			if (!get_realized ())
-#else
+#if USE_GTK2
 			if (!is_realized ())
+#else
+			if (!get_realized ())
 #endif
 				return;
 			
@@ -407,20 +407,20 @@ namespace Plank.Widgets
 			return_if_fail (cursor.width > 0);
 			return_if_fail (cursor.height > 0);
 			
-#if USE_GTK3
-			var region = new Region.rectangle (RectangleInt () {x = 0, y = 0, width = cursor.width, height = cursor.height});
-#else
+#if USE_GTK2
 			var region = Gdk.Region.rectangle (Gdk.Rectangle () {x = 0, y = 0, width = cursor.width, height = cursor.height});
+#else
+			var region = new Region.rectangle (RectangleInt () {x = 0, y = 0, width = cursor.width, height = cursor.height});
 #endif
 			get_window ().input_shape_combine_region (region, cursor.x, cursor.y);
 		}
 		
 		void set_struts ()
 		{
-#if USE_GTK3
-			if (!get_realized ())
-#else
+#if USE_GTK2
 			if (!is_realized ())
+#else
+			if (!get_realized ())
 #endif
 				return;
 			
@@ -433,12 +433,12 @@ namespace Plank.Widgets
 			for (var i = 0; i < first_struts.length; i++)
 				first_struts [i] = struts [i];
 			
-#if USE_GTK3
-			unowned X.Display display = X11Display.get_xdisplay (get_display ());
-			var xid = X11Window.get_xid (get_window ());
-#else
+#if USE_GTK2
 			unowned X.Display display = x11_drawable_get_xdisplay (get_window ());
 			var xid = x11_drawable_get_xid (get_window ());
+#else
+			unowned X.Display display = X11Display.get_xdisplay (get_display ());
+			var xid = X11Window.get_xid (get_window ());
 #endif
 			
 			Gdk.error_trap_push ();

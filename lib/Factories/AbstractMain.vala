@@ -16,7 +16,7 @@
 // 
 
 using Gtk;
-#if !USE_GTK3
+#if USE_GTK2
 using Unique;
 #endif
 using Posix;
@@ -269,10 +269,10 @@ namespace Plank.Factories
 			
 			// ensure only one instance per dock_path
 			var path = app_dbus + "." + dock_path;
-#if USE_GTK3
-			if (new Gtk.Application (path, ApplicationFlags.IS_LAUNCHER).is_registered)
-#else
+#if USE_GTK2
 			if (new App (path, null).is_running)
+#else
+			if (new Gtk.Application (path, ApplicationFlags.IS_LAUNCHER).is_registered)
 #endif
 				error ("Exiting because another instance of this application is already running with the name '%s'.".printf (dock_path));
 			
@@ -350,10 +350,10 @@ namespace Plank.Factories
 		public virtual void show_about ()
 		{
 			if (about_dlg != null) {
-#if USE_GTK3
-				about_dlg.show_all ();
-#else
+#if USE_GTK2
 				about_dlg.window.raise ();
+#else
+				about_dlg.show_all ();
 #endif
 				return;
 			}
@@ -375,10 +375,10 @@ namespace Plank.Factories
 			about_dlg.set_translator_credits (about_translators);
 			
 			about_dlg.response.connect (() => {
-#if USE_GTK3
-				about_dlg.hide ();
-#else
+#if USE_GTK2
 				about_dlg.hide_all ();
+#else
+				about_dlg.hide ();
 #endif
 			});
 			about_dlg.hide.connect (() => {
