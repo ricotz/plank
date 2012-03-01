@@ -158,6 +158,9 @@ namespace Plank.Widgets
 			text_offset = buffer / 2;
 			
 			set_size_request (int.max (HOVER_HEIGHT, buffer + logical_rect.width), HOVER_HEIGHT);
+#if !USE_GTK2
+			queue_resize ();
+#endif
 		}
 		
 		void draw_background ()
@@ -173,12 +176,16 @@ namespace Plank.Widgets
 			Pango.cairo_show_layout (background_buffer.Context, layout);
 		}
 		
+#if USE_GTK2
 		public override bool expose_event (EventExpose event)
 		{
+			var cr = cairo_create (event.window);
+#else
+		public override bool draw (Cairo.Context cr)
+		{
+#endif
 			if (background_buffer == null || background_buffer.Height != height_request || background_buffer.Width != width_request)
 				draw_background ();
-			
-			var cr = cairo_create (event.window);
 			
 			cr.set_operator (Operator.SOURCE);
 			cr.set_source_surface (background_buffer.Internal, 0, 0);

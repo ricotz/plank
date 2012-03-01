@@ -1,3 +1,9 @@
+if USE_GTK2
+SUFFIX=
+else
+SUFFIX=3
+endif
+
 distclean_dirs = \
 	plank \
 	gtk-doc \
@@ -52,20 +58,31 @@ plank_doc_files = \
 	$(NULL)
 
 plank_doc_deps = \
-	gdk-x11-2.0 \
-	gtk+-2.0 \
-	gio-unix-2.0 \
 	bamf \
 	gee-1.0 \
-	libwnck-1.0 \
+	gio-unix-2.0 \
 	posix \
-	unique-1.0 \
 	x11 \
 	$(NULL)
 
+if USE_GTK2
+plank_doc_deps += \
+	gdk-x11-2.0 \
+	gtk+-2.0 \
+	libwnck-1.0 \
+	unique-1.0 \
+	$(NULL)
+else
+plank_doc_deps += \
+	gdk-x11-3.0 \
+	gtk+-3.0 \
+	libwnck-3.0 \
+	$(NULL)
+endif
+
 valadoc_flags_plank = \
 	$(valadoc_flags) \
-	-X $(top_srcdir)/lib/plank.h \
+	-X $(top_srcdir)/lib/plank$(SUFFIX).h \
 	$(addprefix --pkg=,$(plank_doc_deps)) \
 	--vapidir=$(top_srcdir)/lib \
 	--vapidir=$(top_srcdir)/vapi \
@@ -81,7 +98,7 @@ plank-doc: $(plank_doc_files)
 
 plank-gtk-doc: $(plank_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
-		-X -l -X $(top_builddir)/lib/.libs/libplank.so \
+		-X -l -X $(top_builddir)/lib/.libs/libplank$(SUFFIX).so \
 		-o gtk-doc/plank \
 		--doclet=gtkdoc \
 		$(valadoc_flags_plank) \
