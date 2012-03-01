@@ -365,7 +365,7 @@ namespace Plank
 				controller.window.get_display ().get_pointer (out gdk_screen, out x, out y, out mod);
 				
 				var dest = Gdk.Rectangle ();
-				if (window.is_visible () && w_geo.intersect (Gdk.Rectangle () {x = x, y = y}, out dest))
+				if (window.is_visible () && w_geo.intersect (Gdk.Rectangle () {x = x, y = y}, dest))
 #endif
 					return window;
 			}
