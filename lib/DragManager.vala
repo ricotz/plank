@@ -128,7 +128,7 @@ namespace Plank
 		{
 			if (InternalDragActive && DragItem != null) {
 				string uri = "%s\r\n".printf (DragItem.as_uri ());
-				selection_data.set (selection_data.target, 8, (uchar[]) uri.to_utf8 ());
+				selection_data.set (selection_data.get_target (), 8, (uchar[]) uri.to_utf8 ());
 			}
 		}
 
@@ -145,7 +145,7 @@ namespace Plank
 				});
 			
 			InternalDragActive = true;
-			keyboard_grab (controller.window.window, true, get_current_event_time ());
+			keyboard_grab (controller.window.get_window (), true, get_current_event_time ());
 			drag_canceled = false;
 			
 			if (proxy_window != null) {
@@ -341,24 +341,33 @@ namespace Plank
 		
 		Gdk.Window? best_proxy_window ()
 		{
-			var screen = Wnck.Screen.get_default ();
-			unowned GLib.List<Wnck.Window> stack = screen.get_windows_stacked ();
+			var window_stack = controller.window.get_screen ().get_window_stack ();
+			window_stack.reverse ();
 			
-			for (var i = (int) stack.length - 1; i >= 0; i--) {
-				var w = stack.nth_data (i);
+			foreach (var window in window_stack) {
+				int w_x, w_y, w_width, w_height;
+				window.get_position (out w_x, out w_y);
+#if USE_GTK2
+				window.get_size (out w_width, out w_height);
+#else
+				w_width = window.get_width ();
+				w_height = window.get_height ();
+#endif
+				var w_geo = Gdk.Rectangle () {x = w_x, y = w_y, width = w_width, height = w_height};
 				
 				int x, y;
 #if VALA_0_12
 				controller.window.get_display ().get_pointer (null, out x, out y, null);
+				if (window.is_visible () && w_geo.intersect (Gdk.Rectangle () {x = x, y = y}, null))
 #else
 				ModifierType mod;
 				Gdk.Screen gdk_screen;
 				controller.window.get_display ().get_pointer (out gdk_screen, out x, out y, out mod);
-#endif
+				
 				var dest = Gdk.Rectangle ();
-				if (w.is_visible_on_workspace (screen.get_active_workspace ())
-					&& WindowControl.get_easy_geometry (w).intersect (Gdk.Rectangle () {x = x, y = y}, dest))
-					return Gdk.Window.foreign_new ((Gdk.NativeWindow) w.get_xid ());
+				if (window.is_visible () && w_geo.intersect (Gdk.Rectangle () {x = x, y = y}, out dest))
+#endif
+					return window;
 			}
 			
 			return null;
@@ -398,11 +407,14 @@ namespace Plank
 
 		void enable_drag_to ()
 		{
-			TargetEntry[] dest = {
-				TargetEntry () { target = "text/uri-list", flags = 0, info = 0 },
-				TargetEntry () { target = "text/plank-uri-list", flags = 0, info = 0 }
-			};
-			drag_dest_set (controller.window, 0, dest, DragAction.COPY);
+#if USE_GTK2
+			var te1 = TargetEntry () { target = "text/uri-list", flags = TargetFlags.SAME_APP, info = 0 };
+			var te2 = TargetEntry () { target = "text/plank-uri-list", flags = TargetFlags.SAME_APP, info = 0 };
+#else
+			TargetEntry te1 = { "text/uri-list", TargetFlags.SAME_APP, 0 };
+			TargetEntry te2 = { "text/plank-uri-list", TargetFlags.SAME_APP, 0 };
+#endif
+			drag_dest_set (controller.window, 0, {te1, te2}, DragAction.COPY);
 		}
 		
 		void disable_drag_to ()
@@ -413,7 +425,11 @@ namespace Plank
 		void enable_drag_from ()
 		{
 			// we dont really want to offer the drag to anything, merely pretend to, so we set a mimetype nothing takes
+#if USE_GTK2
 			var te = TargetEntry () { target = "text/plank-uri-list", flags = TargetFlags.SAME_APP, info = 0 };
+#else
+			TargetEntry te = { "text/plank-uri-list", TargetFlags.SAME_APP, 0};
+#endif
 			drag_source_set (controller.window, ModifierType.BUTTON1_MASK, { te }, DragAction.PRIVATE);
 		}
 		
