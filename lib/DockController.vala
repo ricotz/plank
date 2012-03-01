@@ -49,6 +49,8 @@ namespace Plank
 			drag_manager.initialize ();
 			hide_manager.initialize ();
 			position_manager.initialize ();
+			
+			window.show_all ();
 		}
 	}
 }

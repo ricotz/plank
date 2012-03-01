@@ -1,6 +1,6 @@
-lib/*.c
+lib/Items/ApplicationDockItem.2.c
 lib/Items/ApplicationDockItem.c
+lib/Items/FileDockItem.2.c
 lib/Items/FileDockItem.c
+lib/Items/PlankDockItem.2.c
 lib/Items/PlankDockItem.c
-lib/Items/TransientDockItem.c
-

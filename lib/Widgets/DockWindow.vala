@@ -84,9 +84,6 @@ namespace Plank.Widgets
 						EventMask.SCROLL_MASK);
 			
 			controller.items.item_position_changed.connect (serialize_item_positions);
-			controller.items.item_added.connect (set_size);
-			controller.items.item_removed.connect (set_size);
-			controller.prefs.changed.connect (set_size);
 			
 			controller.renderer.notify["Hidden"].connect (update_icon_regions);
 			
@@ -99,9 +96,6 @@ namespace Plank.Widgets
 			menu.hide.disconnect (on_menu_hide);
 			
 			controller.items.item_position_changed.disconnect (serialize_item_positions);
-			controller.items.item_added.disconnect (set_size);
-			controller.items.item_removed.disconnect (set_size);
-			controller.prefs.changed.disconnect (set_size);
 			
 			controller.renderer.notify["Hidden"].disconnect (update_icon_regions);
 			
@@ -119,9 +113,8 @@ namespace Plank.Widgets
 				return true;
 			
 			var button = PopupButton.from_event_button (event);
-			if (HoveredItem == null ||
-				    ((event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK
-					&& (button & PopupButton.RIGHT) == PopupButton.RIGHT))
+			if ((button & PopupButton.RIGHT) == PopupButton.RIGHT &&
+					(HoveredItem == null || (event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))
 				do_popup (event.button, true);
 			else if ((HoveredItem.Button & button) == button)
 				do_popup (event.button, false);
@@ -205,8 +198,14 @@ namespace Plank.Widgets
 		/**
 		 * {@inheritDoc}
 		 */
+#if USE_GTK2
 		public override bool expose_event (EventExpose event)
 		{
+			var cr = cairo_create (event.window);
+#else
+		public override bool draw (Context cr)
+		{
+#endif
 			if (dock_is_starting) {
 				debug ("dock window loaded");
 				dock_is_starting = false;
@@ -219,7 +218,7 @@ namespace Plank.Widgets
 			}
 			
 			set_input_mask ();
-			controller.renderer.draw_dock (cairo_create (event.window));
+			controller.renderer.draw_dock (cr);
 			
 			return true;
 		}
@@ -421,6 +420,7 @@ namespace Plank.Widgets
 		 */
 		protected void on_menu_hide ()
 		{
+			update_icon_regions ();
 			controller.hide_manager.update_dock_hovered ();
 			if (!controller.hide_manager.DockHovered)
 				set_hovered (null);
@@ -447,7 +447,11 @@ namespace Plank.Widgets
 		
 		void set_input_mask ()
 		{
+#if USE_GTK2
 			if (!is_realized ())
+#else
+			if (!get_realized ())
+#endif
 				return;
 			
 			var cursor = controller.position_manager.get_cursor_region ();
@@ -455,13 +459,21 @@ namespace Plank.Widgets
 			return_if_fail (cursor.width > 0);
 			return_if_fail (cursor.height > 0);
 			
+#if USE_GTK2
 			var region = Gdk.Region.rectangle (Gdk.Rectangle () {x = 0, y = 0, width = cursor.width, height = cursor.height});
+#else
+			var region = new Region.rectangle (RectangleInt () {x = 0, y = 0, width = cursor.width, height = cursor.height});
+#endif
 			get_window ().input_shape_combine_region (region, cursor.x, cursor.y);
 		}
 		
 		void set_struts ()
 		{
+#if USE_GTK2
 			if (!is_realized ())
+#else
+			if (!get_realized ())
+#endif
 				return;
 			
 			var struts = new ulong [Struts.N_VALUES];
@@ -473,8 +485,13 @@ namespace Plank.Widgets
 			for (var i = 0; i < first_struts.length; i++)
 				first_struts [i] = struts [i];
 			
+#if USE_GTK2
 			unowned X.Display display = x11_drawable_get_xdisplay (get_window ());
 			var xid = x11_drawable_get_xid (get_window ());
+#else
+			unowned X.Display display = X11Display.get_xdisplay (get_display ());
+			var xid = X11Window.get_xid (get_window ());
+#endif
 			
 			Gdk.error_trap_push ();
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,

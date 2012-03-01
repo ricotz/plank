@@ -1,6 +1,6 @@
 //
 //  Copyright (C) 2010 Michal Hruby <michal.mhr@gmail.com>
-//  Copyright (C) 2011 Robert Dyer
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 //
 //  This library is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //  Authored by Michal Hruby <michal.mhr@gmail.com>
-//  Modified by Robert Dyer
+//  Modified by Robert Dyer, Rico Tzschichholz
 //
 
 using Cairo;
@@ -47,8 +47,14 @@ namespace Plank.Widgets
 			draw_line = false;
 		}
 		
+#if USE_GTK2
 		protected override bool expose_event (Gdk.EventExpose event)
 		{
+			var cr = cairo_create (event.window);
+#else
+		protected override bool draw (Cairo.Context cr)
+		{
+#endif
 			Gtk.Allocation alloc;
 			get_allocation (out alloc);
 			
@@ -67,15 +73,25 @@ namespace Plank.Widgets
 				var ythickness = style.ythickness;
 				
 				if (wide_separators)
-					Gtk.paint_box (style, get_window (), StateType.NORMAL,
-						ShadowType.ETCHED_OUT, event.area, this, "hseparator",
+					Gtk.paint_box (style,
+#if USE_GTK2
+						get_window (), StateType.NORMAL, ShadowType.ETCHED_OUT, event.area,
+#else
+						cr, StateType.NORMAL, ShadowType.ETCHED_OUT,
+#endif
+						this, "hseparator",
 						alloc.x + horizontal_padding + xthickness,
 						alloc.y + (alloc.height - separator_height - ythickness)/2,
 						alloc.width - 2 * (horizontal_padding + xthickness),
 						separator_height);
 				else
-					Gtk.paint_hline (style, get_window (), StateType.NORMAL,
-						event.area, this, "menuitem",
+					Gtk.paint_hline (style,
+#if USE_GTK2
+						get_window (), StateType.NORMAL, event.area,
+#else
+						cr, StateType.NORMAL,
+#endif
+						this, "menuitem",
 						alloc.x + horizontal_padding + xthickness,
 						alloc.x + alloc.width - horizontal_padding - xthickness - 1,
 						alloc.y + (alloc.height - ythickness) / 2);
@@ -93,13 +109,16 @@ namespace Plank.Widgets
 			Pango.Rectangle ink_rect, logical_rect;
 			layout.get_pixel_extents (out ink_rect, out logical_rect);
 			
-			Gtk.paint_flat_box (parent.get_style (), get_window (),
-				StateType.NORMAL, ShadowType.NONE,
-				null, this, null,
+			Gtk.paint_flat_box (parent.get_style (),
+#if USE_GTK2
+				get_window (), StateType.NORMAL, ShadowType.NONE, null,
+#else
+				cr, StateType.NORMAL, ShadowType.NONE,
+#endif
+				this, null,
 				0, alloc.y,
 				alloc.x + logical_rect.width + 2 * horizontal_padding, alloc.height);
 			
-			var cr = cairo_create (event.window);
 			var color = style.fg[StateType.NORMAL];
 			
 			cr.move_to (alloc.x + horizontal_padding, alloc.y + (alloc.height - logical_rect.height) / 2);

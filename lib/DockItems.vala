@@ -367,7 +367,16 @@ namespace Plank
 		void pin_item (DockItem item)
 		{
 			if (item is TransientDockItem) {
-				var dockitem = Factory.item_factory.make_dock_item (item.Launcher, item.Sort);
+				var last_sort = 0;
+				
+				foreach (var i in Items) {
+					if (i == item)
+						break;
+					if (!(i is TransientDockItem))
+						last_sort = i.Sort;
+				}
+				
+				var dockitem = Factory.item_factory.make_dock_item (item.Launcher, last_sort + 1);
 				if (dockitem == "")
 					return;
 				

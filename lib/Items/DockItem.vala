@@ -352,12 +352,14 @@ namespace Plank.Items
 		protected virtual void draw_icon (DockSurface surface)
 		{
 			Pixbuf? pbuf = ForcePixbuf;
-			if (pbuf == null) {
+			if (pbuf == null)
 				pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
-				return_if_fail(pbuf != null);
-			} else {
+			else
 				pbuf = DrawingService.ar_scale (pbuf, surface.Width, surface.Height);
-			}
+			// FIXME surface.Context (in theory) should never be null, yet I am seeing that sometimes
+			assert (pbuf != null && surface.Context != null);
+			if (pbuf == null || surface.Context == null)
+				return;
 			cairo_set_source_pixbuf (surface.Context, pbuf, 0, 0);
 			surface.Context.paint ();
 		}

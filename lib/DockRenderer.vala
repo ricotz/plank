@@ -81,8 +81,7 @@ namespace Plank
 			theme = new DockThemeRenderer ();
 			theme.load ("dock");
 			
-			controller.prefs.notify["IconSize"].connect (prefs_changed);
-			controller.prefs.notify["Position"].connect (prefs_changed);
+			controller.prefs.notify.connect (prefs_changed);
 			theme.changed.connect (theme_changed);
 			controller.position_manager.reset_caches (theme);
 			
@@ -109,8 +108,7 @@ namespace Plank
 		
 		~DockRenderer ()
 		{
-			controller.prefs.notify["IconSize"].disconnect (prefs_changed);
-			controller.prefs.notify["Position"].disconnect (prefs_changed);
+			controller.prefs.notify.disconnect (prefs_changed);
 			theme.changed.disconnect (theme_changed);
 			
 			controller.items.item_removed.disconnect (items_changed);

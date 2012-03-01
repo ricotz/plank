@@ -83,14 +83,11 @@ namespace Plank.Services
 		
 		void handle_notify (Object sender, ParamSpec property)
 		{
+			delay ();
 			notify.disconnect (handle_notify);
 			call_verify (property.name);
 			notify.connect (handle_notify);
-			
-			// FIXME save_prefs() might be called twice in this path (if verification failed)
-			//       need to figure out a way to only call it once
-			if (backing_file != null)
-				save_prefs ();
+			apply ();
 		}
 		
 		void handle_verify_notify (Object sender, ParamSpec property)
@@ -155,11 +152,40 @@ namespace Plank.Services
 			if (!backing_file.query_exists ()) {
 				reset_properties ();
 				save_prefs ();
+			} else {
+				load_prefs ();
 			}
 			
-			load_prefs ();
-			
 			start_monitor ();
+		}
+		
+		bool is_delayed = false;
+		bool is_changed = false;
+		
+		/**
+		 * Delays saving changes to the backing file until apply() is called.
+		 */
+		public void delay ()
+		{
+			if (is_delayed)
+				return;
+			
+			is_delayed = true;
+			is_changed = false;
+		}
+		
+		/**
+		 * If any settings were changed, apply them now.
+		 */
+		public void apply ()
+		{
+			if (!is_delayed)
+				return;
+			
+			is_delayed = false;
+			if (is_changed && backing_file != null)
+				save_prefs ();
+			is_changed = false;
 		}
 		
 		/**
@@ -181,8 +207,9 @@ namespace Plank.Services
 		{
 			try {
 				backing_file.delete ();
-			} catch {
+			} catch (Error e) {
 				warning ("Unable to delete the preferences file '%s'", backing_file.get_path () ?? "");
+				debug (e.message);
 			}
 		}
 		
@@ -204,7 +231,8 @@ namespace Plank.Services
 			try {
 				backing_monitor = backing_file.monitor (0);
 				backing_monitor.changed.connect (backing_file_changed);
-			} catch {
+			} catch (Error e) {
+				debug (e.message);
 				error ("Unable to watch the preferences file '%s'", backing_file.get_path () ?? "");
 			}
 		}
@@ -247,32 +275,38 @@ namespace Plank.Services
 					var type = prop.value_type;
 					var val = Value (type);
 					
-					if (type == typeof (int))
-						val.set_int (file.get_integer (group_name, prop.name));
-					else if (type == typeof (uint))
-						val.set_uint ((uint) file.get_integer (group_name, prop.name));
-					else if (type == typeof (double))
-						val.set_double (file.get_double (group_name, prop.name));
-					else if (type == typeof (string))
-						val.set_string (file.get_string (group_name, prop.name));
-					else if (type == typeof (bool))
-						val.set_boolean (file.get_boolean (group_name, prop.name));
-					else if (type.is_enum ())
-						val.set_enum (file.get_integer (group_name, prop.name));
-					else if (type.is_a (typeof (PrefsSerializable))) {
-						get_property (prop.name, ref val);
-						(val.get_object () as PrefsSerializable).prefs_deserialize (file.get_string (group_name, prop.name));
-						continue;
-					} else {
-						debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
-						continue;
+					try {
+						if (type == typeof (int))
+							val.set_int (file.get_integer (group_name, prop.name));
+						else if (type == typeof (uint))
+							val.set_uint ((uint) file.get_integer (group_name, prop.name));
+						else if (type == typeof (double))
+							val.set_double (file.get_double (group_name, prop.name));
+						else if (type == typeof (string))
+							val.set_string (file.get_string (group_name, prop.name));
+						else if (type == typeof (bool))
+							val.set_boolean (file.get_boolean (group_name, prop.name));
+						else if (type.is_enum ())
+							val.set_enum (file.get_integer (group_name, prop.name));
+						else if (type.is_a (typeof (PrefsSerializable))) {
+							get_property (prop.name, ref val);
+							(val.get_object () as PrefsSerializable).prefs_deserialize (file.get_string (group_name, prop.name));
+							continue;
+						} else {
+							debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
+							continue;
+						}
+						
+						set_property (prop.name, val);
+						call_verify (prop.name);
+					} catch (KeyFileError e) {
+						warning ("Problem loading preferences from file '%s' for property '%s'", backing_file.get_path () ?? "", prop.name);
+						debug (e.message);
 					}
-					
-					set_property (prop.name, val);
-					call_verify (prop.name);
 				}
-			} catch {
+			} catch (Error e) {
 				warning ("Unable to load preferences from file '%s'", backing_file.get_path () ?? "");
+				debug (e.message);
 				deleted ();
 			}
 			notify.connect (handle_notify);
@@ -283,6 +317,11 @@ namespace Plank.Services
 		
 		void save_prefs ()
 		{
+			if (is_delayed) {
+				is_changed = true;
+				return;
+			}
+			
 			stop_monitor ();
 			
 			var file = new KeyFile ();
@@ -335,8 +374,9 @@ namespace Plank.Services
 					stream = new DataOutputStream (backing_file.create (0));
 				
 				stream.put_string (file.to_data ());
-			} catch {
+			} catch (Error e) {
 				warning ("Unable to create the preferences file '%s'", backing_file.get_path () ?? "");
+				debug (e.message);
 			}
 			
 			start_monitor ();

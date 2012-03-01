@@ -16,7 +16,9 @@
 // 
 
 using Gtk;
+#if USE_GTK2
 using Unique;
+#endif
 using Posix;
 
 using Plank.Services;
@@ -148,7 +150,11 @@ namespace Plank.Factories
 			
 			initialized ();
 			
-			start_dock ();
+			create_controller ();
+			
+			Gdk.threads_enter ();
+			Gtk.main ();
+			Gdk.threads_leave ();
 			
 			return 0;
 		}
@@ -156,6 +162,13 @@ namespace Plank.Factories
 		[CCode (cheader_filename = "sys/prctl.h", cname = "prctl")]
 		extern static int prctl (int option, string arg2, ulong arg3, ulong arg4, ulong arg5);
 		
+		[CCode (cheader_filename = "glib/glib.h", cname = "glib_major_version")]
+		extern const uint glib_major_version;
+		[CCode (cheader_filename = "glib/glib.h", cname = "glib_minor_version")]
+		extern const uint glib_minor_version;
+		[CCode (cheader_filename = "glib/glib.h", cname = "glib_micro_version")]
+		extern const uint glib_micro_version;
+
 #if !VALA_0_12
 		[CCode (cheader_filename = "sys/utsname.h", cname = "uname")]
 		extern static int uname (utsname buf);
@@ -183,6 +196,10 @@ namespace Plank.Factories
 			uname (un);
 #endif
 			message ("Kernel version: %s", (string) un.release);
+			message ("GLib version: %u.%u.%u", glib_major_version, glib_minor_version, glib_micro_version);
+			message ("GTK version: %d.%d.%d", Gtk.MAJOR_VERSION, Gtk.MINOR_VERSION, Gtk.MICRO_VERSION);
+			message ("Cairo version: %s", Cairo.version_string ());
+			message ("Pango version: %s", Pango.version_string ());
 			Logger.DisplayLevel = LogLevel.WARN;
 		}
 		
@@ -251,7 +268,12 @@ namespace Plank.Factories
 			Gtk.init (ref args);
 			
 			// ensure only one instance per dock_path
-			if (new App (app_dbus + "." + dock_path, null).is_running)
+			var path = app_dbus + "." + dock_path;
+#if USE_GTK2
+			if (new App (path, null).is_running)
+#else
+			if (new Gtk.Application (path, ApplicationFlags.IS_LAUNCHER).is_registered)
+#endif
 				error ("Exiting because another instance of this application is already running with the name '%s'.".printf (dock_path));
 			
 			return args;
@@ -268,16 +290,11 @@ namespace Plank.Factories
 		}
 		
 		/**
-		 * Creates and displays the dock window.
+		 * Creates the dock controller.
 		 */
-		protected virtual void start_dock ()
+		protected virtual void create_controller ()
 		{
-			var controller = new DockController ();
-			controller.window.show_all ();
-			
-			Gdk.threads_enter ();
-			Gtk.main ();
-			Gdk.threads_leave ();
+			new DockController ();
 		}
 		
 		/**
@@ -333,7 +350,11 @@ namespace Plank.Factories
 		public virtual void show_about ()
 		{
 			if (about_dlg != null) {
+#if USE_GTK2
 				about_dlg.window.raise ();
+#else
+				about_dlg.show_all ();
+#endif
 				return;
 			}
 			
@@ -354,7 +375,11 @@ namespace Plank.Factories
 			about_dlg.set_translator_credits (about_translators);
 			
 			about_dlg.response.connect (() => {
+#if USE_GTK2
 				about_dlg.hide_all ();
+#else
+				about_dlg.hide ();
+#endif
 			});
 			about_dlg.hide.connect (() => {
 				about_dlg.destroy ();

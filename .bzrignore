@@ -28,6 +28,7 @@ py-compile
 Makefile
 Makefile.in
 .version
+*.2.vala
 po/*.gmo
 po/.intltool-merge-cache
 po/Makefile.in.in
