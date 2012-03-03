@@ -125,11 +125,10 @@ namespace Bamf {
 	public class Window : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Window ();
-		public unowned string? get_application_id ();
-		public unowned string? get_dbus_menu_object_path ();
 		public int get_monitor ();
+		public uint32 get_pid ();
 		public unowned Bamf.Window? get_transient ();
-		public unowned string? get_unique_bus_name ();
+		public unowned string? get_utf8_prop (string prop);
 		public Bamf.WindowType get_window_type ();
 		public uint32 get_xid ();
 		public ulong last_active ();
