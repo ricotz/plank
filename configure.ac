@@ -200,6 +200,10 @@ if test "x$enable_vala" = "xyes" ; then
 
     PLANK_CORE_2_VALAFLAGS="$VALAFLAGS_2 $PLANK_CORE_COMMON_VALA_PKGS $PLANK_CORE_2_VALA_PKGS"
     AC_SUBST(PLANK_CORE_2_VALAFLAGS)
+
+    if test "x$with_gtk2" = "xyes"; then
+        VALAFLAGS="$VALAFLAGS_2"
+    fi
 fi
 
 # -----------------------------------------------------------
