@@ -82,6 +82,9 @@ namespace Plank.Drawing
 		[Description(nick = "glow-pulse-time", blurb = "The time (in ms) of each pulse of the hidden-dock urgent glow.")]
 		public int GlowPulseTime { get; set; }
 		
+		[Description(nick = "urgent-hue-shift", blurb = "The hue-shift (-180 to 180) of the urgent indicator color.")]
+		public int UrgentHueShift { get; set; }
+		
 		/**
 		 * {@inheritDoc}
 		 */
@@ -108,6 +111,7 @@ namespace Plank.Drawing
 			GlowSize = 30;
 			GlowTime = 10000;
 			GlowPulseTime = 2000;
+			UrgentHueShift = 150;
 		}
 		
 		/**
@@ -444,6 +448,13 @@ namespace Plank.Drawing
 			case "GlowPulseTime":
 				if (GlowPulseTime < 0)
 					GlowPulseTime = 0;
+				break;
+			
+			case "UrgentHueShift":
+				if (UrgentHueShift < -180)
+					UrgentHueShift = -180;
+				else if (UrgentHueShift > 180)
+					UrgentHueShift = 180;
 				break;
 			}
 		}
