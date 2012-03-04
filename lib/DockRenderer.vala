@@ -235,23 +235,8 @@ namespace Plank
 			
 			// calculate drawing offset
 			var x_offset = 0.0, y_offset = 0.0;
-			
-			if (theme.FadeOpacity == 1.0) {
-				switch (controller.prefs.Position) {
-				case PositionType.TOP:
-					y_offset = -controller.position_manager.VisibleDockHeight * get_hide_offset ();
-					break;
-				case PositionType.BOTTOM:
-					y_offset = controller.position_manager.VisibleDockHeight * get_hide_offset ();
-					break;
-				case PositionType.LEFT:
-					x_offset = -controller.position_manager.VisibleDockWidth * get_hide_offset ();
-					break;
-				case PositionType.RIGHT:
-					x_offset = controller.position_manager.VisibleDockWidth * get_hide_offset ();
-					break;
-				}
-			}
+			if (theme.FadeOpacity == 1.0)
+				controller.position_manager.get_dock_draw_position (out x_offset, out y_offset);
 			
 			// draw the dock on the window
 			cr.set_operator (Operator.SOURCE);
@@ -296,52 +281,18 @@ namespace Plank
 		
 		void draw_dock_background ()
 		{
-			var width = 0, height = 0;
+			var width = controller.position_manager.DockBackgroundWidth;
+			var height = controller.position_manager.DockBackgroundHeight;
 			
-			if (controller.prefs.is_horizontal_dock ()) {
-				width = controller.position_manager.DockBackgroundWidth;
-				height = controller.position_manager.DockBackgroundHeight;
-			} else {
-				width = controller.position_manager.DockBackgroundHeight;
-				height = controller.position_manager.DockBackgroundWidth;
-			}
+			if (background_buffer == null || background_buffer.Width != width || background_buffer.Height != height)
+				background_buffer = theme.create_background (main_buffer, width, height, controller.prefs.Position);
 			
-			if (background_buffer == null || background_buffer.Width != width || background_buffer.Height != height) {
-				background_buffer = new DockSurface.with_dock_surface (width, height, main_buffer);
-				theme.draw_background (background_buffer);
-			}
+			var x_offset = 0.0, y_offset = 0.0;
+			controller.position_manager.get_background_position (out x_offset, out y_offset);
 			
 			var cr = main_buffer.Context;
-			var rotate = 0.0;
-			var xoffset = 0.0, yoffset = 0.0;
-			
-			switch (controller.prefs.Position) {
-			case PositionType.BOTTOM:
-				xoffset = (main_buffer.Width - background_buffer.Width) / 2.0;
-				yoffset = main_buffer.Height - background_buffer.Height;
-				break;
-			case PositionType.TOP:
-				rotate = Math.PI;
-				xoffset = (-main_buffer.Width - background_buffer.Width) / 2.0;
-				yoffset = -background_buffer.Height;
-				break;
-			case PositionType.LEFT:
-				rotate = Math.PI * 0.5;
-				xoffset = (main_buffer.Height - background_buffer.Width) / 2.0;
-				yoffset = -background_buffer.Height;
-				break;
-			case PositionType.RIGHT:
-				rotate = Math.PI * -0.5;
-				xoffset = (-main_buffer.Height - background_buffer.Width) / 2.0;
-				yoffset = main_buffer.Width - background_buffer.Height;
-				break;
-			}
-			
-			cr.save ();
-			cr.rotate (rotate);
-			cr.set_source_surface (background_buffer.Internal, xoffset, yoffset);
+			cr.set_source_surface (background_buffer.Internal, x_offset, y_offset);
 			cr.paint ();
-			cr.restore ();
 		}
 		
 		void draw_item (DockItem item)
@@ -457,7 +408,7 @@ namespace Plank
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
 			if (opacity > 0)
-				theme.draw_active_glow (main_buffer, background_buffer, hover_rect, item.AverageIconColor, opacity, controller.prefs.Position);
+				theme.draw_active_glow (main_buffer, background_buffer, controller.position_manager.item_background_region (hover_rect), item.AverageIconColor, opacity, controller.prefs.Position);
 			
 			// draw the icon
 			main_cr.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);

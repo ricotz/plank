@@ -253,22 +253,17 @@ namespace Plank.Drawing
 		{
 			var cr = surface.Context;
 			
-			var top_offset = get_top_offset ();
-			var bottom_offset = get_bottom_offset ();
-			var top_padding = clip_buffer.Height - rect.height - bottom_offset - top_offset;
-			
 			var rotate = 0.0;
 			var xoffset = 0.0, yoffset = 0.0;
 			
 			Pattern gradient = null;
 			
 			switch (pos) {
+			default:
 			case Gtk.PositionType.BOTTOM:
 				xoffset = (surface.Width - clip_buffer.Width) / 2.0;
 				yoffset = surface.Height - clip_buffer.Height;
 				
-				rect.y += 2 * top_offset - top_padding;
-				rect.height -= 2 * (top_offset + bottom_offset) - top_padding;
 				gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
 				break;
 			case Gtk.PositionType.TOP:
@@ -276,24 +271,20 @@ namespace Plank.Drawing
 				xoffset = (-surface.Width - clip_buffer.Width) / 2.0;
 				yoffset = -clip_buffer.Height;
 				
-				rect.height -= 2 * (top_offset + bottom_offset) - top_padding;
 				gradient = new Pattern.linear (0, rect.y + rect.height, 0, rect.y);
 				break;
 			case Gtk.PositionType.LEFT:
 				rotate = Math.PI * 0.5;
-				xoffset = (surface.Height - clip_buffer.Width) / 2.0;
-				yoffset = -clip_buffer.Height;
+				xoffset = (surface.Height - clip_buffer.Height) / 2.0;
+				yoffset = -clip_buffer.Width;
 				
-				rect.width -= 2 * (top_offset + bottom_offset) - top_padding;
 				gradient = new Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
 				break;
 			case Gtk.PositionType.RIGHT:
 				rotate = Math.PI * -0.5;
-				xoffset = (-surface.Height - clip_buffer.Width) / 2.0;
-				yoffset = surface.Width - clip_buffer.Height;
+				xoffset = (-surface.Height - clip_buffer.Height) / 2.0;
+				yoffset = surface.Width - clip_buffer.Width;
 				
-				rect.x += 2 * top_offset - top_padding;
-				rect.width -= 2 * (top_offset + bottom_offset) - top_padding;
 				gradient = new Pattern.linear (rect.x, 0, rect.x + rect.width, 0);
 				break;
 			}
@@ -301,7 +292,10 @@ namespace Plank.Drawing
 			cr.save ();
 			cr.rotate (rotate);
 			cr.translate (xoffset, yoffset);
-			draw_inner_rect (cr, clip_buffer.Width, clip_buffer.Height);
+			if (pos == Gtk.PositionType.BOTTOM || pos == Gtk.PositionType.TOP)
+				draw_inner_rect (cr, clip_buffer.Width, clip_buffer.Height);
+			else
+				draw_inner_rect (cr, clip_buffer.Height, clip_buffer.Width);
 			cr.restore ();
 			
 			cr.set_line_width (LineWidth);
