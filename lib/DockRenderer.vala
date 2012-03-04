@@ -87,7 +87,7 @@ namespace Plank
 			
 			controller.items.item_removed.connect (items_changed);
 			controller.items.item_added.connect (items_changed);
-			controller.items.item_state_changed.connect (items_changed);
+			controller.items.item_state_changed.connect (item_state_changed);
 			
 			screen_is_composited = Gdk.Screen.get_default ().is_composited ();
 			Gdk.Screen.get_default ().composited_changed.connect (composited_changed);
@@ -113,7 +113,7 @@ namespace Plank
 			
 			controller.items.item_removed.disconnect (items_changed);
 			controller.items.item_added.disconnect (items_changed);
-			controller.items.item_state_changed.disconnect (items_changed);
+			controller.items.item_state_changed.disconnect (item_state_changed);
 			
 			Gdk.Screen.get_default ().composited_changed.disconnect (composited_changed);
 
@@ -134,6 +134,11 @@ namespace Plank
 		{
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
+		}
+		
+		void item_state_changed ()
+		{
+			animated_draw ();
 		}
 		
 		void prefs_changed ()
