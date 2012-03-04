@@ -262,7 +262,7 @@ namespace Plank
 			// dock is completely hidden
 			if (get_hide_offset () == 1) {
 				if (urgent_glow_buffer == null)
-					create_urgent_glow ();
+					urgent_glow_buffer = theme.create_urgent_glow (background_buffer, controller.position_manager.GlowSize, get_styled_color ().add_hue (theme.UrgentHueShift).set_sat (1));
 				
 				foreach (var item in controller.items.Items) {
 					if ((item.State & ItemState.URGENT) == 0)
@@ -484,9 +484,9 @@ namespace Plank
 		void draw_indicator_state (Gdk.Rectangle item_rect, IndicatorState indicator, ItemState item_state)
 		{
 			if (indicator_buffer == null)
-				create_normal_indicator ();
+				indicator_buffer = theme.create_indicator (background_buffer, controller.position_manager.IndicatorSize, get_styled_color ().set_min_sat (0.4));
 			if (urgent_indicator_buffer == null)
-				create_urgent_indicator ();
+				urgent_indicator_buffer = theme.create_indicator (background_buffer, controller.position_manager.IndicatorSize, get_styled_color ().add_hue (theme.UrgentHueShift).set_sat (1));
 			
 			var indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 			var main_cr = main_buffer.Context;
@@ -531,23 +531,6 @@ namespace Plank
 		Drawing.Color get_styled_color ()
 		{
 			return new Drawing.Color.from_gdk (controller.window.get_style ().bg [StateType.SELECTED]).set_min_value (90 / (double) uint16.MAX);
-		}
-		
-		void create_normal_indicator ()
-		{
-			indicator_buffer = theme.create_indicator (background_buffer, controller.position_manager.IndicatorSize, get_styled_color ().set_min_sat (0.4));
-		}
-		
-		int urgent_hue_shift = 150;
-		
-		void create_urgent_indicator ()
-		{
-			urgent_indicator_buffer = theme.create_indicator (background_buffer, controller.position_manager.IndicatorSize, get_styled_color ().add_hue (urgent_hue_shift).set_sat (1));
-		}
-		
-		void create_urgent_glow ()
-		{
-			urgent_glow_buffer = theme.create_urgent_glow (background_buffer, controller.position_manager.GlowSize, get_styled_color ().add_hue (urgent_hue_shift).set_sat (1));
 		}
 		
 		void hidden_changed ()
