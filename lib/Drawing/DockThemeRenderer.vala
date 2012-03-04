@@ -115,6 +115,65 @@ namespace Plank.Drawing
 		}
 		
 		/**
+		 * Creates a surface for the dock background.
+		 *
+		 * @param model a similar surface
+		 * @param width the width of the background
+		 * @param color the color of the background
+		 * @return a new dock surface with the background drawn on it
+		 */
+		public DockSurface create_background (DockSurface model, int width, int height, Gtk.PositionType position)
+		{
+			var surface = new DockSurface.with_dock_surface (width, height, model);
+			surface.clear ();
+			
+			if (position == Gtk.PositionType.BOTTOM) {
+				draw_background (surface);
+				return surface;
+			}
+			
+			DockSurface temp;
+			if (position == Gtk.PositionType.TOP)
+				temp = new DockSurface.with_dock_surface (width, height, surface);
+			else
+				temp = new DockSurface.with_dock_surface (height, width, surface);
+			
+			draw_background (temp);
+			
+			var cr = surface.Context;
+			
+			var rotate = 0.0;
+			var x_offset = 0.0, y_offset = 0.0;
+			
+			switch (position) {
+			default:
+			case Gtk.PositionType.BOTTOM:
+				break;
+			case Gtk.PositionType.TOP:
+				rotate = Math.PI;
+				x_offset = -width;
+				y_offset = -height;
+				break;
+			case Gtk.PositionType.LEFT:
+				rotate = Math.PI * 0.5;
+				y_offset = -width;
+				break;
+			case Gtk.PositionType.RIGHT:
+				rotate = Math.PI * -0.5;
+				x_offset = -height;
+				break;
+			}
+			
+			cr.save ();
+			cr.rotate (rotate);
+			cr.set_source_surface (temp.Internal, x_offset, y_offset);
+			cr.paint ();
+			cr.restore ();
+			
+			return surface;
+		}
+		
+		/**
 		 * Creates a surface for an indicator.
 		 *
 		 * @param background a similar surface
