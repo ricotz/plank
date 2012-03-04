@@ -311,30 +311,34 @@ namespace Plank
 			var item_padding = ItemPadding;
 			var top_padding = TopPadding;
 			var bottom_padding = BottomPadding;
-
+			
+			top_padding = 2 * top_offset + (top_padding > 0 ? top_padding : 0);
+			bottom_padding = 2 * bottom_offset + bottom_padding;
+			
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				hover_rect.x += item_padding / 2;
-				hover_rect.y += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
-				hover_rect.height -= top_padding;
+				hover_rect.y += top_padding;
 				hover_rect.width -= item_padding;
+				hover_rect.height -= bottom_padding + top_padding;
 				break;
 			case PositionType.TOP:
 				hover_rect.x += item_padding / 2;
-				hover_rect.y += 2 * bottom_offset + bottom_padding;
-				hover_rect.height -= bottom_padding;
+				hover_rect.y += top_padding;
 				hover_rect.width -= item_padding;
+				hover_rect.height -= bottom_padding + top_padding;
 				break;
 			case PositionType.LEFT:
+				hover_rect.x += top_padding;
 				hover_rect.y += item_padding / 2;
-				hover_rect.x += 2 * bottom_offset + bottom_padding;
-				hover_rect.width -= bottom_padding;
+				hover_rect.width -= bottom_padding + top_padding;
 				hover_rect.height -= item_padding;
 				break;
 			case PositionType.RIGHT:
+				hover_rect.x += top_padding;
 				hover_rect.y += item_padding / 2;
-				hover_rect.x += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
-				hover_rect.width -= top_padding;
+				hover_rect.width -= bottom_padding + top_padding;
 				hover_rect.height -= item_padding;
 				break;
 			}
