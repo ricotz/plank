@@ -34,7 +34,7 @@ libplank3_la_CFLAGS = \
 
 libplank3_la_LDFLAGS = \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
-	-export-symbols $(builddir)/libplank$(SUFFIX).symbols \
+	-export-symbols $(builddir)/libplank.symbols \
 	-lm \
 	$(PLANK_CORE_LDFLAGS) \
 	$(NULL)
@@ -130,7 +130,7 @@ libplank3_la_vala.stamp: $(libplank3_la_VALASOURCES)
 		-C \
 		-H plank3.h \
 		--library plank3 \
-		--symbols libplank3.symbols \
+		--symbols libplank.symbols \
 		--vapi plank3.vapi \
 		$(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
