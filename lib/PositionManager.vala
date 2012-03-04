@@ -343,6 +343,39 @@ namespace Plank
 		}
 		
 		/**
+		 * The intersecting region of a dock item's hover region and the background.
+		 *
+		 * @param rect the item's hover region
+		 * @return the region for the dock item
+		 */
+		public Gdk.Rectangle item_background_region (Gdk.Rectangle rect)
+		{
+			var top_padding = TopPadding;
+			var bottom_padding = BottomPadding;
+			
+			top_padding = 2 * top_offset + top_padding;
+			bottom_padding = 2 * bottom_offset + bottom_padding;
+			
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				rect.y += top_padding - bottom_padding;
+				break;
+			case PositionType.TOP:
+				rect.height -= top_padding - bottom_padding;
+				break;
+			case PositionType.LEFT:
+				rect.width -= top_padding - bottom_padding;
+				break;
+			case PositionType.RIGHT:
+				rect.x += top_padding - bottom_padding;
+				break;
+			}
+			
+			return rect;
+		}
+
+		/**
 		 * The cursor region for interacting with a dock item.
 		 *
 		 * @param item the dock item to find a region for
@@ -507,6 +540,64 @@ namespace Plank
 			case PositionType.RIGHT:
 				win_y = monitor_geo.y + yoffset + (int) (controller.prefs.Offset / 100.0 * yoffset);
 				win_x = monitor_geo.x + monitor_geo.width - DockWidth;
+				break;
+			}
+		}
+
+		/**
+		 * Get's the x and y position to display the main dock buffer.
+		 *
+		 * @param x the resulting x position
+		 * @param y the resulting y position
+		 */
+		public void get_dock_draw_position (out int x, out int y)
+		{
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				x = 0;
+				y = (int) (VisibleDockHeight * controller.renderer.get_hide_offset ());
+				break;
+			case PositionType.TOP:
+				x = 0;
+				y = (int) (- VisibleDockHeight * controller.renderer.get_hide_offset ());
+				break;
+			case PositionType.LEFT:
+				x = (int) (- VisibleDockWidth * controller.renderer.get_hide_offset ());
+				y = 0;
+				break;
+			case PositionType.RIGHT:
+				x = (int) (VisibleDockWidth * controller.renderer.get_hide_offset ());
+				y = 0;
+				break;
+			}
+		}
+		
+		/**
+		 * Get's the x and y position to display the background of the dock.
+		 *
+		 * @param x the resulting x position
+		 * @param y the resulting y position
+		 */
+		public void get_background_position (out int x, out int y)
+		{
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				x = (DockWidth - DockBackgroundWidth) / 2;
+				y = DockHeight - DockBackgroundHeight;
+				break;
+			case PositionType.TOP:
+				x = (DockWidth - DockBackgroundWidth) / 2;
+				y = 0;
+				break;
+			case PositionType.LEFT:
+				x = 0;
+				y = (DockHeight - DockBackgroundHeight) / 2;
+				break;
+			case PositionType.RIGHT:
+				x = DockWidth - DockBackgroundWidth;
+				y = (DockHeight - DockBackgroundHeight) / 2;
 				break;
 			}
 		}
