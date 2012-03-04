@@ -451,6 +451,39 @@ namespace Plank
 		}
 		
 		/**
+		 * Get's the x and y position to display the urgent-glow for a dock item.
+		 *
+		 * @param the item to show urgent-glow for
+		 * @param x the resulting x position
+		 * @param y the resulting y position
+		 */
+		public void get_urgent_glow_position (DockItem item, out int x, out int y)
+		{
+			var rect = item_hover_region (item);
+			var glow_size = controller.position_manager.GlowSize;
+			
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				x = rect.x + (rect.width - glow_size) / 2;
+				y = DockHeight - glow_size / 2;
+				break;
+			case PositionType.TOP:
+				x = rect.x + (rect.width - glow_size) / 2;
+				y = - glow_size / 2;
+				break;
+			case PositionType.LEFT:
+				y = rect.y + (rect.height - glow_size) / 2;
+				x = - glow_size / 2;
+				break;
+			case PositionType.RIGHT:
+				y = rect.y + (rect.height - glow_size) / 2;
+				x = DockWidth - glow_size / 2;
+				break;
+			}
+		}
+
+		/**
 		 * Caches the x and y position of the dock window.
 		 */
 		public void update_dock_position ()
