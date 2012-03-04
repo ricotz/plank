@@ -218,6 +218,7 @@ namespace Plank
 		public Gdk.Rectangle get_cursor_region ()
 		{
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
 				cursor_region.y = DockHeight - cursor_region.height;
@@ -261,6 +262,7 @@ namespace Plank
 			static_dock_region.height = VisibleDockHeight;
 			
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				static_dock_region.x = (DockWidth - static_dock_region.width) / 2;
 				static_dock_region.y = DockHeight - static_dock_region.height;
@@ -392,6 +394,7 @@ namespace Plank
 			var icon_size = controller.prefs.IconSize;
 			
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				rect.width = icon_size + ItemPadding;
 				rect.height = VisibleDockHeight;
@@ -529,6 +532,7 @@ namespace Plank
 			var yoffset = (monitor_geo.height - DockHeight) / 2;
 			
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				win_x = monitor_geo.x + xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
 				win_y = monitor_geo.y + monitor_geo.height - DockHeight;
@@ -614,6 +618,7 @@ namespace Plank
 		public void get_struts (ref ulong[] struts)
 		{
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				struts [controller.prefs.Position] = VisibleDockHeight + controller.window.get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
 				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.x;
