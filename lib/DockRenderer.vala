@@ -234,7 +234,7 @@ namespace Plank
 			}
 			
 			// calculate drawing offset
-			var x_offset = 0.0, y_offset = 0.0;
+			var x_offset = 0, y_offset = 0;
 			if (theme.FadeOpacity == 1.0)
 				controller.position_manager.get_dock_draw_position (out x_offset, out y_offset);
 			
@@ -287,7 +287,7 @@ namespace Plank
 			if (background_buffer == null || background_buffer.Width != width || background_buffer.Height != height)
 				background_buffer = theme.create_background (main_buffer, width, height, controller.prefs.Position);
 			
-			var x_offset = 0.0, y_offset = 0.0;
+			var x_offset = 0, y_offset = 0;
 			controller.position_manager.get_background_position (out x_offset, out y_offset);
 			
 			var cr = main_buffer.Context;
