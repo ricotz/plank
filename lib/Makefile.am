@@ -163,6 +163,7 @@ EXTRA_DIST = \
 	libplank_la_valasource.stamp \
 	$(libplank3_la_VALASOURCES) \
 	$(libplank_la_VALASOURCES) \
+	libplank.symbols \
 	libplank.pc.in \
 	libplank3.pc.in \
 	plank.deps \
