@@ -357,24 +357,23 @@ namespace Plank
 		public Gdk.Rectangle item_background_region (Gdk.Rectangle rect)
 		{
 			var top_padding = TopPadding;
-			var bottom_padding = BottomPadding;
-			
-			top_padding = 2 * top_offset + top_padding;
-			bottom_padding = 2 * bottom_offset + bottom_padding;
+			top_padding = 2 * top_offset + (top_padding > 0 ? 0 : top_padding);
 			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				rect.y += top_padding - bottom_padding;
+				rect.y -= top_padding;
+				rect.height += top_padding;
 				break;
 			case PositionType.TOP:
-				rect.height -= top_padding - bottom_padding;
+				rect.height += top_padding;
 				break;
 			case PositionType.LEFT:
-				rect.width -= top_padding - bottom_padding;
+				rect.width += top_padding;
 				break;
 			case PositionType.RIGHT:
-				rect.x += top_padding - bottom_padding;
+				rect.x -= top_padding;
+				rect.width += top_padding;
 				break;
 			}
 			
