@@ -25,6 +25,10 @@ namespace Plank.Services
 	public enum LogLevel
 	{
 		/**
+		 * Extra debugging info. A *LOT* of messages.
+		 */
+		VERBOSE,
+		/**
 		 * Debugging messages that help track what the application is doing.
 		 */
 		DEBUG,
@@ -131,6 +135,16 @@ namespace Plank.Services
 			write (LogLevel.NOTIFY, format_message (msg));
 		}
 		
+		/**
+		 * Displays a verbose log message to the console.
+		 *
+		 * @param msg the log message to display
+		 */
+		public static void verbose (string msg)
+		{
+			write (LogLevel.VERBOSE, format_message (msg));
+		}
+		
 		static string get_time ()
 		{
 			var now = new DateTime.now_local ();
@@ -175,6 +189,9 @@ namespace Plank.Services
 		static void set_color_for_level (LogLevel level)
 		{
 			switch (level) {
+			case LogLevel.VERBOSE:
+				set_foreground (ConsoleColor.CYAN);
+				break;
 			case LogLevel.DEBUG:
 				set_foreground (ConsoleColor.GREEN);
 				break;
