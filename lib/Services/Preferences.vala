@@ -83,6 +83,7 @@ namespace Plank.Services
 		
 		void handle_notify (Object sender, ParamSpec property)
 		{
+			Logger.verbose ("property changed: %s", property.name);
 			delay ();
 			notify.disconnect (handle_notify);
 			call_verify (property.name);
@@ -170,8 +171,11 @@ namespace Plank.Services
 			if (is_delayed)
 				return;
 			
+			Logger.verbose ("Preferences.delay()");
+			if (backing_file != null && backing_file.get_path () != null)
+				Logger.verbose (backing_file.get_path ());
+			
 			is_delayed = true;
-			is_changed = false;
 		}
 		
 		/**
@@ -182,10 +186,13 @@ namespace Plank.Services
 			if (!is_delayed)
 				return;
 			
+			Logger.verbose ("Preferences.apply()");
+			if (backing_file != null && backing_file.get_path () != null)
+				Logger.verbose (backing_file.get_path ());
+			
 			is_delayed = false;
 			if (is_changed && backing_file != null)
 				save_prefs ();
-			is_changed = false;
 		}
 		
 		/**
@@ -304,8 +311,13 @@ namespace Plank.Services
 		}
 		
 		void save_prefs ()
+			requires (backing_file != null)
 		{
 			if (is_delayed) {
+				Logger.verbose ("Preferences.save_prefs() - delaying save");
+				if (backing_file != null && backing_file.get_path () != null)
+					Logger.verbose (backing_file.get_path ());
+				
 				is_changed = true;
 				return;
 			}
@@ -353,6 +365,7 @@ namespace Plank.Services
 			}
 			
 			debug ("Saving preferences '%s'", backing_file.get_path () ?? "");
+			is_changed = false;
 			
 			try {
 				DataOutputStream stream;
