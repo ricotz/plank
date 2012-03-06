@@ -140,9 +140,9 @@ namespace Plank.Services
 		 *
 		 * @param msg the log message to display
 		 */
-		public static void verbose (string msg)
+		public static void verbose (string msg, ...)
 		{
-			write (LogLevel.VERBOSE, format_message (msg));
+			write (LogLevel.VERBOSE, format_message (msg.vprintf(va_list ())));
 		}
 		
 		static string get_time ()
