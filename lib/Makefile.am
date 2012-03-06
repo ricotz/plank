@@ -34,7 +34,7 @@ libplank3_la_CFLAGS = \
 
 libplank3_la_LDFLAGS = \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
-	-export-symbols $(builddir)/libplank.symbols \
+	-export-symbols $(srcdir)/libplank.symbols \
 	-lm \
 	$(PLANK_CORE_LDFLAGS) \
 	$(NULL)
