@@ -58,8 +58,12 @@ namespace Plank
 		public void initialize ()
 			requires (controller.renderer != null && controller.window != null)
 		{
-			controller.window.get_screen ().size_changed.connect (update_monitor_geo);
-			update_monitor_geo ();
+			var screen = controller.window.get_screen ();
+			
+			screen.size_changed.connect (update_monitor_geo);
+			
+			// NOTE don't call update_monitor_geo to avoid a double-call of dockwindow.set_size on startup
+			screen.get_monitor_geometry (controller.prefs.Monitor, out monitor_geo);
 		}
 		
 		~PositionManager ()
