@@ -142,7 +142,9 @@ namespace Plank.Services
 		 */
 		public static void verbose (string msg, ...)
 		{
-			write (LogLevel.VERBOSE, format_message (msg.vprintf(va_list ())));
+			// NOTE using a local var is needed for valac 0.12/0.14 to avoid invalid c-code
+			var vargs = va_list ();
+			write (LogLevel.VERBOSE, format_message (msg.vprintf (vargs)));
 		}
 		
 		static string get_time ()
