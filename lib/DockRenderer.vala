@@ -297,21 +297,18 @@ namespace Plank
 		
 		void draw_item (DockItem item)
 		{
-			var icon_surface = new DockSurface.with_dock_surface (controller.prefs.IconSize, controller.prefs.IconSize, main_buffer);
-			var icon_cr = icon_surface.Context;
 			var main_cr = main_buffer.Context;
 			
 			// load the icon
 #if BENCHMARK
 			var start = new DateTime.now_local ();
 #endif
-			var item_surface = item.get_surface (icon_surface);
+			var icon_surface = item.get_surface_copy (controller.prefs.IconSize, controller.prefs.IconSize, main_buffer);
+			var icon_cr = icon_surface.Context;
 #if BENCHMARK
 			var end = new DateTime.now_local ();
 			benchmark.add ("	item.get_surface time - %f ms".printf (end.difference (start) / 1000.0));
 #endif
-			icon_cr.set_source_surface (item_surface.Internal, 0, 0);
-			icon_cr.paint ();
 			
 			// get regions
 			var hover_rect = controller.position_manager.item_hover_region (item);

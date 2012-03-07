@@ -314,22 +314,48 @@ namespace Plank.Items
 		}
 		
 		/**
-		 * Returns the dock surface for this item.
+		 * Returns the dock surface for this item and triggers a redraw if 
+		 * the requested size isn't matching the cache.
 		 *
-		 * @param surface existing surface to use as basis of new surface
+		 * @param width width of the requested surface
+		 * @param height height of the requested surface
+		 * @param model existing surface to use as basis of new surface
 		 * @return the dock surface for this item
 		 */
-		public DockSurface get_surface (DockSurface surface)
+		public DockSurface get_surface (int width, int height, DockSurface model)
 		{
-			if (this.surface == null || surface.Width != this.surface.Width || surface.Height != this.surface.Height) {
-				this.surface = new DockSurface.with_dock_surface (surface.Width, surface.Height, surface);
-				draw_icon (this.surface);
+			if (surface == null || width != surface.Width || height != surface.Height) {
+				surface = new DockSurface.with_dock_surface (width, height, model);
 				
-				AverageIconColor = this.surface.average_color ();
+				draw_icon (surface);
+				
+				AverageIconColor = surface.average_color ();
 			}
-			return this.surface;
+			
+			return surface;
 		}
 		
+		/**
+		 * Returns a copy of the dock surface for this item and triggers an
+		 * internal redraw if the requested size isn't matching the cache.
+		 *
+		 * @param width width of the requested surface
+		 * @param height height of the requested surface
+		 * @param model existing surface to use as basis of new surface
+		 * @return the copied dock surface for this item
+		 */
+		public DockSurface get_surface_copy (int width, int height, DockSurface model)
+		{
+			var surface_copy = new DockSurface.with_dock_surface (width, height, model);
+			var cr = surface_copy.Context;
+			var surface = get_surface (width, height, model);
+			
+			cr.set_source_surface (surface.Internal, 0, 0);
+			cr.paint ();
+						
+			return surface_copy;
+		}
+
 		/**
 		 * Draws the item's icon onto a surface.
 		 *
