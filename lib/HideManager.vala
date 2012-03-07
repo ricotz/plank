@@ -161,6 +161,7 @@ namespace Plank
 		void update_hidden ()
 		{
 			switch (controller.prefs.HideMode) {
+			default:
 			case HideType.NONE:
 				show ();
 				break;

@@ -336,11 +336,15 @@ namespace Plank
 				var clickAnimationProgress = click_time / (double) max_click_time;
 				
 				switch (item.ClickedAnimation) {
+				default:
+				case ClickAnimation.NONE:
+					break;
 				case ClickAnimation.BOUNCE:
 					if (!screen_is_composited)
 						break;
 					var change = ((int) (Math.sin (2 * Math.PI * clickAnimationProgress) * icon_size * theme.LaunchBounceHeight)).abs ();
 					switch (controller.prefs.Position) {
+					default:
 					case PositionType.BOTTOM:
 						draw_rect.y -= change;
 						break;
@@ -396,6 +400,7 @@ namespace Plank
 			if (screen_is_composited && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.UrgentBounceTime * 1000) {
 				var change = (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * icon_size * theme.UrgentBounceHeight);
 				switch (controller.prefs.Position) {
+				default:
 				case PositionType.BOTTOM:
 					draw_rect.y -= change;
 					break;
@@ -447,13 +452,14 @@ namespace Plank
 			
 			var x = 0.0, y = 0.0;
 			switch (controller.prefs.Position) {
-			case PositionType.TOP:
-				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
-				y = - indicator_surface.Height / 2.0 + 2.0 * theme.get_bottom_offset () + indicator_surface.Height / 24.0;
-				break;
+			default:
 			case PositionType.BOTTOM:
 				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
 				y = main_buffer.Height - indicator_surface.Height / 2.0 - 2.0 * theme.get_bottom_offset () - indicator_surface.Height / 24.0;
+				break;
+			case PositionType.TOP:
+				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
+				y = - indicator_surface.Height / 2.0 + 2.0 * theme.get_bottom_offset () + indicator_surface.Height / 24.0;
 				break;
 			case PositionType.LEFT:
 				x = - indicator_surface.Width / 2.0 + 2.0 * theme.get_bottom_offset () + indicator_surface.Width / 24.0;

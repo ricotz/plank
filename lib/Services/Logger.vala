@@ -204,6 +204,7 @@ namespace Plank.Services
 				set_foreground (ConsoleColor.MAGENTA);
 				break;
 			case LogLevel.WARN:
+			default:
 				set_foreground (ConsoleColor.YELLOW);
 				break;
 			case LogLevel.ERROR:
