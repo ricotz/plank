@@ -99,6 +99,7 @@ namespace Plank.Services
 		
 		void handle_verify_notify (Object sender, ParamSpec property)
 		{
+			save_prefs ();
 			if (backing_file != null)
 				warning ("Key '%s' failed verification in preferences file '%s', changing value", property.name, backing_file.get_path () ?? "");
 			else
@@ -261,6 +262,7 @@ namespace Plank.Services
 			var missing_keys = false;
 			
 			notify.disconnect (handle_notify);
+			delay ();
 			reset_properties ();
 			try {
 				var file = new KeyFile ();
@@ -316,6 +318,8 @@ namespace Plank.Services
 			
 			if (missing_keys)
 				save_prefs ();
+			
+			apply ();
 		}
 		
 		void save_prefs ()
