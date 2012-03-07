@@ -81,6 +81,9 @@ namespace Plank.Services
 		/**
 		 * Initialize the class, creating the {@link GLib.File} instances for all
 		 * common paths.  Also ensure that any writable directory exists.
+		 *
+		 * @param app_name the name of the application
+		 * @param data_folder_path the path to the application's data folder
 		 */
 		public static void initialize (string app_name, string data_folder)
 		{
