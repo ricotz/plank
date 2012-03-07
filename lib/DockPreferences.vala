@@ -77,6 +77,8 @@ namespace Plank
 		 */
 		protected override void reset_properties ()
 		{
+			Logger.verbose ("DockPreferences.reset_properties ()");
+			
 			IconSize = 48;
 			HideMode = HideType.INTELLIGENT;
 			UnhideDelay = 0;
