@@ -327,6 +327,7 @@ namespace Plank.Items
 			if (surface == null || width != surface.Width || height != surface.Height) {
 				surface = new DockSurface.with_dock_surface (width, height, model);
 				
+				Logger.verbose ("DockItem.draw_icon (width = %i, height = %i)", width, height);
 				draw_icon (surface);
 				
 				AverageIconColor = surface.average_color ();

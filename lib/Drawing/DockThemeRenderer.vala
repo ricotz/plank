@@ -18,6 +18,8 @@
 using Cairo;
 using Gdk;
 
+using Plank.Services;
+
 namespace Plank.Drawing
 {
 	/**
@@ -124,6 +126,8 @@ namespace Plank.Drawing
 		 */
 		public DockSurface create_background (DockSurface model, int width, int height, Gtk.PositionType position)
 		{
+			Logger.verbose ("DockThemeRenderer.create_background (width = %i, height = %i)", width, height);
+			
 			var surface = new DockSurface.with_dock_surface (width, height, model);
 			surface.clear ();
 			
@@ -183,6 +187,8 @@ namespace Plank.Drawing
 		 */
 		public DockSurface create_indicator (DockSurface background, int size, Color color)
 		{
+			Logger.verbose ("DockThemeRenderer.create_indicator (size = %i)", size);
+			
 			var surface = new DockSurface.with_dock_surface (size, size, background);
 			surface.clear ();
 
@@ -218,6 +224,8 @@ namespace Plank.Drawing
 		 */
 		public DockSurface create_urgent_glow (DockSurface background, int size, Color color)
 		{
+			Logger.verbose ("DockThemeRenderer.create_urgent_glow (size = %i)", size);
+			
 			var surface = new DockSurface.with_dock_surface (size, size, background);
 			surface.clear ();
 			

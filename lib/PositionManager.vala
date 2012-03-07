@@ -20,6 +20,7 @@ using Gtk;
 
 using Plank.Items;
 using Plank.Drawing;
+using Plank.Services;
 using Plank.Services.Windows;
 
 namespace Plank
@@ -150,6 +151,8 @@ namespace Plank
 		 */
 		public void reset_caches (DockThemeRenderer theme)
 		{
+			Logger.verbose ("PositionManager.reset_caches ()");
+			
 			var icon_size = controller.prefs.IconSize;
 			var scaled_icon_size = icon_size / 10.0;
 			

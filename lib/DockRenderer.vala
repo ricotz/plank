@@ -24,6 +24,7 @@ using Gee;
 
 using Plank.Items;
 using Plank.Drawing;
+using Plank.Services;
 using Plank.Widgets;
 
 namespace Plank
@@ -178,6 +179,8 @@ namespace Plank
 		 */
 		public void reset_buffers ()
 		{
+			Logger.verbose ("DockRenderer.reset_buffers ()");
+			
 			main_buffer = null;
 			background_buffer = null;
 			indicator_buffer = null;
