@@ -171,9 +171,10 @@ namespace Plank.Services
 			if (is_delayed)
 				return;
 			
-			Logger.verbose ("Preferences.delay()");
 			if (backing_file != null && backing_file.get_path () != null)
-				Logger.verbose (backing_file.get_path ());
+				Logger.verbose ("Preferences.delay('%s')", backing_file.get_path ());
+			else
+				Logger.verbose ("Preferences.delay()");
 			
 			is_delayed = true;
 		}
@@ -186,9 +187,10 @@ namespace Plank.Services
 			if (!is_delayed)
 				return;
 			
-			Logger.verbose ("Preferences.apply()");
 			if (backing_file != null && backing_file.get_path () != null)
-				Logger.verbose (backing_file.get_path ());
+				Logger.verbose ("Preferences.apply('%s')", backing_file.get_path ());
+			else
+				Logger.verbose ("Preferences.apply()");
 			
 			is_delayed = false;
 			if (is_changed && backing_file != null)
@@ -314,9 +316,10 @@ namespace Plank.Services
 			requires (backing_file != null)
 		{
 			if (is_delayed) {
-				Logger.verbose ("Preferences.save_prefs() - delaying save");
 				if (backing_file != null && backing_file.get_path () != null)
-					Logger.verbose (backing_file.get_path ());
+					Logger.verbose ("Preferences.save_prefs('%s') - delaying save", backing_file.get_path ());
+				else
+					Logger.verbose ("Preferences.save_prefs() - delaying save");
 				
 				is_changed = true;
 				return;
