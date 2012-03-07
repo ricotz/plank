@@ -201,15 +201,18 @@ namespace Plank
 		 */
 		public void draw_dock (Context cr)
 		{
+			var width = controller.position_manager.DockWidth;
+			var height = controller.position_manager.DockHeight;
+			
 #if BENCHMARK
 			benchmark.clear ();
 			var start = new DateTime.now_local ();
 #endif
-			if (main_buffer != null && (main_buffer.Width != controller.position_manager.DockWidth || main_buffer.Height != controller.position_manager.DockHeight))
+			if (main_buffer != null && (main_buffer.Width != width || main_buffer.Height != height))
 				reset_buffers ();
 			
 			if (main_buffer == null)
-				main_buffer = new DockSurface.with_surface (controller.position_manager.DockWidth, controller.position_manager.DockHeight, cr.get_target ());
+				main_buffer = new DockSurface.with_surface (width, height, cr.get_target ());
 			
 			main_buffer.clear ();
 			
