@@ -119,12 +119,12 @@ namespace Plank.Drawing
 		/**
 		 * Creates a surface for the dock background.
 		 *
-		 * @param model a similar surface
 		 * @param width the width of the background
 		 * @param color the color of the background
+		 * @param model existing surface to use as basis of new surface
 		 * @return a new dock surface with the background drawn on it
 		 */
-		public DockSurface create_background (DockSurface model, int width, int height, Gtk.PositionType position)
+		public DockSurface create_background (int width, int height, Gtk.PositionType position, DockSurface model)
 		{
 			Logger.verbose ("DockThemeRenderer.create_background (width = %i, height = %i)", width, height);
 			
@@ -180,16 +180,16 @@ namespace Plank.Drawing
 		/**
 		 * Creates a surface for an indicator.
 		 *
-		 * @param background a similar surface
 		 * @param size the size of the indicator
 		 * @param color the color of the indicator
+		 * @param model existing surface to use as basis of new surface
 		 * @return a new dock surface with the indicator drawn on it
 		 */
-		public DockSurface create_indicator (DockSurface background, int size, Color color)
+		public DockSurface create_indicator (int size, Color color, DockSurface model)
 		{
 			Logger.verbose ("DockThemeRenderer.create_indicator (size = %i)", size);
 			
-			var surface = new DockSurface.with_dock_surface (size, size, background);
+			var surface = new DockSurface.with_dock_surface (size, size, model);
 			surface.clear ();
 
 			var cr = surface.Context;
@@ -217,16 +217,16 @@ namespace Plank.Drawing
 		/**
 		 * Creates a surface for an urgent glow.
 		 *
-		 * @param background a similar surface
 		 * @param size the size of the urgent glow
 		 * @param color the color of the urgent glow
+		 * @param model existing surface to use as basis of new surface
 		 * @return a new dock surface with the urgent glow drawn on it
 		 */
-		public DockSurface create_urgent_glow (DockSurface background, int size, Color color)
+		public DockSurface create_urgent_glow (int size, Color color, DockSurface model)
 		{
 			Logger.verbose ("DockThemeRenderer.create_urgent_glow (size = %i)", size);
 			
-			var surface = new DockSurface.with_dock_surface (size, size, background);
+			var surface = new DockSurface.with_dock_surface (size, size, model);
 			surface.clear ();
 			
 			var cr = surface.Context;

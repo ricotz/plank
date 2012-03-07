@@ -258,7 +258,7 @@ namespace Plank
 			// dock is completely hidden
 			if (get_hide_offset () == 1) {
 				if (urgent_glow_buffer == null)
-					urgent_glow_buffer = theme.create_urgent_glow (background_buffer, controller.position_manager.GlowSize, get_styled_color ().add_hue (theme.UrgentHueShift).set_sat (1));
+					urgent_glow_buffer = theme.create_urgent_glow (controller.position_manager.GlowSize, get_styled_color ().add_hue (theme.UrgentHueShift).set_sat (1), background_buffer);
 				
 				foreach (var item in controller.items.Items) {
 					if ((item.State & ItemState.URGENT) == 0)
@@ -291,7 +291,7 @@ namespace Plank
 			var height = controller.position_manager.DockBackgroundHeight;
 			
 			if (background_buffer == null || background_buffer.Width != width || background_buffer.Height != height)
-				background_buffer = theme.create_background (main_buffer, width, height, controller.prefs.Position);
+				background_buffer = theme.create_background (width, height, controller.prefs.Position, main_buffer);
 			
 			var x_offset = 0, y_offset = 0;
 			controller.position_manager.get_background_position (out x_offset, out y_offset);
@@ -437,9 +437,9 @@ namespace Plank
 		void draw_indicator_state (Gdk.Rectangle item_rect, IndicatorState indicator, ItemState item_state)
 		{
 			if (indicator_buffer == null)
-				indicator_buffer = theme.create_indicator (background_buffer, controller.position_manager.IndicatorSize, get_styled_color ().set_min_sat (0.4));
+				indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, get_styled_color ().set_min_sat (0.4), background_buffer);
 			if (urgent_indicator_buffer == null)
-				urgent_indicator_buffer = theme.create_indicator (background_buffer, controller.position_manager.IndicatorSize, get_styled_color ().add_hue (theme.UrgentHueShift).set_sat (1));
+				urgent_indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, get_styled_color ().add_hue (theme.UrgentHueShift).set_sat (1), background_buffer);
 			
 			var indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 			var main_cr = main_buffer.Context;
