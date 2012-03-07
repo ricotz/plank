@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011-2012 Robert Dyer
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@
 
 using Cairo;
 using Gdk;
+
+using Plank.Services;
 
 namespace Plank.Drawing
 {
@@ -82,6 +84,9 @@ namespace Plank.Drawing
 		[Description(nick = "glow-pulse-time", blurb = "The time (in ms) of each pulse of the hidden-dock urgent glow.")]
 		public int GlowPulseTime { get; set; }
 		
+		[Description(nick = "urgent-hue-shift", blurb = "The hue-shift (-180 to 180) of the urgent indicator color.")]
+		public int UrgentHueShift { get; set; }
+		
 		/**
 		 * {@inheritDoc}
 		 */
@@ -108,19 +113,83 @@ namespace Plank.Drawing
 			GlowSize = 30;
 			GlowTime = 10000;
 			GlowPulseTime = 2000;
+			UrgentHueShift = 150;
+		}
+		
+		/**
+		 * Creates a surface for the dock background.
+		 *
+		 * @param width the width of the background
+		 * @param color the color of the background
+		 * @param model existing surface to use as basis of new surface
+		 * @return a new dock surface with the background drawn on it
+		 */
+		public DockSurface create_background (int width, int height, Gtk.PositionType position, DockSurface model)
+		{
+			Logger.verbose ("DockThemeRenderer.create_background (width = %i, height = %i)", width, height);
+			
+			var surface = new DockSurface.with_dock_surface (width, height, model);
+			surface.clear ();
+			
+			if (position == Gtk.PositionType.BOTTOM) {
+				draw_background (surface);
+				return surface;
+			}
+			
+			DockSurface temp;
+			if (position == Gtk.PositionType.TOP)
+				temp = new DockSurface.with_dock_surface (width, height, surface);
+			else
+				temp = new DockSurface.with_dock_surface (height, width, surface);
+			
+			draw_background (temp);
+			
+			var cr = surface.Context;
+			
+			var rotate = 0.0;
+			var x_offset = 0.0, y_offset = 0.0;
+			
+			switch (position) {
+			default:
+			case Gtk.PositionType.BOTTOM:
+				break;
+			case Gtk.PositionType.TOP:
+				rotate = Math.PI;
+				x_offset = -width;
+				y_offset = -height;
+				break;
+			case Gtk.PositionType.LEFT:
+				rotate = Math.PI * 0.5;
+				y_offset = -width;
+				break;
+			case Gtk.PositionType.RIGHT:
+				rotate = Math.PI * -0.5;
+				x_offset = -height;
+				break;
+			}
+			
+			cr.save ();
+			cr.rotate (rotate);
+			cr.set_source_surface (temp.Internal, x_offset, y_offset);
+			cr.paint ();
+			cr.restore ();
+			
+			return surface;
 		}
 		
 		/**
 		 * Creates a surface for an indicator.
 		 *
-		 * @param background a similar surface
 		 * @param size the size of the indicator
 		 * @param color the color of the indicator
+		 * @param model existing surface to use as basis of new surface
 		 * @return a new dock surface with the indicator drawn on it
 		 */
-		public DockSurface create_indicator (DockSurface background, int size, Color color)
+		public DockSurface create_indicator (int size, Color color, DockSurface model)
 		{
-			var surface = new DockSurface.with_dock_surface (size, size, background);
+			Logger.verbose ("DockThemeRenderer.create_indicator (size = %i)", size);
+			
+			var surface = new DockSurface.with_dock_surface (size, size, model);
 			surface.clear ();
 
 			var cr = surface.Context;
@@ -148,14 +217,16 @@ namespace Plank.Drawing
 		/**
 		 * Creates a surface for an urgent glow.
 		 *
-		 * @param background a similar surface
 		 * @param size the size of the urgent glow
 		 * @param color the color of the urgent glow
+		 * @param model existing surface to use as basis of new surface
 		 * @return a new dock surface with the urgent glow drawn on it
 		 */
-		public DockSurface create_urgent_glow (DockSurface background, int size, Color color)
+		public DockSurface create_urgent_glow (int size, Color color, DockSurface model)
 		{
-			var surface = new DockSurface.with_dock_surface (size, size, background);
+			Logger.verbose ("DockThemeRenderer.create_urgent_glow (size = %i)", size);
+			
+			var surface = new DockSurface.with_dock_surface (size, size, model);
 			surface.clear ();
 			
 			var cr = surface.Context;
@@ -190,22 +261,17 @@ namespace Plank.Drawing
 		{
 			var cr = surface.Context;
 			
-			var top_offset = get_top_offset ();
-			var bottom_offset = get_bottom_offset ();
-			var top_padding = clip_buffer.Height - rect.height - bottom_offset - top_offset;
-			
 			var rotate = 0.0;
 			var xoffset = 0.0, yoffset = 0.0;
 			
 			Pattern gradient = null;
 			
 			switch (pos) {
+			default:
 			case Gtk.PositionType.BOTTOM:
 				xoffset = (surface.Width - clip_buffer.Width) / 2.0;
 				yoffset = surface.Height - clip_buffer.Height;
 				
-				rect.y += 2 * top_offset - top_padding;
-				rect.height -= 2 * (top_offset + bottom_offset) - top_padding;
 				gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
 				break;
 			case Gtk.PositionType.TOP:
@@ -213,24 +279,20 @@ namespace Plank.Drawing
 				xoffset = (-surface.Width - clip_buffer.Width) / 2.0;
 				yoffset = -clip_buffer.Height;
 				
-				rect.height -= 2 * (top_offset + bottom_offset) - top_padding;
 				gradient = new Pattern.linear (0, rect.y + rect.height, 0, rect.y);
 				break;
 			case Gtk.PositionType.LEFT:
 				rotate = Math.PI * 0.5;
-				xoffset = (surface.Height - clip_buffer.Width) / 2.0;
-				yoffset = -clip_buffer.Height;
+				xoffset = (surface.Height - clip_buffer.Height) / 2.0;
+				yoffset = -clip_buffer.Width;
 				
-				rect.width -= 2 * (top_offset + bottom_offset) - top_padding;
 				gradient = new Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
 				break;
 			case Gtk.PositionType.RIGHT:
 				rotate = Math.PI * -0.5;
-				xoffset = (-surface.Height - clip_buffer.Width) / 2.0;
-				yoffset = surface.Width - clip_buffer.Height;
+				xoffset = (-surface.Height - clip_buffer.Height) / 2.0;
+				yoffset = surface.Width - clip_buffer.Width;
 				
-				rect.x += 2 * top_offset - top_padding;
-				rect.width -= 2 * (top_offset + bottom_offset) - top_padding;
 				gradient = new Pattern.linear (rect.x, 0, rect.x + rect.width, 0);
 				break;
 			}
@@ -238,7 +300,10 @@ namespace Plank.Drawing
 			cr.save ();
 			cr.rotate (rotate);
 			cr.translate (xoffset, yoffset);
-			draw_inner_rect (cr, clip_buffer.Width, clip_buffer.Height);
+			if (pos == Gtk.PositionType.BOTTOM || pos == Gtk.PositionType.TOP)
+				draw_inner_rect (cr, clip_buffer.Width, clip_buffer.Height);
+			else
+				draw_inner_rect (cr, clip_buffer.Height, clip_buffer.Width);
 			cr.restore ();
 			
 			cr.set_line_width (LineWidth);
@@ -444,6 +509,13 @@ namespace Plank.Drawing
 			case "GlowPulseTime":
 				if (GlowPulseTime < 0)
 					GlowPulseTime = 0;
+				break;
+			
+			case "UrgentHueShift":
+				if (UrgentHueShift < -180)
+					UrgentHueShift = -180;
+				else if (UrgentHueShift > 180)
+					UrgentHueShift = 180;
 				break;
 			}
 		}

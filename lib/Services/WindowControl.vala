@@ -367,8 +367,11 @@ namespace Plank.Services.Windows
 		
 		static void intelligent_focus_off_viewport_window (Wnck.Window targetWindow, ArrayList<Wnck.Window> additional_windows)
 		{
-			for (var i = (int) additional_windows.size - 1; i >= 0; i--) {
-				var window = additional_windows.get (i);
+			var iterator = additional_windows.list_iterator ();
+			iterator.last ();
+			
+			while (iterator.previous ()) {
+				var window = iterator.get ();
 				if (!window.is_minimized () && windows_share_viewport (targetWindow, window)) {
 					center_and_focus_window (window);
 					Thread.usleep (WINDOW_GROUP_DELAY);

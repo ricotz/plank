@@ -541,20 +541,14 @@
 			</vfunc>
 		</object>
 		<object name="BamfWindow" parent="BamfView" type-name="BamfWindow" get-type="bamf_window_get_type">
-			<method name="get_application_id" symbol="bamf_window_get_application_id">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="BamfWindow*"/>
-				</parameters>
-			</method>
-			<method name="get_dbus_menu_object_path" symbol="bamf_window_get_dbus_menu_object_path">
-				<return-type type="gchar*"/>
-				<parameters>
-					<parameter name="self" type="BamfWindow*"/>
-				</parameters>
-			</method>
 			<method name="get_monitor" symbol="bamf_window_get_monitor">
 				<return-type type="gint"/>
+				<parameters>
+					<parameter name="self" type="BamfWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_pid" symbol="bamf_window_get_pid">
+				<return-type type="guint32"/>
 				<parameters>
 					<parameter name="self" type="BamfWindow*"/>
 				</parameters>
@@ -565,10 +559,11 @@
 					<parameter name="self" type="BamfWindow*"/>
 				</parameters>
 			</method>
-			<method name="get_unique_bus_name" symbol="bamf_window_get_unique_bus_name">
+			<method name="get_utf8_prop" symbol="bamf_window_get_utf8_prop">
 				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="self" type="BamfWindow*"/>
+					<parameter name="prop" type="char*"/>
 				</parameters>
 			</method>
 			<method name="get_window_type" symbol="bamf_window_get_window_type">

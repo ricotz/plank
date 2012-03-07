@@ -25,6 +25,10 @@ namespace Plank.Services
 	public enum LogLevel
 	{
 		/**
+		 * Extra debugging info. A *LOT* of messages.
+		 */
+		VERBOSE,
+		/**
 		 * Debugging messages that help track what the application is doing.
 		 */
 		DEBUG,
@@ -104,7 +108,7 @@ namespace Plank.Services
 			is_writing = false;
 			log_queue = new ArrayList<LogMessage> ();
 			try {
-				re = new Regex ("""[(]?.*?([^/]*)\.vala(:\d+)[)]?:\s*(.*)""");
+				re = new Regex ("""[(]?.*?([^/]*?)(\.2)?\.vala(:\d+)[)]?:\s*(.*)""");
 			} catch { }
 			
 			Log.set_default_handler (glib_log_func);
@@ -114,7 +118,7 @@ namespace Plank.Services
 		{
 			if (re != null && re.match (msg)) {
 				var parts = re.split (msg);
-				return "[%s%s] %s".printf (parts[1], parts[2], parts[3]);
+				return "[%s%s] %s".printf (parts[1], parts[3], parts[4]);
 			}
 			return msg;
 		}
@@ -129,6 +133,18 @@ namespace Plank.Services
 		{
 			// TODO display the message using libnotify
 			write (LogLevel.NOTIFY, format_message (msg));
+		}
+		
+		/**
+		 * Displays a verbose log message to the console.
+		 *
+		 * @param msg the log message to display
+		 */
+		public static void verbose (string msg, ...)
+		{
+			// NOTE using a local var is needed for valac 0.12/0.14 to avoid invalid c-code
+			var vargs = va_list ();
+			write (LogLevel.VERBOSE, format_message (msg.vprintf (vargs)));
 		}
 		
 		static string get_time ()
@@ -175,6 +191,9 @@ namespace Plank.Services
 		static void set_color_for_level (LogLevel level)
 		{
 			switch (level) {
+			case LogLevel.VERBOSE:
+				set_foreground (ConsoleColor.CYAN);
+				break;
 			case LogLevel.DEBUG:
 				set_foreground (ConsoleColor.GREEN);
 				break;
@@ -185,6 +204,7 @@ namespace Plank.Services
 				set_foreground (ConsoleColor.MAGENTA);
 				break;
 			case LogLevel.WARN:
+			default:
 				set_foreground (ConsoleColor.YELLOW);
 				break;
 			case LogLevel.ERROR:

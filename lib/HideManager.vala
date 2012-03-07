@@ -178,6 +178,7 @@ namespace Plank
 			}
 			
 			switch (controller.prefs.HideMode) {
+			default:
 			case HideType.NONE:
 				show ();
 				break;

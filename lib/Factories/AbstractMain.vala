@@ -215,10 +215,16 @@ namespace Plank.Factories
 		protected static bool DEBUG = false;
 		
 		/**
+		 * If verbose mode is enabled.
+		 */
+		protected static bool VERBOSE = false;
+		
+		/**
 		 * The default command-line options for the dock.
 		 */
 		protected const OptionEntry[] options = {
 			{ "debug", 'd', 0, OptionArg.NONE, out DEBUG, "Enable debug logging", null },
+			{ "verbose", 'v', 0, OptionArg.NONE, out VERBOSE, "Enable verbose logging", null },
 			{ "name", 'n', 0, OptionArg.STRING, out dock_path, "The name of this dock", null },
 			{ null }
 		};
@@ -250,6 +256,8 @@ namespace Plank.Factories
 		{
 			if (DEBUG)
 				Logger.DisplayLevel = LogLevel.DEBUG;
+			if (VERBOSE)
+				Logger.DisplayLevel = LogLevel.VERBOSE;
 		}
 		
 		/**

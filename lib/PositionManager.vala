@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2012 Robert Dyer
+//  Copyright (C) 2012 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ using Gtk;
 
 using Plank.Items;
 using Plank.Drawing;
+using Plank.Services;
 using Plank.Services.Windows;
 
 namespace Plank
@@ -57,8 +58,12 @@ namespace Plank
 		public void initialize ()
 			requires (controller.renderer != null && controller.window != null)
 		{
-			controller.window.get_screen ().size_changed.connect (update_monitor_geo);
-			update_monitor_geo ();
+			var screen = controller.window.get_screen ();
+			
+			screen.size_changed.connect (update_monitor_geo);
+			
+			// NOTE don't call update_monitor_geo to avoid a double-call of dockwindow.set_size on startup
+			screen.get_monitor_geometry (controller.prefs.Monitor, out monitor_geo);
 		}
 		
 		~PositionManager ()
@@ -150,6 +155,8 @@ namespace Plank
 		 */
 		public void reset_caches (DockThemeRenderer theme)
 		{
+			Logger.verbose ("PositionManager.reset_caches ()");
+			
 			var icon_size = controller.prefs.IconSize;
 			var scaled_icon_size = icon_size / 10.0;
 			
@@ -218,6 +225,7 @@ namespace Plank
 		public Gdk.Rectangle get_cursor_region ()
 		{
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
 				cursor_region.y = DockHeight - cursor_region.height;
@@ -261,6 +269,7 @@ namespace Plank
 			static_dock_region.height = VisibleDockHeight;
 			
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				static_dock_region.x = (DockWidth - static_dock_region.width) / 2;
 				static_dock_region.y = DockHeight - static_dock_region.height;
@@ -311,30 +320,34 @@ namespace Plank
 			var item_padding = ItemPadding;
 			var top_padding = TopPadding;
 			var bottom_padding = BottomPadding;
-
+			
+			top_padding = 2 * top_offset + (top_padding > 0 ? top_padding : 0);
+			bottom_padding = 2 * bottom_offset + bottom_padding;
+			
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				hover_rect.x += item_padding / 2;
-				hover_rect.y += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
-				hover_rect.height -= top_padding;
+				hover_rect.y += top_padding;
 				hover_rect.width -= item_padding;
+				hover_rect.height -= bottom_padding + top_padding;
 				break;
 			case PositionType.TOP:
 				hover_rect.x += item_padding / 2;
-				hover_rect.y += 2 * bottom_offset + bottom_padding;
-				hover_rect.height -= bottom_padding;
+				hover_rect.y += bottom_padding;
 				hover_rect.width -= item_padding;
+				hover_rect.height -= bottom_padding + top_padding;
 				break;
 			case PositionType.LEFT:
+				hover_rect.x += bottom_padding;
 				hover_rect.y += item_padding / 2;
-				hover_rect.x += 2 * bottom_offset + bottom_padding;
-				hover_rect.width -= bottom_padding;
+				hover_rect.width -= bottom_padding + top_padding;
 				hover_rect.height -= item_padding;
 				break;
 			case PositionType.RIGHT:
+				hover_rect.x += top_padding;
 				hover_rect.y += item_padding / 2;
-				hover_rect.x += 2 * top_offset + (top_padding > 0 ? top_padding : 0);
-				hover_rect.width -= top_padding;
+				hover_rect.width -= bottom_padding + top_padding;
 				hover_rect.height -= item_padding;
 				break;
 			}
@@ -342,6 +355,38 @@ namespace Plank
 			return hover_rect;
 		}
 		
+		/**
+		 * The intersecting region of a dock item's hover region and the background.
+		 *
+		 * @param rect the item's hover region
+		 * @return the region for the dock item
+		 */
+		public Gdk.Rectangle item_background_region (Gdk.Rectangle rect)
+		{
+			var top_padding = TopPadding;
+			top_padding = 2 * top_offset + (top_padding > 0 ? 0 : top_padding);
+			
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				rect.y -= top_padding;
+				rect.height += top_padding;
+				break;
+			case PositionType.TOP:
+				rect.height += top_padding;
+				break;
+			case PositionType.LEFT:
+				rect.width += top_padding;
+				break;
+			case PositionType.RIGHT:
+				rect.x -= top_padding;
+				rect.width += top_padding;
+				break;
+			}
+			
+			return rect;
+		}
+
 		/**
 		 * The cursor region for interacting with a dock item.
 		 *
@@ -355,6 +400,7 @@ namespace Plank
 			var icon_size = controller.prefs.IconSize;
 			
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				rect.width = icon_size + ItemPadding;
 				rect.height = VisibleDockHeight;
@@ -451,6 +497,39 @@ namespace Plank
 		}
 		
 		/**
+		 * Get's the x and y position to display the urgent-glow for a dock item.
+		 *
+		 * @param the item to show urgent-glow for
+		 * @param x the resulting x position
+		 * @param y the resulting y position
+		 */
+		public void get_urgent_glow_position (DockItem item, out int x, out int y)
+		{
+			var rect = item_hover_region (item);
+			var glow_size = controller.position_manager.GlowSize;
+			
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				x = rect.x + (rect.width - glow_size) / 2;
+				y = DockHeight - glow_size / 2;
+				break;
+			case PositionType.TOP:
+				x = rect.x + (rect.width - glow_size) / 2;
+				y = - glow_size / 2;
+				break;
+			case PositionType.LEFT:
+				y = rect.y + (rect.height - glow_size) / 2;
+				x = - glow_size / 2;
+				break;
+			case PositionType.RIGHT:
+				y = rect.y + (rect.height - glow_size) / 2;
+				x = DockWidth - glow_size / 2;
+				break;
+			}
+		}
+
+		/**
 		 * Caches the x and y position of the dock window.
 		 */
 		public void update_dock_position ()
@@ -459,6 +538,7 @@ namespace Plank
 			var yoffset = (monitor_geo.height - DockHeight) / 2;
 			
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				win_x = monitor_geo.x + xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
 				win_y = monitor_geo.y + monitor_geo.height - DockHeight;
@@ -477,6 +557,64 @@ namespace Plank
 				break;
 			}
 		}
+
+		/**
+		 * Get's the x and y position to display the main dock buffer.
+		 *
+		 * @param x the resulting x position
+		 * @param y the resulting y position
+		 */
+		public void get_dock_draw_position (out int x, out int y)
+		{
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				x = 0;
+				y = (int) (VisibleDockHeight * controller.renderer.get_hide_offset ());
+				break;
+			case PositionType.TOP:
+				x = 0;
+				y = (int) (- VisibleDockHeight * controller.renderer.get_hide_offset ());
+				break;
+			case PositionType.LEFT:
+				x = (int) (- VisibleDockWidth * controller.renderer.get_hide_offset ());
+				y = 0;
+				break;
+			case PositionType.RIGHT:
+				x = (int) (VisibleDockWidth * controller.renderer.get_hide_offset ());
+				y = 0;
+				break;
+			}
+		}
+		
+		/**
+		 * Get's the x and y position to display the background of the dock.
+		 *
+		 * @param x the resulting x position
+		 * @param y the resulting y position
+		 */
+		public void get_background_position (out int x, out int y)
+		{
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				x = (DockWidth - DockBackgroundWidth) / 2;
+				y = DockHeight - DockBackgroundHeight;
+				break;
+			case PositionType.TOP:
+				x = (DockWidth - DockBackgroundWidth) / 2;
+				y = 0;
+				break;
+			case PositionType.LEFT:
+				x = 0;
+				y = (DockHeight - DockBackgroundHeight) / 2;
+				break;
+			case PositionType.RIGHT:
+				x = DockWidth - DockBackgroundWidth;
+				y = (DockHeight - DockBackgroundHeight) / 2;
+				break;
+			}
+		}
 		
 		/**
 		 * Computes the struts for the dock.
@@ -486,6 +624,7 @@ namespace Plank
 		public void get_struts (ref ulong[] struts)
 		{
 			switch (controller.prefs.Position) {
+			default:
 			case PositionType.BOTTOM:
 				struts [controller.prefs.Position] = VisibleDockHeight + controller.window.get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
 				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.x;

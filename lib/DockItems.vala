@@ -353,14 +353,17 @@ namespace Plank
 			if (item is ApplicationDockItem)
 				app = (item as ApplicationDockItem).App;
 			
-			remove_item_without_signaling (item);
-			
-			if (app != null) {
-				var new_item = new TransientDockItem.with_application (app);
-				new_item.Position = item.Position;
-				add_item_without_signaling (new_item);
+			if (app == null || !app.is_running ()) {
+				remove_item (item);
+				return;
 			}
 			
+			remove_item_without_signaling (item);
+			
+			var new_item = new TransientDockItem.with_application (app);
+			new_item.Position = item.Position;
+			
+			add_item_without_signaling (new_item);
 			item_state_changed ();
 		}
 		

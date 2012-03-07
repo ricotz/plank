@@ -161,8 +161,10 @@ namespace Plank
 				foreach (DockItem item in controller.items.Items)
 					original_item_pos [item] = item.Position;
 				
-				var icon_surface = new DockSurface ((int) (1.2 * controller.prefs.IconSize), (int) (1.2 * controller.prefs.IconSize));
-				pbuf = DragItem.get_surface (icon_surface).load_to_pixbuf ();
+				// FIXME
+				var drag_icon_size = (int) (1.2 * controller.prefs.IconSize);
+				var icon_surface = new DockSurface (drag_icon_size, drag_icon_size);
+				pbuf = DragItem.get_surface (drag_icon_size, drag_icon_size, icon_surface).load_to_pixbuf ();
 				controller.renderer.animated_draw ();
 			} else {
 				pbuf = new Pixbuf (Colorspace.RGB, true, 8, 1, 1);

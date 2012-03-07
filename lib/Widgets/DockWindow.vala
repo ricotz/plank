@@ -23,6 +23,7 @@ using Gtk;
 using Plank.Items;
 using Plank.Drawing;
 using Plank.Factories;
+using Plank.Services;
 using Plank.Services.Windows;
 
 namespace Plank.Widgets
@@ -313,7 +314,12 @@ namespace Plank.Widgets
 		 */
 		public void set_size ()
 		{
-			set_size_request (controller.position_manager.DockWidth, controller.position_manager.DockHeight);
+			var width = controller.position_manager.DockWidth;
+			var height = controller.position_manager.DockHeight;
+
+			Logger.verbose ("DockWindow.set_size (width = %i, height = %i)", width, height);
+			
+			set_size_request (width, height);
 			reposition ();
 			if (HoveredItem != null)
 				position_hover ();
