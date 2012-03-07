@@ -84,10 +84,15 @@ namespace Plank.Services
 		void handle_notify (Object sender, ParamSpec property)
 		{
 			Logger.verbose ("property changed: %s", property.name);
+			
 			delay ();
+			if (backing_file != null)
+				save_prefs ();
+			
 			notify.disconnect (handle_notify);
 			call_verify (property.name);
 			notify.connect (handle_notify);
+			
 			apply ();
 		}
 		
