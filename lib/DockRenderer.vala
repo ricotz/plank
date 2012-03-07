@@ -304,12 +304,13 @@ namespace Plank
 		void draw_item (DockItem item)
 		{
 			var main_cr = main_buffer.Context;
+			var icon_size = controller.prefs.IconSize;
 			
 			// load the icon
 #if BENCHMARK
 			var start = new DateTime.now_local ();
 #endif
-			var icon_surface = item.get_surface_copy (controller.prefs.IconSize, controller.prefs.IconSize, main_buffer);
+			var icon_surface = item.get_surface_copy (icon_size, icon_size, main_buffer);
 			var icon_cr = icon_surface.Context;
 #if BENCHMARK
 			var end = new DateTime.now_local ();
@@ -338,7 +339,7 @@ namespace Plank
 				case ClickAnimation.BOUNCE:
 					if (!screen_is_composited)
 						break;
-					var change = ((int) (Math.sin (2 * Math.PI * clickAnimationProgress) * controller.prefs.IconSize * theme.LaunchBounceHeight)).abs ();
+					var change = ((int) (Math.sin (2 * Math.PI * clickAnimationProgress) * icon_size * theme.LaunchBounceHeight)).abs ();
 					switch (controller.prefs.Position) {
 					case PositionType.BOTTOM:
 						draw_rect.y -= change;
@@ -378,7 +379,7 @@ namespace Plank
 			
 			// draw badge text
 			if (item.BadgeText != "")
-				theme.draw_badge (icon_surface, controller.prefs.IconSize, get_styled_color (), item.BadgeText);
+				theme.draw_badge (icon_surface, icon_size, get_styled_color (), item.BadgeText);
 			
 			// darken the icon
 			if (darken > 0) {
@@ -393,7 +394,7 @@ namespace Plank
 			// bounce icon on urgent state
 			var urgent_time = new DateTime.now_utc ().difference (item.LastUrgent);
 			if (screen_is_composited && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.UrgentBounceTime * 1000) {
-				var change = (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * controller.prefs.IconSize * theme.UrgentBounceHeight);
+				var change = (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * icon_size * theme.UrgentBounceHeight);
 				switch (controller.prefs.Position) {
 				case PositionType.BOTTOM:
 					draw_rect.y -= change;
