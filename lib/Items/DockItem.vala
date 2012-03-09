@@ -313,16 +313,7 @@ namespace Plank.Items
 			needs_redraw ();
 		}
 		
-		/**
-		 * Returns the dock surface for this item and triggers a redraw if 
-		 * the requested size isn't matching the cache.
-		 *
-		 * @param width width of the requested surface
-		 * @param height height of the requested surface
-		 * @param model existing surface to use as basis of new surface
-		 * @return the dock surface for this item
-		 */
-		public DockSurface get_surface (int width, int height, DockSurface model)
+		DockSurface get_surface (int width, int height, DockSurface model)
 		{
 			if (surface == null || width != surface.Width || height != surface.Height) {
 				surface = new DockSurface.with_dock_surface (width, height, model);
@@ -349,9 +340,8 @@ namespace Plank.Items
 		{
 			var surface_copy = new DockSurface.with_dock_surface (width, height, model);
 			var cr = surface_copy.Context;
-			var surface = get_surface (width, height, model);
 			
-			cr.set_source_surface (surface.Internal, 0, 0);
+			cr.set_source_surface (get_surface (width, height, model).Internal, 0, 0);
 			cr.paint ();
 						
 			return surface_copy;
