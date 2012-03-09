@@ -132,6 +132,15 @@ namespace Plank.Factories
 		protected string about_translators = "";
 		
 		/**
+		 * The Application for preserving uniqueness
+		 */
+#if USE_GTK2
+		protected Unique.App application;
+#else
+		protected Gtk.Application application;
+#endif
+		
+		/**
 		 * Initializes the program, makes the dock and starts it.
 		 *
 		 * @param args the command-line arguments
@@ -277,14 +286,23 @@ namespace Plank.Factories
 			
 			// ensure only one instance per dock_path
 			var path = app_dbus + "." + dock_path;
-#if USE_GTK2
-			if (new App (path, null).is_running)
-#else
-			if (new Gtk.Application (path, ApplicationFlags.IS_LAUNCHER).is_registered)
-#endif
-				error ("Exiting because another instance of this application is already running with the name '%s'.".printf (dock_path));
 			
-			return args;
+#if USE_GTK2
+			application = new App (path, null);
+			if (!application.is_running)
+				return args;
+#else
+			application = new Gtk.Application (path, ApplicationFlags.FLAGS_NONE);
+			try {
+				if (application.register () && !application.get_is_remote ())
+					return args;
+			} catch {
+				error ("Registering application as '%s' failed.", dock_path);
+			}
+#endif
+			
+			// FIXME we should exit more gracefully
+			error ("Exiting because another instance of this application is already running with the name '%s'.", dock_path);
 		}
 		
 		/**
