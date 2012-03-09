@@ -1,4 +1,4 @@
-SUBDIRS = icons themes
+SUBDIRS = apport icons themes
 
 EXTRA_DIST = plank.desktop.in \
 	poof.png
