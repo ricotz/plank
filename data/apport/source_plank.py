@@ -2,7 +2,7 @@
 
 '''Apport package hook for plank
 
-(c) 2012 Robert Dyer
+(c) 2012 Robert Dyer, Rico Tzschichholz
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,4 +23,9 @@ from os import path
 
 def add_info(report, ui=None):
 	attach_file_if_exists(report, path.expanduser('~/.config/plank/dock1/settings'), 'DockSettings')
-    report['SuspiciousXErrors'] = xsession_errors(re.compile('\[(FATAL|WARN|ERROR|INFO|DEBUG).*'))
+	
+	report['SuspiciousXErrors'] = xsession_errors(re.compile('\[(FATAL|WARN|ERROR|INFO|DEBUG).*'))
+	
+	if not apport.packaging.is_distro_package(report['Package'].split()[0]):
+		report['ThirdParty'] = 'True'
+		report['CrashDB'] = 'plank'
