@@ -135,9 +135,9 @@ namespace Plank.Factories
 		 * The Application for preserving uniqueness
 		 */
 #if USE_GTK2
-		protected Unique.App application;
+		Unique.App application;
 #else
-		protected Gtk.Application application;
+		Gtk.Application application;
 #endif
 		
 		/**
