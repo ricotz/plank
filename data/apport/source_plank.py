@@ -24,7 +24,7 @@ from os import path
 def add_info(report, ui=None):
 	attach_file_if_exists(report, path.expanduser('~/.config/plank/dock1/settings'), 'DockSettings')
 	
-	report['SuspiciousXErrors'] = xsession_errors(re.compile('\[(FATAL|WARN|ERROR|INFO|DEBUG).*'))
+	report['SuspiciousXErrors.txt'] = xsession_errors(re.compile('\[(FATAL|WARN|ERROR|INFO|DEBUG).*'))
 	
 	if not apport.packaging.is_distro_package(report['Package'].split()[0]):
 		report['ThirdParty'] = 'True'
