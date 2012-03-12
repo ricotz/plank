@@ -1,9 +1,11 @@
 [Desktop Entry]
 Name=Plank
+GenericName=Dock
+_Comment=Plank. Stupidly simple.
+Categories=Utility;
 Type=Application
 Exec=plank
-Terminal=false
 Icon=plank
-_Comment=Plank. Stupidly simple.
+Terminal=false
 NoDisplay=false
-Categories=Utility;
+NotShowIn=Pantheon;
