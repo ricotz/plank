@@ -341,8 +341,7 @@ namespace Plank.Items
 				file.load_from_file (launcher, 0);
 				
 				icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
-				// TODO use the localized string
-				text = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
+				text = file.get_locale_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
 				
 				// get the Unity static quicklists
 				// see https://wiki.edubuntu.org/Unity/LauncherAPI#Static Quicklist entries
@@ -377,8 +376,7 @@ namespace Plank.Items
 									continue;
 							}
 							
-							// TODO use the localized string
-							var name = file.get_string (group, UNITY_QUICKLISTS_NAME_KEY);
+							var name = file.get_locale_string (group, UNITY_QUICKLISTS_NAME_KEY);
 							shortcuts.add (name);
 							shortcut_map.set (name, file.get_string (group, UNITY_QUICKLISTS_EXEC_KEY));
 						}
