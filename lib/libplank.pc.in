@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: libplank
-Description: Generic dock library of Plank 
+Description: Generic dock library of Plank for gtk+2.0
 Version: @PACKAGE_VERSION@
 Requires: cairo gee-1.0 glib-2.0 gio-2.0 gobject-2.0 gthread-2.0 gdk-2.0 gdk-pixbuf-2.0 gtk+-2.0
 Libs: -L${libdir} -lplank

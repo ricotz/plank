@@ -360,7 +360,7 @@ namespace Plank.Widgets
 			
 			foreach (var item in controller.items.Items) {
 				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
-				if (appitem == null || appitem.App == null)
+				if (appitem == null || appitem.App == null || appitem.App.is_closed ())
 					continue;
 				
 				if (menu_is_visible () || controller.renderer.Hidden)

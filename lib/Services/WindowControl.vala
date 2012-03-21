@@ -80,6 +80,10 @@ namespace Plank.Services.Windows
 			uint count = 0;
 			
 			GLib.List<unowned Bamf.View>? children = app.get_children ();
+			
+			if (children == null)
+				return 0;
+			
 			foreach (unowned Bamf.View view in children) {
 				if (!(view is Bamf.Window && view.is_user_visible ()))
 					continue;
@@ -125,7 +129,11 @@ namespace Plank.Services.Windows
 		{
 			var windows = new ArrayList<Bamf.Window> ();
 			
-			GLib.List<unowned Bamf.View> children = app.get_children ();
+			GLib.List<unowned Bamf.View>? children = app.get_children ();
+			
+			if (children == null)
+				return windows;
+			
 			foreach (unowned Bamf.View view in children) {
 				if (view is Bamf.Window)
 					windows.add (view as Bamf.Window);

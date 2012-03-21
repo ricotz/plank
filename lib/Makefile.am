@@ -149,7 +149,7 @@ libplank_la_vala.stamp: libplank_la_valasource.stamp $(libplank_la_VALASOURCES)
 
 DISTCLEANFILES = \
 	libplank_la_valasource.stamp \
-	$(libplank3_la_VALASOURCES) \
+	$(libplank_la_VALASOURCES) \
 	libplank_la_vala.stamp \
 	$(libplank_la_SOURCES) \
 	plank.vapi \
