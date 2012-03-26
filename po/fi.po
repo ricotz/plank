@@ -7,57 +7,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-01-09 13:07+0000\n"
+"POT-Creation-Date: 2012-03-19 06:10+0000\n"
 "PO-Revision-Date: 2011-07-13 16:06+0000\n"
 "Last-Translator: Jiri Grönroos <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-09 23:00+0000\n"
-"X-Generator: Launchpad (build 14640)\n"
+"X-Launchpad-Export-Date: 2012-03-24 06:44+0000\n"
+"X-Generator: Launchpad (build 14981)\n"
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
 msgstr "Plank. Typerän yksinkertainen."
 
-#: ../lib/Items/ApplicationDockItem.vala:226
+#: ../lib/Items/ApplicationDockItem.vala:241
 msgid "_Keep in Dock"
 msgstr "_Pidä käynnistimessä"
 
-#: ../lib/Items/ApplicationDockItem.vala:248
-msgid "_Open New Window"
-msgstr "Avaa uu_dessa ikkunassa"
-
-#: ../lib/Items/ApplicationDockItem.vala:254
+#: ../lib/Items/ApplicationDockItem.vala:253
 msgid "Unma_ximize"
 msgstr "_Palauta koko"
 
-#: ../lib/Items/ApplicationDockItem.vala:258
+#: ../lib/Items/ApplicationDockItem.vala:257
 msgid "Ma_ximize"
 msgstr "_Suurenna"
 
-#: ../lib/Items/ApplicationDockItem.vala:264
-msgid "_Restore"
-msgstr "Pa_lauta"
-
-#: ../lib/Items/ApplicationDockItem.vala:268
-msgid "Mi_nimize"
-msgstr "Pie_nennä"
-
-#: ../lib/Items/ApplicationDockItem.vala:273
+#: ../lib/Items/ApplicationDockItem.vala:262
 msgid "_Close All"
 msgstr "Sulje _kaikki"
 
-#: ../lib/Items/FileDockItem.vala:239
+#: ../lib/Items/FileDockItem.vala:240
 msgid "_Open in File Browser"
 msgstr "A_vaa tiedostoselaimessa"
 
-#: ../lib/Items/FileDockItem.vala:252
+#: ../lib/Items/FileDockItem.vala:253
 msgid "_Open"
 msgstr "_Avaa"
 
-#: ../lib/Items/FileDockItem.vala:256
+#: ../lib/Items/FileDockItem.vala:257
 msgid "Open Containing _Folder"
 msgstr "Näy_tä kansiossa"
 

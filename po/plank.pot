@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-18 16:47-0600\n"
+"POT-Creation-Date: 2012-03-24 07:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,15 +37,15 @@ msgstr ""
 msgid "_Close All"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:239
+#: ../lib/Items/FileDockItem.vala:240
 msgid "_Open in File Browser"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:252
+#: ../lib/Items/FileDockItem.vala:253
 msgid "_Open"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:256
+#: ../lib/Items/FileDockItem.vala:257
 msgid "Open Containing _Folder"
 msgstr ""
 
