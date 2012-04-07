@@ -268,6 +268,8 @@ namespace Plank
 		{
 			controller.window.update_hovered (-1, -1);
 			drag_known = false;
+			
+			reset_item_positions ();
 		}
 		
 		bool drag_failed (Widget w, DragContext context, DragResult result)
@@ -275,8 +277,7 @@ namespace Plank
 			drag_canceled = result == DragResult.USER_CANCELLED;
 			
 			if (drag_canceled)
-				foreach (var entry in original_item_pos.entries)
-					controller.items.update_item_position (entry.key, entry.value);
+				reset_item_positions ();
 			
 			return !drag_canceled;
 		}
@@ -324,6 +325,7 @@ namespace Plank
 						if (item.Position < DragItem.Position && item.Position >= destPos)
 							controller.items.update_item_position (item, item.Position + 1);
 				}
+				
 				controller.items.update_item_position (DragItem, destPos);
 				controller.window.serialize_item_positions ();
 			}
@@ -339,6 +341,14 @@ namespace Plank
 						item.scrolled (ScrollDirection.DOWN, 0);
 					return true;
 				});
+		}
+		
+		void reset_item_positions ()
+		{
+			foreach (var entry in original_item_pos.entries)
+				controller.items.update_item_position (entry.key, entry.value);
+			
+			controller.window.serialize_item_positions ();
 		}
 		
 		Gdk.Window? best_proxy_window ()
