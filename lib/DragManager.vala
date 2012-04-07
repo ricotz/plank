@@ -269,7 +269,8 @@ namespace Plank
 			controller.window.update_hovered (-1, -1);
 			drag_known = false;
 			
-			reset_item_positions ();
+			if (DragItem != null)
+				reset_item_positions ();
 		}
 		
 		bool drag_failed (Widget w, DragContext context, DragResult result)
