@@ -25,13 +25,6 @@ namespace Plank.Items
 {
 	internal class TransientDockItem : ApplicationDockItem
 	{
-		/**
-		 * {@inheritDoc}
-		 */
-		public override bool CanBeRemoved {
-			get { return false; }
-		}
-		
 		public TransientDockItem.with_application (Bamf.Application app)
 		{
 			base ();
@@ -45,6 +38,14 @@ namespace Plank.Items
 				Prefs.Launcher = launcher;
 				load_from_launcher ();
 			}
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public override bool can_be_removed ()
+		{
+			return false;
 		}
 	}
 }

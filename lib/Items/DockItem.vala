@@ -227,13 +227,6 @@ namespace Plank.Items
 		public DateTime LastActive { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
 		/**
-		 * If this item can be removed from the dock.
-		 */
-		public virtual bool CanBeRemoved {
-			get { return true; }
-		}
-		
-		/**
 		 * Whether or not this item is valid for the .dockitem given.
 		 */
 		public virtual bool ValidItem {
@@ -433,6 +426,16 @@ namespace Plank.Items
 		public virtual ArrayList<Gtk.MenuItem> get_menu_items ()
 		{
 			return new ArrayList<Gtk.MenuItem> ();
+		}
+		
+		/**
+		 * Returns if this item can be removed from the dock.
+		 *
+		 * @return if this item can be removed from the dock
+		 */
+		public virtual bool can_be_removed ()
+		{
+			return true;
 		}
 		
 		/**
