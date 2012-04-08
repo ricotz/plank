@@ -331,21 +331,7 @@ namespace Plank
 			if (InternalDragActive && DragItem != null && controller.window.HoveredItem != null
 				&& DragItem != controller.window.HoveredItem) {
 				
-				var destPos = controller.window.HoveredItem.Position;
-				
-				// drag right
-				if (DragItem.Position < destPos) {
-					foreach (DockItem item in controller.items.Items)
-						if (item.Position > DragItem.Position && item.Position <= destPos)
-							controller.items.update_item_position (item, item.Position - 1);
-				// drag left
-				} else if (DragItem.Position > destPos) {
-					foreach (DockItem item in controller.items.Items)
-						if (item.Position < DragItem.Position && item.Position >= destPos)
-							controller.items.update_item_position (item, item.Position + 1);
-				}
-				
-				controller.items.update_item_position (DragItem, destPos);
+				controller.items.move_item_to (DragItem, controller.window.HoveredItem);
 				controller.window.serialize_item_positions ();
 			}
 			

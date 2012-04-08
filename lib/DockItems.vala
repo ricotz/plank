@@ -269,6 +269,32 @@ namespace Plank
 			Items.sort ((CompareFunc) compare_items);
 		}
 		
+		/**
+		 * Move an item to the position of another item.
+		 * This shifts all items which are between these two items.
+		 *
+		 * @param move the item to move
+		 * @param target the item of the new position
+		 */
+		public void move_item_to (DockItem move, DockItem target)
+		{
+			if (move == target)
+				return;
+			
+			var index_target = Items.index_of (target);
+			Items.remove (move);
+			Items.insert (index_target, move);
+			
+			int pos = 0;
+			foreach (var item in Items) {
+				if (item.Position != pos)
+					item.Position = pos;
+				pos++;
+			}
+			
+			item_position_changed ();
+		}
+		
 		void add_item_without_signaling (DockItem item, bool is_initializing = false)
 		{
 			if (item.Position == -1) {
