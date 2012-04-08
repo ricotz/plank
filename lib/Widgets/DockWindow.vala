@@ -117,7 +117,7 @@ namespace Plank.Widgets
 			if ((button & PopupButton.RIGHT) == PopupButton.RIGHT &&
 					(HoveredItem == null || (event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))
 				do_popup (event.button, true);
-			else if ((HoveredItem.Button & button) == button)
+			else if (HoveredItem != null && (HoveredItem.Button & button) == button)
 				do_popup (event.button, false);
 			
 			return true;

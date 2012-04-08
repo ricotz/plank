@@ -86,7 +86,7 @@ namespace Plank.Services
 		{
 			Logger.verbose ("property changed: %s", property.name);
 			
-			delay ();
+			is_delayed_internal = true;
 			if (backing_file != null)
 				save_prefs ();
 			
@@ -94,7 +94,9 @@ namespace Plank.Services
 			call_verify (property.name);
 			notify.connect (handle_notify);
 			
-			apply ();
+			is_delayed_internal = false;
+			if (!is_delayed && is_changed && backing_file != null)
+				save_prefs ();
 		}
 		
 		void handle_verify_notify (Object sender, ParamSpec property)
@@ -166,6 +168,7 @@ namespace Plank.Services
 		}
 		
 		bool is_delayed = false;
+		bool is_delayed_internal = false;
 		bool is_changed = false;
 		
 		/**
@@ -274,7 +277,7 @@ namespace Plank.Services
 			var missing_keys = false;
 			
 			notify.disconnect (handle_notify);
-			delay ();
+			is_delayed_internal = true;
 			reset_properties ();
 			try {
 				var file = new KeyFile ();
@@ -331,13 +334,15 @@ namespace Plank.Services
 			if (missing_keys)
 				save_prefs ();
 			
-			apply ();
+			is_delayed_internal = false;
+			if (!is_delayed && is_changed && backing_file != null)
+				save_prefs ();
 		}
 		
 		void save_prefs ()
 			requires (backing_file != null)
 		{
-			if (is_delayed) {
+			if (is_delayed || is_delayed_internal) {
 				if (backing_file != null && backing_file.get_path () != null)
 					Logger.verbose ("Preferences.save_prefs('%s') - delaying save", backing_file.get_path ());
 				else
