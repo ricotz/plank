@@ -145,7 +145,11 @@ namespace Plank
 				});
 			
 			InternalDragActive = true;
+#if USE_GTK2
 			keyboard_grab (controller.window.get_window (), true, get_current_event_time ());
+#else
+			context.get_device ().grab (controller.window.get_window (), GrabOwnership.APPLICATION, true, EventMask.ALL_EVENTS_MASK, null, get_current_event_time ());
+#endif
 			drag_canceled = false;
 			
 			if (proxy_window != null) {
@@ -232,12 +236,16 @@ namespace Plank
 						DragItem.delete ();
 						
 						int x, y;
+#if USE_GTK2
 #if VALA_0_12
 						controller.window.get_display ().get_pointer (null, out x, out y, null);
 #else
 						ModifierType mod;
 						Gdk.Screen gdk_screen;
 						controller.window.get_display ().get_pointer (out gdk_screen, out x, out y, out mod);
+#endif
+#else
+						context.get_device ().get_position (null, out x, out y);
 #endif
 						new PoofWindow (x, y);
 					}
@@ -253,7 +261,11 @@ namespace Plank
 			
 			InternalDragActive = false;
 			DragItem = null;
+#if USE_GTK2
 			keyboard_ungrab (get_current_event_time ());
+#else
+			context.get_device ().ungrab (get_current_event_time ());
+#endif
 			
 			controller.window.notify["HoveredItem"].disconnect (hovered_item_changed);
 			
@@ -369,14 +381,21 @@ namespace Plank
 				var w_geo = Gdk.Rectangle () {x = w_x, y = w_y, width = w_width, height = w_height};
 				
 				int x, y;
+#if USE_GTK2
 #if VALA_0_12
 				controller.window.get_display ().get_pointer (null, out x, out y, null);
-				if (window.is_visible () && w_geo.intersect (Gdk.Rectangle () {x = x, y = y}, null))
 #else
 				ModifierType mod;
 				Gdk.Screen gdk_screen;
 				controller.window.get_display ().get_pointer (out gdk_screen, out x, out y, out mod);
+#endif
+#else
+				controller.window.get_display ().get_device_manager ().get_client_pointer ().get_position (null, out x, out y);
+#endif
 				
+#if VALA_0_12
+				if (window.is_visible () && w_geo.intersect (Gdk.Rectangle () {x = x, y = y}, null))
+#else
 				var dest = Gdk.Rectangle ();
 				if (window.is_visible () && w_geo.intersect (Gdk.Rectangle () {x = x, y = y}, dest))
 #endif
@@ -401,12 +420,17 @@ namespace Plank
 			}
 			
 			ModifierType mod;
+#if USE_GTK2
 #if VALA_0_12
 			controller.window.get_display ().get_pointer (null, null, null, out mod);
 #else
 			int x, y;
 			Gdk.Screen gdk_screen;
 			controller.window.get_display ().get_pointer (out gdk_screen, out x, out y, out mod);
+#endif
+#else
+			double[] axes = {};
+			controller.window.get_display ().get_device_manager ().get_client_pointer ().get_state (controller.window.get_window (), axes, out mod);
 #endif
 			
 			if ((mod & ModifierType.BUTTON1_MASK) == ModifierType.BUTTON1_MASK) {
