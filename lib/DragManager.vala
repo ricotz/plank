@@ -31,6 +31,7 @@ namespace Plank
 	{
 		Gdk.Window proxy_window;
 		
+		bool drag_canceled;
 		bool drag_known;
 		bool drag_data_requested;
 		uint marker = 0;
@@ -195,9 +196,7 @@ namespace Plank
 				//controller.window.SetHoveredAcceptsDrop ();
 			}
 			
-			drag_status (context, DragAction.COPY, get_current_event_time ());
-			// TODO ??
-			//args.RetVal = true;
+			drag_status (context, DragAction.COPY, time_);
 		}
 
 		bool drag_drop (Widget w, DragContext context, int x, int y, uint time_)
@@ -226,8 +225,6 @@ namespace Plank
 			ExternalDragActive = false;
 			return true;
 		}
-		
-		bool drag_canceled;
 		
 		void drag_end (Widget w, DragContext context)
 		{
@@ -329,6 +326,7 @@ namespace Plank
 			} else {
 				drag_status (context, DragAction.COPY, time_);
 			}
+			
 			return true;
 		}
 		
@@ -443,11 +441,11 @@ namespace Plank
 		void enable_drag_to ()
 		{
 #if USE_GTK2
-			var te1 = TargetEntry () { target = "text/uri-list", flags = TargetFlags.SAME_APP, info = 0 };
-			var te2 = TargetEntry () { target = "text/plank-uri-list", flags = TargetFlags.SAME_APP, info = 0 };
+			var te1 = TargetEntry () { target = "text/uri-list", flags = 0, info = 0 };
+			var te2 = TargetEntry () { target = "text/plank-uri-list", flags = 0, info = 0 };
 #else
-			TargetEntry te1 = { "text/uri-list", TargetFlags.SAME_APP, 0 };
-			TargetEntry te2 = { "text/plank-uri-list", TargetFlags.SAME_APP, 0 };
+			TargetEntry te1 = { "text/uri-list", 0, 0 };
+			TargetEntry te2 = { "text/plank-uri-list", 0, 0 };
 #endif
 			drag_dest_set (controller.window, 0, {te1, te2}, DragAction.COPY);
 		}
