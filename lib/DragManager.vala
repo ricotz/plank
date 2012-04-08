@@ -328,7 +328,9 @@ namespace Plank
 		
 		void hovered_item_changed ()
 		{
-			if (InternalDragActive && controller.window.HoveredItem != null && DragItem != controller.window.HoveredItem) {
+			if (InternalDragActive && DragItem != null && controller.window.HoveredItem != null
+				&& DragItem != controller.window.HoveredItem) {
+				
 				var destPos = controller.window.HoveredItem.Position;
 				
 				// drag right
