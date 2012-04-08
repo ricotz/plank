@@ -281,7 +281,11 @@ namespace Plank
 			controller.window.update_hovered (-1, -1);
 			drag_known = false;
 			
-			if (DragItem != null)
+			if (DragItem == null)
+				return;
+			
+			controller.hide_manager.update_dock_hovered ();
+			if (!controller.hide_manager.DockHovered)
 				reset_item_positions ();
 		}
 		
