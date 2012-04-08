@@ -136,6 +136,9 @@ namespace Plank
 		{
 			controller.window.notify["HoveredItem"].connect (hovered_item_changed);
 			
+			// Delay persistent write of dock-preference until drag_end ()
+			controller.prefs.delay ();
+			
 			// We need to update if the dock is hovered even
 			// if we don't get a (drag-)motion-event
 			if (hover_timer == 0)
@@ -268,6 +271,9 @@ namespace Plank
 #endif
 			
 			controller.window.notify["HoveredItem"].disconnect (hovered_item_changed);
+
+			// Perform persistent write of dock-preference
+			controller.prefs.apply ();
 			
 			if (hover_timer > 0)
 				GLib.Source.remove (hover_timer);
