@@ -297,7 +297,9 @@ namespace Plank.Widgets
 					item_list += item.DockItemPath;
 				}
 			}
-			controller.prefs.DockItems = item_list;
+			
+			if (controller.prefs.DockItems != item_list)
+				controller.prefs.DockItems = item_list;
 		}
 		
 		/**
