@@ -156,6 +156,9 @@ namespace Plank
 			DragItem = controller.window.HoveredItem;
 			original_item_pos.clear ();
 			
+			if (RepositionMode)
+				DragItem = null;
+			
 			if (DragItem != null) {
 				foreach (DockItem item in controller.items.Items)
 					original_item_pos [item] = item.Position;
@@ -302,6 +305,9 @@ namespace Plank
 
 		bool drag_motion (Widget w, DragContext context, int x, int y, uint time_)
 		{
+			if (RepositionMode)
+				return true;
+
 			ExternalDragActive = !InternalDragActive;
 			
 			if (marker != direct_hash (context)) {
