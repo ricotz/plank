@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
+//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -280,7 +280,6 @@ namespace Plank
 			
 			if (ExternalDragActive) {
 				controller.window.notify["HoveredItem"].disconnect (hovered_item_changed);
-				ExternalDragActive = false;
 				
 				// Force last redraw for ExternalDrag
 				controller.renderer.animated_draw ();
