@@ -36,7 +36,6 @@ namespace Plank
 		bool drag_data_requested;
 		uint marker = 0;
 		uint drag_hover_timer = 0;
-		uint hover_timer = 0;
 		Gee.Map<DockItem, int> original_item_pos = new HashMap<DockItem, int> ();
 		
 		DockController controller;
@@ -139,14 +138,6 @@ namespace Plank
 			
 			// Delay persistent write of dock-preference until drag_end ()
 			controller.prefs.delay ();
-			
-			// We need to update if the dock is hovered even
-			// if we don't get a (drag-)motion-event
-			if (hover_timer == 0)
-				hover_timer = GLib.Timeout.add (50, () => {
-					controller.hide_manager.update_dock_hovered ();
-					return true;
-				});
 			
 			InternalDragActive = true;
 #if USE_GTK2
@@ -274,10 +265,6 @@ namespace Plank
 			// Perform persistent write of dock-preference
 			controller.prefs.apply ();
 			
-			if (hover_timer > 0)
-				GLib.Source.remove (hover_timer);
-			hover_timer = 0;
-			
 			// Force last redraw for InternalDrag
 			controller.renderer.animated_draw ();
 		}
@@ -339,9 +326,7 @@ namespace Plank
 				drag_status (context, DragAction.COPY, time_);
 			}
 			
-			if (ExternalDragActive)
-				controller.hide_manager.update_dock_hovered ();
-			
+			controller.hide_manager.update_dock_hovered ();
 			controller.window.update_hovered (x, y);
 			
 			return true;
