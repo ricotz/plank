@@ -192,8 +192,10 @@ namespace Plank
 						drag_data.add (s);
 				
 				drag_data_requested = false;
-				// TODO
-				//controller.window.SetHoveredAcceptsDrop ();
+				
+				// Force initial redraw for ExternalDrag to pick up new
+				// drag_data for can_accept_drop check
+				controller.renderer.animated_draw ();				
 			}
 			
 			drag_status (context, DragAction.COPY, time_);
@@ -276,18 +278,27 @@ namespace Plank
 				GLib.Source.remove (hover_timer);
 			hover_timer = 0;
 			
+			// Force last redraw for InternalDrag
 			controller.renderer.animated_draw ();
 		}
 
 		void drag_leave (Widget w, DragContext context, uint time_)
 		{
+			controller.hide_manager.update_dock_hovered ();
 			controller.window.update_hovered (-1, -1);
 			drag_known = false;
+			
+			if (ExternalDragActive) {
+				controller.window.notify["HoveredItem"].disconnect (hovered_item_changed);
+				ExternalDragActive = false;
+				
+				// Force last redraw for ExternalDrag
+				controller.renderer.animated_draw ();
+			}
 			
 			if (DragItem == null)
 				return;
 			
-			controller.hide_manager.update_dock_hovered ();
 			if (!controller.hide_manager.DockHovered)
 				reset_item_positions ();
 		}
@@ -311,21 +322,27 @@ namespace Plank
 				drag_known = false;
 			}
 			
-			controller.window.update_hovered (x, y);
-			
 			// we own the drag if InternalDragActive is true, lets not be silly
-			if (!drag_known && !InternalDragActive) {
+			if (ExternalDragActive && !drag_known) {
 				drag_known = true;
+				
+				controller.window.notify["HoveredItem"].connect (hovered_item_changed);
+				
 				Atom atom = drag_dest_find_target (controller.window, context, drag_dest_get_target_list (controller.window));
 				if (atom.name () != Atom.NONE.name ()) {
-					drag_get_data (controller.window, context, atom, time_);
 					drag_data_requested = true;
+					drag_get_data (controller.window, context, atom, time_);
 				} else {
 					drag_status (context, DragAction.PRIVATE, time_);
 				}
 			} else {
 				drag_status (context, DragAction.COPY, time_);
 			}
+			
+			if (ExternalDragActive)
+				controller.hide_manager.update_dock_hovered ();
+			
+			controller.window.update_hovered (x, y);
 			
 			return true;
 		}
@@ -348,7 +365,7 @@ namespace Plank
 					DockItem item = controller.window.HoveredItem;
 					if (item != null)
 						item.scrolled (ScrollDirection.DOWN, 0);
-					return true;
+					return item != null;
 				});
 		}
 		
