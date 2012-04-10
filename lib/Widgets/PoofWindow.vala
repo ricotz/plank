@@ -54,7 +54,8 @@ namespace Plank.Widgets
 			try {
 				poof_image = new Pixbuf.from_file (poof_file);
 			} catch {
-				error ("Unable to load poof animation image '%s'", poof_file);
+				poof_image = new Pixbuf (Colorspace.RGB, true, 8, 128, 640);
+				warning ("Unable to load poof animation image '%s'", poof_file);
 			}
 			
 			set_size_request (POOF_SIZE, POOF_SIZE);
