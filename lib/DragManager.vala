@@ -36,7 +36,6 @@ namespace Plank
 		bool drag_data_requested;
 		uint marker = 0;
 		uint drag_hover_timer = 0;
-		Gee.Map<DockItem, int> original_item_pos = new HashMap<DockItem, int> ();
 		
 		DockController controller;
 		
@@ -154,14 +153,12 @@ namespace Plank
 			
 			Pixbuf pbuf;
 			DragItem = controller.window.HoveredItem;
-			original_item_pos.clear ();
 			
 			if (RepositionMode)
 				DragItem = null;
 			
 			if (DragItem != null) {
-				foreach (DockItem item in controller.items.Items)
-					original_item_pos [item] = item.Position;
+				controller.items.save_item_positions ();
 				
 				// FIXME
 				var drag_icon_size = (int) (1.2 * controller.prefs.IconSize);
@@ -289,7 +286,7 @@ namespace Plank
 				return;
 			
 			if (!controller.hide_manager.DockHovered)
-				reset_item_positions ();
+				controller.items.restore_item_positions ();
 		}
 		
 		bool drag_failed (Widget w, DragContext context, DragResult result)
@@ -297,7 +294,7 @@ namespace Plank
 			drag_canceled = result == DragResult.USER_CANCELLED;
 			
 			if (drag_canceled)
-				reset_item_positions ();
+				controller.items.restore_item_positions ();
 			
 			return !drag_canceled;
 		}
@@ -357,14 +354,6 @@ namespace Plank
 						item.scrolled (ScrollDirection.DOWN, 0);
 					return item != null;
 				});
-		}
-		
-		void reset_item_positions ()
-		{
-			foreach (var entry in original_item_pos.entries)
-				controller.items.update_item_position (entry.key, entry.value);
-			
-			controller.window.serialize_item_positions ();
 		}
 		
 		Gdk.Window? best_proxy_window ()

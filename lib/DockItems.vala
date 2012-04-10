@@ -53,6 +53,8 @@ namespace Plank
 		 * A list of the dock items.
 		 */
 		public ArrayList<DockItem> Items = new ArrayList<DockItem> ();
+
+		Gee.Map<DockItem, int> saved_item_positions = new HashMap<DockItem, int> ();
 		
 		FileMonitor? items_monitor = null;
 		DockController controller;
@@ -258,15 +260,40 @@ namespace Plank
 		}
 		
 		/**
-		 * Updates an item's position.
-		 *
-		 * @param item the item to update
-		 * @param position the new position
+		 * Save current item positions
 		 */
-		public void update_item_position (DockItem item, int position)
+		public void save_item_positions ()
 		{
-			item.Position = position;
-			Items.sort ((CompareFunc) compare_items);
+			saved_item_positions.clear ();
+			
+			foreach (var item in Items)
+				saved_item_positions[item] = item.Position;
+		}
+		
+		/**
+		 * Restore previously saved item positions
+		 */
+		public void restore_item_positions ()
+		{
+			if (saved_item_positions.size == 0)
+				return;
+			
+			foreach (var entry in saved_item_positions.entries)
+				entry.key.Position = entry.value;
+ 			Items.sort ((CompareFunc) compare_items);
+			
+			update_item_positions ();
+			item_position_changed ();
+ 		}
+		
+		void update_item_positions ()
+		{
+			int pos = 0;
+			foreach (var item in Items) {
+				if (item.Position != pos)
+					item.Position = pos;
+				pos++;
+			}
 		}
 		
 		/**
