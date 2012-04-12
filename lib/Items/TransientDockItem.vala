@@ -27,7 +27,6 @@ namespace Plank.Items
 	{
 		public TransientDockItem.with_application (Bamf.Application app)
 		{
-			base ();
 			set_app (app);
 			
 			var launcher = app.get_desktop_file ();
