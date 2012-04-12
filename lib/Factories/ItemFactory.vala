@@ -160,6 +160,7 @@ namespace Plank.Factories
 					// save the key file
 					var stream = new DataOutputStream (launchers_dir.get_child (dockitem).create (0));
 					stream.put_string (file.to_data ());
+					stream.close ();
 					
 					debug ("Adding dock item '%s' for launcher '%s'", dockitem, launcher);
 					return dockitem;

@@ -385,13 +385,13 @@ namespace Plank.Services
 			is_changed = false;
 			
 			try {
-				OutputStream stream;
+				DataOutputStream stream;
 				if (backing_file.query_exists ())
-					stream = backing_file.replace (null, false, 0);
+					stream = new DataOutputStream (backing_file.replace (null, false, 0));
 				else
-					stream = backing_file.create (0);
-				
-				new DataOutputStream (stream).put_string (file.to_data ());
+					stream = new DataOutputStream (backing_file.create (0));
+				stream.put_string (file.to_data ());
+				stream.close ();
 			} catch (Error e) {
 				warning ("Unable to create the preferences file '%s'", backing_file.get_path () ?? "");
 				debug (e.message);
