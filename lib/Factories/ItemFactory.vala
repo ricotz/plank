@@ -142,7 +142,9 @@ namespace Plank.Factories
 		 */
 		public string make_dock_item (string launcher, int sort)
 		{
-			if (File.new_for_path (launcher).query_exists ()) {
+			var launcher_file = File.new_for_path (launcher);
+			
+			if (launcher_file.query_exists ()) {
 				var file = new KeyFile ();
 				
 				file.set_string (typeof (Items.DockItemPreferences).name (), "Launcher", launcher);
@@ -150,7 +152,7 @@ namespace Plank.Factories
 				
 				try {
 					// find a unique file name, based on the name of the launcher
-					var launcher_base = (File.new_for_path (launcher).get_basename () ?? "").split (".") [0];
+					var launcher_base = (launcher_file.get_basename () ?? "unknown").split (".") [0];
 					var dockitem = launcher_base + ".dockitem";
 					var counter = 1;
 					
