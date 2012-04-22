@@ -51,6 +51,8 @@ namespace Plank.Items
 		
 		internal Bamf.Application? App { get; private set; default = null; }
 		
+		ArrayList<string> supported_mime_types = new ArrayList<string> ();
+		
 		ArrayList<string> shortcuts = new ArrayList<string> ();
 		HashMap<string, string> shortcut_map = new HashMap<string, string> (str_hash, str_equal);
 		
@@ -314,20 +316,16 @@ namespace Plank.Items
 			if (uris == null || is_window ())
 				return false;
 			
+			// if they dont specify mimes but have '%F' etc in their Exec, assume any file allowed
+			// FIXME also check if the Exec key has %F/%f/%U/%u in it
+			if (supported_mime_types.size == 0 /* && .. */)
+				return true;
+			
 			try {
-				var supported_types = new ArrayList<string> ();
-				try {
-					KeyFile file = new KeyFile ();
-					file.load_from_file (Prefs.Launcher, 0);
-					var mimes = file.get_string_list (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_MIME_TYPE);
-					foreach (var mime in mimes)
-						supported_types.add (g_content_type_from_mime_type (mime));
-				} catch {}
-				
 				foreach (var uri in uris) {
 					var info = File.new_for_uri (uri).query_info (FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, FileQueryInfoFlags.NONE);
 					var uri_content_type = info.get_content_type ();
-					foreach (var content_type in supported_types)
+					foreach (var content_type in supported_mime_types)
 						if (g_content_type_is_a (uri_content_type, content_type) || g_content_type_equals (uri_content_type, content_type))
 							return true;
 				}
@@ -358,7 +356,7 @@ namespace Plank.Items
 			stop_monitor ();
 			
 			string icon, text;
-			parse_launcher (Prefs.Launcher, out icon, out text, shortcuts, shortcut_map);
+			parse_launcher (Prefs.Launcher, out icon, out text, shortcuts, shortcut_map, supported_mime_types);
 			Icon = icon;
 			ForcePixbuf = null;
 			Text = text;
@@ -374,8 +372,9 @@ namespace Plank.Items
 		 * @param text the text key from the launcher
 		 * @param shortcuts a list of all Unity static quicklist shortcuts by name
 		 * @param shortcut_map a map of Unity static quicklist shortcuts from name to exec
+		 * @param mimes a list of all supported mime types
 		 */
-		public static void parse_launcher (string launcher, out string icon, out string text, ArrayList<string>? shortcuts, HashMap<string, string>? shortcut_map)
+		public static void parse_launcher (string launcher, out string icon, out string text, ArrayList<string>? shortcuts, HashMap<string, string>? shortcut_map, ArrayList<string>? mimes)
 		{
 			icon = "";
 			text = "";
@@ -386,6 +385,12 @@ namespace Plank.Items
 				
 				icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
 				text = file.get_locale_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
+				
+				if (mimes != null) {
+					var mimestrings = file.get_string_list (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_MIME_TYPE);
+					foreach (var mime in mimestrings)
+						mimes.add (g_content_type_from_mime_type (mime));
+				}
 				
 				// get the Unity static quicklists
 				// see https://wiki.edubuntu.org/Unity/LauncherAPI#Static Quicklist entries
