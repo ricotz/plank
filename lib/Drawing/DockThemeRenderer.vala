@@ -120,7 +120,8 @@ namespace Plank.Drawing
 		 * Creates a surface for the dock background.
 		 *
 		 * @param width the width of the background
-		 * @param color the color of the background
+		 * @param height the height of the background
+		 * @param position the position of the dock
 		 * @param model existing surface to use as basis of new surface
 		 * @return a new dock surface with the background drawn on it
 		 */

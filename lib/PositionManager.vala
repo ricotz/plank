@@ -499,7 +499,7 @@ namespace Plank
 		/**
 		 * Get's the x and y position to display the urgent-glow for a dock item.
 		 *
-		 * @param the item to show urgent-glow for
+		 * @param item the item to show urgent-glow for
 		 * @param x the resulting x position
 		 * @param y the resulting y position
 		 */
