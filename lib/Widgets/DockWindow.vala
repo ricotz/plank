@@ -72,7 +72,7 @@ namespace Plank.Widgets
 			set_type_hint (WindowTypeHint.DOCK);
 			
 			menu.attach_to_widget (this, null);
-			menu.show.connect (update_icon_regions);
+			menu.show.connect (on_menu_show);
 			menu.hide.connect (on_menu_hide);
 			
 			stick ();
@@ -83,16 +83,12 @@ namespace Plank.Widgets
 						EventMask.LEAVE_NOTIFY_MASK |
 						EventMask.POINTER_MOTION_MASK |
 						EventMask.SCROLL_MASK);
-			
-			controller.renderer.notify["Hidden"].connect (update_icon_regions);
 		}
 		
 		~DockWindow ()
 		{
-			menu.show.disconnect (update_icon_regions);
+			menu.show.disconnect (on_menu_show);
 			menu.hide.disconnect (on_menu_hide);
-			
-			controller.renderer.notify["Hidden"].disconnect (update_icon_regions);
 		}
 		
 		/**
@@ -308,8 +304,10 @@ namespace Plank.Widgets
 		/**
 		 * Updates the icon regions for all items on the dock.
 		 */
-		protected void update_icon_regions ()
+		public void update_icon_regions ()
 		{
+			Logger.verbose ("DockWindow.update_icon_regions ()");
+			
 			Gdk.Rectangle? region = null;
 			
 			foreach (var item in controller.items.Items) {
@@ -324,8 +322,6 @@ namespace Plank.Widgets
 				
 				WindowControl.update_icon_regions (appitem.App, region, controller.position_manager.win_x, controller.position_manager.win_y);
 			}
-			
-			controller.renderer.animated_draw ();
 		}
 		
 		/**
@@ -374,10 +370,17 @@ namespace Plank.Widgets
 		 */
 		protected void on_menu_hide ()
 		{
-			update_icon_regions ();
 			controller.hide_manager.update_dock_hovered ();
 			if (!controller.hide_manager.DockHovered)
 				set_hovered (null);
+		}
+		
+		/**
+		 * Called when the popup menu shows.
+		 */
+		protected void on_menu_show ()
+		{
+			controller.renderer.animated_draw ();
 		}
 		
 		/**
