@@ -285,10 +285,10 @@ namespace Plank.Widgets
 		{
 			var item_list = "";
 			foreach (var item in controller.items.Items) {
-				if (!(item is TransientDockItem) && item.DockItemPath.length > 0) {
+				if (!(item is TransientDockItem) && item.DockItemFilename.length > 0) {
 					if (item_list.length > 0)
 						item_list += ";;";
-					item_list += item.DockItemPath;
+					item_list += item.DockItemFilename;
 				}
 			}
 			

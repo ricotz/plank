@@ -239,10 +239,10 @@ namespace Plank.Items
 		public Drawing.Color AverageIconColor { get; protected set; }
 		
 		/**
-		 * The path to the preferences backing file.
+		 * The filename of the preferences backing file.
 		 */
-		public string DockItemPath {
-			owned get { return Prefs.get_backing_path (); }
+		public string DockItemFilename {
+			owned get { return Prefs.get_filename (); }
 		}
 		
 		/**

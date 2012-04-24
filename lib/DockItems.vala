@@ -333,13 +333,13 @@ namespace Plank
 				var positions = controller.prefs.DockItems.split (";;");
 				
 				// see if the position was serialized
-				if (item.DockItemPath.length > 0)
+				if (item.DockItemFilename.length > 0)
 					for (; pos < positions.length; pos++)
-						if (positions[pos] == item.DockItemPath)
+						if (positions[pos] == item.DockItemFilename)
 							break;
 				
 				// if we walked past, find a position based on Sort
-				if (item.DockItemPath.length == 0 || pos == positions.length)
+				if (item.DockItemFilename.length == 0 || pos == positions.length)
 					foreach (var i in Items) {
 						pos = i.Position;
 						if (i.Sort >= item.Sort)

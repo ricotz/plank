@@ -226,11 +226,11 @@ namespace Plank.Services
 		}
 		
 		/**
-		 * Returns the path to the backing file.
+		 * Returns the filename of the backing file.
 		 *
-		 * @return the path to the backing file
+		 * @return the filename of the backing file
 		 */
-		public string get_backing_path ()
+		public string get_filename ()
 		{
 			if (backing_file == null)
 				return "";
