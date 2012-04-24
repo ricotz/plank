@@ -31,9 +31,17 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		public PlankDockItem.with_dockitem (string dockitem)
+		public PlankDockItem.with_dockitem_file (GLib.File file)
 		{
-			base.with_dockitem (dockitem);
+			base.with_dockitem_file (file);
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public PlankDockItem.with_dockitem_filename (string filename)
+		{
+			base.with_dockitem_filename (filename);
 		}
 		
 		/**

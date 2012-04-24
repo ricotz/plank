@@ -33,43 +33,43 @@ namespace Plank.Factories
 		/**
 		 * Creates a new {@link Items.DockItem} from a .dockitem.
 		 *
-		 * @param dock_item_filename the .dockitem file to parse
+		 * @param file the {@link GLib.File} of .dockitem file to parse
 		 * @return the new {@link Items.DockItem} created
 		 */
-		public virtual DockItem make_item (string dock_item_filename)
+		public virtual DockItem make_item (GLib.File file)
 		{
-			return default_make_item (dock_item_filename, get_launcher_from_dockitem (dock_item_filename));
+			return default_make_item (file, get_launcher_from_dockitem (file));
 		}
 		
 		/**
 		 * Creates a new {@link Items.DockItem} for a launcher parsed from a .dockitem.
 		 *
-		 * @param dock_item_filename the .dockitem file that was parsed
+		 * @param file the {@link GLib.File} of .dockitem file that was parsed
 		 * @param launcher the launcher name from the .dockitem
 		 * @return the new {@link Items.DockItem} created
 		 */
-		protected DockItem default_make_item (string dock_item_filename, string launcher)
+		protected DockItem default_make_item (GLib.File file, string launcher)
 		{
 			if (Factory.main.is_launcher_for_dock (launcher))
-				return new PlankDockItem.with_dockitem (dock_item_filename);
+				return new PlankDockItem.with_dockitem_file (file);
 			if (launcher.has_suffix (".desktop"))
-				return new ApplicationDockItem.with_dockitem (dock_item_filename);
-			return new FileDockItem.with_dockitem (dock_item_filename);
+				return new ApplicationDockItem.with_dockitem_file (file);
+			return new FileDockItem.with_dockitem_file (file);
 		}
 		
 		/**
 		 * Parses a .dockitem to get the launcher from it.
 		 *
-		 * @param dockitem the .dockitem to parse
+		 * @param file the {@link GLib.File} of .dockitem to parse
 		 * @return the launcher from the .dockitem
 		 */
-		protected string get_launcher_from_dockitem (string dockitem)
+		protected string get_launcher_from_dockitem (GLib.File file)
 		{
 			try {
-				var file = new KeyFile ();
-				file.load_from_file (dockitem, 0);
+				var keyfile = new KeyFile ();
+				keyfile.load_from_file (file.get_path (), KeyFileFlags.NONE);
 				
-				return file.get_string (typeof (Items.DockItemPreferences).name (), "Launcher");
+				return keyfile.get_string (typeof (Items.DockItemPreferences).name (), "Launcher");
 			} catch {
 				return "";
 			}
@@ -110,26 +110,26 @@ namespace Plank.Factories
 				return;
 			
 			// add browser
-			if (make_dock_item ("/usr/share/applications/chromium-browser.desktop", 1) == "")
-				if (make_dock_item ("/usr/local/share/applications/google-chrome.desktop", 1) == "")
-					if (make_dock_item ("/usr/share/applications/firefox.desktop", 1) == "")
-						if (make_dock_item ("/usr/share/applications/epiphany.desktop", 1) == "")
+			if (make_dock_item ("/usr/share/applications/chromium-browser.desktop", 1) == null)
+				if (make_dock_item ("/usr/local/share/applications/google-chrome.desktop", 1) == null)
+					if (make_dock_item ("/usr/share/applications/firefox.desktop", 1) == null)
+						if (make_dock_item ("/usr/share/applications/epiphany.desktop", 1) == null)
 							make_dock_item ("/usr/share/applications/kde4/konqbrowser.desktop", 1);
 			
 			// add terminal
-			if (make_dock_item ("/usr/share/applications/terminator.desktop", 2) == "")
-				if (make_dock_item ("/usr/share/applications/gnome-terminal.desktop", 2) == "")
+			if (make_dock_item ("/usr/share/applications/terminator.desktop", 2) == null)
+				if (make_dock_item ("/usr/share/applications/gnome-terminal.desktop", 2) == null)
 					make_dock_item ("/usr/share/applications/kde4/konsole.desktop", 2);
 			
 			// add music player
-			if (make_dock_item ("/usr/share/applications/exaile.desktop", 3) == "")
-				if (make_dock_item ("/usr/share/applications/songbird.desktop", 3) == "")
-					if (make_dock_item ("/usr/share/applications/rhythmbox.desktop", 3) == "")
-						if (make_dock_item ("/usr/share/applications/banshee-1.desktop", 3) == "")
+			if (make_dock_item ("/usr/share/applications/exaile.desktop", 3) == null)
+				if (make_dock_item ("/usr/share/applications/songbird.desktop", 3) == null)
+					if (make_dock_item ("/usr/share/applications/rhythmbox.desktop", 3) == null)
+						if (make_dock_item ("/usr/share/applications/banshee-1.desktop", 3) == null)
 							make_dock_item ("/usr/share/applications/kde4/amarok.desktop", 3);
 			
 			// add IM client
-			if (make_dock_item ("/usr/share/applications/pidgin.desktop", 4) == "")
+			if (make_dock_item ("/usr/share/applications/pidgin.desktop", 4) == null)
 				make_dock_item ("/usr/share/applications/empathy.desktop", 4);
 		}
 		
@@ -138,9 +138,9 @@ namespace Plank.Factories
 		 *
 		 * @param launcher the launcher to create a .dockitem for
 		 * @param sort the Sort value in the new .dockitem
-		 * @return the name of the new .dockitem created
+		 * @return the new {@link GLib.File} of the new .dockitem created
 		 */
-		public string make_dock_item (string launcher, int sort)
+		public GLib.File? make_dock_item (string launcher, int sort)
 		{
 			var launcher_file = File.new_for_path (launcher);
 			
@@ -154,22 +154,25 @@ namespace Plank.Factories
 					// find a unique file name, based on the name of the launcher
 					var launcher_base = (launcher_file.get_basename () ?? "unknown").split (".") [0];
 					var dockitem = launcher_base + ".dockitem";
+					var dockitem_file = launchers_dir.get_child (dockitem);
 					var counter = 1;
 					
-					while (launchers_dir.get_child (dockitem).query_exists ())
+					while (dockitem_file.query_exists ()) {
 						dockitem = "%s-%d.dockitem".printf (launcher_base, counter++);
+						dockitem_file = launchers_dir.get_child (dockitem);
+					}
 					
 					// save the key file
-					var stream = new DataOutputStream (launchers_dir.get_child (dockitem).create (0));
+					var stream = new DataOutputStream (dockitem_file.create (FileCreateFlags.NONE));
 					stream.put_string (file.to_data ());
 					stream.close ();
 					
-					debug ("Adding dock item '%s' for launcher '%s'", dockitem, launcher);
-					return dockitem;
+					debug ("Created dock item '%s' for launcher '%s'", dockitem_file.get_path (), launcher);
+					return dockitem_file;
 				} catch { }
 			}
 			
-			return "";
+			return null;
 		}
 	}
 }

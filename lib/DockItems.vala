@@ -160,11 +160,11 @@ namespace Plank
 				FileInfo info;
 				while ((info = enumerator.next_file ()) != null)
 					if (file_is_dockitem (info)) {
-						var filename = Factory.item_factory.launchers_dir.get_path () + "/" + info.get_name ();
-						var item = Factory.item_factory.make_item (filename);
+						var file = Factory.item_factory.launchers_dir.get_child (info.get_name ());
+						var item = Factory.item_factory.make_item (file);
 						
 						if (!item.ValidItem) {
-							warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, filename);
+							warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());
 							continue;
 						}
 						
@@ -432,12 +432,12 @@ namespace Plank
 						last_sort = i.Sort;
 				}
 				
-				var dockitem = Factory.item_factory.make_dock_item (item.Launcher, last_sort + 1);
-				if (dockitem == "")
+				var dockitem_file = Factory.item_factory.make_dock_item (item.Launcher, last_sort + 1);
+				if (dockitem_file == null)
 					return;
 				
 				remove_item_without_signaling (item);
-				var new_item = new ApplicationDockItem.with_dockitem (Factory.item_factory.launchers_dir.get_child (dockitem).get_path () ?? "");
+				var new_item = new ApplicationDockItem.with_dockitem_file (dockitem_file);
 				new_item.Position = item.Position;
 				add_item_without_signaling (new_item);
 				
