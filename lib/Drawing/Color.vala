@@ -192,7 +192,7 @@ namespace Plank.Drawing
 		/**
 		 * Limits the color's saturation.
 		 *
-		 * @param val the minimum saturation allowed
+		 * @param sat the minimum saturation allowed
 		 * @return the new color
 		 */
 		public Color set_min_sat (double sat)
@@ -226,7 +226,7 @@ namespace Plank.Drawing
 		/**
 		 * Limits the color's saturation.
 		 *
-		 * @param val the maximum saturation allowed
+		 * @param sat the maximum saturation allowed
 		 * @return the new color
 		 */
 		public Color set_max_sat (double sat)

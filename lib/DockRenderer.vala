@@ -514,6 +514,8 @@ namespace Plank
 			else
 				last_hide = new DateTime.now_utc ();
 			
+			controller.window.update_icon_regions ();
+			
 			animated_draw ();
 		}
 		
