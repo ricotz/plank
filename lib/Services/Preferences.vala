@@ -140,21 +140,31 @@ namespace Plank.Services
 		/**
 		 * Creates a preferences object with a backing file.
 		 *
-		 * @param filename the path to the backing file for this preferences
+		 * @param file the {@link GLib.File} of the backing file for this preferences
 		 */
-		public Preferences.with_file (string filename)
+		public Preferences.with_file (GLib.File file)
 		{
-			init_from_file (filename);
+			init_from_file (file);
+		}
+		
+		/**
+		 * Creates a preferences object with a backing filename.
+		 *
+		 * @param filename of the backing file for this preferences
+		 */
+		public Preferences.with_filename (string filename)
+		{
+			init_from_file (Paths.AppConfigFolder.get_child (filename));
 		}
 		
 		/**
 		 * Initializes this preferences with a backing file.
 		 *
-		 * @param filename the path to the backing file for this preferences
+		 * @param file the {@link GLib.File} of the backing file for this preferences
 		 */
-		protected void init_from_file (string filename)
+		protected void init_from_file (GLib.File file)
 		{
-			backing_file = Paths.AppConfigFolder.get_child (filename);
+			backing_file = file;
 			
 			// ensure the preferences file exists
 			if (!backing_file.query_exists ()) {
@@ -165,6 +175,16 @@ namespace Plank.Services
 			}
 			
 			start_monitor ();
+		}
+		
+		/**
+		 * Initializes this preferences with a backing filename.
+		 *
+		 * @param filename of the backing file for this preferences
+		 */
+		protected void init_from_filename (string filename)
+		{
+			init_from_file (Paths.AppConfigFolder.get_child (filename));
 		}
 		
 		bool is_delayed = false;
@@ -214,6 +234,7 @@ namespace Plank.Services
 			is_changed = false;
 			
 			try {
+				Logger.verbose ("Preferences.delete ('%s')", backing_file.get_path () ?? "");
 				backing_file.delete ();
 			} catch (Error e) {
 				warning ("Unable to delete the preferences file '%s'", backing_file.get_path () ?? "");

@@ -39,9 +39,25 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		public FileDockItem.with_dockitem (string dockitem)
+		public FileDockItem.with_dockitem_file (GLib.File file)
 		{
-			Prefs = new DockItemPreferences.with_file (dockitem);
+			Prefs = new DockItemPreferences.with_file (file);
+			
+			initialize ();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public FileDockItem.with_dockitem_filename (string filename)
+		{
+			Prefs = new DockItemPreferences.with_filename (filename);
+			
+			initialize ();
+		}
+
+		void initialize ()
+		{
 			if (!ValidItem)
 				return;
 			

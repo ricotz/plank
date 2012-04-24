@@ -33,9 +33,17 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		public DockItemPreferences.with_file (string filename)
+		public DockItemPreferences.with_file (GLib.File file)
 		{
-			base.with_file (filename);
+			base.with_file (file);
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public DockItemPreferences.with_filename (string filename)
+		{
+			base.with_filename (filename);
 		}
 		
 		/**
