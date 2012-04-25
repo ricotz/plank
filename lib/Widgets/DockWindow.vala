@@ -426,6 +426,7 @@ namespace Plank.Widgets
 		 */
 		protected void on_menu_show ()
 		{
+			controller.hover.hide ();
 			controller.renderer.animated_draw ();
 		}
 		
