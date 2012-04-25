@@ -285,10 +285,12 @@ namespace Plank.Services
 				(event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
 				return;
 			
-			if ((event & FileMonitorEvent.DELETED) == FileMonitorEvent.DELETED)
-				deleted ();
-			else
+			if ((event & FileMonitorEvent.DELETED) == FileMonitorEvent.DELETED) {
+				if (!f.query_exists ())
+					deleted ();
+			} else {
 				load_prefs ();
+			}
 		}
 		
 		void load_prefs ()
