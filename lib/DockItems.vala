@@ -262,9 +262,7 @@ namespace Plank
 			foreach (var file in queued_files) {
 				var basename = file.get_basename ();
 				bool skip = false;
-				stdout.printf ("%s ->\n", basename);
 				foreach (var item in Items) {
-					stdout.printf ("%s[%s]\n", item.Text, item.DockItemFilename);
 					if (basename == item.DockItemFilename) {
 						skip = true;
 						break;
