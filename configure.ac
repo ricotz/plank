@@ -87,7 +87,7 @@ AM_CONDITIONAL(USE_GTK2, [test "x$with_gtk2" = "xyes"])
 if test "x$with_gtk2" = "xyes"; then
     GTK_MIN_VERSION=2.22.0
     GLIB_MIN_VERSION=2.26.0
-    VALA_MIN_VERSION=0.10.0
+    VALA_MIN_VERSION=0.14.1
     VALADOC_MIN_VERSION=0.3.1
     BAMF_MIN_VERSION=0.2.58
 else

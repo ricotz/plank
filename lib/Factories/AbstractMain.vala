@@ -27,18 +27,6 @@ using Plank.Widgets;
 
 namespace Plank.Factories
 {
-#if !VALA_0_12
-	struct utsname
-	{
-		char sysname [65];
-		char nodename [65];
-		char release [65];
-		char version [65];
-		char machine [65];
-		char domainname [65];
-	}
-#endif
-	
 	/**
 	 * The main class for all dock applications.  All docks should extend this class.
 	 * In the constructor, the string fields should be initialized to customize the dock.
@@ -178,11 +166,6 @@ namespace Plank.Factories
 		[CCode (cheader_filename = "glib/glib.h", cname = "glib_micro_version")]
 		extern const uint glib_micro_version;
 
-#if !VALA_0_12
-		[CCode (cheader_filename = "sys/utsname.h", cname = "uname")]
-		extern static int uname (utsname buf);
-#endif
-		
 		/**
 		 * Sets the program executable's name, traps signals and intializes logging.
 		 */
@@ -198,12 +181,7 @@ namespace Plank.Factories
 			Logger.initialize (program_name);
 			Logger.DisplayLevel = LogLevel.INFO;
 			message ("%s version: %s", program_name, build_version);
-#if VALA_0_12
 			var un = Posix.utsname ();
-#else
-			var un = utsname ();
-			uname (un);
-#endif
 			message ("Kernel version: %s", (string) un.release);
 			message ("GLib version: %u.%u.%u", glib_major_version, glib_minor_version, glib_micro_version);
 			message ("GTK version: %d.%d.%d", Gtk.MAJOR_VERSION, Gtk.MINOR_VERSION, Gtk.MICRO_VERSION);

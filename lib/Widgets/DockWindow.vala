@@ -440,11 +440,7 @@ namespace Plank.Widgets
 		 */
 		protected void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in)
 		{
-#if VALA_0_14
 			var requisition = menu.get_requisition ();
-#else
-			var requisition = menu.requisition;
-#endif
 			controller.position_manager.get_menu_position (HoveredItem, requisition, out x, out y);
 			push_in = false;
 		}

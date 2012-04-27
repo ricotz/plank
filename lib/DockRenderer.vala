@@ -328,12 +328,7 @@ namespace Plank
 			
 			// get regions
 			var hover_rect = controller.position_manager.item_hover_region (item);
-#if !VALA_0_14
-			var draw_rect = hover_rect;
-			draw_rect = controller.position_manager.item_draw_region (draw_rect);
-#else
 			var draw_rect = controller.position_manager.item_draw_region (hover_rect);
-#endif			
 			
 			// lighten or darken the icon
 			var lighten = 0.0, darken = 0.0;
@@ -433,12 +428,7 @@ namespace Plank
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
 			if (opacity > 0) {
-#if !VALA_0_14
-				var glow_rect = hover_rect;
-				glow_rect = controller.position_manager.item_background_region (glow_rect);
-#else
 				var glow_rect = controller.position_manager.item_background_region (hover_rect);
-#endif			
 				theme.draw_active_glow (main_buffer, background_buffer, glow_rect, item.AverageIconColor, opacity, controller.prefs.Position);
 			}
 			
