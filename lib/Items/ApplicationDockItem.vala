@@ -342,7 +342,7 @@ namespace Plank.Items
 					var info = File.new_for_uri (uri).query_info (FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, FileQueryInfoFlags.NONE);
 					var uri_content_type = info.get_content_type ();
 					foreach (var content_type in supported_mime_types)
-						if (g_content_type_is_a (uri_content_type, content_type) || g_content_type_equals (uri_content_type, content_type))
+						if (ContentType.is_a (uri_content_type, content_type) || ContentType.equals (uri_content_type, content_type))
 							return true;
 				}
 			} catch {}
@@ -405,7 +405,7 @@ namespace Plank.Items
 				if (mimes != null) {
 					var mimestrings = file.get_string_list (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_MIME_TYPE);
 					foreach (var mime in mimestrings)
-						mimes.add (g_content_type_from_mime_type (mime));
+						mimes.add (ContentType.from_mime_type (mime));
 				}
 				
 				// get the Unity static quicklists
