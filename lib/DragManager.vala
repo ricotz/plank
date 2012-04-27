@@ -230,13 +230,7 @@ namespace Plank
 						
 						int x, y;
 #if USE_GTK2
-#if VALA_0_12
 						controller.window.get_display ().get_pointer (null, out x, out y, null);
-#else
-						ModifierType mod;
-						Gdk.Screen gdk_screen;
-						controller.window.get_display ().get_pointer (out gdk_screen, out x, out y, out mod);
-#endif
 #else
 						context.get_device ().get_position (null, out x, out y);
 #endif
@@ -374,23 +368,12 @@ namespace Plank
 				
 				int x, y;
 #if USE_GTK2
-#if VALA_0_12
 				controller.window.get_display ().get_pointer (null, out x, out y, null);
-#else
-				ModifierType mod;
-				Gdk.Screen gdk_screen;
-				controller.window.get_display ().get_pointer (out gdk_screen, out x, out y, out mod);
-#endif
 #else
 				controller.window.get_display ().get_device_manager ().get_client_pointer ().get_position (null, out x, out y);
 #endif
 				
-#if VALA_0_12
 				if (window.is_visible () && w_geo.intersect (Gdk.Rectangle () {x = x, y = y}, null))
-#else
-				var dest = Gdk.Rectangle ();
-				if (window.is_visible () && w_geo.intersect (Gdk.Rectangle () {x = x, y = y}, dest))
-#endif
 					return window;
 			}
 			
@@ -413,13 +396,7 @@ namespace Plank
 			
 			ModifierType mod;
 #if USE_GTK2
-#if VALA_0_12
 			controller.window.get_display ().get_pointer (null, null, null, out mod);
-#else
-			int x, y;
-			Gdk.Screen gdk_screen;
-			controller.window.get_display ().get_pointer (out gdk_screen, out x, out y, out mod);
-#endif
 #else
 			double[] axes = {};
 			controller.window.get_display ().get_device_manager ().get_client_pointer ().get_state (controller.window.get_window (), axes, out mod);
