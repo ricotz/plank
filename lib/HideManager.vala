@@ -270,13 +270,7 @@ namespace Plank
 					if (w.get_pid () != active_window.get_pid ())
 						continue;
 					
-#if VALA_0_12
 					if (window_geometry (w).intersect (dock_rect, null)) {
-#else
-					// FIXME this var is only needed due to a vapi bug where we cant use null
-					var dest_rect = Gdk.Rectangle ();
-					if (window_geometry (w).intersect (dock_rect, dest_rect)) {
-#endif
 						intersect = true;
 						break;
 					}

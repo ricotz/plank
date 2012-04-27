@@ -433,13 +433,7 @@ namespace Plank.Services.Windows
 			viewpRect.width = viewportWidth;
 			viewpRect.height = viewportHeight;
 			
-#if VALA_0_12
 			return viewpRect.intersect (secondGeo, null);
-#else
-			// FIXME this var is only needed due to a vapi bug where we cant use null
-			var dest = Gdk.Rectangle ();
-			return viewpRect.intersect (secondGeo, dest);
-#endif
 		}
 		
 		static void center_and_focus_window (Wnck.Window w) 

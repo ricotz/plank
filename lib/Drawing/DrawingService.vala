@@ -154,11 +154,7 @@ namespace Plank.Drawing
 		
 		static Pixbuf? load_pixbuf (string icon, int size)
 		{
-#if VALA_0_12
 			Pixbuf? pbuf = null;
-#else
-			unowned Pixbuf? pbuf = null;
-#endif
 			unowned IconTheme icon_theme = IconTheme.get_default ();
 			
 			try {
@@ -171,16 +167,7 @@ namespace Plank.Drawing
 				}
 			} catch { }
 			
-#if VALA_0_12
 			return pbuf;
-#else
-			if (pbuf == null)
-				return null;
-			
-			var tmp = pbuf.copy ();
-			pbuf.unref ();
-			return tmp;
-#endif
 		}
 		
 		/**
