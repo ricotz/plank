@@ -330,6 +330,8 @@ namespace Plank
 				entry.key.Position = entry.value;
  			Items.sort ((CompareFunc) compare_items);
 			
+			saved_item_positions.clear ();
+			
 			update_item_positions ();
 			item_position_changed ();
  		}
