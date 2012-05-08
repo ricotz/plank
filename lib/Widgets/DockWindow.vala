@@ -396,6 +396,7 @@ namespace Plank.Widgets
 		 */
 		protected void on_menu_hide ()
 		{
+			update_icon_regions ();
 			controller.hide_manager.update_dock_hovered ();
 			if (!controller.hide_manager.DockHovered)
 				set_hovered (null);
@@ -406,6 +407,7 @@ namespace Plank.Widgets
 		 */
 		protected void on_menu_show ()
 		{
+			update_icon_regions ();
 			controller.hover.hide ();
 			controller.renderer.animated_draw ();
 		}
