@@ -45,18 +45,18 @@ namespace Plank.Services
 	 * any public property of a sub-class is changed, the public properties are serialized to
 	 * the backing file.
 	 *
-	 * ''NOTE: Clients of this class should not connect to the {@link GLib.Object.notify()} signal.''
-	 * ''Instead, they should connect to the {@link Services.Preferences.changed()} signal.''
+	 * ''NOTE: Clients of this class should not connect to the {@link GLib.Object.notify} signal.''
+	 * ''Instead, they should connect to the {@link Plank.Services.Preferences.changed} signal.''
 	 */
 	public abstract class Preferences : GLib.Object
 	{
 		/**
-		 * This signal is to be used in place of the standard {@link GLib.Object.notify()} signal.
+		 * This signal is to be used in place of the standard {@link GLib.Object.notify} signal.
 		 *
 		 * This signal ''only'' emits after a property's value was verified.
 		 *
 		 * Note that in the case where a property was set to an invalid value,
-		 * (and thus, sanitized to a valid value), the {@link GLib.Object.notify()} signal will emit 
+		 * (and thus, sanitized to a valid value), the {@link GLib.Object.notify} signal will emit 
 		 * twice: once with the invalid value and once with the sanitized value.
 		 */
 		[Signal (no_recurse = true, run = "first", action = true, no_hooks = true, detailed = true)]
