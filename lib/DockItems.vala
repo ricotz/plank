@@ -115,7 +115,6 @@ namespace Plank
 		 * Adds a dock item to the collection.
 		 *
 		 * @param item the dock item to add
-		 * @param is_initializing if the dock is initializing
 		 */
 		public void add_item (DockItem item)
 		{
