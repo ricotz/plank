@@ -334,7 +334,6 @@ namespace Plank
 				&& DragItem != controller.window.HoveredItem) {
 				
 				controller.items.move_item_to (DragItem, controller.window.HoveredItem);
-				controller.window.serialize_item_positions ();
 			}
 			
 			if (drag_hover_timer > 0)

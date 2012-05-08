@@ -89,11 +89,13 @@ namespace Plank
 			
 			load_items ();
 			
+			item_position_changed.connect (serialize_item_positions);
 			Matcher.get_default ().app_opened.connect (app_opened);
 		}
 		
 		~DockItems ()
 		{
+			item_position_changed.disconnect (serialize_item_positions);
 			Matcher.get_default ().app_opened.disconnect (app_opened);
 			
 			var items = new HashSet<DockItem> ();
@@ -344,6 +346,24 @@ namespace Plank
 					item.Position = pos;
 				pos++;
 			}
+		}
+		
+		/**
+		 * Serializes the item positions to the preferences.
+		 */
+		void serialize_item_positions ()
+		{
+			var item_list = "";
+			foreach (var item in Items) {
+				if (!(item is TransientDockItem) && item.DockItemFilename.length > 0) {
+					if (item_list.length > 0)
+						item_list += ";;";
+					item_list += item.DockItemFilename;
+				}
+			}
+			
+			if (controller.prefs.DockItems != item_list)
+				controller.prefs.DockItems = item_list;
 		}
 		
 		/**

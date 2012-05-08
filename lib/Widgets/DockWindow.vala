@@ -84,7 +84,6 @@ namespace Plank.Widgets
 						EventMask.POINTER_MOTION_MASK |
 						EventMask.SCROLL_MASK);
 			
-			controller.items.item_position_changed.connect (serialize_item_positions);
 			controller.drag_manager.notify["DragItem"].connect (drag_item_changed);
 		}
 		
@@ -93,7 +92,6 @@ namespace Plank.Widgets
 			menu.show.disconnect (on_menu_show);
 			menu.hide.disconnect (on_menu_hide);
 			
-			controller.items.item_position_changed.disconnect (serialize_item_positions);
 			controller.drag_manager.notify["DragItem"].disconnect (drag_item_changed);
 		}
 		
@@ -276,24 +274,6 @@ namespace Plank.Widgets
 			int x, y;
 			controller.position_manager.get_hover_position (HoveredItem, out x, out y);
 			controller.hover.move_hover (x, y);
-		}
-		
-		/**
-		 * Serializes the item positions to the preferences.
-		 */
-		public void serialize_item_positions ()
-		{
-			var item_list = "";
-			foreach (var item in controller.items.Items) {
-				if (!(item is TransientDockItem) && item.DockItemFilename.length > 0) {
-					if (item_list.length > 0)
-						item_list += ";;";
-					item_list += item.DockItemFilename;
-				}
-			}
-			
-			if (controller.prefs.DockItems != item_list)
-				controller.prefs.DockItems = item_list;
 		}
 		
 		/**
