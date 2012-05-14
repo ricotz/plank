@@ -36,7 +36,7 @@ namespace Plank.Widgets
 		/**
 		 * The controller for this dock.
 		 */
-		protected DockController controller;
+		public DockController controller { private get; construct; }
 		
 		
 		/**
@@ -61,15 +61,15 @@ namespace Plank.Widgets
 		 */
 		public DockWindow (DockController controller)
 		{
-			base ();
-			
-			this.controller = controller;
-			
-			set_accept_focus (false);
+			GLib.Object (controller: controller, type: Gtk.WindowType.TOPLEVEL, type_hint: WindowTypeHint.DOCK);
+		}
+		
+		construct
+		{			
+			accept_focus = false;
 			can_focus = false;
 			skip_pager_hint = true;
 			skip_taskbar_hint = true;
-			set_type_hint (WindowTypeHint.DOCK);
 			
 			menu.attach_to_widget (this, null);
 			menu.show.connect (on_menu_show);

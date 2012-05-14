@@ -27,13 +27,16 @@ namespace Plank.Widgets
 	{
 		public CompositedWindow ()
 		{
-			this.with_type (Gtk.WindowType.TOPLEVEL);
+			GLib.Object (type: Gtk.WindowType.TOPLEVEL);
 		}
 		
 		public CompositedWindow.with_type (Gtk.WindowType window_type)
 		{
 			GLib.Object (type: window_type);
-			
+		}
+		
+		construct
+		{			
 			app_paintable = true;
 			decorated = false;
 			resizable = false;
