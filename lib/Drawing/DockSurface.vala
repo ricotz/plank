@@ -26,32 +26,25 @@ namespace Plank.Drawing
 	 */
 	public class DockSurface : GLib.Object
 	{
-		Surface surface;
 		/**
 		 * The internal {@link Cairo.Surface} backing the dock surface.
 		 */
-		public Surface Internal {
-			get { return surface; }
-			private set {
-				surface = value;
-				Context = new Cairo.Context (surface);
-			}
-		}
+		public Cairo.Surface Internal { get; construct; }
 		
 		/**
 		 * The width of the surface.
 		 */
-		public int Width { get; private set; }
+		public int Width { get; construct; }
 		
 		/**
 		 * The height of the surface.
 		 */
-		public int Height { get; private set; }
+		public int Height { get; construct; }
 		
 		/**
 		 * A {@link Cairo.Context} for the dock surface.
 		 */
-		public Cairo.Context Context { get; private set; }
+		public Cairo.Context Context { get; construct; }
 		
 		/**
 		 * Creates a new dock surface.
@@ -61,9 +54,7 @@ namespace Plank.Drawing
 		 */
 		public DockSurface (int width, int height)
 		{
-			Width = width;
-			Height = height;
-			Internal = new ImageSurface (Format.ARGB32, Width, Height);
+			Object (Width: width, Height: height, Internal: new ImageSurface (Format.ARGB32, width, height));
 		}
 		
 		/**
@@ -75,9 +66,7 @@ namespace Plank.Drawing
 		 */
 		public DockSurface.with_surface (int width, int height, Surface model)
 		{
-			Width = width;
-			Height = height;
-			Internal = new Surface.similar (model, Content.COLOR_ALPHA, Width, Height);
+			Object (Width: width, Height: height, Internal: new Surface.similar (model, Content.COLOR_ALPHA, width, height));
 		}
 
 		/**
@@ -89,9 +78,12 @@ namespace Plank.Drawing
 		 */
 		public DockSurface.with_dock_surface (int width, int height, DockSurface model)
 		{
-			Width = width;
-			Height = height;
-			Internal = new Surface.similar (model.Internal, Content.COLOR_ALPHA, Width, Height);
+			Object (Width: width, Height: height, Internal: new Surface.similar (model.Internal, Content.COLOR_ALPHA, width, height));
+		}
+		
+		construct
+		{
+			Context = new Cairo.Context (Internal);
 		}
 		
 		/**
