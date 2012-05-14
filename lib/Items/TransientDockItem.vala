@@ -27,7 +27,7 @@ namespace Plank.Items
 	{
 		public TransientDockItem.with_application (Bamf.Application app)
 		{
-			Object (Prefs: new DockItemPreferences (), App: app);
+			GLib.Object (Prefs: new DockItemPreferences (), App: app);
 		}
 		
 		construct

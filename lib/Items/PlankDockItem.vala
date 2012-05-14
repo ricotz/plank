@@ -33,7 +33,7 @@ namespace Plank.Items
 		 */
 		public PlankDockItem.with_dockitem_file (GLib.File file)
 		{
-			Object (Prefs: new DockItemPreferences.with_file (file));
+			GLib.Object (Prefs: new DockItemPreferences.with_file (file));
 		}
 		
 		/**
@@ -41,7 +41,7 @@ namespace Plank.Items
 		 */
 		public PlankDockItem.with_dockitem_filename (string filename)
 		{
-			Object (Prefs: new DockItemPreferences.with_filename (filename));
+			GLib.Object (Prefs: new DockItemPreferences.with_filename (filename));
 		}
 		
 		/**

@@ -270,7 +270,7 @@ namespace Plank.Items
 		 */
 		public DockItem ()
 		{
-			Object (Prefs: new DockItemPreferences ());
+			GLib.Object (Prefs: new DockItemPreferences ());
 		}
 		
 		construct
