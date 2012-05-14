@@ -41,9 +41,7 @@ namespace Plank.Items
 		 */
 		public FileDockItem.with_dockitem_file (GLib.File file)
 		{
-			Prefs = new DockItemPreferences.with_file (file);
-			
-			initialize ();
+			Object (Prefs: new DockItemPreferences.with_file (file));
 		}
 
 		/**
@@ -51,18 +49,16 @@ namespace Plank.Items
 		 */
 		public FileDockItem.with_dockitem_filename (string filename)
 		{
-			Prefs = new DockItemPreferences.with_filename (filename);
-			
-			initialize ();
+			Object (Prefs: new DockItemPreferences.with_filename (filename));
 		}
-
-		void initialize ()
+		
+		construct
 		{
+			Prefs.changed["Launcher"].connect (handle_launcher_changed);
+			
 			if (!ValidItem)
 				return;
 			
-			Prefs.changed["Launcher"].connect (handle_launcher_changed);
-			Prefs.deleted.connect (handle_deleted);
 			OwnedFile = File.new_for_path (Prefs.Launcher);
 			
 			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? DEFAULT_ICON;
@@ -84,7 +80,6 @@ namespace Plank.Items
 		~FileDockItem ()
 		{
 			Prefs.changed["Launcher"].disconnect (handle_launcher_changed);
-			Prefs.deleted.disconnect (handle_deleted);
 			
 			if (dir_monitor != null) {
 				dir_monitor.changed.disconnect (handle_dir_changed);

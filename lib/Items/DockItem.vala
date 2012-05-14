@@ -236,7 +236,7 @@ namespace Plank.Items
 		/**
 		 * The average color of this item's icon.
 		 */
-		public Drawing.Color AverageIconColor { get; protected set; }
+		public Drawing.Color AverageIconColor { get; protected set; default = new Drawing.Color (0, 0, 0, 0); }
 		
 		/**
 		 * The launcher associated with this item.
@@ -261,7 +261,7 @@ namespace Plank.Items
 		/**
 		 * The underlying preferences for this item.
 		 */
-		protected DockItemPreferences Prefs { get; set; }
+		public DockItemPreferences Prefs { get; construct; }
 		
 		DockSurface? surface = null;
 		
@@ -270,9 +270,12 @@ namespace Plank.Items
 		 */
 		public DockItem ()
 		{
-			Prefs = new DockItemPreferences ();
-			AverageIconColor = new Drawing.Color (0, 0, 0, 0);
-			
+			Object (Prefs: new DockItemPreferences ());
+		}
+		
+		construct
+		{
+			Prefs.deleted.connect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.connect (reset_icon_buffer);
 			notify["Icon"].connect (reset_icon_buffer);
 			notify["ForcePixbuf"].connect (reset_icon_buffer);
@@ -280,6 +283,7 @@ namespace Plank.Items
 		
 		~DockItem ()
 		{
+			Prefs.deleted.disconnect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.disconnect (reset_icon_buffer);
 			notify["Icon"].disconnect (reset_icon_buffer);
 			notify["ForcePixbuf"].disconnect (reset_icon_buffer);

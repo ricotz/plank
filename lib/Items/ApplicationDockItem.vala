@@ -49,7 +49,26 @@ namespace Plank.Items
 		 */
 		public signal void app_closed ();
 		
-		internal Bamf.Application? App { get; private set; default = null; }
+		Bamf.Application? app = null;
+		public Bamf.Application? App {
+			internal get {
+				return app;
+			}
+			internal construct set {
+				if (app == value)
+					return;
+				
+				if (app != null)
+					app_signals_disconnect (app);
+				
+				app = value;
+				
+				if (app != null) {
+					app_signals_connect (app);
+					initialize_states ();
+				}
+			}
+		}
 		
 		ArrayList<string> shortcuts = new ArrayList<string> ();
 		HashMap<string, string> shortcut_map = new HashMap<string, string> (str_hash, str_equal);
@@ -59,9 +78,7 @@ namespace Plank.Items
 		 */
 		public ApplicationDockItem.with_dockitem_file (GLib.File file)
 		{
-			Prefs = new DockItemPreferences.with_file (file);
-			
-			initialize ();
+			Object (Prefs: new DockItemPreferences.with_file (file));
 		}
 		
 		/**
@@ -69,18 +86,15 @@ namespace Plank.Items
 		 */
 		public ApplicationDockItem.with_dockitem_filename (string filename)
 		{
-			Prefs = new DockItemPreferences.with_filename (filename);
-			
-			initialize ();
+			Object (Prefs: new DockItemPreferences.with_filename (filename));
 		}
 		
-		void initialize ()
+		construct
 		{
+			Prefs.changed["Launcher"].connect (handle_launcher_changed);
+			
 			if (!ValidItem)
 				return;
-			
-			Prefs.changed["Launcher"].connect (handle_launcher_changed);
-			Prefs.deleted.connect (handle_deleted);
 			
 			load_from_launcher ();
 		}
@@ -88,44 +102,29 @@ namespace Plank.Items
 		~ApplicationDockItem ()
 		{
 			Prefs.changed["Launcher"].disconnect (handle_launcher_changed);
-			Prefs.deleted.disconnect (handle_deleted);
 			
-			unset_app ();
+			App = null;
 			stop_monitor ();
 		}
 		
-		internal void set_app (Bamf.Application? app)
+		void app_signals_connect (Bamf.Application app)
 		{
-			if (app == null || App == app)
-				return;
-			
-			unset_app ();
-			
-			App = app;
-			
-			App.active_changed.connect (handle_active_changed);
-			App.running_changed.connect (handle_running_changed);
-			App.urgent_changed.connect (handle_urgent_changed);
-			App.window_added.connect (handle_window_added);
-			App.window_removed.connect (handle_window_removed);
-			App.closed.connect (handle_closed);
-			
-			initialize_states ();
+			app.active_changed.connect (handle_active_changed);
+			app.running_changed.connect (handle_running_changed);
+			app.urgent_changed.connect (handle_urgent_changed);
+			app.window_added.connect (handle_window_added);
+			app.window_removed.connect (handle_window_removed);
+			app.closed.connect (handle_closed);
 		}
 		
-		void unset_app ()
-		{	
-			if (App == null)
-				return;
-			
-			App.active_changed.disconnect (handle_active_changed);
-			App.running_changed.disconnect (handle_running_changed);
-			App.urgent_changed.disconnect (handle_urgent_changed);
-			App.window_added.disconnect (handle_window_added);
-			App.window_removed.disconnect (handle_window_removed);
-			App.closed.disconnect (handle_closed);
-			
-			App = null;
+		void app_signals_disconnect (Bamf.Application app)
+		{
+			app.active_changed.disconnect (handle_active_changed);
+			app.running_changed.disconnect (handle_running_changed);
+			app.urgent_changed.disconnect (handle_urgent_changed);
+			app.window_added.disconnect (handle_window_added);
+			app.window_removed.disconnect (handle_window_removed);
+			app.closed.disconnect (handle_closed);
 		}
 		
 		void initialize_states ()
@@ -149,8 +148,7 @@ namespace Plank.Items
 		
 		void handle_launcher_changed ()
 		{
-			unset_app ();
-			set_app (Matcher.get_default ().app_for_launcher (Prefs.Launcher));
+			App = Matcher.get_default ().app_for_launcher (Prefs.Launcher);
 			
 			launcher_changed ();
 		}
@@ -158,7 +156,7 @@ namespace Plank.Items
 		void handle_closed ()
 		{
 			if (this is TransientDockItem)
-				unset_app ();
+				App = null;
 			
 			handle_urgent_changed (false);
 			handle_active_changed (false);

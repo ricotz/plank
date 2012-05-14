@@ -27,12 +27,15 @@ namespace Plank.Items
 	{
 		public TransientDockItem.with_application (Bamf.Application app)
 		{
-			set_app (app);
-			
-			var launcher = app.get_desktop_file ();
+			Object (Prefs: new DockItemPreferences (), App: app);
+		}
+		
+		construct
+		{
+			var launcher = App.get_desktop_file ();
 			if (launcher == "") {
-				Text = app.get_name ();
-				ForcePixbuf = WindowControl.get_app_icon (app);
+				Text = App.get_name ();
+				ForcePixbuf = WindowControl.get_app_icon (App);
 			} else {
 				Prefs.Launcher = launcher;
 				load_from_launcher ();
