@@ -276,7 +276,7 @@ namespace Plank.Items
 		construct
 		{
 			Prefs.deleted.connect (handle_deleted);
-			Gtk.IconTheme.get_default ().changed.connect (reset_icon_buffer);
+			Gtk.IconTheme.get_default ().changed.connect (icon_theme_changed);
 			notify["Icon"].connect (reset_icon_buffer);
 			notify["ForcePixbuf"].connect (reset_icon_buffer);
 		}
@@ -284,7 +284,7 @@ namespace Plank.Items
 		~DockItem ()
 		{
 			Prefs.deleted.disconnect (handle_deleted);
-			Gtk.IconTheme.get_default ().changed.disconnect (reset_icon_buffer);
+			Gtk.IconTheme.get_default ().changed.disconnect (icon_theme_changed);
 			notify["Icon"].disconnect (reset_icon_buffer);
 			notify["ForcePixbuf"].disconnect (reset_icon_buffer);
 		}
@@ -313,6 +313,13 @@ namespace Plank.Items
 			surface = null;
 			
 			needs_redraw ();
+		}
+		
+		void icon_theme_changed ()
+		{
+			// Put Gtk.IconTheme.changed emmitted signals in idle queue to avoid 
+			// race conditions with concurrent handles
+			Idle.add ((SourceFunc) reset_icon_buffer);
 		}
 		
 		DockSurface get_surface (int width, int height, DockSurface model)
