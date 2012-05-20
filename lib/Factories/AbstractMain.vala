@@ -279,8 +279,9 @@ namespace Plank.Factories
 			}
 #endif
 			
-			// FIXME we should exit more gracefully
-			error ("Exiting because another instance of this application is already running with the name '%s'.", dock_path);
+			warning ("Exiting because another instance of this application is already running with the name '%s'.", dock_path);
+			Posix.exit (-1);
+			return null;
 		}
 		
 		/**
