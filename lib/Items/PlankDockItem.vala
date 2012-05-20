@@ -44,6 +44,12 @@ namespace Plank.Items
 			GLib.Object (Prefs: new DockItemPreferences.with_filename (filename));
 		}
 		
+		construct
+		{
+			// if plank is pinned indicate that it is running while it isnt user-visible
+			Indicator = IndicatorState.SINGLE;
+		}
+		
 		/**
 		 * {@inheritDoc}
 		 */
