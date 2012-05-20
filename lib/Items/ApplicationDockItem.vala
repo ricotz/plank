@@ -49,7 +49,26 @@ namespace Plank.Items
 		 */
 		public signal void app_closed ();
 		
-		internal Bamf.Application? App { get; private set; default = null; }
+		Bamf.Application? app = null;
+		public Bamf.Application? App {
+			internal get {
+				return app;
+			}
+			internal construct set {
+				if (app == value)
+					return;
+				
+				if (app != null)
+					app_signals_disconnect (app);
+				
+				app = value;
+				
+				if (app != null) {
+					app_signals_connect (app);
+					initialize_states ();
+				}
+			}
+		}
 		
 		ArrayList<string> supported_mime_types = new ArrayList<string> ();
 		
@@ -61,9 +80,7 @@ namespace Plank.Items
 		 */
 		public ApplicationDockItem.with_dockitem_file (GLib.File file)
 		{
-			Prefs = new DockItemPreferences.with_file (file);
-			
-			initialize ();
+			GLib.Object (Prefs: new DockItemPreferences.with_file (file));
 		}
 		
 		/**
@@ -71,18 +88,15 @@ namespace Plank.Items
 		 */
 		public ApplicationDockItem.with_dockitem_filename (string filename)
 		{
-			Prefs = new DockItemPreferences.with_filename (filename);
-			
-			initialize ();
+			GLib.Object (Prefs: new DockItemPreferences.with_filename (filename));
 		}
 		
-		void initialize ()
+		construct
 		{
+			Prefs.changed["Launcher"].connect (handle_launcher_changed);
+			
 			if (!ValidItem)
 				return;
-			
-			Prefs.changed["Launcher"].connect (handle_launcher_changed);
-			Prefs.deleted.connect (handle_deleted);
 			
 			load_from_launcher ();
 		}
@@ -90,98 +104,70 @@ namespace Plank.Items
 		~ApplicationDockItem ()
 		{
 			Prefs.changed["Launcher"].disconnect (handle_launcher_changed);
-			Prefs.deleted.disconnect (handle_deleted);
 			
-			unset_app ();
+			App = null;
 			stop_monitor ();
 		}
 		
-		internal void set_app (Bamf.Application app)
+		void app_signals_connect (Bamf.Application app)
 		{
-			if (App == app)
-				return;
-			
-			unset_app ();
-			
-			App = app;
-			
-			App.active_changed.connect (update_active);
-			App.urgent_changed.connect (update_urgent);
-			App.child_added.connect (update_indicator);
-			App.child_removed.connect (update_indicator);
-			App.closed.connect (signal_app_closed);
-				
-			update_states ();
+			app.active_changed.connect (handle_active_changed);
+			app.running_changed.connect (handle_running_changed);
+			app.urgent_changed.connect (handle_urgent_changed);
+			app.window_added.connect (handle_window_added);
+			app.window_removed.connect (handle_window_removed);
+			app.closed.connect (handle_closed);
 		}
 		
-		void unset_app ()
-		{	
-			if (App == null)
-				return;
-			
-			App.active_changed.disconnect (update_active);
-			App.urgent_changed.disconnect (update_urgent);
-			App.child_added.disconnect (update_indicator);
-			App.child_removed.disconnect (update_indicator);
-			App.closed.disconnect (signal_app_closed);
-			
-			App = null;
-			
-			update_states ();
-		}
-		
-		void handle_launcher_changed ()
+		void app_signals_disconnect (Bamf.Application app)
 		{
-			update_app ();
-			
-			launcher_changed ();
+			app.active_changed.disconnect (handle_active_changed);
+			app.running_changed.disconnect (handle_running_changed);
+			app.urgent_changed.disconnect (handle_urgent_changed);
+			app.window_added.disconnect (handle_window_added);
+			app.window_removed.disconnect (handle_window_removed);
+			app.closed.disconnect (handle_closed);
 		}
 		
-		void signal_app_closed ()
+		void initialize_states ()
+			requires (App != null)
 		{
-			unset_app ();
+			handle_active_changed (App.is_active ());
+			handle_urgent_changed (App.is_urgent ());
 			
-			app_closed ();
+			update_indicator (WindowControl.get_num_windows (App));
 		}
 		
-		bool is_window ()
+		public bool is_running ()
+		{
+			return (App != null && App.is_running ());
+		}
+		
+		public bool is_window ()
 		{
 			return (App != null && App.get_desktop_file () == "");
 		}
 		
-		void update_app ()
+		void handle_launcher_changed ()
 		{
-			unset_app ();
-			set_app (Matcher.get_default ().app_for_launcher (Prefs.Launcher));
-		}
-		
-		void update_urgent (bool is_urgent)
-		{
-			var was_urgent = (State & ItemState.URGENT) == ItemState.URGENT;
+			App = Matcher.get_default ().app_for_launcher (Prefs.Launcher);
 			
-			if (is_urgent && !was_urgent) {
-				LastUrgent = new DateTime.now_utc ();
-				State |= ItemState.URGENT;
-			} else if (!is_urgent && was_urgent) {
-				State &= ~ItemState.URGENT;
-			}
+			launcher_changed ();
 		}
 		
-		void update_indicator ()
+		void handle_closed ()
 		{
-			if (App == null || App.is_closed () || !App.is_running ()) {
-				if (Indicator != IndicatorState.NONE)
-					Indicator = IndicatorState.NONE;
-			} else if (WindowControl.get_num_windows (App) > 1) {
-				if (Indicator != IndicatorState.SINGLE_PLUS)
-					Indicator = IndicatorState.SINGLE_PLUS;
-			} else {
-				if (Indicator != IndicatorState.SINGLE)
-					Indicator = IndicatorState.SINGLE;
-			}
+			if (this is TransientDockItem)
+				App = null;
+			
+			handle_urgent_changed (false);
+			handle_active_changed (false);
+			update_indicator (0);
+			
+			app_closed ();
 		}
 		
-		void update_active (bool is_active)
+		void handle_active_changed (bool is_active)
 		{
 			var was_active = (State & ItemState.ACTIVE) == ItemState.ACTIVE;
 			
@@ -194,16 +180,50 @@ namespace Plank.Items
 			}
 		}
 		
-		void update_states ()
+		void handle_running_changed (bool is_running)
 		{
-			if (App == null || App.is_closed () || !App.is_running ()) {
-				update_urgent (false);
-				update_active (false);
-			} else {
-				update_urgent (App.is_urgent ());
-				update_active (App.is_active ());
+			if (is_running)
+				return;
+			
+			handle_urgent_changed (false);
+			handle_active_changed (false);
+			update_indicator (0);
+		}
+		
+		void handle_urgent_changed (bool is_urgent)
+		{
+			var was_urgent = (State & ItemState.URGENT) == ItemState.URGENT;
+			
+			if (is_urgent && !was_urgent) {
+				LastUrgent = new DateTime.now_utc ();
+				State |= ItemState.URGENT;
+			} else if (!is_urgent && was_urgent) {
+				State &= ~ItemState.URGENT;
 			}
-			update_indicator ();
+		}
+		
+		void handle_window_added (Bamf.View? child)
+		{
+			update_indicator (WindowControl.get_num_windows (App));
+		}
+		
+		void handle_window_removed (Bamf.View? child)
+		{
+			update_indicator (WindowControl.get_num_windows (App));
+		}
+		
+		void update_indicator (uint window_count)
+		{
+			if (window_count == 0) {
+				if (Indicator != IndicatorState.NONE)
+					Indicator = IndicatorState.NONE;
+			} else if (window_count == 1) {
+				if (Indicator != IndicatorState.SINGLE)
+					Indicator = IndicatorState.SINGLE;
+			} else {
+				if (Indicator != IndicatorState.SINGLE_PLUS)
+					Indicator = IndicatorState.SINGLE_PLUS;
+			}
 		}
 		
 		void launch ()
@@ -218,12 +238,13 @@ namespace Plank.Items
 		{
 			if (!is_window ())
 				if (button == PopupButton.MIDDLE || 
-					(button == PopupButton.LEFT && (App == null || App.get_children ().length () == 0 || (mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))) {
+					(button == PopupButton.LEFT && (App == null || WindowControl.get_num_windows (App) == 0 ||
+					(mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))) {
 					launch ();
 					return ClickAnimation.BOUNCE;
 				}
 			
-			if (button == PopupButton.LEFT && App != null && App.get_children ().length () > 0) {
+			if (button == PopupButton.LEFT && App != null && WindowControl.get_num_windows (App) > 0) {
 				WindowControl.smart_focus (App);
 				return ClickAnimation.DARKEN;
 			}
@@ -255,6 +276,10 @@ namespace Plank.Items
 		{
 			var items = new ArrayList<Gtk.MenuItem> ();
 			
+			GLib.List<unowned Bamf.View>? windows = null;
+			if (App != null)
+				windows = App.get_windows ();
+			
 			if (!is_window ()) {
 				var item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
 				item.active = !(this is TransientDockItem);
@@ -262,9 +287,7 @@ namespace Plank.Items
 				items.add (item);
 			}
 			
-			var closed = App == null || App.get_children ().length () == 0;
-			
-			if (!closed) {
+			if (is_running () && windows != null && windows.length () > 0) {
 				Gtk.MenuItem item;
 				
 				if (WindowControl.has_maximized_window (App)) {
@@ -296,28 +319,27 @@ namespace Plank.Items
 				}
 			}
 			
-			if (!closed) {
-				var windows = WindowControl.get_windows (App);
-				if (windows.size > 0) {
-					items.add (new SeparatorMenuItem ());
+			if (is_running () && windows != null && windows.length () > 0) {
+				items.add (new SeparatorMenuItem ());
+				
+				int width, height;
+				icon_size_lookup (IconSize.MENU, out width, out height);
+				
+				foreach (var view in windows) {
+					var window = (view as Bamf.Window);
+					if (window == null)
+						continue;
 					
-					int width, height;
-					icon_size_lookup (IconSize.MENU, out width, out height);
+					var pbuf = WindowControl.get_window_icon (window);
+					if (pbuf == null)
+						pbuf = DrawingService.load_icon (Icon, width, height);
+					else
+						pbuf = DrawingService.ar_scale (pbuf, width, height);
 					
-					for (var i = 0; i < windows.size; i++) {
-						var window = windows.get (i);
-						
-						var pbuf = WindowControl.get_window_icon (window);
-						if (pbuf == null)
-							pbuf = DrawingService.load_icon (Icon, width, height);
-						else
-							pbuf = DrawingService.ar_scale (pbuf, width, height);
-						
-						var window_item = new ImageMenuItem.with_mnemonic (window.get_name ());
-						window_item.set_image (new Gtk.Image.from_pixbuf (pbuf));
-						window_item.activate.connect (() => WindowControl.focus_window (window));
-						items.add (window_item);
-					}
+					var window_item = new ImageMenuItem.with_mnemonic (window.get_name ());
+					window_item.set_image (new Gtk.Image.from_pixbuf (pbuf));
+					window_item.activate.connect (() => WindowControl.focus_window (window));
+					items.add (window_item);
 				}
 			}
 			

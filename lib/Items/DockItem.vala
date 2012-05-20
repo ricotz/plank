@@ -236,7 +236,7 @@ namespace Plank.Items
 		/**
 		 * The average color of this item's icon.
 		 */
-		public Drawing.Color AverageIconColor { get; protected set; }
+		public Drawing.Color AverageIconColor { get; protected set; default = new Drawing.Color (0, 0, 0, 0); }
 		
 		/**
 		 * The filename of the preferences backing file.
@@ -268,7 +268,7 @@ namespace Plank.Items
 		/**
 		 * The underlying preferences for this item.
 		 */
-		protected DockItemPreferences Prefs { get; set; }
+		public DockItemPreferences Prefs { get; construct; }
 		
 		DockSurface? surface = null;
 		
@@ -277,17 +277,21 @@ namespace Plank.Items
 		 */
 		public DockItem ()
 		{
-			Prefs = new DockItemPreferences ();
-			AverageIconColor = new Drawing.Color (0, 0, 0, 0);
-			
-			Gtk.IconTheme.get_default ().changed.connect (reset_icon_buffer);
+			GLib.Object (Prefs: new DockItemPreferences ());
+		}
+		
+		construct
+		{
+			Prefs.deleted.connect (handle_deleted);
+			Gtk.IconTheme.get_default ().changed.connect (icon_theme_changed);
 			notify["Icon"].connect (reset_icon_buffer);
 			notify["ForcePixbuf"].connect (reset_icon_buffer);
 		}
 		
 		~DockItem ()
 		{
-			Gtk.IconTheme.get_default ().changed.disconnect (reset_icon_buffer);
+			Prefs.deleted.disconnect (handle_deleted);
+			Gtk.IconTheme.get_default ().changed.disconnect (icon_theme_changed);
 			notify["Icon"].disconnect (reset_icon_buffer);
 			notify["ForcePixbuf"].disconnect (reset_icon_buffer);
 		}
@@ -316,6 +320,13 @@ namespace Plank.Items
 			surface = null;
 			
 			needs_redraw ();
+		}
+		
+		void icon_theme_changed ()
+		{
+			// Put Gtk.IconTheme.changed emmitted signals in idle queue to avoid 
+			// race conditions with concurrent handles
+			Idle.add ((SourceFunc) reset_icon_buffer);
 		}
 		
 		DockSurface get_surface (int width, int height, DockSurface model)

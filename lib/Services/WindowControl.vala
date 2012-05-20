@@ -77,20 +77,12 @@ namespace Plank.Services.Windows
 		
 		public static uint get_num_windows (Bamf.Application app)
 		{
-			uint count = 0;
-			
-			GLib.List<unowned Bamf.View>? children = app.get_children ();
+			GLib.List<unowned Bamf.View>? children = app.get_windows ();
 			
 			if (children == null)
 				return 0;
 			
-			foreach (unowned Bamf.View view in children) {
-				if (!(view is Bamf.Window && view.is_user_visible ()))
-					continue;
-				count++;
-			}
-			
-			return count;
+			return children.length ();
 		}
 		
 		public static bool has_maximized_window (Bamf.Application app)
@@ -129,7 +121,7 @@ namespace Plank.Services.Windows
 		{
 			var windows = new ArrayList<Bamf.Window> ();
 			
-			GLib.List<unowned Bamf.View>? children = app.get_children ();
+			GLib.List<unowned Bamf.View>? children = app.get_windows ();
 			
 			if (children == null)
 				return windows;
@@ -142,11 +134,8 @@ namespace Plank.Services.Windows
 			return windows;
 		}
 		
-		public static void update_icon_regions (Bamf.Application app, Gdk.Rectangle? rect, int x, int y)
+		public static void update_icon_regions (Bamf.Application app, Gdk.Rectangle rect)
 		{
-			if (rect == null)
-				rect = Gdk.Rectangle () { x = 0, y = 0, width = 0, height = 0 };
-			
 			Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
@@ -155,7 +144,7 @@ namespace Plank.Services.Windows
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null)
-					window.set_icon_geometry (x + rect.x, y + rect.y, rect.width, rect.height);
+					window.set_icon_geometry (rect.x, rect.y, rect.width, rect.height);
 			}
 		}
 		

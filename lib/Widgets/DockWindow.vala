@@ -36,7 +36,7 @@ namespace Plank.Widgets
 		/**
 		 * The controller for this dock.
 		 */
-		protected DockController controller;
+		public DockController controller { private get; construct; }
 		
 		
 		/**
@@ -61,15 +61,15 @@ namespace Plank.Widgets
 		 */
 		public DockWindow (DockController controller)
 		{
-			base ();
-			
-			this.controller = controller;
-			
-			set_accept_focus (false);
+			GLib.Object (controller: controller, type: Gtk.WindowType.TOPLEVEL, type_hint: WindowTypeHint.DOCK);
+		}
+		
+		construct
+		{			
+			accept_focus = false;
 			can_focus = false;
 			skip_pager_hint = true;
 			skip_taskbar_hint = true;
-			set_type_hint (WindowTypeHint.DOCK);
 			
 			menu.attach_to_widget (this, null);
 			menu.show.connect (on_menu_show);
@@ -334,19 +334,22 @@ namespace Plank.Widgets
 		{
 			Logger.verbose ("DockWindow.update_icon_regions ()");
 			
-			Gdk.Rectangle? region = null;
+			Gdk.Rectangle region;
 			
 			foreach (var item in controller.items.Items) {
-				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
-				if (appitem == null || appitem.App == null || appitem.App.is_closed ())
+				ApplicationDockItem? appitem = (item as ApplicationDockItem);
+				if (appitem == null || !appitem.is_running ())
 					continue;
 				
 				if (menu_is_visible () || controller.renderer.Hidden)
-					region = null;
+					region = Gdk.Rectangle ();
 				else
 					region = controller.position_manager.item_hover_region (appitem);
 				
-				WindowControl.update_icon_regions (appitem.App, region, controller.position_manager.win_x, controller.position_manager.win_y);
+				region.x += controller.position_manager.win_x;
+				region.y += controller.position_manager.win_y;
+				
+				WindowControl.update_icon_regions (appitem.App, region);
 			}
 		}
 		

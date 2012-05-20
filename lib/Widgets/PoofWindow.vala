@@ -36,6 +36,10 @@ namespace Plank.Widgets
 		
 		DateTime start_time;
 		
+		public int x { private get; construct; }
+
+		public int y { private get; construct; }
+		
 		/**
 		 * Creates a new poof window at the screen-relative coordinates specified.
 		 *
@@ -44,11 +48,14 @@ namespace Plank.Widgets
 		 */
 		public PoofWindow (int x, int y)
 		{
-			base ();
-			
+			GLib.Object (x: x, y: y, type: Gtk.WindowType.TOPLEVEL, type_hint: WindowTypeHint.SPLASHSCREEN);
+		}
+		
+		construct
+		{			
+			accept_focus = false;
 			can_focus = false;
 			set_keep_above (true);
-			type_hint = WindowTypeHint.SPLASHSCREEN;
 			
 			var poof_file = Paths.DataFolder.get_child ("poof.png").get_path () ?? "";
 			try {

@@ -33,7 +33,7 @@ namespace Plank.Items
 		 */
 		public PlankDockItem.with_dockitem_file (GLib.File file)
 		{
-			base.with_dockitem_file (file);
+			GLib.Object (Prefs: new DockItemPreferences.with_file (file));
 		}
 		
 		/**
@@ -41,7 +41,13 @@ namespace Plank.Items
 		 */
 		public PlankDockItem.with_dockitem_filename (string filename)
 		{
-			base.with_dockitem_filename (filename);
+			GLib.Object (Prefs: new DockItemPreferences.with_filename (filename));
+		}
+		
+		construct
+		{
+			// if plank is pinned indicate that it is running while it isnt user-visible
+			Indicator = IndicatorState.SINGLE;
 		}
 		
 		/**

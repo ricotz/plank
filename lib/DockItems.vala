@@ -228,7 +228,7 @@ namespace Plank
 			
 			var found = item_for_application (app);
 			if (found != null) {
-				found.set_app (app);
+				found.App = app;
 			} else if (app.is_user_visible () && WindowControl.get_num_windows (app) > 0) {
 				var new_item = new TransientDockItem.with_application (app);
 				new_item.Sort = last_sort + 1;
@@ -515,7 +515,7 @@ namespace Plank
 				
 				var new_item = new ApplicationDockItem.with_dockitem_file (dockitem_file);
 				if (app_item.App != null)
-					new_item.set_app (app_item.App);
+					new_item.App = app_item.App;
 				replace_item (new_item, item);
 			} else {
 				item.delete ();

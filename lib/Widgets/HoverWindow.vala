@@ -34,7 +34,7 @@ namespace Plank.Widgets
 		const int HOVER_HEIGHT = 26;
 		const int PADDING = 10;
 		
-		DockController controller;
+		public DockController controller { private get; construct; }
 		
 		/**
 		 * The text to display in the window.
@@ -49,21 +49,21 @@ namespace Plank.Widgets
 		
 		public HoverWindow (DockController controller)
 		{
-			base.with_type (Gtk.WindowType.POPUP);
+			GLib.Object (controller: controller, type: Gtk.WindowType.POPUP, type_hint: WindowTypeHint.TOOLTIP);
+		}
+		
+		construct
+		{			
+			accept_focus = false;
+			can_focus = false;
+			skip_pager_hint = true;
+			skip_taskbar_hint = true;
 			
-			this.controller = controller;
+			set_redraw_on_allocate (true);
 			
 			theme = new ThemeRenderer ();
 			theme.load ("hover");
 			theme.changed.connect (theme_changed);
-			
-			set_accept_focus (false);
-			can_focus = false;
-			skip_pager_hint = true;
-			skip_taskbar_hint = true;
-			set_type_hint (WindowTypeHint.DOCK);
-			
-			set_redraw_on_allocate (true);
 			
 			update_layout ();
 			style_set.connect (() => update_layout ());
