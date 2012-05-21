@@ -167,8 +167,8 @@ namespace Plank.Drawing
 				3 * top_offset / 2.0,
 				width - 3 * LineWidth,
 				height - 3 * top_offset / 2.0 - 3 * bottom_offset / 2.0,
-				TopRoundness,
-				BottomRoundness);
+				TopRoundness - LineWidth,
+				BottomRoundness - LineWidth);
 		}
 		
 		/**
@@ -186,8 +186,8 @@ namespace Plank.Drawing
 		{
 			var min_size  = double.min (width, height);
 			
-			top_radius    = double.min (top_radius, min_size);
-			bottom_radius = double.min (bottom_radius, min_size - top_radius);
+			top_radius    = double.max (0, double.min (top_radius, min_size));
+			bottom_radius = double.max (0, double.min (bottom_radius, min_size - top_radius));
 			
 			if (!Gdk.Screen.get_default ().is_composited ())
 				top_radius = bottom_radius = 0.0;
