@@ -126,7 +126,8 @@ namespace Plank.Drawing
 				surface.Width - LineWidth,
 				surface.Height - LineWidth / 2.0 - bottom_offset / 2.0,
 				TopRoundness,
-				BottomRoundness);
+				BottomRoundness,
+				LineWidth);
 			cr.fill_preserve ();
 			cr.restore ();
 			
@@ -166,7 +167,8 @@ namespace Plank.Drawing
 				width - 3 * LineWidth,
 				height - 3 * LineWidth / 2.0 - 3 * bottom_offset / 2.0,
 				TopRoundness - LineWidth,
-				BottomRoundness - LineWidth);
+				BottomRoundness - LineWidth,
+				LineWidth);
 		}
 		
 		/**
@@ -179,8 +181,9 @@ namespace Plank.Drawing
 		 * @param height the height of the rect
 		 * @param top_radius the roundedness of the top edge
 		 * @param bottom_radius the roundedness of the bottom edge
+		 * @param line_width the line-width of the rect
 		 */
-		protected void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
+		public static void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0, double line_width = 1.0)
 		{
 			var min_size  = double.min (width, height);
 			
@@ -192,7 +195,7 @@ namespace Plank.Drawing
 			
 			// if the top isnt round, we have to adjust the starting point a bit
 			if (top_radius == 0.0)
-				cr.move_to (x - LineWidth / 2.0, y);
+				cr.move_to (x - line_width / 2.0, y);
 			else
 				cr.move_to (x + top_radius, y);
 			
