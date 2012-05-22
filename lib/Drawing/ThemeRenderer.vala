@@ -88,7 +88,7 @@ namespace Plank.Drawing
 		 */
 		public int get_top_offset ()
 		{
-			return LineWidth;
+			return 2 * LineWidth;
 		}
 		
 		/**
@@ -98,7 +98,7 @@ namespace Plank.Drawing
 		 */
 		public int get_bottom_offset ()
 		{
-			return BottomRoundness > 0 ? LineWidth : 0;
+			return BottomRoundness > 0 ? 2 * LineWidth : 0;
 		}
 		
 		/**
@@ -110,7 +110,6 @@ namespace Plank.Drawing
 		{
 			var cr = surface.Context;
 			
-			var top_offset    = get_top_offset ();
 			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			
 			var gradient = new Pattern.linear (0, 0, 0, surface.Height);
@@ -123,9 +122,9 @@ namespace Plank.Drawing
 			
 			draw_rounded_rect (cr,
 				LineWidth / 2.0,
-				top_offset / 2.0,
+				LineWidth / 2.0,
 				surface.Width - LineWidth,
-				surface.Height - top_offset / 2.0 - bottom_offset / 2.0,
+				surface.Height - LineWidth / 2.0 - bottom_offset / 2.0,
 				TopRoundness,
 				BottomRoundness);
 			cr.fill_preserve ();
@@ -135,7 +134,7 @@ namespace Plank.Drawing
 			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			
-			gradient = new Pattern.linear (0, top_offset, 0, surface.Height - top_offset - bottom_offset);
+			gradient = new Pattern.linear (0, 2 * LineWidth, 0, surface.Height - 2 * LineWidth - bottom_offset);
 			
 			gradient.add_color_stop_rgba (0, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.5);
 			gradient.add_color_stop_rgba ((TopRoundness > 0 ? TopRoundness : LineWidth) / (double) surface.Height, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.12);
@@ -159,14 +158,13 @@ namespace Plank.Drawing
 		 */
 		protected void draw_inner_rect (Context cr, int width, int height)
 		{
-			var top_offset    = get_top_offset ();
 			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			
 			draw_rounded_rect (cr,
 				3 * LineWidth / 2.0,
-				3 * top_offset / 2.0,
+				3 * LineWidth / 2.0,
 				width - 3 * LineWidth,
-				height - 3 * top_offset / 2.0 - 3 * bottom_offset / 2.0,
+				height - 3 * LineWidth / 2.0 - 3 * bottom_offset / 2.0,
 				TopRoundness - LineWidth,
 				BottomRoundness - LineWidth);
 		}

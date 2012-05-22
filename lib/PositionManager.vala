@@ -173,14 +173,13 @@ namespace Plank
 			bottom_offset = theme.get_bottom_offset ();
 			
 			// height of the visible (cursor) rect of the dock
-			var height = icon_size + 2 * (top_offset + bottom_offset) + BottomPadding;
-			if (TopPadding > 0)
-				height += TopPadding;
+			var height = icon_size + top_offset + TopPadding + bottom_offset + BottomPadding;
 			
 			// height of the dock background image, as drawn
 			var background_height = height;
-			if (TopPadding < 0)
-				background_height += TopPadding;
+			
+			if (top_offset + TopPadding < 0)
+				height -= top_offset + TopPadding;
 			
 			// height of the dock window
 			var dock_height = height + (int) (icon_size * theme.UrgentBounceHeight);
@@ -318,11 +317,11 @@ namespace Plank
 		public Gdk.Rectangle item_draw_region (Gdk.Rectangle hover_rect)
 		{
 			var item_padding = ItemPadding;
-			var top_padding = TopPadding;
+			var top_padding = top_offset + TopPadding;
 			var bottom_padding = BottomPadding;
 			
-			top_padding = 2 * top_offset + (top_padding > 0 ? top_padding : 0);
-			bottom_padding = 2 * bottom_offset + bottom_padding;
+			top_padding = (top_padding < 0 ? 0 : top_padding);
+			bottom_padding = bottom_offset + bottom_padding;
 			
 			switch (controller.prefs.Position) {
 			default:
@@ -363,8 +362,8 @@ namespace Plank
 		 */
 		public Gdk.Rectangle item_background_region (Gdk.Rectangle rect)
 		{
-			var top_padding = TopPadding;
-			top_padding = 2 * top_offset + (top_padding > 0 ? 0 : top_padding);
+			var top_padding = top_offset + TopPadding;
+			top_padding = (top_padding > 0 ? 0 : top_padding);
 			
 			switch (controller.prefs.Position) {
 			default:
