@@ -112,6 +112,7 @@ namespace Plank.Items
 			app.active_changed.connect (handle_active_changed);
 			app.running_changed.connect (handle_running_changed);
 			app.urgent_changed.connect (handle_urgent_changed);
+			app.user_visible_changed.connect (handle_user_visible_changed);
 			app.window_added.connect (handle_window_added);
 			app.window_removed.connect (handle_window_removed);
 			app.closed.connect (handle_closed);
@@ -122,6 +123,7 @@ namespace Plank.Items
 			app.active_changed.disconnect (handle_active_changed);
 			app.running_changed.disconnect (handle_running_changed);
 			app.urgent_changed.disconnect (handle_urgent_changed);
+			app.user_visible_changed.disconnect (handle_user_visible_changed);
 			app.window_added.disconnect (handle_window_added);
 			app.window_removed.disconnect (handle_window_removed);
 			app.closed.disconnect (handle_closed);
@@ -151,6 +153,17 @@ namespace Plank.Items
 			App = Matcher.get_default ().app_for_launcher (Prefs.Launcher);
 			
 			launcher_changed ();
+		}
+		
+		void handle_user_visible_changed (bool user_visible)
+		{
+			if (user_visible)
+				return;
+			
+			if (this is TransientDockItem)
+				App = null;
+			
+			app_closed ();
 		}
 		
 		void handle_closed ()
