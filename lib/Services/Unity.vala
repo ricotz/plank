@@ -203,6 +203,9 @@ namespace Plank.Services
 						continue;
 					
 					var p = app_item.App.get_desktop_file ().split("/");
+					if (p.length == 0)
+						continue;
+					
 					var uri = "application://" + p[p.length - 1];
 					
 					if (app_uri == uri) {
