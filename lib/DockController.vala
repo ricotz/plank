@@ -17,6 +17,7 @@
 
 using Plank.Factories;
 using Plank.Widgets;
+using Plank.Services;
 
 namespace Plank
 {
@@ -32,6 +33,7 @@ namespace Plank
 		public HideManager hide_manager;
 		public HoverWindow hover;
 		public DockWindow window;
+		public Unity unity;
 		
 		public DockController ()
 		{
@@ -46,6 +48,8 @@ namespace Plank
 			renderer.initialize ();
 			hide_manager.initialize ();
 			position_manager.initialize ();
+			
+			unity = new Unity (this);
 			
 			window.show_all ();
 		}

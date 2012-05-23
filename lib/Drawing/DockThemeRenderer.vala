@@ -328,7 +328,7 @@ namespace Plank.Drawing
 		 * @param color the color of the badge
 		 * @param badge_text the text for the badge
 		 */
-		public void draw_badge (DockSurface surface, int icon_size, Color color, string badge_text)
+		public void draw_item_count (DockSurface surface, int icon_size, Color color, int64 count)
 		{
 			var cr = surface.Context;
 			
@@ -383,7 +383,7 @@ namespace Plank.Drawing
 			font_description.set_weight (Pango.Weight.BOLD);
 			layout.set_font_description (font_description);
 			
-			layout.set_text (badge_text, -1);
+			layout.set_text (count.to_string (), -1);
 			Pango.Rectangle ink_rect, logical_rect;
 			layout.get_pixel_extents (out ink_rect, out logical_rect);
 			
@@ -412,6 +412,86 @@ namespace Plank.Drawing
 			cr.set_source_rgba (1, 1, 1, 1);
 			cr.fill ();
 			cr.restore ();
+		}
+
+
+		/**
+		 * Draws a progress bar for an item.
+		 *
+		 * @param surface the surface to draw the progress onto
+		 * @param icon_size the icon-size of the dock
+		 * @param color the color of the progress
+		 * @param progress the value between 0.0 and 1.0
+		 */
+		public void draw_item_progress (DockSurface surface, int icon_size, Color color, double progress)
+		{
+			if (progress < 0)
+				return;
+			
+			var cr = surface.Context;
+			
+			// TODO use theme-colors or even make it themeable
+			
+			var padding = 2.0;
+			var width = surface.Width - 2.0 * padding;
+			var height = double.min (26.0, 0.18 * surface.Height);
+			var x = padding;
+			var y = surface.Height - height - padding;
+			
+			var line_width = 1.0;
+			cr.set_line_width (line_width);
+			
+			// draw the outer stroke
+			x += line_width / 2.0;
+			y += line_width / 2.0;
+			width -= line_width;
+			height -= line_width;
+			
+			var outer_stroke = new Pattern.linear (0, y, 0, y + height);
+			outer_stroke.add_color_stop_rgba (0, 0, 0, 0, 0.3);
+			outer_stroke.add_color_stop_rgba (1, 1, 1, 1, 0.3);
+			
+			draw_rounded_line (surface, x, y, width, height, true, true, outer_stroke, null);
+			
+			// draw the finished stroke/fill
+			x += line_width;
+			y += line_width;
+			width -= 2 * line_width;
+			height -= 2 * line_width;
+			var finished_width = progress * width - line_width / 2.0;
+			
+			var finished_stroke = new Pattern.linear (0, y, 0, y + height);
+			finished_stroke.add_color_stop_rgba (0, 67 / 255.0, 165 / 255.0, 226 / 255.0, 1);
+			finished_stroke.add_color_stop_rgba (1, 32 / 255.0, 94 / 255.0, 136 / 255.0, 1);
+			
+			var finished_fill = new Pattern.linear (0, y, 0, y + height);
+			finished_fill.add_color_stop_rgba (0, 91 / 255.0, 174 / 255.0, 226 / 255.0, 1);
+			finished_fill.add_color_stop_rgba (1, 35 / 255.0, 115 / 255.0, 164 / 255.0, 1);
+			
+			draw_rounded_line (surface, x, y, finished_width, height, true, false, finished_stroke, finished_fill);
+			
+			// draw the remaining stroke/fill
+			var remaining_stroke = new Pattern.linear (0, y, 0, y + height);
+			remaining_stroke.add_color_stop_rgba (0, 82 / 255.0, 82 / 255.0, 82 / 255.0, 1);
+			remaining_stroke.add_color_stop_rgba (1, 148 / 255.0, 148 / 255.0, 148 / 255.0, 1);
+			
+			var remaining_fill = new Pattern.linear (0, y, 0, y + height);
+			remaining_fill.add_color_stop_rgba (0, 106 / 255.0, 106 / 255.0, 106 / 255.0, 1);
+			remaining_fill.add_color_stop_rgba (1, 159 / 255.0, 159 / 255.0, 159 / 255.0, 1);
+			
+			draw_rounded_line (surface, x + finished_width + line_width, y, width - finished_width, height, false, true, remaining_stroke, remaining_fill);
+			
+			// draw the highlight on the finished part
+			x += line_width;
+			y += line_width;
+			width -= line_width;
+			height -= 2 * line_width;
+			
+			var finished_highlight = new Pattern.linear (0, y, 0, y + height);
+			finished_highlight.add_color_stop_rgba (0, 1, 1, 1, 0.3);
+			finished_highlight.add_color_stop_rgba (0.2, 1, 1, 1, 0);
+			
+			draw_rounded_line (surface, x, y, finished_width, height, true, false, finished_highlight, null);
 		}
 		
 		/**
