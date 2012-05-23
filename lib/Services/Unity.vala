@@ -31,8 +31,10 @@ namespace Plank.Services
 			Object (Item: item);
 		}
 		
-		public void update (VariantIter prop_iter)
+		public void update (string sender_name, VariantIter prop_iter)
 		{
+			DBusName = sender_name;
+			
 			string prop_key;
 			Variant prop_value;
 			
@@ -105,7 +107,7 @@ namespace Plank.Services
 				return;
 			}
 			
-			Logger.verbose ("Unity: Initalizing LauncherEntry support");
+			debug ("Unity: Initalizing LauncherEntry support");
 			
 			// Acquire Unity bus-name to activate libunity clients since normally there shouldn't be a running Unity
 			unity_bus_id = Bus.own_name (BusType.SESSION, "com.canonical.Unity", BusNameOwnerFlags.NONE,
@@ -139,7 +141,7 @@ namespace Plank.Services
 		}  
 
 		void handle_name_lost (DBusConnection conn, string name) {
-			Logger.verbose ("Unity: %s lost", name);
+			debug ("Unity: %s lost", name);
 		}
 		
 		
@@ -194,7 +196,7 @@ namespace Plank.Services
 			var entry = remote_entries.get (app_uri);
 			
 			// If don't know this app yet create a new entry
-			if (entry == null) {
+			if (entry == null)
 				foreach (var item in controller.items.Items) {
 					var app_item = item as ApplicationDockItem;
 					if (app_item == null || app_item.App == null)
@@ -209,12 +211,10 @@ namespace Plank.Services
 						break;
 					}
 				}
-			}
 			
 			// Update our entry and trigger a redraw
 			if (entry != null) {
-				entry.DBusName = sender_name;
-				entry.update (prop_iter);
+				entry.update (sender_name, prop_iter);
 				controller.renderer.animated_draw ();
 			}
 		}
