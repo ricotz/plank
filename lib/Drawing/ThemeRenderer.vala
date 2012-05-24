@@ -205,22 +205,22 @@ namespace Plank.Drawing
 			cr.arc (x + top_radius,            y + top_radius,             top_radius,    Math.PI,       Math.PI * 1.5);
 		}
 		
-		public static void draw_rounded_line (DockSurface surface, double x, double y, double width, double height, bool roundLeft, bool roundRight, Pattern stroke, Pattern? fill)
+		public static void draw_rounded_line (DockSurface surface, double x, double y, double width, double height, bool is_round_left, bool is_round_right, Pattern? stroke = null, Pattern? fill = null)
 		{
 			var cr = surface.Context;
 			
-			var leftRadius = roundLeft ? height / 2.0 : 0.0;
-			var rightRadius = roundRight ? height / 2.0 : 0.0;
+			var left_radius = is_round_left ? height / 2.0 : 0.0;
+			var right_radius = is_round_right ? height / 2.0 : 0.0;
 			
-			cr.move_to (x + width - rightRadius, y);
-			cr.line_to (x + leftRadius, y);
-			if (roundLeft)
-				cr.arc_negative (x + leftRadius, y + height / 2.0, leftRadius, -Math.PI / 2.0, Math.PI / 2.0);
+			cr.move_to (x + width - right_radius, y);
+			cr.line_to (x + left_radius, y);
+			if (is_round_left)
+				cr.arc_negative (x + left_radius, y + height / 2.0, left_radius, -Math.PI / 2.0, Math.PI / 2.0);
 			else
 				cr.line_to (x, y + height);
-			cr.line_to (x + width - rightRadius, y + height);
-			if (roundRight)
-				cr.arc_negative (x + width - rightRadius, y + height / 2.0, rightRadius, Math.PI / 2.0, -Math.PI / 2.0);
+			cr.line_to (x + width - right_radius, y + height);
+			if (is_round_right)
+				cr.arc_negative (x + width - right_radius, y + height / 2.0, right_radius, Math.PI / 2.0, -Math.PI / 2.0);
 			else
 				cr.line_to (x + width, y);
 			cr.close_path ();
@@ -229,7 +229,8 @@ namespace Plank.Drawing
 				cr.set_source (fill);
 				cr.fill_preserve ();
 			}
-			cr.set_source (stroke);
+			if (stroke != null)
+				cr.set_source (stroke);
 			cr.stroke ();
 		}
 		
