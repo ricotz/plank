@@ -34,9 +34,6 @@ namespace Plank.Items
 		// see http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#extra-actions
 		private const string DESKTOP_ACTION_KEY = "Actions";
 		private const string DESKTOP_ACTION_GROUP_NAME = "Desktop Action %s";
-		private const string DESKTOP_ACTION_NAME_KEY = "Name";
-		private const string DESKTOP_ACTION_ICON_KEY = "Icon";
-		private const string DESKTOP_ACTION_EXEC_KEY = "Exec";
 		
 		// for the Unity static quicklists
 		// see https://wiki.edubuntu.org/Unity/LauncherAPI#Static_Quicklist_entries
@@ -44,8 +41,6 @@ namespace Plank.Items
 		private const string UNITY_QUICKLISTS_SHORTCUT_GROUP_NAME = "%s Shortcut Group";
 		private const string UNITY_QUICKLISTS_TARGET_KEY = "TargetEnvironment";
 		private const string UNITY_QUICKLISTS_TARGET_VALUE = "Unity";
-		private const string UNITY_QUICKLISTS_NAME_KEY = "Name";
-		private const string UNITY_QUICKLISTS_EXEC_KEY = "Exec";
 		
 		/**
 		 * Signal fired when the item's 'keep in dock' menu item is pressed.
@@ -441,10 +436,10 @@ namespace Plank.Items
 							}
 							
 							// check for NotShowIn
-							if (file.has_key (group, "NotShowIn")) {
+							if (file.has_key (group, KeyFileDesktop.KEY_NOT_SHOW_IN)) {
 								var found = false;
 								
-								foreach (var s in file.get_string_list (group, "NotShowIn"))
+								foreach (var s in file.get_string_list (group, KeyFileDesktop.KEY_NOT_SHOW_IN))
 									if (s == "Plank") {
 										found = true;
 										break;
@@ -455,10 +450,10 @@ namespace Plank.Items
 							}
 							
 							// check for OnlyShowIn
-							if (file.has_key (group, "OnlyShowIn")) {
+							if (file.has_key (group, KeyFileDesktop.KEY_ONLY_SHOW_IN)) {
 								var found = false;
 								
-								foreach (var s in file.get_string_list (group, "OnlyShowIn"))
+								foreach (var s in file.get_string_list (group, KeyFileDesktop.KEY_ONLY_SHOW_IN))
 									if (s == UNITY_QUICKLISTS_TARGET_VALUE || s == "Plank") {
 										found = true;
 										break;
@@ -470,11 +465,11 @@ namespace Plank.Items
 							
 							// check for Icon
 							var action_icon = "";
-							if (file.has_key (group, DESKTOP_ACTION_ICON_KEY))
-								icon = file.get_string (group, DESKTOP_ACTION_ICON_KEY);
+							if (file.has_key (group, KeyFileDesktop.KEY_ICON))
+								icon = file.get_string (group, KeyFileDesktop.KEY_ICON);
 							
-							var action_name = file.get_locale_string (group, DESKTOP_ACTION_NAME_KEY);
-							var action_exec = file.get_string (group, DESKTOP_ACTION_EXEC_KEY);
+							var action_name = file.get_locale_string (group, KeyFileDesktop.KEY_NAME);
+							var action_exec = file.get_string (group, KeyFileDesktop.KEY_EXEC);
 							
 							actions.add (action_name);
 							actions_map.set (action_name, "%s;;%s".printf (action_exec, action_icon));
