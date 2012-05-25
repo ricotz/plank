@@ -64,6 +64,8 @@ namespace Plank
 			
 			// NOTE don't call update_monitor_geo to avoid a double-call of dockwindow.set_size on startup
 			screen.get_monitor_geometry (controller.prefs.Monitor, out monitor_geo);
+			
+			update_dock_position ();
 		}
 		
 		~PositionManager ()

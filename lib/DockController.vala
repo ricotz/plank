@@ -44,8 +44,8 @@ namespace Plank
 			window = new DockWindow (this);
 			
 			renderer.initialize ();
-			hide_manager.initialize ();
 			position_manager.initialize ();
+			hide_manager.initialize ();
 			
 			window.show_all ();
 		}
