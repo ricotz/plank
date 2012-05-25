@@ -49,7 +49,7 @@ namespace Plank.Widgets
 		
 		public HoverWindow (DockController controller)
 		{
-			GLib.Object (controller: controller, type: Gtk.WindowType.POPUP, type_hint: WindowTypeHint.TOOLTIP);
+			GLib.Object (controller: controller, type: Gtk.WindowType.TOPLEVEL, type_hint: WindowTypeHint.DOCK);
 		}
 		
 		construct
