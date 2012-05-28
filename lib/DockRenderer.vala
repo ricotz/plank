@@ -382,7 +382,7 @@ namespace Plank
 			
 			// draw item's count
 			if (item.CountVisible)
-				theme.draw_item_count (icon_surface, icon_size, get_styled_color (), item.Count);
+				theme.draw_item_count (icon_surface, icon_size, get_styled_color ().add_hue (theme.UrgentHueShift), item.Count);
 			
 			// draw item's progress
 			if (item.ProgressVisible)
