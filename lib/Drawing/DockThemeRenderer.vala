@@ -332,41 +332,48 @@ namespace Plank.Drawing
 		{
 			var cr = surface.Context;
 			
-			var badge_color_start = color.set_val (1.0).set_sat (0.47);
-			var badge_color_end = color.set_val (0.5).set_sat (0.51);
+			var badge_color_start = color.copy ().brighten_val (1.0);
+			var badge_color_middle = color.copy ().set_sat (0.87);
+			var badge_color_end = color.copy ().set_sat (0.87).darken_val (0.7);
+			var stroke_color_start = color.copy ().set_sat (0.9);
+			var stroke_color_end = color.copy ().set_sat (0.9).darken_val (0.9);
 			
+			// FIXME enhance scalability and adjustments depending on icon-size
 			var is_small = icon_size < 32;
 			var is_large = icon_size > 54;
-			var padding = (is_small ? 2.0 : (is_large ? 4.0 : 3.0));
-			var line_width = (is_small ? 0.0 : (is_large ? 1.5 : 1.0));
+			var padding = (is_small ? 1.0 : (is_large ? 4.5 : 2.0));
+			var line_width = (is_small ? 0.0 : (is_large ? 2.0 : 1.0));
 
 			var height = (is_small ? 0.80 : 0.50) * double.min (surface.Width, surface.Height) - 2.0 * line_width;
-			var width = (0.85 + 0.15 * count.to_string ().length) * height;
+			var width = (0.75 + 0.25 * count.to_string ().length) * height;
 			var max_width = surface.Width - 2.0 * line_width;
 			if (width > max_width)
 				width = max_width;
 			var x = surface.Width - width - line_width;
 			var y = line_width;
 			
+			cr.set_line_width (line_width);
+			
 			Pattern stroke, fill;
 			
 			if (!is_small) {
 				// draw outline shadow
-				cr.set_line_width (line_width);
-				stroke = new Pattern.rgba (0.0, 0.0, 0.0, 0.5);
-				draw_rounded_line (surface, x, y + line_width / 2, width, height, true, true, stroke, null);
+				stroke = new Pattern.rgba (0.2, 0.2, 0.2, 0.3);
+				draw_rounded_line (surface, x - line_width / 2, y + line_width / 2, width + line_width, height, true, true, stroke, null);
 				
 				// draw filled gradient with outline
-				stroke = new Pattern.rgba (1.0, 1.0, 1.0, 1.0);
-				fill = new Pattern.radial (x, line_width, 0.0, x, line_width, width);
-				fill.add_color_stop_rgba (0.0, badge_color_start.R, badge_color_start.G, badge_color_start.B, badge_color_start.A);
-				fill.add_color_stop_rgba (1.0, badge_color_end.R, badge_color_end.G, badge_color_end.B, badge_color_end.A);
+				stroke = new Pattern.linear (0, y, 0, y + height);
+				stroke.add_color_stop_rgba (0.2, stroke_color_start.R, stroke_color_start.G, stroke_color_start.B, 0.8);
+				stroke.add_color_stop_rgba (0.8, stroke_color_end.R, stroke_color_end.G, stroke_color_end.B, 0.8);
+				fill = new Pattern.linear (0, y, 0, y + height);
+				fill.add_color_stop_rgba (0.1, badge_color_start.R, badge_color_start.G, badge_color_start.B, 1.0);
+				fill.add_color_stop_rgba (0.5, badge_color_middle.R, badge_color_middle.G, badge_color_middle.B, 1.0);
+				fill.add_color_stop_rgba (0.9, badge_color_end.R, badge_color_end.G, badge_color_end.B, 1.0);
 				draw_rounded_line (surface, x, y, width, height, true, true, stroke, fill);
 				
-				// draw inline "shadow"
-				cr.set_line_width (line_width / 2.0);
-				stroke = new Pattern.rgba (badge_color_end.R, badge_color_end.G, badge_color_end.B, badge_color_end.A);
-				draw_rounded_line (surface, x + line_width, y + line_width, width - 2.0 * line_width, height - 2.0 * line_width, true, true, stroke, null);
+				// draw inline highlight
+				stroke = new Pattern.rgba (0.9, 0.9, 0.9, 0.1);
+				draw_rounded_line (surface, x + line_width, y + line_width, width - 2 * line_width, height - 2 * line_width, true, true, stroke, null);
 			}
 			
 			var layout = new Pango.Layout (pango_context_get ());
@@ -399,7 +406,7 @@ namespace Plank.Drawing
 			cr.set_line_width (line_width);
 			Pango.cairo_layout_path (cr, layout);
 			cr.stroke_preserve ();
-			cr.set_source_rgba (1.0, 1.0, 1.0, 1.0);
+			cr.set_source_rgba (1.0, 1.0, 1.0, 0.95);
 			cr.fill ();
 			cr.restore ();
 		}
@@ -420,68 +427,46 @@ namespace Plank.Drawing
 			
 			var cr = surface.Context;
 			
-			// TODO use theme-colors or even make it themeable
-			
-			var padding = 2.0;
+			// FIXME enhance scalability and adjustments depending on icon-size
+			var line_width = 1.0;
+			var padding = 4.0;
 			var width = surface.Width - 2.0 * padding;
-			var height = double.min (26.0, 0.18 * surface.Height);
+			var height = double.min (18.0, (int) (0.15 * surface.Height));
 			var x = padding;
 			var y = surface.Height - height - padding;
 			
-			var line_width = 1.0;
 			cr.set_line_width (line_width);
 			
+			Pattern stroke, fill;
+			
 			// draw the outer stroke
-			x += line_width / 2.0;
-			y += line_width / 2.0;
-			width -= line_width;
-			height -= line_width;
+			stroke = new Pattern.linear (0, y, 0, y + height);
+			stroke.add_color_stop_rgba (0.5, 0.5, 0.5, 0.5, 0.1);
+			stroke.add_color_stop_rgba (0.9, 0.8, 0.8, 0.8, 0.4);
+			draw_rounded_line (surface, x, y + line_width / 2.0, width, height, true, true, stroke, null);
 			
-			var outer_stroke = new Pattern.linear (0, y, 0, y + height);
-			outer_stroke.add_color_stop_rgba (0, 0, 0, 0, 0.3);
-			outer_stroke.add_color_stop_rgba (1, 1, 1, 1, 0.3);
-			
-			draw_rounded_line (surface, x, y, width, height, true, true, outer_stroke, null);
-			
-			// draw the finished stroke/fill
+			// draw the background
 			x += line_width;
 			y += line_width;
-			width -= 2 * line_width;
-			height -= 2 * line_width;
+			width -= 2.0 * line_width;
+			height -= 2.0 * line_width;
+			
+			stroke = new Pattern.rgba (0.20, 0.20, 0.20, 0.9);
+			fill = new Pattern.linear (0, y, 0, y + height);
+			fill.add_color_stop_rgba (0.4, 0.25, 0.25, 0.25, 1.0);
+			fill.add_color_stop_rgba (0.9, 0.35, 0.35, 0.35, 1.0);
+			draw_rounded_line (surface, x, y, width, height, true, true, stroke, fill);
+			
+			// draw the finished bar
+			x += line_width;
+			y += line_width;
+			width -= 2.0 * line_width;
+			height -= 2.0 * line_width;
+			
 			var finished_width = progress * width - line_width / 2.0;
-			
-			var finished_stroke = new Pattern.linear (0, y, 0, y + height);
-			finished_stroke.add_color_stop_rgba (0, 67 / 255.0, 165 / 255.0, 226 / 255.0, 1);
-			finished_stroke.add_color_stop_rgba (1, 32 / 255.0, 94 / 255.0, 136 / 255.0, 1);
-			
-			var finished_fill = new Pattern.linear (0, y, 0, y + height);
-			finished_fill.add_color_stop_rgba (0, 91 / 255.0, 174 / 255.0, 226 / 255.0, 1);
-			finished_fill.add_color_stop_rgba (1, 35 / 255.0, 115 / 255.0, 164 / 255.0, 1);
-			
-			draw_rounded_line (surface, x, y, finished_width, height, true, false, finished_stroke, finished_fill);
-			
-			// draw the remaining stroke/fill
-			var remaining_stroke = new Pattern.linear (0, y, 0, y + height);
-			remaining_stroke.add_color_stop_rgba (0, 82 / 255.0, 82 / 255.0, 82 / 255.0, 1);
-			remaining_stroke.add_color_stop_rgba (1, 148 / 255.0, 148 / 255.0, 148 / 255.0, 1);
-			
-			var remaining_fill = new Pattern.linear (0, y, 0, y + height);
-			remaining_fill.add_color_stop_rgba (0, 106 / 255.0, 106 / 255.0, 106 / 255.0, 1);
-			remaining_fill.add_color_stop_rgba (1, 159 / 255.0, 159 / 255.0, 159 / 255.0, 1);
-			
-			draw_rounded_line (surface, x + finished_width + line_width, y, width - finished_width, height, false, true, remaining_stroke, remaining_fill);
-			
-			// draw the highlight on the finished part
-			x += line_width;
-			y += line_width;
-			width -= line_width;
-			height -= 2 * line_width;
-			
-			var finished_highlight = new Pattern.linear (0, y, 0, y + height);
-			finished_highlight.add_color_stop_rgba (0, 1, 1, 1, 0.3);
-			finished_highlight.add_color_stop_rgba (0.2, 1, 1, 1, 0);
-			
-			draw_rounded_line (surface, x, y, finished_width, height, true, false, finished_highlight, null);
+			stroke = new Pattern.rgba (0.8, 0.8, 0.8, 1.0);
+			fill = new Pattern.rgba (0.9, 0.9, 0.9, 1.0);
+			draw_rounded_line (surface, x, y, finished_width, height, true, true, stroke, fill);
 		}
 		
 		/**
