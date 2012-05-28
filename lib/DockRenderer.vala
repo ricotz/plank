@@ -376,9 +376,18 @@ namespace Plank
 				icon_cr.set_operator (Cairo.Operator.OVER);
 			}
 			
-			// draw badge text
-			if (item.BadgeText != "")
-				theme.draw_badge (icon_surface, icon_size, get_styled_color (), item.BadgeText);
+			
+			// TODO put them onto a cached icon_overlay_surface for performance reasons?
+			// maybe even draw outside of the item-draw-area (considering the hover-area)
+			
+			// draw item's count
+			if (item.CountVisible)
+				theme.draw_item_count (icon_surface, icon_size, get_styled_color ().add_hue (theme.UrgentHueShift), item.Count);
+			
+			// draw item's progress
+			if (item.ProgressVisible)
+				theme.draw_item_progress (icon_surface, icon_size, get_styled_color (), item.Progress);
+			
 			
 			// darken the icon
 			if (darken > 0) {

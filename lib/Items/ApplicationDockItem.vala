@@ -204,6 +204,11 @@ namespace Plank.Items
 			update_indicator (0);
 		}
 		
+		public void set_urgent (bool is_urgent)
+		{
+			handle_urgent_changed (is_urgent);
+		}
+		
 		void handle_urgent_changed (bool is_urgent)
 		{
 			var was_urgent = (State & ItemState.URGENT) == ItemState.URGENT;

@@ -206,6 +206,51 @@ namespace Plank.Drawing
 		}
 		
 		/**
+		 * Draws a rounded horizontal line.
+		 *
+		 * @param cr the context to draw with
+		 * @param x the x location of the line
+		 * @param y the y location of the line
+		 * @param width the width of the line
+		 * @param height the height of the line
+		 * @param is_round_left weather the left is round or not
+		 * @param is_round_right weather the right is round or not
+		 * @param stroke filling style of the outline
+		 * @param fill filling style of the inner area
+		 */
+		public static void draw_rounded_line (Context cr, double x, double y, double width, double height, bool is_round_left, bool is_round_right, Pattern? stroke = null, Pattern? fill = null)
+		{
+			if (height > width) {
+				y += (height - width) / 2.0;
+				height = width;
+			}
+			
+			var left_radius = is_round_left ? height / 2.0 : 0.0;
+			var right_radius = is_round_right ? height / 2.0 : 0.0;
+			
+			cr.move_to (x + width - right_radius, y);
+			cr.line_to (x + left_radius, y);
+			if (is_round_left)
+				cr.arc_negative (x + left_radius, y + left_radius, left_radius, -Math.PI / 2.0, Math.PI / 2.0);
+			else
+				cr.line_to (x, y + height);
+			cr.line_to (x + width - right_radius, y + height);
+			if (is_round_right)
+				cr.arc_negative (x + width - right_radius, y + right_radius, right_radius, Math.PI / 2.0, -Math.PI / 2.0);
+			else
+				cr.line_to (x + width, y);
+			cr.close_path ();
+			
+			if (fill != null) {
+				cr.set_source (fill);
+				cr.fill_preserve ();
+			}
+			if (stroke != null)
+				cr.set_source (stroke);
+			cr.stroke ();
+		}
+		
+		/**
 		 * {@inheritDoc}
 		 */
 		protected override void verify (string prop)
