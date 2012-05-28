@@ -205,10 +205,21 @@ namespace Plank.Drawing
 			cr.arc (x + top_radius,            y + top_radius,             top_radius,    Math.PI,       Math.PI * 1.5);
 		}
 		
-		public static void draw_rounded_line (DockSurface surface, double x, double y, double width, double height, bool is_round_left, bool is_round_right, Pattern? stroke = null, Pattern? fill = null)
+		/**
+		 * Draws a rounded horizontal line.
+		 *
+		 * @param cr the context to draw with
+		 * @param x the x location of the line
+		 * @param y the y location of the line
+		 * @param width the width of the line
+		 * @param height the height of the line
+		 * @param is_round_left weather the left is round or not
+		 * @param is_round_right weather the right is round or not
+		 * @param stroke filling style of the outline
+		 * @param fill filling style of the inner area
+		 */
+		public static void draw_rounded_line (Context cr, double x, double y, double width, double height, bool is_round_left, bool is_round_right, Pattern? stroke = null, Pattern? fill = null)
 		{
-			var cr = surface.Context;
-			
 			if (height > width) {
 				y += (height - width) / 2.0;
 				height = width;

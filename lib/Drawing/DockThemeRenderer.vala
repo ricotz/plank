@@ -359,7 +359,7 @@ namespace Plank.Drawing
 			if (!is_small) {
 				// draw outline shadow
 				stroke = new Pattern.rgba (0.2, 0.2, 0.2, 0.3);
-				draw_rounded_line (surface, x - line_width / 2, y + line_width / 2, width + line_width, height, true, true, stroke, null);
+				draw_rounded_line (cr, x - line_width / 2, y + line_width / 2, width + line_width, height, true, true, stroke, null);
 				
 				// draw filled gradient with outline
 				stroke = new Pattern.linear (0, y, 0, y + height);
@@ -369,11 +369,11 @@ namespace Plank.Drawing
 				fill.add_color_stop_rgba (0.1, badge_color_start.R, badge_color_start.G, badge_color_start.B, 1.0);
 				fill.add_color_stop_rgba (0.5, badge_color_middle.R, badge_color_middle.G, badge_color_middle.B, 1.0);
 				fill.add_color_stop_rgba (0.9, badge_color_end.R, badge_color_end.G, badge_color_end.B, 1.0);
-				draw_rounded_line (surface, x, y, width, height, true, true, stroke, fill);
+				draw_rounded_line (cr, x, y, width, height, true, true, stroke, fill);
 				
 				// draw inline highlight
 				stroke = new Pattern.rgba (0.9, 0.9, 0.9, 0.1);
-				draw_rounded_line (surface, x + line_width, y + line_width, width - 2 * line_width, height - 2 * line_width, true, true, stroke, null);
+				draw_rounded_line (cr, x + line_width, y + line_width, width - 2 * line_width, height - 2 * line_width, true, true, stroke, null);
 			}
 			
 			var layout = new Pango.Layout (pango_context_get ());
@@ -443,7 +443,7 @@ namespace Plank.Drawing
 			stroke = new Pattern.linear (0, y, 0, y + height);
 			stroke.add_color_stop_rgba (0.5, 0.5, 0.5, 0.5, 0.1);
 			stroke.add_color_stop_rgba (0.9, 0.8, 0.8, 0.8, 0.4);
-			draw_rounded_line (surface, x, y + line_width / 2.0, width, height, true, true, stroke, null);
+			draw_rounded_line (cr, x, y + line_width / 2.0, width, height, true, true, stroke, null);
 			
 			// draw the background
 			x += line_width;
@@ -455,7 +455,7 @@ namespace Plank.Drawing
 			fill = new Pattern.linear (0, y, 0, y + height);
 			fill.add_color_stop_rgba (0.4, 0.25, 0.25, 0.25, 1.0);
 			fill.add_color_stop_rgba (0.9, 0.35, 0.35, 0.35, 1.0);
-			draw_rounded_line (surface, x, y, width, height, true, true, stroke, fill);
+			draw_rounded_line (cr, x, y, width, height, true, true, stroke, fill);
 			
 			// draw the finished bar
 			x += line_width;
@@ -466,7 +466,7 @@ namespace Plank.Drawing
 			var finished_width = progress * width - line_width / 2.0;
 			stroke = new Pattern.rgba (0.8, 0.8, 0.8, 1.0);
 			fill = new Pattern.rgba (0.9, 0.9, 0.9, 1.0);
-			draw_rounded_line (surface, x, y, finished_width, height, true, true, stroke, fill);
+			draw_rounded_line (cr, x, y, finished_width, height, true, true, stroke, fill);
 		}
 		
 		/**
