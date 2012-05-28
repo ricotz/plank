@@ -209,18 +209,23 @@ namespace Plank.Drawing
 		{
 			var cr = surface.Context;
 			
+			if (height > width) {
+				y += (height - width) / 2.0;
+				height = width;
+			}
+			
 			var left_radius = is_round_left ? height / 2.0 : 0.0;
 			var right_radius = is_round_right ? height / 2.0 : 0.0;
 			
 			cr.move_to (x + width - right_radius, y);
 			cr.line_to (x + left_radius, y);
 			if (is_round_left)
-				cr.arc_negative (x + left_radius, y + height / 2.0, left_radius, -Math.PI / 2.0, Math.PI / 2.0);
+				cr.arc_negative (x + left_radius, y + left_radius, left_radius, -Math.PI / 2.0, Math.PI / 2.0);
 			else
 				cr.line_to (x, y + height);
 			cr.line_to (x + width - right_radius, y + height);
 			if (is_round_right)
-				cr.arc_negative (x + width - right_radius, y + height / 2.0, right_radius, Math.PI / 2.0, -Math.PI / 2.0);
+				cr.arc_negative (x + width - right_radius, y + right_radius, right_radius, Math.PI / 2.0, -Math.PI / 2.0);
 			else
 				cr.line_to (x + width, y);
 			cr.close_path ();
