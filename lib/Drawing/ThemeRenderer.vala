@@ -88,7 +88,7 @@ namespace Plank.Drawing
 		 */
 		public int get_top_offset ()
 		{
-			return LineWidth;
+			return 2 * LineWidth;
 		}
 		
 		/**
@@ -98,7 +98,7 @@ namespace Plank.Drawing
 		 */
 		public int get_bottom_offset ()
 		{
-			return BottomRoundness > 0 ? LineWidth : 0;
+			return BottomRoundness > 0 ? 2 * LineWidth : 0;
 		}
 		
 		/**
@@ -110,7 +110,6 @@ namespace Plank.Drawing
 		{
 			var cr = surface.Context;
 			
-			var top_offset    = get_top_offset ();
 			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			
 			var gradient = new Pattern.linear (0, 0, 0, surface.Height);
@@ -123,11 +122,12 @@ namespace Plank.Drawing
 			
 			draw_rounded_rect (cr,
 				LineWidth / 2.0,
-				top_offset / 2.0,
+				LineWidth / 2.0,
 				surface.Width - LineWidth,
-				surface.Height - top_offset / 2.0 - bottom_offset / 2.0,
+				surface.Height - LineWidth / 2.0 - bottom_offset / 2.0,
 				TopRoundness,
-				BottomRoundness);
+				BottomRoundness,
+				LineWidth);
 			cr.fill_preserve ();
 			cr.restore ();
 			
@@ -135,7 +135,7 @@ namespace Plank.Drawing
 			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			
-			gradient = new Pattern.linear (0, top_offset, 0, surface.Height - top_offset - bottom_offset);
+			gradient = new Pattern.linear (0, 2 * LineWidth, 0, surface.Height - 2 * LineWidth - bottom_offset);
 			
 			gradient.add_color_stop_rgba (0, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.5);
 			gradient.add_color_stop_rgba ((TopRoundness > 0 ? TopRoundness : LineWidth) / (double) surface.Height, InnerStrokeColor.R, InnerStrokeColor.G, InnerStrokeColor.B, 0.12);
@@ -159,16 +159,16 @@ namespace Plank.Drawing
 		 */
 		protected void draw_inner_rect (Context cr, int width, int height)
 		{
-			var top_offset    = get_top_offset ();
 			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			
 			draw_rounded_rect (cr,
 				3 * LineWidth / 2.0,
-				3 * top_offset / 2.0,
+				3 * LineWidth / 2.0,
 				width - 3 * LineWidth,
-				height - 3 * top_offset / 2.0 - 3 * bottom_offset / 2.0,
-				TopRoundness,
-				BottomRoundness);
+				height - 3 * LineWidth / 2.0 - 3 * bottom_offset / 2.0,
+				TopRoundness - LineWidth,
+				BottomRoundness - LineWidth,
+				LineWidth);
 		}
 		
 		/**
@@ -181,20 +181,21 @@ namespace Plank.Drawing
 		 * @param height the height of the rect
 		 * @param top_radius the roundedness of the top edge
 		 * @param bottom_radius the roundedness of the bottom edge
+		 * @param line_width the line-width of the rect
 		 */
-		protected void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0)
+		public static void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0, double line_width = 1.0)
 		{
 			var min_size  = double.min (width, height);
 			
-			top_radius    = double.min (top_radius, min_size);
-			bottom_radius = double.min (bottom_radius, min_size - top_radius);
+			top_radius    = double.max (0, double.min (top_radius, min_size));
+			bottom_radius = double.max (0, double.min (bottom_radius, min_size - top_radius));
 			
 			if (!Gdk.Screen.get_default ().is_composited ())
 				top_radius = bottom_radius = 0.0;
 			
 			// if the top isnt round, we have to adjust the starting point a bit
 			if (top_radius == 0.0)
-				cr.move_to (x - LineWidth / 2.0, y);
+				cr.move_to (x - line_width / 2.0, y);
 			else
 				cr.move_to (x + top_radius, y);
 			
@@ -202,6 +203,51 @@ namespace Plank.Drawing
 			cr.arc (x + width - bottom_radius, y + height - bottom_radius, bottom_radius, 0,             Math.PI * 0.5);
 			cr.arc (x + bottom_radius,         y + height - bottom_radius, bottom_radius, Math.PI * 0.5, Math.PI);
 			cr.arc (x + top_radius,            y + top_radius,             top_radius,    Math.PI,       Math.PI * 1.5);
+		}
+		
+		/**
+		 * Draws a rounded horizontal line.
+		 *
+		 * @param cr the context to draw with
+		 * @param x the x location of the line
+		 * @param y the y location of the line
+		 * @param width the width of the line
+		 * @param height the height of the line
+		 * @param is_round_left weather the left is round or not
+		 * @param is_round_right weather the right is round or not
+		 * @param stroke filling style of the outline
+		 * @param fill filling style of the inner area
+		 */
+		public static void draw_rounded_line (Context cr, double x, double y, double width, double height, bool is_round_left, bool is_round_right, Pattern? stroke = null, Pattern? fill = null)
+		{
+			if (height > width) {
+				y += (height - width) / 2.0;
+				height = width;
+			}
+			
+			var left_radius = is_round_left ? height / 2.0 : 0.0;
+			var right_radius = is_round_right ? height / 2.0 : 0.0;
+			
+			cr.move_to (x + width - right_radius, y);
+			cr.line_to (x + left_radius, y);
+			if (is_round_left)
+				cr.arc_negative (x + left_radius, y + left_radius, left_radius, -Math.PI / 2.0, Math.PI / 2.0);
+			else
+				cr.line_to (x, y + height);
+			cr.line_to (x + width - right_radius, y + height);
+			if (is_round_right)
+				cr.arc_negative (x + width - right_radius, y + right_radius, right_radius, Math.PI / 2.0, -Math.PI / 2.0);
+			else
+				cr.line_to (x + width, y);
+			cr.close_path ();
+			
+			if (fill != null) {
+				cr.set_source (fill);
+				cr.fill_preserve ();
+			}
+			if (stroke != null)
+				cr.set_source (stroke);
+			cr.stroke ();
 		}
 		
 		/**

@@ -30,14 +30,17 @@ namespace Plank.Items
 	 */
 	public class ApplicationDockItem : DockItem
 	{
+		// for FDO Desktop Actions
+		// see http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#extra-actions
+		private const string DESKTOP_ACTION_KEY = "Actions";
+		private const string DESKTOP_ACTION_GROUP_NAME = "Desktop Action %s";
+		
 		// for the Unity static quicklists
 		// see https://wiki.edubuntu.org/Unity/LauncherAPI#Static_Quicklist_entries
 		private const string UNITY_QUICKLISTS_KEY = "X-Ayatana-Desktop-Shortcuts";
 		private const string UNITY_QUICKLISTS_SHORTCUT_GROUP_NAME = "%s Shortcut Group";
 		private const string UNITY_QUICKLISTS_TARGET_KEY = "TargetEnvironment";
 		private const string UNITY_QUICKLISTS_TARGET_VALUE = "Unity";
-		private const string UNITY_QUICKLISTS_NAME_KEY = "Name";
-		private const string UNITY_QUICKLISTS_EXEC_KEY = "Exec";
 		
 		/**
 		 * Signal fired when the item's 'keep in dock' menu item is pressed.
@@ -72,8 +75,8 @@ namespace Plank.Items
 		
 		ArrayList<string> supported_mime_types = new ArrayList<string> ();
 		
-		ArrayList<string> shortcuts = new ArrayList<string> ();
-		HashMap<string, string> shortcut_map = new HashMap<string, string> (str_hash, str_equal);
+		ArrayList<string> actions = new ArrayList<string> ();
+		HashMap<string, string> actions_map = new HashMap<string, string> (str_hash, str_equal);
 		
 		/**
 		 * {@inheritDoc}
@@ -114,6 +117,7 @@ namespace Plank.Items
 			app.active_changed.connect (handle_active_changed);
 			app.running_changed.connect (handle_running_changed);
 			app.urgent_changed.connect (handle_urgent_changed);
+			app.user_visible_changed.connect (handle_user_visible_changed);
 			app.window_added.connect (handle_window_added);
 			app.window_removed.connect (handle_window_removed);
 			app.closed.connect (handle_closed);
@@ -124,6 +128,7 @@ namespace Plank.Items
 			app.active_changed.disconnect (handle_active_changed);
 			app.running_changed.disconnect (handle_running_changed);
 			app.urgent_changed.disconnect (handle_urgent_changed);
+			app.user_visible_changed.disconnect (handle_user_visible_changed);
 			app.window_added.disconnect (handle_window_added);
 			app.window_removed.disconnect (handle_window_removed);
 			app.closed.disconnect (handle_closed);
@@ -153,6 +158,17 @@ namespace Plank.Items
 			App = Matcher.get_default ().app_for_launcher (Prefs.Launcher);
 			
 			launcher_changed ();
+		}
+		
+		void handle_user_visible_changed (bool user_visible)
+		{
+			if (user_visible)
+				return;
+			
+			if (this is TransientDockItem)
+				App = null;
+			
+			app_closed ();
 		}
 		
 		void handle_closed ()
@@ -188,6 +204,11 @@ namespace Plank.Items
 			handle_urgent_changed (false);
 			handle_active_changed (false);
 			update_indicator (0);
+		}
+		
+		public void set_urgent (bool is_urgent)
+		{
+			handle_urgent_changed (is_urgent);
 		}
 		
 		void handle_urgent_changed (bool is_urgent)
@@ -305,14 +326,23 @@ namespace Plank.Items
 				items.add (item);
 			}
 			
-			if (!is_window () && shortcuts.size > 0) {
+			if (!is_window () && actions.size > 0) {
 				items.add (new SeparatorMenuItem ());
 				
-				foreach (var s in shortcuts) {
-					var item = new Gtk.MenuItem.with_mnemonic (s);
+				foreach (var s in actions) {
+					var values = actions_map.get (s).split (";;");
+					
+					Gtk.MenuItem item;
+					if (values[1] != null && values[1] != "") {
+						item = new Gtk.ImageMenuItem.with_mnemonic (s);
+						(item as Gtk.ImageMenuItem).set_image (new Gtk.Image.from_icon_name (values[1], IconSize.MENU));
+					 } else {
+						item = new Gtk.MenuItem.with_mnemonic (s);
+					 }
+						
 					item.activate.connect (() => {
 						try {
-							AppInfo.create_from_commandline (shortcut_map.get (s), null, AppInfoCreateFlags.NONE).launch (null, null);
+							AppInfo.create_from_commandline (values[0], null, AppInfoCreateFlags.NONE).launch (null, null);
 						} catch { }
 					});
 					items.add (item);
@@ -394,7 +424,7 @@ namespace Plank.Items
 			stop_monitor ();
 			
 			string icon, text;
-			parse_launcher (Prefs.Launcher, out icon, out text, shortcuts, shortcut_map, supported_mime_types);
+			parse_launcher (Prefs.Launcher, out icon, out text, actions, actions_map, supported_mime_types);
 			Icon = icon;
 			ForcePixbuf = null;
 			Text = text;
@@ -403,16 +433,16 @@ namespace Plank.Items
 		}
 		
 		/**
-		 * Parses a launcher to get the text, icon and Unity static quicklist shortcuts.
+		 * Parses a launcher to get the text, icon and actions.
 		 *
 		 * @param launcher the launcher file (.desktop file) to parse
 		 * @param icon the icon key from the launcher
 		 * @param text the text key from the launcher
-		 * @param shortcuts a list of all Unity static quicklist shortcuts by name
-		 * @param shortcut_map a map of Unity static quicklist shortcuts from name to exec
+		 * @param actions a list of all actions by name
+		 * @param actions_map a map of actions from name to exec;;icon
 		 * @param mimes a list of all supported mime types
 		 */
-		public static void parse_launcher (string launcher, out string icon, out string text, ArrayList<string>? shortcuts, HashMap<string, string>? shortcut_map, ArrayList<string>? mimes)
+		public static void parse_launcher (string launcher, out string icon, out string text, ArrayList<string>? actions = null, Map<string, string>? actions_map = null, ArrayList<string>? mimes = null)
 		{
 			icon = "";
 			text = "";
@@ -430,17 +460,27 @@ namespace Plank.Items
 						mimes.add (ContentType.from_mime_type (mime));
 				}
 				
+				// get FDO Desktop Actions
+				// see http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#extra-actions
 				// get the Unity static quicklists
 				// see https://wiki.edubuntu.org/Unity/LauncherAPI#Static Quicklist entries
-				if (shortcuts != null && shortcut_map != null) {
-					shortcuts.clear ();
-					shortcut_map.clear ();
+				if (actions != null && actions_map != null) {
+					actions.clear ();
+					actions_map.clear ();
 					
-					if (file.has_key (KeyFileDesktop.GROUP, UNITY_QUICKLISTS_KEY))
-						foreach (var shortcut in file.get_string_list (KeyFileDesktop.GROUP, UNITY_QUICKLISTS_KEY)) {
-							var group = UNITY_QUICKLISTS_SHORTCUT_GROUP_NAME.printf (shortcut);
-							if (!file.has_group (group))
-								continue;
+					string[] keys = {DESKTOP_ACTION_KEY, UNITY_QUICKLISTS_KEY};
+					
+					foreach (var key in keys) {
+						if (!file.has_key (KeyFileDesktop.GROUP, key))
+							continue;
+						
+						foreach (var action in file.get_string_list (KeyFileDesktop.GROUP, key)) {
+							var group = DESKTOP_ACTION_GROUP_NAME.printf (action);
+							if (!file.has_group (group)) {
+								group = UNITY_QUICKLISTS_SHORTCUT_GROUP_NAME.printf (action);
+								if (!file.has_group (group))
+									continue;
+							}
 							
 							// check for TargetEnvironment
 							if (file.has_key (group, UNITY_QUICKLISTS_TARGET_KEY)) {
@@ -449,11 +489,25 @@ namespace Plank.Items
 									continue;
 							}
 							
-							// check for OnlyShowIn
-							if (file.has_key (group, "OnlyShowIn")) {
+							// check for NotShowIn
+							if (file.has_key (group, KeyFileDesktop.KEY_NOT_SHOW_IN)) {
 								var found = false;
 								
-								foreach (var s in file.get_string_list (group, "OnlyShowIn"))
+								foreach (var s in file.get_string_list (group, KeyFileDesktop.KEY_NOT_SHOW_IN))
+									if (s == "Plank") {
+										found = true;
+										break;
+									}
+								
+								if (found)
+									continue;
+							}
+							
+							// check for OnlyShowIn
+							if (file.has_key (group, KeyFileDesktop.KEY_ONLY_SHOW_IN)) {
+								var found = false;
+								
+								foreach (var s in file.get_string_list (group, KeyFileDesktop.KEY_ONLY_SHOW_IN))
 									if (s == UNITY_QUICKLISTS_TARGET_VALUE || s == "Plank") {
 										found = true;
 										break;
@@ -463,10 +517,18 @@ namespace Plank.Items
 									continue;
 							}
 							
-							var name = file.get_locale_string (group, UNITY_QUICKLISTS_NAME_KEY);
-							shortcuts.add (name);
-							shortcut_map.set (name, file.get_string (group, UNITY_QUICKLISTS_EXEC_KEY));
+							// check for Icon
+							var action_icon = "";
+							if (file.has_key (group, KeyFileDesktop.KEY_ICON))
+								icon = file.get_string (group, KeyFileDesktop.KEY_ICON);
+							
+							var action_name = file.get_locale_string (group, KeyFileDesktop.KEY_NAME);
+							var action_exec = file.get_string (group, KeyFileDesktop.KEY_EXEC);
+							
+							actions.add (action_name);
+							actions_map.set (action_name, "%s;;%s".printf (action_exec, action_icon));
 						}
+					}
 				}
 			} catch { }
 		}

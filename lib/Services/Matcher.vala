@@ -38,7 +38,7 @@ namespace Plank.Services.Windows
 			return matcher;
 		}
 		
-		ArrayList<Bamf.View> pending_views = new ArrayList<Bamf.View> ();
+		HashSet<Bamf.View> pending_views = new HashSet<Bamf.View> ();
 		Bamf.Matcher? bamf_matcher;
 		
 		private Matcher ()
@@ -71,14 +71,15 @@ namespace Plank.Services.Windows
 		
 		void view_user_visible_changed (Bamf.View view, bool user_visible)
 		{
-			view.user_visible_changed.disconnect (view_user_visible_changed);
-			pending_views.remove (view);
+			if (!user_visible)
+				return;
+			
 			view_opened (view);
 		}
 		
 		void view_opened (Bamf.View arg1)
 		{
-			if (!arg1.is_user_visible ()) {
+			if (arg1 is Bamf.Application && !arg1.is_user_visible ()) {
 				pending_views.add (arg1);
 				arg1.user_visible_changed.connect (view_user_visible_changed);
 				return;

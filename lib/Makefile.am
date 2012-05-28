@@ -77,6 +77,7 @@ libplank3_la_VALASOURCES = \
 	Services/Paths.vala \
 	Services/Preferences.vala \
 	Services/System.vala \
+	Services/Unity.vala \
 	Services/WindowControl.vala \
 	Widgets/CompositedWindow.vala \
 	Widgets/DockWindow.vala \

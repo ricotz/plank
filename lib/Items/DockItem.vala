@@ -167,9 +167,29 @@ namespace Plank.Items
 		public string Text { get; set; default = ""; }
 		
 		/**
-		 * The text for the dock item's badge (if any).
+		 * The count for the dock item.
 		 */
-		public string BadgeText { get; set; default = ""; }
+		public int64 Count { get; set; default = 0; }
+		
+		/**
+		 * Show the item's count or not.
+		 */
+		public bool CountVisible { get; set; default = false; }
+		
+		/**
+		 * The progress for this dock item.
+		 */
+		public double Progress { get; set; default = 0; }
+		
+		/**
+		 * Show the item's progress or not.
+		 */
+		public bool ProgressVisible { get; set; default = false; }
+		
+		/**
+		 * The dock item's quicklist-dbusmenu-path.
+		 */
+		public string QuicklistPath { get; set; default = ""; }
 		
 		/**
 		 * The dock item's position on the dock.
@@ -375,10 +395,7 @@ namespace Plank.Items
 				pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
 			else
 				pbuf = DrawingService.ar_scale (pbuf, surface.Width, surface.Height);
-			// FIXME surface.Context (in theory) should never be null, yet I am seeing that sometimes
-			assert (pbuf != null && surface.Context != null);
-			if (pbuf == null || surface.Context == null)
-				return;
+			
 			cairo_set_source_pixbuf (surface.Context, pbuf, 0, 0);
 			surface.Context.paint ();
 		}

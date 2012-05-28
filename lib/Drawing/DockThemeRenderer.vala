@@ -328,90 +328,145 @@ namespace Plank.Drawing
 		 * @param color the color of the badge
 		 * @param badge_text the text for the badge
 		 */
-		public void draw_badge (DockSurface surface, int icon_size, Color color, string badge_text)
+		public void draw_item_count (DockSurface surface, int icon_size, Color color, int64 count)
 		{
 			var cr = surface.Context;
 			
-			var badge_color_start = color.set_val (1).set_sat (0.47);
-			var badge_color_end = color.set_val (0.5).set_sat (0.51);
+			var badge_color_start = color.copy ().brighten_val (1.0);
+			var badge_color_middle = color.copy ().set_sat (0.87);
+			var badge_color_end = color.copy ().set_sat (0.87).darken_val (0.7);
+			var stroke_color_start = color.copy ().set_sat (0.9);
+			var stroke_color_end = color.copy ().set_sat (0.9).darken_val (0.9);
 			
+			// FIXME enhance scalability and adjustments depending on icon-size
 			var is_small = icon_size < 32;
-			var padding = 4;
-			var lineWidth = 2;
-			var size = (is_small ? 0.9 : 0.65) * double.min (surface.Width, surface.Height);
-			var x = surface.Width - size / 2.0;
-			var y = size / 2.0;
+			var is_large = icon_size > 54;
+			var padding = (is_small ? 1.0 : (is_large ? 4.5 : 2.0));
+			var line_width = (is_small ? 0.0 : (is_large ? 2.0 : 1.0));
+
+			var height = (is_small ? 0.80 : 0.50) * double.min (surface.Width, surface.Height) - 2.0 * line_width;
+			var width = (0.75 + 0.25 * count.to_string ().length) * height;
+			var max_width = surface.Width - 2.0 * line_width;
+			if (width > max_width)
+				width = max_width;
+			var x = surface.Width - width - line_width;
+			var y = line_width;
+			
+			cr.set_line_width (line_width);
+			
+			Pattern stroke, fill;
 			
 			if (!is_small) {
 				// draw outline shadow
-				cr.set_line_width (lineWidth);
-				cr.set_source_rgba (0, 0, 0, 0.5);
-				cr.arc (x, y + 1, size / 2 - lineWidth, 0, Math.PI * 2);
-				cr.stroke ();
+				stroke = new Pattern.rgba (0.2, 0.2, 0.2, 0.3);
+				draw_rounded_line (cr, x - line_width / 2, y + line_width / 2, width + line_width, height, true, true, stroke, null);
 				
-				// draw filled gradient
-				var rg = new Pattern.radial (x, lineWidth, 0, x, lineWidth, size);
-				rg.add_color_stop_rgba (0, badge_color_start.R, badge_color_start.G, badge_color_start.B, badge_color_start.A);
-				rg.add_color_stop_rgba (1.0, badge_color_end.R, badge_color_end.G, badge_color_end.B, badge_color_end.A);
+				// draw filled gradient with outline
+				stroke = new Pattern.linear (0, y, 0, y + height);
+				stroke.add_color_stop_rgba (0.2, stroke_color_start.R, stroke_color_start.G, stroke_color_start.B, 0.8);
+				stroke.add_color_stop_rgba (0.8, stroke_color_end.R, stroke_color_end.G, stroke_color_end.B, 0.8);
+				fill = new Pattern.linear (0, y, 0, y + height);
+				fill.add_color_stop_rgba (0.1, badge_color_start.R, badge_color_start.G, badge_color_start.B, 1.0);
+				fill.add_color_stop_rgba (0.5, badge_color_middle.R, badge_color_middle.G, badge_color_middle.B, 1.0);
+				fill.add_color_stop_rgba (0.9, badge_color_end.R, badge_color_end.G, badge_color_end.B, 1.0);
+				draw_rounded_line (cr, x, y, width, height, true, true, stroke, fill);
 				
-				cr.set_source (rg);
-				cr.arc (x, y, size / 2 - lineWidth, 0, Math.PI * 2);
-				cr.fill ();
-				
-				// draw outline
-				cr.set_source_rgba (1, 1, 1, 1);
-				cr.arc (x, y, size / 2 - lineWidth, 0, Math.PI * 2);
-				cr.stroke ();
-				
-				cr.set_line_width (lineWidth / 2);
-				cr.set_source_rgba (badge_color_end.R, badge_color_end.G, badge_color_end.B, badge_color_end.A);
-				cr.arc (x, y, size / 2 - 2 * lineWidth, 0, Math.PI * 2);
-				cr.stroke ();
-				
-				cr.set_source_rgba (0, 0, 0, 0.2);
-			} else {
-				lineWidth = 0;
-				padding = 2;
+				// draw inline highlight
+				stroke = new Pattern.rgba (0.9, 0.9, 0.9, 0.1);
+				draw_rounded_line (cr, x + line_width, y + line_width, width - 2 * line_width, height - 2 * line_width, true, true, stroke, null);
 			}
 			
 			var layout = new Pango.Layout (pango_context_get ());
-			layout.set_width ((int) (surface.Height / 2 * Pango.SCALE));
+			layout.set_width ((int) (width * Pango.SCALE));
 			layout.set_ellipsize (Pango.EllipsizeMode.NONE);
 			
 			var font_description = new Gtk.Style ().font_desc;
-			font_description.set_absolute_size ((int) (surface.Height / 2 * Pango.SCALE));
+			font_description.set_absolute_size ((int) (height * Pango.SCALE));
 			font_description.set_weight (Pango.Weight.BOLD);
 			layout.set_font_description (font_description);
 			
-			layout.set_text (badge_text, -1);
+			layout.set_text (count.to_string (), -1);
 			Pango.Rectangle ink_rect, logical_rect;
 			layout.get_pixel_extents (out ink_rect, out logical_rect);
 			
-			size -= 2 * padding + 2 * lineWidth;
+			var scale = double.min (1.0, double.min ((width - 2.0 * padding - 2.0 * line_width) / (double) logical_rect.width, (height - 2.0 * padding) / (double) logical_rect.height));
 			
-			var scale = double.min (1, double.min (size / (double) logical_rect.width, size / (double) logical_rect.height));
+			if (!is_small)
+				cr.set_source_rgba (0.0, 0.0, 0.0, 0.2);
+			else
+				cr.set_source_rgba (0.0, 0.0, 0.0, 0.6);
 			
-			if (!is_small) {
-				cr.set_source_rgba (0, 0, 0, 0.2);
-			} else {
-				cr.set_source_rgba (0, 0, 0, 0.6);
-				x = surface.Width - scale * logical_rect.width / 2;
-				y = scale * logical_rect.height / 2;
-			}
-			
-			cr.move_to (x - scale * logical_rect.width / 2, y - scale * logical_rect.height / 2);
+			cr.move_to (x + width / 2.0 - scale * logical_rect.width / 2.0, y + height / 2.0 - scale * logical_rect.height / 2.0 - line_width / 2.0);
 			
 			// draw text
 			cr.save ();
 			if (scale < 1)
 				cr.scale (scale, scale);
 			
-			cr.set_line_width (2);
+			cr.set_line_width (line_width);
 			Pango.cairo_layout_path (cr, layout);
 			cr.stroke_preserve ();
-			cr.set_source_rgba (1, 1, 1, 1);
+			cr.set_source_rgba (1.0, 1.0, 1.0, 0.95);
 			cr.fill ();
 			cr.restore ();
+		}
+
+
+		/**
+		 * Draws a progress bar for an item.
+		 *
+		 * @param surface the surface to draw the progress onto
+		 * @param icon_size the icon-size of the dock
+		 * @param color the color of the progress
+		 * @param progress the value between 0.0 and 1.0
+		 */
+		public void draw_item_progress (DockSurface surface, int icon_size, Color color, double progress)
+		{
+			if (progress < 0)
+				return;
+			
+			var cr = surface.Context;
+			
+			// FIXME enhance scalability and adjustments depending on icon-size
+			var line_width = 1.0;
+			var padding = 4.0;
+			var width = surface.Width - 2.0 * padding;
+			var height = double.min (18.0, (int) (0.15 * surface.Height));
+			var x = padding;
+			var y = surface.Height - height - padding;
+			
+			cr.set_line_width (line_width);
+			
+			Pattern stroke, fill;
+			
+			// draw the outer stroke
+			stroke = new Pattern.linear (0, y, 0, y + height);
+			stroke.add_color_stop_rgba (0.5, 0.5, 0.5, 0.5, 0.1);
+			stroke.add_color_stop_rgba (0.9, 0.8, 0.8, 0.8, 0.4);
+			draw_rounded_line (cr, x, y + line_width / 2.0, width, height, true, true, stroke, null);
+			
+			// draw the background
+			x += line_width;
+			y += line_width;
+			width -= 2.0 * line_width;
+			height -= 2.0 * line_width;
+			
+			stroke = new Pattern.rgba (0.20, 0.20, 0.20, 0.9);
+			fill = new Pattern.linear (0, y, 0, y + height);
+			fill.add_color_stop_rgba (0.4, 0.25, 0.25, 0.25, 1.0);
+			fill.add_color_stop_rgba (0.9, 0.35, 0.35, 0.35, 1.0);
+			draw_rounded_line (cr, x, y, width, height, true, true, stroke, fill);
+			
+			// draw the finished bar
+			x += line_width;
+			y += line_width;
+			width -= 2.0 * line_width;
+			height -= 2.0 * line_width;
+			
+			var finished_width = progress * width - line_width / 2.0;
+			stroke = new Pattern.rgba (0.8, 0.8, 0.8, 1.0);
+			fill = new Pattern.rgba (0.9, 0.9, 0.9, 1.0);
+			draw_rounded_line (cr, x, y, finished_width, height, true, true, stroke, fill);
 		}
 		
 		/**
