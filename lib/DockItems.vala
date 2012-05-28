@@ -188,10 +188,6 @@ namespace Plank
 				if (item is TransientDockItem)
 					last_sort = item.Sort;
 			
-			var launcher = app.get_desktop_file ();
-			if (launcher != "" && !File.new_for_path (launcher).query_exists ())
-				return;
-			
 			var found = item_for_application (app);
 			if (found != null) {
 				found.App = app;
