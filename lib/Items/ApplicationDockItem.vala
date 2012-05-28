@@ -404,6 +404,9 @@ namespace Plank.Items
 			icon = "";
 			text = "";
 			
+			if (launcher == null || launcher == "")
+				return;
+			
 			try {
 				var file = new KeyFile ();
 				file.load_from_file (launcher, 0);

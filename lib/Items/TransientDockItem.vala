@@ -33,7 +33,7 @@ namespace Plank.Items
 		construct
 		{
 			var launcher = App.get_desktop_file ();
-			if (launcher == "") {
+			if (launcher == null || launcher == "") {
 				Text = App.get_name ();
 				ForcePixbuf = WindowControl.get_app_icon (App);
 			} else {
