@@ -129,6 +129,8 @@ namespace Plank.Services
 					connection.signal_unsubscribe (launcher_entry_dbus_signal_id);
 				if (dbus_name_owner_changed_signal_id > 0)
 					connection.signal_unsubscribe (dbus_name_owner_changed_signal_id);
+				
+				connection.close_sync ();
 			}
 		}
 		
