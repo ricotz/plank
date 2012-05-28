@@ -74,6 +74,16 @@ namespace Plank.Drawing
 		}
 		
 		/**
+		 * Makes a copy of this color.
+		 *
+		 * @return the new color
+		 */
+		public Color copy ()
+		{
+			return new Color (R, G, B, A);
+		}
+		
+		/**
 		 * Sets the hue for the color.
 		 *
 		 * @param hue the new hue for the color

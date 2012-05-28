@@ -98,6 +98,7 @@ plank_drawing_color_new
 plank_drawing_color_construct
 plank_drawing_color_new_from_gdk
 plank_drawing_color_construct_from_gdk
+plank_drawing_color_copy
 plank_drawing_color_set_hue
 plank_drawing_color_set_sat
 plank_drawing_color_set_val
