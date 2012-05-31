@@ -457,7 +457,7 @@ namespace Plank.Items
 				icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
 				text = file.get_locale_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
 				
-				if (mimes != null) {
+				if (mimes != null && file.has_key (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_MIME_TYPE)) {
 					var mimestrings = file.get_string_list (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_MIME_TYPE);
 					foreach (var mime in mimestrings)
 						mimes.add (ContentType.from_mime_type (mime));
