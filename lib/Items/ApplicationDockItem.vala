@@ -150,7 +150,7 @@ namespace Plank.Items
 		
 		public bool is_window ()
 		{
-			return (App != null && App.get_desktop_file () == "");
+			return (App != null && (App.get_desktop_file () == null || App.get_desktop_file () == ""));
 		}
 		
 		void handle_launcher_changed ()
@@ -446,6 +446,9 @@ namespace Plank.Items
 		{
 			icon = "";
 			text = "";
+			
+			if (launcher == null || launcher == "")
+				return;
 			
 			try {
 				var file = new KeyFile ();

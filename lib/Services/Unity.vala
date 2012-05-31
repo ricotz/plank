@@ -204,7 +204,11 @@ namespace Plank.Services
 					if (app_item == null || app_item.App == null)
 						continue;
 					
-					var p = app_item.App.get_desktop_file ().split("/");
+					var desktop_file = app_item.App.get_desktop_file ();
+					if (desktop_file == null || desktop_file == "")
+						continue;
+					
+					var p = desktop_file.split("/");
 					if (p.length == 0)
 						continue;
 					

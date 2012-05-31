@@ -52,6 +52,9 @@ namespace Plank.Services.Windows
 		
 		~Matcher ()
 		{
+			foreach (var view in pending_views)
+				view.user_visible_changed.disconnect (view_user_visible_changed);				
+			
 			bamf_matcher.active_application_changed.disconnect (handle_app_changed);
 			bamf_matcher.active_window_changed.disconnect (handle_window_changed);
 			bamf_matcher.view_opened.disconnect (view_opened);
