@@ -117,7 +117,9 @@ namespace Plank.Widgets
 			x = int.max (monitor.x, int.min (x, monitor.x + monitor.width - width_request));
 			y = int.max (monitor.y, int.min (y, monitor.y + monitor.height - height_request));
 			
+			show ();
 			move (x, y);
+			hide ();
 		}
 		
 		void update_layout ()
