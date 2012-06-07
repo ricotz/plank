@@ -43,25 +43,11 @@ namespace Plank.Widgets
 			double_buffered = false;
 			
 			var screen = get_screen ();
-#if USE_GTK2
-			set_default_colormap (screen.get_rgba_colormap () ?? screen.get_rgb_colormap ());
-			
-			realize.connect (() => {
-				get_window ().set_back_pixmap (null, false);
-			});
-#else
 			set_visual (screen.get_rgba_visual () ?? screen.get_system_visual ());
-#endif
 		}
 		
-#if USE_GTK2
-		public override bool expose_event (EventExpose event)
-		{
-			var cr = cairo_create (event.window);
-#else
 		public override bool draw (Cairo.Context cr)
 		{
-#endif
 			cr.set_operator (Cairo.Operator.CLEAR);
 			cr.rectangle (0, 0, width_request, height_request);
 			cr.fill ();

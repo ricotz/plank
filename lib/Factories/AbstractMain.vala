@@ -16,9 +16,6 @@
 // 
 
 using Gtk;
-#if USE_GTK2
-using Unique;
-#endif
 using Posix;
 
 using Plank.Services;
@@ -122,11 +119,7 @@ namespace Plank.Factories
 		/**
 		 * The Application for preserving uniqueness
 		 */
-#if USE_GTK2
-		Unique.App application;
-#else
 		Gtk.Application application;
-#endif
 		
 		/**
 		 * Initializes the program, makes the dock and starts it.
@@ -265,11 +258,6 @@ namespace Plank.Factories
 			// ensure only one instance per dock_path
 			var path = app_dbus + "." + dock_path;
 			
-#if USE_GTK2
-			application = new App (path, null);
-			if (!application.is_running)
-				return args;
-#else
 			application = new Gtk.Application (path, ApplicationFlags.FLAGS_NONE);
 			try {
 				if (application.register () && !application.get_is_remote ())
@@ -277,7 +265,6 @@ namespace Plank.Factories
 			} catch {
 				error ("Registering application as '%s' failed.", dock_path);
 			}
-#endif
 			
 			warning ("Exiting because another instance of this application is already running with the name '%s'.", dock_path);
 			Posix.exit (-1);
@@ -355,11 +342,7 @@ namespace Plank.Factories
 		public virtual void show_about ()
 		{
 			if (about_dlg != null) {
-#if USE_GTK2
-				about_dlg.window.raise ();
-#else
 				about_dlg.show_all ();
-#endif
 				return;
 			}
 			
@@ -380,11 +363,7 @@ namespace Plank.Factories
 			about_dlg.set_translator_credits (about_translators);
 			
 			about_dlg.response.connect (() => {
-#if USE_GTK2
-				about_dlg.hide_all ();
-#else
 				about_dlg.hide ();
-#endif
 			});
 			about_dlg.hide.connect (() => {
 				about_dlg.destroy ();

@@ -86,14 +86,8 @@ namespace Plank.Widgets
 			return double.max (0, double.min (1, (double) new DateTime.now_utc ().difference (start_time) / RUN_LENGTH));
 		}
 		
-#if USE_GTK2
-		public override bool expose_event (EventExpose event)
-		{
-			var cr = cairo_create (event.window);
-#else
 		public override bool draw (Cairo.Context cr)
 		{
-#endif
 			cr.set_operator (Operator.SOURCE);
 			cr.set_source_rgba (0, 0, 0, 0);
 			cr.paint ();
