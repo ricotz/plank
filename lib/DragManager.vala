@@ -139,11 +139,7 @@ namespace Plank
 			controller.prefs.delay ();
 			
 			InternalDragActive = true;
-#if USE_GTK2
-			keyboard_grab (controller.window.get_window (), true, get_current_event_time ());
-#else
 			context.get_device ().grab (controller.window.get_window (), GrabOwnership.APPLICATION, true, EventMask.ALL_EVENTS_MASK, null, get_current_event_time ());
-#endif
 			drag_canceled = false;
 			
 			if (proxy_window != null) {
@@ -228,11 +224,7 @@ namespace Plank
 						DragItem.delete ();
 						
 						int x, y;
-#if USE_GTK2
-						controller.window.get_display ().get_pointer (null, out x, out y, null);
-#else
 						context.get_device ().get_position (null, out x, out y);
-#endif
 						new PoofWindow (x, y);
 					}
 				} else {
@@ -247,11 +239,7 @@ namespace Plank
 			
 			InternalDragActive = false;
 			DragItem = null;
-#if USE_GTK2
-			keyboard_ungrab (get_current_event_time ());
-#else
 			context.get_device ().ungrab (get_current_event_time ());
-#endif
 			
 			controller.window.notify["HoveredItem"].disconnect (hovered_item_changed);
 
@@ -356,20 +344,12 @@ namespace Plank
 			foreach (var window in window_stack) {
 				int w_x, w_y, w_width, w_height;
 				window.get_position (out w_x, out w_y);
-#if USE_GTK2
-				window.get_size (out w_width, out w_height);
-#else
 				w_width = window.get_width ();
 				w_height = window.get_height ();
-#endif
 				var w_geo = Gdk.Rectangle () {x = w_x, y = w_y, width = w_width, height = w_height};
 				
 				int x, y;
-#if USE_GTK2
-				controller.window.get_display ().get_pointer (null, out x, out y, null);
-#else
 				controller.window.get_display ().get_device_manager ().get_client_pointer ().get_position (null, out x, out y);
-#endif
 				
 				if (window.is_visible () && w_geo.intersect (Gdk.Rectangle () {x = x, y = y}, null))
 					return window;
@@ -393,12 +373,8 @@ namespace Plank
 			}
 			
 			ModifierType mod;
-#if USE_GTK2
-			controller.window.get_display ().get_pointer (null, null, null, out mod);
-#else
 			double[] axes = {};
 			controller.window.get_display ().get_device_manager ().get_client_pointer ().get_state (controller.window.get_window (), axes, out mod);
-#endif
 			
 			if ((mod & ModifierType.BUTTON1_MASK) == ModifierType.BUTTON1_MASK) {
 				Gdk.Window bestProxy = best_proxy_window ();
@@ -411,13 +387,8 @@ namespace Plank
 
 		void enable_drag_to ()
 		{
-#if USE_GTK2
-			var te1 = TargetEntry () { target = "text/uri-list", flags = 0, info = 0 };
-			var te2 = TargetEntry () { target = "text/plank-uri-list", flags = 0, info = 0 };
-#else
 			TargetEntry te1 = { "text/uri-list", 0, 0 };
 			TargetEntry te2 = { "text/plank-uri-list", 0, 0 };
-#endif
 			drag_dest_set (controller.window, 0, {te1, te2}, DragAction.COPY);
 		}
 		
@@ -429,11 +400,7 @@ namespace Plank
 		void enable_drag_from ()
 		{
 			// we dont really want to offer the drag to anything, merely pretend to, so we set a mimetype nothing takes
-#if USE_GTK2
-			var te = TargetEntry () { target = "text/plank-uri-list", flags = TargetFlags.SAME_APP, info = 0 };
-#else
 			TargetEntry te = { "text/plank-uri-list", TargetFlags.SAME_APP, 0};
-#endif
 			drag_source_set (controller.window, ModifierType.BUTTON1_MASK, { te }, DragAction.PRIVATE);
 		}
 		

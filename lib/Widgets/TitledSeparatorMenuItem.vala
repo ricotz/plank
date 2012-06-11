@@ -47,14 +47,8 @@ namespace Plank.Widgets
 			draw_line = false;
 		}
 		
-#if USE_GTK2
-		protected override bool expose_event (Gdk.EventExpose event)
-		{
-			var cr = cairo_create (event.window);
-#else
 		protected override bool draw (Cairo.Context cr)
 		{
-#endif
 			Gtk.Allocation alloc;
 			get_allocation (out alloc);
 			
@@ -74,11 +68,7 @@ namespace Plank.Widgets
 				
 				if (wide_separators)
 					Gtk.paint_box (style,
-#if USE_GTK2
-						get_window (), StateType.NORMAL, ShadowType.ETCHED_OUT, event.area,
-#else
 						cr, StateType.NORMAL, ShadowType.ETCHED_OUT,
-#endif
 						this, "hseparator",
 						alloc.x + horizontal_padding + xthickness,
 						alloc.y + (alloc.height - separator_height - ythickness)/2,
@@ -86,11 +76,7 @@ namespace Plank.Widgets
 						separator_height);
 				else
 					Gtk.paint_hline (style,
-#if USE_GTK2
-						get_window (), StateType.NORMAL, event.area,
-#else
 						cr, StateType.NORMAL,
-#endif
 						this, "menuitem",
 						alloc.x + horizontal_padding + xthickness,
 						alloc.x + alloc.width - horizontal_padding - xthickness - 1,
@@ -110,11 +96,7 @@ namespace Plank.Widgets
 			layout.get_pixel_extents (out ink_rect, out logical_rect);
 			
 			Gtk.paint_flat_box (parent.get_style (),
-#if USE_GTK2
-				get_window (), StateType.NORMAL, ShadowType.NONE, null,
-#else
 				cr, StateType.NORMAL, ShadowType.NONE,
-#endif
 				this, null,
 				0, alloc.y,
 				alloc.x + logical_rect.width + 2 * horizontal_padding, alloc.height);

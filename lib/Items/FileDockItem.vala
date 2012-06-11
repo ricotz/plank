@@ -248,6 +248,11 @@ namespace Plank.Items
 			
 			items.add (new SeparatorMenuItem ());
 			
+			var delete_item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
+			delete_item.active = true;
+			delete_item.activate.connect (() => delete ());
+			items.add (delete_item);
+			
 			var item = create_menu_item (_("_Open in File Browser"), "gtk-open");
 			item.activate.connect (() => {
 				launch ();
@@ -260,6 +265,11 @@ namespace Plank.Items
 		ArrayList<Gtk.MenuItem> get_file_menu_items ()
 		{
 			var items = new ArrayList<Gtk.MenuItem> ();
+			
+			var delete_item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
+			delete_item.active = true;
+			delete_item.activate.connect (() => delete ());
+			items.add (delete_item);
 			
 			var item = create_menu_item (_("_Open"), "gtk-open");
 			item.activate.connect (launch);
