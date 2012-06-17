@@ -174,10 +174,10 @@ namespace Plank.Factories
 			Logger.initialize (program_name);
 			Logger.DisplayLevel = LogLevel.INFO;
 			message ("%s version: %s", program_name, build_version);
-			var un = Posix.utsname ();
-			message ("Kernel version: %s", (string) un.release);
+			message ("Kernel version: %s", Posix.utsname ().release);
 			message ("GLib version: %u.%u.%u", glib_major_version, glib_minor_version, glib_micro_version);
 			message ("GTK version: %d.%d.%d", Gtk.MAJOR_VERSION, Gtk.MINOR_VERSION, Gtk.MICRO_VERSION);
+			message ("Wnck version: %d.%d.%d", Wnck.Version.MAJOR_VERSION, Wnck.Version.MINOR_VERSION, Wnck.Version.MICRO_VERSION);
 			message ("Cairo version: %s", Cairo.version_string ());
 			message ("Pango version: %s", Pango.version_string ());
 			Logger.DisplayLevel = LogLevel.WARN;
