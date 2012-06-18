@@ -93,6 +93,8 @@ namespace Plank
 			Matcher.get_default ().window_closed.connect (update_window_intersect);
 			
 			Wnck.Screen.get_default ().active_window_changed.connect (handle_window_changed);
+			Wnck.Screen.get_default ().active_workspace_changed.connect (handle_workspace_changed);
+			
 			setup_active_window ();
 		}
 		
@@ -109,6 +111,7 @@ namespace Plank
 			Matcher.get_default ().window_closed.disconnect (update_window_intersect);
 			
 			Wnck.Screen.get_default ().active_window_changed.disconnect (handle_window_changed);
+			Wnck.Screen.get_default ().active_workspace_changed.disconnect (handle_workspace_changed);
 			
 			stop_timers ();
 		}
@@ -279,19 +282,29 @@ namespace Plank
 			update_hidden ();
 		}
 		
+		void schedule_update ()
+		{
+			if (timer_window_changed > 0)
+				return;
+			
+			timer_window_changed = GLib.Timeout.add (UPDATE_TIMEOUT, () => {
+				update_window_intersect ();
+				timer_window_changed = 0;
+				return false;
+			});
+		}
+		
+		void handle_workspace_changed (Wnck.Workspace? previous)
+		{
+			schedule_update ();
+		}
+		
 		void handle_window_changed (Wnck.Window? previous)
 		{
 			if (previous != null)
 				previous.geometry_changed.disconnect (handle_geometry_changed);
 			
-			if (timer_window_changed > 0)
-				return;
-			
-			timer_window_changed = GLib.Timeout.add (UPDATE_TIMEOUT, () => {
-				setup_active_window ();
-				timer_window_changed = 0;
-				return false;
-			});
+			setup_active_window ();
 		}
 		
 		void setup_active_window ()
@@ -303,7 +316,7 @@ namespace Plank
 				active_window.geometry_changed.connect (handle_geometry_changed);
 			}
 			
-			update_window_intersect ();
+			schedule_update ();
 		}
 		
 		void handle_geometry_changed (Wnck.Window? w)
