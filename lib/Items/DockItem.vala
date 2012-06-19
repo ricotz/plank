@@ -525,5 +525,21 @@ namespace Plank.Items
 			
 			return item;
 		}
+		
+		/**
+		 * Copy all property value of this dockitem instance to target instance.
+		 *
+		 * @param target the dockitem to copy the values to
+		 */
+		public void copy_values_to (DockItem target)
+		{
+			foreach (var prop in get_class ().list_properties ()) {
+				var name = prop.get_name ();
+				var type = prop.value_type;
+				var val = Value (type);
+				get_property (name, ref val);
+				target.set_property (name, val);
+			}
+		}
 	}
 }

@@ -481,6 +481,7 @@ namespace Plank
 			}
 			
 			var new_item = new TransientDockItem.with_application (app);
+			item.copy_values_to (new_item);
 			replace_item (new_item, item);
 		}
 		
@@ -510,8 +511,7 @@ namespace Plank
 					return;
 				
 				var new_item = new ApplicationDockItem.with_dockitem_file (dockitem_file);
-				if (app_item.App != null)
-					new_item.App = app_item.App;
+				item.copy_values_to (new_item);
 				replace_item (new_item, item);
 			} else {
 				item.delete ();
