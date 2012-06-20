@@ -344,13 +344,13 @@ namespace Plank.Drawing
 			var padding = (is_small ? 1.0 : (is_large ? 4.5 : 2.0));
 			var line_width = (is_small ? 0.0 : (is_large ? 2.0 : 1.0));
 
-			var height = (is_small ? 0.80 : 0.50) * double.min (surface.Width, surface.Height) - 2.0 * line_width;
-			var width = (0.75 + 0.25 * count.to_string ().length) * height;
+			var height = Math.floor ((is_small ? 0.80 : 0.50) * double.min (surface.Width, surface.Height) - 2.0 * line_width);
+			var width = Math.floor ((0.75 + 0.25 * count.to_string ().length) * height);
 			var max_width = surface.Width - 2.0 * line_width;
 			if (width > max_width)
 				width = max_width;
-			var x = surface.Width - width - line_width;
-			var y = line_width;
+			var x = surface.Width - width - line_width / 2.0;
+			var y = line_width + line_width / 2.0;
 			
 			cr.set_line_width (line_width);
 			
@@ -359,7 +359,7 @@ namespace Plank.Drawing
 			if (!is_small) {
 				// draw outline shadow
 				stroke = new Pattern.rgba (0.2, 0.2, 0.2, 0.3);
-				draw_rounded_line (cr, x - line_width / 2, y + line_width / 2, width + line_width, height, true, true, stroke, null);
+				draw_rounded_line (cr, x, y, width + line_width, height, true, true, stroke, null);
 				
 				// draw filled gradient with outline
 				stroke = new Pattern.linear (0, y, 0, y + height);
@@ -396,7 +396,7 @@ namespace Plank.Drawing
 			else
 				cr.set_source_rgba (0.0, 0.0, 0.0, 0.6);
 			
-			cr.move_to (x + width / 2.0 - scale * logical_rect.width / 2.0, y + height / 2.0 - scale * logical_rect.height / 2.0 - line_width / 2.0);
+			cr.move_to (x + Math.floor (width / 2.0 - scale * logical_rect.width / 2.0), y + Math.floor (height / 2.0 - scale * logical_rect.height / 2.0));
 			
 			// draw text
 			cr.save ();
@@ -431,7 +431,7 @@ namespace Plank.Drawing
 			var line_width = 1.0;
 			var padding = 4.0;
 			var width = surface.Width - 2.0 * padding;
-			var height = double.min (18.0, (int) (0.15 * surface.Height));
+			var height = Math.floor (double.min (18.0, (int) (0.15 * surface.Height)));
 			var x = padding;
 			var y = surface.Height - height - padding;
 			
@@ -443,7 +443,7 @@ namespace Plank.Drawing
 			stroke = new Pattern.linear (0, y, 0, y + height);
 			stroke.add_color_stop_rgba (0.5, 0.5, 0.5, 0.5, 0.1);
 			stroke.add_color_stop_rgba (0.9, 0.8, 0.8, 0.8, 0.4);
-			draw_rounded_line (cr, x, y + line_width / 2.0, width, height, true, true, stroke, null);
+			draw_rounded_line (cr, x + line_width / 2.0, y + line_width / 2.0, width, height, true, true, stroke, null);
 			
 			// draw the background
 			x += line_width;
@@ -455,7 +455,7 @@ namespace Plank.Drawing
 			fill = new Pattern.linear (0, y, 0, y + height);
 			fill.add_color_stop_rgba (0.4, 0.25, 0.25, 0.25, 1.0);
 			fill.add_color_stop_rgba (0.9, 0.35, 0.35, 0.35, 1.0);
-			draw_rounded_line (cr, x, y, width, height, true, true, stroke, fill);
+			draw_rounded_line (cr, x + line_width / 2.0, y + line_width / 2.0, width, height, true, true, stroke, fill);
 			
 			// draw the finished bar
 			x += line_width;
@@ -463,10 +463,10 @@ namespace Plank.Drawing
 			width -= 2.0 * line_width;
 			height -= 2.0 * line_width;
 			
-			var finished_width = progress * width - line_width / 2.0;
+			var finished_width = Math.ceil (progress * width);
 			stroke = new Pattern.rgba (0.8, 0.8, 0.8, 1.0);
 			fill = new Pattern.rgba (0.9, 0.9, 0.9, 1.0);
-			draw_rounded_line (cr, x, y, finished_width, height, true, true, stroke, fill);
+			draw_rounded_line (cr, x + line_width / 2.0, y + line_width / 2.0, finished_width, height, true, true, stroke, fill);
 		}
 		
 		/**

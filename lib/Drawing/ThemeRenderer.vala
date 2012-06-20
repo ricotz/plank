@@ -221,9 +221,11 @@ namespace Plank.Drawing
 		public static void draw_rounded_line (Context cr, double x, double y, double width, double height, bool is_round_left, bool is_round_right, Pattern? stroke = null, Pattern? fill = null)
 		{
 			if (height > width) {
-				y += (height - width) / 2.0;
+				y += Math.floor ((height - width) / 2.0);
 				height = width;
 			}
+			
+			height = 2.0 * Math.floor (height / 2.0);
 			
 			var left_radius = is_round_left ? height / 2.0 : 0.0;
 			var right_radius = is_round_right ? height / 2.0 : 0.0;
