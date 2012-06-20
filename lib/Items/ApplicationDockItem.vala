@@ -42,6 +42,8 @@ namespace Plank.Items
 		private const string UNITY_QUICKLISTS_TARGET_KEY = "TargetEnvironment";
 		private const string UNITY_QUICKLISTS_TARGET_VALUE = "Unity";
 		
+		private const string[] SUPPORTED_GETTEXT_DOMAINS_KEYS = {"X-Ubuntu-Gettext-Domain", "X-GNOME-Gettext-Domain"};
+		
 		/**
 		 * Signal fired when the item's 'keep in dock' menu item is pressed.
 		 */
@@ -463,6 +465,13 @@ namespace Plank.Items
 						mimes.add (ContentType.from_mime_type (mime));
 				}
 				
+				string? textdomain = null;
+				foreach (var domain_key in SUPPORTED_GETTEXT_DOMAINS_KEYS)
+					if (file.has_key (KeyFileDesktop.GROUP, domain_key)) {
+						textdomain = file.get_string (KeyFileDesktop.GROUP, domain_key);
+						break;
+					}
+				
 				// get FDO Desktop Actions
 				// see http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#extra-actions
 				// get the Unity static quicklists
@@ -527,6 +536,10 @@ namespace Plank.Items
 							
 							var action_name = file.get_locale_string (group, KeyFileDesktop.KEY_NAME);
 							var action_exec = file.get_string (group, KeyFileDesktop.KEY_EXEC);
+							
+							// apply given gettext-domain if available
+							if (textdomain != null)
+								action_name = GLib.dgettext (textdomain, action_name).dup ();
 							
 							actions.add (action_name);
 							actions_map.set (action_name, "%s;;%s".printf (action_exec, action_icon));
