@@ -301,8 +301,10 @@ namespace Plank
 		
 		void handle_window_changed (Wnck.Window? previous)
 		{
-			if (previous != null)
+			if (previous != null) {
 				previous.geometry_changed.disconnect (handle_geometry_changed);
+				previous.state_changed.disconnect (handle_state_changed);
+			}
 			
 			setup_active_window ();
 		}
@@ -314,7 +316,16 @@ namespace Plank
 			if (active_window != null) {
 				last_window_rect = window_geometry (active_window);
 				active_window.geometry_changed.connect (handle_geometry_changed);
+				active_window.state_changed.connect (handle_state_changed);
 			}
+			
+			schedule_update ();
+		}
+		
+		void handle_state_changed (Wnck.WindowState changed_mask, Wnck.WindowState new_state)
+		{
+			if ((changed_mask & Wnck.WindowState.MINIMIZED) == 0)
+				return;
 			
 			schedule_update ();
 		}
