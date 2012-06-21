@@ -143,6 +143,9 @@ namespace Plank
 			var win_x = controller.position_manager.win_x;
 			var win_y = controller.position_manager.win_y;
 			
+			// update window.HoveredItem
+			controller.window.update_hovered (x - win_x, y - win_y);
+			
 			// compute rect of the window
 			var dock_rect = controller.position_manager.get_cursor_region ();
 			dock_rect.x += win_x;

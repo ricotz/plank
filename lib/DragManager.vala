@@ -253,7 +253,6 @@ namespace Plank
 		void drag_leave (Widget w, DragContext context, uint time_)
 		{
 			controller.hide_manager.update_dock_hovered ();
-			controller.window.update_hovered (-1, -1);
 			drag_known = false;
 			
 			if (ExternalDragActive) {
@@ -309,7 +308,6 @@ namespace Plank
 				drag_status (context, DragAction.COPY, time_);
 			}
 			
-			controller.hide_manager.update_dock_hovered ();
 			controller.window.update_hovered (x, y);
 			
 			return true;
