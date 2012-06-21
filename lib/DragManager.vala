@@ -225,7 +225,7 @@ namespace Plank
 						
 						int x, y;
 						context.get_device ().get_position (null, out x, out y);
-						new PoofWindow (x, y);
+						new PoofWindow (x, y).run ();
 					}
 				} else {
 					// Dropped somewhere on dock
