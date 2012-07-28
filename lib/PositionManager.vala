@@ -56,7 +56,7 @@ namespace Plank
 		 * Initializes the position manager.
 		 */
 		public void initialize ()
-			requires (controller.renderer != null && controller.window != null)
+			requires (controller.window != null)
 		{
 			var screen = controller.window.get_screen ();
 			
@@ -65,8 +65,6 @@ namespace Plank
 			
 			// NOTE don't call update_monitor_geo to avoid a double-call of dockwindow.set_size on startup
 			screen.get_monitor_geometry (controller.prefs.get_monitor (), out monitor_geo);
-			
-			update_dock_position ();
 		}
 		
 		~PositionManager ()
@@ -200,25 +198,23 @@ namespace Plank
 			if (HorizPadding < 0)
 				width -= 2 * HorizPadding;
 			
-			// width of the dock window
-			var dock_width = width + GlowSize / 2;
-			
-			
 			if (controller.prefs.is_horizontal_dock ()) {
 				VisibleDockHeight = height;
 				VisibleDockWidth = width;
 				DockHeight = dock_height;
-				DockWidth = dock_width;
+				DockWidth = monitor_geo.width;
 				DockBackgroundHeight = background_height;
 				DockBackgroundWidth = background_width;
 			} else {
 				VisibleDockHeight = width;
 				VisibleDockWidth = height;
-				DockHeight = dock_width;
+				DockHeight = monitor_geo.height;
 				DockWidth = dock_height;
 				DockBackgroundHeight = background_width;
 				DockBackgroundWidth = background_height;
 			}
+			
+			update_dock_position ();
 		}
 		
 		/**
@@ -273,31 +269,34 @@ namespace Plank
 			static_dock_region.width = VisibleDockWidth;
 			static_dock_region.height = VisibleDockHeight;
 			
+			var xoffset = (DockWidth - static_dock_region.width) / 2;
+			var yoffset = (DockHeight - static_dock_region.height) / 2;
+			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				static_dock_region.x = (DockWidth - static_dock_region.width) / 2;
+				static_dock_region.x = xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
 				static_dock_region.y = DockHeight - static_dock_region.height;
 				
 				cursor_region.x = static_dock_region.x;
 				cursor_region.width = static_dock_region.width;
 				break;
 			case PositionType.TOP:
-				static_dock_region.x = (DockWidth - static_dock_region.width) / 2;
+				static_dock_region.x = xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
 				static_dock_region.y = 0;
 				
 				cursor_region.x = static_dock_region.x;
 				cursor_region.width = static_dock_region.width;
 				break;
 			case PositionType.LEFT:
-				static_dock_region.y = (DockHeight - static_dock_region.height) / 2;
+				static_dock_region.y = yoffset + (int) (controller.prefs.Offset / 100.0 * yoffset);
 				static_dock_region.x = 0;
 				
 				cursor_region.y = static_dock_region.y;
 				cursor_region.height = static_dock_region.height;
 				break;
 			case PositionType.RIGHT:
-				static_dock_region.y = (DockHeight - static_dock_region.height) / 2;
+				static_dock_region.y = yoffset + (int) (controller.prefs.Offset / 100.0 * yoffset);
 				static_dock_region.x = DockWidth - static_dock_region.width;
 				
 				cursor_region.y = static_dock_region.y;
@@ -305,13 +304,7 @@ namespace Plank
 				break;
 			}
 			
-			if (old_region.x != static_dock_region.x
-				|| old_region.y != static_dock_region.y
-				|| old_region.width != static_dock_region.width
-				|| old_region.height != static_dock_region.height)
-				controller.window.set_size ();
-			else
-				controller.renderer.animated_draw ();
+			controller.renderer.animated_draw ();
 		}
 		
 		/**
@@ -539,25 +532,19 @@ namespace Plank
 		 */
 		public void update_dock_position ()
 		{
-			var xoffset = (monitor_geo.width - DockWidth) / 2;
-			var yoffset = (monitor_geo.height - DockHeight) / 2;
-			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				win_x = monitor_geo.x + xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
+				win_x = monitor_geo.x;
 				win_y = monitor_geo.y + monitor_geo.height - DockHeight;
 				break;
 			case PositionType.TOP:
-				win_x = monitor_geo.x + xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
+			case PositionType.LEFT:
+				win_x = monitor_geo.x;
 				win_y = monitor_geo.y;
 				break;
-			case PositionType.LEFT:
-				win_y = monitor_geo.y + yoffset + (int) (controller.prefs.Offset / 100.0 * yoffset);
-				win_x = monitor_geo.x;
-				break;
 			case PositionType.RIGHT:
-				win_y = monitor_geo.y + yoffset + (int) (controller.prefs.Offset / 100.0 * yoffset);
+				win_y = monitor_geo.y;
 				win_x = monitor_geo.x + monitor_geo.width - DockWidth;
 				break;
 			}
@@ -603,20 +590,20 @@ namespace Plank
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				x = (DockWidth - DockBackgroundWidth) / 2;
-				y = DockHeight - DockBackgroundHeight;
+				x = static_dock_region.x + (VisibleDockWidth - DockBackgroundWidth) / 2;
+				y = static_dock_region.y + VisibleDockHeight - DockBackgroundHeight;
 				break;
 			case PositionType.TOP:
-				x = (DockWidth - DockBackgroundWidth) / 2;
+				x = static_dock_region.x + (VisibleDockWidth - DockBackgroundWidth) / 2;
 				y = 0;
 				break;
 			case PositionType.LEFT:
 				x = 0;
-				y = (DockHeight - DockBackgroundHeight) / 2;
+				y = static_dock_region.y + (VisibleDockHeight - DockBackgroundHeight) / 2;
 				break;
 			case PositionType.RIGHT:
-				x = DockWidth - DockBackgroundWidth;
-				y = (DockHeight - DockBackgroundHeight) / 2;
+				x = static_dock_region.x + VisibleDockWidth - DockBackgroundWidth;
+				y = static_dock_region.y + (VisibleDockHeight - DockBackgroundHeight) / 2;
 				break;
 			}
 		}

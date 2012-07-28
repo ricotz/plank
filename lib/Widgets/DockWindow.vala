@@ -282,7 +282,12 @@ namespace Plank.Widgets
 		{
 			var width = controller.position_manager.DockWidth;
 			var height = controller.position_manager.DockHeight;
-
+			
+			int width_current, height_current;
+			get_size_request (out width_current, out height_current);
+			if (width == width_current && height == height_current)
+				return;
+			
 			Logger.verbose ("DockWindow.set_size (width = %i, height = %i)", width, height);
 			
 			set_size_request (width, height);

@@ -84,7 +84,6 @@ namespace Plank
 			
 			controller.prefs.notify.connect (prefs_changed);
 			theme.changed.connect (theme_changed);
-			controller.position_manager.reset_caches (theme);
 			
 			controller.items.item_removed.connect (items_changed);
 			controller.items.item_added.connect (items_changed);
@@ -103,7 +102,9 @@ namespace Plank
 			requires (controller.window != null)
 		{
 			set_widget (controller.window);
+			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
+			controller.window.set_size ();
 			controller.window.notify["HoveredItem"].connect (animated_draw);
 		}
 		
