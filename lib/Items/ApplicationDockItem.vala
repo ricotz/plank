@@ -57,6 +57,15 @@ namespace Plank.Items
 		Bamf.Application? app = null;
 		public Bamf.Application? App {
 			internal get {
+				// Nasty hack for libreoffice as workarround
+				// closing libreoffice results in destroying its Bamf.Application object
+				// and creating a new object which renders our reference useless
+				// https://bugs.launchpad.net/bamf/+bug/1026426
+				// https://bugs.launchpad.net/plank/+bug/1029555
+				warn_if_fail (app == null || (app is Bamf.Application));
+				if (app != null && !(app is Bamf.Application))
+					app = null;
+				
 				return app;
 			}
 			internal construct set {
