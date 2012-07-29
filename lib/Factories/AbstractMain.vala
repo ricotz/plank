@@ -290,7 +290,7 @@ namespace Plank.Factories
 		}
 		
 		/**
-		 * Returns true if the launcher given is the launcher for this dock.
+		 * Is true if the launcher given is the launcher for this dock.
 		 *
 		 * @param launcher the launcher to test
 		 */

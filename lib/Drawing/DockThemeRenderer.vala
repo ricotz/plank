@@ -257,6 +257,7 @@ namespace Plank.Drawing
 		 * @param rect the rect for the glow
 		 * @param color the color of the glow
 		 * @param opacity the opacity of the glow
+		 * @param pos the dock's position
 		 */
 		public void draw_active_glow (DockSurface surface, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
 		{
@@ -326,7 +327,7 @@ namespace Plank.Drawing
 		 * @param surface the surface to draw the badge onto
 		 * @param icon_size the icon-size of the dock
 		 * @param color the color of the badge
-		 * @param badge_text the text for the badge
+		 * @param count the number for the badge to show
 		 */
 		public void draw_item_count (DockSurface surface, int icon_size, Color color, int64 count)
 		{

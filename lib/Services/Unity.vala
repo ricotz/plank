@@ -76,7 +76,7 @@ namespace Plank.Services
 	}
 	
 	/**
-	 * Unity / Launcher API - https://wiki.edubuntu.org/Unity/LauncherAPI
+	 * Unity / Launcher API - wiki.edubuntu.org/Unity/LauncherAPI
 	 */
 	public class Unity : GLib.Object
 	{
