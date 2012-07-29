@@ -134,18 +134,37 @@ namespace Plank.Services
 			}
 		}
 		
-		void handle_bus_acquired (DBusConnection conn, string name) {
-			Logger.verbose ("Unity: %s acquired", name);
-		}
-
-		void handle_name_acquired (DBusConnection conn, string name) {
-			Logger.verbose ("Unity: %s acquired", name);
-		}  
-
-		void handle_name_lost (DBusConnection conn, string name) {
-			debug ("Unity: %s lost", name);
+		/**
+		 * Removes an remote entry from the collection.
+		 *
+		 * @param item the corresponding dockitem of the RemoteEntry to remove
+		 */
+		public void remove_entry (DockItem item)
+		{
+			foreach (var entry in remote_entries.entries) {
+				if (entry.value.Item != item)
+					continue;
+				
+				entry.value.reset ();
+				remote_entries.unset (entry.key);
+				break;
+			}
 		}
 		
+		void handle_bus_acquired (DBusConnection conn, string name)
+		{
+			Logger.verbose ("Unity: %s acquired", name);
+		}
+
+		void handle_name_acquired (DBusConnection conn, string name)
+		{
+			Logger.verbose ("Unity: %s acquired", name);
+		}
+
+		void handle_name_lost (DBusConnection conn, string name)
+		{
+			debug ("Unity: %s lost", name);
+		}
 		
 		void handle_entry_signal (DBusConnection connection, string sender_name, string object_path,
 			string interface_name, string signal_name, Variant parameters)
@@ -177,7 +196,6 @@ namespace Plank.Services
 				break;
 			}
 		}
-		
 		
 		void handle_update_request (string sender_name, Variant parameters)
 		{

@@ -55,11 +55,17 @@ namespace Plank
 		
 		FileMonitor? items_monitor = null;
 		
+		DockController controller;
+		
 		/**
 		 * Creates a new container for dock items.
+		 *
+		 * @param controller the dock controller that owns these items
 		 */
-		public DockItems ()
+		public DockItems (DockController controller)
 		{
+			this.controller = controller;
+			
 			Factory.item_factory.launchers_dir = Paths.AppConfigFolder.get_child (Factory.main.dock_path + "/launchers");
 			
 			// if we made the launcher directory, assume a first run and pre-populate with launchers
@@ -284,6 +290,7 @@ namespace Plank
 			}
 			
 			Items.remove (item);
+			controller.unity.remove_entry (item);
 		}
 		
 		void handle_item_deleted (DockItem item)
