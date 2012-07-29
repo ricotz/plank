@@ -109,10 +109,10 @@ namespace Plank.Items
 			var radius = 3 + 6 * height / (128 - 48);
 			
 			cr.move_to (radius, 0.5);
-			cr.arc (width - radius - 0.5, radius + 0.5, radius, Math.PI * 1.5, Math.PI * 2.0);
-			cr.arc (width - radius - 0.5, height - radius - 0.5, radius, 0, Math.PI * 0.5);
-			cr.arc (radius + 0.5, height - radius - 0.5, radius, Math.PI * 0.5, Math.PI);
-			cr.arc (radius + 0.5, radius + 0.5, radius, Math.PI, Math.PI * 1.5);
+			cr.arc (width - radius - 0.5, radius + 0.5, radius, -Math.PI_2, 0);
+			cr.arc (width - radius - 0.5, height - radius - 0.5, radius, 0, Math.PI_2);
+			cr.arc (radius + 0.5, height - radius - 0.5, radius, Math.PI_2, Math.PI);
+			cr.arc (radius + 0.5, radius + 0.5, radius, Math.PI, -Math.PI_2);
 			
 			cr.set_source_rgba (1, 1, 1, 0.6);
 			cr.set_line_width (1);

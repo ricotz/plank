@@ -160,11 +160,11 @@ namespace Plank.Drawing
 				y_offset = -height;
 				break;
 			case Gtk.PositionType.LEFT:
-				rotate = Math.PI * 0.5;
+				rotate = Math.PI_2;
 				y_offset = -width;
 				break;
 			case Gtk.PositionType.RIGHT:
-				rotate = Math.PI * -0.5;
+				rotate = -Math.PI_2;
 				x_offset = -height;
 				break;
 			}
@@ -284,14 +284,14 @@ namespace Plank.Drawing
 				gradient = new Pattern.linear (0, rect.y + rect.height, 0, rect.y);
 				break;
 			case Gtk.PositionType.LEFT:
-				rotate = Math.PI * 0.5;
+				rotate = Math.PI_2;
 				xoffset = (surface.Height - clip_buffer.Height) / 2.0;
 				yoffset = -clip_buffer.Width;
 				
 				gradient = new Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
 				break;
 			case Gtk.PositionType.RIGHT:
-				rotate = Math.PI * -0.5;
+				rotate = -Math.PI_2;
 				xoffset = (-surface.Height - clip_buffer.Height) / 2.0;
 				yoffset = surface.Width - clip_buffer.Width;
 				
