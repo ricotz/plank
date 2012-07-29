@@ -589,7 +589,7 @@ namespace Plank.Drawing
 			var mean = range / sd;
 			
 			for (var i = 0; i < gaussWidth / 2 + 1; i++)
-				kernel[gaussWidth - i - 1] = kernel[i] = Math.pow (Math.sin (((i + 1) * (Math.PI / 2) - mean) / range), 2) * sd;
+				kernel[gaussWidth - i - 1] = kernel[i] = Math.pow (Math.sin (((i + 1) * Math.PI_2 - mean) / range), 2) * sd;
 			
 			// normalize the values
 			var gaussSum = 0.0;

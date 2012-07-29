@@ -42,10 +42,14 @@ namespace Plank
 		
 		/**
 		 * Triggered when a new item is added to the collection.
+		 *
+		 * @param item the dockitem which was added
 		 */
 		public signal void item_added (DockItem item);
 		/**
 		 * Triggered when an item is removed from the collection.
+		 *
+		 * @param item the dockitem which was removed
 		 */
 		public signal void item_removed (DockItem item);
 		
@@ -435,6 +439,7 @@ namespace Plank
 			item_signals_disconnect (item);
 			
 			Items.remove (item);
+			controller.unity.remove_entry (item);
 			
 			update_item_positions ();
 		}

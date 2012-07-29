@@ -160,11 +160,11 @@ namespace Plank.Drawing
 				y_offset = -height;
 				break;
 			case Gtk.PositionType.LEFT:
-				rotate = Math.PI * 0.5;
+				rotate = Math.PI_2;
 				y_offset = -width;
 				break;
 			case Gtk.PositionType.RIGHT:
-				rotate = Math.PI * -0.5;
+				rotate = -Math.PI_2;
 				x_offset = -height;
 				break;
 			}
@@ -257,6 +257,7 @@ namespace Plank.Drawing
 		 * @param rect the rect for the glow
 		 * @param color the color of the glow
 		 * @param opacity the opacity of the glow
+		 * @param pos the dock's position
 		 */
 		public void draw_active_glow (DockSurface surface, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
 		{
@@ -283,14 +284,14 @@ namespace Plank.Drawing
 				gradient = new Pattern.linear (0, rect.y + rect.height, 0, rect.y);
 				break;
 			case Gtk.PositionType.LEFT:
-				rotate = Math.PI * 0.5;
+				rotate = Math.PI_2;
 				xoffset = (surface.Height - clip_buffer.Height) / 2.0;
 				yoffset = -clip_buffer.Width;
 				
 				gradient = new Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
 				break;
 			case Gtk.PositionType.RIGHT:
-				rotate = Math.PI * -0.5;
+				rotate = -Math.PI_2;
 				xoffset = (-surface.Height - clip_buffer.Height) / 2.0;
 				yoffset = surface.Width - clip_buffer.Width;
 				
@@ -326,7 +327,7 @@ namespace Plank.Drawing
 		 * @param surface the surface to draw the badge onto
 		 * @param icon_size the icon-size of the dock
 		 * @param color the color of the badge
-		 * @param badge_text the text for the badge
+		 * @param count the number for the badge to show
 		 */
 		public void draw_item_count (DockSurface surface, int icon_size, Color color, int64 count)
 		{

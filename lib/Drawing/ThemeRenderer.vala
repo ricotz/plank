@@ -199,10 +199,10 @@ namespace Plank.Drawing
 			else
 				cr.move_to (x + top_radius, y);
 			
-			cr.arc (x + width - top_radius,    y + top_radius,             top_radius,    Math.PI * 1.5, 0);
-			cr.arc (x + width - bottom_radius, y + height - bottom_radius, bottom_radius, 0,             Math.PI * 0.5);
-			cr.arc (x + bottom_radius,         y + height - bottom_radius, bottom_radius, Math.PI * 0.5, Math.PI);
-			cr.arc (x + top_radius,            y + top_radius,             top_radius,    Math.PI,       Math.PI * 1.5);
+			cr.arc (x + width - top_radius,    y + top_radius,             top_radius,    -Math.PI_2, 0);
+			cr.arc (x + width - bottom_radius, y + height - bottom_radius, bottom_radius, 0,           Math.PI_2);
+			cr.arc (x + bottom_radius,         y + height - bottom_radius, bottom_radius, Math.PI_2,   Math.PI);
+			cr.arc (x + top_radius,            y + top_radius,             top_radius,    Math.PI,     -Math.PI_2);
 		}
 		
 		/**
@@ -233,12 +233,12 @@ namespace Plank.Drawing
 			cr.move_to (x + width - right_radius, y);
 			cr.line_to (x + left_radius, y);
 			if (is_round_left)
-				cr.arc_negative (x + left_radius, y + left_radius, left_radius, -Math.PI / 2.0, Math.PI / 2.0);
+				cr.arc_negative (x + left_radius, y + left_radius, left_radius, -Math.PI_2, Math.PI_2);
 			else
 				cr.line_to (x, y + height);
 			cr.line_to (x + width - right_radius, y + height);
 			if (is_round_right)
-				cr.arc_negative (x + width - right_radius, y + right_radius, right_radius, Math.PI / 2.0, -Math.PI / 2.0);
+				cr.arc_negative (x + width - right_radius, y + right_radius, right_radius, Math.PI_2, -Math.PI_2);
 			else
 				cr.line_to (x + width, y);
 			cr.close_path ();

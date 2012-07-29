@@ -57,6 +57,15 @@ namespace Plank.Items
 		Bamf.Application? app = null;
 		public Bamf.Application? App {
 			internal get {
+				// Nasty hack for libreoffice as workarround
+				// closing libreoffice results in destroying its Bamf.Application object
+				// and creating a new object which renders our reference useless
+				// https://bugs.launchpad.net/bamf/+bug/1026426
+				// https://bugs.launchpad.net/plank/+bug/1029555
+				warn_if_fail (app == null || (app is Bamf.Application));
+				if (app != null && !(app is Bamf.Application))
+					app = null;
+				
 				return app;
 			}
 			internal construct set {
@@ -423,10 +432,14 @@ namespace Plank.Items
 		 */
 		protected void load_from_launcher ()
 		{
+			var launcher = Prefs.Launcher;
+			if (launcher == null || launcher == "")
+				return;
+			
 			stop_monitor ();
 			
 			string icon, text;
-			parse_launcher (Prefs.Launcher, out icon, out text, actions, actions_map, supported_mime_types);
+			parse_launcher (launcher, out icon, out text, actions, actions_map, supported_mime_types);
 			Icon = icon;
 			ForcePixbuf = null;
 			Text = text;
@@ -568,6 +581,9 @@ namespace Plank.Items
 		{
 			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) != FileMonitorEvent.CHANGES_DONE_HINT &&
 				(event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
+				return;
+			
+			if (!f.query_exists ())
 				return;
 			
 			debug ("Launcher file '%s' changed, reloading", Prefs.Launcher);
