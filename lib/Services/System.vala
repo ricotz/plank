@@ -139,7 +139,7 @@ namespace Plank.Services
 					return;
 				}
 				
-				error ("Error opening files. The application doesn't support files/URIs or wasn't found.");
+				warning ("The application '%s' doesn't support files/URIs or wasn't found.", info.get_name ());
 			} catch (Error e) {
 				debug ("Error: " + e.domain.to_string ());
 				error (e.message);
