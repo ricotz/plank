@@ -125,17 +125,11 @@ namespace Plank.Services.Windows
 		
 		public Bamf.Application? app_for_launcher (string launcher)
 		{
-			GLib.List<unowned Bamf.View>? apps = bamf_matcher.get_applications ();
+			unowned Bamf.Application? app = bamf_matcher.get_application_for_desktop_file (launcher, false);
 			
-			warn_if_fail (apps != null);
-			if (apps == null)
-				return null;
+			warn_if_fail (app != null);
 			
-			foreach (var app in apps)
-				if (app is Bamf.Application && (app as Bamf.Application).get_desktop_file () == launcher)
-					return app as Bamf.Application;
-			
-			return null;
+			return app;
 		}
 		
 		public void set_favorites (ArrayList<string> favs)
