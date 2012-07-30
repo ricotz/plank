@@ -192,7 +192,10 @@ namespace Plank.Drawing
 			
 			var surface = new DockSurface.with_dock_surface (size, size, model);
 			surface.clear ();
-
+			
+			if (size <= 0)
+				return surface;
+			
 			var cr = surface.Context;
 			
 			var x = size / 2;
@@ -230,6 +233,9 @@ namespace Plank.Drawing
 			var surface = new DockSurface.with_dock_surface (size, size, model);
 			surface.clear ();
 			
+			if (size <= 0)
+				return surface;
+			
 			var cr = surface.Context;
 			
 			var x = size / 2.0;
@@ -261,6 +267,9 @@ namespace Plank.Drawing
 		 */
 		public void draw_active_glow (DockSurface surface, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
 		{
+			if (opacity <= 0.0)
+				return;
+			
 			var cr = surface.Context;
 			
 			var rotate = 0.0;
