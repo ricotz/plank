@@ -158,6 +158,27 @@ namespace Plank
 			return null;
 		}
 		
+		public void add_item_with_launcher (string launcher, DockItem? target = null, int sort = 0)
+		{
+			if (launcher == null || launcher == "")
+				return;
+			
+			// delay automatic add of new dockitems while creating this new one
+			delay_items_monitor ();
+			
+			var dockitem_file = Factory.item_factory.make_dock_item (launcher, sort);
+			if (dockitem_file == null)
+				return;
+			
+			var item = Factory.item_factory.make_item (dockitem_file);
+			add_item (item);
+			
+			if (target != null)
+				move_item_to (item, target);
+			
+			resume_items_monitor ();
+		}
+		
 		void load_items ()
 		{
 			debug ("Reloading dock items...");

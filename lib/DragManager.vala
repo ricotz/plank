@@ -43,9 +43,9 @@ namespace Plank
 
 		public bool HoveredAcceptsDrop { get; private set; }
 		
-		public ArrayList<string> drag_data;
+		public ArrayList<string>? drag_data;
 		
-		public DockItem DragItem { get; private set; }
+		public DockItem? DragItem { get; private set; }
 		
 		bool externalDragActive;
 		public bool ExternalDragActive {
@@ -197,17 +197,27 @@ namespace Plank
 			
 			var item = controller.window.HoveredItem;
 			
+			var sort = 0;
+			if (item != null)
+				sort = item.Sort + 1;
+			
+			if (drag_data.size == 1) {
+				var uri = drag_data[0];
+				if (uri.has_prefix ("file://") && uri.has_suffix (".desktop")) {
+					controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
+					
+					ExternalDragActive = false;
+					return true;
+				}
+			}
+			
 			if (item != null && item.can_accept_drop (drag_data)) {
 				item.accept_drop (drag_data);
 			} else {
-				var pos = 0;
-				if (item != null)
-					pos = item.Sort + 1;
-				
 				foreach (var uri in drag_data) {
 					if (!uri.has_prefix ("file://"))
 						continue;
-					Factory.item_factory.make_dock_item (uri.replace ("file://", ""), pos++);
+					controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
 				}
 			}
 			
