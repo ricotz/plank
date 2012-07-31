@@ -36,7 +36,7 @@ namespace Plank
 	{
 		DockController controller;
 		
-		DockThemeRenderer theme;
+		DockTheme theme;
 		
 		DockSurface? background_buffer;
 		DockSurface? main_buffer;
@@ -79,7 +79,7 @@ namespace Plank
 		{
 			this.controller = controller;
 			
-			theme = new DockThemeRenderer ();
+			theme = new DockTheme ();
 			theme.load ("dock");
 			
 			controller.prefs.notify.connect (prefs_changed);

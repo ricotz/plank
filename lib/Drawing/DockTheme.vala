@@ -25,7 +25,7 @@ namespace Plank.Drawing
 	/**
 	 * A themed renderer for dock windows.
 	 */
-	public class DockThemeRenderer : ThemeRenderer
+	public class DockTheme : Theme
 	{
 		const double MIN_INDICATOR_SIZE = 0.0;
 		const double MAX_INDICATOR_SIZE = 10.0;
@@ -127,7 +127,7 @@ namespace Plank.Drawing
 		 */
 		public DockSurface create_background (int width, int height, Gtk.PositionType position, DockSurface model)
 		{
-			Logger.verbose ("DockThemeRenderer.create_background (width = %i, height = %i)", width, height);
+			Logger.verbose ("DockTheme.create_background (width = %i, height = %i)", width, height);
 			
 			var surface = new DockSurface.with_dock_surface (width, height, model);
 			surface.clear ();
@@ -188,7 +188,7 @@ namespace Plank.Drawing
 		 */
 		public DockSurface create_indicator (int size, Color color, DockSurface model)
 		{
-			Logger.verbose ("DockThemeRenderer.create_indicator (size = %i)", size);
+			Logger.verbose ("DockTheme.create_indicator (size = %i)", size);
 			
 			var surface = new DockSurface.with_dock_surface (size, size, model);
 			surface.clear ();
@@ -228,7 +228,7 @@ namespace Plank.Drawing
 		 */
 		public DockSurface create_urgent_glow (int size, Color color, DockSurface model)
 		{
-			Logger.verbose ("DockThemeRenderer.create_urgent_glow (size = %i)", size);
+			Logger.verbose ("DockTheme.create_urgent_glow (size = %i)", size);
 			
 			var surface = new DockSurface.with_dock_surface (size, size, model);
 			surface.clear ();

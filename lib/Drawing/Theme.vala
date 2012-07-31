@@ -26,7 +26,7 @@ namespace Plank.Drawing
 	/**
 	 * A themed renderer for windows.
 	 */
-	public class ThemeRenderer : Preferences
+	public class Theme : Preferences
 	{
 		[Description(nick = "top-roundness", blurb = "The roundness of the top corners.")]
 		public int TopRoundness { get; set; }
@@ -49,7 +49,7 @@ namespace Plank.Drawing
 		[Description(nick = "inner-stroke-color", blurb = "The color (RGBA) of the inner stroke.")]
 		public Color InnerStrokeColor { get; set; }
 		
-		public ThemeRenderer ()
+		public Theme ()
 		{
 			base ();
 		}

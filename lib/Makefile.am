@@ -53,9 +53,9 @@ libplank_la_VALASOURCES = \
 	Drawing/Color.vala \
 	Drawing/DrawingService.vala \
 	Drawing/DockSurface.vala \
-	Drawing/DockThemeRenderer.vala \
-	Drawing/HoverThemeRenderer.vala \
-	Drawing/ThemeRenderer.vala \
+	Drawing/DockTheme.vala \
+	Drawing/HoverTheme.vala \
+	Drawing/Theme.vala \
 	Factories/AbstractMain.vala \
 	Factories/Factory.vala \
 	Factories/ItemFactory.vala \

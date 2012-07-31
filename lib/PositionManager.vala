@@ -155,7 +155,7 @@ namespace Plank
 		 *
 		 * @param theme the current dock theme
 		 */
-		public void reset_caches (DockThemeRenderer theme)
+		public void reset_caches (DockTheme theme)
 		{
 			Logger.verbose ("PositionManager.reset_caches ()");
 			

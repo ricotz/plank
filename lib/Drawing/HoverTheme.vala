@@ -22,7 +22,7 @@ namespace Plank.Drawing
 	/**
 	 * A themed renderer for hover windows.
 	 */
-	public class HoverThemeRenderer : ThemeRenderer
+	public class HoverTheme : Theme
 	{
 		/**
 		 * {@inheritDoc}

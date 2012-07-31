@@ -41,7 +41,7 @@ namespace Plank.Widgets
 		 */
 		public string Text { get; set; default = ""; }
 		
-		ThemeRenderer theme;
+		HoverTheme theme;
 		
 		Pango.Layout layout;
 		
@@ -61,7 +61,7 @@ namespace Plank.Widgets
 			
 			set_redraw_on_allocate (true);
 			
-			theme = new ThemeRenderer ();
+			theme = new HoverTheme ();
 			theme.load ("hover");
 			theme.changed.connect (theme_changed);
 			
