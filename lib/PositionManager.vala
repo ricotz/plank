@@ -37,6 +37,8 @@ namespace Plank
 		
 		Gdk.Rectangle monitor_geo;
 		
+		bool screen_is_composited;
+		
 		/**
 		 * Creates a new position manager.
 		 *
@@ -65,6 +67,8 @@ namespace Plank
 			
 			// NOTE don't call update_monitor_geo to avoid a double-call of dockwindow.set_size on startup
 			screen.get_monitor_geometry (controller.prefs.get_monitor (), out monitor_geo);
+			
+			screen_is_composited = screen.is_composited ();
 		}
 		
 		~PositionManager ()
@@ -161,6 +165,8 @@ namespace Plank
 		{
 			Logger.verbose ("PositionManager.reset_caches ()");
 			
+			screen_is_composited = controller.window.get_screen ().is_composited ();
+			
 			var icon_size = controller.prefs.IconSize;
 			var scaled_icon_size = icon_size / 10.0;
 			
@@ -176,6 +182,11 @@ namespace Plank
 			top_offset = theme.get_top_offset ();
 			bottom_offset = theme.get_bottom_offset ();
 			
+			if (!screen_is_composited) {
+				HorizPadding = int.max (0, HorizPadding);
+				TopPadding = int.max (0, TopPadding);
+			}
+			
 			// height of the visible (cursor) rect of the dock
 			var height = icon_size + top_offset + TopPadding + bottom_offset + BottomPadding;
 			
@@ -186,7 +197,7 @@ namespace Plank
 				height -= top_offset + TopPadding;
 			
 			// height of the dock window
-			var dock_height = height + (int) (icon_size * theme.UrgentBounceHeight);
+			var dock_height = height + (screen_is_composited ? (int) (icon_size * theme.UrgentBounceHeight) : 0);
 			
 			
 			var width = controller.items.Items.size * (ItemPadding + icon_size) + 2 * HorizPadding + 4 * theme.LineWidth;
@@ -202,13 +213,13 @@ namespace Plank
 				VisibleDockHeight = height;
 				VisibleDockWidth = width;
 				DockHeight = dock_height;
-				DockWidth = monitor_geo.width;
+				DockWidth = (screen_is_composited ? monitor_geo.width : width);
 				DockBackgroundHeight = background_height;
 				DockBackgroundWidth = background_width;
 			} else {
 				VisibleDockHeight = width;
 				VisibleDockWidth = height;
-				DockHeight = monitor_geo.height;
+				DockHeight = (screen_is_composited ? monitor_geo.height : width);
 				DockWidth = dock_height;
 				DockBackgroundHeight = background_width;
 				DockBackgroundWidth = background_height;
@@ -272,31 +283,36 @@ namespace Plank
 			var xoffset = (DockWidth - static_dock_region.width) / 2;
 			var yoffset = (DockHeight - static_dock_region.height) / 2;
 			
+			if (!screen_is_composited) {
+				xoffset = (int) ((1 + controller.prefs.Offset / 100.0) * xoffset);
+				yoffset = (int) ((1 + controller.prefs.Offset / 100.0) * yoffset);
+			}
+			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				static_dock_region.x = xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
+				static_dock_region.x = xoffset;
 				static_dock_region.y = DockHeight - static_dock_region.height;
 				
 				cursor_region.x = static_dock_region.x;
 				cursor_region.width = static_dock_region.width;
 				break;
 			case PositionType.TOP:
-				static_dock_region.x = xoffset + (int) (controller.prefs.Offset / 100.0 * xoffset);
+				static_dock_region.x = xoffset;
 				static_dock_region.y = 0;
 				
 				cursor_region.x = static_dock_region.x;
 				cursor_region.width = static_dock_region.width;
 				break;
 			case PositionType.LEFT:
-				static_dock_region.y = yoffset + (int) (controller.prefs.Offset / 100.0 * yoffset);
+				static_dock_region.y = yoffset;
 				static_dock_region.x = 0;
 				
 				cursor_region.y = static_dock_region.y;
 				cursor_region.height = static_dock_region.height;
 				break;
 			case PositionType.RIGHT:
-				static_dock_region.y = yoffset + (int) (controller.prefs.Offset / 100.0 * yoffset);
+				static_dock_region.y = yoffset;
 				static_dock_region.x = DockWidth - static_dock_region.width;
 				
 				cursor_region.y = static_dock_region.y;
@@ -304,7 +320,13 @@ namespace Plank
 				break;
 			}
 			
-			controller.renderer.animated_draw ();
+			if (old_region.x != static_dock_region.x
+				|| old_region.y != static_dock_region.y
+				|| old_region.width != static_dock_region.width
+				|| old_region.height != static_dock_region.height)
+				controller.window.set_size ();
+			else
+				controller.renderer.animated_draw ();
 		}
 		
 		/**
@@ -532,19 +554,30 @@ namespace Plank
 		 */
 		public void update_dock_position ()
 		{
+			var xoffset = 0;
+			var yoffset = 0;
+			
+			if (!screen_is_composited) {
+				xoffset = (int) ((1 + controller.prefs.Offset / 100.0) * (monitor_geo.width - DockWidth) / 2);
+				yoffset = (int) ((1 + controller.prefs.Offset / 100.0) * (monitor_geo.height - DockHeight) / 2);
+			}
+			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				win_x = monitor_geo.x;
+				win_x = monitor_geo.x + xoffset;
 				win_y = monitor_geo.y + monitor_geo.height - DockHeight;
 				break;
 			case PositionType.TOP:
-			case PositionType.LEFT:
-				win_x = monitor_geo.x;
+				win_x = monitor_geo.x + xoffset;
 				win_y = monitor_geo.y;
 				break;
+			case PositionType.LEFT:
+				win_y = monitor_geo.y + yoffset;
+				win_x = monitor_geo.x;
+				break;
 			case PositionType.RIGHT:
-				win_y = monitor_geo.y;
+				win_y = monitor_geo.y + yoffset;
 				win_x = monitor_geo.x + monitor_geo.width - DockWidth;
 				break;
 			}
@@ -587,23 +620,36 @@ namespace Plank
 		 */
 		public void get_background_position (out int x, out int y)
 		{
+			var xoffset = 0, yoffset = 0;
+			var width = 0, height = 0;
+			
+			if (screen_is_composited) {
+				xoffset = static_dock_region.x;
+				yoffset = static_dock_region.y;
+				width = VisibleDockWidth;
+				height = VisibleDockHeight;
+			} else {
+				width = DockWidth;
+				height = DockHeight;
+			}
+			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				x = static_dock_region.x + (VisibleDockWidth - DockBackgroundWidth) / 2;
-				y = static_dock_region.y + VisibleDockHeight - DockBackgroundHeight;
+				x = xoffset + (width - DockBackgroundWidth) / 2;
+				y = yoffset + height - DockBackgroundHeight;
 				break;
 			case PositionType.TOP:
-				x = static_dock_region.x + (VisibleDockWidth - DockBackgroundWidth) / 2;
+				x = xoffset + (width - DockBackgroundWidth) / 2;
 				y = 0;
 				break;
 			case PositionType.LEFT:
 				x = 0;
-				y = static_dock_region.y + (VisibleDockHeight - DockBackgroundHeight) / 2;
+				y = yoffset + (height - DockBackgroundHeight) / 2;
 				break;
 			case PositionType.RIGHT:
-				x = static_dock_region.x + VisibleDockWidth - DockBackgroundWidth;
-				y = static_dock_region.y + (VisibleDockHeight - DockBackgroundHeight) / 2;
+				x = xoffset + width - DockBackgroundWidth;
+				y = yoffset + (height - DockBackgroundHeight) / 2;
 				break;
 			}
 		}
