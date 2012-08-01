@@ -283,7 +283,7 @@ namespace Plank
 			var xoffset = (DockWidth - static_dock_region.width) / 2;
 			var yoffset = (DockHeight - static_dock_region.height) / 2;
 			
-			if (!screen_is_composited) {
+			if (screen_is_composited) {
 				xoffset = (int) ((1 + controller.prefs.Offset / 100.0) * xoffset);
 				yoffset = (int) ((1 + controller.prefs.Offset / 100.0) * yoffset);
 			}
