@@ -262,7 +262,9 @@ namespace Plank
 				foreach (var w in screen.get_windows ()) {
 					if (w.is_minimized ())
 						continue;
-					if ((w.get_window_type () & (Wnck.WindowType.DESKTOP | Wnck.WindowType.DOCK | Wnck.WindowType.SPLASHSCREEN | Wnck.WindowType.MENU)) != 0)
+					var type = w.get_window_type ();
+					if (type == Wnck.WindowType.DESKTOP || type == Wnck.WindowType.DOCK
+						|| type == Wnck.WindowType.MENU || type == Wnck.WindowType.SPLASHSCREEN)
 						continue;
 					if (!w.is_visible_on_workspace (active_workspace))
 						continue;
