@@ -627,24 +627,24 @@ namespace Plank
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				struts [controller.prefs.Position] = VisibleDockHeight + controller.window.get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
-				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.x;
-				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.x + monitor_geo.width - 1;
+				struts [Struts.BOTTOM] = VisibleDockHeight + controller.window.get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
+				struts [Struts.BOTTOM_START] = monitor_geo.x;
+				struts [Struts.BOTTOM_END] = monitor_geo.x + monitor_geo.width - 1;
 				break;
 			case PositionType.TOP:
-				struts [controller.prefs.Position] = monitor_geo.y + VisibleDockHeight;
-				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.x;
-				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.x + monitor_geo.width - 1;
+				struts [Struts.TOP] = monitor_geo.y + VisibleDockHeight;
+				struts [Struts.TOP_START] = monitor_geo.x;
+				struts [Struts.TOP_END] = monitor_geo.x + monitor_geo.width - 1;
 				break;
 			case PositionType.LEFT:
-				struts [controller.prefs.Position] = monitor_geo.x + VisibleDockWidth;
-				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.y;
-				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.y + monitor_geo.height - 1;
+				struts [Struts.LEFT] = monitor_geo.x + VisibleDockWidth;
+				struts [Struts.LEFT_START] = monitor_geo.y;
+				struts [Struts.LEFT_END] = monitor_geo.y + monitor_geo.height - 1;
 				break;
 			case PositionType.RIGHT:
-				struts [controller.prefs.Position] = VisibleDockWidth + controller.window.get_screen ().get_width () - monitor_geo.x - monitor_geo.width;
-				struts [controller.prefs.Position + Struts.LEFT_START] = monitor_geo.y;
-				struts [controller.prefs.Position + Struts.LEFT_END] = monitor_geo.y + monitor_geo.height - 1;
+				struts [Struts.RIGHT] = VisibleDockWidth + controller.window.get_screen ().get_width () - monitor_geo.x - monitor_geo.width;
+				struts [Struts.RIGHT_START] = monitor_geo.y;
+				struts [Struts.RIGHT_END] = monitor_geo.y + monitor_geo.height - 1;
 				break;
 			}
 		}
