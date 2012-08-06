@@ -1,60 +1,59 @@
-# Polish translation for plank package
-# Copyright (C) 2011 Plank Developers
+# Catalan translation for plank
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the plank package.
-# Piotr Sokół <psokol@jabster.pl>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: plank 0.1.0\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: plank\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-08-05 16:09+0000\n"
-"PO-Revision-Date: 2012-08-05 08:46+0000\n"
-"Last-Translator: Przemysław S <Unknown>\n"
-"Language-Team: Polish <>\n"
+"PO-Revision-Date: 2012-08-04 20:15+0000\n"
+"Last-Translator: Alfredo Hernández <Unknown>\n"
+"Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-08-06 06:00+0000\n"
 "X-Generator: Launchpad (build 15745)\n"
-"Language: \n"
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "Plank. Idiotycznie prosty."
+msgstr "Plank. Estúpidament simple."
 
 #: ../lib/Items/ApplicationDockItem.vala:314
 #: ../lib/Items/FileDockItem.vala:251 ../lib/Items/FileDockItem.vala:269
 msgid "_Keep in Dock"
-msgstr "_Przechowywanie aktywatora"
+msgstr "_Mantenir al Dock"
 
 #: ../lib/Items/ApplicationDockItem.vala:324
 msgid "Unma_ximize"
-msgstr "_Przywróć zwykły rozmiar"
+msgstr "Desma_ximitza"
 
 #: ../lib/Items/ApplicationDockItem.vala:328
 msgid "Ma_ximize"
-msgstr "Zm_aksymalizuj"
+msgstr "Ma_ximitza"
 
 #: ../lib/Items/ApplicationDockItem.vala:333
 msgid "_Close All"
-msgstr "Za_mknij wszystkie"
+msgstr "_Tanca-ho tot"
 
 #: ../lib/Items/FileDockItem.vala:256
 msgid "_Open in File Browser"
-msgstr "_Otwórz w menedżerze plików"
+msgstr "_Obre al navegador de fitxers"
 
 #: ../lib/Items/FileDockItem.vala:274
 msgid "_Open"
-msgstr "_Uruchom"
+msgstr "_Obre"
 
 #: ../lib/Items/FileDockItem.vala:278
 msgid "Open Containing _Folder"
-msgstr "Otwórz katalog _docelowy"
+msgstr "Obre la _carpeta contenidora"
 
 #: ../lib/Items/PlankDockItem.vala:79
 msgid "Get _Help Online..."
-msgstr "Uzyskaj p_omoc online..."
+msgstr "Obteniu _ajuda online..."
 
 #: ../lib/Items/PlankDockItem.vala:83
 msgid "_Translate This Application..."
-msgstr "_Przetłumacz ten program..."
+msgstr "_Traduïu aquesta aplicació..."
