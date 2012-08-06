@@ -104,7 +104,6 @@ namespace Plank
 			set_widget (controller.window);
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
-			controller.window.set_size ();
 			controller.window.notify["HoveredItem"].connect (animated_draw);
 		}
 		
