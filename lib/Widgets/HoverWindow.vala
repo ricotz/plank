@@ -151,8 +151,8 @@ namespace Plank.Widgets
 			// make the buffer
 			Pango.Rectangle ink_rect, logical_rect;
 			layout.get_pixel_extents (out ink_rect, out logical_rect);
-			if (logical_rect.width > 0.8 * screen.width ()) {
-				layout.set_width ((int) (0.8 * screen.width () * Pango.SCALE));
+			if (logical_rect.width > 0.8 * screen.get_width ()) {
+				layout.set_width ((int) (0.8 * screen.get_width () * Pango.SCALE));
 				layout.get_pixel_extents (out ink_rect, out logical_rect);
 			}
 			
