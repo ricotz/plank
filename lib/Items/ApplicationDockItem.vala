@@ -54,6 +54,13 @@ namespace Plank.Items
 		 */
 		public signal void app_closed ();
 		
+#if HAVE_DBUSMENU
+		/**
+		 * The dock item's quicklist-dbusmenu.
+		 */
+		public DbusmenuGtk.Client? Quicklist { get; set; default = null; }
+#endif
+		
 		Bamf.Application? app = null;
 		public Bamf.Application? App {
 			internal get {
@@ -118,6 +125,9 @@ namespace Plank.Items
 			Prefs.changed["Launcher"].disconnect (handle_launcher_changed);
 			
 			App = null;
+#if HAVE_DBUSMENU
+			Quicklist = null;
+#endif
 			stop_monitor ();
 		}
 		
@@ -334,6 +344,19 @@ namespace Plank.Items
 				item.activate.connect (() => WindowControl.close_all (App));
 				items.add (item);
 			}
+			
+#if HAVE_DBUSMENU
+			if (Quicklist != null) {
+				items.add (new SeparatorMenuItem ());
+				
+				var dm_root = Quicklist.get_root ();
+				if (dm_root != null) {
+					Logger.verbose ("%i quicklist menuitems for %s", dm_root.get_children ().length (), Text);
+					foreach (var menuitem in dm_root.get_children ())
+						items.add (Quicklist.menuitem_get (menuitem));
+				}
+			}
+#endif
 			
 			if (!is_window () && actions.size > 0) {
 				items.add (new SeparatorMenuItem ());
