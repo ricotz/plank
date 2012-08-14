@@ -148,7 +148,7 @@ if test "x$enable_vala" = "xyes" ; then
     PLANK_CORE_VALA_PKGS="--pkg gio-unix-2.0 \
                           --pkg gtk+-3.0 \
                           --pkg gdk-x11-3.0 \
-                          --pkg bamf \
+                          --pkg libbamf3 \
                           --pkg libwnck-3.0 \
                           --pkg gee-1.0 \
                           --pkg posix \

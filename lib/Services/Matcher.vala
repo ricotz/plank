@@ -53,7 +53,7 @@ namespace Plank.Services.Windows
 		~Matcher ()
 		{
 			foreach (var view in pending_views)
-				view.user_visible_changed.disconnect (view_user_visible_changed);				
+				view.user_visible_changed.disconnect (view_user_visible_changed);
 			
 			bamf_matcher.active_application_changed.disconnect (handle_app_changed);
 			bamf_matcher.active_window_changed.disconnect (handle_window_changed);
@@ -91,7 +91,7 @@ namespace Plank.Services.Windows
 			if (arg1 is Bamf.Window)
 				window_opened (arg1 as Bamf.Window);
 			else if (arg1 is Bamf.Application)
-				app_opened (arg1 as Bamf.Application);		
+				app_opened (arg1 as Bamf.Application);
 		}
 		
 		void view_closed (Bamf.View arg1)
@@ -109,7 +109,7 @@ namespace Plank.Services.Windows
 		
 		public ArrayList<Bamf.Application> active_launchers ()
 		{
-			GLib.List<unowned Bamf.View>? apps = bamf_matcher.get_running_applications ();
+			var apps = bamf_matcher.get_running_applications ();
 			var list = new ArrayList<Bamf.Application> ();
 			
 			warn_if_fail (apps != null);
@@ -117,15 +117,14 @@ namespace Plank.Services.Windows
 				return list;
 			
 			foreach (var app in apps)
-				if (app is Bamf.Application)
-					list.add (app as Bamf.Application);
+				list.add (app);
 			
 			return list;
 		}
 		
 		public Bamf.Application? app_for_launcher (string launcher)
 		{
-			unowned Bamf.Application? app = bamf_matcher.get_application_for_desktop_file (launcher, false);
+			unowned Bamf.Application app = bamf_matcher.get_application_for_desktop_file (launcher, false);
 			
 			warn_if_fail (app != null);
 			
