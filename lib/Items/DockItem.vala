@@ -187,11 +187,6 @@ namespace Plank.Items
 		public bool ProgressVisible { get; set; default = false; }
 		
 		/**
-		 * The dock item's quicklist-dbusmenu-path.
-		 */
-		public string QuicklistPath { get; set; default = ""; }
-		
-		/**
 		 * The dock item's position on the dock.
 		 */
 		public int Position { get; set; default = 0; }
