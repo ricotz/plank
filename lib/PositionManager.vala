@@ -210,6 +210,7 @@ namespace Plank
 				width -= 2 * HorizPadding;
 			
 			if (controller.prefs.is_horizontal_dock ()) {
+				width = int.min (monitor_geo.width, width);
 				VisibleDockHeight = height;
 				VisibleDockWidth = width;
 				DockHeight = dock_height;
@@ -217,6 +218,7 @@ namespace Plank
 				DockBackgroundHeight = background_height;
 				DockBackgroundWidth = background_width;
 			} else {
+				width = int.min (monitor_geo.height, width);
 				VisibleDockHeight = width;
 				VisibleDockWidth = height;
 				DockHeight = (screen_is_composited ? monitor_geo.height : width);
