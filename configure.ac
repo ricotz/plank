@@ -103,6 +103,7 @@ if test "x$enable_dbusmenu" = "xyes" ; then
     PLANK_CORE_PKGS="$PLANK_CORE_PKGS dbusmenu-glib-0.4 >= $DBUSMENU_MIN_VERSION \
                      dbusmenu-gtk3-0.4 >= $DBUSMENU_MIN_VERSION"
 fi
+AM_CONDITIONAL([HAVE_DBUSMENU], [test "x$enable_dbusmenu" = "xyes"])
 
 PKG_CHECK_MODULES(PLANK_CORE, $PLANK_CORE_PKGS)
 

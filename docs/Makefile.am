@@ -62,6 +62,13 @@ plank_doc_deps = \
 	x11 \
 	$(NULL)
 
+if HAVE_DBUSMENU
+plank_doc_deps += \
+	Dbusmenu-0.4 \
+	DbusmenuGtk3-0.4 \
+	$(NULL)
+endif
+
 valadoc_flags_plank = \
 	$(valadoc_flags) \
 	-X $(top_srcdir)/lib/plank.h \
