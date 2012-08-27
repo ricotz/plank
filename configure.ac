@@ -90,6 +90,7 @@ PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  libwnck-3.0 \
                  gee-1.0 \
                  x11"
+PLANK_CORE_OPTIONAL_PKGS=""
 
 #
 # Support dynamic quicklists provided with dbusmenu
@@ -100,11 +101,13 @@ AC_ARG_ENABLE([dbusmenu],
               [enable_dbusmenu=$enableval],
               [enable_dbusmenu=yes])
 if test "x$enable_dbusmenu" = "xyes" ; then
-    PLANK_CORE_PKGS="$PLANK_CORE_PKGS dbusmenu-glib-0.4 >= $DBUSMENU_MIN_VERSION \
-                     dbusmenu-gtk3-0.4 >= $DBUSMENU_MIN_VERSION"
+    PLANK_CORE_OPTIONAL_PKGS="$PLANK_CORE_OPTIONAL_PKGS dbusmenu-glib-0.4 >= $DBUSMENU_MIN_VERSION dbusmenu-gtk3-0.4 >= $DBUSMENU_MIN_VERSION"
 fi
 AM_CONDITIONAL([HAVE_DBUSMENU], [test "x$enable_dbusmenu" = "xyes"])
 
+
+AC_SUBST(PLANK_CORE_OPTIONAL_PKGS)
+PLANK_CORE_PKGS="$PLANK_CORE_PKGS $PLANK_CORE_OPTIONAL_PKGS"
 PKG_CHECK_MODULES(PLANK_CORE, $PLANK_CORE_PKGS)
 
 #
