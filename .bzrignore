@@ -37,6 +37,7 @@ lib/.deps
 lib/.libs
 lib/*.c
 lib/*.h
+lib/*.deps
 lib/*.vapi
 lib/*.lo
 lib/*.la
