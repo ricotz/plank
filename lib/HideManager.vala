@@ -89,8 +89,8 @@ namespace Plank
 			controller.window.leave_notify_event.connect (leave_notify_event);
 			controller.window.motion_notify_event.connect (motion_notify_event);
 			
-			Matcher.get_default ().window_opened.connect (update_window_intersect);
-			Matcher.get_default ().window_closed.connect (update_window_intersect);
+			Matcher.get_default ().window_opened.connect (schedule_update);
+			Matcher.get_default ().window_closed.connect (schedule_update);
 			
 			Wnck.Screen.get_default ().active_window_changed.connect (handle_window_changed);
 			Wnck.Screen.get_default ().active_workspace_changed.connect (handle_workspace_changed);
@@ -107,8 +107,8 @@ namespace Plank
 			controller.window.leave_notify_event.disconnect (leave_notify_event);
 			controller.window.motion_notify_event.disconnect (motion_notify_event);
 			
-			Matcher.get_default ().window_opened.disconnect (update_window_intersect);
-			Matcher.get_default ().window_closed.disconnect (update_window_intersect);
+			Matcher.get_default ().window_opened.disconnect (schedule_update);
+			Matcher.get_default ().window_closed.disconnect (schedule_update);
 			
 			Wnck.Screen.get_default ().active_window_changed.disconnect (handle_window_changed);
 			Wnck.Screen.get_default ().active_workspace_changed.disconnect (handle_workspace_changed);
