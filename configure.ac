@@ -77,6 +77,7 @@ GLIB_MIN_VERSION=2.28.0
 VALA_MIN_VERSION=0.14.1
 VALADOC_MIN_VERSION=0.3.1
 BAMF_MIN_VERSION=0.2.92
+DBUSMENU_MIN_VERSION=0.4
 
 PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  glib-2.0 >= $GLIB_MIN_VERSION \
@@ -89,7 +90,24 @@ PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  libwnck-3.0 \
                  gee-1.0 \
                  x11"
+PLANK_CORE_OPTIONAL_PKGS=""
 
+#
+# Support dynamic quicklists provided with dbusmenu
+#
+AC_ARG_ENABLE([dbusmenu],
+              AS_HELP_STRING([--enable-dbusmenu],
+                             [Enable dynamic quicklist support provided over dbusmenu]),
+              [enable_dbusmenu=$enableval],
+              [enable_dbusmenu=yes])
+if test "x$enable_dbusmenu" = "xyes" ; then
+    PLANK_CORE_OPTIONAL_PKGS="$PLANK_CORE_OPTIONAL_PKGS dbusmenu-glib-0.4 >= $DBUSMENU_MIN_VERSION dbusmenu-gtk3-0.4 >= $DBUSMENU_MIN_VERSION"
+fi
+AM_CONDITIONAL([HAVE_DBUSMENU], [test "x$enable_dbusmenu" = "xyes"])
+
+
+AC_SUBST(PLANK_CORE_OPTIONAL_PKGS)
+PLANK_CORE_PKGS="$PLANK_CORE_PKGS $PLANK_CORE_OPTIONAL_PKGS"
 PKG_CHECK_MODULES(PLANK_CORE, $PLANK_CORE_PKGS)
 
 #
@@ -148,11 +166,16 @@ if test "x$enable_vala" = "xyes" ; then
     PLANK_CORE_VALA_PKGS="--pkg gio-unix-2.0 \
                           --pkg gtk+-3.0 \
                           --pkg gdk-x11-3.0 \
-                          --pkg bamf \
+                          --pkg libbamf3 \
                           --pkg libwnck-3.0 \
                           --pkg gee-1.0 \
                           --pkg posix \
                           --pkg x11"
+
+    if test "x$enable_dbusmenu" = "xyes" ; then
+        PLANK_CORE_VALA_PKGS="$PLANK_CORE_VALA_PKGS --pkg Dbusmenu-0.4 --pkg DbusmenuGtk3-0.4"
+        VALAFLAGS="$VALAFLAGS --define HAVE_DBUSMENU"
+    fi
 
     VALAFLAGS="$VALAFLAGS --thread --target-glib=2.28"
 

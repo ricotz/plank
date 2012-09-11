@@ -95,8 +95,8 @@ namespace Plank
 			controller.drag_manager.notify["ExternalDragActive"].connect (update_dock_hovered);
 			controller.drag_manager.notify["InternalDragActive"].connect (update_dock_hovered);
 			
-			Matcher.get_default ().window_opened.connect (update_window_intersect);
-			Matcher.get_default ().window_closed.connect (update_window_intersect);
+			Matcher.get_default ().window_opened.connect (schedule_update);
+			Matcher.get_default ().window_closed.connect (schedule_update);
 			
 			Wnck.Screen.get_default ().active_window_changed.connect (handle_window_changed);
 			Wnck.Screen.get_default ().active_workspace_changed.connect (handle_workspace_changed);
@@ -116,8 +116,8 @@ namespace Plank
 			controller.drag_manager.notify["ExternalDragActive"].disconnect (update_dock_hovered);
 			controller.drag_manager.notify["InternalDragActive"].disconnect (update_dock_hovered);
 			
-			Matcher.get_default ().window_opened.disconnect (update_window_intersect);
-			Matcher.get_default ().window_closed.disconnect (update_window_intersect);
+			Matcher.get_default ().window_opened.disconnect (schedule_update);
+			Matcher.get_default ().window_closed.disconnect (schedule_update);
 			
 			Wnck.Screen.get_default ().active_window_changed.disconnect (handle_window_changed);
 			Wnck.Screen.get_default ().active_workspace_changed.disconnect (handle_workspace_changed);
@@ -286,7 +286,9 @@ namespace Plank
 				foreach (var w in screen.get_windows ()) {
 					if (w.is_minimized ())
 						continue;
-					if ((w.get_window_type () & (Wnck.WindowType.DESKTOP | Wnck.WindowType.DOCK | Wnck.WindowType.SPLASHSCREEN | Wnck.WindowType.MENU)) != 0)
+					var type = w.get_window_type ();
+					if (type == Wnck.WindowType.DESKTOP || type == Wnck.WindowType.DOCK
+						|| type == Wnck.WindowType.MENU || type == Wnck.WindowType.SPLASHSCREEN)
 						continue;
 					if (!w.is_visible_on_workspace (active_workspace))
 						continue;

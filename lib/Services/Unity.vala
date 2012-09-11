@@ -56,9 +56,20 @@ namespace Plank.Services
 					Item.ProgressVisible = prop_value.get_boolean ();
 				else if (prop_key == "urgent")
 					Item.set_urgent (prop_value.get_boolean ());
-				else if (prop_key == "quicklist")
+#if HAVE_DBUSMENU
+				else if (prop_key == "quicklist") {
 					/* The value is the object path of the dbusmenu */
-					Item.QuicklistPath = prop_value.get_string ();
+					var dbus_path = prop_value.get_string ();
+					// Make sure we don't update our Quicklist instance if isn't necessary
+					if (Item.Quicklist == null || Item.Quicklist.dbus_object != dbus_path)
+						if (dbus_path != "") {
+							Logger.verbose ("Loading dynamic quicklists for %s (%s)", Item.Text, sender_name);
+							Item.Quicklist = new DbusmenuGtk.Client (sender_name, dbus_path);
+						} else {
+							Item.Quicklist = null;
+						}
+				}
+#endif
 			}
 		}
 		
@@ -71,7 +82,9 @@ namespace Plank.Services
 			Item.Progress = 0.0;
 			Item.ProgressVisible = false;
 			Item.set_urgent (false);
-			Item.QuicklistPath = "";
+#if HAVE_DBUSMENU
+			Item.Quicklist = null;
+#endif
 		}
 	}
 	

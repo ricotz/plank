@@ -52,15 +52,22 @@ plank_doc_files = \
 	$(NULL)
 
 plank_doc_deps = \
-	bamf \
 	gee-1.0 \
 	gio-unix-2.0 \
 	gdk-x11-3.0 \
 	gtk+-3.0 \
+	libbamf3 \
 	libwnck-3.0 \
 	posix \
 	x11 \
 	$(NULL)
+
+if HAVE_DBUSMENU
+plank_doc_deps += \
+	Dbusmenu-0.4 \
+	DbusmenuGtk3-0.4 \
+	$(NULL)
+endif
 
 valadoc_flags_plank = \
 	$(valadoc_flags) \

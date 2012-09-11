@@ -7,52 +7,53 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-03-19 06:10+0000\n"
+"POT-Creation-Date: 2012-09-10 11:15+0000\n"
 "PO-Revision-Date: 2011-04-08 20:05+0000\n"
 "Last-Translator: Diogo Lavareda <diogolavareda9@hotmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-24 06:44+0000\n"
-"X-Generator: Launchpad (build 14981)\n"
+"X-Launchpad-Export-Date: 2012-09-10 21:28+0000\n"
+"X-Generator: Launchpad (build 15924)\n"
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
 msgstr "Plank. Estupidamente simples."
 
-#: ../lib/Items/ApplicationDockItem.vala:241
+#: ../lib/Items/ApplicationDockItem.vala:324
+#: ../lib/Items/FileDockItem.vala:251 ../lib/Items/FileDockItem.vala:269
 msgid "_Keep in Dock"
 msgstr "Manter na Dock (_K)"
 
-#: ../lib/Items/ApplicationDockItem.vala:253
+#: ../lib/Items/ApplicationDockItem.vala:334
 msgid "Unma_ximize"
 msgstr "Desma_ximizar"
 
-#: ../lib/Items/ApplicationDockItem.vala:257
+#: ../lib/Items/ApplicationDockItem.vala:338
 msgid "Ma_ximize"
 msgstr "Ma_ximizar"
 
-#: ../lib/Items/ApplicationDockItem.vala:262
+#: ../lib/Items/ApplicationDockItem.vala:343
 msgid "_Close All"
 msgstr "Fe_char Todas"
 
-#: ../lib/Items/FileDockItem.vala:240
+#: ../lib/Items/FileDockItem.vala:256
 msgid "_Open in File Browser"
 msgstr "Abrir n_o Gestor de Ficheiros"
 
-#: ../lib/Items/FileDockItem.vala:253
+#: ../lib/Items/FileDockItem.vala:274
 msgid "_Open"
 msgstr "Abrir (_O)"
 
-#: ../lib/Items/FileDockItem.vala:257
+#: ../lib/Items/FileDockItem.vala:278
 msgid "Open Containing _Folder"
 msgstr "Abrir Pasta respectiva (_F)"
 
-#: ../lib/Items/PlankDockItem.vala:65
+#: ../lib/Items/PlankDockItem.vala:79
 msgid "Get _Help Online..."
 msgstr "Obter Ajuda online... (_H)"
 
-#: ../lib/Items/PlankDockItem.vala:69
+#: ../lib/Items/PlankDockItem.vala:83
 msgid "_Translate This Application..."
 msgstr "_Traduzir Esta Aplicação..."

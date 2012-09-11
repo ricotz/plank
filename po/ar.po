@@ -1,4 +1,4 @@
-# Esperanto translation for plank
+# Arabic translation for plank
 # Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the plank package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-09-10 11:15+0000\n"
-"PO-Revision-Date: 2012-03-10 07:04+0000\n"
-"Last-Translator: Kristjan SCHMIDT <Unknown>\n"
-"Language-Team: Esperanto <eo@li.org>\n"
+"PO-Revision-Date: 2012-08-05 06:48+0000\n"
+"Last-Translator: Abdulrahman M. S. <Unknown>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,41 +19,41 @@ msgstr ""
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "Planko. Stulte simple."
+msgstr "بلانك، بسيط بغباء."
 
 #: ../lib/Items/ApplicationDockItem.vala:324
 #: ../lib/Items/FileDockItem.vala:251 ../lib/Items/FileDockItem.vala:269
 msgid "_Keep in Dock"
-msgstr "Manteni en do_ko"
+msgstr "_قم بابقائه على الشريط"
 
 #: ../lib/Items/ApplicationDockItem.vala:334
 msgid "Unma_ximize"
-msgstr "Nema_ksimumigi"
+msgstr "إ_ستعادة"
 
 #: ../lib/Items/ApplicationDockItem.vala:338
 msgid "Ma_ximize"
-msgstr "Ma_ksimumigi"
+msgstr "_تكبير"
 
 #: ../lib/Items/ApplicationDockItem.vala:343
 msgid "_Close All"
-msgstr "_Fermi ĉiujn"
+msgstr "أ_غلق الكلّ"
 
 #: ../lib/Items/FileDockItem.vala:256
 msgid "_Open in File Browser"
-msgstr "Malfermi en d_osierretumilo"
+msgstr "_فتح في متصفح الملفات"
 
 #: ../lib/Items/FileDockItem.vala:274
 msgid "_Open"
-msgstr "_Malfermi"
+msgstr "_فتح"
 
 #: ../lib/Items/FileDockItem.vala:278
 msgid "Open Containing _Folder"
-msgstr "Mal_fermi enhavantan dosierujon"
+msgstr "اف_تح المجلد الذي يحتوي الملف"
 
 #: ../lib/Items/PlankDockItem.vala:79
 msgid "Get _Help Online..."
-msgstr "Obteni _helpon interrete"
+msgstr "ال_حصول على المساعدة عبر الشبكة..."
 
 #: ../lib/Items/PlankDockItem.vala:83
 msgid "_Translate This Application..."
-msgstr "_Traduki ĉi tiun aplikaĵon..."
+msgstr "ترجم هذا الت_طبيق"

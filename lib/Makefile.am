@@ -54,9 +54,9 @@ libplank_la_VALASOURCES = \
 	Drawing/Color.vala \
 	Drawing/DrawingService.vala \
 	Drawing/DockSurface.vala \
-	Drawing/DockThemeRenderer.vala \
-	Drawing/HoverThemeRenderer.vala \
-	Drawing/ThemeRenderer.vala \
+	Drawing/DockTheme.vala \
+	Drawing/HoverTheme.vala \
+	Drawing/Theme.vala \
 	Factories/AbstractMain.vala \
 	Factories/Factory.vala \
 	Factories/ItemFactory.vala \
@@ -87,6 +87,14 @@ libplank_la_SOURCES = \
 
 plank.h plank.vapi: libplank_la_vala.stamp
 
+plank.deps: Makefile
+	@echo Creating $@
+	@cp $(srcdir)/plank.deps.in $@
+if HAVE_DBUSMENU
+	@echo "Dbusmenu-0.4" >> $@
+	@echo "DbusmenuGtk3-0.4" >> $@
+endif
+
 libplank_la_vala.stamp: $(libplank_la_VALASOURCES)
 	$(AM_V_VALA)$(VALAC) \
 		$(libplank_la_VALAFLAGS) \
@@ -109,7 +117,7 @@ EXTRA_DIST = \
 	$(libplank_la_VALASOURCES) \
 	libplank.symbols \
 	libplank.pc.in \
-	plank.deps \
+	plank.deps.in \
 	plank.vapi \
 	plank.h \
 	$(NULL)

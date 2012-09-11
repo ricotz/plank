@@ -25,7 +25,7 @@ namespace Plank.Drawing
 	/**
 	 * A themed renderer for dock windows.
 	 */
-	public class DockThemeRenderer : ThemeRenderer
+	public class DockTheme : Theme
 	{
 		const double MIN_INDICATOR_SIZE = 0.0;
 		const double MAX_INDICATOR_SIZE = 10.0;
@@ -127,7 +127,7 @@ namespace Plank.Drawing
 		 */
 		public DockSurface create_background (int width, int height, Gtk.PositionType position, DockSurface model)
 		{
-			Logger.verbose ("DockThemeRenderer.create_background (width = %i, height = %i)", width, height);
+			Logger.verbose ("DockTheme.create_background (width = %i, height = %i)", width, height);
 			
 			var surface = new DockSurface.with_dock_surface (width, height, model);
 			surface.clear ();
@@ -188,11 +188,14 @@ namespace Plank.Drawing
 		 */
 		public DockSurface create_indicator (int size, Color color, DockSurface model)
 		{
-			Logger.verbose ("DockThemeRenderer.create_indicator (size = %i)", size);
+			Logger.verbose ("DockTheme.create_indicator (size = %i)", size);
 			
 			var surface = new DockSurface.with_dock_surface (size, size, model);
 			surface.clear ();
-
+			
+			if (size <= 0)
+				return surface;
+			
 			var cr = surface.Context;
 			
 			var x = size / 2;
@@ -225,10 +228,13 @@ namespace Plank.Drawing
 		 */
 		public DockSurface create_urgent_glow (int size, Color color, DockSurface model)
 		{
-			Logger.verbose ("DockThemeRenderer.create_urgent_glow (size = %i)", size);
+			Logger.verbose ("DockTheme.create_urgent_glow (size = %i)", size);
 			
 			var surface = new DockSurface.with_dock_surface (size, size, model);
 			surface.clear ();
+			
+			if (size <= 0)
+				return surface;
 			
 			var cr = surface.Context;
 			
@@ -261,6 +267,9 @@ namespace Plank.Drawing
 		 */
 		public void draw_active_glow (DockSurface surface, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
 		{
+			if (opacity <= 0.0)
+				return;
+			
 			var cr = surface.Context;
 			
 			var rotate = 0.0;
@@ -333,6 +342,11 @@ namespace Plank.Drawing
 		{
 			var cr = surface.Context;
 			
+			// Expect the icon to be in the center of the given surface
+			// and adjust the offset accordingly
+			var x = Math.floor ((surface.Width - icon_size) / 2);
+			var y = Math.floor ((surface.Height - icon_size) / 2);
+			
 			var badge_color_start = color.copy ().brighten_val (1.0);
 			var badge_color_middle = color.copy ().set_sat (0.87);
 			var badge_color_end = color.copy ().set_sat (0.87).darken_val (0.7);
@@ -345,13 +359,13 @@ namespace Plank.Drawing
 			var padding = (is_small ? 1.0 : (is_large ? 4.5 : 2.0));
 			var line_width = (is_small ? 0.0 : (is_large ? 2.0 : 1.0));
 
-			var height = Math.floor ((is_small ? 0.80 : 0.50) * double.min (surface.Width, surface.Height) - 2.0 * line_width);
+			var height = Math.floor ((is_small ? 0.80 : 0.50) * icon_size - 2.0 * line_width);
 			var width = Math.floor ((0.75 + 0.25 * count.to_string ().length) * height);
-			var max_width = surface.Width - 2.0 * line_width;
+			var max_width = icon_size - 2.0 * line_width;
 			if (width > max_width)
 				width = max_width;
-			var x = surface.Width - width - line_width / 2.0;
-			var y = line_width + line_width / 2.0;
+			x += icon_size - width - line_width / 2.0;
+			y += line_width + line_width / 2.0;
 			
 			cr.set_line_width (line_width);
 			
@@ -428,13 +442,18 @@ namespace Plank.Drawing
 			
 			var cr = surface.Context;
 			
+			// Expect the icon to be in the center of the given surface
+			// and adjust the offset accordingly
+			var x = Math.floor ((surface.Width - icon_size) / 2);
+			var y = Math.floor ((surface.Height - icon_size) / 2);
+			
 			// FIXME enhance scalability and adjustments depending on icon-size
 			var line_width = 1.0;
 			var padding = 4.0;
-			var width = surface.Width - 2.0 * padding;
-			var height = Math.floor (double.min (18.0, (int) (0.15 * surface.Height)));
-			var x = padding;
-			var y = surface.Height - height - padding;
+			var width = icon_size - 2.0 * padding;
+			var height = Math.floor (double.min (18.0, (int) (0.15 * icon_size)));
+			x += padding;
+			y += icon_size - height - padding;
 			
 			cr.set_line_width (line_width);
 			

@@ -28,7 +28,6 @@ py-compile
 Makefile
 Makefile.in
 .version
-*.2.vala
 po/*.gmo
 po/.intltool-merge-cache
 po/Makefile.in.in
@@ -38,6 +37,7 @@ lib/.deps
 lib/.libs
 lib/*.c
 lib/*.h
+lib/*.deps
 lib/*.vapi
 lib/*.lo
 lib/*.la
