@@ -40,7 +40,7 @@ namespace Plank
 		[Description(nick = "unhide-delay", blurb = "Time (in ms) to wait before unhiding the dock.")]
 		public uint UnhideDelay { get; set; }
 		
-		[Description(nick = "monitor", blurb = "The monitor number for the dock.")]
+		[Description(nick = "monitor", blurb = "The monitor number for the dock. Use -1 to keep on the primary monitor.")]
 		public int Monitor { get; set; }
 		
 		[Description(nick = "position", blurb = "The position for the dock on the monitor.")]
@@ -82,7 +82,7 @@ namespace Plank
 			IconSize = 48;
 			HideMode = HideType.INTELLIGENT;
 			UnhideDelay = 0;
-			Monitor = Screen.get_default ().get_primary_monitor ();
+			Monitor = -1;
 			Position = PositionType.BOTTOM;
 			Offset = 0;
 		}
@@ -90,6 +90,18 @@ namespace Plank
 		void monitors_changed ()
 		{
 			verify ("Monitor");
+		}
+		
+		/**
+		 * Get the actual monitor to place the dock on
+		 *
+		 * @return the number of the monitor
+		 */
+		public int get_monitor ()
+		{
+			if (Monitor <= -1)
+				return Screen.get_default ().get_primary_monitor ();
+			return Monitor;
 		}
 		
 		/**
@@ -140,7 +152,9 @@ namespace Plank
 				break;
 			
 			case "Monitor":
-				if (Monitor >= Screen.get_default ().get_n_monitors ())
+				if (Monitor < -1)
+					Monitor = -1;
+				else if (Monitor != -1 && Monitor >= Screen.get_default ().get_n_monitors ())
 					Monitor = Screen.get_default ().get_primary_monitor ();
 				break;
 			
