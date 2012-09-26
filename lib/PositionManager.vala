@@ -60,23 +60,27 @@ namespace Plank
 		{
 			var screen = controller.window.get_screen ();
 			
+			screen.monitors_changed.connect (update_monitor_geo);
 			screen.size_changed.connect (update_monitor_geo);
 			
 			// NOTE don't call update_monitor_geo to avoid a double-call of dockwindow.set_size on startup
-			screen.get_monitor_geometry (controller.prefs.Monitor, out monitor_geo);
+			screen.get_monitor_geometry (controller.prefs.get_monitor (), out monitor_geo);
 			
 			update_dock_position ();
 		}
 		
 		~PositionManager ()
 		{
-			controller.window.get_screen ().size_changed.disconnect (update_monitor_geo);
+			var screen = controller.window.get_screen ();
+			
+			screen.monitors_changed.disconnect (update_monitor_geo);
+			screen.size_changed.disconnect (update_monitor_geo);
 			controller.prefs.changed["Monitor"].disconnect (update_monitor_geo);
 		}
 		
 		void update_monitor_geo ()
 		{
-			controller.window.get_screen ().get_monitor_geometry (controller.prefs.Monitor, out monitor_geo);
+			controller.window.get_screen ().get_monitor_geometry (controller.prefs.get_monitor (), out monitor_geo);
 			controller.window.set_size ();
 		}
 		
