@@ -134,6 +134,22 @@ namespace Plank.Services.Windows
 			return false;
 		}
 		
+		public static bool has_window_on_workspace (Bamf.Application app, Wnck.Workspace workspace)
+		{
+			Screen.get_default ();
+			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
+			
+			for (var i = 0; xids != null && i < xids.length; i++) {
+				var window = Wnck.Window.@get (xids.index (i));
+				if (window != null && window.is_on_workspace (workspace))
+					return true;
+			}
+			
+			return false;
+		}
+		
 		public static ArrayList<Bamf.Window> get_windows (Bamf.Application app)
 		{
 			var windows = new ArrayList<Bamf.Window> ();
