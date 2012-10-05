@@ -95,13 +95,14 @@ PLANK_CORE_OPTIONAL_PKGS=""
 #
 # Support dynamic quicklists provided with dbusmenu
 #
+DBUSMENU_PKGS="dbusmenu-glib-0.4 >= $DBUSMENU_MIN_VERSION dbusmenu-gtk3-0.4 >= $DBUSMENU_MIN_VERSION"
 AC_ARG_ENABLE([dbusmenu],
               AS_HELP_STRING([--enable-dbusmenu],
                              [Enable dynamic quicklist support provided over dbusmenu]),
               [enable_dbusmenu=$enableval],
-              [enable_dbusmenu=yes])
+              [PKG_CHECK_MODULES(DBUSMENU, $DBUSMENU_PKGS, [enable_dbusmenu=yes], [enable_dbusmenu=no])])
 if test "x$enable_dbusmenu" = "xyes" ; then
-    PLANK_CORE_OPTIONAL_PKGS="$PLANK_CORE_OPTIONAL_PKGS dbusmenu-glib-0.4 >= $DBUSMENU_MIN_VERSION dbusmenu-gtk3-0.4 >= $DBUSMENU_MIN_VERSION"
+    PLANK_CORE_OPTIONAL_PKGS="$PLANK_CORE_OPTIONAL_PKGS $DBUSMENU_PKGS"
 fi
 AM_CONDITIONAL([HAVE_DBUSMENU], [test "x$enable_dbusmenu" = "xyes"])
 
@@ -242,5 +243,8 @@ ${PACKAGE} ${VERSION}
     Vala Compiler...............:  ${VALAC}
     Vala Flags..................:  ${VALAFLAGS}
     C Compiler Flags............:  ${CFLAGS}
+
+    Dbusmenu support............:  ${enable_dbusmenu}
+
     Documentation...............:  ${have_valadoc}
 "
