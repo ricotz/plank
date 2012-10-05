@@ -70,14 +70,26 @@ AC_SUBST([API_VERSION])
 
 
 # -----------------------------------------------------------
+# Vala
+# -----------------------------------------------------------
+VALA_MIN_VERSION=0.14.1
+
+AM_PROG_VALAC([$VALA_MIN_VERSION])
+if test "x$VALAC" = "x"; then
+    AC_MSG_ERROR([Vala requested but valac >= $VALA_MIN_VERSION is not installed])
+fi
+
+AC_PATH_PROG([VAPIGEN], [vapigen], [])
+if test "x$VAPIGEN" = "x"; then
+    AC_MSG_ERROR([Vala must be built with --enable-vapigen])
+fi
+
+# -----------------------------------------------------------
 # Dependencies
 # -----------------------------------------------------------
 GTK_MIN_VERSION=3.0.0
 GLIB_MIN_VERSION=2.28.0
-VALA_MIN_VERSION=0.14.1
-VALADOC_MIN_VERSION=0.3.1
 BAMF_MIN_VERSION=0.2.92
-DBUSMENU_MIN_VERSION=0.4
 
 PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  glib-2.0 >= $GLIB_MIN_VERSION \
@@ -92,9 +104,24 @@ PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  x11"
 PLANK_CORE_OPTIONAL_PKGS=""
 
-#
+PLANK_CORE_VALA_PKGS="--pkg gio-unix-2.0 \
+                      --pkg gtk+-3.0 \
+                      --pkg gdk-x11-3.0 \
+                      --pkg libbamf3 \
+                      --pkg libwnck-3.0 \
+                      --pkg gee-1.0 \
+                      --pkg posix \
+                      --pkg x11"
+
+VALAFLAGS="--thread --target-glib=2.28"
+
+
+# -----------------------------------------------------------
+# Optional Dependencies
+# -----------------------------------------------------------
+
 # Support dynamic quicklists provided with dbusmenu
-#
+DBUSMENU_MIN_VERSION=0.4
 DBUSMENU_PKGS="dbusmenu-glib-0.4 >= $DBUSMENU_MIN_VERSION dbusmenu-gtk3-0.4 >= $DBUSMENU_MIN_VERSION"
 AC_ARG_ENABLE([dbusmenu],
               AS_HELP_STRING([--enable-dbusmenu],
@@ -103,29 +130,21 @@ AC_ARG_ENABLE([dbusmenu],
               [PKG_CHECK_MODULES(DBUSMENU, $DBUSMENU_PKGS, [enable_dbusmenu=yes], [enable_dbusmenu=no])])
 if test "x$enable_dbusmenu" = "xyes" ; then
     PLANK_CORE_OPTIONAL_PKGS="$PLANK_CORE_OPTIONAL_PKGS $DBUSMENU_PKGS"
+    PLANK_CORE_VALA_PKGS="$PLANK_CORE_VALA_PKGS --pkg Dbusmenu-0.4 --pkg DbusmenuGtk3-0.4"
+    VALAFLAGS="$VALAFLAGS --define HAVE_DBUSMENU"
 fi
 AM_CONDITIONAL([HAVE_DBUSMENU], [test "x$enable_dbusmenu" = "xyes"])
+
 
 
 AC_SUBST(PLANK_CORE_OPTIONAL_PKGS)
 PLANK_CORE_PKGS="$PLANK_CORE_PKGS $PLANK_CORE_OPTIONAL_PKGS"
 PKG_CHECK_MODULES(PLANK_CORE, $PLANK_CORE_PKGS)
 
-#
-# Vala building options -- allows tarball builds without installing Vala
-#
-AC_ARG_ENABLE([vala],
-              AS_HELP_STRING([--enable-vala],
-                             [Enable building from the Vala sources]),
-              [enable_vala=$enableval],
-              [enable_vala=no])
 
-# Force Vala for non-release builds
-m4_if(plank_released, [1], [],
-    [
-        enable_vala=yes
-        echo "Vala compiler required for non-release builds; requiring Vala..."
-    ])
+# -----------------------------------------------------------
+# Addional configure flags
+# -----------------------------------------------------------
 
 # Enable Vala debug-flag by default for non-release builds
 AC_ARG_ENABLE([debug],
@@ -145,48 +164,15 @@ if test "x$enable_benchmark" = "xyes" ; then
     VALAFLAGS="$VALAFLAGS --define BENCHMARK"
 fi
 
-# Force Vala if generated source is missing or outdated
-if test \
-    ! -e ${srcdir}/lib/libplank_la_vala.stamp -o \
-    ! -e ${srcdir}/src/plank_vala.stamp; then
-    enable_vala=yes
-    echo "Vala source needs to be re-compiled; requiring Vala..."
-fi
+PLANK_CORE_VALAFLAGS="$VALAFLAGS $PLANK_CORE_VALA_PKGS"
+AC_SUBST(PLANK_CORE_VALAFLAGS)
 
-if test "x$enable_vala" = "xyes" ; then
-    AM_PROG_VALAC([$VALA_MIN_VERSION])
-    if test "x$VALAC" = "x"; then
-        AC_MSG_ERROR([Vala requested but valac >= $VALA_MIN_VERSION is not installed])
-    fi
-
-    AC_PATH_PROG([VAPIGEN], [vapigen], [])
-    if test "x$VAPIGEN" = "x"; then
-        AC_MSG_ERROR([Vala must be built with --enable-vapigen])
-    fi
-
-    PLANK_CORE_VALA_PKGS="--pkg gio-unix-2.0 \
-                          --pkg gtk+-3.0 \
-                          --pkg gdk-x11-3.0 \
-                          --pkg libbamf3 \
-                          --pkg libwnck-3.0 \
-                          --pkg gee-1.0 \
-                          --pkg posix \
-                          --pkg x11"
-
-    if test "x$enable_dbusmenu" = "xyes" ; then
-        PLANK_CORE_VALA_PKGS="$PLANK_CORE_VALA_PKGS --pkg Dbusmenu-0.4 --pkg DbusmenuGtk3-0.4"
-        VALAFLAGS="$VALAFLAGS --define HAVE_DBUSMENU"
-    fi
-
-    VALAFLAGS="$VALAFLAGS --thread --target-glib=2.28"
-
-    PLANK_CORE_VALAFLAGS="$VALAFLAGS $PLANK_CORE_VALA_PKGS"
-    AC_SUBST(PLANK_CORE_VALAFLAGS)
-fi
 
 # -----------------------------------------------------------
 # Documentation
 # -----------------------------------------------------------
+VALADOC_MIN_VERSION=0.3.1
+
 AC_ARG_ENABLE([docs],
               AS_HELP_STRING([--enable-docs],[Enable documentation generation]),
               [enable_docs=$enableval], [enable_docs=no])
@@ -239,7 +225,6 @@ echo "
 ${PACKAGE} ${VERSION}
 
     Prefix......................:  ${prefix}
-    Vala........................:  ${enable_vala}
     Vala Compiler...............:  ${VALAC}
     Vala Flags..................:  ${VALAFLAGS}
     C Compiler Flags............:  ${CFLAGS}
