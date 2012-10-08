@@ -8,4 +8,3 @@ Exec=plank
 Icon=plank
 Terminal=false
 NoDisplay=false
-NotShowIn=Pantheon;
