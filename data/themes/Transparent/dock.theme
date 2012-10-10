@@ -1,8 +1,8 @@
 
-[PlankDrawingThemeRenderer]
+[PlankDrawingTheme]
 TopRoundness=0
 BottomRoundness=0
 
-[PlankDrawingDockThemeRenderer]
+[PlankDrawingDockTheme]
 TopPadding=-12
 BottomPadding=2
