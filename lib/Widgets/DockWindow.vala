@@ -90,6 +90,15 @@ namespace Plank.Widgets
 		{
 			menu.show.disconnect (on_menu_show);
 			menu.hide.disconnect (on_menu_hide);
+			
+			if (hover_reposition_timer > 0) {
+				GLib.Source.remove (hover_reposition_timer);
+				hover_reposition_timer = 0;
+			}
+			if (reposition_timer != 0) {
+				GLib.Source.remove (reposition_timer);
+				reposition_timer = 0;
+			}
 		}
 		
 		/**

@@ -36,6 +36,8 @@ namespace Plank.Widgets
 		
 		DateTime start_time;
 		
+		uint animation_timer = 0;
+		
 		public int x { private get; construct; }
 
 		public int y { private get; construct; }
@@ -67,8 +69,9 @@ namespace Plank.Widgets
 			set_size_request (POOF_SIZE, POOF_SIZE);
 			move (x - (POOF_SIZE / 2), y - (POOF_SIZE / 2));
 			
-			Timeout.add (30, () => {
+			animation_timer = Timeout.add (30, () => {
 				if (get_animation_state () == 1) {
+					animation_timer = 0;
 					hide ();
 					destroy ();
 					return false;
@@ -79,6 +82,14 @@ namespace Plank.Widgets
 			
 			start_time = new DateTime.now_utc (); 
 			show_all ();
+		}
+		
+		~PoofWindow ()
+		{
+			if (animation_timer != 0) {
+				GLib.Source.remove (animation_timer);
+				animation_timer = 0;
+			}
 		}
 		
 		double get_animation_state ()

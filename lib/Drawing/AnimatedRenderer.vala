@@ -41,6 +41,14 @@ namespace Plank.Drawing
 		{
 		}
 		
+		~AnimatedRenderer ()
+		{
+			if (animation_timer > 0) {
+				GLib.Source.remove (animation_timer);
+				animation_timer = 0;
+			}
+		}
+		
 		/**
 		 * Creates a new animation renderer for a widget.
 		 *
