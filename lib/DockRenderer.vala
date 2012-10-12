@@ -83,11 +83,9 @@ namespace Plank
 		{
 			this.controller = controller;
 			
-			theme = new DockTheme ();
-			theme.load ("dock");
+			load_theme ();
 			
 			controller.prefs.notify.connect (prefs_changed);
-			theme.changed.connect (theme_changed);
 			
 			controller.items.item_state_changed.connect (item_state_changed);
 			controller.items.item_position_changed.connect (item_position_changed);
@@ -97,6 +95,8 @@ namespace Plank
 			Gdk.Screen.get_default ().composited_changed.connect (composited_changed);
 
 			notify["Hidden"].connect (hidden_changed);
+			
+			controller.prefs.notify["Theme"].connect (load_theme);
 		}
 		
 		/**
@@ -124,6 +124,7 @@ namespace Plank
 
 			notify["Hidden"].disconnect (hidden_changed);
 			
+			controller.prefs.notify["Theme"].disconnect (load_theme);
 			controller.window.notify["HoveredItem"].disconnect (animated_draw);
 		}
 		
@@ -162,6 +163,23 @@ namespace Plank
 		{
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
+		}
+		
+		void load_theme ()
+		{
+			var is_reload = (theme != null);
+			
+			if (is_reload)
+				theme.changed.disconnect (theme_changed);
+			
+			theme = new DockTheme (controller.prefs.Theme);
+			theme.load ("dock");
+			theme.changed.connect (theme_changed);
+			
+			controller.position_manager.reset_caches (theme);
+			
+			if (is_reload)
+				controller.position_manager.update_regions ();
 		}
 		
 		/**

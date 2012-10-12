@@ -164,6 +164,8 @@ namespace Plank.Services
 		 */
 		protected void init_from_file (GLib.File file)
 		{
+			stop_monitor ();
+			
 			backing_file = file;
 			
 			// ensure the preferences file exists

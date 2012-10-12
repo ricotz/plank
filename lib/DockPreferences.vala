@@ -55,6 +55,9 @@ namespace Plank
 		[Description(nick = "offset", blurb = "The dock's position offset from center (in percent).")]
 		public int Offset { get; set; }
 		
+		[Description(nick = "theme", blurb = "The name of the dock's theme to use.")]
+		public string Theme { get; set; }
+		
 		[Description(nick = "alignment", blurb = "The alignment for the dock on the monitor's edge.")]
 		public Gtk.Align Alignment { get; set; }
 		
@@ -99,6 +102,7 @@ namespace Plank
 			DockItems = "";
 			Position = PositionType.BOTTOM;
 			Offset = 0;
+			Theme = Plank.Drawing.Theme.DEFAULT_NAME;
 			Alignment = Gtk.Align.CENTER;
 			ItemsAlignment = Gtk.Align.CENTER;
 		}
@@ -188,6 +192,11 @@ namespace Plank
 					Offset = -100;
 				else if (Offset > 100)
 					Offset = 100;
+				break;
+			
+			case "Theme":
+				if (Theme == "")
+					Theme = Plank.Drawing.Theme.DEFAULT_NAME;
 				break;
 			
 			case "Alignment":

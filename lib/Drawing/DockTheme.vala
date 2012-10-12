@@ -87,6 +87,11 @@ namespace Plank.Drawing
 		[Description(nick = "urgent-hue-shift", blurb = "The hue-shift (-180 to 180) of the urgent indicator color.")]
 		public int UrgentHueShift { get; set; }
 		
+		public DockTheme (string name)
+		{
+			base.with_name (name);
+		}
+		
 		/**
 		 * {@inheritDoc}
 		 */
