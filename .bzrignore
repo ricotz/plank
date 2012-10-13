@@ -35,6 +35,7 @@ po/POTFILES
 po/stamp-it
 lib/.deps
 lib/.libs
+lib/*-abi
 lib/*.c
 lib/*.h
 lib/*.deps

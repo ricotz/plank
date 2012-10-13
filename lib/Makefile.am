@@ -28,7 +28,7 @@ libplank_la_CFLAGS = \
 
 libplank_la_LDFLAGS = \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
-	-export-symbols $(builddir)/libplank.symbols \
+	-export-symbols $(builddir)/build-abi \
 	-lm \
 	$(PLANK_CORE_LDFLAGS) \
 	$(NULL)
@@ -94,20 +94,25 @@ if HAVE_DBUSMENU
 	@echo "DbusmenuGtk3-0.4" >> $@
 endif
 
-libplank_la_vala.stamp: $(libplank_la_VALASOURCES)
+libplank_la_vala.stamp build-abi: $(libplank_la_VALASOURCES)
 	$(AM_V_VALA)$(VALAC) \
 		$(libplank_la_VALAFLAGS) \
 		-C \
 		-H plank.h \
 		--library plank \
-		--symbols libplank.symbols \
+		--symbols build-abi \
 		--vapi plank.vapi \
 		$(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
 
+symbols: build-abi
+	@cat $(builddir)/build-abi | sort > $(srcdir)/libplank.symbols
+
+TESTS = abicheck.sh
+
 CLEANFILES = \
 	$(nodist_libplank_la_SOURCES) \
-	libplank.symbols \
+	build-abi \
 	libplank.pc \
 	plank.deps \
 	plank.vapi \
@@ -116,7 +121,9 @@ CLEANFILES = \
 
 EXTRA_DIST = \
 	$(libplank_la_VALASOURCES) \
+	abicheck.sh \
 	libplank.pc.in \
+	libplank.symbols \
 	plank.deps.in \
 	$(NULL)
 
