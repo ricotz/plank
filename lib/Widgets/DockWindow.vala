@@ -52,6 +52,7 @@ namespace Plank.Widgets
 		
 		
 		uint reposition_timer = 0;
+		uint hover_reposition_timer = 0;
 		
 		bool dock_is_starting = true;
 		
@@ -93,6 +94,15 @@ namespace Plank.Widgets
 			menu.hide.disconnect (on_menu_hide);
 			
 			controller.drag_manager.notify["DragItem"].disconnect (drag_item_changed);
+			
+			if (hover_reposition_timer > 0) {
+				GLib.Source.remove (hover_reposition_timer);
+				hover_reposition_timer = 0;
+			}
+			if (reposition_timer != 0) {
+				GLib.Source.remove (reposition_timer);
+				reposition_timer = 0;
+			}
 		}
 		
 		/**
@@ -227,14 +237,26 @@ namespace Plank.Widgets
 				return;
 			}
 			
-			if (controller.hover.get_visible ())
-				controller.hover.hide ();
+			if (hover_reposition_timer > 0)
+				return;
 			
-			controller.hover.Text = HoveredItem.Text;
-			position_hover ();
-			
-			if (!controller.hover.get_visible ())
-				controller.hover.show ();
+			hover_reposition_timer = GLib.Timeout.add (1000 / 60, () => {
+				hover_reposition_timer = 0;
+				
+				if (HoveredItem == null)
+					return false;
+				
+				if (controller.hover.get_visible ())
+					controller.hover.hide ();
+				
+				controller.hover.Text = HoveredItem.Text;
+				position_hover ();
+				
+				if (!controller.hover.get_visible ())
+					controller.hover.show ();
+				
+				return false;
+			});
 		}
 		
 		/**

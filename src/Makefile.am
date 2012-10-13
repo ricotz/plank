@@ -6,7 +6,7 @@ plank_VALAFLAGS = \
 	$(PLANK_CORE_VALAFLAGS)
 
 plank_VALAFLAGS += \
-	$(top_srcdir)/lib/plank.vapi \
+	$(top_builddir)/lib/plank.vapi \
 	--vapidir $(VAPIDIR) \
 	$(VAPIDIR)/config.vapi \
 	$(NULL)
@@ -20,9 +20,9 @@ plank_PROGRAMS = plank
 plank_CFLAGS = \
 	$(PLANK_CORE_CFLAGS) \
 	-include config.h \
-	-I$(top_srcdir)/lib \
+	-I$(top_builddir)/lib \
 	$(NULL)
-	
+
 plank_LDADD = \
 	$(PLANK_CORE_LIBS) \
 	$(top_builddir)/lib/libplank.la \
@@ -32,7 +32,7 @@ plank_VALASOURCES = \
 	PlankMain.vala \
 	$(NULL)
 
-plank_SOURCES = \
+nodist_plank_SOURCES = \
 	plank_vala.stamp \
 	$(plank_VALASOURCES:.vala=.c) \
 	$(NULL)
@@ -44,9 +44,8 @@ plank_vala.stamp: $(plank_VALASOURCES)
 		$(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
 
-DISTCLEANFILES = \
-	$(plank_SOURCES) \
-	plank_vala.stamp \
+CLEANFILES = \
+	$(nodist_plank_SOURCES) \
 	$(NULL)
 
 EXTRA_DIST = \

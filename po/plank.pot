@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-08 22:15-0500\n"
+"POT-Creation-Date: 2012-10-13 11:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,20 +21,20 @@ msgstr ""
 msgid "Plank. Stupidly simple."
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:303
+#: ../lib/Items/ApplicationDockItem.vala:326
 #: ../lib/Items/FileDockItem.vala:251 ../lib/Items/FileDockItem.vala:269
 msgid "_Keep in Dock"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:313
+#: ../lib/Items/ApplicationDockItem.vala:336
 msgid "Unma_ximize"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:317
+#: ../lib/Items/ApplicationDockItem.vala:340
 msgid "Ma_ximize"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:322
+#: ../lib/Items/ApplicationDockItem.vala:345
 msgid "_Close All"
 msgstr ""
 
