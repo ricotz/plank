@@ -118,8 +118,11 @@ namespace Plank.Widgets
 			y = int.max (monitor.y, int.min (y, monitor.y + monitor.height - height_request));
 			
 			show ();
+			Gdk.flush ();
 			move (x, y);
+			Gdk.flush ();
 			hide ();
+			Gdk.flush ();
 		}
 		
 		void update_layout ()
