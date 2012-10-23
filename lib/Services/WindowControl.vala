@@ -45,6 +45,23 @@ namespace Plank.Services.Windows
 		// when changing a viewport, wait this time (for viewport change animations) before continuing
 		public static const uint VIEWPORT_CHANGE_DELAY = 200;
 		
+		public static void initialize ()
+		{
+			var screen = Screen.get_default ();
+			
+			set_client_type (ClientType.PAGER);
+			
+			screen.force_update ();
+			screen.window_manager_changed.connect (window_manager_changed);
+			
+			message ("Window-manager: %s", screen.get_window_manager_name ());
+		}
+		
+		static void window_manager_changed (Wnck.Screen screen)
+		{
+			warning ("Window-manager changed: %s", screen.get_window_manager_name ());
+		}
+		
 		public static unowned Gdk.Pixbuf? get_app_icon (Bamf.Application app)
 		{
 			unowned Gdk.Pixbuf? pbuf = null;
@@ -146,13 +163,6 @@ namespace Plank.Services.Windows
 				if (window != null)
 					window.set_icon_geometry (rect.x, rect.y, rect.width, rect.height);
 			}
-		}
-		
-		public static void initialize ()
-		{
-			set_client_type (ClientType.PAGER);
-			
-			Screen.get_default ().force_update ();
 		}
 		
 		public static void close_all (Bamf.Application app)
