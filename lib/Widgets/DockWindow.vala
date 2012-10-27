@@ -236,7 +236,7 @@ namespace Plank.Widgets
 				controller.hover.Text = HoveredItem.Text;
 				position_hover ();
 				
-				if (!controller.hover.get_visible ())
+				if (!menu_is_visible () && !controller.hover.get_visible ())
 					controller.hover.show ();
 				
 				return false;
