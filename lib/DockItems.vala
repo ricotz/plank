@@ -91,8 +91,10 @@ namespace Plank
 			controller.prefs.changed["CurrentWorkspaceOnly"].connect (handle_setting_changed);
 			
 			Matcher.get_default ().app_opened.connect (app_opened);
-			Wnck.Screen.get_default ().active_window_changed.connect (handle_window_changed);
-			Wnck.Screen.get_default ().active_workspace_changed.connect (handle_workspace_changed);
+			
+			var wnck_screen = Wnck.Screen.get_default ();
+			wnck_screen.active_window_changed.connect (handle_window_changed);
+			wnck_screen.active_workspace_changed.connect (handle_workspace_changed);
 		}
 		
 		~DockItems ()
@@ -100,8 +102,10 @@ namespace Plank
 			controller.prefs.changed["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
 			
 			Matcher.get_default ().app_opened.disconnect (app_opened);
-			Wnck.Screen.get_default ().active_window_changed.disconnect (handle_window_changed);
-			Wnck.Screen.get_default ().active_workspace_changed.disconnect (handle_workspace_changed);
+			
+			var wnck_screen = Wnck.Screen.get_default ();
+			wnck_screen.active_window_changed.disconnect (handle_window_changed);
+			wnck_screen.active_workspace_changed.disconnect (handle_workspace_changed);
 			
 			visible_items.clear ();
 			
