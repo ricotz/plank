@@ -84,6 +84,14 @@ namespace Plank.Drawing
 		}
 		
 		/**
+		 * Set HSV color values of this color.
+		 */
+		public void set_hsv (double h, double s, double v)
+		{
+			hsv_to_rgb (h, s, v, out R, out G, out B);
+		}
+		
+		/**
 		 * Sets the hue for the color.
 		 *
 		 * @param hue the new hue for the color
@@ -145,6 +153,14 @@ namespace Plank.Drawing
 		{
 			A = alpha;
 			return this;
+		}
+		
+		/**
+		 * Get HSV color values of this color.
+		 */
+		public void get_hsv (out double h, out double s, out double v)
+		{
+			rgb_to_hsv (R, G, B, out h, out s, out v);
 		}
 		
 		/**
@@ -335,15 +351,12 @@ namespace Plank.Drawing
 			return this;
 		}
 		
-		void rgb_to_hsv (double r, double g, double b, out double h, out double s, out double v)
+		static void rgb_to_hsv (double r, double g, double b, out double h, out double s, out double v)
 			requires (r >= 0 && r <= 1)
 			requires (g >= 0 && g <= 1)
 			requires (b >= 0 && b <= 1)
 		{
-			var min = double.min (r, double.min (g, b));
-			var max = double.max (r, double.max (g, b));
-			
-			v = max;
+			v = double.max (r, double.max (g, b));
 			if (v == 0) {
 				h = 0;
 				s = 0;
@@ -355,8 +368,8 @@ namespace Plank.Drawing
 			g /= v;
 			b /= v;
 			
-			min = double.min (r, double.min (g, b));
-			max = double.max (r, double.max (g, b));
+			var min = double.min (r, double.min (g, b));
+			var max = double.max (r, double.max (g, b));
 			
 			var delta = max - min;
 			s = delta;
@@ -381,7 +394,7 @@ namespace Plank.Drawing
 			}
 		}
 		
-		void hsv_to_rgb (double h, double s, double v, out double r, out double g, out double b)
+		static void hsv_to_rgb (double h, double s, double v, out double r, out double g, out double b)
 			requires (h >= 0 && h <= 360)
 			requires (s >= 0 && s <= 1)
 			requires (v >= 0 && v <= 1)
