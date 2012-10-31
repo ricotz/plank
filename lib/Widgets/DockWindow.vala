@@ -252,7 +252,7 @@ namespace Plank.Widgets
 				controller.hover.Text = HoveredItem.Text;
 				position_hover ();
 				
-				if (!controller.hover.get_visible ())
+				if (!menu_is_visible () && !controller.hover.get_visible ())
 					controller.hover.show ();
 				
 				return false;
@@ -308,7 +308,12 @@ namespace Plank.Widgets
 		{
 			var width = controller.position_manager.DockWidth;
 			var height = controller.position_manager.DockHeight;
-
+			
+			int width_current, height_current;
+			get_size_request (out width_current, out height_current);
+			if (width == width_current && height == height_current)
+				return;
+			
 			Logger.verbose ("DockWindow.set_size (width = %i, height = %i)", width, height);
 			
 			set_size_request (width, height);

@@ -47,8 +47,8 @@ namespace Plank
 			hover = new HoverWindow (this);
 			window = new DockWindow (this);
 			
-			renderer.initialize ();
 			position_manager.initialize ();
+			renderer.initialize ();
 			drag_manager.initialize ();
 			hide_manager.initialize ();
 			

@@ -259,13 +259,13 @@ namespace Plank.Drawing
 		 * Draws an active glow for an item.
 		 *
 		 * @param surface the surface to draw onto
-		 * @param clip_buffer a region to clip the glow to
+		 * @param clip_rect the rect to clip the glow to
 		 * @param rect the rect for the glow
 		 * @param color the color of the glow
 		 * @param opacity the opacity of the glow
 		 * @param pos the dock's position
 		 */
-		public void draw_active_glow (DockSurface surface, DockSurface clip_buffer, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
+		public void draw_active_glow (DockSurface surface, Gdk.Rectangle clip_rect, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
 		{
 			if (opacity <= 0.0)
 				return;
@@ -280,29 +280,29 @@ namespace Plank.Drawing
 			switch (pos) {
 			default:
 			case Gtk.PositionType.BOTTOM:
-				xoffset = (surface.Width - clip_buffer.Width) / 2.0;
-				yoffset = surface.Height - clip_buffer.Height;
+				xoffset = clip_rect.x;
+				yoffset = clip_rect.y;
 				
 				gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
 				break;
 			case Gtk.PositionType.TOP:
 				rotate = Math.PI;
-				xoffset = (-surface.Width - clip_buffer.Width) / 2.0;
-				yoffset = -clip_buffer.Height;
+				xoffset = -clip_rect.x - clip_rect.width;
+				yoffset = -clip_rect.height;
 				
 				gradient = new Pattern.linear (0, rect.y + rect.height, 0, rect.y);
 				break;
 			case Gtk.PositionType.LEFT:
 				rotate = Math.PI_2;
-				xoffset = (surface.Height - clip_buffer.Height) / 2.0;
-				yoffset = -clip_buffer.Width;
+				xoffset = clip_rect.y;
+				yoffset = -clip_rect.width;
 				
 				gradient = new Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
 				break;
 			case Gtk.PositionType.RIGHT:
 				rotate = -Math.PI_2;
-				xoffset = (-surface.Height - clip_buffer.Height) / 2.0;
-				yoffset = surface.Width - clip_buffer.Width;
+				xoffset = -clip_rect.y - clip_rect.height;
+				yoffset = clip_rect.x;
 				
 				gradient = new Pattern.linear (rect.x, 0, rect.x + rect.width, 0);
 				break;
@@ -312,9 +312,9 @@ namespace Plank.Drawing
 			cr.rotate (rotate);
 			cr.translate (xoffset, yoffset);
 			if (pos == Gtk.PositionType.BOTTOM || pos == Gtk.PositionType.TOP)
-				draw_inner_rect (cr, clip_buffer.Width, clip_buffer.Height);
+				draw_inner_rect (cr, clip_rect.width, clip_rect.height);
 			else
-				draw_inner_rect (cr, clip_buffer.Height, clip_buffer.Width);
+				draw_inner_rect (cr, clip_rect.height, clip_rect.width);
 			cr.restore ();
 			
 			cr.set_line_width (LineWidth);

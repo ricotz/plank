@@ -39,6 +39,7 @@ namespace Plank
 		DockTheme theme;
 		
 		DockSurface? background_buffer;
+		Gdk.Rectangle background_rect;
 		DockSurface? main_buffer;
 		DockSurface? indicator_buffer;
 		DockSurface? urgent_indicator_buffer;
@@ -84,7 +85,6 @@ namespace Plank
 			
 			controller.prefs.notify.connect (prefs_changed);
 			theme.changed.connect (theme_changed);
-			controller.position_manager.reset_caches (theme);
 			
 			controller.items.item_removed.connect (items_changed);
 			controller.items.item_added.connect (items_changed);
@@ -104,6 +104,7 @@ namespace Plank
 			requires (controller.window != null)
 		{
 			set_widget (controller.window);
+			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
 			controller.window.notify["HoveredItem"].connect (animated_draw);
 		}
@@ -304,6 +305,7 @@ namespace Plank
 			
 			var x_offset = 0, y_offset = 0;
 			controller.position_manager.get_background_position (out x_offset, out y_offset);
+			background_rect = Gdk.Rectangle () { x = x_offset, y = y_offset, width = width, height = height };
 			
 			var cr = main_buffer.Context;
 			cr.set_source_surface (background_buffer.Internal, x_offset, y_offset);
@@ -438,7 +440,7 @@ namespace Plank
 				opacity = 1 - opacity;
 			if (opacity > 0) {
 				var glow_rect = controller.position_manager.item_background_region (hover_rect);
-				theme.draw_active_glow (main_buffer, background_buffer, glow_rect, item.AverageIconColor, opacity, controller.prefs.Position);
+ 				theme.draw_active_glow (main_buffer, background_rect, glow_rect, item.AverageIconColor, opacity, controller.prefs.Position);
 			}
 			
 			// draw the icon
