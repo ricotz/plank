@@ -298,7 +298,12 @@ namespace Plank.Widgets
 			Logger.verbose ("DockWindow.set_size (width = %i, height = %i)", width, height);
 			
 			set_size_request (width, height);
-			reposition ();
+			
+			if (dock_is_starting)
+				position ();
+			else
+				reposition ();
+			
 			if (HoveredItem != null)
 				position_hover ();
 			
@@ -318,15 +323,20 @@ namespace Plank.Widgets
 			reposition_timer = GLib.Timeout.add (50, () => {
 				reposition_timer = 0;
 				
-				controller.position_manager.update_dock_position ();
-				move (controller.position_manager.win_x, controller.position_manager.win_y);
-				
-				update_icon_regions ();
-				set_struts ();
-				set_hovered (null);
+				position ();
 				
 				return false;
 			});
+		}
+		
+		void position ()
+		{
+			controller.position_manager.update_dock_position ();
+			move (controller.position_manager.win_x, controller.position_manager.win_y);
+			
+			update_icon_regions ();
+			set_struts ();
+			set_hovered (null);
 		}
 		
 		/**
