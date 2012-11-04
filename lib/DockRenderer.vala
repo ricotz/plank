@@ -135,7 +135,8 @@ namespace Plank
 		
 		void items_changed ()
 		{
-			controller.position_manager.reset_caches (theme);
+			if (controller.prefs.Alignment != Gtk.Align.FILL)
+				controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
 		}
 		
