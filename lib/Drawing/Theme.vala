@@ -17,6 +17,7 @@
 
 using Cairo;
 using Gdk;
+using Gee;
 using Gtk;
 
 using Plank.Services;
@@ -297,6 +298,52 @@ namespace Plank.Drawing
 			case "InnerStrokeColor":
 				break;
 			}
+		}
+		
+		/**
+		 * Get a sorted list of all available theme-names
+		 *
+		 * @return {@link Gee.ArrayList} the list of theme-names
+		 */
+		public static ArrayList<string> get_theme_list ()
+		{
+			var list = new HashSet<string> (str_hash, str_equal);
+			
+			list.add (DEFAULT_NAME);
+			
+			// Look in user's themes-folder
+			try {
+				var enumerator = Paths.AppThemeFolder.enumerate_children ("standard::name,standard::type",
+					GLib.FileQueryInfoFlags.NONE);
+				FileInfo info;
+				while ((info = enumerator.next_file ()) != null) {
+					if (info.get_is_hidden ()
+						|| info.get_file_type () != GLib.FileType.DIRECTORY)
+						continue;
+					
+					list.add (info.get_name ());
+				}
+			} catch {}
+			
+			// Look in system's themes-folder
+			try {
+				var enumerator = Paths.ThemeFolder.enumerate_children ("standard::name,standard::type",
+					GLib.FileQueryInfoFlags.NONE);
+				FileInfo info;
+				while ((info = enumerator.next_file ()) != null) {
+					if (info.get_is_hidden ()
+						|| info.get_file_type () != GLib.FileType.DIRECTORY)
+						continue;
+					
+					list.add (info.get_name ());
+				}
+			} catch {}
+			
+			var result = new ArrayList<string> ();
+			result.add_all (list);
+			result.sort ((CompareFunc) strcmp);
+			
+			return result;
 		}
 		
 		/**
