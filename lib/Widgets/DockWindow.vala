@@ -72,9 +72,6 @@ namespace Plank.Widgets
 			skip_pager_hint = true;
 			skip_taskbar_hint = true;
 			
-			// Initialize "transparent" window to avoid visual clitch on start-up
-			opacity = 0;
-			
 			menu.attach_to_widget (this, null);
 			menu.show.connect (on_menu_show);
 			menu.hide.connect (on_menu_hide);
@@ -203,10 +200,6 @@ namespace Plank.Widgets
 			
 			set_input_mask ();
 			controller.renderer.draw_dock (cr);
-			
-			// make window finally visible if it isn't yet
-			if (opacity != 1)
-				opacity = 1;
 			
 			return true;
 		}
