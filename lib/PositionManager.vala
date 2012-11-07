@@ -325,10 +325,16 @@ namespace Plank
 			if (old_region.x != static_dock_region.x
 				|| old_region.y != static_dock_region.y
 				|| old_region.width != static_dock_region.width
-				|| old_region.height != static_dock_region.height)
+				|| old_region.height != static_dock_region.height) {
 				controller.window.set_size ();
-			else
+				
+				// With active compositing support set_size () won't trigger a redraw
+				// (a changed static_dock_region doesn't implicate the window-size changed)
+				if (screen_is_composited)
+					controller.renderer.animated_draw ();
+			} else {
 				controller.renderer.animated_draw ();
+			}
 		}
 		
 		/**
