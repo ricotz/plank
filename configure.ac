@@ -211,7 +211,7 @@ data/apport/Makefile
 data/icons/Makefile
 data/themes/Makefile
 lib/Makefile
-lib/libplank.pc
+lib/plank.pc
 man/Makefile
 src/Makefile
 docs/Makefile

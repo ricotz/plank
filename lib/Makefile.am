@@ -16,7 +16,7 @@ nodist_vapi_DATA = \
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig
-nodist_pkgconfig_DATA = libplank.pc
+nodist_pkgconfig_DATA = plank.pc
 
 libplankdir = $(libdir)
 
@@ -113,8 +113,8 @@ TESTS = abicheck.sh
 CLEANFILES = \
 	$(nodist_libplank_la_SOURCES) \
 	build-abi \
-	libplank.pc \
 	plank.deps \
+	plank.pc \
 	plank.vapi \
 	plank.h \
 	$(NULL)
@@ -122,8 +122,8 @@ CLEANFILES = \
 EXTRA_DIST = \
 	$(libplank_la_VALASOURCES) \
 	abicheck.sh \
-	libplank.pc.in \
 	libplank.symbols \
 	plank.deps.in \
+	plank.pc.in \
 	$(NULL)
 
