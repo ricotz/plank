@@ -302,32 +302,42 @@ namespace Plank.Widgets
 		}
 		
 		/**
-		 * Sets the size of the dock window.
+		 * Sets the size of the dock window and repositions it if needed.
 		 */
-		public void set_size ()
+		public void update_size_and_position ()
 		{
+			controller.position_manager.update_dock_position ();
+			
+			var x = controller.position_manager.win_x;
+			var y = controller.position_manager.win_y;
+			
 			var width = controller.position_manager.DockWidth;
 			var height = controller.position_manager.DockHeight;
 			
 			int width_current, height_current;
 			get_size_request (out width_current, out height_current);
-			if (width == width_current && height == height_current)
-				return;
+			var needs_resize = (width != width_current || height != height_current);
 			
-			Logger.verbose ("DockWindow.set_size (width = %i, height = %i)", width, height);
+			int x_current, y_current;
+			get_position (out x_current, out y_current);
+			var needs_reposition = (x != x_current || y != y_current);
 			
-			set_size_request (width, height);
-			reposition ();
-			if (HoveredItem != null)
-				position_hover ();
+			if (needs_resize) {
+				Logger.verbose ("DockWindow.set_size_request (width = %i, height = %i)", width, height);
+				set_size_request (width, height);
+				controller.renderer.reset_buffers ();
+			}
 			
-			controller.renderer.reset_buffers ();
+			if (needs_reposition) {
+				if (dock_is_starting) {
+					position (x, y);
+				} else {
+					schedule_position ();
+				}
+			}
 		}
 		
-		/**
-		 * Repositions the dock to keep it centered on the screen edge.
-		 */
-		protected void reposition ()
+		void schedule_position ()
 		{
 			if (reposition_timer != 0) {
 				GLib.Source.remove (reposition_timer);
@@ -338,14 +348,24 @@ namespace Plank.Widgets
 				reposition_timer = 0;
 				
 				controller.position_manager.update_dock_position ();
-				move (controller.position_manager.win_x, controller.position_manager.win_y);
 				
-				update_icon_regions ();
-				set_struts ();
-				set_hovered (null);
+				var x = controller.position_manager.win_x;
+				var y = controller.position_manager.win_y;
+				
+				position (x, y);
 				
 				return false;
 			});
+		}
+		
+		void position (int x, int y)
+		{
+			Logger.verbose ("DockWindow.move (x = %i, y = %i)", x, y);
+			move (x, y);
+			
+			update_icon_regions ();
+			set_struts ();
+			set_hovered (null);
 		}
 		
 		/**

@@ -83,7 +83,11 @@ namespace Plank
 		void update_monitor_geo ()
 		{
 			controller.window.get_screen ().get_monitor_geometry (controller.prefs.get_monitor (), out monitor_geo);
-			controller.window.set_size ();
+			update_dimensions ();
+			update_dock_position ();
+			update_regions ();
+			
+			controller.window.update_size_and_position ();
 		}
 		
 		//
@@ -100,6 +104,10 @@ namespace Plank
 		 */
 		public int win_y { get; protected set; }
 		
+		
+		public int LineWidth { get; private set; }
+		
+		public int IconSize { get; private set; }
 		
 		/**
 		 * Theme-based indicator size, scaled by icon size.
@@ -125,6 +133,8 @@ namespace Plank
 		 * Theme-based item padding, scaled by icon size.
 		 */
 		public int ItemPadding   { get; private set; }
+		
+		public int UrgentBounceHeight { get; private set; }
 		
 		int items_offset;
 		int top_offset;
@@ -167,8 +177,8 @@ namespace Plank
 			
 			screen_is_composited = controller.window.get_screen ().is_composited ();
 			
-			var icon_size = controller.prefs.IconSize;
-			var scaled_icon_size = icon_size / 10.0;
+			IconSize = controller.prefs.IconSize;
+			var scaled_icon_size = IconSize / 10.0;
 			
 			IndicatorSize = (int) (theme.IndicatorSize * scaled_icon_size);
 			GlowSize      = (int) (theme.GlowSize      * scaled_icon_size);
@@ -176,11 +186,21 @@ namespace Plank
 			TopPadding    = (int) (theme.TopPadding    * scaled_icon_size);
 			BottomPadding = (int) (theme.BottomPadding * scaled_icon_size);
 			ItemPadding   = (int) (theme.ItemPadding   * scaled_icon_size);
+			UrgentBounceHeight = (int) (theme.UrgentBounceHeight * IconSize);
+			LineWidth     = theme.LineWidth;
 			
-			items_offset  = (int) (2 * theme.LineWidth + (HorizPadding > 0 ? HorizPadding : 0));
+			items_offset  = (int) (2 * LineWidth + (HorizPadding > 0 ? HorizPadding : 0));
 			
 			top_offset = theme.get_top_offset ();
 			bottom_offset = theme.get_bottom_offset ();
+			
+			update_dimensions ();
+			update_dock_position ();
+		}
+		
+		void update_dimensions ()
+		{
+			Logger.verbose ("PositionManager.update_dimensions ()");
 			
 			if (!screen_is_composited) {
 				HorizPadding = int.max (0, HorizPadding);
@@ -188,7 +208,7 @@ namespace Plank
 			}
 			
 			// height of the visible (cursor) rect of the dock
-			var height = icon_size + top_offset + TopPadding + bottom_offset + BottomPadding;
+			var height = IconSize + top_offset + TopPadding + bottom_offset + BottomPadding;
 			
 			// height of the dock background image, as drawn
 			var background_height = height;
@@ -197,10 +217,10 @@ namespace Plank
 				height -= top_offset + TopPadding;
 			
 			// height of the dock window
-			var dock_height = height + (screen_is_composited ? (int) (icon_size * theme.UrgentBounceHeight) : 0);
+			var dock_height = height + (screen_is_composited ? UrgentBounceHeight : 0);
 			
 			
-			var width = controller.items.Items.size * (ItemPadding + icon_size) + 2 * HorizPadding + 4 * theme.LineWidth;
+			var width = controller.items.Items.size * (ItemPadding + IconSize) + 2 * HorizPadding + 4 * LineWidth;
 			
 			// width of the dock background image, as drawn
 			var background_width = width;
@@ -226,8 +246,6 @@ namespace Plank
 				DockBackgroundHeight = background_width;
 				DockBackgroundWidth = background_height;
 			}
-			
-			update_dock_position ();
 		}
 		
 		/**
@@ -277,6 +295,8 @@ namespace Plank
 		 */
 		public void update_regions ()
 		{
+			Logger.verbose ("PositionManager.update_regions ()");
+			
 			var old_region = static_dock_region;
 			
 			static_dock_region.width = VisibleDockWidth;
@@ -325,10 +345,16 @@ namespace Plank
 			if (old_region.x != static_dock_region.x
 				|| old_region.y != static_dock_region.y
 				|| old_region.width != static_dock_region.width
-				|| old_region.height != static_dock_region.height)
-				controller.window.set_size ();
-			else
+				|| old_region.height != static_dock_region.height) {
+				controller.window.update_size_and_position ();
+				
+				// With active compositing support update_size_and_position () won't trigger a redraw
+				// (a changed static_dock_region doesn't implicate the window-size changed)
+				if (screen_is_composited)
+					controller.renderer.animated_draw ();
+			} else {
 				controller.renderer.animated_draw ();
+			}
 		}
 		
 		/**
