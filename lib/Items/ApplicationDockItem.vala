@@ -519,7 +519,7 @@ namespace Plank.Items
 							// check for Icon
 							var action_icon = "";
 							if (file.has_key (group, KeyFileDesktop.KEY_ICON))
-								icon = file.get_string (group, KeyFileDesktop.KEY_ICON);
+								action_icon = file.get_string (group, KeyFileDesktop.KEY_ICON);
 							
 							var action_name = file.get_locale_string (group, KeyFileDesktop.KEY_NAME);
 							var action_exec = file.get_string (group, KeyFileDesktop.KEY_EXEC);
