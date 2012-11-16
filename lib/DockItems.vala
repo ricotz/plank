@@ -158,14 +158,14 @@ namespace Plank
 			return null;
 		}
 		
-		public DockItem? item_for_uri (string uri)
+		public bool item_exists_for_uri (string uri)
 		{
 			var launcher = uri.replace ("file://", "");
 			foreach (var item in Items)
 				if (item.Launcher == launcher)
-					return item;
+					return true;
 			
-			return null;
+			return false;
 		}
 		
 		public void add_item_with_launcher (string launcher, DockItem? target = null, int sort = 0)

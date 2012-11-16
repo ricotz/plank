@@ -224,7 +224,7 @@ namespace Plank
 			
 			if (DragIsDesktopFile) {
 				var uri = drag_data[0];
-				if (controller.items.item_for_uri (uri) == null)
+				if (controller.items.item_exists_for_uri (uri))
 					controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
 				
 				ExternalDragActive = false;
@@ -235,7 +235,7 @@ namespace Plank
 				item.accept_drop (drag_data);
 			} else {
 				foreach (var uri in drag_data) {
-					if (controller.items.item_for_uri (uri) == null)
+					if (controller.items.item_exists_for_uri (uri))
 						controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
 				}
 			}
