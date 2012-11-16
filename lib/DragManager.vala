@@ -208,6 +208,10 @@ namespace Plank
 		{
 			drag_finish (context, true, false, time_);
 			
+			if (drag_hover_timer > 0)
+				GLib.Source.remove (drag_hover_timer);
+			drag_hover_timer = 0;
+			
 			if (drag_data == null)
 				return true;
 			
@@ -276,6 +280,10 @@ namespace Plank
 
 		void drag_leave (Widget w, DragContext context, uint time_)
 		{
+			if (drag_hover_timer > 0)
+				GLib.Source.remove (drag_hover_timer);
+			drag_hover_timer = 0;
+			
 			controller.hide_manager.update_dock_hovered ();
 			drag_known = false;
 			
