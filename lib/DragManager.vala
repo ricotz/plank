@@ -204,7 +204,8 @@ namespace Plank
 			if (drag_data.size == 1) {
 				var uri = drag_data[0];
 				if (uri.has_prefix ("file://") && uri.has_suffix (".desktop")) {
-					controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
+					if (controller.items.item_for_uri (uri) == null)
+						controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
 					
 					ExternalDragActive = false;
 					return true;
@@ -217,7 +218,8 @@ namespace Plank
 				foreach (var uri in drag_data) {
 					if (!uri.has_prefix ("file://"))
 						continue;
-					controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
+					if (controller.items.item_for_uri (uri) == null)
+						controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
 				}
 			}
 			
