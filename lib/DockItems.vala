@@ -95,6 +95,7 @@ namespace Plank
 			var wnck_screen = Wnck.Screen.get_default ();
 			wnck_screen.active_window_changed.connect (handle_window_changed);
 			wnck_screen.active_workspace_changed.connect (handle_workspace_changed);
+			wnck_screen.viewports_changed.connect (handle_viewports_changed);
 		}
 		
 		~DockItems ()
@@ -106,6 +107,7 @@ namespace Plank
 			var wnck_screen = Wnck.Screen.get_default ();
 			wnck_screen.active_window_changed.disconnect (handle_window_changed);
 			wnck_screen.active_workspace_changed.disconnect (handle_workspace_changed);
+			wnck_screen.viewports_changed.disconnect (handle_viewports_changed);
 			
 			visible_items.clear ();
 			
@@ -321,7 +323,17 @@ namespace Plank
 		
 		void handle_workspace_changed (Wnck.Screen screen, Wnck.Workspace previously_active_space)
 		{
-			if (!controller.prefs.CurrentWorkspaceOnly)
+			if (!controller.prefs.CurrentWorkspaceOnly
+				|| screen.get_active_workspace ().is_virtual ())
+				return;
+			
+			update_visible_items ();
+		}
+		
+		void handle_viewports_changed (Wnck.Screen screen)
+		{
+			if (!controller.prefs.CurrentWorkspaceOnly
+				|| !screen.get_active_workspace ().is_virtual ())
 				return;
 			
 			update_visible_items ();

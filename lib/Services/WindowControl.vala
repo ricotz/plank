@@ -141,10 +141,20 @@ namespace Plank.Services.Windows
 			
 			warn_if_fail (xids != null);
 			
+			var is_virtual = workspace.is_virtual ();
+			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				var window = Wnck.Window.@get (xids.index (i));
-				if (window != null && window.is_on_workspace (workspace))
-					return true;
+				if (window == null)
+					continue;
+				
+				if (!is_virtual) {
+					if (window.is_on_workspace (workspace))
+						return true;
+				} else {
+					if (window.is_in_viewport (workspace))
+						return true;
+				}
 			}
 			
 			return false;
