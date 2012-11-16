@@ -379,7 +379,9 @@ namespace Plank
 			
 			if (controller.window.HoveredItem == item && controller.window.menu_is_visible ())
 				darken += 0.4;
-			else if (controller.drag_manager.ExternalDragActive && controller.drag_manager.drag_data != null && !item.can_accept_drop (controller.drag_manager.drag_data))
+			else if (controller.drag_manager.ExternalDragActive
+				&& !controller.drag_manager.DragIsDesktopFile
+				&& !controller.drag_manager.drop_is_accepted_by (item))
 				darken += 0.6;
 			
 			// glow the icon

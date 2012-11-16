@@ -29,6 +29,8 @@ namespace Plank
 {
 	public class DragManager : GLib.Object
 	{
+		DockController controller;
+		
 		Gdk.Window proxy_window;
 		
 		bool drag_canceled;
@@ -37,15 +39,15 @@ namespace Plank
 		uint marker = 0;
 		uint drag_hover_timer = 0;
 		
-		DockController controller;
+		ArrayList<string>? drag_data;
 		
 		public bool InternalDragActive { get; private set; }
 
 		public bool HoveredAcceptsDrop { get; private set; }
 		
-		public ArrayList<string>? drag_data;
-		
 		public DockItem? DragItem { get; private set; }
+		
+		public bool DragIsDesktopFile { get; private set; }
 		
 		bool externalDragActive;
 		public bool ExternalDragActive {
@@ -59,6 +61,7 @@ namespace Plank
 					drag_known = false;
 					drag_data = null;
 					drag_data_requested = false;
+					DragIsDesktopFile = false;
 				}
 			} 
 		}
@@ -130,7 +133,15 @@ namespace Plank
 				selection_data.set (selection_data.get_target (), 8, (uchar[]) uri.to_utf8 ());
 			}
 		}
-
+		
+		public bool drop_is_accepted_by (DockItem item)
+		{
+			if (drag_data == null)
+				return false;
+			
+			return item.can_accept_drop (drag_data);
+		}
+		
 		void drag_begin (Widget w, DragContext context)
 		{
 			controller.window.notify["HoveredItem"].connect (hovered_item_changed);
@@ -180,9 +191,14 @@ namespace Plank
 				
 				drag_data_requested = false;
 				
+				if (drag_data.size == 1)
+					DragIsDesktopFile = drag_data[0].has_suffix (".desktop");
+				else
+					DragIsDesktopFile = false;
+				
 				// Force initial redraw for ExternalDrag to pick up new
 				// drag_data for can_accept_drop check
-				controller.renderer.animated_draw ();				
+				controller.renderer.animated_draw ();
 			}
 			
 			drag_status (context, DragAction.COPY, time_);
@@ -201,23 +217,19 @@ namespace Plank
 			if (item != null)
 				sort = item.Sort + 1;
 			
-			if (drag_data.size == 1) {
+			if (DragIsDesktopFile) {
 				var uri = drag_data[0];
-				if (uri.has_prefix ("file://") && uri.has_suffix (".desktop")) {
-					if (controller.items.item_for_uri (uri) == null)
-						controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
-					
-					ExternalDragActive = false;
-					return true;
-				}
+				if (controller.items.item_for_uri (uri) == null)
+					controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
+				
+				ExternalDragActive = false;
+				return true;
 			}
 			
 			if (item != null && item.can_accept_drop (drag_data)) {
 				item.accept_drop (drag_data);
 			} else {
 				foreach (var uri in drag_data) {
-					if (!uri.has_prefix ("file://"))
-						continue;
 					if (controller.items.item_for_uri (uri) == null)
 						controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
 				}
