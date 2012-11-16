@@ -31,7 +31,7 @@ namespace Plank
 		const int MIN_ICON_SIZE = 24;
 		const int MAX_ICON_SIZE = 128;
 		
-		[Description(nick = "current-workspace-only", blurb = "Wether to show only windows of the current workspace.")]
+		[Description(nick = "current-workspace-only", blurb = "Whether to show only windows of the current workspace.")]
 		public bool CurrentWorkspaceOnly { get; set; }
 		
 		[Description(nick = "icon-size", blurb = "The size of dock icons (in pixels).")]
