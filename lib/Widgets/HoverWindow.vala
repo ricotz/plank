@@ -31,7 +31,6 @@ namespace Plank.Widgets
 	 */
 	public class HoverWindow : CompositedWindow
 	{
-		const int HOVER_HEIGHT = 26;
 		const int PADDING = 10;
 		
 		public DockController controller { private get; construct; }
@@ -131,7 +130,7 @@ namespace Plank.Widgets
 			layout.set_ellipsize (EllipsizeMode.END);
 			
 			var font_description = get_style ().font_desc;
-			font_description.set_absolute_size ((int) (11 * Pango.SCALE));
+			font_description.set_size ((int) (9 * Pango.SCALE));
 			font_description.set_weight (Weight.BOLD);
 			layout.set_font_description (font_description);
 			
@@ -159,10 +158,10 @@ namespace Plank.Widgets
 				layout.get_pixel_extents (out ink_rect, out logical_rect);
 			}
 			
-			var buffer = HOVER_HEIGHT - logical_rect.height;
+			var buffer = (int) (logical_rect.height / 4.0) * 2;
 			text_offset = buffer / 2;
 			
-			set_size_request (int.max (HOVER_HEIGHT, buffer + logical_rect.width), HOVER_HEIGHT);
+			set_size_request (logical_rect.width + buffer, logical_rect.height + buffer);
 			queue_resize ();
 		}
 		
