@@ -205,6 +205,16 @@ namespace Plank.Widgets
 		}
 		
 		/**
+		 * {@inheritDoc}
+		 */
+		public override bool map_event (EventAny event)
+		{
+			set_struts ();
+			
+			return base.map_event (event);
+		}
+		
+		/**
 		 * Sets the currently hovered item for this dock.
 		 *
 		 * @param item the hovered item (if any) for this dock
