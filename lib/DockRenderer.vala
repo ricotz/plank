@@ -61,6 +61,9 @@ namespace Plank
 		 */
 		public double get_hide_offset ()
 		{
+			if (!screen_is_composited)
+				return 0;
+			
 			var time = theme.FadeOpacity == 1.0 ? theme.HideTime : theme.FadeTime;
 			var diff = double.min (1, new DateTime.now_utc ().difference (last_hide) / (double) (time * 1000));
 			return Hidden ? diff : 1 - diff;
@@ -503,6 +506,11 @@ namespace Plank
 				last_hide = now.add_seconds ((diff - theme.HideTime * 1000) / 1000000.0);
 			else
 				last_hide = new DateTime.now_utc ();
+			
+			if (!screen_is_composited) {
+				controller.window.update_size_and_position ();
+				return;
+			}
 			
 			controller.window.update_icon_regions ();
 			
