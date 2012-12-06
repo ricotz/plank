@@ -94,12 +94,15 @@ namespace Plank.Services.Windows
 		
 		public static uint get_num_windows (Bamf.Application app)
 		{
-			GLib.List<unowned Bamf.View>? children = app.get_windows ();
+			Screen.get_default ();
+			Array<uint32>? xids = app.get_xids ();
 			
-			if (children == null)
+			warn_if_fail (xids != null);
+			
+			if (xids == null)
 				return 0;
 			
-			return children.length ();
+			return xids.length;
 		}
 		
 		public static bool has_maximized_window (Bamf.Application app)
