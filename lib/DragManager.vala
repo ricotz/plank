@@ -250,6 +250,8 @@ namespace Plank
 				if (!controller.hide_manager.DockHovered) {
 					if (DragItem.can_be_removed ()) {
 						// Remove from dock
+						if (!(DragItem is ApplicationDockItem) || !((DragItem as ApplicationDockItem).is_running ()))
+							controller.items.remove_item (DragItem);
 						DragItem.delete ();
 						
 						int x, y;
