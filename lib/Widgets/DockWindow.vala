@@ -361,18 +361,18 @@ namespace Plank.Widgets
 			
 			Gdk.Rectangle region;
 			
+			var default_region = controller.position_manager.get_default_icon_geometry ();
+			var use_default_region = (controller.window.menu_is_visible () || controller.renderer.Hidden);
+			
 			foreach (var item in controller.items.Items) {
 				ApplicationDockItem? appitem = (item as ApplicationDockItem);
 				if (appitem == null || !appitem.is_running ())
 					continue;
 				
-				if (menu_is_visible () || controller.renderer.Hidden)
-					region = Gdk.Rectangle ();
+				if (use_default_region)
+					region = default_region;
 				else
-					region = controller.position_manager.item_hover_region (appitem);
-				
-				region.x += controller.position_manager.win_x;
-				region.y += controller.position_manager.win_y;
+					region = controller.position_manager.get_icon_geometry (appitem);
 				
 				WindowControl.update_icon_regions (appitem.App, region);
 			}

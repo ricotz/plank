@@ -54,6 +54,16 @@ namespace Plank.Items
 		 */
 		public signal void app_closed ();
 		
+		/**
+		 * Signal fired when the application associated with this item opened a new window.
+		 */
+		public signal void app_window_added ();
+		
+		/**
+		 * Signal fired when the application associated with this item closed a window.
+		 */
+		public signal void app_window_removed ();
+		
 #if HAVE_DBUSMENU
 		/**
 		 * The dock item's quicklist-dbusmenu.
@@ -245,11 +255,15 @@ namespace Plank.Items
 		void handle_window_added (Bamf.View? child)
 		{
 			update_indicator (WindowControl.get_num_windows (App));
+			
+			app_window_added ();
 		}
 		
 		void handle_window_removed (Bamf.View? child)
 		{
 			update_indicator (WindowControl.get_num_windows (App));
+			
+			app_window_removed ();
 		}
 		
 		void update_indicator (uint window_count)
