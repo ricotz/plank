@@ -746,31 +746,32 @@ namespace Plank
 		}
 		
 		/**
-		 * Get the default icon geometry for the dock.
+		 * Get the item's icon geometry for the hidden dock.
 		 *
-		 * @return default icon geometry for this dock
+		 * @return the item's icon geometry for the hidden dock.
 		 */
-		public Gdk.Rectangle get_default_icon_geometry ()
+		public Gdk.Rectangle get_hidden_icon_geometry (ApplicationDockItem item)
 		{
-			var x = 0, y = 0;
+			var x = win_x, y = win_y;
+			var region = item_hover_region (item);
 			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				x = DockWidth / 2;
-				y = DockHeight;
+				x += region.x + region.width / 2;
+				y += DockHeight;
 				break;
 			case PositionType.TOP:
-				x = DockWidth / 2;
-				y = 0;
+				x += region.x + region.width / 2;
+				y += 0;
 				break;
 			case PositionType.LEFT:
-				x = 0;
-				y = DockHeight / 2;
+				x += 0;
+				y += region.y + region.height / 2;
 				break;
 			case PositionType.RIGHT:
-				x = DockWidth;
-				y = DockHeight / 2;
+				x += DockWidth;
+				y += region.y + region.height / 2;
 				break;
 			}
 			
