@@ -734,26 +734,21 @@ namespace Plank
 		 * Get the item's icon geometry for the dock.
 		 *
 		 * @param item an application-dockitem of the dock
+		 * @param for_hidden whether the geometry should apply for a hidden dock
 		 * @return icon geometry for the given application-dockitem
 		 */
-		public Gdk.Rectangle get_icon_geometry (ApplicationDockItem item)
+		public Gdk.Rectangle get_icon_geometry (ApplicationDockItem item, bool for_hidden)
 		{
 			var region = item_hover_region (item);
-			region.x += win_x;
-			region.y += win_y;
 			
-			return region;
-		}
-		
-		/**
-		 * Get the item's icon geometry for the hidden dock.
-		 *
-		 * @return the item's icon geometry for the hidden dock.
-		 */
-		public Gdk.Rectangle get_hidden_icon_geometry (ApplicationDockItem item)
-		{
+			if (!for_hidden) {
+				region.x += win_x;
+				region.y += win_y;
+				
+				return region;
+			}
+			
 			var x = win_x, y = win_y;
-			var region = item_hover_region (item);
 			
 			switch (controller.prefs.Position) {
 			default:
