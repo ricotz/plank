@@ -268,10 +268,11 @@ namespace Plank
 			item.needs_redraw.connect (signal_item_state_changed);
 			item.deleted.connect (handle_item_deleted);
 			
-			if (item is ApplicationDockItem) {
-				(item as ApplicationDockItem).app_closed.connect (app_closed);
-				(item as ApplicationDockItem).app_window_added.connect (handle_item_app_window_added);
-				(item as ApplicationDockItem).pin_launcher.connect (pin_item);
+			unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
+			if (appitem != null) {
+				appitem.app_closed.connect (app_closed);
+				appitem.app_window_added.connect (handle_item_app_window_added);
+				appitem.pin_launcher.connect (pin_item);
 			}
 		}
 		
@@ -285,10 +286,11 @@ namespace Plank
 			item.needs_redraw.disconnect (signal_item_state_changed);
 			item.deleted.disconnect (handle_item_deleted);
 			
-			if (item is ApplicationDockItem) {
-				(item as ApplicationDockItem).app_closed.disconnect (app_closed);
-				(item as ApplicationDockItem).app_window_added.disconnect (handle_item_app_window_added);
-				(item as ApplicationDockItem).pin_launcher.disconnect (pin_item);
+			unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
+			if (appitem != null) {
+				appitem.app_closed.disconnect (app_closed);
+				appitem.app_window_added.disconnect (handle_item_app_window_added);
+				appitem.pin_launcher.disconnect (pin_item);
 			}
 			
 			Items.remove (item);
