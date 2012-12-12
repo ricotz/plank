@@ -731,6 +731,49 @@ namespace Plank
 		}
 		
 		/**
+		 * Get the item's icon geometry for the dock.
+		 *
+		 * @param item an application-dockitem of the dock
+		 * @param for_hidden whether the geometry should apply for a hidden dock
+		 * @return icon geometry for the given application-dockitem
+		 */
+		public Gdk.Rectangle get_icon_geometry (ApplicationDockItem item, bool for_hidden)
+		{
+			var region = item_hover_region (item);
+			
+			if (!for_hidden) {
+				region.x += win_x;
+				region.y += win_y;
+				
+				return region;
+			}
+			
+			var x = win_x, y = win_y;
+			
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				x += region.x + region.width / 2;
+				y += DockHeight;
+				break;
+			case PositionType.TOP:
+				x += region.x + region.width / 2;
+				y += 0;
+				break;
+			case PositionType.LEFT:
+				x += 0;
+				y += region.y + region.height / 2;
+				break;
+			case PositionType.RIGHT:
+				x += DockWidth;
+				y += region.y + region.height / 2;
+				break;
+			}
+			
+			return Gdk.Rectangle () { x = x, y = y, width = 0, height = 0};
+		}
+		
+		/**
 		 * Computes the struts for the dock.
 		 *
 		 * @param struts the array to contain the struts

@@ -270,6 +270,7 @@ namespace Plank
 			
 			if (item is ApplicationDockItem) {
 				(item as ApplicationDockItem).app_closed.connect (app_closed);
+				(item as ApplicationDockItem).app_window_added.connect (handle_item_app_window_added);
 				(item as ApplicationDockItem).pin_launcher.connect (pin_item);
 			}
 		}
@@ -286,11 +287,17 @@ namespace Plank
 			
 			if (item is ApplicationDockItem) {
 				(item as ApplicationDockItem).app_closed.disconnect (app_closed);
+				(item as ApplicationDockItem).app_window_added.disconnect (handle_item_app_window_added);
 				(item as ApplicationDockItem).pin_launcher.disconnect (pin_item);
 			}
 			
 			Items.remove (item);
 			controller.unity.remove_entry (item);
+		}
+		
+		void handle_item_app_window_added ()
+		{
+			controller.window.update_icon_regions ();
 		}
 		
 		void handle_item_deleted (DockItem item)
