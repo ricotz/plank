@@ -31,27 +31,29 @@ namespace Plank
 	public class DockItems : GLib.Object
 	{
 		/**
+		 * Triggered when the items collection has changed.
+		 *
+		 * @param added the list of added items
+		 * @param removed the list of removed items
+		 */
+		public signal void items_changed (Gee.List<DockItem> added, Gee.List<DockItem> removed);
+		
+		/**
 		 * Triggered when the state of an item changes.
 		 */
 		public signal void item_state_changed ();
 		
 		/**
-		 * Triggered when a new item is added to the collection.
-		 *
-		 * @param item the dockitem which was added
-		 */
-		public signal void item_added (DockItem item);
-		/**
-		 * Triggered when an item is removed from the collection.
-		 *
-		 * @param item the dockitem which was removed
-		 */
-		public signal void item_removed (DockItem item);
-		
-		/**
 		 * A list of the dock items.
 		 */
-		public ArrayList<DockItem> Items = new ArrayList<DockItem> ();
+		public unowned ArrayList<DockItem> Items {
+			get {
+				return visible_items;
+			}
+		}
+		
+		ArrayList<DockItem> visible_items = new ArrayList<DockItem> ();
+		ArrayList<DockItem> internal_items = new ArrayList<DockItem> ();
 		
 		FileMonitor? items_monitor = null;
 		
@@ -84,20 +86,36 @@ namespace Plank
 			
 			load_items ();
 			add_running_apps ();
-			set_item_positions ();
+			update_visible_items ();
+			
+			controller.prefs.changed["CurrentWorkspaceOnly"].connect (handle_setting_changed);
 			
 			Matcher.get_default ().app_opened.connect (app_opened);
+			
+			var wnck_screen = Wnck.Screen.get_default ();
+			wnck_screen.active_window_changed.connect (handle_window_changed);
+			wnck_screen.active_workspace_changed.connect (handle_workspace_changed);
+			wnck_screen.viewports_changed.connect (handle_viewports_changed);
 		}
 		
 		~DockItems ()
 		{
+			controller.prefs.changed["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
+			
 			Matcher.get_default ().app_opened.disconnect (app_opened);
 			
+			var wnck_screen = Wnck.Screen.get_default ();
+			wnck_screen.active_window_changed.disconnect (handle_window_changed);
+			wnck_screen.active_workspace_changed.disconnect (handle_workspace_changed);
+			wnck_screen.viewports_changed.disconnect (handle_viewports_changed);
+			
+			visible_items.clear ();
+			
 			var items = new HashSet<DockItem> ();
-			items.add_all (Items);
+			items.add_all (internal_items);
 			foreach (var item in items)
 				remove_item_without_signaling (item);
-			Items.clear ();
+			internal_items.clear ();
 			
 			if (items_monitor != null) {
 				items_monitor.changed.disconnect (handle_items_dir_changed);
@@ -114,9 +132,8 @@ namespace Plank
 		public void add_item (DockItem item)
 		{
 			add_item_without_signaling (item);
-			set_item_positions ();
-
-			item_added (item);
+			
+			update_visible_items ();
 		}
 		
 		/**
@@ -127,9 +144,8 @@ namespace Plank
 		public void remove_item (DockItem item)
 		{
 			remove_item_without_signaling (item);
-			set_item_positions ();
 			
-			item_removed (item);
+			update_visible_items ();
 		}
 		
 		void signal_item_state_changed ()
@@ -139,7 +155,7 @@ namespace Plank
 		
 		ApplicationDockItem? item_for_application (Bamf.Application app)
 		{
-			foreach (var item in Items) {
+			foreach (var item in internal_items) {
 				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 				if (appitem == null)
 					continue;
@@ -164,7 +180,7 @@ namespace Plank
 						var item = Factory.item_factory.make_item (file);
 						
 						if (item.ValidItem)
-							add_item (item);
+							add_item_without_signaling (item);
 						else
 							warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());
 					}
@@ -174,13 +190,48 @@ namespace Plank
 			
 			var favs = new ArrayList<string> ();
 			
-			foreach (var item in Items)
+			foreach (var item in internal_items)
 				if ((item is ApplicationDockItem) && !(item is TransientDockItem))
 					favs.add (item.Launcher);
 			
 			Matcher.get_default ().set_favorites (favs);
 			
 			debug ("done.");
+		}
+		
+		void update_visible_items ()
+		{
+			Logger.verbose ("DockItems.update_visible_items ()");
+			
+			var old_items = new ArrayList<DockItem> ();
+			old_items.add_all (visible_items);
+			
+			visible_items.clear ();
+			
+			if (controller.prefs.CurrentWorkspaceOnly) {
+				var active_workspace = Wnck.Screen.get_default ().get_active_workspace ();
+				foreach (var item in internal_items) {
+					var transient = (item as TransientDockItem);
+					if (transient != null
+						&& !WindowControl.has_window_on_workspace (transient.App, active_workspace))
+						continue;
+					visible_items.add (item);
+				}
+			} else {
+				visible_items.add_all (internal_items);
+			}
+			
+			set_item_positions ();
+			
+			var added_items = new ArrayList<DockItem> ();
+			added_items.add_all (visible_items);
+			added_items.remove_all (old_items);
+			
+			var removed_items = old_items;
+			removed_items.remove_all (visible_items);
+			
+			if (added_items.size > 0 || removed_items.size > 0)
+				items_changed (added_items, removed_items);
 		}
 		
 		void add_running_apps ()
@@ -194,7 +245,7 @@ namespace Plank
 		{
 			var last_sort = 1000;
 			
-			foreach (var item in Items)
+			foreach (var item in internal_items)
 				if (item is TransientDockItem)
 					last_sort = item.Sort;
 			
@@ -217,7 +268,7 @@ namespace Plank
 		void set_item_positions ()
 		{
 			int pos = 0;
-			foreach (var i in Items)
+			foreach (var i in visible_items)
 				i.Position = pos++;
 		}
 		
@@ -242,7 +293,7 @@ namespace Plank
 			
 			// remove peristent and invalid items
 			var remove = new ArrayList<DockItem> ();
-			foreach (var item in Items)
+			foreach (var item in internal_items)
 				if (!(item is TransientDockItem) || !item.ValidItem)
 					remove.add (item);
 			foreach (var item in remove)
@@ -250,15 +301,48 @@ namespace Plank
 			
 			load_items ();
 			add_running_apps ();
-			set_item_positions ();
+			update_visible_items ();
+		}
+		
+		void handle_setting_changed ()
+		{
+			update_visible_items ();
+		}
+		
+		void handle_window_changed (Wnck.Window? previous)
+		{
+			if (!controller.prefs.CurrentWorkspaceOnly)
+				return;
 			
-			item_state_changed ();
+			if (previous == null
+				|| previous.get_workspace () == previous.get_screen ().get_active_workspace ())
+				return;
+			
+			update_visible_items ();
+		}
+		
+		void handle_workspace_changed (Wnck.Screen screen, Wnck.Workspace previously_active_space)
+		{
+			if (!controller.prefs.CurrentWorkspaceOnly
+				|| screen.get_active_workspace ().is_virtual ())
+				return;
+			
+			update_visible_items ();
+		}
+		
+		void handle_viewports_changed (Wnck.Screen screen)
+		{
+			if (!controller.prefs.CurrentWorkspaceOnly
+				|| !screen.get_active_workspace ().is_virtual ())
+				return;
+			
+			update_visible_items ();
 		}
 		
 		void add_item_without_signaling (DockItem item)
 		{
-			Items.add (item);
-			Items.sort ((CompareFunc) compare_items);
+			internal_items.add (item);
+			internal_items.sort ((CompareFunc) compare_items);
 			
 			item.AddTime = new DateTime.now_utc ();
 			item.notify["Icon"].connect (signal_item_state_changed);
@@ -293,7 +377,7 @@ namespace Plank
 				appitem.pin_launcher.disconnect (pin_item);
 			}
 			
-			Items.remove (item);
+			internal_items.remove (item);
 			controller.unity.remove_entry (item);
 		}
 		
@@ -313,12 +397,19 @@ namespace Plank
 				return;
 			}
 			
-			remove_item_without_signaling (item);
+			var index = internal_items.index_of (item);
 			
+			remove_item_without_signaling (item);
 			var new_item = new TransientDockItem.with_application (app);
 			new_item.Position = item.Position;
-			
 			add_item_without_signaling (new_item);
+			
+			if (index >= 0) {
+				internal_items.remove (new_item);
+				internal_items.insert (index, new_item);
+			}
+			
+			update_visible_items ();
 			item_state_changed ();
 		}
 		
@@ -327,7 +418,7 @@ namespace Plank
 			if (item is TransientDockItem) {
 				var last_sort = 0;
 				
-				foreach (var i in Items) {
+				foreach (var i in internal_items) {
 					if (i == item)
 						break;
 					if (!(i is TransientDockItem))
@@ -338,12 +429,19 @@ namespace Plank
 				if (dockitem_file == null)
 					return;
 				
+				var index = visible_items.index_of (item);
+				
 				remove_item_without_signaling (item);
 				var new_item = new ApplicationDockItem.with_dockitem_file (dockitem_file);
 				new_item.Position = item.Position;
 				add_item_without_signaling (new_item);
 				
-				item_state_changed ();
+				if (index >= 0) {
+					visible_items.insert (index, new_item);
+					item_state_changed ();
+				} else {
+					update_visible_items ();
+				}
 			} else {
 				item.delete ();
 			}
