@@ -529,6 +529,11 @@ namespace Plank.Items
 		public void copy_values_to (DockItem target)
 		{
 			foreach (var prop in get_class ().list_properties ()) {
+				// Skip non-copyable properties to avoid warnings
+				if ((prop.flags & ParamFlags.WRITABLE) == 0
+					|| (prop.flags & ParamFlags.CONSTRUCT_ONLY) != 0)
+					continue;
+				
 				var name = prop.get_name ();
 				var type = prop.value_type;
 				var val = Value (type);
