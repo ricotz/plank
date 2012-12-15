@@ -268,14 +268,7 @@ namespace Plank
 		
 		void update_window_intersect ()
 		{
-			// get window location
-			var win_x = controller.position_manager.win_x;
-			var win_y = controller.position_manager.win_y;
-			
-			// compute rect of the window
 			var dock_rect = controller.position_manager.get_static_dock_region ();
-			dock_rect.x += win_x;
-			dock_rect.y += win_y;
 			
 			var intersect = false;
 			var screen = Wnck.Screen.get_default ();

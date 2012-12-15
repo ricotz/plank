@@ -54,6 +54,16 @@ namespace Plank.Items
 		 */
 		public signal void app_closed ();
 		
+		/**
+		 * Signal fired when the application associated with this item opened a new window.
+		 */
+		public signal void app_window_added ();
+		
+		/**
+		 * Signal fired when the application associated with this item closed a window.
+		 */
+		public signal void app_window_removed ();
+		
 #if HAVE_DBUSMENU
 		/**
 		 * The dock item's quicklist-dbusmenu.
@@ -247,11 +257,15 @@ namespace Plank.Items
 		void handle_window_added (Bamf.View? child)
 		{
 			update_indicator (WindowControl.get_num_windows (App));
+			
+			app_window_added ();
 		}
 		
 		void handle_window_removed (Bamf.View? child)
 		{
 			update_indicator (WindowControl.get_num_windows (App));
+			
+			app_window_removed ();
 		}
 		
 		void update_indicator (uint window_count)
@@ -568,7 +582,7 @@ namespace Plank.Items
 							// check for Icon
 							var action_icon = "";
 							if (file.has_key (group, KeyFileDesktop.KEY_ICON))
-								icon = file.get_string (group, KeyFileDesktop.KEY_ICON);
+								action_icon = file.get_string (group, KeyFileDesktop.KEY_ICON);
 							
 							var action_name = file.get_locale_string (group, KeyFileDesktop.KEY_NAME);
 							var action_exec = file.get_string (group, KeyFileDesktop.KEY_EXEC);

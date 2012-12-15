@@ -31,6 +31,9 @@ namespace Plank
 		const int MIN_ICON_SIZE = 24;
 		const int MAX_ICON_SIZE = 128;
 		
+		[Description(nick = "current-workspace-only", blurb = "Whether to show only windows of the current workspace.")]
+		public bool CurrentWorkspaceOnly { get; set; }
+		
 		[Description(nick = "icon-size", blurb = "The size of dock icons (in pixels).")]
 		public int IconSize { get; set; }
 		
@@ -82,6 +85,7 @@ namespace Plank
 		{
 			Logger.verbose ("DockPreferences.reset_properties ()");
 			
+			CurrentWorkspaceOnly = false;
 			IconSize = 48;
 			HideMode = HideType.INTELLIGENT;
 			UnhideDelay = 0;
@@ -142,6 +146,9 @@ namespace Plank
 		protected override void verify (string prop)
 		{
 			switch (prop) {
+			case "CurrentWorkspaceOnly":
+				break;
+			
 			case "IconSize":
 				if (IconSize < MIN_ICON_SIZE)
 					IconSize = MIN_ICON_SIZE;

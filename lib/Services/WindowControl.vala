@@ -94,12 +94,15 @@ namespace Plank.Services.Windows
 		
 		public static uint get_num_windows (Bamf.Application app)
 		{
-			GLib.List<unowned Bamf.View>? children = app.get_windows ();
+			Screen.get_default ();
+			Array<uint32>? xids = app.get_xids ();
 			
-			if (children == null)
+			warn_if_fail (xids != null);
+			
+			if (xids == null)
 				return 0;
 			
-			return children.length ();
+			return xids.length;
 		}
 		
 		public static bool has_maximized_window (Bamf.Application app)
@@ -129,6 +132,32 @@ namespace Plank.Services.Windows
 				var window = Wnck.Window.@get (xids.index (i));
 				if (window != null && window.is_minimized ())
 					return true;
+			}
+			
+			return false;
+		}
+		
+		public static bool has_window_on_workspace (Bamf.Application app, Wnck.Workspace workspace)
+		{
+			Screen.get_default ();
+			Array<uint32>? xids = app.get_xids ();
+			
+			warn_if_fail (xids != null);
+			
+			var is_virtual = workspace.is_virtual ();
+			
+			for (var i = 0; xids != null && i < xids.length; i++) {
+				var window = Wnck.Window.@get (xids.index (i));
+				if (window == null)
+					continue;
+				
+				if (!is_virtual) {
+					if (window.is_on_workspace (workspace))
+						return true;
+				} else {
+					if (window.is_in_viewport (workspace))
+						return true;
+				}
 			}
 			
 			return false;

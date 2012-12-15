@@ -287,7 +287,30 @@ namespace Plank
 		 */
 		public Gdk.Rectangle get_static_dock_region ()
 		{
-			return static_dock_region;
+			var dock_region = static_dock_region;
+			dock_region.x += win_x;
+			dock_region.y += win_y;
+			
+			// Revert adjustments made by update_dock_position () for non-compositing mode
+			if (!screen_is_composited && controller.renderer.Hidden) {
+				switch (controller.prefs.Position) {
+				default:
+				case PositionType.BOTTOM:
+					dock_region.y -= DockHeight - 1;
+					break;
+				case PositionType.TOP:
+					dock_region.y += DockHeight - 1;
+					break;
+				case PositionType.LEFT:
+					dock_region.x += DockWidth - 1;
+					break;
+				case PositionType.RIGHT:
+					dock_region.x -= DockWidth - 1;
+					break;
+				}
+			}
+			
+			return dock_region;
 		}
 		
 		/**
@@ -609,8 +632,27 @@ namespace Plank
 				win_x = monitor_geo.x + monitor_geo.width - DockWidth;
 				break;
 			}
+			
+			// Actually change the window position while hidden for non-compositing mode
+			if (!screen_is_composited && controller.renderer.Hidden) {
+				switch (controller.prefs.Position) {
+				default:
+				case PositionType.BOTTOM:
+					win_y += DockHeight - 1;
+					break;
+				case PositionType.TOP:
+					win_y -= DockHeight - 1;
+					break;
+				case PositionType.LEFT:
+					win_x -= DockWidth - 1;
+					break;
+				case PositionType.RIGHT:
+					win_x += DockWidth - 1;
+					break;
+				}
+			}
 		}
-
+		
 		/**
 		 * Get's the x and y position to display the main dock buffer.
 		 *
@@ -619,6 +661,12 @@ namespace Plank
 		 */
 		public void get_dock_draw_position (out int x, out int y)
 		{
+			if (!screen_is_composited) {
+				x = 0;
+				y = 0;
+				return;
+			}
+			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
@@ -680,6 +728,49 @@ namespace Plank
 				y = yoffset + (height - DockBackgroundHeight) / 2;
 				break;
 			}
+		}
+		
+		/**
+		 * Get the item's icon geometry for the dock.
+		 *
+		 * @param item an application-dockitem of the dock
+		 * @param for_hidden whether the geometry should apply for a hidden dock
+		 * @return icon geometry for the given application-dockitem
+		 */
+		public Gdk.Rectangle get_icon_geometry (ApplicationDockItem item, bool for_hidden)
+		{
+			var region = item_hover_region (item);
+			
+			if (!for_hidden) {
+				region.x += win_x;
+				region.y += win_y;
+				
+				return region;
+			}
+			
+			var x = win_x, y = win_y;
+			
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				x += region.x + region.width / 2;
+				y += DockHeight;
+				break;
+			case PositionType.TOP:
+				x += region.x + region.width / 2;
+				y += 0;
+				break;
+			case PositionType.LEFT:
+				x += 0;
+				y += region.y + region.height / 2;
+				break;
+			case PositionType.RIGHT:
+				x += DockWidth;
+				y += region.y + region.height / 2;
+				break;
+			}
+			
+			return Gdk.Rectangle () { x = x, y = y, width = 0, height = 0};
 		}
 		
 		/**
