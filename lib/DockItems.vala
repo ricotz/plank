@@ -243,16 +243,15 @@ namespace Plank
 		
 		void app_opened (Bamf.Application app)
 		{
-			var last_sort = 1000;
-			
-			foreach (var item in internal_items)
-				if (item is TransientDockItem)
-					last_sort = item.Sort;
-			
 			var found = item_for_application (app);
 			if (found != null) {
 				found.App = app;
 			} else if (app.is_user_visible () && WindowControl.get_num_windows (app) > 0) {
+				var last_sort = 1000;
+				foreach (var item in internal_items)
+					if (item is TransientDockItem)
+						last_sort = item.Sort;
+				
 				var new_item = new TransientDockItem.with_application (app);
 				new_item.Sort = last_sort + 1;
 				add_item (new_item);
