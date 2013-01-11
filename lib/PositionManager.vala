@@ -468,32 +468,30 @@ namespace Plank
 		{
 			var rect = Gdk.Rectangle ();
 			
-			var icon_size = controller.prefs.IconSize;
-			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				rect.width = icon_size + ItemPadding;
+				rect.width = IconSize + ItemPadding;
 				rect.height = VisibleDockHeight;
-				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + icon_size);
+				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + IconSize);
 				rect.y = DockHeight - rect.height;
 				break;
 			case PositionType.TOP:
-				rect.width = icon_size + ItemPadding;
+				rect.width = IconSize + ItemPadding;
 				rect.height = VisibleDockHeight;
-				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + icon_size);
+				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + IconSize);
 				rect.y = 0;
 				break;
 			case PositionType.LEFT:
-				rect.height = icon_size + ItemPadding;
+				rect.height = IconSize + ItemPadding;
 				rect.width = VisibleDockWidth;
-				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + icon_size);
+				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + IconSize);
 				rect.x = 0;
 				break;
 			case PositionType.RIGHT:
-				rect.height = icon_size + ItemPadding;
+				rect.height = IconSize + ItemPadding;
 				rect.width = VisibleDockWidth;
-				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + icon_size);
+				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + IconSize);
 				rect.x = DockWidth - rect.width;
 				break;
 			}

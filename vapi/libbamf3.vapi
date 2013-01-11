@@ -14,7 +14,7 @@ namespace Bamf {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_supported_mime_types ();
 		public GLib.List<weak Bamf.Window> get_windows ();
-		public GLib.Array<uint> get_xids ();
+		public GLib.Array<uint32> get_xids ();
 		public signal void window_added (Bamf.View object);
 		public signal void window_removed (Bamf.View object);
 	}
@@ -26,15 +26,6 @@ namespace Bamf {
 		public void insert_desktop_file (string desktop_file);
 		public void register_application_for_pid (string application, int32 pid);
 		public void register_tab_provider (string path);
-		public void set_approver_behavior (int32 behavior);
-	}
-	[CCode (cheader_filename = "libbamf/libbamf.h", type_id = "bamf_indicator_get_type ()")]
-	public class Indicator : Bamf.View {
-		[CCode (has_construct_function = false)]
-		protected Indicator ();
-		public unowned string get_dbus_menu_path ();
-		public unowned string get_remote_address ();
-		public unowned string get_remote_path ();
 	}
 	[CCode (cheader_filename = "libbamf/libbamf.h", type_id = "bamf_matcher_get_type ()")]
 	public class Matcher : GLib.Object {
@@ -65,10 +56,10 @@ namespace Bamf {
 		[CCode (has_construct_function = false)]
 		public Tab (string path);
 		public bool close ();
-		public unowned string get_desktop_name ();
-		public bool get_is_foreground_tab ();
-		public unowned string get_location ();
-		public uint64 get_xid ();
+		public virtual unowned string get_desktop_name ();
+		public virtual bool get_is_foreground_tab ();
+		public virtual unowned string get_location ();
+		public virtual uint64 get_xid ();
 		public bool raise ();
 		[NoAccessorMethod]
 		public string desktop_id { owned get; set; }
@@ -85,7 +76,6 @@ namespace Bamf {
 		protected TabSource ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_tab_ids ();
-		public unowned GLib.Array<void*> get_tab_preview (string tab_id);
 		public string get_tab_uri (string tab_id);
 		public uint32 get_tab_xid (string tab_id);
 		[NoWrapper]
@@ -115,7 +105,9 @@ namespace Bamf {
 		public virtual bool is_running ();
 		public bool is_sticky ();
 		public virtual bool is_urgent ();
+#if !HAVE_BAMF_0_4
 		[CCode (cname = "bamf_view_user_visible")]
+#endif
 		public bool is_user_visible ();
 		[NoWrapper]
 		public virtual void set_path (string path);
@@ -144,14 +136,14 @@ namespace Bamf {
 	public class Window : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Window ();
-		public int get_monitor ();
-		public uint32 get_pid ();
-		public unowned Bamf.Window get_transient ();
-		public string get_utf8_prop (string prop);
-		public Bamf.WindowType get_window_type ();
-		public uint32 get_xid ();
-		public long last_active ();
-		public Bamf.WindowMaximizationType maximized ();
+		public virtual int get_monitor ();
+		public virtual uint32 get_pid ();
+		public virtual unowned Bamf.Window get_transient ();
+		public virtual string get_utf8_prop (string prop);
+		public virtual Bamf.WindowType get_window_type ();
+		public virtual uint32 get_xid ();
+		public virtual long last_active ();
+		public virtual Bamf.WindowMaximizationType maximized ();
 		public virtual signal void maximized_changed (int old_value, int new_value);
 		public virtual signal void monitor_changed (int old_value, int new_value);
 	}

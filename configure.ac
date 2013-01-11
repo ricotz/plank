@@ -120,6 +120,15 @@ VALAFLAGS="--thread --target-glib=2.28"
 # Optional Dependencies
 # -----------------------------------------------------------
 
+# Check for newer BAMF
+BAMF_MIN_VERSION=0.4.0
+BAMF_PKGS="libbamf3 >= $BAMF_MIN_VERSION"
+PKG_CHECK_MODULES(BAMF, $BAMF_PKGS, [enable_bamf_0_4=yes], [enable_bamf_0_4=no])
+if test "x$enable_bamf_0_4" = "xyes" ; then
+    VALAFLAGS="$VALAFLAGS --define HAVE_BAMF_0_4"
+fi
+AM_CONDITIONAL([HAVE_BAMF_0_4], [test "x$enable_bamf_0_4" = "xyes"])
+
 # Support dynamic quicklists provided with dbusmenu
 DBUSMENU_MIN_VERSION=0.4
 DBUSMENU_PKGS="dbusmenu-glib-0.4 >= $DBUSMENU_MIN_VERSION dbusmenu-gtk3-0.4 >= $DBUSMENU_MIN_VERSION"
