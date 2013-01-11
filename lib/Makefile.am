@@ -21,6 +21,7 @@ nodist_pkgconfig_DATA = plank.pc
 libplankdir = $(libdir)
 
 libplank_la_CFLAGS = \
+	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
 	$(PLANK_CORE_CFLAGS) \
 	-include config.h \
 	-w \
