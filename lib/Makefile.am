@@ -89,6 +89,7 @@ plank.h plank.vapi: libplank_la_vala.stamp
 
 plank.deps: Makefile
 	@echo Creating $@
+	@touch $@
 	@cp $(srcdir)/plank.deps.in $@
 if HAVE_DBUSMENU
 	@echo "Dbusmenu-0.4" >> $@
@@ -98,6 +99,8 @@ endif
 libplank_la_vala.stamp build-abi: $(libplank_la_VALASOURCES)
 	$(AM_V_VALA)$(VALAC) \
 		$(libplank_la_VALAFLAGS) \
+		--basedir $(srcdir) \
+		--directory $(builddir) \
 		-C \
 		-H plank.h \
 		--library plank \
