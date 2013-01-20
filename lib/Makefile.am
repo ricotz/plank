@@ -135,6 +135,7 @@ EXTRA_DIST = \
 	abicheck.sh \
 	libplank.symbols \
 	plank.deps.in \
+	plank.gresource.xml \
 	plank.pc.in \
 	$(NULL)
 
