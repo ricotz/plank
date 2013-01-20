@@ -14,10 +14,11 @@ SUBDIRS += docs
 endif
 
 DISTCHECK_CONFIGURE_FLAGS = \
-	--disable-vala \
+	--disable-docs \
 	$(NULL)
 
 EXTRA_DIST = \
+	COPYRIGHT \
 	.version \
 	build-aux/bzr-version-gen \
 	$(NULL)

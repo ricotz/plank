@@ -21,6 +21,8 @@ using Plank.Services;
 
 namespace Plank
 {
+	public const string G_RESOURCE_PATH = "/net/launchpad/plank";
+	
 	/**
 	 * A controller class for managing a single dock.
 	 */

@@ -71,9 +71,9 @@ endif
 
 valadoc_flags_plank = \
 	$(valadoc_flags) \
-	-X $(top_srcdir)/lib/plank.h \
+	-X $(top_builddir)/lib/plank.h \
 	$(addprefix --pkg=,$(plank_doc_deps)) \
-	--vapidir=$(top_srcdir)/lib \
+	--vapidir=$(top_builddir)/lib \
 	--vapidir=$(top_srcdir)/vapi \
 	$(plank_doc_files) \
 	$(NULL)

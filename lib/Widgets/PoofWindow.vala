@@ -54,17 +54,20 @@ namespace Plank.Widgets
 		}
 		
 		construct
-		{			
+		{
 			accept_focus = false;
 			can_focus = false;
 			set_keep_above (true);
 			
-			var poof_file = Paths.DataFolder.get_child ("poof.png").get_path () ?? "";
 			try {
-				poof_image = new Pixbuf.from_file (poof_file);
+#if !VALA_0_18
+				poof_image = gdk_pixbuf_new_from_resource ("%s/img/poof.png".printf (Plank.G_RESOURCE_PATH));
+#else
+				poof_image = new Pixbuf.from_resource ("%s/img/poof.png".printf (Plank.G_RESOURCE_PATH));
+#endif
 			} catch {
 				poof_image = new Pixbuf (Colorspace.RGB, true, 8, 128, 640);
-				warning ("Unable to load poof animation image '%s'", poof_file);
+				warning ("Unable to load poof animation image");
 			}
 			
 			set_size_request (POOF_SIZE, POOF_SIZE);

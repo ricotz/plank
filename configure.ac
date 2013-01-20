@@ -88,7 +88,8 @@ fi
 # Dependencies
 # -----------------------------------------------------------
 GTK_MIN_VERSION=3.0.0
-GLIB_MIN_VERSION=2.28.0
+GLIB_MIN_VERSION=2.32.0
+GDK_PIXBUF_MIN_VERSION=2.26.0
 BAMF_MIN_VERSION=0.2.92
 
 PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
@@ -98,6 +99,7 @@ PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  gio-unix-2.0 >= $GLIB_MIN_VERSION \
                  gtk+-3.0 >= $GTK_MIN_VERSION \
                  gdk-x11-3.0 >= $GTK_MIN_VERSION \
+                 gdk-pixbuf-2.0 >= $GDK_PIXBUF_MIN_VERSION \
                  libbamf3 >= $BAMF_MIN_VERSION \
                  libwnck-3.0 \
                  gee-1.0 \
@@ -107,14 +109,30 @@ PLANK_CORE_OPTIONAL_PKGS=""
 PLANK_CORE_VALA_PKGS="--pkg gio-unix-2.0 \
                       --pkg gtk+-3.0 \
                       --pkg gdk-x11-3.0 \
+                      --pkg gdk-pixbuf-2.0 \
                       --pkg libbamf3 \
                       --pkg libwnck-3.0 \
                       --pkg gee-1.0 \
                       --pkg posix \
                       --pkg x11"
 
-VALAFLAGS="--thread --target-glib=2.28"
+VALAFLAGS="--thread --target-glib=2.32"
 
+# -----------------------------------------------------------
+# GLib Resources
+# -----------------------------------------------------------
+
+AC_ARG_VAR([GLIB_COMPILE_RESOURCES],[the glib-compile-resources program])
+AC_PATH_PROG([GLIB_COMPILE_RESOURCES],[glib-compile-resources],[])
+if test -z "$GLIB_COMPILE_RESOURCES"; then
+  AC_MSG_ERROR([glib-compile-resources not found])
+fi
+
+AC_ARG_VAR([XMLLINT],[the xmllint program])
+AC_PATH_PROG([XMLLINT],[xmllint],[])
+if test -z "$XMLLINT"; then
+  AC_MSG_ERROR([xmllint not found])
+fi
 
 # -----------------------------------------------------------
 # Optional Dependencies
