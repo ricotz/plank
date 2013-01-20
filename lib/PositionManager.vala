@@ -136,6 +136,7 @@ namespace Plank
 		
 		public int UrgentBounceHeight { get; private set; }
 		
+		int items_width;
 		int items_offset;
 		int top_offset;
 		int bottom_offset;
@@ -219,8 +220,21 @@ namespace Plank
 			// height of the dock window
 			var dock_height = height + (screen_is_composited ? UrgentBounceHeight : 0);
 			
-			
-			var width = controller.items.Items.size * (ItemPadding + IconSize) + 2 * HorizPadding + 4 * LineWidth;
+			var width = 0;
+			switch (controller.prefs.Alignment) {
+			default:
+			case Align.START:
+			case Align.END:
+			case Align.CENTER:
+				width = controller.items.Items.size * (ItemPadding + IconSize) + 2 * HorizPadding + 4 * LineWidth;
+				break;
+			case Align.FILL:
+				if (controller.prefs.is_horizontal_dock ())
+					width = monitor_geo.width;
+				else
+					width = monitor_geo.height;
+				break;
+			}
 			
 			// width of the dock background image, as drawn
 			var background_width = width;
@@ -322,6 +336,9 @@ namespace Plank
 			
 			var old_region = static_dock_region;
 			
+			// width of the items-area of the dock
+			items_width = controller.items.Items.size * (ItemPadding + controller.prefs.IconSize);
+			
 			static_dock_region.width = VisibleDockWidth;
 			static_dock_region.height = VisibleDockHeight;
 			
@@ -331,6 +348,21 @@ namespace Plank
 			if (screen_is_composited) {
 				xoffset = (int) ((1 + controller.prefs.Offset / 100.0) * xoffset);
 				yoffset = (int) ((1 + controller.prefs.Offset / 100.0) * yoffset);
+				
+				switch (controller.prefs.Alignment) {
+				default:
+				case Align.CENTER:
+				case Align.FILL:
+					break;
+				case Align.START:
+					xoffset = 0;
+					yoffset = (monitor_geo.height - static_dock_region.height);
+					break;
+				case Align.END:
+					xoffset = (monitor_geo.width - static_dock_region.width);
+					yoffset = 0;
+					break;
+				}
 			}
 			
 			switch (controller.prefs.Position) {
@@ -496,6 +528,28 @@ namespace Plank
 				break;
 			}
 			
+			if (controller.prefs.Alignment != Gtk.Align.FILL)
+				return rect;
+			
+			switch (controller.prefs.ItemsAlignment) {
+			default:
+			case Align.FILL:
+			case Align.CENTER:
+				if (controller.prefs.is_horizontal_dock ())
+					rect.x += (static_dock_region.width - 2 * items_offset - items_width) / 2;
+				else
+					rect.y += (static_dock_region.height - 2 * items_offset - items_width) / 2;
+				break;
+			case Align.START:
+				break;
+			case Align.END:
+				if (controller.prefs.is_horizontal_dock ())
+					rect.x += (static_dock_region.width - 2 * items_offset - items_width);
+				else
+					rect.y += (static_dock_region.height - 2 * items_offset - items_width);
+				break;
+			}
+			
 			return rect;
 		}
 		
@@ -609,6 +663,21 @@ namespace Plank
 			if (!screen_is_composited) {
 				xoffset = (int) ((1 + controller.prefs.Offset / 100.0) * (monitor_geo.width - DockWidth) / 2);
 				yoffset = (int) ((1 + controller.prefs.Offset / 100.0) * (monitor_geo.height - DockHeight) / 2);
+				
+				switch (controller.prefs.Alignment) {
+				default:
+				case Align.CENTER:
+				case Align.FILL:
+					break;
+				case Align.START:
+					xoffset = 0;
+					yoffset = (monitor_geo.height - static_dock_region.height);
+					break;
+				case Align.END:
+					xoffset = (monitor_geo.width - static_dock_region.width);
+					yoffset = 0;
+					break;
+				}
 			}
 			
 			switch (controller.prefs.Position) {

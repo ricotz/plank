@@ -52,6 +52,12 @@ namespace Plank
 		[Description(nick = "offset", blurb = "The dock's position offset from center (in percent).")]
 		public int Offset { get; set; }
 		
+		[Description(nick = "alignment", blurb = "The alignment for the dock on the monitor's edge.")]
+		public Gtk.Align Alignment { get; set; }
+		
+		[Description(nick = "items-alignment", blurb = "The alignment of the items in this dock.")]
+		public Gtk.Align ItemsAlignment { get; set; }
+		
 		/**
 		 * {@inheritDoc}
 		 */
@@ -89,6 +95,8 @@ namespace Plank
 			Monitor = -1;
 			Position = PositionType.BOTTOM;
 			Offset = 0;
+			Alignment = Gtk.Align.CENTER;
+			ItemsAlignment = Gtk.Align.CENTER;
 		}
 		
 		void monitors_changed ()
@@ -173,6 +181,12 @@ namespace Plank
 					Offset = -100;
 				else if (Offset > 100)
 					Offset = 100;
+				break;
+			
+			case "Alignment":
+				break;
+			
+			case "ItemsAlignment":
 				break;
 			}
 		}
