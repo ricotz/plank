@@ -4,7 +4,10 @@ VAPIDIR = $(top_srcdir)/vapi
 
 lib_LTLIBRARIES = libplank.la
 
-BUILT_SOURCES = libplank_la_vala.stamp
+BUILT_SOURCES = \
+	libplank_la_vala.stamp \
+	plank-resources.c \
+	$(NULL)
 
 libplankincludedir = $(includedir)/plank
 nodist_libplankinclude_HEADERS = plank.h
@@ -37,6 +40,7 @@ libplank_la_LDFLAGS = \
 libplank_la_VALAFLAGS = \
 	$(PLANK_CORE_VALAFLAGS) \
 	--vapidir $(VAPIDIR) \
+	$(VAPIDIR)/compat.vapi \
 	$(NULL)
 
 libplank_la_LIBADD = \
@@ -81,9 +85,12 @@ libplank_la_VALASOURCES = \
 	$(NULL)
 
 nodist_libplank_la_SOURCES = \
-	libplank_la_vala.stamp \
+	$(BUILT_SOURCES) \
 	$(libplank_la_VALASOURCES:.vala=.c) \
 	$(NULL)
+
+plank-resources.c: plank.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir $(top_srcdir)/data $(srcdir)/plank.gresource.xml)
+	$(AM_V_GEN) XMLLINT=$(XMLLINT) $(GLIB_COMPILE_RESOURCES) --target $@ --sourcedir $(top_srcdir)/data --generate --internal --c-name plank $<
 
 plank.h plank.vapi: libplank_la_vala.stamp
 
