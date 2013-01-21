@@ -50,7 +50,7 @@ namespace Plank.Widgets
 		 */
 		public PoofWindow (int x, int y)
 		{
-			GLib.Object (x: x, y: y, type: Gtk.WindowType.TOPLEVEL, type_hint: WindowTypeHint.SPLASHSCREEN);
+			GLib.Object (x: x, y: y, type: Gtk.WindowType.TOPLEVEL, type_hint: WindowTypeHint.DOCK);
 		}
 		
 		construct
@@ -72,7 +72,10 @@ namespace Plank.Widgets
 			
 			set_size_request (POOF_SIZE, POOF_SIZE);
 			move (x - (POOF_SIZE / 2), y - (POOF_SIZE / 2));
-			
+		}
+		
+		public void run ()
+		{
 			animation_timer = Timeout.add (30, () => {
 				if (get_animation_state () == 1) {
 					animation_timer = 0;
@@ -84,7 +87,7 @@ namespace Plank.Widgets
 				return true;
 			});
 			
-			start_time = new DateTime.now_utc (); 
+			start_time = new DateTime.now_utc ();
 			show_all ();
 		}
 		

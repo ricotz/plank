@@ -52,6 +52,7 @@ libplank_la_VALASOURCES = \
 	DockItems.vala \
 	DockPreferences.vala \
 	DockRenderer.vala \
+	DragManager.vala \
 	HideManager.vala \
 	PositionManager.vala \
 	Drawing/AnimatedRenderer.vala \

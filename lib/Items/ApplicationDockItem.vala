@@ -101,6 +101,8 @@ namespace Plank.Items
 			}
 		}
 		
+		ArrayList<string> supported_mime_types = new ArrayList<string> ();
+		
 		ArrayList<string> actions = new ArrayList<string> ();
 		HashMap<string, string> actions_map = new HashMap<string, string> (str_hash, str_equal);
 		
@@ -423,6 +425,46 @@ namespace Plank.Items
 		}
 		
 		/**
+		 * {@inheritDoc}
+		 */
+		public override bool can_accept_drop (ArrayList<string> uris)
+		{
+			if (uris == null || is_window ())
+				return false;
+			
+			// if they dont specify mimes but have '%F' etc in their Exec, assume any file allowed
+			// FIXME also check if the Exec key has %F/%f/%U/%u in it
+			if (supported_mime_types.size == 0 /* && .. */)
+				return true;
+			
+			try {
+				foreach (var uri in uris) {
+					var info = File.new_for_uri (uri).query_info (FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, FileQueryInfoFlags.NONE);
+					var uri_content_type = info.get_content_type ();
+					foreach (var content_type in supported_mime_types)
+						if (ContentType.is_a (uri_content_type, content_type) || ContentType.equals (uri_content_type, content_type))
+							return true;
+				}
+			} catch {}
+			
+			return false;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public override bool accept_drop (ArrayList<string> uris)
+		{
+			var files = new ArrayList<File> ();
+			foreach (var uri in uris)
+				files.add (File.new_for_uri (uri));
+			
+			Services.System.launch_with_files (File.new_for_path (Prefs.Launcher), files.to_array ());
+			
+			return true;
+		}
+		
+		/**
 		 * Parses the associated launcher and sets the icon and text from it.
 		 */
 		protected void load_from_launcher ()
@@ -434,7 +476,7 @@ namespace Plank.Items
 			stop_monitor ();
 			
 			string icon, text;
-			parse_launcher (launcher, out icon, out text, actions, actions_map);
+			parse_launcher (launcher, out icon, out text, actions, actions_map, supported_mime_types);
 			Icon = icon;
 			ForcePixbuf = null;
 			Text = text;
@@ -450,8 +492,9 @@ namespace Plank.Items
 		 * @param text the text key from the launcher
 		 * @param actions a list of all actions by name
 		 * @param actions_map a map of actions from name to exec;;icon
+		 * @param mimes a list of all supported mime types
 		 */
-		public static void parse_launcher (string launcher, out string icon, out string text, ArrayList<string>? actions = null, Map<string, string>? actions_map = null)
+		public static void parse_launcher (string launcher, out string icon, out string text, ArrayList<string>? actions = null, Map<string, string>? actions_map = null, ArrayList<string>? mimes = null)
 		{
 			icon = "";
 			text = "";
@@ -465,6 +508,12 @@ namespace Plank.Items
 				
 				icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
 				text = file.get_locale_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
+				
+				if (mimes != null && file.has_key (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_MIME_TYPE)) {
+					var mimestrings = file.get_string_list (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_MIME_TYPE);
+					foreach (var mime in mimestrings)
+						mimes.add (ContentType.from_mime_type (mime));
+				}
 				
 				string? textdomain = null;
 				foreach (var domain_key in SUPPORTED_GETTEXT_DOMAINS_KEYS)

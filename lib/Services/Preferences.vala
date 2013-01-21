@@ -226,6 +226,18 @@ namespace Plank.Services
 		}
 		
 		/**
+		 * Returns the filename of the backing file.
+		 *
+		 * @return the filename of the backing file
+		 */
+		public string get_filename ()
+		{
+			if (backing_file == null)
+				return "";
+			return backing_file.get_basename ();
+		}
+		
+		/**
 		 * This forces the deletion of the backing file for this preferences.
 		 */
 		public void delete ()
@@ -273,10 +285,12 @@ namespace Plank.Services
 				(event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
 				return;
 			
-			if ((event & FileMonitorEvent.DELETED) == FileMonitorEvent.DELETED)
-				deleted ();
-			else
+			if ((event & FileMonitorEvent.DELETED) == FileMonitorEvent.DELETED) {
+				if (!f.query_exists ())
+					deleted ();
+			} else {
 				load_prefs ();
+			}
 		}
 		
 		void load_prefs ()

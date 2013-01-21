@@ -90,6 +90,7 @@ namespace Plank
 			theme.changed.connect (theme_changed);
 			
 			controller.items.item_state_changed.connect (item_state_changed);
+			controller.items.item_position_changed.connect (item_position_changed);
 			controller.items.items_changed.connect (items_changed);
 			
 			screen_is_composited = Gdk.Screen.get_default ().is_composited ();
@@ -116,6 +117,7 @@ namespace Plank
 			theme.changed.disconnect (theme_changed);
 			
 			controller.items.item_state_changed.disconnect (item_state_changed);
+			controller.items.item_position_changed.disconnect (item_position_changed);
 			controller.items.items_changed.disconnect (items_changed);
 			
 			Gdk.Screen.get_default ().composited_changed.disconnect (composited_changed);
@@ -138,6 +140,11 @@ namespace Plank
 			if (controller.prefs.Alignment != Gtk.Align.FILL)
 				controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
+		}
+		
+		void item_position_changed ()
+		{
+			animated_draw ();
 		}
 		
 		void item_state_changed ()
@@ -235,7 +242,9 @@ namespace Plank
 #if BENCHMARK
 				start2 = new DateTime.now_local ();
 #endif
-				draw_item (item);
+				// Do not draw the currently dragged item
+				if (controller.drag_manager.DragItem != item)
+					draw_item (item);
 #if BENCHMARK
 				end2 = new DateTime.now_local ();
 				benchmark.add ("item render time - %f ms".printf (end2.difference (start2) / 1000.0));
@@ -372,6 +381,10 @@ namespace Plank
 			
 			if (controller.window.HoveredItem == item && controller.window.menu_is_visible ())
 				darken += 0.4;
+			else if (controller.drag_manager.ExternalDragActive
+				&& !controller.drag_manager.DragIsDesktopFile
+				&& !controller.drag_manager.drop_is_accepted_by (item))
+				darken += 0.6;
 			
 			// glow the icon
 			if (lighten > 0) {

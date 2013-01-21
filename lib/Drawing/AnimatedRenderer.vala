@@ -98,9 +98,10 @@ namespace Plank.Drawing
 			if (animation_needed (new DateTime.now_utc ()))
 				return true;
 			
-			if (animation_timer > 0)
+			if (animation_timer > 0) {
 				GLib.Source.remove (animation_timer);
-			animation_timer = 0;
+				animation_timer = 0;
+			}
 
 			// one final draw to clear out the end of previous animations
 			widget.queue_draw ();

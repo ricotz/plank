@@ -46,6 +46,9 @@ namespace Plank
 		[Description(nick = "monitor", blurb = "The monitor number for the dock. Use -1 to keep on the primary monitor.")]
 		public int Monitor { get; set; }
 		
+		[Description(nick = "dock-items", blurb = "List of *.dockitem files on this dock. DO NOT MODIFY")]
+		public string DockItems { get; set; }
+		
 		[Description(nick = "position", blurb = "The position for the dock on the monitor.")]
 		public PositionType Position { get; set; }
 		
@@ -93,6 +96,7 @@ namespace Plank
 			HideMode = HideType.INTELLIGENT;
 			UnhideDelay = 0;
 			Monitor = -1;
+			DockItems = "";
 			Position = PositionType.BOTTOM;
 			Offset = 0;
 			Alignment = Gtk.Align.CENTER;
@@ -171,6 +175,9 @@ namespace Plank
 					Monitor = -1;
 				else if (Monitor != -1 && Monitor >= Screen.get_default ().get_n_monitors ())
 					Monitor = Screen.get_default ().get_primary_monitor ();
+				break;
+			
+			case "DockItems":
 				break;
 			
 			case "Position":

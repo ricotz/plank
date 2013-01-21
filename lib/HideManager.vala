@@ -54,6 +54,8 @@ namespace Plank
 		
 		DockController controller;
 		
+		bool disabled;
+		
 		/**
 		 * If the dock is currently hovered by the mouse cursor.
 		 */
@@ -72,6 +74,7 @@ namespace Plank
 		{
 			this.controller = controller;
 			
+			disabled = false;
 			windows_intersect = false;
 			hide ();
 			
@@ -88,6 +91,9 @@ namespace Plank
 			controller.window.enter_notify_event.connect (enter_notify_event);
 			controller.window.leave_notify_event.connect (leave_notify_event);
 			controller.window.motion_notify_event.connect (motion_notify_event);
+			
+			controller.drag_manager.notify["ExternalDragActive"].connect (update_dock_hovered);
+			controller.drag_manager.notify["InternalDragActive"].connect (update_dock_hovered);
 			
 			Matcher.get_default ().window_opened.connect (schedule_update);
 			Matcher.get_default ().window_closed.connect (schedule_update);
@@ -107,6 +113,9 @@ namespace Plank
 			controller.window.leave_notify_event.disconnect (leave_notify_event);
 			controller.window.motion_notify_event.disconnect (motion_notify_event);
 			
+			controller.drag_manager.notify["ExternalDragActive"].disconnect (update_dock_hovered);
+			controller.drag_manager.notify["InternalDragActive"].disconnect (update_dock_hovered);
+			
 			Matcher.get_default ().window_opened.disconnect (schedule_update);
 			Matcher.get_default ().window_closed.disconnect (schedule_update);
 			
@@ -121,6 +130,9 @@ namespace Plank
 		 */
 		public void update_dock_hovered ()
 		{
+			// disable hiding if drags are active
+			disabled = controller.drag_manager.InternalDragActive || controller.drag_manager.ExternalDragActive;
+			
 			// get current mouse pointer location
 			int x, y;
 			
@@ -130,6 +142,9 @@ namespace Plank
 			// get window location
 			var win_x = controller.position_manager.win_x;
 			var win_y = controller.position_manager.win_y;
+			
+			// update window.HoveredItem
+			controller.window.update_hovered (x - win_x, y - win_y);
 			
 			// compute rect of the window
 			var dock_rect = controller.position_manager.get_cursor_region ();
@@ -159,6 +174,11 @@ namespace Plank
 		
 		void update_hidden ()
 		{
+			if (disabled) {
+				controller.renderer.show ();
+				return;
+			}
+			
 			switch (controller.prefs.HideMode) {
 			default:
 			case HideType.NONE:
@@ -219,6 +239,10 @@ namespace Plank
 		
 		bool leave_notify_event (EventCrossing event)
 		{
+			// ignore this event if it was sent explicitly
+			if ((bool) event.send_event)
+				return false;
+			
 			if (DockHovered && !controller.window.menu_is_visible ())
 				DockHovered = false;
 			

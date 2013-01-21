@@ -41,5 +41,13 @@ namespace Plank.Items
 				load_from_launcher ();
 			}
 		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public override bool can_be_removed ()
+		{
+			return false;
+		}
 	}
 }

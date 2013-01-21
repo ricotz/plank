@@ -189,7 +189,7 @@ namespace Plank.Items
 		/**
 		 * The dock item's position on the dock.
 		 */
-		public int Position { get; set; default = 0; }
+		public int Position { get; set; default = -1; }
 		
 		/**
 		 * The buttons this item shows popup menus for.
@@ -254,23 +254,17 @@ namespace Plank.Items
 		public Drawing.Color AverageIconColor { get; protected set; default = new Drawing.Color (0, 0, 0, 0); }
 		
 		/**
+		 * The filename of the preferences backing file.
+		 */
+		public string DockItemFilename {
+			owned get { return Prefs.get_filename (); }
+		}
+		
+		/**
 		 * The launcher associated with this item.
 		 */
 		public string Launcher {
 			get { return Prefs.Launcher; }
-		}
-		
-		/**
-		 * The sort value for this item.
-		 */
-		public int Sort {
-			get {
-				return Prefs.Sort;
-			}
-			set {
-				if (Prefs.Sort != value)
-					Prefs.Sort = value;
-			}
 		}
 		
 		/**
@@ -443,6 +437,38 @@ namespace Plank.Items
 		}
 		
 		/**
+		 * Returns if this item can be removed from the dock.
+		 *
+		 * @return if this item can be removed from the dock
+		 */
+		public virtual bool can_be_removed ()
+		{
+			return true;
+		}
+		
+		/**
+		 * Returns if the item accepts a drop of the given URIs.
+		 *
+		 * @param uris the URIs to check
+		 * @return if the item accepts a drop of the given URIs
+		 */
+		public virtual bool can_accept_drop (ArrayList<string> uris)
+		{
+			return false;
+		}
+		
+		/**
+		 * Accepts a drop of the given URIs.
+		 *
+		 * @param uris the URIs to accept
+		 * @return if the item accepted a drop of the given URIs
+		 */
+		public virtual bool accept_drop (ArrayList<string> uris)
+		{
+			return false;
+		}
+		
+		/**
 		 * Returns a unique ID for this dock item.
 		 *
 		 * @return a unique ID for this dock item
@@ -480,6 +506,27 @@ namespace Plank.Items
 			item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon (icon, width, height)));
 			
 			return item;
+		}
+		
+		/**
+		 * Copy all property value of this dockitem instance to target instance.
+		 *
+		 * @param target the dockitem to copy the values to
+		 */
+		public void copy_values_to (DockItem target)
+		{
+			foreach (var prop in get_class ().list_properties ()) {
+				// Skip non-copyable properties to avoid warnings
+				if ((prop.flags & ParamFlags.WRITABLE) == 0
+					|| (prop.flags & ParamFlags.CONSTRUCT_ONLY) != 0)
+					continue;
+				
+				var name = prop.get_name ();
+				var type = prop.value_type;
+				var val = Value (type);
+				get_property (name, ref val);
+				target.set_property (name, val);
+			}
 		}
 	}
 }

@@ -84,12 +84,16 @@ namespace Plank.Widgets
 						EventMask.LEAVE_NOTIFY_MASK |
 						EventMask.POINTER_MOTION_MASK |
 						EventMask.SCROLL_MASK);
+			
+			controller.drag_manager.notify["DragItem"].connect (drag_item_changed);
 		}
 		
 		~DockWindow ()
 		{
 			menu.show.disconnect (on_menu_show);
 			menu.hide.disconnect (on_menu_hide);
+			
+			controller.drag_manager.notify["DragItem"].disconnect (drag_item_changed);
 			
 			if (hover_reposition_timer > 0) {
 				GLib.Source.remove (hover_reposition_timer);
@@ -106,6 +110,11 @@ namespace Plank.Widgets
 		 */
 		public override bool button_press_event (EventButton event)
 		{
+			// This event gets fired before the drag end event, 
+			// in this case we ignore it.
+			if (controller.drag_manager.InternalDragActive)
+				return true;
+			
 			var button = PopupButton.from_event_button (event);
 			if ((button & PopupButton.RIGHT) == PopupButton.RIGHT &&
 					(HoveredItem == null || (event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))
@@ -121,6 +130,9 @@ namespace Plank.Widgets
 		 */
 		public override bool button_release_event (EventButton event)
 		{
+			if (controller.drag_manager.InternalDragActive)
+				return true;
+
 			if (HoveredItem != null && !menu_is_visible ())
 				HoveredItem.clicked (PopupButton.from_event_button (event), event.state);
 			
@@ -142,6 +154,10 @@ namespace Plank.Widgets
 		 */
 		public override bool leave_notify_event (EventCrossing event)
 		{
+			// ignore this event if it was sent explicitly
+			if ((bool) event.send_event)
+				return false;
+			
 			if (!menu_is_visible ())
 				set_hovered (null);
 			else
@@ -155,10 +171,7 @@ namespace Plank.Widgets
 		 */
 		public override bool motion_notify_event (EventMotion event)
 		{
-			if (update_hovered ((int) event.x, (int) event.y))
-				return true;
-			
-			set_hovered (null);
+			update_hovered ((int) event.x, (int) event.y);
 			return true;
 		}
 		
@@ -167,6 +180,9 @@ namespace Plank.Widgets
 		 */
 		public override bool scroll_event (EventScroll event)
 		{
+			if (controller.drag_manager.InternalDragActive)
+				return true;
+			
 			if ((event.state & ModifierType.CONTROL_MASK) != 0) {
 				if (event.direction == ScrollDirection.UP)
 					controller.prefs.increase_icon_size ();
@@ -226,7 +242,7 @@ namespace Plank.Widgets
 			
 			HoveredItem = item;
 			
-			if (HoveredItem == null) {
+			if (HoveredItem == null || controller.drag_manager.InternalDragActive) {
 				controller.hover.hide ();
 				return;
 			}
@@ -260,7 +276,7 @@ namespace Plank.Widgets
 		 * @param y the cursor x position
 		 * @return if a dock item is hovered
 		 */
-		protected bool update_hovered (int x, int y)
+		public bool update_hovered (int x, int y)
 		{
 			foreach (var item in controller.items.Items) {
 				var rect = controller.position_manager.item_hover_region (item);
@@ -271,6 +287,7 @@ namespace Plank.Widgets
 				}
 			}
 			
+			set_hovered (null);			
 			return false;
 		}
 		
@@ -283,6 +300,15 @@ namespace Plank.Widgets
 			int x, y;
 			controller.position_manager.get_hover_position (HoveredItem, out x, out y);
 			controller.hover.move_hover (x, y);
+		}
+		
+		/**
+		 * Called when a dragged item changes.
+		 */
+		protected void drag_item_changed ()
+		{
+			if (controller.drag_manager.DragItem != null)
+				set_hovered (null);
 		}
 		
 		/**
@@ -429,6 +455,7 @@ namespace Plank.Widgets
 		protected void on_menu_show ()
 		{
 			update_icon_regions ();
+			controller.hover.hide ();
 			controller.renderer.animated_draw ();
 		}
 		

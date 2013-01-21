@@ -475,5 +475,14 @@ namespace Plank.Services.Windows
 			
 			w.activate_transient (time);
 		}
+		
+		public static Gdk.Rectangle get_easy_geometry (Wnck.Window w)
+		{
+			Gdk.Rectangle geo = Gdk.Rectangle ();
+			
+			w.get_geometry (out geo.x, out geo.y, out geo.width, out geo.height);
+			
+			return geo;
+		}
 	}
 }

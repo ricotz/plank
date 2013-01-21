@@ -19,6 +19,7 @@ using Gee;
 
 using Plank.Factories;
 using Plank.Items;
+using Plank.Widgets;
 
 using Plank.Services;
 using Plank.Services.Windows;
@@ -42,6 +43,10 @@ namespace Plank
 		 * Triggered when the state of an item changes.
 		 */
 		public signal void item_state_changed ();
+		/**
+		 * Triggered anytime an item's Position changes.
+		 */
+		public signal void item_position_changed ();
 		
 		/**
 		 * A list of the dock items.
@@ -55,7 +60,11 @@ namespace Plank
 		ArrayList<DockItem> visible_items = new ArrayList<DockItem> ();
 		ArrayList<DockItem> internal_items = new ArrayList<DockItem> ();
 		
+		Gee.Map<DockItem, int> saved_item_positions = new HashMap<DockItem, int> ();
+		
 		FileMonitor? items_monitor = null;
+		bool delay_items_monitor_handle = false;
+		ArrayList<GLib.File> queued_files = new ArrayList<GLib.File> ();
 		
 		DockController controller;
 		
@@ -87,9 +96,12 @@ namespace Plank
 			load_items ();
 			add_running_apps ();
 			update_visible_items ();
+			serialize_item_positions ();
 			
 			controller.prefs.changed["CurrentWorkspaceOnly"].connect (handle_setting_changed);
 			
+			item_position_changed.connect (serialize_item_positions);
+			items_changed.connect (serialize_item_positions);
 			Matcher.get_default ().app_opened.connect (app_opened);
 			
 			var wnck_screen = Wnck.Screen.get_default ();
@@ -100,6 +112,8 @@ namespace Plank
 		
 		~DockItems ()
 		{
+			item_position_changed.disconnect (serialize_item_positions);
+			items_changed.disconnect (serialize_item_positions);
 			controller.prefs.changed["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
 			
 			Matcher.get_default ().app_opened.disconnect (app_opened);
@@ -109,6 +123,7 @@ namespace Plank
 			wnck_screen.active_workspace_changed.disconnect (handle_workspace_changed);
 			wnck_screen.viewports_changed.disconnect (handle_viewports_changed);
 			
+			saved_item_positions.clear ();
 			visible_items.clear ();
 			
 			var items = new HashSet<DockItem> ();
@@ -148,7 +163,7 @@ namespace Plank
 			update_visible_items ();
 		}
 		
-		void signal_item_state_changed ()
+		void handle_item_state_changed ()
 		{
 			item_state_changed ();
 		}
@@ -167,9 +182,43 @@ namespace Plank
 			return null;
 		}
 		
+		public bool item_exists_for_uri (string uri)
+		{
+			var launcher = uri.replace ("file://", "");
+			foreach (var item in internal_items)
+				if (item.Launcher == launcher)
+					return true;
+			
+			return false;
+		}
+		
+		public void add_item_with_launcher (string launcher, DockItem? target = null)
+		{
+			if (launcher == null || launcher == "")
+				return;
+			
+			// delay automatic add of new dockitems while creating this new one
+			delay_items_monitor ();
+			
+			var dockitem_file = Factory.item_factory.make_dock_item (launcher);
+			if (dockitem_file == null)
+				return;
+			
+			var item = Factory.item_factory.make_item (dockitem_file);
+			add_item (item);
+			
+			if (target != null)
+				move_item_to (item, target);
+			
+			resume_items_monitor ();
+		}
+		
 		void load_items ()
 		{
 			debug ("Reloading dock items...");
+			var existing_items = new ArrayList<DockItem> ();
+			var new_items = new ArrayList<DockItem> ();
+			var favs = new ArrayList<string> ();
 			
 			try {
 				var enumerator = Factory.item_factory.launchers_dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_STANDARD_IS_HIDDEN, 0);
@@ -179,20 +228,36 @@ namespace Plank
 						var file = Factory.item_factory.launchers_dir.get_child (info.get_name ());
 						var item = Factory.item_factory.make_item (file);
 						
-						if (item.ValidItem)
-							add_item_without_signaling (item);
-						else
+						if (!item.ValidItem) {
 							warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());
+							continue;
+						}
+						
+						if (controller.prefs.DockItems.contains (info.get_name ()))
+							existing_items.add (item);
+						else
+							new_items.add (item);
+						
+						if ((item is ApplicationDockItem) && !(item is TransientDockItem))
+							favs.add (item.Launcher);
 					}
 			} catch {
 				error ("Error loading dock items");
 			}
 			
-			var favs = new ArrayList<string> ();
+			// add saved dockitems based on their serialized order
+			var dockitems = controller.prefs.DockItems.split (";;");
+			for (int pos = 0; pos < dockitems.length; pos++)
+				foreach (var item in existing_items)
+					if (dockitems[pos] == item.DockItemFilename) {
+						item.Position = pos;
+						add_item_without_signaling (item);
+						break;
+					}
 			
-			foreach (var item in internal_items)
-				if ((item is ApplicationDockItem) && !(item is TransientDockItem))
-					favs.add (item.Launcher);
+			// add new dockitems
+			foreach (var item in new_items)
+				add_item_without_signaling (item);
 			
 			Matcher.get_default ().set_favorites (favs);
 			
@@ -234,28 +299,34 @@ namespace Plank
 				items_changed (added_items, removed_items);
 		}
 		
-		void add_running_apps ()
-		{
-			// do this a better more efficient way
-			foreach (var app in Matcher.get_default ().active_launchers ())
-				app_opened (app);
-		}
-		
-		void app_opened (Bamf.Application app)
+		void add_running_app (Bamf.Application app, bool without_signaling)
 		{
 			var found = item_for_application (app);
 			if (found != null) {
 				found.App = app;
-			} else if (app.is_user_visible () && WindowControl.get_num_windows (app) > 0) {
-				var last_sort = 1000;
-				foreach (var item in internal_items)
-					if (item is TransientDockItem)
-						last_sort = item.Sort;
-				
-				var new_item = new TransientDockItem.with_application (app);
-				new_item.Sort = last_sort + 1;
-				add_item (new_item);
+				return;
 			}
+			
+			if (!app.is_user_visible () || WindowControl.get_num_windows (app) <= 0)
+				return;
+			
+			var new_item = new TransientDockItem.with_application (app);
+			
+			if (without_signaling)
+				add_item_without_signaling (new_item);
+			else
+				add_item (new_item);
+		}
+		
+		void add_running_apps ()
+		{
+			foreach (var app in Matcher.get_default ().active_launchers ())
+				add_running_app (app, true);
+		}
+		
+		void app_opened (Bamf.Application app)
+		{
+			add_running_app (app, false);
 		}
 		
 		void app_closed (DockItem remove)
@@ -276,6 +347,40 @@ namespace Plank
 			return !info.get_is_hidden () && info.get_name ().has_suffix (".dockitem");
 		}
 		
+		void delay_items_monitor ()
+		{
+			delay_items_monitor_handle = true;
+		}
+		
+		void resume_items_monitor ()
+		{
+			delay_items_monitor_handle = false;
+			process_queued_files ();
+		}
+		
+		void process_queued_files ()
+		{
+			foreach (var file in queued_files) {
+				var basename = file.get_basename ();
+				bool skip = false;
+				foreach (var item in internal_items) {
+					if (basename == item.DockItemFilename) {
+						skip = true;
+						break;
+					}
+				}
+				
+				if (skip)
+					continue;
+				
+				Logger.verbose ("DockItems.process_queued_files ('%s')", basename);
+				var item = Factory.item_factory.make_item (file);
+				add_item (item);
+			}
+			
+			queued_files.clear ();
+		}
+		
 		void handle_items_dir_changed (File f, File? other, FileMonitorEvent event)
 		{
 			try {
@@ -290,17 +395,17 @@ namespace Plank
 			if ((event & FileMonitorEvent.CREATED) != FileMonitorEvent.CREATED)
 				return;
 			
-			// remove peristent and invalid items
-			var remove = new ArrayList<DockItem> ();
+			// bail if an item already manages this dockitem-file
 			foreach (var item in internal_items)
-				if (!(item is TransientDockItem) || !item.ValidItem)
-					remove.add (item);
-			foreach (var item in remove)
-				remove_item_without_signaling (item);
+				if (f.get_basename () == item.DockItemFilename)
+					return;
 			
-			load_items ();
-			add_running_apps ();
-			update_visible_items ();
+			Logger.verbose ("DockItems.handle_items_dir_changed (processing '%s')", f.get_path ());
+			
+			queued_files.add (f);
+			
+			if (!delay_items_monitor_handle)
+				process_queued_files ();
 		}
 		
 		void handle_setting_changed ()
@@ -338,17 +443,141 @@ namespace Plank
 			update_visible_items ();
 		}
 		
+		/**
+		 * Save current item positions
+		 */
+		public void save_item_positions ()
+		{
+			saved_item_positions.clear ();
+			
+			foreach (var item in visible_items)
+				saved_item_positions[item] = item.Position;
+		}
+		
+		/**
+		 * Restore previously saved item positions
+		 */
+		public void restore_item_positions ()
+		{
+			if (saved_item_positions.size == 0)
+				return;
+			
+			foreach (var entry in saved_item_positions.entries)
+				entry.key.Position = entry.value;
+ 			visible_items.sort ((CompareFunc) compare_items);
+			
+			saved_item_positions.clear ();
+			
+			set_item_positions ();
+			item_position_changed ();
+ 		}
+		
+		/**
+		 * Serializes the item positions to the preferences.
+		 */
+		void serialize_item_positions ()
+		{
+			var item_list = "";
+			foreach (var item in internal_items) {
+				if (!(item is TransientDockItem) && item.DockItemFilename.length > 0) {
+					if (item_list.length > 0)
+						item_list += ";;";
+					item_list += item.DockItemFilename;
+				}
+			}
+			
+			if (controller.prefs.DockItems != item_list)
+				controller.prefs.DockItems = item_list;
+		}
+		
+		/**
+		 * Move an item to the position of another item.
+		 * This shifts all items which are between these two items.
+		 *
+		 * @param move the item to move
+		 * @param target the item of the new position
+		 */
+		public void move_item_to (DockItem move, DockItem target)
+		{
+			if (move == target)
+				return;
+			
+			var index_target = internal_items.index_of (target);
+			internal_items.remove (move);
+			internal_items.insert (index_target, move);
+			
+			if (visible_items.contains (move) && (index_target = visible_items.index_of (target)) >= 0) {
+				visible_items.remove (move);
+				visible_items.insert (index_target, move);
+				set_item_positions ();
+			} else {
+				update_visible_items ();
+			}
+			
+			item_position_changed ();
+		}
+		
 		void add_item_without_signaling (DockItem item)
 		{
-			internal_items.add (item);
-			internal_items.sort ((CompareFunc) compare_items);
+			if (item.Position > -1) {
+				internal_items.insert (item.Position, item);
+			} else {
+				internal_items.add (item);
+			}
 			
 			item.AddTime = new DateTime.now_utc ();
-			item.notify["Icon"].connect (signal_item_state_changed);
-			item.notify["Indicator"].connect (signal_item_state_changed);
-			item.notify["State"].connect (signal_item_state_changed);
-			item.notify["LastClicked"].connect (signal_item_state_changed);
-			item.needs_redraw.connect (signal_item_state_changed);
+			item_signals_connect (item);
+		}
+		
+		/**
+		 * Replace an item with another item.
+		 *
+		 * @param new_item the new item
+		 * @param old_item the item to be replaced
+		 */
+		public void replace_item (DockItem new_item, DockItem old_item)
+		{
+			if (new_item == old_item || !internal_items.contains (old_item))
+				return;
+			
+			Logger.verbose ("DockItems.replace_item (%s[%s, %i] > %s[%s, %i])", old_item.Text, old_item.DockItemFilename, (int)old_item, new_item.Text, new_item.DockItemFilename, (int)new_item);
+			
+			item_signals_disconnect (old_item);
+			
+			var index = internal_items.index_of (old_item);
+			internal_items.remove (old_item);
+			internal_items.insert (index, new_item);
+			
+			new_item.AddTime = old_item.AddTime;
+			new_item.Position = old_item.Position;
+			item_signals_connect (new_item);
+			
+			if ((index = visible_items.index_of (old_item)) >= 0) {
+				visible_items.remove (old_item);
+				visible_items.insert (index, new_item);
+			} else {
+				update_visible_items ();
+			}
+			
+			item_position_changed ();
+		}
+		
+		void remove_item_without_signaling (DockItem item)
+		{
+			item.RemoveTime = new DateTime.now_utc ();
+			item_signals_disconnect (item);
+			
+			internal_items.remove (item);
+			controller.unity.remove_entry (item);
+		}
+		
+		void item_signals_connect (DockItem item)
+		{
+			item.notify["Icon"].connect (handle_item_state_changed);
+			item.notify["Indicator"].connect (handle_item_state_changed);
+			item.notify["State"].connect (handle_item_state_changed);
+			item.notify["LastClicked"].connect (handle_item_state_changed);
+			item.needs_redraw.connect (handle_item_state_changed);
 			item.deleted.connect (handle_item_deleted);
 			
 			unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
@@ -359,14 +588,13 @@ namespace Plank
 			}
 		}
 		
-		void remove_item_without_signaling (DockItem item)
+		void item_signals_disconnect (DockItem item)
 		{
-			item.RemoveTime = new DateTime.now_utc ();
-			item.notify["Icon"].disconnect (signal_item_state_changed);
-			item.notify["Indicator"].disconnect (signal_item_state_changed);
-			item.notify["State"].disconnect (signal_item_state_changed);
-			item.notify["LastClicked"].disconnect (signal_item_state_changed);
-			item.needs_redraw.disconnect (signal_item_state_changed);
+			item.notify["Icon"].disconnect (handle_item_state_changed);
+			item.notify["Indicator"].disconnect (handle_item_state_changed);
+			item.notify["State"].disconnect (handle_item_state_changed);
+			item.notify["LastClicked"].disconnect (handle_item_state_changed);
+			item.needs_redraw.disconnect (handle_item_state_changed);
 			item.deleted.disconnect (handle_item_deleted);
 			
 			unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
@@ -375,9 +603,6 @@ namespace Plank
 				appitem.app_window_added.disconnect (handle_item_app_window_added);
 				appitem.pin_launcher.disconnect (pin_item);
 			}
-			
-			internal_items.remove (item);
-			controller.unity.remove_entry (item);
 		}
 		
 		void handle_item_app_window_added ()
@@ -396,61 +621,44 @@ namespace Plank
 				return;
 			}
 			
-			var index = internal_items.index_of (item);
-			
-			remove_item_without_signaling (item);
 			var new_item = new TransientDockItem.with_application (app);
-			new_item.Position = item.Position;
-			add_item_without_signaling (new_item);
+			item.copy_values_to (new_item);
 			
-			if (index >= 0) {
-				internal_items.remove (new_item);
-				internal_items.insert (index, new_item);
-			}
-			
-			update_visible_items ();
-			item_state_changed ();
+			replace_item (new_item, item);
 		}
 		
 		void pin_item (DockItem item)
 		{
+			Logger.verbose ("DockItems.pin_item ('%s[%s]')", item.Text, item.DockItemFilename);
+
+			var app_item = (item as ApplicationDockItem);
+			if (app_item == null)
+				return;
+			
+			// delay automatic add of new dockitems while creating this new one
+			delay_items_monitor ();
+			
 			if (item is TransientDockItem) {
-				var last_sort = 0;
-				
-				foreach (var i in internal_items) {
-					if (i == item)
-						break;
-					if (!(i is TransientDockItem))
-						last_sort = i.Sort;
-				}
-				
-				var dockitem_file = Factory.item_factory.make_dock_item (item.Launcher, last_sort + 1);
+				var dockitem_file = Factory.item_factory.make_dock_item (item.Launcher);
 				if (dockitem_file == null)
 					return;
 				
-				var index = visible_items.index_of (item);
-				
-				remove_item_without_signaling (item);
 				var new_item = new ApplicationDockItem.with_dockitem_file (dockitem_file);
-				new_item.Position = item.Position;
-				add_item_without_signaling (new_item);
+				item.copy_values_to (new_item);
 				
-				if (index >= 0) {
-					visible_items.insert (index, new_item);
-					item_state_changed ();
-				} else {
-					update_visible_items ();
-				}
+				replace_item (new_item, item);
 			} else {
 				item.delete ();
 			}
+			
+			resume_items_monitor ();
 		}
 		
 		static int compare_items (DockItem left, DockItem right)
 		{
-			if (left.Sort == right.Sort)
+			if (left.Position == right.Position)
 				return 0;
-			if (left.Sort < right.Sort)
+			if (left.Position < right.Position)
 				return -1;
 			return 1;
 		}
