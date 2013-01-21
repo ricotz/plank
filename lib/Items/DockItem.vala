@@ -268,19 +268,6 @@ namespace Plank.Items
 		}
 		
 		/**
-		 * The sort value for this item.
-		 */
-		public int Sort {
-			get {
-				return Prefs.Sort;
-			}
-			set {
-				if (Prefs.Sort != value)
-					Prefs.Sort = value;
-			}
-		}
-		
-		/**
 		 * The underlying preferences for this item.
 		 */
 		public DockItemPreferences Prefs { get; construct; }

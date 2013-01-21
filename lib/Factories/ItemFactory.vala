@@ -87,13 +87,13 @@ namespace Plank.Factories
 				return false;
 			
 			if (browser != null)
-				make_dock_item (new DesktopAppInfo (browser.get_id ()).get_filename (), 1);
+				make_dock_item (new DesktopAppInfo (browser.get_id ()).get_filename ());
 			if (terminal != null)
-				make_dock_item (new DesktopAppInfo (terminal.get_id ()).get_filename (), 2);
+				make_dock_item (new DesktopAppInfo (terminal.get_id ()).get_filename ());
 			if (calendar != null)
-				make_dock_item (new DesktopAppInfo (calendar.get_id ()).get_filename (), 3);
+				make_dock_item (new DesktopAppInfo (calendar.get_id ()).get_filename ());
 			if (media != null)
-				make_dock_item (new DesktopAppInfo (media.get_id ()).get_filename (), 4);
+				make_dock_item (new DesktopAppInfo (media.get_id ()).get_filename ());
 			
 			return true;
 		}
@@ -104,33 +104,33 @@ namespace Plank.Factories
 		public void make_default_items ()
 		{
 			// add plank item!
-			make_dock_item ((Paths.DataFolder.get_parent ().get_path () ?? "") + "/applications/" + Factory.main.app_launcher, 0);
+			make_dock_item ((Paths.DataFolder.get_parent ().get_path () ?? "") + "/applications/" + Factory.main.app_launcher);
 			
 			if (make_default_gnome_items ())
 				return;
 			
 			// add browser
-			if (make_dock_item ("/usr/share/applications/chromium-browser.desktop", 1) == null)
-				if (make_dock_item ("/usr/local/share/applications/google-chrome.desktop", 1) == null)
-					if (make_dock_item ("/usr/share/applications/firefox.desktop", 1) == null)
-						if (make_dock_item ("/usr/share/applications/epiphany.desktop", 1) == null)
-							make_dock_item ("/usr/share/applications/kde4/konqbrowser.desktop", 1);
+			if (make_dock_item ("/usr/share/applications/chromium-browser.desktop") == null)
+				if (make_dock_item ("/usr/local/share/applications/google-chrome.desktop") == null)
+					if (make_dock_item ("/usr/share/applications/firefox.desktop") == null)
+						if (make_dock_item ("/usr/share/applications/epiphany.desktop") == null)
+							make_dock_item ("/usr/share/applications/kde4/konqbrowser.desktop");
 			
 			// add terminal
-			if (make_dock_item ("/usr/share/applications/terminator.desktop", 2) == null)
-				if (make_dock_item ("/usr/share/applications/gnome-terminal.desktop", 2) == null)
-					make_dock_item ("/usr/share/applications/kde4/konsole.desktop", 2);
+			if (make_dock_item ("/usr/share/applications/terminator.desktop") == null)
+				if (make_dock_item ("/usr/share/applications/gnome-terminal.desktop") == null)
+					make_dock_item ("/usr/share/applications/kde4/konsole.desktop");
 			
 			// add music player
-			if (make_dock_item ("/usr/share/applications/exaile.desktop", 3) == null)
-				if (make_dock_item ("/usr/share/applications/songbird.desktop", 3) == null)
-					if (make_dock_item ("/usr/share/applications/rhythmbox.desktop", 3) == null)
-						if (make_dock_item ("/usr/share/applications/banshee-1.desktop", 3) == null)
-							make_dock_item ("/usr/share/applications/kde4/amarok.desktop", 3);
+			if (make_dock_item ("/usr/share/applications/exaile.desktop") == null)
+				if (make_dock_item ("/usr/share/applications/songbird.desktop") == null)
+					if (make_dock_item ("/usr/share/applications/rhythmbox.desktop") == null)
+						if (make_dock_item ("/usr/share/applications/banshee-1.desktop") == null)
+							make_dock_item ("/usr/share/applications/kde4/amarok.desktop");
 			
 			// add IM client
-			if (make_dock_item ("/usr/share/applications/pidgin.desktop", 4) == null)
-				make_dock_item ("/usr/share/applications/empathy.desktop", 4);
+			if (make_dock_item ("/usr/share/applications/pidgin.desktop") == null)
+				make_dock_item ("/usr/share/applications/empathy.desktop");
 		}
 		
 		/**
@@ -140,7 +140,7 @@ namespace Plank.Factories
 		 * @param sort the Sort value in the new .dockitem
 		 * @return the new {@link GLib.File} of the new .dockitem created
 		 */
-		public GLib.File? make_dock_item (string launcher, int sort)
+		public GLib.File? make_dock_item (string launcher)
 		{
 			var launcher_file = File.new_for_path (launcher);
 			
@@ -148,7 +148,6 @@ namespace Plank.Factories
 				var file = new KeyFile ();
 				
 				file.set_string (typeof (Items.DockItemPreferences).name (), "Launcher", launcher);
-				file.set_integer (typeof (Items.DockItemPreferences).name (), "Sort", sort);
 				
 				try {
 					// find a unique file name, based on the name of the launcher

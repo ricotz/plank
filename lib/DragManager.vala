@@ -218,14 +218,10 @@ namespace Plank
 			
 			var item = controller.window.HoveredItem;
 			
-			var sort = 0;
-			if (item != null)
-				sort = item.Sort + 1;
-			
 			if (DragIsDesktopFile) {
 				var uri = drag_data[0];
 				if (!controller.items.item_exists_for_uri (uri))
-					controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
+					controller.items.add_item_with_launcher (uri.replace ("file://", ""), item);
 				
 				ExternalDragActive = false;
 				return true;
@@ -236,7 +232,7 @@ namespace Plank
 			} else {
 				foreach (var uri in drag_data) {
 					if (!controller.items.item_exists_for_uri (uri))
-						controller.items.add_item_with_launcher (uri.replace ("file://", ""), item, sort);
+						controller.items.add_item_with_launcher (uri.replace ("file://", ""), item);
 				}
 			}
 			

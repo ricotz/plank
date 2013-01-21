@@ -192,7 +192,7 @@ namespace Plank
 			return false;
 		}
 		
-		public void add_item_with_launcher (string launcher, DockItem? target = null, int sort = 0)
+		public void add_item_with_launcher (string launcher, DockItem? target = null)
 		{
 			if (launcher == null || launcher == "")
 				return;
@@ -200,7 +200,7 @@ namespace Plank
 			// delay automatic add of new dockitems while creating this new one
 			delay_items_monitor ();
 			
-			var dockitem_file = Factory.item_factory.make_dock_item (launcher, sort);
+			var dockitem_file = Factory.item_factory.make_dock_item (launcher);
 			if (dockitem_file == null)
 				return;
 			
@@ -256,7 +256,6 @@ namespace Plank
 					}
 			
 			// add new dockitems
-			new_items.sort ((CompareFunc) compare_items_sort);
 			foreach (var item in new_items)
 				add_item_without_signaling (item);
 			
@@ -300,7 +299,7 @@ namespace Plank
 				items_changed (added_items, removed_items);
 		}
 		
-		void add_running_app (Bamf.Application app, int sort, bool without_signaling)
+		void add_running_app (Bamf.Application app, bool without_signaling)
 		{
 			var found = item_for_application (app);
 			if (found != null) {
@@ -312,7 +311,6 @@ namespace Plank
 				return;
 			
 			var new_item = new TransientDockItem.with_application (app);
-			new_item.Sort = sort;
 			
 			if (without_signaling)
 				add_item_without_signaling (new_item);
@@ -322,25 +320,13 @@ namespace Plank
 		
 		void add_running_apps ()
 		{
-			var last_sort = 1000;
-			
-			foreach (var item in internal_items)
-				if (item is TransientDockItem)
-					last_sort = item.Sort;
-			
 			foreach (var app in Matcher.get_default ().active_launchers ())
-				add_running_app (app, ++last_sort, true);
+				add_running_app (app, true);
 		}
 		
 		void app_opened (Bamf.Application app)
 		{
-			var last_sort = 1000;
-			
-			foreach (var item in internal_items)
-				if (item is TransientDockItem)
-					last_sort = item.Sort;
-			
-			add_running_app (app, ++last_sort, false);
+			add_running_app (app, false);
 		}
 		
 		void app_closed (DockItem remove)
@@ -533,19 +519,8 @@ namespace Plank
 		
 		void add_item_without_signaling (DockItem item)
 		{
-			print ("add %s - %d, %d\n", item.Text, item.Position, item.Sort);
-			
-			if (item.Position == -1) {
-				// find a position based on Sort
-				DockItem? pos_item = null;
-				foreach (var i in internal_items) {
-					pos_item = i;
-					if (i.Sort >= item.Sort)
-						break;
-				}
-				
-				var index = (pos_item == null ? internal_items.size : internal_items.index_of (pos_item) + 1);
-				internal_items.insert (index, item);
+			if (item.Position > -1) {
+				internal_items.insert (item.Position, item);
 			} else {
 				internal_items.add (item);
 			}
@@ -664,22 +639,12 @@ namespace Plank
 			delay_items_monitor ();
 			
 			if (item is TransientDockItem) {
-				var last_sort = 0;
-				
-				foreach (var i in internal_items) {
-					if (i == item)
-						break;
-					if (!(i is TransientDockItem))
-						last_sort = i.Sort;
-				}
-				
-				var dockitem_file = Factory.item_factory.make_dock_item (item.Launcher, last_sort + 1);
+				var dockitem_file = Factory.item_factory.make_dock_item (item.Launcher);
 				if (dockitem_file == null)
 					return;
 				
 				var new_item = new ApplicationDockItem.with_dockitem_file (dockitem_file);
 				item.copy_values_to (new_item);
-				item.Sort = last_sort + 1;
 				
 				replace_item (new_item, item);
 			} else {
@@ -694,15 +659,6 @@ namespace Plank
 			if (left.Position == right.Position)
 				return 0;
 			if (left.Position < right.Position)
-				return -1;
-			return 1;
-		}
-		
-		static int compare_items_sort (DockItem left, DockItem right)
-		{
-			if (left.Sort == right.Sort)
-				return 0;
-			if (left.Sort < right.Sort)
 				return -1;
 			return 1;
 		}
