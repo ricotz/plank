@@ -89,8 +89,8 @@ namespace Plank
 			try {
 				items_monitor = Factory.item_factory.launchers_dir.monitor (0);
 				items_monitor.changed.connect (handle_items_dir_changed);
-			} catch {
-				error ("Unable to watch the launchers directory.");
+			} catch (Error e) {
+				error ("Unable to watch the launchers directory. (%s)", e.message);
 			}
 			
 			load_items ();
@@ -241,8 +241,8 @@ namespace Plank
 						if ((item is ApplicationDockItem) && !(item is TransientDockItem))
 							favs.add (item.Launcher);
 					}
-			} catch {
-				error ("Error loading dock items");
+			} catch (Error e) {
+				error ("Error loading dock items. (%s)", e.message);
 			}
 			
 			// add saved dockitems based on their serialized order

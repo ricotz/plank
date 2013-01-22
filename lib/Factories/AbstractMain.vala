@@ -262,8 +262,8 @@ namespace Plank.Factories
 			try {
 				if (application.register () && !application.get_is_remote ())
 					return args;
-			} catch {
-				error ("Registering application as '%s' failed.", dock_path);
+			} catch (Error e) {
+				error ("Registering application as '%s' failed. (%s)", dock_path, e.message);
 			}
 			
 			warning ("Exiting because another instance of this application is already running with the name '%s'.", dock_path);
