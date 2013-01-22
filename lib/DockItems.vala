@@ -247,10 +247,11 @@ namespace Plank
 			
 			// add saved dockitems based on their serialized order
 			var dockitems = controller.prefs.DockItems.split (";;");
-			for (int pos = 0; pos < dockitems.length; pos++)
+			var pos = 0;
+			foreach (var dockitem in dockitems)
 				foreach (var item in existing_items)
-					if (dockitems[pos] == item.DockItemFilename) {
-						item.Position = pos;
+					if (dockitem == item.DockItemFilename) {
+						item.Position = ++pos;
 						add_item_without_signaling (item);
 						break;
 					}
@@ -519,7 +520,7 @@ namespace Plank
 		
 		void add_item_without_signaling (DockItem item)
 		{
-			if (item.Position > -1) {
+			if (item.Position > -1 && item.Position <= internal_items.size) {
 				internal_items.insert (item.Position, item);
 			} else {
 				internal_items.add (item);
