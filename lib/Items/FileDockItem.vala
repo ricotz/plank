@@ -246,7 +246,8 @@ namespace Plank.Items
 			foreach (var s in keys)
 				items.add (menu_items.get (s));
 			
-			items.add (new SeparatorMenuItem ());
+			if (keys.size > 0)
+				items.add (new SeparatorMenuItem ());
 			
 			var delete_item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
 			delete_item.active = true;
