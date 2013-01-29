@@ -171,7 +171,7 @@ namespace Plank
 		ApplicationDockItem? item_for_application (Bamf.Application app)
 		{
 			var app_desktop_file = app.get_desktop_file ();
-			if (app_desktop_file[0] == '/')
+			if (app_desktop_file.has_prefix ("/"))
 				try {
 					app_desktop_file = Filename.to_uri (app_desktop_file);
 				} catch (ConvertError e) {

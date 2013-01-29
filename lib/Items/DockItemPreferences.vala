@@ -58,7 +58,7 @@ namespace Plank.Items
 		{
 			switch (prop) {
 			case "Launcher":
-				if (Launcher[0] == '/')
+				if (Launcher.has_prefix ("/"))
 					try {
 						Launcher = Filename.to_uri (Launcher);
 					} catch (ConvertError e) {
