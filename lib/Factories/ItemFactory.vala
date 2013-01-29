@@ -86,19 +86,30 @@ namespace Plank.Factories
 			if (browser == null && terminal == null && calendar == null && media == null)
 				return false;
 			
-			try {
-				if (browser != null)
+			if (browser != null)
+				try {
 					make_dock_item (Filename.to_uri (new DesktopAppInfo (browser.get_id ()).get_filename ()));
-				if (terminal != null)
+				} catch (ConvertError e) {
+					warning (e.message);
+				}
+			if (terminal != null)
+				try {
 					make_dock_item (Filename.to_uri (new DesktopAppInfo (terminal.get_id ()).get_filename ()));
-				if (calendar != null)
+				} catch (ConvertError e) {
+					warning (e.message);
+				}
+			if (calendar != null)
+				try {
 					make_dock_item (Filename.to_uri (new DesktopAppInfo (calendar.get_id ()).get_filename ()));
-				if (media != null)
+				} catch (ConvertError e) {
+					warning (e.message);
+				}
+			if (media != null)
+				try {
 					make_dock_item (Filename.to_uri (new DesktopAppInfo (media.get_id ()).get_filename ()));
-			} catch (ConvertError e) {
-				warning (e.message);
-				return false;
-			}
+				} catch (ConvertError e) {
+					warning (e.message);
+				}
 			
 			return true;
 		}
