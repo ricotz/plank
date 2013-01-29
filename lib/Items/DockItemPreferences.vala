@@ -24,7 +24,7 @@ namespace Plank.Items
 	 */
 	public class DockItemPreferences : Preferences
 	{
-		[Description(nick = "launcher", blurb = "The path to the launcher for this item.")]
+		[Description(nick = "launcher", blurb = "The uri for this item.")]
 		public string Launcher { get; set; }
 		
 		/**
@@ -49,6 +49,23 @@ namespace Plank.Items
 		protected override void reset_properties ()
 		{
 			Launcher = "";
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		protected override void verify (string prop)
+		{
+			switch (prop) {
+			case "Launcher":
+				if (Launcher[0] == '/')
+					try {
+						Launcher = Filename.to_uri (Launcher);
+					} catch (ConvertError e) {
+						warning (e.message);
+					}
+				break;
+			}
 		}
 	}
 }

@@ -186,7 +186,7 @@ namespace Plank.Items
 		
 		void handle_launcher_changed ()
 		{
-			App = Matcher.get_default ().app_for_launcher (Prefs.Launcher);
+			App = Matcher.get_default ().app_for_uri (Prefs.Launcher);
 			
 			launcher_changed ();
 		}
@@ -284,7 +284,7 @@ namespace Plank.Items
 		
 		void launch ()
 		{
-			Services.System.launch (File.new_for_path (Prefs.Launcher));
+			Services.System.launch (File.new_for_uri (Prefs.Launcher));
 		}
 		
 		/**
@@ -459,7 +459,7 @@ namespace Plank.Items
 			foreach (var uri in uris)
 				files.add (File.new_for_uri (uri));
 			
-			Services.System.launch_with_files (File.new_for_path (Prefs.Launcher), files.to_array ());
+			Services.System.launch_with_files (File.new_for_uri (Prefs.Launcher), files.to_array ());
 			
 			return true;
 		}
@@ -504,7 +504,7 @@ namespace Plank.Items
 			
 			try {
 				var file = new KeyFile ();
-				file.load_from_file (launcher, 0);
+				file.load_from_file (Filename.from_uri (launcher), 0);
 				
 				icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
 				text = file.get_locale_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
@@ -607,7 +607,7 @@ namespace Plank.Items
 				return;
 			
 			try {
-				monitor = File.new_for_path (Prefs.Launcher).monitor (0);
+				monitor = File.new_for_uri (Prefs.Launcher).monitor (0);
 				monitor.changed.connect (monitor_changed);
 			} catch {
 				warning ("Unable to watch the launcher file '%s'", Prefs.Launcher);
