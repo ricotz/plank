@@ -376,7 +376,10 @@ namespace Plank
 				
 				Logger.verbose ("DockItems.process_queued_files ('%s')", basename);
 				var item = Factory.item_factory.make_item (file);
-				add_item (item);
+				if (item.ValidItem)
+					add_item (item);
+				else
+					warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());
 			}
 			
 			queued_files.clear ();
