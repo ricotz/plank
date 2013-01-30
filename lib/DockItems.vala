@@ -171,7 +171,7 @@ namespace Plank
 		ApplicationDockItem? item_for_application (Bamf.Application app)
 		{
 			var app_desktop_file = app.get_desktop_file ();
-			if (app_desktop_file.has_prefix ("/"))
+			if (app_desktop_file != null && app_desktop_file.has_prefix ("/"))
 				try {
 					app_desktop_file = Filename.to_uri (app_desktop_file);
 				} catch (ConvertError e) {
@@ -183,8 +183,12 @@ namespace Plank
 				if (appitem == null)
 					continue;
 				
-				if ((appitem.App != null && appitem.App == app)
-					|| (appitem.Launcher != "" && appitem.Launcher == app_desktop_file))
+				var item_app = appitem.App;
+				if (item_app != null && item_app == app)
+					return appitem;
+				
+				var launcher = appitem.Launcher;
+				if (launcher != "" && app_desktop_file != null && launcher == app_desktop_file)
 					return appitem;
 			}
 			
