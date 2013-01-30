@@ -51,7 +51,7 @@ namespace Plank.Drawing
 				}
 				
 				// look for a thumbnail
-				var thumb_icon = info.get_attribute_string (FILE_ATTRIBUTE_THUMBNAIL_PATH);
+				var thumb_icon = info.get_attribute_string (FileAttribute.THUMBNAIL_PATH);
 				if (thumb_icon != null && thumb_icon != "")
 					return thumb_icon;
 				

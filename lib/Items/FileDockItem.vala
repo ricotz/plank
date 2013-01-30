@@ -298,9 +298,9 @@ namespace Plank.Items
 			var files = new ArrayList<File> ();
 			
 			try {
-				var enumerator = OwnedFile.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + ","
-					+ FILE_ATTRIBUTE_STANDARD_IS_HIDDEN + ","
-					+ FILE_ATTRIBUTE_ACCESS_CAN_READ, 0);
+				var enumerator = OwnedFile.enumerate_children (FileAttribute.STANDARD_NAME + ","
+					+ FileAttribute.STANDARD_IS_HIDDEN + ","
+					+ FileAttribute.ACCESS_CAN_READ, 0);
 				
 				FileInfo info;
 				

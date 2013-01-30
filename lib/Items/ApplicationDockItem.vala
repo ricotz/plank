@@ -439,7 +439,7 @@ namespace Plank.Items
 			
 			try {
 				foreach (var uri in uris) {
-					var info = File.new_for_uri (uri).query_info (FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, FileQueryInfoFlags.NONE);
+					var info = File.new_for_uri (uri).query_info (FileAttribute.STANDARD_CONTENT_TYPE, FileQueryInfoFlags.NONE);
 					var uri_content_type = info.get_content_type ();
 					foreach (var content_type in supported_mime_types)
 						if (ContentType.is_a (uri_content_type, content_type) || ContentType.equals (uri_content_type, content_type))

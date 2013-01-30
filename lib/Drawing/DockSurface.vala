@@ -361,25 +361,22 @@ namespace Plank.Drawing
 			
 			uint8 *pixels = original.get_data ();
 			
-			try {
-				// Process Rows
-				unowned Thread<void*> th = Thread.create<void*> (() => {
-					exponential_blur_rows (pixels, width, height, 0, height / 2, 0, width, alpha);
-					return null;
-				}, true);
-				
-				exponential_blur_rows (pixels, width, height, height / 2, height, 0, width, alpha);
-				th.join ();
-				
-				// Process Columns
-				th = Thread.create<void*> (() => {
-					exponential_blur_columns (pixels, width, height, 0, width / 2, 0, height, alpha);
-					return null;
-				}, true);
-				
-				exponential_blur_columns (pixels, width, height, width / 2, width, 0, height, alpha);
-				th.join ();
-			} catch { }
+			var th = new Thread<void*> (null, () => {
+				exponential_blur_rows (pixels, width, height, 0, height / 2, 0, width, alpha);
+				return null;
+			});
+			
+			exponential_blur_rows (pixels, width, height, height / 2, height, 0, width, alpha);
+			th.join ();
+			
+			// Process Columns
+			th = new Thread<void*> (null, () => {
+				exponential_blur_columns (pixels, width, height, 0, width / 2, 0, height, alpha);
+				return null;
+			});
+			
+			exponential_blur_columns (pixels, width, height, width / 2, width, 0, height, alpha);
+			th.join ();
 			
 			original.mark_dirty ();
 			
@@ -487,39 +484,36 @@ namespace Plank.Drawing
 						shiftar[x, k] = shift * 4;
 				}
 			
-			try {
-				// Horizontal Pass
-				unowned Thread<void*> th = Thread.create<void*> (() => {
-					gaussian_blur_horizontal (abuffer, bbuffer, kernel, gaussWidth, width, height, 0, height / 2, shiftar);
-					return null;
-				}, true);
-				
-				gaussian_blur_horizontal (abuffer, bbuffer, kernel, gaussWidth, width, height, height / 2, height, shiftar);
-				th.join ();
-				
-				// Clear buffer
-				memset (abuffer, 0, sizeof(double) * size);
-				
-				// Precompute vertical shifts
-				shiftar = new int[int.max (width, height), gaussWidth];
-				for (var y = 0; y < height; y++)
-					for (var k = 0; k < gaussWidth; k++) {
-						var shift = k - radius;
-						if (y + shift <= 0 || y + shift >= height)
-							shiftar[y, k] = 0;
-						else
-							shiftar[y, k] = shift * width * 4;
-					}
-				
-				// Vertical Pass
-				th = Thread.create<void*> (() => {
-					gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, 0, width / 2, shiftar);
-					return null;
-				}, true);
-				
-				gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, width / 2, width, shiftar);
-				th.join ();
-			} catch {}
+			var th = new Thread<void*> (null, () => {
+				gaussian_blur_horizontal (abuffer, bbuffer, kernel, gaussWidth, width, height, 0, height / 2, shiftar);
+				return null;
+			});
+			
+			gaussian_blur_horizontal (abuffer, bbuffer, kernel, gaussWidth, width, height, height / 2, height, shiftar);
+			th.join ();
+			
+			// Clear buffer
+			memset (abuffer, 0, sizeof(double) * size);
+			
+			// Precompute vertical shifts
+			shiftar = new int[int.max (width, height), gaussWidth];
+			for (var y = 0; y < height; y++)
+				for (var k = 0; k < gaussWidth; k++) {
+					var shift = k - radius;
+					if (y + shift <= 0 || y + shift >= height)
+						shiftar[y, k] = 0;
+					else
+						shiftar[y, k] = shift * width * 4;
+				}
+			
+			// Vertical Pass
+			th = new Thread<void*> (null, () => {
+				gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, 0, width / 2, shiftar);
+				return null;
+			});
+			
+			gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, width / 2, width, shiftar);
+			th.join ();
 			
 			// Save blurred image to original uint8[]
 			for (var i = 0; i < size; i++)

@@ -233,7 +233,7 @@ namespace Plank
 			var favs = new ArrayList<string> ();
 			
 			try {
-				var enumerator = Factory.item_factory.launchers_dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_STANDARD_IS_HIDDEN, 0);
+				var enumerator = Factory.item_factory.launchers_dir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0);
 				FileInfo info;
 				while ((info = enumerator.next_file ()) != null)
 					if (file_is_dockitem (info)) {
@@ -400,7 +400,7 @@ namespace Plank
 		void handle_items_dir_changed (File f, File? other, FileMonitorEvent event)
 		{
 			try {
-				if (!file_is_dockitem (f.query_info (FILE_ATTRIBUTE_STANDARD_NAME + "," + FILE_ATTRIBUTE_STANDARD_IS_HIDDEN, 0)))
+				if (!file_is_dockitem (f.query_info (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0)))
 					return;
 			} catch {
 				return;
