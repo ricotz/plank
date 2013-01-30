@@ -86,13 +86,6 @@ namespace Plank
 				debug ("done.");
 			}
 			
-			try {
-				items_monitor = Factory.item_factory.launchers_dir.monitor (0);
-				items_monitor.changed.connect (handle_items_dir_changed);
-			} catch (Error e) {
-				error ("Unable to watch the launchers directory. (%s)", e.message);
-			}
-			
 			load_items ();
 			add_running_apps ();
 			update_visible_items ();
@@ -108,6 +101,13 @@ namespace Plank
 			wnck_screen.active_window_changed.connect (handle_window_changed);
 			wnck_screen.active_workspace_changed.connect (handle_workspace_changed);
 			wnck_screen.viewports_changed.connect (handle_viewports_changed);
+			
+			try {
+				items_monitor = Factory.item_factory.launchers_dir.monitor (0);
+				items_monitor.changed.connect (handle_items_dir_changed);
+			} catch (Error e) {
+				error ("Unable to watch the launchers directory. (%s)", e.message);
+			}
 		}
 		
 		~DockItems ()
