@@ -87,13 +87,29 @@ namespace Plank.Factories
 				return false;
 			
 			if (browser != null)
-				make_dock_item (new DesktopAppInfo (browser.get_id ()).get_filename ());
+				try {
+					make_dock_item (Filename.to_uri (new DesktopAppInfo (browser.get_id ()).get_filename ()));
+				} catch (ConvertError e) {
+					warning (e.message);
+				}
 			if (terminal != null)
-				make_dock_item (new DesktopAppInfo (terminal.get_id ()).get_filename ());
+				try {
+					make_dock_item (Filename.to_uri (new DesktopAppInfo (terminal.get_id ()).get_filename ()));
+				} catch (ConvertError e) {
+					warning (e.message);
+				}
 			if (calendar != null)
-				make_dock_item (new DesktopAppInfo (calendar.get_id ()).get_filename ());
+				try {
+					make_dock_item (Filename.to_uri (new DesktopAppInfo (calendar.get_id ()).get_filename ()));
+				} catch (ConvertError e) {
+					warning (e.message);
+				}
 			if (media != null)
-				make_dock_item (new DesktopAppInfo (media.get_id ()).get_filename ());
+				try {
+					make_dock_item (Filename.to_uri (new DesktopAppInfo (media.get_id ()).get_filename ()));
+				} catch (ConvertError e) {
+					warning (e.message);
+				}
 			
 			return true;
 		}
@@ -104,50 +120,50 @@ namespace Plank.Factories
 		public void make_default_items ()
 		{
 			// add plank item!
-			make_dock_item ((Paths.DataFolder.get_parent ().get_path () ?? "") + "/applications/" + Factory.main.app_launcher);
+			make_dock_item (Paths.DataFolder.get_parent ().get_child ("applications").get_child (Factory.main.app_launcher).get_uri ());
 			
 			if (make_default_gnome_items ())
 				return;
 			
 			// add browser
-			if (make_dock_item ("/usr/share/applications/chromium-browser.desktop") == null)
-				if (make_dock_item ("/usr/local/share/applications/google-chrome.desktop") == null)
-					if (make_dock_item ("/usr/share/applications/firefox.desktop") == null)
-						if (make_dock_item ("/usr/share/applications/epiphany.desktop") == null)
-							make_dock_item ("/usr/share/applications/kde4/konqbrowser.desktop");
+			if (make_dock_item ("file:///usr/share/applications/chromium-browser.desktop") == null)
+				if (make_dock_item ("file:///usr/local/share/applications/google-chrome.desktop") == null)
+					if (make_dock_item ("file:///usr/share/applications/firefox.desktop") == null)
+						if (make_dock_item ("file:///usr/share/applications/epiphany.desktop") == null)
+							make_dock_item ("file:///usr/share/applications/kde4/konqbrowser.desktop");
 			
 			// add terminal
-			if (make_dock_item ("/usr/share/applications/terminator.desktop") == null)
-				if (make_dock_item ("/usr/share/applications/gnome-terminal.desktop") == null)
-					make_dock_item ("/usr/share/applications/kde4/konsole.desktop");
+			if (make_dock_item ("file:///usr/share/applications/terminator.desktop") == null)
+				if (make_dock_item ("file:///usr/share/applications/gnome-terminal.desktop") == null)
+					make_dock_item ("file:///usr/share/applications/kde4/konsole.desktop");
 			
 			// add music player
-			if (make_dock_item ("/usr/share/applications/exaile.desktop") == null)
-				if (make_dock_item ("/usr/share/applications/songbird.desktop") == null)
-					if (make_dock_item ("/usr/share/applications/rhythmbox.desktop") == null)
-						if (make_dock_item ("/usr/share/applications/banshee-1.desktop") == null)
-							make_dock_item ("/usr/share/applications/kde4/amarok.desktop");
+			if (make_dock_item ("file:///usr/share/applications/exaile.desktop") == null)
+				if (make_dock_item ("file:///usr/share/applications/songbird.desktop") == null)
+					if (make_dock_item ("file:///usr/share/applications/rhythmbox.desktop") == null)
+						if (make_dock_item ("file:///usr/share/applications/banshee-1.desktop") == null)
+							make_dock_item ("file:///usr/share/applications/kde4/amarok.desktop");
 			
 			// add IM client
-			if (make_dock_item ("/usr/share/applications/pidgin.desktop") == null)
-				make_dock_item ("/usr/share/applications/empathy.desktop");
+			if (make_dock_item ("file:///usr/share/applications/pidgin.desktop") == null)
+				make_dock_item ("file:///usr/share/applications/empathy.desktop");
 		}
 		
 		/**
-		 * Creates a new .dockitem for a launcher.
+		 * Creates a new .dockitem for a uri.
 		 *
-		 * @param launcher the launcher to create a .dockitem for
+		 * @param uri the uri or path to create a .dockitem for
 		 * @param sort the Sort value in the new .dockitem
 		 * @return the new {@link GLib.File} of the new .dockitem created
 		 */
-		public GLib.File? make_dock_item (string launcher)
+		public GLib.File? make_dock_item (string uri)
 		{
-			var launcher_file = File.new_for_path (launcher);
+			var launcher_file = File.new_for_uri (uri);
 			
 			if (launcher_file.query_exists ()) {
 				var file = new KeyFile ();
 				
-				file.set_string (typeof (Items.DockItemPreferences).name (), "Launcher", launcher);
+				file.set_string (typeof (Items.DockItemPreferences).name (), "Launcher", uri);
 				
 				try {
 					// find a unique file name, based on the name of the launcher
@@ -166,7 +182,7 @@ namespace Plank.Factories
 					stream.put_string (file.to_data ());
 					stream.close ();
 					
-					debug ("Created dock item '%s' for launcher '%s'", dockitem_file.get_path (), launcher);
+					debug ("Created dock item '%s' for launcher '%s'", dockitem_file.get_path (), uri);
 					return dockitem_file;
 				} catch { }
 			}

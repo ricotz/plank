@@ -245,7 +245,7 @@ namespace Plank.Items
 		 * Whether or not this item is valid for the .dockitem given.
 		 */
 		public virtual bool ValidItem {
-			get { return File.new_for_path (Prefs.Launcher).query_exists (); }
+			get { return File.new_for_uri (Prefs.Launcher).query_exists (); }
 		}
 		
 		/**

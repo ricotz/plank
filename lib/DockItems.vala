@@ -170,12 +170,25 @@ namespace Plank
 		
 		ApplicationDockItem? item_for_application (Bamf.Application app)
 		{
+			var app_desktop_file = app.get_desktop_file ();
+			if (app_desktop_file != null && app_desktop_file.has_prefix ("/"))
+				try {
+					app_desktop_file = Filename.to_uri (app_desktop_file);
+				} catch (ConvertError e) {
+					warning (e.message);
+				}
+			
 			foreach (var item in internal_items) {
 				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 				if (appitem == null)
 					continue;
-				if ((appitem.App != null && appitem.App == app) || (appitem.Launcher != null
-					&& appitem.Launcher != "" && appitem.Launcher == app.get_desktop_file ()))
+				
+				var item_app = appitem.App;
+				if (item_app != null && item_app == app)
+					return appitem;
+				
+				var launcher = appitem.Launcher;
+				if (launcher != "" && app_desktop_file != null && launcher == app_desktop_file)
 					return appitem;
 			}
 			
@@ -184,23 +197,22 @@ namespace Plank
 		
 		public bool item_exists_for_uri (string uri)
 		{
-			var launcher = uri.replace ("file://", "");
 			foreach (var item in internal_items)
-				if (item.Launcher == launcher)
+				if (item.Launcher == uri)
 					return true;
 			
 			return false;
 		}
 		
-		public void add_item_with_launcher (string launcher, DockItem? target = null)
+		public void add_item_with_uri (string uri, DockItem? target = null)
 		{
-			if (launcher == null || launcher == "")
+			if (uri == null || uri == "")
 				return;
 			
 			// delay automatic add of new dockitems while creating this new one
 			delay_items_monitor ();
 			
-			var dockitem_file = Factory.item_factory.make_dock_item (launcher);
+			var dockitem_file = Factory.item_factory.make_dock_item (uri);
 			if (dockitem_file == null)
 				return;
 			

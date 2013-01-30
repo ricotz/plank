@@ -122,8 +122,16 @@ namespace Plank.Services.Windows
 			return list;
 		}
 		
-		public Bamf.Application? app_for_launcher (string launcher)
+		public Bamf.Application? app_for_uri (string uri)
 		{
+			string launcher;
+			try {
+				launcher = Filename.from_uri (uri);
+			} catch (ConvertError e) {
+				warning (e.message);
+				return null;
+			}
+			
 			unowned Bamf.Application app = bamf_matcher.get_application_for_desktop_file (launcher, false);
 			
 			warn_if_fail (app != null);

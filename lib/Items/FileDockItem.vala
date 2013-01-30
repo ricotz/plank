@@ -59,9 +59,15 @@ namespace Plank.Items
 			if (!ValidItem)
 				return;
 			
-			OwnedFile = File.new_for_path (Prefs.Launcher);
+			OwnedFile = File.new_for_uri (Prefs.Launcher);
 			
 			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? DEFAULT_ICON;
+			
+			if (!OwnedFile.is_native ()) {
+				Text = OwnedFile.get_uri ();
+				return;
+			}
+			
 			Text = OwnedFile.get_basename () ?? "";
 			
 			// pop up the dir contents on a left click too
@@ -163,7 +169,7 @@ namespace Plank.Items
 		
 		void handle_launcher_changed ()
 		{
-			OwnedFile = File.new_for_path (Prefs.Launcher);
+			OwnedFile = File.new_for_uri (Prefs.Launcher);
 			
 			launcher_changed ();
 		}
