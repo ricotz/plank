@@ -25,7 +25,7 @@ namespace PlankMain
 		{
 			var main_class = new PlankMain ();
 			Factory.init (main_class, new ItemFactory ());
-			return main_class.start (args);
+			return main_class.run (ref args);
 		}
 		
 		public PlankMain ()

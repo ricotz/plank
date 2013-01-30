@@ -119,20 +119,23 @@ namespace Plank.Factories
 		/**
 		 * The Application for preserving uniqueness
 		 */
-		Gtk.Application application;
+		protected Gtk.Application application;
 		
 		/**
-		 * Initializes the program, makes the dock and starts it.
+		 * Initializes the program, makes the dock and runs it.
 		 *
 		 * @param args the command-line arguments
+		 * @return the exit status value
 		 */
-		public virtual int start (string[] args)
+		public virtual int run (ref unowned string[] args)
 		{
 			initialize_program ();
 			
-			args = parse_commandline (args);
+			if (!parse_commandline (ref args))
+				return Posix.EXIT_FAILURE;
 			
-			args = initialize_libraries (args);
+			if (!initialize_libraries (ref args))
+				return Posix.EXIT_FAILURE;
 			
 			set_options ();
 			
@@ -146,7 +149,7 @@ namespace Plank.Factories
 			Gtk.main ();
 			Gdk.threads_leave ();
 			
-			return 0;
+			return Posix.EXIT_SUCCESS;
 		}
 		
 		[CCode (cheader_filename = "sys/prctl.h", cname = "prctl")]
@@ -213,8 +216,9 @@ namespace Plank.Factories
 		 * Parses the command-line for options, but does not set them.
 		 *
 		 * @param args the command-line arguments
+		 * @return whether the arguments were parsed successfully
 		 */
-		protected virtual unowned string[] parse_commandline (string[] args)
+		protected virtual bool parse_commandline (ref unowned string[] args)
 		{
 			// parse commandline options
 			var context = new OptionContext ("");
@@ -224,9 +228,11 @@ namespace Plank.Factories
 			
 			try {
 				context.parse (ref args);
-			} catch { }
+			} catch {
+				return false;
+			}
 			
-			return args;
+			return true;
 		}
 		
 		/**
@@ -244,15 +250,18 @@ namespace Plank.Factories
 		 * Initializes most libraries used (GTK, GDK, etc).
 		 *
 		 * @param args the command-line arguments
+		 * @return whether the libraries were intialized successfully
 		 */
-		protected virtual unowned string[] initialize_libraries (string[] args)
+		protected virtual bool initialize_libraries (ref unowned string[] args)
 		{
 			Intl.bindtextdomain (exec_name, build_data_dir + "/locale");
 			
-			if (!Thread.supported ())
-				error ("Problem initializing thread support.");
-			Gdk.threads_init ();
+			if (!Thread.supported ()) {
+				critical ("Problem initializing thread support.");
+				return false;
+			}
 			
+			Gdk.threads_init ();
 			Gtk.init (ref args);
 			
 			// ensure only one instance per dock_path
@@ -261,14 +270,14 @@ namespace Plank.Factories
 			application = new Gtk.Application (path, ApplicationFlags.FLAGS_NONE);
 			try {
 				if (application.register () && !application.get_is_remote ())
-					return args;
+					return true;
 			} catch (Error e) {
-				error ("Registering application as '%s' failed. (%s)", dock_path, e.message);
+				critical ("Registering application as '%s' failed. (%s)", dock_path, e.message);
+				return false;
 			}
 			
 			warning ("Exiting because another instance of this application is already running with the name '%s'.", dock_path);
-			Posix.exit (-1);
-			return null;
+			return false;
 		}
 		
 		/**
