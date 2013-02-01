@@ -136,16 +136,16 @@ namespace Plank.Items
 			
 			foreach (var file in get_files ()) {
 				string icon, text;
-				
-				if (file.get_basename ().has_suffix (".desktop")) {
-					ApplicationDockItem.parse_launcher (file.get_uri (), out icon, out text);
+				var uri = file.get_uri ();
+				if (uri.has_suffix (".desktop")) {
+					ApplicationDockItem.parse_launcher (uri, out icon, out text);
 				} else {
 					icon = DrawingService.get_icon_from_file (file) ?? "";
 					text = file.get_basename () ?? "";
 				}
 				
-				icons.set (text, icon);
-				keys.add (text);
+				icons.set (text + uri, icon);
+				keys.add (text + uri);
 			}
 			
 			var pos = 0;
@@ -222,30 +222,30 @@ namespace Plank.Items
 			var keys = new ArrayList<string> ();
 			
 			foreach (var file in get_files ()) {
-				if (file.get_basename ().has_suffix (".desktop")) {
-					string icon, text;
-					ApplicationDockItem.parse_launcher (file.get_uri (), out icon, out text);
-					
-					var item = create_menu_item (text, icon);
+				Gtk.MenuItem item;
+				string icon, text;
+				var uri = file.get_uri ();
+				if (uri.has_suffix (".desktop")) {
+					ApplicationDockItem.parse_launcher (uri, out icon, out text);
+					item = create_menu_item (text, icon);
 					item.activate.connect (() => {
 						Services.System.launch (file);
 						ClickedAnimation = ClickAnimation.BOUNCE;
 						LastClicked = new DateTime.now_utc ();
 					});
-					menu_items.set (text, item);
-					keys.add (text);
 				} else {
-					var icon = DrawingService.get_icon_from_file (file) ?? "";
-					
-					var item = create_menu_item (file.get_basename () ?? "", icon);
+					icon = DrawingService.get_icon_from_file (file) ?? "";
+					text = file.get_basename () ?? "";
+					item = create_menu_item (text, icon);
 					item.activate.connect (() => {
 						Services.System.open (file);
 						ClickedAnimation = ClickAnimation.BOUNCE;
 						LastClicked = new DateTime.now_utc ();
 					});
-					menu_items.set (file.get_basename () ?? "", item);
-					keys.add (file.get_basename () ?? "");
 				}
+				
+				menu_items.set (text + uri, item);
+				keys.add (text + uri);
 			}
 			
 			keys.sort ((CompareFunc) strcmp);
