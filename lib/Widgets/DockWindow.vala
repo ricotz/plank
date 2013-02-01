@@ -336,6 +336,12 @@ namespace Plank.Widgets
 				Logger.verbose ("DockWindow.set_size_request (width = %i, height = %i)", width, height);
 				set_size_request (width, height);
 				controller.renderer.reset_buffers ();
+				
+				if (!needs_reposition) {
+					update_icon_regions ();
+					set_struts ();
+					set_hovered (null);
+				}
 			}
 			
 			if (needs_reposition) {
