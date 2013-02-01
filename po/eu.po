@@ -7,46 +7,46 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-09-10 11:15+0000\n"
+"POT-Creation-Date: 2013-01-30 21:37+0000\n"
 "PO-Revision-Date: 2012-07-23 18:29+0000\n"
 "Last-Translator: Ibai Oihanguren <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-10 21:28+0000\n"
-"X-Generator: Launchpad (build 15924)\n"
+"X-Launchpad-Export-Date: 2013-01-30 21:56+0000\n"
+"X-Generator: Launchpad (build 16455)\n"
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
 msgstr "Plank. Inozoentzako ere erabilerraza."
 
-#: ../lib/Items/ApplicationDockItem.vala:324
-#: ../lib/Items/FileDockItem.vala:251 ../lib/Items/FileDockItem.vala:269
+#: ../lib/Items/ApplicationDockItem.vala:340
+#: ../lib/Items/FileDockItem.vala:258 ../lib/Items/FileDockItem.vala:276
 msgid "_Keep in Dock"
 msgstr "_Mantendu atrakean"
 
-#: ../lib/Items/ApplicationDockItem.vala:334
+#: ../lib/Items/ApplicationDockItem.vala:350
 msgid "Unma_ximize"
 msgstr "_Leheneratu"
 
-#: ../lib/Items/ApplicationDockItem.vala:338
+#: ../lib/Items/ApplicationDockItem.vala:354
 msgid "Ma_ximize"
 msgstr "Ma_ximizatu"
 
-#: ../lib/Items/ApplicationDockItem.vala:343
+#: ../lib/Items/ApplicationDockItem.vala:359
 msgid "_Close All"
 msgstr "Itxi _dena"
 
-#: ../lib/Items/FileDockItem.vala:256
+#: ../lib/Items/FileDockItem.vala:263
 msgid "_Open in File Browser"
 msgstr "Ireki _fitxategi-arakatzailean"
 
-#: ../lib/Items/FileDockItem.vala:274
+#: ../lib/Items/FileDockItem.vala:281
 msgid "_Open"
 msgstr "_Ireki"
 
-#: ../lib/Items/FileDockItem.vala:278
+#: ../lib/Items/FileDockItem.vala:285
 msgid "Open Containing _Folder"
 msgstr "Ireki daukan _karpeta"
 

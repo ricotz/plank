@@ -138,7 +138,7 @@ namespace Plank.Items
 				string icon, text;
 				
 				if (file.get_basename ().has_suffix (".desktop")) {
-					ApplicationDockItem.parse_launcher (file.get_path () ?? "", out icon, out text);
+					ApplicationDockItem.parse_launcher (file.get_uri (), out icon, out text);
 				} else {
 					icon = DrawingService.get_icon_from_file (file) ?? "";
 					text = file.get_basename () ?? "";
@@ -224,7 +224,7 @@ namespace Plank.Items
 			foreach (var file in get_files ()) {
 				if (file.get_basename ().has_suffix (".desktop")) {
 					string icon, text;
-					ApplicationDockItem.parse_launcher (file.get_path () ?? "", out icon, out text);
+					ApplicationDockItem.parse_launcher (file.get_uri (), out icon, out text);
 					
 					var item = create_menu_item (text, icon);
 					item.activate.connect (() => {
