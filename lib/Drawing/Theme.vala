@@ -31,7 +31,7 @@ namespace Plank.Drawing
 	{
 		public const string DEFAULT_NAME = "Default";
 		
-		File theme_folder;
+		File? theme_folder;
 		
 		[Description(nick = "top-roundness", blurb = "The roundness of the top corners.")]
 		public int TopRoundness { get; set; }
@@ -89,6 +89,12 @@ namespace Plank.Drawing
 		 */
 		public void load (string type)
 		{
+			// if there is no folder available, fallback to the internal defaults
+			if (theme_folder == null) {
+				reset_properties ();
+				return;
+			}
+			
 			init_from_file (theme_folder.get_child (type + ".theme"));
 		}
 		
@@ -350,11 +356,12 @@ namespace Plank.Drawing
 		 * Try to get an already existing folder located in the
 		 * themes folder while prefering the user's themes folder.
 		 * If there is no folder found we fallback to the "Default" theme.
+		 * If even that folder doesn't exist return NULL (and use built-in defaults)
 		 *
 		 * @param basename the name of the folder
-		 * @return {@link GLib.File} the folder of the theme
+		 * @return {@link GLib.File} the folder of the theme or NULL
 		 */
-		public static File get_theme_folder (string name)
+		public static File? get_theme_folder (string name)
 		{
 			if (name == DEFAULT_NAME)
 				return get_default_theme_folder ();
@@ -378,7 +385,7 @@ namespace Plank.Drawing
 			return get_default_theme_folder ();
 		}
 		
-		static File get_default_theme_folder ()
+		static File? get_default_theme_folder ()
 		{
 			File folder;
 			
@@ -388,13 +395,9 @@ namespace Plank.Drawing
 				&& folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY)
 				return folder;
 			
-			// "Default" folder located in user's themes-folder
-			folder = Paths.AppThemeFolder.get_child (DEFAULT_NAME);
-			Paths.ensure_directory_exists (folder);
-			if (folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY)
-				return folder;
+			warning ("%s is not a folder fallback to the built-in defaults!", folder.get_path ());
 			
-			error ("%s is not a folder and was suppose to be our fallback!", folder.get_path ());
+			return null;
 		}
 	}
 }
