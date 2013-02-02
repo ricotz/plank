@@ -174,16 +174,21 @@ namespace Plank.Services
 			var file_exists = backing_file.query_exists ();
 			
 			if (!read_only) {
-				FileInfo info;
-				if (file_exists)
-					info = file.query_info (FileAttribute.ACCESS_CAN_WRITE, FileQueryInfoFlags.NONE, null);
-				else
-					info = file.get_parent ().query_info (FileAttribute.ACCESS_CAN_WRITE, FileQueryInfoFlags.NONE, null);
-				
-				read_only = read_only || !info.get_attribute_boolean (FileAttribute.ACCESS_CAN_WRITE);
-				
-				if (read_only)
-					warning ("'%s' is read-only!", file.get_path () ?? "");
+				try {
+					FileInfo info;
+					if (file_exists)
+						info = file.query_info (FileAttribute.ACCESS_CAN_WRITE, FileQueryInfoFlags.NONE, null);
+					else
+						info = file.get_parent ().query_info (FileAttribute.ACCESS_CAN_WRITE, FileQueryInfoFlags.NONE, null);
+					
+					read_only = read_only || !info.get_attribute_boolean (FileAttribute.ACCESS_CAN_WRITE);
+					
+					if (read_only)
+						warning ("'%s' is read-only!", file.get_path () ?? "");
+				} catch (Error e) {
+					warning (e.message);
+					read_only = true;
+				}
 			}
 			
 			// ensure the preferences file exists
