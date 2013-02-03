@@ -60,14 +60,14 @@ namespace Plank.Widgets
 			
 			set_redraw_on_allocate (true);
 			
-			theme = new HoverTheme ();
-			theme.load ("hover");
-			theme.changed.connect (theme_changed);
+			load_theme ();
 			
 			update_layout ();
 			style_set.connect (() => update_layout ());
 			
 			notify["Text"].connect (invalidate);
+			
+			controller.prefs.notify["Theme"].connect (load_theme);
 			
 			stick ();
 			show_all ();
@@ -78,6 +78,21 @@ namespace Plank.Widgets
 		{
 			background_buffer = null;
 			queue_draw ();
+		}
+		
+		void load_theme ()
+		{
+			var is_reload = (theme != null);
+			
+			if (is_reload)
+				theme.changed.disconnect (theme_changed);
+			
+			theme = new HoverTheme (controller.prefs.Theme);
+			theme.load ("hover");
+			theme.changed.connect (theme_changed);
+			
+			if (is_reload)
+				theme_changed ();
 		}
 		
 		/**

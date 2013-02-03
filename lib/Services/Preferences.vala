@@ -84,6 +84,9 @@ namespace Plank.Services
 		
 		void handle_notify (Object sender, ParamSpec property)
 		{
+			if (read_only)
+				return;
+			
 			Logger.verbose ("property changed: %s", property.name);
 			
 			is_delayed_internal = true;
@@ -136,6 +139,7 @@ namespace Plank.Services
 		
 		File? backing_file;
 		FileMonitor backing_monitor;
+		bool read_only = false;
 		
 		/**
 		 * Creates a preferences object with a backing file.
@@ -164,10 +168,31 @@ namespace Plank.Services
 		 */
 		protected void init_from_file (GLib.File file)
 		{
+			stop_monitor ();
+			
 			backing_file = file;
+			var file_exists = backing_file.query_exists ();
+			
+			if (!read_only) {
+				try {
+					FileInfo info;
+					if (file_exists)
+						info = file.query_info (FileAttribute.ACCESS_CAN_WRITE, FileQueryInfoFlags.NONE, null);
+					else
+						info = file.get_parent ().query_info (FileAttribute.ACCESS_CAN_WRITE, FileQueryInfoFlags.NONE, null);
+					
+					read_only = read_only || !info.get_attribute_boolean (FileAttribute.ACCESS_CAN_WRITE);
+					
+					if (read_only)
+						warning ("'%s' is read-only!", file.get_path () ?? "");
+				} catch (Error e) {
+					warning (e.message);
+					read_only = true;
+				}
+			}
 			
 			// ensure the preferences file exists
-			if (!backing_file.query_exists ()) {
+			if (!file_exists) {
 				reset_properties ();
 				save_prefs ();
 			} else {
@@ -196,6 +221,9 @@ namespace Plank.Services
 		 */
 		public void delay ()
 		{
+			if (read_only)
+				return;
+			
 			if (is_delayed)
 				return;
 			
@@ -212,6 +240,9 @@ namespace Plank.Services
 		 */
 		public void apply ()
 		{
+			if (read_only)
+				return;
+			
 			if (!is_delayed)
 				return;
 			
@@ -242,6 +273,9 @@ namespace Plank.Services
 		 */
 		public void delete ()
 		{
+			if (read_only)
+				return;
+			
 			is_delayed = false;
 			is_changed = false;
 			
@@ -365,6 +399,9 @@ namespace Plank.Services
 		void save_prefs ()
 			requires (backing_file != null)
 		{
+			if (read_only)
+				return;
+			
 			if (is_delayed || is_delayed_internal) {
 				if (backing_file != null && backing_file.get_path () != null)
 					Logger.verbose ("Preferences.save_prefs('%s') - delaying save", backing_file.get_path ());

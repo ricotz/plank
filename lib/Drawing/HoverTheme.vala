@@ -24,6 +24,11 @@ namespace Plank.Drawing
 	 */
 	public class HoverTheme : Theme
 	{
+		public HoverTheme (string name)
+		{
+			base.with_name (name);
+		}
+		
 		/**
 		 * {@inheritDoc}
 		 */

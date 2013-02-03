@@ -17,6 +17,7 @@
 
 using Cairo;
 using Gdk;
+using Gee;
 using Gtk;
 
 using Plank.Services;
@@ -28,6 +29,10 @@ namespace Plank.Drawing
 	 */
 	public class Theme : Preferences
 	{
+		public const string DEFAULT_NAME = "Default";
+		
+		File? theme_folder;
+		
 		[Description(nick = "top-roundness", blurb = "The roundness of the top corners.")]
 		public int TopRoundness { get; set; }
 		
@@ -52,6 +57,13 @@ namespace Plank.Drawing
 		public Theme ()
 		{
 			base ();
+			theme_folder = get_theme_folder (DEFAULT_NAME);
+		}
+		
+		public Theme.with_name (string name)
+		{
+			base ();
+			theme_folder = get_theme_folder (name);
 		}
 		
 		/**
@@ -77,8 +89,13 @@ namespace Plank.Drawing
 		 */
 		public void load (string type)
 		{
-			Paths.ensure_directory_exists (Paths.AppConfigFolder.get_child ("theme"));
-			init_from_filename ("theme/" + type + ".theme");
+			// if there is no folder available, fallback to the internal defaults
+			if (theme_folder == null) {
+				reset_properties ();
+				return;
+			}
+			
+			init_from_file (theme_folder.get_child (type + ".theme"));
 		}
 		
 		/**
@@ -287,6 +304,100 @@ namespace Plank.Drawing
 			case "InnerStrokeColor":
 				break;
 			}
+		}
+		
+		/**
+		 * Get a sorted list of all available theme-names
+		 *
+		 * @return {@link Gee.ArrayList} the list of theme-names
+		 */
+		public static ArrayList<string> get_theme_list ()
+		{
+			var list = new HashSet<string> (str_hash, str_equal);
+			
+			list.add (DEFAULT_NAME);
+			
+			// Look in user's themes-folder
+			try {
+				var enumerator = Paths.AppThemeFolder.enumerate_children ("standard::name,standard::type",
+					GLib.FileQueryInfoFlags.NONE);
+				FileInfo info;
+				while ((info = enumerator.next_file ()) != null) {
+					if (info.get_is_hidden ()
+						|| info.get_file_type () != GLib.FileType.DIRECTORY)
+						continue;
+					
+					list.add (info.get_name ());
+				}
+			} catch {}
+			
+			// Look in system's themes-folder
+			try {
+				var enumerator = Paths.ThemeFolder.enumerate_children ("standard::name,standard::type",
+					GLib.FileQueryInfoFlags.NONE);
+				FileInfo info;
+				while ((info = enumerator.next_file ()) != null) {
+					if (info.get_is_hidden ()
+						|| info.get_file_type () != GLib.FileType.DIRECTORY)
+						continue;
+					
+					list.add (info.get_name ());
+				}
+			} catch {}
+			
+			var result = new ArrayList<string> ();
+			result.add_all (list);
+			result.sort ((CompareFunc) strcmp);
+			
+			return result;
+		}
+		
+		/**
+		 * Try to get an already existing folder located in the
+		 * themes folder while prefering the user's themes folder.
+		 * If there is no folder found we fallback to the "Default" theme.
+		 * If even that folder doesn't exist return NULL (and use built-in defaults)
+		 *
+		 * @param basename the name of the folder
+		 * @return {@link GLib.File} the folder of the theme or NULL
+		 */
+		public static File? get_theme_folder (string name)
+		{
+			if (name == DEFAULT_NAME)
+				return get_default_theme_folder ();
+			
+			File folder;
+			
+			// Look in user's themes-folder
+			folder = Paths.AppThemeFolder.get_child (name);
+			if (folder.query_exists ()
+				&& folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY)
+				return folder;
+			
+			// Look in system's themes-folder
+			folder = Paths.ThemeFolder.get_child (name);
+			if (folder.query_exists ()
+				&& folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY)
+				return folder;
+			
+			warning ("%s not found, falling back to %s.", name, DEFAULT_NAME);
+			
+			return get_default_theme_folder ();
+		}
+		
+		static File? get_default_theme_folder ()
+		{
+			File folder;
+			
+			// "Default" folder located in system's themes-folder
+			folder = Paths.ThemeFolder.get_child (DEFAULT_NAME);
+			if (folder.query_exists ()
+				&& folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY)
+				return folder;
+			
+			warning ("%s is not a folder fallback to the built-in defaults!", folder.get_path ());
+			
+			return null;
 		}
 	}
 }

@@ -40,6 +40,10 @@ namespace Plank.Services
 		 */
 		public static File DataFolder { get; protected set; }
 		
+		/**
+		 * DataFolder/themes
+		 */
+		public static File ThemeFolder { get; protected set; }
 		
 		/**
 		 * HomeFolder/.config
@@ -73,6 +77,11 @@ namespace Plank.Services
 		public static File AppDataFolder { get; protected set; }
 		
 		/**
+		 * defaults to AppDataFolder/themes
+		 */
+		public static File AppThemeFolder { get; protected set; }
+		
+		/**
 		 * defaults to CacheHomeFolder/app_name
 		 */
 		public static File AppCacheFolder { get; protected set; }
@@ -90,6 +99,7 @@ namespace Plank.Services
 			// get environment-based settings
 			HomeFolder = File.new_for_path (Environment.get_home_dir ());
 			DataFolder = File.new_for_path (data_folder);
+			ThemeFolder = DataFolder.get_child ("themes");
 			
 			
 			// get standard directories
@@ -106,12 +116,14 @@ namespace Plank.Services
 			// set the program-specific directories to use
 			AppConfigFolder = ConfigHomeFolder.get_child (app_name);
 			AppDataFolder   = DataHomeFolder.get_child (app_name);
+			AppThemeFolder  = AppDataFolder.get_child ("themes");
 			AppCacheFolder  = CacheHomeFolder.get_child (app_name);
 			
 			
 			// ensure all writable directories exist
 			ensure_directory_exists (AppConfigFolder);
 			ensure_directory_exists (AppDataFolder);
+			ensure_directory_exists (AppThemeFolder);
 			ensure_directory_exists (AppCacheFolder);
 		}
 		
