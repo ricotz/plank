@@ -197,6 +197,8 @@ namespace Plank
 			case "Theme":
 				if (Theme == "")
 					Theme = Plank.Drawing.Theme.DEFAULT_NAME;
+				else if (Theme.contains ("/"))
+					Theme = Theme.replace ("/", "");
 				break;
 			
 			case "Alignment":
