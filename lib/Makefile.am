@@ -49,7 +49,6 @@ libplank_la_LIBADD = \
 
 libplank_la_VALASOURCES = \
 	DockController.vala \
-	DockItems.vala \
 	DockPreferences.vala \
 	DockRenderer.vala \
 	DragManager.vala \
@@ -66,7 +65,9 @@ libplank_la_VALASOURCES = \
 	Factories/Factory.vala \
 	Factories/ItemFactory.vala \
 	Items/ApplicationDockItem.vala \
+	Items/ApplicationDockItemProvider.vala \
 	Items/DockItem.vala \
+	Items/DockItemProvider.vala \
 	Items/DockItemPreferences.vala \
 	Items/FileDockItem.vala \
 	Items/PlankDockItem.vala \

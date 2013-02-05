@@ -192,6 +192,11 @@ namespace Plank.Items
 		public int Position { get; set; default = -1; }
 		
 		/**
+		 * Wether the item is currently visible on the dock.
+		 */
+		public bool IsVisible { get; set; default = true; }
+		
+		/**
 		 * The buttons this item shows popup menus for.
 		 */
 		public PopupButton Button { get; protected set; default = PopupButton.RIGHT; }

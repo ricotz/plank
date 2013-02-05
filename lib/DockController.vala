@@ -16,6 +16,7 @@
 // 
 
 using Plank.Factories;
+using Plank.Items;
 using Plank.Widgets;
 using Plank.Services;
 
@@ -29,7 +30,7 @@ namespace Plank
 	public class DockController : GLib.Object
 	{
 		public DockPreferences prefs;
-		public DockItems items;
+		public ApplicationDockItemProvider items;
 		public PositionManager position_manager;
 		public DockRenderer renderer;
 		public DragManager drag_manager;
@@ -41,7 +42,7 @@ namespace Plank
 		public DockController ()
 		{
 			prefs = new DockPreferences.with_filename (Factories.AbstractMain.dock_path + "/settings");
-			items = new DockItems (this);
+			items = new ApplicationDockItemProvider (this);
 			position_manager = new PositionManager (this);
 			renderer = new DockRenderer (this);
 			drag_manager = new DragManager (this);

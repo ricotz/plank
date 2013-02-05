@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
+//  Copyright (C) 2011-2013 Robert Dyer, Rico Tzschichholz
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,65 +18,34 @@
 using Gee;
 
 using Plank.Factories;
-using Plank.Items;
 using Plank.Widgets;
 
 using Plank.Services;
 using Plank.Services.Windows;
 
-namespace Plank
+namespace Plank.Items
 {
 	/**
-	 * A container and controller class for managing dock items on a dock.
+	 * A container and controller class for managing application dock items on a dock.
 	 */
-	public class DockItems : GLib.Object
+	public class ApplicationDockItemProvider : DockItemProvider
 	{
-		/**
-		 * Triggered when the items collection has changed.
-		 *
-		 * @param added the list of added items
-		 * @param removed the list of removed items
-		 */
-		public signal void items_changed (Gee.List<DockItem> added, Gee.List<DockItem> removed);
-		
-		/**
-		 * Triggered when the state of an item changes.
-		 */
-		public signal void item_state_changed ();
-		/**
-		 * Triggered anytime an item's Position changes.
-		 */
-		public signal void item_position_changed ();
-		
-		/**
-		 * A list of the dock items.
-		 */
-		public unowned ArrayList<DockItem> Items {
-			get {
-				return visible_items;
-			}
-		}
-		
-		ArrayList<DockItem> visible_items = new ArrayList<DockItem> ();
-		ArrayList<DockItem> internal_items = new ArrayList<DockItem> ();
-		
-		Gee.Map<DockItem, int> saved_item_positions = new HashMap<DockItem, int> ();
-		
 		FileMonitor? items_monitor = null;
 		bool delay_items_monitor_handle = false;
 		ArrayList<GLib.File> queued_files = new ArrayList<GLib.File> ();
-		
-		DockController controller;
 		
 		/**
 		 * Creates a new container for dock items.
 		 *
 		 * @param controller the dock controller that owns these items
 		 */
-		public DockItems (DockController controller)
+		public ApplicationDockItemProvider (DockController controller)
 		{
-			this.controller = controller;
-			
+			Object (controller : controller);
+		}
+		
+		construct
+		{
 			Factory.item_factory.launchers_dir = Paths.AppConfigFolder.get_child (Factories.AbstractMain.dock_path + "/launchers");
 			
 			// if we made the launcher directory, assume a first run and pre-populate with launchers
@@ -93,8 +62,6 @@ namespace Plank
 			
 			controller.prefs.changed["CurrentWorkspaceOnly"].connect (handle_setting_changed);
 			
-			item_position_changed.connect (serialize_item_positions);
-			items_changed.connect (serialize_item_positions);
 			Matcher.get_default ().app_opened.connect (app_opened);
 			
 			var wnck_screen = Wnck.Screen.get_default ();
@@ -110,10 +77,8 @@ namespace Plank
 			}
 		}
 		
-		~DockItems ()
+		~ApplicationDockItemProvider ()
 		{
-			item_position_changed.disconnect (serialize_item_positions);
-			items_changed.disconnect (serialize_item_positions);
 			controller.prefs.changed["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
 			
 			Matcher.get_default ().app_opened.disconnect (app_opened);
@@ -123,49 +88,11 @@ namespace Plank
 			wnck_screen.active_workspace_changed.disconnect (handle_workspace_changed);
 			wnck_screen.viewports_changed.disconnect (handle_viewports_changed);
 			
-			saved_item_positions.clear ();
-			visible_items.clear ();
-			
-			var items = new HashSet<DockItem> ();
-			items.add_all (internal_items);
-			foreach (var item in items)
-				remove_item_without_signaling (item);
-			internal_items.clear ();
-			
 			if (items_monitor != null) {
 				items_monitor.changed.disconnect (handle_items_dir_changed);
 				items_monitor.cancel ();
 				items_monitor = null;
 			}
-		}
-		
-		/**
-		 * Adds a dock item to the collection.
-		 *
-		 * @param item the dock item to add
-		 */
-		public void add_item (DockItem item)
-		{
-			add_item_without_signaling (item);
-			
-			update_visible_items ();
-		}
-		
-		/**
-		 * Removes a dock item from the collection.
-		 *
-		 * @param item the dock item to remove
-		 */
-		public void remove_item (DockItem item)
-		{
-			remove_item_without_signaling (item);
-			
-			update_visible_items ();
-		}
-		
-		void handle_item_state_changed ()
-		{
-			item_state_changed ();
 		}
 		
 		ApplicationDockItem? item_for_application (Bamf.Application app)
@@ -277,39 +204,23 @@ namespace Plank
 			debug ("done.");
 		}
 		
-		void update_visible_items ()
+		protected override void update_visible_items ()
 		{
-			Logger.verbose ("DockItems.update_visible_items ()");
-			
-			var old_items = new ArrayList<DockItem> ();
-			old_items.add_all (visible_items);
-			
-			visible_items.clear ();
+			Logger.verbose ("ApplicationDockItemProvider.update_visible_items ()");
 			
 			if (controller.prefs.CurrentWorkspaceOnly) {
 				var active_workspace = Wnck.Screen.get_default ().get_active_workspace ();
 				foreach (var item in internal_items) {
 					var transient = (item as TransientDockItem);
-					if (transient != null
-						&& !WindowControl.has_window_on_workspace (transient.App, active_workspace))
-						continue;
-					visible_items.add (item);
+					item.IsVisible = (transient == null
+						|| WindowControl.has_window_on_workspace (transient.App, active_workspace));
 				}
 			} else {
-				visible_items.add_all (internal_items);
+				foreach (var item in internal_items)
+					item.IsVisible = true;
 			}
 			
-			set_item_positions ();
-			
-			var added_items = new ArrayList<DockItem> ();
-			added_items.add_all (visible_items);
-			added_items.remove_all (old_items);
-			
-			var removed_items = old_items;
-			removed_items.remove_all (visible_items);
-			
-			if (added_items.size > 0 || removed_items.size > 0)
-				items_changed (added_items, removed_items);
+			base.update_visible_items ();
 		}
 		
 		void add_running_app (Bamf.Application app, bool without_signaling)
@@ -348,13 +259,6 @@ namespace Plank
 				remove_item (remove);
 		}
 		
-		void set_item_positions ()
-		{
-			int pos = 0;
-			foreach (var i in visible_items)
-				i.Position = pos++;
-		}
-		
 		bool file_is_dockitem (FileInfo info)
 		{
 			return !info.get_is_hidden () && info.get_name ().has_suffix (".dockitem");
@@ -386,7 +290,7 @@ namespace Plank
 				if (skip)
 					continue;
 				
-				Logger.verbose ("DockItems.process_queued_files ('%s')", basename);
+				Logger.verbose ("ApplicationDockItemProvider.process_queued_files ('%s')", basename);
 				var item = Factory.item_factory.make_item (file);
 				if (item.ValidItem)
 					add_item (item);
@@ -416,17 +320,12 @@ namespace Plank
 				if (f.get_basename () == item.DockItemFilename)
 					return;
 			
-			Logger.verbose ("DockItems.handle_items_dir_changed (processing '%s')", f.get_path ());
+			Logger.verbose ("ApplicationDockItemProvider.handle_items_dir_changed (processing '%s')", f.get_path ());
 			
 			queued_files.add (f);
 			
 			if (!delay_items_monitor_handle)
 				process_queued_files ();
-		}
-		
-		void handle_setting_changed ()
-		{
-			update_visible_items ();
 		}
 		
 		void handle_window_changed (Wnck.Window? previous)
@@ -459,142 +358,9 @@ namespace Plank
 			update_visible_items ();
 		}
 		
-		/**
-		 * Save current item positions
-		 */
-		public void save_item_positions ()
+		protected override void item_signals_connect (DockItem item)
 		{
-			saved_item_positions.clear ();
-			
-			foreach (var item in visible_items)
-				saved_item_positions[item] = item.Position;
-		}
-		
-		/**
-		 * Restore previously saved item positions
-		 */
-		public void restore_item_positions ()
-		{
-			if (saved_item_positions.size == 0)
-				return;
-			
-			foreach (var entry in saved_item_positions.entries)
-				entry.key.Position = entry.value;
- 			visible_items.sort ((CompareFunc) compare_items);
-			
-			saved_item_positions.clear ();
-			
-			set_item_positions ();
-			item_position_changed ();
- 		}
-		
-		/**
-		 * Serializes the item positions to the preferences.
-		 */
-		void serialize_item_positions ()
-		{
-			var item_list = "";
-			foreach (var item in internal_items) {
-				if (!(item is TransientDockItem) && item.DockItemFilename.length > 0) {
-					if (item_list.length > 0)
-						item_list += ";;";
-					item_list += item.DockItemFilename;
-				}
-			}
-			
-			if (controller.prefs.DockItems != item_list)
-				controller.prefs.DockItems = item_list;
-		}
-		
-		/**
-		 * Move an item to the position of another item.
-		 * This shifts all items which are between these two items.
-		 *
-		 * @param move the item to move
-		 * @param target the item of the new position
-		 */
-		public void move_item_to (DockItem move, DockItem target)
-		{
-			if (move == target)
-				return;
-			
-			var index_target = internal_items.index_of (target);
-			internal_items.remove (move);
-			internal_items.insert (index_target, move);
-			
-			if (visible_items.contains (move) && (index_target = visible_items.index_of (target)) >= 0) {
-				visible_items.remove (move);
-				visible_items.insert (index_target, move);
-				set_item_positions ();
-			} else {
-				update_visible_items ();
-			}
-			
-			item_position_changed ();
-		}
-		
-		void add_item_without_signaling (DockItem item)
-		{
-			if (item.Position > -1 && item.Position <= internal_items.size) {
-				internal_items.insert (item.Position, item);
-			} else {
-				internal_items.add (item);
-			}
-			
-			item.AddTime = new DateTime.now_utc ();
-			item_signals_connect (item);
-		}
-		
-		/**
-		 * Replace an item with another item.
-		 *
-		 * @param new_item the new item
-		 * @param old_item the item to be replaced
-		 */
-		public void replace_item (DockItem new_item, DockItem old_item)
-		{
-			if (new_item == old_item || !internal_items.contains (old_item))
-				return;
-			
-			Logger.verbose ("DockItems.replace_item (%s[%s, %i] > %s[%s, %i])", old_item.Text, old_item.DockItemFilename, (int)old_item, new_item.Text, new_item.DockItemFilename, (int)new_item);
-			
-			item_signals_disconnect (old_item);
-			
-			var index = internal_items.index_of (old_item);
-			internal_items.remove (old_item);
-			internal_items.insert (index, new_item);
-			
-			new_item.AddTime = old_item.AddTime;
-			new_item.Position = old_item.Position;
-			item_signals_connect (new_item);
-			
-			if ((index = visible_items.index_of (old_item)) >= 0) {
-				visible_items.remove (old_item);
-				visible_items.insert (index, new_item);
-			} else {
-				update_visible_items ();
-			}
-			
-			item_position_changed ();
-		}
-		
-		void remove_item_without_signaling (DockItem item)
-		{
-			item.RemoveTime = new DateTime.now_utc ();
-			item_signals_disconnect (item);
-			
-			internal_items.remove (item);
-			controller.unity.remove_entry (item);
-		}
-		
-		void item_signals_connect (DockItem item)
-		{
-			item.notify["Icon"].connect (handle_item_state_changed);
-			item.notify["Indicator"].connect (handle_item_state_changed);
-			item.notify["State"].connect (handle_item_state_changed);
-			item.notify["LastClicked"].connect (handle_item_state_changed);
-			item.needs_redraw.connect (handle_item_state_changed);
-			item.deleted.connect (handle_item_deleted);
+			base.item_signals_connect (item);
 			
 			unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 			if (appitem != null) {
@@ -604,14 +370,9 @@ namespace Plank
 			}
 		}
 		
-		void item_signals_disconnect (DockItem item)
+		protected override void item_signals_disconnect (DockItem item)
 		{
-			item.notify["Icon"].disconnect (handle_item_state_changed);
-			item.notify["Indicator"].disconnect (handle_item_state_changed);
-			item.notify["State"].disconnect (handle_item_state_changed);
-			item.notify["LastClicked"].disconnect (handle_item_state_changed);
-			item.needs_redraw.disconnect (handle_item_state_changed);
-			item.deleted.disconnect (handle_item_deleted);
+			base.item_signals_disconnect (item);
 			
 			unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 			if (appitem != null) {
@@ -626,7 +387,7 @@ namespace Plank
 			controller.window.update_icon_regions ();
 		}
 		
-		void handle_item_deleted (DockItem item)
+		protected override void handle_item_deleted (DockItem item)
 		{
 			Bamf.Application? app = null;
 			if (item is ApplicationDockItem)
@@ -645,7 +406,7 @@ namespace Plank
 		
 		void pin_item (DockItem item)
 		{
-			Logger.verbose ("DockItems.pin_item ('%s[%s]')", item.Text, item.DockItemFilename);
+			Logger.verbose ("ApplicationDockItemProvider.pin_item ('%s[%s]')", item.Text, item.DockItemFilename);
 
 			var app_item = (item as ApplicationDockItem);
 			if (app_item == null)
@@ -668,15 +429,6 @@ namespace Plank
 			}
 			
 			resume_items_monitor ();
-		}
-		
-		static int compare_items (DockItem left, DockItem right)
-		{
-			if (left.Position == right.Position)
-				return 0;
-			if (left.Position < right.Position)
-				return -1;
-			return 1;
 		}
 	}
 }
