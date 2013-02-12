@@ -290,7 +290,6 @@ namespace Plank.Items
 			item_signals_disconnect (item);
 			
 			internal_items.remove (item);
-			controller.unity.remove_entry (item);
 		}
 		
 		protected virtual void item_signals_connect (DockItem item)

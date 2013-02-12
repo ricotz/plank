@@ -25,6 +25,73 @@ using Plank.Services.Windows;
 
 namespace Plank.Items
 {
+	class RemoteEntry : GLib.Object
+	{
+		public ApplicationDockItem Item { get; construct; }
+		public string DBusName { get; set; }
+		
+		public RemoteEntry (ApplicationDockItem item)
+		{
+			Object (Item: item);
+		}
+		
+		public void update (string sender_name, VariantIter prop_iter)
+		{
+			DBusName = sender_name;
+			
+			string prop_key;
+			Variant prop_value;
+			
+			// TODO emblem isn't part of libunity API anymore
+			//      do we want to support this ?
+			
+			while (prop_iter.next ("{sv}", out prop_key, out prop_value)) {
+				if (prop_key == "count")
+					Item.Count = prop_value.get_int64 ();
+				else if (prop_key == "count-visible")
+					Item.CountVisible = prop_value.get_boolean ();
+				//else if (prop_key == "emblem")
+				//	Item.Emblem = prop_value.get_string ();
+				//else if (prop_key == "emblem-visible")
+				//	Item.EmblemVisible = prop_value.get_boolean ();
+				else if (prop_key == "progress")
+					Item.Progress = prop_value.get_double ();
+				else if (prop_key == "progress-visible")
+					Item.ProgressVisible = prop_value.get_boolean ();
+				else if (prop_key == "urgent")
+					Item.set_urgent (prop_value.get_boolean ());
+#if HAVE_DBUSMENU
+				else if (prop_key == "quicklist") {
+					/* The value is the object path of the dbusmenu */
+					var dbus_path = prop_value.get_string ();
+					// Make sure we don't update our Quicklist instance if isn't necessary
+					if (Item.Quicklist == null || Item.Quicklist.dbus_object != dbus_path)
+						if (dbus_path != "") {
+							Logger.verbose ("Loading dynamic quicklists for %s (%s)", Item.Text, sender_name);
+							Item.Quicklist = new DbusmenuGtk.Client (sender_name, dbus_path);
+						} else {
+							Item.Quicklist = null;
+						}
+				}
+#endif
+			}
+		}
+		
+		public void reset ()
+		{
+			Item.Count = 0;
+			Item.CountVisible = false;
+			//Item.Emblem = "";
+			//Item.EmblemVisible = false;
+			Item.Progress = 0.0;
+			Item.ProgressVisible = false;
+			Item.set_urgent (false);
+#if HAVE_DBUSMENU
+			Item.Quicklist = null;
+#endif
+		}
+	}
+	
 	/**
 	 * A container and controller class for managing application dock items on a dock.
 	 */
@@ -33,6 +100,12 @@ namespace Plank.Items
 		FileMonitor? items_monitor = null;
 		bool delay_items_monitor_handle = false;
 		ArrayList<GLib.File> queued_files = new ArrayList<GLib.File> ();
+		
+		DBusConnection connection = null;
+		uint unity_bus_id = 0;
+		uint launcher_entry_dbus_signal_id = 0;
+		uint dbus_name_owner_changed_signal_id = 0;
+		HashMap<string, RemoteEntry> remote_entries = new HashMap<string, RemoteEntry> ();
 		
 		/**
 		 * Creates a new container for dock items.
@@ -75,6 +148,25 @@ namespace Plank.Items
 			} catch (Error e) {
 				error ("Unable to watch the launchers directory. (%s)", e.message);
 			}
+			
+			// Initialize Unity DBus
+			try {
+				connection = Bus.get_sync (BusType.SESSION, null);
+			} catch (Error e) {
+				warning (e.message);
+				return;
+			}
+			
+			debug ("Unity: Initalizing LauncherEntry support");
+			
+			// Acquire Unity bus-name to activate libunity clients since normally there shouldn't be a running Unity
+			unity_bus_id = Bus.own_name (BusType.SESSION, "com.canonical.Unity", BusNameOwnerFlags.NONE,
+				handle_bus_acquired, handle_name_acquired, handle_name_lost);
+			
+			launcher_entry_dbus_signal_id = connection.signal_subscribe (null, "com.canonical.Unity.LauncherEntry",
+				null, null, null, DBusSignalFlags.NONE, handle_entry_signal);
+			dbus_name_owner_changed_signal_id = connection.signal_subscribe ("org.freedesktop.DBus", "org.freedesktop.DBus",
+				"NameOwnerChanged", "/org/freedesktop/DBus", null, DBusSignalFlags.NONE, handle_name_owner_changed);
 		}
 		
 		~ApplicationDockItemProvider ()
@@ -92,6 +184,19 @@ namespace Plank.Items
 				items_monitor.changed.disconnect (handle_items_dir_changed);
 				items_monitor.cancel ();
 				items_monitor = null;
+			}
+			
+			
+			if (unity_bus_id > 0)
+				Bus.unown_name (unity_bus_id);
+			
+			if (connection != null) {
+				if (launcher_entry_dbus_signal_id > 0)
+					connection.signal_unsubscribe (launcher_entry_dbus_signal_id);
+				if (dbus_name_owner_changed_signal_id > 0)
+					connection.signal_unsubscribe (dbus_name_owner_changed_signal_id);
+				
+				connection.close_sync ();
 			}
 		}
 		
@@ -358,6 +463,13 @@ namespace Plank.Items
 			update_visible_items ();
 		}
 		
+		protected override void remove_item_without_signaling (DockItem item)
+		{
+			base.remove_item_without_signaling (item);
+			
+			remove_entry (item);
+		}
+		
 		protected override void item_signals_connect (DockItem item)
 		{
 			base.item_signals_connect (item);
@@ -429,6 +541,113 @@ namespace Plank.Items
 			}
 			
 			resume_items_monitor ();
+		}
+		
+		void remove_entry (DockItem item)
+		{
+			foreach (var entry in remote_entries.entries) {
+				if (entry.value.Item != item)
+					continue;
+				
+				entry.value.reset ();
+				remote_entries.unset (entry.key);
+				break;
+			}
+		}
+		
+		void handle_bus_acquired (DBusConnection conn, string name)
+		{
+			Logger.verbose ("Unity: %s acquired", name);
+		}
+
+		void handle_name_acquired (DBusConnection conn, string name)
+		{
+			Logger.verbose ("Unity: %s acquired", name);
+		}
+
+		void handle_name_lost (DBusConnection conn, string name)
+		{
+			debug ("Unity: %s lost", name);
+		}
+		
+		void handle_entry_signal (DBusConnection connection, string sender_name, string object_path,
+			string interface_name, string signal_name, Variant parameters)
+		{
+			if (parameters == null || signal_name == null || sender_name == null)
+				return;
+			
+			if (signal_name == "Update")
+				handle_update_request (sender_name, parameters);
+		}
+		
+		void handle_name_owner_changed (DBusConnection connection, string sender_name, string object_path,
+			string interface_name, string signal_name, Variant parameters)
+		{
+			string name, before, after;
+			parameters.get ("(sss)", out name, out before, out after);
+			
+			if (after != null && after != "")
+				return;
+			
+			// Remove connected entry since there is no new NameOwner
+			foreach (var entry in remote_entries.entries) {
+				if (entry.value.DBusName != name)
+					continue;
+				
+				entry.value.reset ();
+				remote_entries.unset (entry.key);
+				controller.renderer.animated_draw ();
+				break;
+			}
+		}
+		
+		void handle_update_request (string sender_name, Variant parameters)
+		{
+			if (parameters == null)
+				return;
+			
+			if (!parameters.is_of_type (new VariantType ("(sa{sv})"))) {
+				warning ("Unity.handle_update_request (illegal payload signature '%s' from %s. expected '(sa{sv})')", parameters.get_type_string (), sender_name);
+				return;
+			}
+			
+			string app_uri;
+			VariantIter prop_iter;
+			parameters.get ("(sa{sv})", out app_uri, out prop_iter);
+			
+			Logger.verbose ("Unity.handle_update_request (processing update for %s)", app_uri);
+			
+			var entry = remote_entries.get (app_uri);
+			
+			// If don't know this app yet create a new entry
+			if (entry == null)
+				foreach (var item in internal_items) {
+					var app_item = item as ApplicationDockItem;
+					if (app_item == null || app_item.App == null)
+						continue;
+					
+					var desktop_file = app_item.App.get_desktop_file ();
+					if (desktop_file == null || desktop_file == "")
+						continue;
+					
+					var p = desktop_file.split("/");
+					if (p.length == 0)
+						continue;
+					
+					var uri = "application://" + p[p.length - 1];
+					
+					if (app_uri == uri) {
+						entry = new RemoteEntry (app_item);
+						remote_entries.set (app_uri, entry);
+						break;
+					}
+				}
+			
+			// Update our entry and trigger a redraw
+			if (entry != null) {
+				entry.update (sender_name, prop_iter);
+				controller.renderer.animated_draw ();
+			}
 		}
 	}
 }

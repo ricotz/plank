@@ -68,7 +68,7 @@ namespace Plank.Items
 		/**
 		 * The dock item's quicklist-dbusmenu.
 		 */
-		public DbusmenuGtk.Client? Quicklist { get; set; default = null; }
+		internal DbusmenuGtk.Client? Quicklist { get; set; default = null; }
 #endif
 		
 		Bamf.Application? app = null;

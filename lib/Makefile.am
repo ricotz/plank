@@ -77,7 +77,6 @@ libplank_la_VALASOURCES = \
 	Services/Paths.vala \
 	Services/Preferences.vala \
 	Services/System.vala \
-	Services/Unity.vala \
 	Services/WindowControl.vala \
 	Widgets/CompositedWindow.vala \
 	Widgets/DockWindow.vala \
@@ -100,10 +99,6 @@ plank.deps: Makefile
 	@echo Creating $@
 	@touch $@
 	@cp $(srcdir)/plank.deps.in $@
-if HAVE_DBUSMENU
-	@echo "Dbusmenu-0.4" >> $@
-	@echo "DbusmenuGtk3-0.4" >> $@
-endif
 
 libplank_la_vala.stamp build-abi: $(libplank_la_VALASOURCES)
 	$(AM_V_VALA)$(VALAC) \
