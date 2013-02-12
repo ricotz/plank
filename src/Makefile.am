@@ -1,14 +1,11 @@
 include $(top_srcdir)/Makefile.common
 
-VAPIDIR = $(top_srcdir)/vapi
-
 plank_VALAFLAGS = \
-	$(PLANK_CORE_VALAFLAGS)
-
-plank_VALAFLAGS += \
+	$(PLANK_CORE_VALAFLAGS) \
 	$(top_builddir)/lib/plank.vapi \
-	--vapidir $(VAPIDIR) \
-	$(VAPIDIR)/config.vapi \
+	--vapidir $(top_srcdir)/vapi \
+	$(top_srcdir)/vapi/config.vapi \
+	-C \
 	$(NULL)
 
 plankdir = $(bindir)
@@ -37,10 +34,9 @@ nodist_plank_SOURCES = \
 	$(plank_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-plank_vala.stamp: $(plank_VALASOURCES)
+plank_vala.stamp: $(plank_VALASOURCES) Makefile
 	$(AM_V_VALA)$(VALAC) \
 		$(plank_VALAFLAGS) \
-		-C \
 		$(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
 

@@ -21,7 +21,7 @@ using Wnck;
 
 namespace Plank.Services.Windows
 {
-	internal enum Struts 
+	public enum Struts
 	{
 		LEFT,
 		RIGHT,
@@ -38,7 +38,7 @@ namespace Plank.Services.Windows
 		N_VALUES
 	}
 	
-	internal class WindowControl : GLib.Object
+	public class WindowControl : GLib.Object
 	{
 		// when working on a group of windows, wait this amount between each action
 		const uint WINDOW_GROUP_DELAY = 10000;

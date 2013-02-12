@@ -1,11 +1,28 @@
 include $(top_srcdir)/Makefile.common
 
-VAPIDIR = $(top_srcdir)/vapi
+AM_CFLAGS = \
+	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
+	$(PLANK_CORE_CFLAGS) \
+	-w \
+	$(NULL)
 
-lib_LTLIBRARIES = libplank.la
+AM_LDFLAGS = \
+	-lm \
+	$(NULL)
+
+AM_VALAFLAGS = \
+	$(PLANK_CORE_VALAFLAGS) \
+	--vapidir $(top_srcdir)/vapi \
+	$(top_srcdir)/vapi/compat.vapi \
+	--basedir $(srcdir) \
+	--directory $(builddir) \
+	-C \
+	$(NULL)
 
 BUILT_SOURCES = \
+	libplank_internal_la_vala.stamp \
 	libplank_la_vala.stamp \
+	plank.h \
 	plank-resources.c \
 	$(NULL)
 
@@ -21,30 +38,24 @@ nodist_vapi_DATA = \
 pkgconfigdir = $(libdir)/pkgconfig
 nodist_pkgconfig_DATA = plank.pc
 
+
+lib_LTLIBRARIES = libplank.la
+
 libplankdir = $(libdir)
 
-libplank_la_CFLAGS = \
-	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
-	$(PLANK_CORE_CFLAGS) \
-	-include config.h \
-	-w \
-	$(NULL)
-
 libplank_la_LDFLAGS = \
+	-no-undefined \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
 	-export-symbols $(builddir)/build-abi \
-	-lm \
-	$(PLANK_CORE_LDFLAGS) \
 	$(NULL)
 
 libplank_la_VALAFLAGS = \
-	$(PLANK_CORE_VALAFLAGS) \
-	--vapidir $(VAPIDIR) \
-	$(VAPIDIR)/compat.vapi \
+	$(builddir)/plank-internal.vapi \
 	$(NULL)
 
 libplank_la_LIBADD = \
 	$(PLANK_CORE_LIBS) \
+	$(builddir)/libplank-internal.la \
 	$(NULL)
 
 libplank_la_VALASOURCES = \
@@ -73,16 +84,13 @@ libplank_la_VALASOURCES = \
 	Items/PlankDockItem.vala \
 	Items/TransientDockItem.vala \
 	Services/Logger.vala \
-	Services/Matcher.vala \
 	Services/Paths.vala \
 	Services/Preferences.vala \
 	Services/System.vala \
-	Services/WindowControl.vala \
 	Widgets/CompositedWindow.vala \
 	Widgets/DockWindow.vala \
 	Widgets/HoverWindow.vala \
 	Widgets/PoofWindow.vala \
-	Widgets/TitledSeparatorMenuItem.vala \
 	$(NULL)
 
 nodist_libplank_la_SOURCES = \
@@ -100,12 +108,9 @@ plank.deps: Makefile
 	@touch $@
 	@cp $(srcdir)/plank.deps.in $@
 
-libplank_la_vala.stamp build-abi: $(libplank_la_VALASOURCES)
+libplank_la_vala.stamp build-abi: libplank_internal_la_vala.stamp $(libplank_la_VALASOURCES) Makefile
 	$(AM_V_VALA)$(VALAC) \
-		$(libplank_la_VALAFLAGS) \
-		--basedir $(srcdir) \
-		--directory $(builddir) \
-		-C \
+		$(AM_VALAFLAGS) $(libplank_la_VALAFLAGS) \
 		-H plank.h \
 		--library plank \
 		--symbols build-abi \
@@ -116,19 +121,59 @@ libplank_la_vala.stamp build-abi: $(libplank_la_VALASOURCES)
 symbols: build-abi
 	@cat $(builddir)/build-abi | sort > $(srcdir)/libplank.symbols
 
+
+noinst_lib_LTLIBRARIES = libplank-internal.la
+noinst_libdir = $(abs_builddir)
+
+libplank_internal_la_LDFLAGS = \
+	-avoid-version \
+	-non_shared \
+	-static \
+	$(NULL)
+
+libplank_internal_la_LIBADD = \
+	$(PLANK_CORE_LIBS) \
+	$(NULL)
+
+libplank_internal_la_VALASOURCES = \
+	Services/Matcher.vala \
+	Services/WindowControl.vala \
+	Widgets/TitledSeparatorMenuItem.vala \
+	$(NULL)
+
+nodist_libplank_internal_la_SOURCES = \
+	$(libplank_internal_la_VALASOURCES:.vala=.c) \
+	$(NULL)
+
+plank-internal.h plank-internal.vapi: libplank_internal_la_vala.stamp
+
+libplank_internal_la_vala.stamp: $(libplank_internal_la_VALASOURCES) Makefile
+	$(AM_V_VALA)$(VALAC) \
+		$(AM_VALAFLAGS) \
+		-H plank-internal.h \
+		--library plank-internal \
+		--vapi plank-internal.vapi \
+		$(filter %.vala %.c,$^)
+	$(AM_V_at)touch $@
+
+
 TESTS = abicheck.sh
 
 CLEANFILES = \
 	$(nodist_libplank_la_SOURCES) \
+	$(nodist_libplank_internal_la_SOURCES) \
 	build-abi \
 	plank.deps \
 	plank.pc \
 	plank.vapi \
 	plank.h \
+	plank-internal.vapi \
+	plank-internal.h \
 	$(NULL)
 
 EXTRA_DIST = \
 	$(libplank_la_VALASOURCES) \
+	$(libplank_internal_la_VALASOURCES) \
 	abicheck.sh \
 	libplank.symbols \
 	plank.deps.in \
