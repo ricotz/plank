@@ -31,6 +31,10 @@ namespace Plank.Drawing
 	{
 		const string MISSING_ICONS = "application-default-icon;;application-x-executable";
 		
+		DrawingService ()
+		{
+		}
+		
 		/**
 		 * Gets the icon name from a {@link GLib.File}.
 		 *

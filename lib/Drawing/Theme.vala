@@ -27,7 +27,7 @@ namespace Plank.Drawing
 	/**
 	 * A themed renderer for windows.
 	 */
-	public class Theme : Preferences
+	public abstract class Theme : Preferences
 	{
 		public const string DEFAULT_NAME = "Default";
 		

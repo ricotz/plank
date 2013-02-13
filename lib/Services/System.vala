@@ -22,6 +22,10 @@ namespace Plank.Services
 	 */
 	public class System : GLib.Object
 	{
+		System ()
+		{
+		}
+		
 		/**
 		 * Opens a file based on a URI.
 		 *

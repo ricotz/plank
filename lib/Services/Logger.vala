@@ -97,6 +97,10 @@ namespace Plank.Services
 		
 		static Regex? re = null;
 		
+		Logger ()
+		{
+		}
+		
 		/**
 		 * Initializes the logger for the application.
 		 *

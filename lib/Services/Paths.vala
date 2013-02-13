@@ -87,6 +87,10 @@ namespace Plank.Services
 		public static File AppCacheFolder { get; protected set; }
 		
 		
+		Paths ()
+		{
+		}
+		
 		/**
 		 * Initialize the class, creating the {@link GLib.File} instances for all
 		 * common paths.  Also ensure that any writable directory exists.
