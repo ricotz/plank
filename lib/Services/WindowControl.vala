@@ -41,9 +41,13 @@ namespace Plank.Services.Windows
 	public class WindowControl : GLib.Object
 	{
 		// when working on a group of windows, wait this amount between each action
-		const uint WINDOW_GROUP_DELAY = 10000;
+		public const uint WINDOW_GROUP_DELAY = 10000;
 		// when changing a viewport, wait this time (for viewport change animations) before continuing
-		public static const uint VIEWPORT_CHANGE_DELAY = 200;
+		public const uint VIEWPORT_CHANGE_DELAY = 200;
+		
+		WindowControl ()
+		{
+		}
 		
 		public static void initialize ()
 		{
