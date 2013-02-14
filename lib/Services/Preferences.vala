@@ -15,6 +15,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using Plank.Drawing;
+
 namespace Plank.Services
 {
 	/**
@@ -365,7 +367,10 @@ namespace Plank.Services
 							val.set_boolean (file.get_boolean (group_name, prop.name));
 						else if (type.is_enum ())
 							val.set_enum (file.get_integer (group_name, prop.name));
-						else if (type.is_a (typeof (PrefsSerializable))) {
+						else if (type.is_a (typeof (Drawing.Color))) {
+							var color = Drawing.Color.from_string (file.get_string (group_name, prop.name));
+							val.set_boxed (&color);
+						} else if (type.is_a (typeof (PrefsSerializable))) {
 							get_property (prop.name, ref val);
 							(val.get_object () as PrefsSerializable).prefs_deserialize (file.get_string (group_name, prop.name));
 							continue;
@@ -439,9 +444,12 @@ namespace Plank.Services
 					file.set_boolean (group_name, prop.name, val.get_boolean ());
 				else if (type.is_enum ())
 					file.set_integer (group_name, prop.name, val.get_enum ());
-				else if (type.is_a (typeof (PrefsSerializable)))
+				else if (type.is_a (typeof (Drawing.Color))) {
+					Drawing.Color* color = val.get_boxed ();
+					file.set_string (group_name, prop.name, (color.to_string ()));
+				} else if (type.is_a (typeof (PrefsSerializable))) {
 					file.set_string (group_name, prop.name, (val.get_object () as PrefsSerializable).prefs_serialize ());
-				else {
+				} else {
 					debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
 					continue;
 				}

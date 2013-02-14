@@ -232,10 +232,11 @@ namespace Plank.Drawing
 				dataPtr += source.n_channels;
 			}
 			
-			return new Drawing.Color (rTotal / uint8.MAX / pixels,
-							 gTotal / uint8.MAX / pixels,
-							 bTotal / uint8.MAX / pixels,
-							 1).set_val (0.8).multiply_sat (1.15);
+			Drawing.Color color = { rTotal / uint8.MAX / pixels, gTotal / uint8.MAX / pixels, bTotal / uint8.MAX / pixels, 1.0 };
+			color.set_val (0.8);
+			color.multiply_sat (1.15);
+			
+			return color;
 		}
 	}
 }

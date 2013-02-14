@@ -22,10 +22,9 @@ using Plank.Services;
 namespace Plank.Drawing
 {
 	/**
-	 * Represents a RGBA color and has methods for manipulating
-	 * the color to create similar colors.
+	 * Represents a RGBA color and has methods for manipulating the color.
 	 */
-	public class Color : GLib.Object, PrefsSerializable
+	public struct Color
 	{
 		/**
 		 * The red value for the color.
@@ -44,33 +43,51 @@ namespace Plank.Drawing
 		 */
 		public double A;
 		
-		/**
-		 * Creates a new color object.
-		 *
-		 * @param R the red value
-		 * @param G the green value
-		 * @param B the blue value
-		 * @param A the alpha value
+ 		/**
+		 * Creates a new color from a {@link Gdk.Color}.
+ 		 *
+ 		 * @param color the color to use
+ 		 * @return new {@link Color} based on the given one
 		 */
-		public Color (double R, double G, double B, double A)
+		public static Color from_gdk_color (Gdk.Color color)
 		{
-			this.R = R;
-			this.G = G;
-			this.B = B;
-			this.A = A;
+			return Color () { R = color.red / (double) uint16.MAX,
+				G = color.green / (double) uint16.MAX,
+				B = color.blue / (double) uint16.MAX,
+				A = 1.0 };
 		}
 		
 		/**
-		 * Creates a new color object from a {@link Gdk.Color}.
-		 *
-		 * @param color the color to use
+		 * Creates a new {@link Gdk.Color}.from this color
+ 		 *
+ 		 * @return new {@link Gdk.Color}
 		 */
-		public Color.from_gdk (Gdk.Color color)
+		public Gdk.Color to_gdk_color ()
 		{
-			R = color.red / (double) uint16.MAX;
-			G = color.green / (double) uint16.MAX;
-			B = color.blue / (double) uint16.MAX;
-			A = 1.0;
+			return Gdk.Color () { red = (uint16) (R * uint16.MAX),
+				green = (uint16) (G * uint16.MAX),
+				blue = (uint16) (B * uint16.MAX) };
+		}
+		
+ 		/**
+		 * Creates a new color from a {@link Gdk.RGBA}.
+ 		 *
+ 		 * @param color the color to use
+ 		 * @return new {@link Color} based on the given one
+		 */
+		public static Color from_gdk_rgba (Gdk.RGBA color)
+		{
+			return Color () { R = color.red, G = color.green, B = color.blue, A = color.alpha };
+		}
+		
+		/**
+		 * Creates a new {@link Gdk.RGBA}.from this color
+ 		 *
+ 		 * @return new {@link Gdk.RGBA}
+		 */
+		public Gdk.RGBA to_gdk_rgba ()
+		{
+			return Gdk.RGBA () { red = R, green = G, blue = B, alpha = A };
 		}
 		
 		/**
@@ -80,7 +97,17 @@ namespace Plank.Drawing
 		 */
 		public Color copy ()
 		{
-			return new Color (R, G, B, A);
+			return Color () { R = R, G = G, B = B, A = A };
+		}
+		
+		/**
+		 * Check equality with the give color
+		 *
+		 * @return whether the give color equals this color.
+		 */
+		public bool equal (Color color)
+		{
+			return (R == color.R && G == color.G && B == color.B && A == color.A);
 		}
 		
 		/**
@@ -95,64 +122,53 @@ namespace Plank.Drawing
 		 * Sets the hue for the color.
 		 *
 		 * @param hue the new hue for the color
-		 * @return the new color
 		 */
-		public Color set_hue (double hue)
+		public void set_hue (double hue)
 			requires (hue >= 0 && hue <= 360)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			h = hue;
 			hsv_to_rgb (h, s, v, out R, out G, out B);
-			
-			return this;
 		}
 		
 		/**
 		 * Sets the saturation for the color.
 		 *
 		 * @param sat the new saturation for the color
-		 * @return the new color
 		 */
-		public Color set_sat (double sat)
+		public void set_sat (double sat)
 			requires (sat >= 0 && sat <= 1)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			s = sat;
 			hsv_to_rgb (h, s, v, out R, out G, out B);
-			
-			return this;
 		}
 		
 		/**
 		 * Sets the value for the color.
 		 *
 		 * @param val the new value for the color
-		 * @return the new color
 		 */
-		public Color set_val (double val)
+		public void set_val (double val)
 			requires (val >= 0 && val <= 1)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			v = val;
 			hsv_to_rgb (h, s, v, out R, out G, out B);
-			
-			return this;
 		}
 		
 		/**
 		 * Sets the alpha for the color.
 		 *
 		 * @param alpha the new alpha for the color
-		 * @return the new color
 		 */
-		public Color set_alpha (double alpha)
+		public void set_alpha (double alpha)
 			requires (alpha >= 0 && alpha <= 1)
 		{
 			A = alpha;
-			return this;
 		}
 		
 		/**
@@ -203,101 +219,83 @@ namespace Plank.Drawing
 		 * Increases the color's hue.
 		 *
 		 * @param val the amount to add to the hue
-		 * @return the new color
 		 */
-		public Color add_hue (double val)
+		public void add_hue (double val)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			h = (((h + val) % 360) + 360) % 360;
 			hsv_to_rgb (h, s, v, out R, out G, out B);
-			
-			return this;
 		}
 		
 		/**
 		 * Limits the color's saturation.
 		 *
 		 * @param sat the minimum saturation allowed
-		 * @return the new color
 		 */
-		public Color set_min_sat (double sat)
+		public void set_min_sat (double sat)
 			requires (sat >= 0 && sat <= 1)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			s = double.max (s, sat);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
-			
-			return this;
 		}
 		
 		/**
 		 * Limits the color's value.
 		 *
 		 * @param val the minimum value allowed
-		 * @return the new color
 		 */
-		public Color set_min_value (double val)
+		public void set_min_value (double val)
 			requires (val >= 0 && val <= 1)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			v = double.max (v, val);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
-			
-			return this;
 		}
 		
 		/**
 		 * Limits the color's saturation.
 		 *
 		 * @param sat the maximum saturation allowed
-		 * @return the new color
 		 */
-		public Color set_max_sat (double sat)
+		public void set_max_sat (double sat)
 			requires (sat >= 0 && sat <= 1)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			s = double.min (s, sat);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
-			
-			return this;
 		}
 
 		/**
 		 * Limits the color's value.
 		 *
 		 * @param val the maximum value allowed
-		 * @return the new color
 		 */
-		public Color set_max_val (double val)
+		public void set_max_val (double val)
 			requires (val >= 0 && val <= 1)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			v = double.min (v, val);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
-			
-			return this;
 		}
 		
 		/**
 		 * Multiplies the color's saturation using the amount.
 		 *
 		 * @param amount amount to multiply the saturation by
-		 * @return the new color
 		 */
-		public Color multiply_sat (double amount)
+		public void multiply_sat (double amount)
 			requires (amount >= 0)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			s = double.min (1, s * amount);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
-			
-			return this;
 		}
 		
 		/**
@@ -306,49 +304,41 @@ namespace Plank.Drawing
 		 * @param amount percent of the value to brighten by
 		 * @return the new color
 		 */
-		public Color brighten_val (double amount)
+		public void brighten_val (double amount)
 			requires (amount >= 0 && amount <= 1)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			v = double.min (1, v + (1 - v) * amount);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
-			
-			return this;
 		}
 		
 		/**
 		 * Darkens the color's value using the value.
 		 *
 		 * @param amount percent of the value to darken by
-		 * @return the new color
 		 */
-		public Color darken_val (double amount)
+		public void darken_val (double amount)
 			requires (amount >= 0 && amount <= 1)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			v = double.max (0, v - (1 - v) * amount);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
-			
-			return this;
 		}
 		
 		/**
 		 * Darkens the color's value using the saturtion.
 		 *
 		 * @param amount percent of the saturation to darken by
-		 * @return the new color
 		 */
-		public Color darken_by_sat (double amount)
+		public void darken_by_sat (double amount)
 			requires (amount >= 0 && amount <= 1)
 		{
 			double h, s, v;
 			rgb_to_hsv (R, G, B, out h, out s, out v);
 			v = double.max (0, v - amount * s);
 			hsv_to_rgb (h, s, v, out R, out G, out B);
-			
-			return this;
 		}
 		
 		static void rgb_to_hsv (double r, double g, double b, out double h, out double s, out double v)
@@ -451,9 +441,12 @@ namespace Plank.Drawing
 		}
 		
 		/**
-		 * {@inheritDoc}
+		 * Convert color to string formatted like "%d;;%d;;%d;;%d"
+		 * with numeric entries ranged in 0..255
+		 *
+		 * @return the string representation of this color
 		 */
-		public string prefs_serialize ()
+		public string to_string ()
 		{
 			return "%d;;%d;;%d;;%d".printf ((int) (R * uint8.MAX),
 				(int) (G * uint8.MAX),
@@ -462,16 +455,24 @@ namespace Plank.Drawing
 		}
 		
 		/**
-		 * {@inheritDoc}
+		 * Create new color converted from string formatted like 
+		 * "%d;;%d;;%d;;%d" with numeric entries ranged in 0..255
+		 *
+ 		 * @return new {@link Color} based on the given string
 		 */
-		public void prefs_deserialize (string s)
+		public static Color from_string (string s)
 		{
 			var parts = s.split (";;");
 			
-			R = double.min (uint8.MAX, double.max (0, int.parse (parts [0]))) / uint8.MAX;
-			G = double.min (uint8.MAX, double.max (0, int.parse (parts [1]))) / uint8.MAX;
-			B = double.min (uint8.MAX, double.max (0, int.parse (parts [2]))) / uint8.MAX;
-			A = double.min (uint8.MAX, double.max (0, int.parse (parts [3]))) / uint8.MAX;
+			if (parts.length != 4) {
+				critical ("Malformed color string '%s'", s);
+				return {0};
+			}
+			
+			return Color () { R = double.min (uint8.MAX, double.max (0, int.parse (parts [0]))) / uint8.MAX,
+				G = double.min (uint8.MAX, double.max (0, int.parse (parts [1]))) / uint8.MAX,
+				B = double.min (uint8.MAX, double.max (0, int.parse (parts [2]))) / uint8.MAX,
+				A = double.min (uint8.MAX, double.max (0, int.parse (parts [3]))) / uint8.MAX };
 		}
 	}
 }

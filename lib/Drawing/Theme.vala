@@ -76,10 +76,10 @@ namespace Plank.Drawing
 			
 			LineWidth = 1;
 			
-			OuterStrokeColor = new Color (0.1647, 0.1647, 0.1647, 1);
-			FillStartColor   = new Color (0.1647, 0.1647, 0.1647, 1);
-			FillEndColor     = new Color (0.3176, 0.3176, 0.3176, 1);
-			InnerStrokeColor = new Color (1, 1, 1, 1);
+			OuterStrokeColor = { 0.1647, 0.1647, 0.1647, 1.0 };
+			FillStartColor   = { 0.1647, 0.1647, 0.1647, 1.0 };
+			FillEndColor     = { 0.3176, 0.3176, 0.3176, 1.0 };
+			InnerStrokeColor = { 1.0, 1.0, 1.0, 1.0 };
 		}
 		
 		/**

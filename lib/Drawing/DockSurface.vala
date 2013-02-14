@@ -195,10 +195,11 @@ namespace Plank.Drawing
 				data += 4;
 			}
 			
-			return new Drawing.Color (rTotal / uint8.MAX / length,
-							 gTotal / uint8.MAX / length,
-							 bTotal / uint8.MAX / length,
-							 1).set_val (0.8).multiply_sat (1.15);
+			Drawing.Color color = { rTotal / uint8.MAX / length, gTotal / uint8.MAX / length, bTotal / uint8.MAX / length, 1.0 };
+			color.set_val (0.8);
+			color.multiply_sat (1.15);
+			
+			return color;
 		}
 		
 		/**

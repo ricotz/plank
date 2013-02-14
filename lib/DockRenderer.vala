@@ -287,8 +287,12 @@ namespace Plank
 			
 			// dock is completely hidden
 			if (get_hide_offset () == 1) {
-				if (urgent_glow_buffer == null)
-					urgent_glow_buffer = theme.create_urgent_glow (controller.position_manager.GlowSize, get_styled_color ().add_hue (theme.UrgentHueShift).set_sat (1), background_buffer);
+				if (urgent_glow_buffer == null) {
+					var urgent_color = get_styled_color ();
+					urgent_color.add_hue (theme.UrgentHueShift);
+					urgent_color.set_sat (1.0);
+					urgent_glow_buffer = theme.create_urgent_glow (controller.position_manager.GlowSize, urgent_color, background_buffer);
+				}
 				
 				foreach (var item in controller.items.Items) {
 					if ((item.State & ItemState.URGENT) == 0)
@@ -415,13 +419,16 @@ namespace Plank
 			// TODO put them onto a cached icon_overlay_surface for performance reasons?
 			// maybe even draw outside of the item-draw-area (considering the hover-area)
 			
+			var urgent_color = get_styled_color ();
+			urgent_color.add_hue (theme.UrgentHueShift);
+			
 			// draw item's count
 			if (item.CountVisible)
-				theme.draw_item_count (icon_surface, icon_size, get_styled_color ().add_hue (theme.UrgentHueShift), item.Count);
+				theme.draw_item_count (icon_surface, icon_size, urgent_color, item.Count);
 			
 			// draw item's progress
 			if (item.ProgressVisible)
-				theme.draw_item_progress (icon_surface, icon_size, get_styled_color (), item.Progress);
+				theme.draw_item_progress (icon_surface, icon_size, urgent_color, item.Progress);
 			
 			
 			// darken the icon
@@ -476,10 +483,17 @@ namespace Plank
 		
 		void draw_indicator_state (Gdk.Rectangle item_rect, IndicatorState indicator, ItemState item_state)
 		{
-			if (indicator_buffer == null)
-				indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, get_styled_color ().set_min_sat (0.4), background_buffer);
-			if (urgent_indicator_buffer == null)
-				urgent_indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, get_styled_color ().add_hue (theme.UrgentHueShift).set_sat (1), background_buffer);
+			if (indicator_buffer == null) {
+				var indicator_color = get_styled_color ();
+				indicator_color.set_min_sat (0.4);
+				indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, indicator_color, background_buffer);
+			}
+			if (urgent_indicator_buffer == null) {
+				var urgent_indicator_color = get_styled_color ();
+				urgent_indicator_color.add_hue (theme.UrgentHueShift);
+				urgent_indicator_color.set_sat (1.0);
+				urgent_indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, urgent_indicator_color, background_buffer);
+			}
 			
 			var indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 			var main_cr = main_buffer.Context;
@@ -524,7 +538,9 @@ namespace Plank
 		
 		Drawing.Color get_styled_color ()
 		{
-			return new Drawing.Color.from_gdk (controller.window.get_style ().bg [StateType.SELECTED]).set_min_value (90 / (double) uint16.MAX);
+			var selected_color = Drawing.Color.from_gdk_color (controller.window.get_style ().bg [StateType.SELECTED]);
+			selected_color.set_min_value (90 / (double) uint16.MAX);
+			return selected_color;
 		}
 		
 		void hidden_changed ()

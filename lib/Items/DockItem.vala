@@ -256,7 +256,7 @@ namespace Plank.Items
 		/**
 		 * The average color of this item's icon.
 		 */
-		public Drawing.Color AverageIconColor { get; protected set; default = new Drawing.Color (0, 0, 0, 0); }
+		public Drawing.Color AverageIconColor { get; protected set; default = Drawing.Color () { R = 0.0, G = 0.0, B = 0.0, A = 0.0 }; }
 		
 		/**
 		 * The filename of the preferences backing file.

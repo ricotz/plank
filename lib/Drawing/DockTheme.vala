@@ -352,11 +352,18 @@ namespace Plank.Drawing
 			var x = Math.floor ((surface.Width - icon_size) / 2);
 			var y = Math.floor ((surface.Height - icon_size) / 2);
 			
-			var badge_color_start = color.copy ().brighten_val (1.0);
-			var badge_color_middle = color.copy ().set_sat (0.87);
-			var badge_color_end = color.copy ().set_sat (0.87).darken_val (0.7);
-			var stroke_color_start = color.copy ().set_sat (0.9);
-			var stroke_color_end = color.copy ().set_sat (0.9).darken_val (0.9);
+			var badge_color_start = color.copy ();
+			badge_color_start.brighten_val (1.0);
+			var badge_color_middle = color.copy ();
+			badge_color_middle.set_sat (0.87);
+			var badge_color_end = color.copy ();
+			badge_color_end.set_sat (0.87);
+			badge_color_end.darken_val (0.7);
+			var stroke_color_start = color.copy ();
+			stroke_color_start.set_sat (0.9);
+			var stroke_color_end = color.copy ();
+			stroke_color_end.set_sat (0.9);
+			stroke_color_end.darken_val (0.9);
 			
 			// FIXME enhance scalability and adjustments depending on icon-size
 			var is_small = icon_size < 32;
