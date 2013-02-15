@@ -122,8 +122,7 @@ symbols: build-abi
 	@cat $(builddir)/build-abi | sort > $(srcdir)/libplank.symbols
 
 
-noinst_lib_LTLIBRARIES = libplank-internal.la
-noinst_libdir = $(abs_builddir)
+noinst_LTLIBRARIES = libplank-internal.la
 
 libplank_internal_la_LDFLAGS = \
 	-avoid-version \
