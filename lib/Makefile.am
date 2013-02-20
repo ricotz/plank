@@ -91,6 +91,7 @@ libplank_la_VALASOURCES = \
 	Widgets/DockWindow.vala \
 	Widgets/HoverWindow.vala \
 	Widgets/PoofWindow.vala \
+	Widgets/TitledSeparatorMenuItem.vala \
 	$(NULL)
 
 nodist_libplank_la_SOURCES = \
@@ -137,7 +138,6 @@ libplank_internal_la_LIBADD = \
 libplank_internal_la_VALASOURCES = \
 	Services/Matcher.vala \
 	Services/WindowControl.vala \
-	Widgets/TitledSeparatorMenuItem.vala \
 	$(NULL)
 
 nodist_libplank_internal_la_SOURCES = \
