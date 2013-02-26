@@ -44,9 +44,11 @@ lib_LTLIBRARIES = libplank.la
 libplankdir = $(libdir)
 
 libplank_la_LDFLAGS = \
+	$(AM_LDLAGS) \
 	-no-undefined \
 	-version-info "$(LT_CURRENT)":"$(LT_REVISION)":"$(LT_AGE)" \
-	-export-symbols $(builddir)/build-abi \
+	-export-dynamic \
+	-export-symbols-regex '^plank_.*' \
 	$(NULL)
 
 libplank_la_VALAFLAGS = \
@@ -124,6 +126,11 @@ symbols: build-abi
 
 
 noinst_LTLIBRARIES = libplank-internal.la
+
+libplank_internal_la_CFLAGS = \
+	$(AM_CFLAGS) \
+	-fvisibility=internal \
+	$(NULL)
 
 libplank_internal_la_LDFLAGS = \
 	-avoid-version \
