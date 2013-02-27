@@ -25,73 +25,6 @@ using Plank.Services.Windows;
 
 namespace Plank.Items
 {
-	class RemoteEntry : GLib.Object
-	{
-		public ApplicationDockItem Item { get; construct; }
-		public string DBusName { get; set; }
-		
-		public RemoteEntry (ApplicationDockItem item)
-		{
-			Object (Item: item);
-		}
-		
-		public void update (string sender_name, VariantIter prop_iter)
-		{
-			DBusName = sender_name;
-			
-			string prop_key;
-			Variant prop_value;
-			
-			// TODO emblem isn't part of libunity API anymore
-			//      do we want to support this ?
-			
-			while (prop_iter.next ("{sv}", out prop_key, out prop_value)) {
-				if (prop_key == "count")
-					Item.Count = prop_value.get_int64 ();
-				else if (prop_key == "count-visible")
-					Item.CountVisible = prop_value.get_boolean ();
-				//else if (prop_key == "emblem")
-				//	Item.Emblem = prop_value.get_string ();
-				//else if (prop_key == "emblem-visible")
-				//	Item.EmblemVisible = prop_value.get_boolean ();
-				else if (prop_key == "progress")
-					Item.Progress = prop_value.get_double ();
-				else if (prop_key == "progress-visible")
-					Item.ProgressVisible = prop_value.get_boolean ();
-				else if (prop_key == "urgent")
-					Item.set_urgent (prop_value.get_boolean ());
-#if HAVE_DBUSMENU
-				else if (prop_key == "quicklist") {
-					/* The value is the object path of the dbusmenu */
-					var dbus_path = prop_value.get_string ();
-					// Make sure we don't update our Quicklist instance if isn't necessary
-					if (Item.Quicklist == null || Item.Quicklist.dbus_object != dbus_path)
-						if (dbus_path != "") {
-							Logger.verbose ("Loading dynamic quicklists for %s (%s)", Item.Text, sender_name);
-							Item.Quicklist = new DbusmenuGtk.Client (sender_name, dbus_path);
-						} else {
-							Item.Quicklist = null;
-						}
-				}
-#endif
-			}
-		}
-		
-		public void reset ()
-		{
-			Item.Count = 0;
-			Item.CountVisible = false;
-			//Item.Emblem = "";
-			//Item.EmblemVisible = false;
-			Item.Progress = 0.0;
-			Item.ProgressVisible = false;
-			Item.set_urgent (false);
-#if HAVE_DBUSMENU
-			Item.Quicklist = null;
-#endif
-		}
-	}
-	
 	/**
 	 * A container and controller class for managing application dock items on a dock.
 	 */
@@ -105,7 +38,6 @@ namespace Plank.Items
 		uint unity_bus_id = 0;
 		uint launcher_entry_dbus_signal_id = 0;
 		uint dbus_name_owner_changed_signal_id = 0;
-		HashMap<string, RemoteEntry> remote_entries = new HashMap<string, RemoteEntry> ();
 		
 		/**
 		 * Creates a new container for dock items.
@@ -463,13 +395,6 @@ namespace Plank.Items
 			update_visible_items ();
 		}
 		
-		protected override void remove_item_without_signaling (DockItem item)
-		{
-			base.remove_item_without_signaling (item);
-			
-			remove_entry (item);
-		}
-		
 		protected override void item_signals_connect (DockItem item)
 		{
 			base.item_signals_connect (item);
@@ -543,18 +468,6 @@ namespace Plank.Items
 			resume_items_monitor ();
 		}
 		
-		void remove_entry (DockItem item)
-		{
-			foreach (var entry in remote_entries.entries) {
-				if (entry.value.Item != item)
-					continue;
-				
-				entry.value.reset ();
-				remote_entries.unset (entry.key);
-				break;
-			}
-		}
-		
 		void handle_bus_acquired (DBusConnection conn, string name)
 		{
 			Logger.verbose ("Unity: %s acquired", name);
@@ -589,13 +502,16 @@ namespace Plank.Items
 			if (after != null && after != "")
 				return;
 			
-			// Remove connected entry since there is no new NameOwner
-			foreach (var entry in remote_entries.entries) {
-				if (entry.value.DBusName != name)
+			// Reset item since there is no new NameOwner
+			foreach (var item in internal_items) {
+				var app_item = item as ApplicationDockItem;
+				if (app_item == null)
 					continue;
 				
-				entry.value.reset ();
-				remote_entries.unset (entry.key);
+				if (app_item.get_unity_dbusname () != name)
+					continue;
+				
+				app_item.unity_reset ();
 				controller.renderer.animated_draw ();
 				break;
 			}
@@ -617,35 +533,34 @@ namespace Plank.Items
 			
 			Logger.verbose ("Unity.handle_update_request (processing update for %s)", app_uri);
 			
-			var entry = remote_entries.get (app_uri);
+			ApplicationDockItem current_item = null;
+			foreach (var item in internal_items) {
+				var app_item = item as ApplicationDockItem;
+				if (app_item == null)
+					continue;
+				
+				if (app_item.get_unity_dbusname () == sender_name) {
+					current_item = app_item;
+					break;
+				}
+			}
 			
 			// If don't know this app yet create a new entry
-			if (entry == null)
+			if (current_item == null)
 				foreach (var item in internal_items) {
 					var app_item = item as ApplicationDockItem;
-					if (app_item == null || app_item.App == null)
+					if (app_item == null)
 						continue;
 					
-					var desktop_file = app_item.App.get_desktop_file ();
-					if (desktop_file == null || desktop_file == "")
-						continue;
-					
-					var p = desktop_file.split("/");
-					if (p.length == 0)
-						continue;
-					
-					var uri = "application://" + p[p.length - 1];
-					
-					if (app_uri == uri) {
-						entry = new RemoteEntry (app_item);
-						remote_entries.set (app_uri, entry);
+					if (app_item.get_unity_application_uri () == app_uri) {
+						current_item = app_item;
 						break;
 					}
 				}
 			
 			// Update our entry and trigger a redraw
-			if (entry != null) {
-				entry.update (sender_name, prop_iter);
+			if (current_item != null) {
+				current_item.unity_update (sender_name, prop_iter);
 				controller.renderer.animated_draw ();
 			}
 		}

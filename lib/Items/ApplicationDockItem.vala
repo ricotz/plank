@@ -68,7 +68,7 @@ namespace Plank.Items
 		/**
 		 * The dock item's quicklist-dbusmenu.
 		 */
-		internal DbusmenuGtk.Client? Quicklist { get; set; default = null; }
+		DbusmenuGtk.Client? Quicklist { get; set; default = null; }
 #endif
 		
 		Bamf.Application? app = null;
@@ -98,6 +98,8 @@ namespace Plank.Items
 					app_signals_connect (app);
 					initialize_states ();
 				}
+				
+				unity_update_application_uri ();
 			}
 		}
 		
@@ -105,6 +107,9 @@ namespace Plank.Items
 		
 		ArrayList<string> actions = new ArrayList<string> ();
 		HashMap<string, string> actions_map = new HashMap<string, string> (str_hash, str_equal);
+		
+		string? unity_application_uri = null;
+		string? unity_dbusname = null;
 		
 		/**
 		 * {@inheritDoc}
@@ -636,5 +641,102 @@ namespace Plank.Items
 			monitor.cancel ();
 			monitor = null;
 		}
+		
+		void unity_update_application_uri ()
+		{
+			unity_application_uri = null;
+			
+			if (App == null)
+				return;
+			
+			var desktop_file = App.get_desktop_file ();
+			if (desktop_file == null || desktop_file == "")
+				return;
+			
+			var p = desktop_file.split ("/");
+			if (p.length == 0)
+				return;
+			
+			unity_application_uri = "application://" + p[p.length - 1];
+		}
+		
+		/**
+		 * Get libunity application URI
+		 *
+		 * @return the libunity application uri of this item, or NULL
+		 */
+		public string? get_unity_application_uri ()
+		{
+			return unity_application_uri;
+		}
+		
+		/**
+		 * Get current libunity dbusname
+		 *
+		 * @return the dbusname which provides the LauncherEntry interface, or NULL
+		 */
+		public string? get_unity_dbusname ()
+		{
+			return unity_dbusname;
+		}
+		
+		/**
+		 * Update this item's remote libunity value based on the given data
+		 *
+		 * @param sender_name the corressponding dbusname
+		 * @param proper_iter the data in a standardize format from libunity
+		 */
+		public void unity_update (string sender_name, VariantIter prop_iter)
+		{
+			unity_dbusname = sender_name;
+			
+			string prop_key;
+			Variant prop_value;
+			
+			while (prop_iter.next ("{sv}", out prop_key, out prop_value)) {
+				if (prop_key == "count")
+					Count = prop_value.get_int64 ();
+				else if (prop_key == "count-visible")
+					CountVisible = prop_value.get_boolean ();
+				else if (prop_key == "progress")
+					Progress = prop_value.get_double ();
+				else if (prop_key == "progress-visible")
+					ProgressVisible = prop_value.get_boolean ();
+				else if (prop_key == "urgent")
+					set_urgent (prop_value.get_boolean ());
+#if HAVE_DBUSMENU
+				else if (prop_key == "quicklist") {
+					/* The value is the object path of the dbusmenu */
+					var dbus_path = prop_value.get_string ();
+					// Make sure we don't update our Quicklist instance if isn't necessary
+					if (Quicklist == null || Quicklist.dbus_object != dbus_path)
+						if (dbus_path != "") {
+							Logger.verbose ("Loading dynamic quicklists for %s (%s)", Text, sender_name);
+							Quicklist = new DbusmenuGtk.Client (sender_name, dbus_path);
+						} else {
+							Quicklist = null;
+						}
+				}
+#endif
+			}
+		}
+		
+		/**
+		 * Reset this item's remote libunity values
+		 */
+		public void unity_reset ()
+		{
+			unity_dbusname = null;
+			
+			Count = 0;
+			CountVisible = false;
+			Progress = 0.0;
+			ProgressVisible = false;
+			set_urgent (false);
+#if HAVE_DBUSMENU
+			Quicklist = null;
+#endif
+		}
+
 	}
 }
