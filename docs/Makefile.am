@@ -39,6 +39,7 @@ valadoc_flags = \
 	--verbose \
 	--package-name $(PACKAGE_NAME) \
 	--package-version $(PACKAGE_VERSION) \
+	--target-glib=2.32 \
 	$(NULL)
 
 # plank documentation
@@ -52,6 +53,7 @@ plank_doc_files = \
 	$(NULL)
 
 plank_doc_deps = \
+	compat \
 	gee-1.0 \
 	gio-unix-2.0 \
 	gdk-x11-3.0 \
@@ -61,13 +63,6 @@ plank_doc_deps = \
 	posix \
 	x11 \
 	$(NULL)
-
-if HAVE_DBUSMENU
-plank_doc_deps += \
-	Dbusmenu-0.4 \
-	DbusmenuGtk3-0.4 \
-	$(NULL)
-endif
 
 valadoc_flags_plank = \
 	$(valadoc_flags) \
