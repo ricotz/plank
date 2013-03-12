@@ -89,9 +89,6 @@ namespace Plank
 			controller.items.item_position_changed.connect (item_position_changed);
 			controller.items.items_changed.connect (items_changed);
 			
-			screen_is_composited = Gdk.Screen.get_default ().is_composited ();
-			Gdk.Screen.get_default ().composited_changed.connect (composited_changed);
-
 			notify["Hidden"].connect (hidden_changed);
 		}
 		
@@ -103,6 +100,10 @@ namespace Plank
 		{
 			set_widget (controller.window);
 			
+			var screen = controller.window.get_screen ();
+			screen_is_composited = screen.is_composited ();
+			screen.composited_changed.connect (composited_changed);
+
 			load_theme ();
 			
 			controller.position_manager.reset_caches (theme);
@@ -120,7 +121,7 @@ namespace Plank
 			controller.items.item_position_changed.disconnect (item_position_changed);
 			controller.items.items_changed.disconnect (items_changed);
 			
-			Gdk.Screen.get_default ().composited_changed.disconnect (composited_changed);
+			controller.window.get_screen ().composited_changed.disconnect (composited_changed);
 
 			notify["Hidden"].disconnect (hidden_changed);
 			
@@ -130,7 +131,7 @@ namespace Plank
 		
 		void composited_changed ()
 		{
-			screen_is_composited = Gdk.Screen.get_default ().is_composited ();
+			screen_is_composited = controller.window.get_screen ().is_composited ();
 			
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
