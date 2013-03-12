@@ -328,9 +328,12 @@ namespace Plank.Widgets
 			get_size_request (out width_current, out height_current);
 			var needs_resize = (width != width_current || height != height_current);
 			
-			int x_current, y_current;
-			get_position (out x_current, out y_current);
-			var needs_reposition = (x != x_current || y != y_current);
+			var needs_reposition = true;
+			if (get_realized ()) {
+				int x_current, y_current;
+				get_position (out x_current, out y_current);
+				needs_reposition = (x != x_current || y != y_current);
+			}
 			
 			if (needs_resize) {
 				Logger.verbose ("DockWindow.set_size_request (width = %i, height = %i)", width, height);
