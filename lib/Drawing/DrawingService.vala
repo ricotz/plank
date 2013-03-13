@@ -76,10 +76,15 @@ namespace Plank.Drawing
 		 */
 		public static string? get_icon_from_gicon (Icon? icon)
 		{
-			if (icon is ThemedIcon)
-				return string.joinv (";;", (string[]) (icon as ThemedIcon).get_names ());
+			if (icon is ThemedIcon) {
+				var icons = string.joinv (";;", (icon as ThemedIcon).get_names ());
+				// Remove possible null values which sneaked through joinv, possibly a GTK+ bug?
+				return icons.replace ("(null);;", "");
+			}
+			
 			if (icon is FileIcon)
 				return (icon as FileIcon).get_file ().get_path ();
+			
 			return null;
 		}
 		
