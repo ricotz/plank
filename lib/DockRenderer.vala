@@ -48,6 +48,7 @@ namespace Plank
 		DateTime last_hide = new DateTime.from_unix_utc (0);
 		
 		bool screen_is_composited;
+		uint reset_position_manager_timer = 0;
 		
 		/**
 		 * If the dock is currently hidden.
@@ -156,14 +157,29 @@ namespace Plank
 		
 		void prefs_changed ()
 		{
-			controller.position_manager.reset_caches (theme);
-			controller.position_manager.update_regions ();
+			reset_position_manager ();
 		}
 		
 		void theme_changed ()
 		{
-			controller.position_manager.reset_caches (theme);
-			controller.position_manager.update_regions ();
+			reset_position_manager ();
+		}
+		
+		void reset_position_manager ()
+		{
+			// Don't perform an update immediately and summon further
+			// update-requests, wait at least 50ms after the last request
+			
+			if (reset_position_manager_timer > 0)
+				Source.remove (reset_position_manager_timer);
+			
+			reset_position_manager_timer = Timeout.add (50, () => {
+				reset_position_manager_timer = 0;
+				controller.position_manager.reset_caches (theme);
+				controller.position_manager.update_regions ();
+				
+				return false;
+			});
 		}
 		
 		void load_theme ()
