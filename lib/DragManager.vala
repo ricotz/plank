@@ -290,8 +290,17 @@ namespace Plank
 			if (ExternalDragActive) {
 				controller.window.notify["HoveredItem"].disconnect (hovered_item_changed);
 				
-				// Force last redraw for ExternalDrag
-				controller.renderer.animated_draw ();
+				// Make sure ExternalDragActive gets set to false to reactivate HideManager.
+				// This is needed while getting a leave event without followed by a drop.
+				// Delay it to preserve functionality in drag_drop.
+				Idle.add (() => {
+					ExternalDragActive = false;
+					
+					// Force last redraw for ExternalDrag
+					controller.renderer.animated_draw ();
+					
+					return false;
+				});
 			}
 			
 			if (DragItem == null)
