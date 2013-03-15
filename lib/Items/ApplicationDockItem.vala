@@ -135,6 +135,7 @@ namespace Plank.Items
 				return;
 			
 			load_from_launcher ();
+			unity_update_application_uri ();
 		}
 		
 		~ApplicationDockItem ()
@@ -646,10 +647,7 @@ namespace Plank.Items
 		{
 			unity_application_uri = null;
 			
-			if (App == null)
-				return;
-			
-			var desktop_file = App.get_desktop_file ();
+			var desktop_file = (App != null ? App.get_desktop_file () : Launcher);
 			if (desktop_file == null || desktop_file == "")
 				return;
 			
