@@ -44,15 +44,43 @@ valadoc_flags = \
 
 # plank documentation
 plank_doc_files = \
-	$(top_srcdir)/lib/*.vala \
-	$(top_srcdir)/lib/Drawing/*.vala \
-	$(top_srcdir)/lib/Factories/*.vala \
-	$(top_srcdir)/lib/Items/*.vala \
-	$(top_srcdir)/lib/Services/*.vala \
-	$(top_srcdir)/lib/Widgets/*.vala \
+	$(top_srcdir)/lib/DockController.vala \
+	$(top_srcdir)/lib/DockPreferences.vala \
+	$(top_srcdir)/lib/DockRenderer.vala \
+	$(top_srcdir)/lib/DragManager.vala \
+	$(top_srcdir)/lib/HideManager.vala \
+	$(top_srcdir)/lib/PositionManager.vala \
+	$(top_srcdir)/lib/Drawing/AnimatedRenderer.vala \
+	$(top_srcdir)/lib/Drawing/Color.vala \
+	$(top_srcdir)/lib/Drawing/DrawingService.vala \
+	$(top_srcdir)/lib/Drawing/DockSurface.vala \
+	$(top_srcdir)/lib/Drawing/DockTheme.vala \
+	$(top_srcdir)/lib/Drawing/HoverTheme.vala \
+	$(top_srcdir)/lib/Drawing/Theme.vala \
+	$(top_srcdir)/lib/Factories/AbstractMain.vala \
+	$(top_srcdir)/lib/Factories/Factory.vala \
+	$(top_srcdir)/lib/Factories/ItemFactory.vala \
+	$(top_srcdir)/lib/Items/ApplicationDockItem.vala \
+	$(top_srcdir)/lib/Items/ApplicationDockItemProvider.vala \
+	$(top_srcdir)/lib/Items/DockItem.vala \
+	$(top_srcdir)/lib/Items/DockItemProvider.vala \
+	$(top_srcdir)/lib/Items/DockItemPreferences.vala \
+	$(top_srcdir)/lib/Items/FileDockItem.vala \
+	$(top_srcdir)/lib/Items/PlankDockItem.vala \
+	$(top_srcdir)/lib/Items/TransientDockItem.vala \
+	$(top_srcdir)/lib/Services/Logger.vala \
+	$(top_srcdir)/lib/Services/Paths.vala \
+	$(top_srcdir)/lib/Services/Preferences.vala \
+	$(top_srcdir)/lib/Services/System.vala \
+	$(top_srcdir)/lib/Widgets/CompositedWindow.vala \
+	$(top_srcdir)/lib/Widgets/DockWindow.vala \
+	$(top_srcdir)/lib/Widgets/HoverWindow.vala \
+	$(top_srcdir)/lib/Widgets/PoofWindow.vala \
+	$(top_srcdir)/lib/Widgets/TitledSeparatorMenuItem.vala \
 	$(NULL)
 
 plank_doc_deps = \
+	plank-internal \
 	compat \
 	gee-1.0 \
 	gio-unix-2.0 \
@@ -66,7 +94,6 @@ plank_doc_deps = \
 
 valadoc_flags_plank = \
 	$(valadoc_flags) \
-	-X $(top_builddir)/lib/plank.h \
 	$(addprefix --pkg=,$(plank_doc_deps)) \
 	--vapidir=$(top_builddir)/lib \
 	--vapidir=$(top_srcdir)/vapi \
@@ -83,6 +110,7 @@ plank-doc: $(plank_doc_files)
 plank-gtk-doc: $(plank_doc_files)
 	$(AM_V_GEN)$(VALADOC) \
 		-X -l -X $(top_builddir)/lib/.libs/libplank.so \
+		-X $(top_builddir)/lib/plank.h \
 		-o gtk-doc/plank \
 		--doclet=gtkdoc \
 		$(valadoc_flags_plank) \
