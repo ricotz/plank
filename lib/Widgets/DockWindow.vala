@@ -48,7 +48,7 @@ namespace Plank.Widgets
 		/**
 		 * The popup menu for this dock.
 		 */
-		protected Gtk.Menu menu = new Gtk.Menu ();
+		protected Gtk.Menu? menu;
 		
 		
 		uint reposition_timer = 0;
@@ -66,15 +66,11 @@ namespace Plank.Widgets
 		}
 		
 		construct
-		{			
+		{
 			accept_focus = false;
 			can_focus = false;
 			skip_pager_hint = true;
 			skip_taskbar_hint = true;
-			
-			menu.attach_to_widget (this, null);
-			menu.show.connect (on_menu_show);
-			menu.hide.connect (on_menu_hide);
 			
 			stick ();
 			
@@ -90,8 +86,10 @@ namespace Plank.Widgets
 		
 		~DockWindow ()
 		{
-			menu.show.disconnect (on_menu_show);
-			menu.hide.disconnect (on_menu_hide);
+			if (menu != null) {
+				menu.show.disconnect (on_menu_show);
+				menu.hide.disconnect (on_menu_hide);
+			}
 			
 			controller.drag_manager.notify["DragItem"].disconnect (drag_item_changed);
 			
@@ -118,9 +116,9 @@ namespace Plank.Widgets
 			var button = PopupButton.from_event_button (event);
 			if ((button & PopupButton.RIGHT) == PopupButton.RIGHT &&
 					(HoveredItem == null || (event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))
-				do_popup (event.button, true);
+				show_menu (event.button, true);
 			else if (HoveredItem != null && (HoveredItem.Button & button) == button)
-				do_popup (event.button, false);
+				show_menu (event.button, false);
 			
 			return true;
 		}
@@ -411,7 +409,7 @@ namespace Plank.Widgets
 		 */
 		public bool menu_is_visible ()
 		{
-			return menu.get_visible ();
+			return (menu != null && menu.get_visible ());
 		}
 		
 		/**
@@ -420,12 +418,19 @@ namespace Plank.Widgets
 		 * @param button the button used to trigger the popup
 		 * @param show_plank_menu if the 'global' menu should be shown
 		 */
-		protected void do_popup (uint button, bool show_plank_menu)
+		protected void show_menu (uint button, bool show_plank_menu)
 		{
-			foreach (var w in menu.get_children ()) {
-				if (w is ImageMenuItem)
-					(w as ImageMenuItem).get_image ().destroy ();
-				menu.remove (w);
+			if (menu != null) {
+				foreach (var w in menu.get_children ()) {
+					if (w is ImageMenuItem)
+						(w as ImageMenuItem).get_image ().destroy ();
+					menu.remove (w);
+				}
+				
+				menu.show.disconnect (on_menu_show);
+				menu.hide.disconnect (on_menu_hide);
+				menu.detach ();
+				menu = null;
 			}
 			
 			ArrayList<Gtk.MenuItem> items;
@@ -437,10 +442,16 @@ namespace Plank.Widgets
 			if (items.size == 0)
 				return;
 			
-			foreach (var item in items)
-				menu.append (item);
+			menu = new Gtk.Menu ();
+			menu.attach_to_widget (this, null);
+			menu.show.connect (on_menu_show);
+			menu.hide.connect (on_menu_hide);
 			
-			menu.show_all ();
+			foreach (var item in items) {
+				item.show ();
+				menu.append (item);
+			}
+			
 			if (show_plank_menu)
 				menu.popup (null, null, null, button, get_current_event_time ());
 			else
