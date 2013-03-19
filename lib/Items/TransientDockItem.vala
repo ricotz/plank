@@ -30,15 +30,26 @@ namespace Plank.Items
 			GLib.Object (Prefs: new DockItemPreferences (), App: app);
 		}
 		
+		public TransientDockItem.with_launcher (string launcher_uri)
+		{
+			GLib.Object (Prefs: new DockItemPreferences.with_launcher (launcher_uri), App: null);
+		}
+		
 		construct
 		{
-			var launcher = App.get_desktop_file ();
-			if (launcher == null || launcher == "") {
-				Text = App.get_name ();
-				ForcePixbuf = WindowControl.get_app_icon (App);
-			} else {
-				Prefs.Launcher = launcher;
+			if (App != null) {
+				var launcher = App.get_desktop_file ();
+				if (launcher == null || launcher == "") {
+					Text = App.get_name ();
+					ForcePixbuf = WindowControl.get_app_icon (App);
+				} else {
+					Prefs.Launcher = launcher;
+					load_from_launcher ();
+				}
+			} else if (Prefs.Launcher != null) {
 				load_from_launcher ();
+			} else {
+				critical ("No source of information for this item available");
 			}
 		}
 		

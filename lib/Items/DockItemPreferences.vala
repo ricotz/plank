@@ -30,6 +30,15 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
+		public DockItemPreferences.with_launcher (string launcher)
+		{
+			base ();
+			Launcher = launcher;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
 		public DockItemPreferences.with_file (GLib.File file)
 		{
 			base.with_file (file);

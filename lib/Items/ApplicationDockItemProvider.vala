@@ -249,7 +249,7 @@ namespace Plank.Items
 				var active_workspace = Wnck.Screen.get_default ().get_active_workspace ();
 				foreach (var item in internal_items) {
 					var transient = (item as TransientDockItem);
-					item.IsVisible = (transient == null
+					item.IsVisible = (transient == null || transient.App == null
 						|| WindowControl.has_window_on_workspace (transient.App, active_workspace));
 				}
 			} else {
@@ -292,7 +292,8 @@ namespace Plank.Items
 		
 		void app_closed (DockItem remove)
 		{
-			if (remove is TransientDockItem)
+			if (remove is TransientDockItem
+				&& !(remove.ProgressVisible || remove.CountVisible))
 				remove_item (remove);
 		}
 		
@@ -503,6 +504,7 @@ namespace Plank.Items
 				return;
 			
 			// Reset item since there is no new NameOwner
+			TransientDockItem? transient_item = null;
 			foreach (var item in internal_items) {
 				var app_item = item as ApplicationDockItem;
 				if (app_item == null)
@@ -512,9 +514,16 @@ namespace Plank.Items
 					continue;
 				
 				app_item.unity_reset ();
+				transient_item = item as TransientDockItem;
+				
 				controller.renderer.animated_draw ();
 				break;
 			}
+			
+			// Remove item which only exists because of the presence of
+			// this removed LauncherEntry interface
+			if (transient_item != null && transient_item.App == null)
+				remove_item (transient_item);
 		}
 		
 		void handle_update_request (string sender_name, Variant parameters)
@@ -533,35 +542,54 @@ namespace Plank.Items
 			
 			Logger.verbose ("Unity.handle_update_request (processing update for %s)", app_uri);
 			
-			ApplicationDockItem current_item = null;
+			ApplicationDockItem? current_item = null;
 			foreach (var item in internal_items) {
 				var app_item = item as ApplicationDockItem;
 				if (app_item == null)
 					continue;
 				
-				if (app_item.get_unity_dbusname () == sender_name) {
+				if (app_item.get_unity_dbusname () == sender_name
+					|| app_item.get_unity_application_uri () == app_uri) {
 					current_item = app_item;
 					break;
 				}
 			}
 			
-			// If don't know this app yet create a new entry
-			if (current_item == null)
-				foreach (var item in internal_items) {
-					var app_item = item as ApplicationDockItem;
-					if (app_item == null)
-						continue;
-					
-					if (app_item.get_unity_application_uri () == app_uri) {
-						current_item = app_item;
-						break;
-					}
-				}
-			
 			// Update our entry and trigger a redraw
 			if (current_item != null) {
 				current_item.unity_update (sender_name, prop_iter);
-				controller.renderer.animated_draw ();
+				
+				// Remove item which progress-bar/badge is gone and only existed
+				// because of the presence of this LauncherEntry interface
+				var transient_item = current_item as TransientDockItem;
+				if (transient_item != null && transient_item.App == null
+					&& !(transient_item.ProgressVisible || transient_item.CountVisible))
+					remove_item (transient_item);
+				else
+					controller.renderer.animated_draw ();
+			} else {
+				// Find a matching desktop-file and create new TransientDockItem for this LauncherEntry
+				foreach (var folder in Paths.DataDirFolders) {
+					var applications_folder = folder.get_child ("applications");
+					if (!applications_folder.query_exists ())
+						continue;
+					
+					var desktop_file = applications_folder.get_child (app_uri.replace ("application://", ""));
+					if (!desktop_file.query_exists ())
+						continue;
+					
+					current_item = new TransientDockItem.with_launcher (desktop_file.get_uri ());
+					current_item.unity_update (sender_name, prop_iter);
+					
+					// Only add item if there is actually a visible progress-bar or badge
+					if (current_item.ProgressVisible || current_item.CountVisible)
+						add_item (current_item);
+					
+					break;
+				}
+				
+				if (current_item == null)
+					warning ("Matching application for '%s' not found or not installed!", app_uri);
 			}
 		}
 	}
