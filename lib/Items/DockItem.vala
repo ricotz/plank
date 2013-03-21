@@ -333,7 +333,10 @@ namespace Plank.Items
 		{
 			// Put Gtk.IconTheme.changed emmitted signals in idle queue to avoid 
 			// race conditions with concurrent handles
-			Idle.add ((SourceFunc) reset_icon_buffer);
+			Idle.add (() => {
+				reset_icon_buffer ();
+				return false;
+			});
 		}
 		
 		DockSurface get_surface (int width, int height, DockSurface model)
