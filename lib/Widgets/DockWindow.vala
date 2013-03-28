@@ -277,8 +277,17 @@ namespace Plank.Widgets
 		 */
 		public bool update_hovered (int x, int y)
 		{
+			unowned PositionManager position_manager = controller.position_manager;
+			
+			var cursor_rect = position_manager.get_cursor_region ();
+			if (y < cursor_rect.y && y > cursor_rect.y + cursor_rect.height
+				&& x < cursor_rect.x && x > cursor_rect.x + cursor_rect.width) {
+				set_hovered (null);
+				return false;
+			}
+			
 			foreach (var item in controller.items.Items) {
-				var rect = controller.position_manager.item_hover_region (item);
+				var rect = position_manager.item_hover_region (item);
 				
 				if (y >= rect.y && y <= rect.y + rect.height && x >= rect.x && x <= rect.x + rect.width) {
 					set_hovered (item);
@@ -286,7 +295,7 @@ namespace Plank.Widgets
 				}
 			}
 			
-			set_hovered (null);			
+			set_hovered (null);
 			return false;
 		}
 		
