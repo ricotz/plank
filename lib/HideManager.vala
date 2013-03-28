@@ -54,7 +54,10 @@ namespace Plank
 		
 		DockController controller;
 		
-		bool disabled;
+		/**
+		 * If hiding the dock is currently disabled
+		 */
+		public bool Disabled { get; set; default = false; }
 		
 		/**
 		 * If the dock is currently hovered by the mouse cursor.
@@ -74,10 +77,10 @@ namespace Plank
 		{
 			this.controller = controller;
 			
-			disabled = false;
 			windows_intersect = false;
 			hide ();
 			
+			notify["Disabled"].connect (update_hidden);
 			notify["DockHovered"].connect (update_hidden);
 			controller.prefs.changed.connect (prefs_changed);
 		}
@@ -106,6 +109,7 @@ namespace Plank
 		
 		~HideManager ()
 		{
+			notify["Disabled"].disconnect (update_hidden);
 			notify["DockHovered"].disconnect (update_hidden);
 			controller.prefs.changed.disconnect (prefs_changed);
 			
@@ -134,9 +138,6 @@ namespace Plank
 			unowned DockWindow window = controller.window;
 			unowned DragManager drag_manager = controller.drag_manager;
 			
-			// disable hiding if drags are active
-			disabled = drag_manager.InternalDragActive || drag_manager.ExternalDragActive;
-			
 			// get current mouse pointer location
 			int x, y;
 			
@@ -157,6 +158,11 @@ namespace Plank
 						  y >= dock_rect.y && y <= dock_rect.y + dock_rect.height;
 			if (DockHovered != hovered)
 				DockHovered = hovered;
+			
+			// disable hiding if drags are active
+			var disabled = drag_manager.InternalDragActive || drag_manager.ExternalDragActive;
+			if (Disabled != disabled)
+				Disabled = disabled;
 		}
 		
 		uint timer_prefs_changed = 0;
@@ -177,7 +183,7 @@ namespace Plank
 		
 		void update_hidden ()
 		{
-			if (disabled) {
+			if (Disabled) {
 				controller.renderer.show ();
 				return;
 			}
