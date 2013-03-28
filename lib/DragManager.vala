@@ -361,7 +361,7 @@ namespace Plank
 				drag_status (context, DragAction.COPY, time_);
 			}
 			
-			controller.window.update_hovered (x, y);
+			window.update_hovered (x, y);
 			
 			return true;
 		}
