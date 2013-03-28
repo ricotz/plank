@@ -147,17 +147,16 @@ namespace Plank
 			var win_x = position_manager.win_x;
 			var win_y = position_manager.win_y;
 			
-			// update window.HoveredItem
-			window.update_hovered (x - win_x, y - win_y);
-			
 			// compute rect of the window
 			var dock_rect = position_manager.get_cursor_region ();
 			dock_rect.x += win_x;
 			dock_rect.y += win_y;
 			
 			// use the dock rect and cursor location to determine if dock is hovered
-			DockHovered = x >= dock_rect.x && x <= dock_rect.x + dock_rect.width &&
+			var hovered = x >= dock_rect.x && x <= dock_rect.x + dock_rect.width &&
 						  y >= dock_rect.y && y <= dock_rect.y + dock_rect.height;
+			if (DockHovered != hovered)
+				DockHovered = hovered;
 		}
 		
 		uint timer_prefs_changed = 0;

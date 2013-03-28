@@ -298,6 +298,7 @@ namespace Plank
 			
 			if (ExternalDragActive) {
 				controller.window.notify["HoveredItem"].disconnect (hovered_item_changed);
+				controller.window.update_hovered (-1, -1);
 				
 				// Make sure ExternalDragActive gets set to false to reactivate HideManager.
 				// This is needed while getting a leave event without followed by a drop.
