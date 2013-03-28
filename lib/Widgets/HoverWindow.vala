@@ -124,7 +124,7 @@ namespace Plank.Widgets
 				break;
 			}
 			
-			var screen = get_screen ();
+			unowned Screen screen = get_screen ();
 			Gdk.Rectangle monitor;
 			screen.get_monitor_geometry (screen.get_monitor_at_point (item_x, item_y), out monitor);
 			
@@ -144,7 +144,7 @@ namespace Plank.Widgets
 			layout = new Pango.Layout (pango_context_get ());
 			layout.set_ellipsize (EllipsizeMode.END);
 			
-			var font_description = get_style ().font_desc;
+			unowned FontDescription font_description = get_style ().font_desc;
 			font_description.set_size ((int) (9 * Pango.SCALE));
 			font_description.set_weight (Weight.BOLD);
 			layout.set_font_description (font_description);
@@ -156,7 +156,7 @@ namespace Plank.Widgets
 		
 		void invalidate ()
 		{
-			var screen = get_screen ();
+			unowned Screen screen = get_screen ();
 			background_buffer = null;
 			
 			if (Text == "")

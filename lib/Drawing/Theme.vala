@@ -125,7 +125,7 @@ namespace Plank.Drawing
 		 */
 		public void draw_background (DockSurface surface)
 		{
-			var cr = surface.Context;
+			unowned Context cr = surface.Context;
 			
 			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			

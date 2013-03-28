@@ -42,7 +42,7 @@ namespace Plank.Widgets
 			resizable = false;
 			double_buffered = false;
 			
-			var screen = get_screen ();
+			unowned Screen screen = get_screen ();
 			set_visual (screen.get_rgba_visual () ?? screen.get_system_visual ());
 		}
 		

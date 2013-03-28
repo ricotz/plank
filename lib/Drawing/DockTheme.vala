@@ -150,7 +150,7 @@ namespace Plank.Drawing
 			
 			draw_background (temp);
 			
-			var cr = surface.Context;
+			unowned Context cr = surface.Context;
 			
 			var rotate = 0.0;
 			var x_offset = 0.0, y_offset = 0.0;
@@ -201,7 +201,7 @@ namespace Plank.Drawing
 			if (size <= 0)
 				return surface;
 			
-			var cr = surface.Context;
+			unowned Context cr = surface.Context;
 			
 			var x = size / 2;
 			var y = x;
@@ -241,7 +241,7 @@ namespace Plank.Drawing
 			if (size <= 0)
 				return surface;
 			
-			var cr = surface.Context;
+			unowned Context cr = surface.Context;
 			
 			var x = size / 2.0;
 			
@@ -275,7 +275,7 @@ namespace Plank.Drawing
 			if (opacity <= 0.0)
 				return;
 			
-			var cr = surface.Context;
+			unowned Context cr = surface.Context;
 			
 			var rotate = 0.0;
 			var xoffset = 0.0, yoffset = 0.0;
@@ -345,7 +345,7 @@ namespace Plank.Drawing
 		 */
 		public void draw_item_count (DockSurface surface, int icon_size, Color color, int64 count)
 		{
-			var cr = surface.Context;
+			unowned Context cr = surface.Context;
 			
 			// Expect the icon to be in the center of the given surface
 			// and adjust the offset accordingly
@@ -452,7 +452,7 @@ namespace Plank.Drawing
 			if (progress < 0)
 				return;
 			
-			var cr = surface.Context;
+			unowned Context cr = surface.Context;
 			
 			// Expect the icon to be in the center of the given surface
 			// and adjust the offset accordingly

@@ -410,7 +410,7 @@ namespace Plank.Items
 				icon_size_lookup (IconSize.MENU, out width, out height);
 				
 				foreach (var view in windows) {
-					var window = (view as Bamf.Window);
+					unowned Bamf.Window? window = (view as Bamf.Window);
 					if (window == null)
 						continue;
 					

@@ -130,24 +130,28 @@ namespace Plank
 		 */
 		public void update_dock_hovered ()
 		{
+			unowned PositionManager position_manager = controller.position_manager;
+			unowned DockWindow window = controller.window;
+			unowned DragManager drag_manager = controller.drag_manager;
+			
 			// disable hiding if drags are active
-			disabled = controller.drag_manager.InternalDragActive || controller.drag_manager.ExternalDragActive;
+			disabled = drag_manager.InternalDragActive || drag_manager.ExternalDragActive;
 			
 			// get current mouse pointer location
 			int x, y;
 			
-			controller.window.get_display ().
+			window.get_display ().
 				get_device_manager ().get_client_pointer ().get_position (null, out x, out y);
 			
 			// get window location
-			var win_x = controller.position_manager.win_x;
-			var win_y = controller.position_manager.win_y;
+			var win_x = position_manager.win_x;
+			var win_y = position_manager.win_y;
 			
 			// update window.HoveredItem
-			controller.window.update_hovered (x - win_x, y - win_y);
+			window.update_hovered (x - win_x, y - win_y);
 			
 			// compute rect of the window
-			var dock_rect = controller.position_manager.get_cursor_region ();
+			var dock_rect = position_manager.get_cursor_region ();
 			dock_rect.x += win_x;
 			dock_rect.y += win_y;
 			

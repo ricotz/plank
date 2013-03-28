@@ -75,9 +75,9 @@ namespace Plank
 				repositionMode = value;
 				
 				if (repositionMode)
-					disable_drag_to ();
+					disable_drag_to (controller.window);
 				else
-					enable_drag_to ();
+					enable_drag_to (controller.window);
 			}
 		}
 		
@@ -87,37 +87,42 @@ namespace Plank
 		}
 		
 		public void initialize ()
+			requires (controller.window != null)
 		{
-			controller.window.drag_motion.connect (drag_motion);
-			controller.window.drag_begin.connect (drag_begin);
-			controller.window.drag_data_received.connect (drag_data_received);
-			controller.window.drag_data_get.connect (drag_data_get);
-			controller.window.drag_drop.connect (drag_drop);
-			controller.window.drag_end.connect (drag_end);
-			controller.window.drag_leave.connect (drag_leave);
-			controller.window.drag_failed.connect (drag_failed);
+			unowned DockWindow window = controller.window;
 			
-			controller.window.motion_notify_event.connect (window_motion_notify_event);
+			window.drag_motion.connect (drag_motion);
+			window.drag_begin.connect (drag_begin);
+			window.drag_data_received.connect (drag_data_received);
+			window.drag_data_get.connect (drag_data_get);
+			window.drag_drop.connect (drag_drop);
+			window.drag_end.connect (drag_end);
+			window.drag_leave.connect (drag_leave);
+			window.drag_failed.connect (drag_failed);
 			
-			enable_drag_to ();
-			enable_drag_from ();
+			window.motion_notify_event.connect (window_motion_notify_event);
+			
+			enable_drag_to (window);
+			enable_drag_from (window);
 		}
 		
 		~DragManager ()
 		{
-			controller.window.drag_motion.disconnect (drag_motion);
-			controller.window.drag_begin.disconnect (drag_begin);
-			controller.window.drag_data_received.disconnect (drag_data_received);
-			controller.window.drag_data_get.disconnect (drag_data_get);
-			controller.window.drag_drop.disconnect (drag_drop);
-			controller.window.drag_end.disconnect (drag_end);
-			controller.window.drag_leave.disconnect (drag_leave);
-			controller.window.drag_failed.disconnect (drag_failed);
+			unowned DockWindow window = controller.window;
 			
-			controller.window.motion_notify_event.disconnect (window_motion_notify_event);
+			window.drag_motion.disconnect (drag_motion);
+			window.drag_begin.disconnect (drag_begin);
+			window.drag_data_received.disconnect (drag_data_received);
+			window.drag_data_get.disconnect (drag_data_get);
+			window.drag_drop.disconnect (drag_drop);
+			window.drag_end.disconnect (drag_end);
+			window.drag_leave.disconnect (drag_leave);
+			window.drag_failed.disconnect (drag_failed);
 			
-			disable_drag_to ();
-			disable_drag_from ();
+			window.motion_notify_event.disconnect (window_motion_notify_event);
+			
+			disable_drag_to (window);
+			disable_drag_from (window);
 		}
 		
 		bool window_motion_notify_event (Widget w, EventMotion event)
@@ -144,22 +149,24 @@ namespace Plank
 		
 		void drag_begin (Widget w, DragContext context)
 		{
-			controller.window.notify["HoveredItem"].connect (hovered_item_changed);
+			unowned DockWindow window = controller.window;
+			
+			window.notify["HoveredItem"].connect (hovered_item_changed);
 			
 			// Delay persistent write of dock-preference until drag_end ()
 			controller.prefs.delay ();
 			
 			InternalDragActive = true;
-			context.get_device ().grab (controller.window.get_window (), GrabOwnership.APPLICATION, true, EventMask.ALL_EVENTS_MASK, null, get_current_event_time ());
+			context.get_device ().grab (window.get_window (), GrabOwnership.APPLICATION, true, EventMask.ALL_EVENTS_MASK, null, get_current_event_time ());
 			drag_canceled = false;
 			
 			if (proxy_window != null) {
-				enable_drag_to ();
+				enable_drag_to (window);
 				proxy_window = null;
 			}
 			
 			Pixbuf pbuf;
-			DragItem = controller.window.HoveredItem;
+			DragItem = window.HoveredItem;
 			
 			if (RepositionMode)
 				DragItem = null;
@@ -216,12 +223,13 @@ namespace Plank
 			if (drag_data == null)
 				return true;
 			
-			var item = controller.window.HoveredItem;
+			unowned ApplicationDockItemProvider items = controller.items;
+			unowned DockItem item = controller.window.HoveredItem;
 			
 			if (DragIsDesktopFile) {
 				var uri = drag_data[0];
-				if (!controller.items.item_exists_for_uri (uri))
-					controller.items.add_item_with_uri (uri, item);
+				if (!items.item_exists_for_uri (uri))
+					items.add_item_with_uri (uri, item);
 				
 				ExternalDragActive = false;
 				return true;
@@ -231,8 +239,8 @@ namespace Plank
 				item.accept_drop (drag_data);
 			} else {
 				foreach (var uri in drag_data) {
-					if (!controller.items.item_exists_for_uri (uri))
-						controller.items.add_item_with_uri (uri, item);
+					if (!items.item_exists_for_uri (uri))
+						items.add_item_with_uri (uri, item);
 				}
 			}
 			
@@ -246,7 +254,8 @@ namespace Plank
 				if (!controller.hide_manager.DockHovered) {
 					if (DragItem.can_be_removed ()) {
 						// Remove from dock
-						if (!(DragItem is ApplicationDockItem) || !((DragItem as ApplicationDockItem).is_running ()))
+						unowned ApplicationDockItem? app_item = (DragItem as ApplicationDockItem);
+						if (app_item == null || !(app_item.is_running ()))
 							controller.items.remove_item (DragItem);
 						DragItem.delete ();
 						
@@ -332,16 +341,18 @@ namespace Plank
 				drag_known = false;
 			}
 			
+			unowned DockWindow window = controller.window;
+			
 			// we own the drag if InternalDragActive is true, lets not be silly
 			if (ExternalDragActive && !drag_known) {
 				drag_known = true;
 				
-				controller.window.notify["HoveredItem"].connect (hovered_item_changed);
+				window.notify["HoveredItem"].connect (hovered_item_changed);
 				
-				Atom atom = drag_dest_find_target (controller.window, context, drag_dest_get_target_list (controller.window));
+				Atom atom = drag_dest_find_target (window, context, drag_dest_get_target_list (window));
 				if (atom.name () != Atom.NONE.name ()) {
 					drag_data_requested = true;
-					drag_get_data (controller.window, context, atom, time_);
+					drag_get_data (window, context, atom, time_);
 				} else {
 					drag_status (context, DragAction.PRIVATE, time_);
 				}
@@ -356,10 +367,12 @@ namespace Plank
 		
 		void hovered_item_changed ()
 		{
-			if (InternalDragActive && DragItem != null && controller.window.HoveredItem != null
-				&& DragItem != controller.window.HoveredItem) {
+			unowned DockItem hovered_item = controller.window.HoveredItem;
+			
+			if (InternalDragActive && DragItem != null && hovered_item != null
+				&& DragItem != hovered_item) {
 				
-				controller.items.move_item_to (DragItem, controller.window.HoveredItem);
+				controller.items.move_item_to (DragItem, hovered_item);
 			}
 			
 			if (drag_hover_timer > 0) {
@@ -369,7 +382,7 @@ namespace Plank
 			
 			if (ExternalDragActive && drag_data != null)
 				drag_hover_timer = GLib.Timeout.add (1500, () => {
-					DockItem item = controller.window.HoveredItem;
+					unowned DockItem item = controller.window.HoveredItem;
 					if (item != null)
 						item.scrolled (ScrollDirection.DOWN, 0);
 					return item != null;
@@ -408,7 +421,7 @@ namespace Plank
 				if (proxy_window == null)
 					return;
 				proxy_window = null;
-				enable_drag_to ();
+				enable_drag_to (controller.window);
 				return;
 			}
 			
@@ -425,28 +438,28 @@ namespace Plank
 			}
 		}
 
-		void enable_drag_to ()
+		void enable_drag_to (DockWindow window)
 		{
 			TargetEntry te1 = { "text/uri-list", 0, 0 };
 			TargetEntry te2 = { "text/plank-uri-list", 0, 0 };
-			drag_dest_set (controller.window, 0, {te1, te2}, DragAction.COPY);
+			drag_dest_set (window, 0, {te1, te2}, DragAction.COPY);
 		}
 		
-		void disable_drag_to ()
+		void disable_drag_to (DockWindow window)
 		{
-			drag_dest_unset (controller.window);
+			drag_dest_unset (window);
 		}
 		
-		void enable_drag_from ()
+		void enable_drag_from (DockWindow window)
 		{
 			// we dont really want to offer the drag to anything, merely pretend to, so we set a mimetype nothing takes
 			TargetEntry te = { "text/plank-uri-list", TargetFlags.SAME_APP, 0};
-			drag_source_set (controller.window, ModifierType.BUTTON1_MASK, { te }, DragAction.PRIVATE);
+			drag_source_set (window, ModifierType.BUTTON1_MASK, { te }, DragAction.PRIVATE);
 		}
 		
-		void disable_drag_from ()
+		void disable_drag_from (DockWindow window)
 		{
-			drag_source_unset (controller.window);
+			drag_source_unset (window);
 		}
 	}
 }

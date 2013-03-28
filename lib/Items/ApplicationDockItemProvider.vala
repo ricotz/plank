@@ -248,7 +248,7 @@ namespace Plank.Items
 			if (controller.prefs.CurrentWorkspaceOnly) {
 				var active_workspace = Wnck.Screen.get_default ().get_active_workspace ();
 				foreach (var item in internal_items) {
-					var transient = (item as TransientDockItem);
+					unowned TransientDockItem? transient = (item as TransientDockItem);
 					item.IsVisible = (transient == null || transient.App == null
 						|| WindowControl.has_window_on_workspace (transient.App, active_workspace));
 				}
@@ -427,7 +427,7 @@ namespace Plank.Items
 		
 		protected override void handle_item_deleted (DockItem item)
 		{
-			Bamf.Application? app = null;
+			unowned Bamf.Application? app = null;
 			if (item is ApplicationDockItem)
 				app = (item as ApplicationDockItem).App;
 			
@@ -446,7 +446,7 @@ namespace Plank.Items
 		{
 			Logger.verbose ("ApplicationDockItemProvider.pin_item ('%s[%s]')", item.Text, item.DockItemFilename);
 
-			var app_item = (item as ApplicationDockItem);
+			unowned ApplicationDockItem? app_item = (item as ApplicationDockItem);
 			if (app_item == null)
 				return;
 			
@@ -504,9 +504,9 @@ namespace Plank.Items
 				return;
 			
 			// Reset item since there is no new NameOwner
-			TransientDockItem? transient_item = null;
+			unowned TransientDockItem? transient_item = null;
 			foreach (var item in internal_items) {
-				var app_item = item as ApplicationDockItem;
+				unowned ApplicationDockItem? app_item = item as ApplicationDockItem;
 				if (app_item == null)
 					continue;
 				
@@ -544,7 +544,7 @@ namespace Plank.Items
 			
 			ApplicationDockItem? current_item = null;
 			foreach (var item in internal_items) {
-				var app_item = item as ApplicationDockItem;
+				unowned ApplicationDockItem? app_item = item as ApplicationDockItem;
 				if (app_item == null)
 					continue;
 				
@@ -561,7 +561,7 @@ namespace Plank.Items
 				
 				// Remove item which progress-bar/badge is gone and only existed
 				// because of the presence of this LauncherEntry interface
-				var transient_item = current_item as TransientDockItem;
+				unowned TransientDockItem? transient_item = current_item as TransientDockItem;
 				if (transient_item != null && transient_item.App == null
 					&& !(transient_item.ProgressVisible || transient_item.CountVisible))
 					remove_item (transient_item);

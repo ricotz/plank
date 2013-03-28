@@ -251,17 +251,18 @@ namespace Plank.Widgets
 			hover_reposition_timer = GLib.Timeout.add (1000 / 60, () => {
 				hover_reposition_timer = 0;
 				
+				unowned HoverWindow hover = controller.hover;
+				if (hover.get_visible ())
+					hover.hide ();
+				
 				if (HoveredItem == null)
 					return false;
 				
-				if (controller.hover.get_visible ())
-					controller.hover.hide ();
-				
-				controller.hover.Text = HoveredItem.Text;
+				hover.Text = HoveredItem.Text;
 				position_hover ();
 				
-				if (!menu_is_visible () && !controller.hover.get_visible ())
-					controller.hover.show ();
+				if (!menu_is_visible () && !hover.get_visible ())
+					hover.show ();
 				
 				return false;
 			});
@@ -314,13 +315,14 @@ namespace Plank.Widgets
 		 */
 		public void update_size_and_position ()
 		{
-			controller.position_manager.update_dock_position ();
+			unowned PositionManager position_manager = controller.position_manager;
+			position_manager.update_dock_position ();
 			
-			var x = controller.position_manager.win_x;
-			var y = controller.position_manager.win_y;
+			var x = position_manager.win_x;
+			var y = position_manager.win_y;
 			
-			var width = controller.position_manager.DockWidth;
-			var height = controller.position_manager.DockHeight;
+			var width = position_manager.DockWidth;
+			var height = position_manager.DockHeight;
 			
 			int width_current, height_current;
 			get_size_request (out width_current, out height_current);
@@ -364,10 +366,11 @@ namespace Plank.Widgets
 			reposition_timer = GLib.Timeout.add (50, () => {
 				reposition_timer = 0;
 				
-				controller.position_manager.update_dock_position ();
+				unowned PositionManager position_manager = controller.position_manager;
+				position_manager.update_dock_position ();
 				
-				var x = controller.position_manager.win_x;
-				var y = controller.position_manager.win_y;
+				var x = position_manager.win_x;
+				var y = position_manager.win_y;
 				
 				position (x, y);
 				
@@ -392,10 +395,10 @@ namespace Plank.Widgets
 		{
 			Logger.verbose ("DockWindow.update_icon_regions ()");
 			
-			var use_hidden_region = (controller.window.menu_is_visible () || controller.renderer.Hidden);
+			var use_hidden_region = (menu_is_visible () || controller.renderer.Hidden);
 			
 			foreach (var item in controller.items.Items) {
-				ApplicationDockItem? appitem = (item as ApplicationDockItem);
+				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 				if (appitem == null || !appitem.is_running ())
 					continue;
 				
@@ -464,8 +467,9 @@ namespace Plank.Widgets
 		protected void on_menu_hide ()
 		{
 			update_icon_regions ();
-			controller.hide_manager.update_dock_hovered ();
-			if (!controller.hide_manager.DockHovered)
+			unowned HideManager hide_manager = controller.hide_manager;
+			hide_manager.update_dock_hovered ();
+			if (!hide_manager.DockHovered)
 				set_hovered (null);
 		}
 		

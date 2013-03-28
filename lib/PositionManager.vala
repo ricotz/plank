@@ -60,7 +60,7 @@ namespace Plank
 		public void initialize ()
 			requires (controller.window != null)
 		{
-			var screen = controller.window.get_screen ();
+			unowned Screen screen = controller.window.get_screen ();
 			
 			screen.monitors_changed.connect (update_monitor_geo);
 			screen.size_changed.connect (update_monitor_geo);
@@ -73,7 +73,7 @@ namespace Plank
 		
 		~PositionManager ()
 		{
-			var screen = controller.window.get_screen ();
+			unowned Screen screen = controller.window.get_screen ();
 			
 			screen.monitors_changed.disconnect (update_monitor_geo);
 			screen.size_changed.disconnect (update_monitor_geo);
@@ -201,6 +201,8 @@ namespace Plank
 		
 		void update_dimensions ()
 		{
+			unowned DockPreferences prefs = controller.prefs;
+			
 			Logger.verbose ("PositionManager.update_dimensions ()");
 			
 			if (!screen_is_composited) {
@@ -221,7 +223,7 @@ namespace Plank
 			var dock_height = height + (screen_is_composited ? UrgentBounceHeight : 0);
 			
 			var width = 0;
-			switch (controller.prefs.Alignment) {
+			switch (prefs.Alignment) {
 			default:
 			case Align.START:
 			case Align.END:
@@ -229,7 +231,7 @@ namespace Plank
 				width = controller.items.Items.size * (ItemPadding + IconSize) + 2 * HorizPadding + 4 * LineWidth;
 				break;
 			case Align.FILL:
-				if (controller.prefs.is_horizontal_dock ())
+				if (prefs.is_horizontal_dock ())
 					width = monitor_geo.width;
 				else
 					width = monitor_geo.height;
@@ -243,7 +245,7 @@ namespace Plank
 			if (HorizPadding < 0)
 				width -= 2 * HorizPadding;
 			
-			if (controller.prefs.is_horizontal_dock ()) {
+			if (prefs.is_horizontal_dock ()) {
 				width = int.min (monitor_geo.width, width);
 				VisibleDockHeight = height;
 				VisibleDockWidth = width;
@@ -332,12 +334,14 @@ namespace Plank
 		 */
 		public void update_regions ()
 		{
+			unowned DockPreferences prefs = controller.prefs;
+			
 			Logger.verbose ("PositionManager.update_regions ()");
 			
 			var old_region = static_dock_region;
 			
 			// width of the items-area of the dock
-			items_width = controller.items.Items.size * (ItemPadding + controller.prefs.IconSize);
+			items_width = controller.items.Items.size * (ItemPadding + prefs.IconSize);
 			
 			static_dock_region.width = VisibleDockWidth;
 			static_dock_region.height = VisibleDockHeight;
@@ -346,10 +350,11 @@ namespace Plank
 			var yoffset = (DockHeight - static_dock_region.height) / 2;
 			
 			if (screen_is_composited) {
-				xoffset = (int) ((1 + controller.prefs.Offset / 100.0) * xoffset);
-				yoffset = (int) ((1 + controller.prefs.Offset / 100.0) * yoffset);
+				var offset = prefs.Offset;
+				xoffset = (int) ((1 + offset / 100.0) * xoffset);
+				yoffset = (int) ((1 + offset / 100.0) * yoffset);
 				
-				switch (controller.prefs.Alignment) {
+				switch (prefs.Alignment) {
 				default:
 				case Align.CENTER:
 				case Align.FILL:
@@ -365,7 +370,7 @@ namespace Plank
 				}
 			}
 			
-			switch (controller.prefs.Position) {
+			switch (prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
 				static_dock_region.x = xoffset;
@@ -498,9 +503,11 @@ namespace Plank
 		 */
 		public Gdk.Rectangle item_hover_region (DockItem item)
 		{
+			unowned DockPreferences prefs = controller.prefs;
+			
 			var rect = Gdk.Rectangle ();
 			
-			switch (controller.prefs.Position) {
+			switch (prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
 				rect.width = IconSize + ItemPadding;
@@ -528,14 +535,14 @@ namespace Plank
 				break;
 			}
 			
-			if (controller.prefs.Alignment != Gtk.Align.FILL)
+			if (prefs.Alignment != Gtk.Align.FILL)
 				return rect;
 			
-			switch (controller.prefs.ItemsAlignment) {
+			switch (prefs.ItemsAlignment) {
 			default:
 			case Align.FILL:
 			case Align.CENTER:
-				if (controller.prefs.is_horizontal_dock ())
+				if (prefs.is_horizontal_dock ())
 					rect.x += (static_dock_region.width - 2 * items_offset - items_width) / 2;
 				else
 					rect.y += (static_dock_region.height - 2 * items_offset - items_width) / 2;
@@ -543,7 +550,7 @@ namespace Plank
 			case Align.START:
 				break;
 			case Align.END:
-				if (controller.prefs.is_horizontal_dock ())
+				if (prefs.is_horizontal_dock ())
 					rect.x += (static_dock_region.width - 2 * items_offset - items_width);
 				else
 					rect.y += (static_dock_region.height - 2 * items_offset - items_width);
@@ -657,14 +664,17 @@ namespace Plank
 		 */
 		public void update_dock_position ()
 		{
+			unowned DockPreferences prefs = controller.prefs;
+			
 			var xoffset = 0;
 			var yoffset = 0;
 			
 			if (!screen_is_composited) {
-				xoffset = (int) ((1 + controller.prefs.Offset / 100.0) * (monitor_geo.width - DockWidth) / 2);
-				yoffset = (int) ((1 + controller.prefs.Offset / 100.0) * (monitor_geo.height - DockHeight) / 2);
+				var offset = prefs.Offset;
+				xoffset = (int) ((1 + offset / 100.0) * (monitor_geo.width - DockWidth) / 2);
+				yoffset = (int) ((1 + offset / 100.0) * (monitor_geo.height - DockHeight) / 2);
 				
-				switch (controller.prefs.Alignment) {
+				switch (prefs.Alignment) {
 				default:
 				case Align.CENTER:
 				case Align.FILL:
@@ -680,7 +690,7 @@ namespace Plank
 				}
 			}
 			
-			switch (controller.prefs.Position) {
+			switch (prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
 				win_x = monitor_geo.x + xoffset;
@@ -702,7 +712,7 @@ namespace Plank
 			
 			// Actually change the window position while hidden for non-compositing mode
 			if (!screen_is_composited && controller.renderer.Hidden) {
-				switch (controller.prefs.Position) {
+				switch (prefs.Position) {
 				default:
 				case PositionType.BOTTOM:
 					win_y += DockHeight - 1;

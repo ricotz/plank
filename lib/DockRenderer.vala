@@ -101,7 +101,7 @@ namespace Plank
 		{
 			set_widget (controller.window);
 			
-			var screen = controller.window.get_screen ();
+			unowned Screen screen = controller.window.get_screen ();
 			screen_is_composited = screen.is_composited ();
 			screen.composited_changed.connect (composited_changed);
 
@@ -246,8 +246,11 @@ namespace Plank
 		 */
 		public void draw_dock (Context cr)
 		{
-			var width = controller.position_manager.DockWidth;
-			var height = controller.position_manager.DockHeight;
+			unowned PositionManager position_manager = controller.position_manager;
+			unowned DockItem dragged_item = controller.drag_manager.DragItem;
+			
+			var width = position_manager.DockWidth;
+			var height = position_manager.DockHeight;
 			
 #if BENCHMARK
 			benchmark.clear ();
@@ -278,7 +281,7 @@ namespace Plank
 				start2 = new DateTime.now_local ();
 #endif
 				// Do not draw the currently dragged item
-				if (controller.drag_manager.DragItem != item)
+				if (dragged_item != item)
 					draw_item (item);
 #if BENCHMARK
 				end2 = new DateTime.now_local ();
@@ -289,7 +292,7 @@ namespace Plank
 			// calculate drawing offset
 			var x_offset = 0, y_offset = 0;
 			if (theme.FadeOpacity == 1.0)
-				controller.position_manager.get_dock_draw_position (out x_offset, out y_offset);
+				position_manager.get_dock_draw_position (out x_offset, out y_offset);
 			
 			// draw the dock on the window
 			cr.set_operator (Operator.SOURCE);
@@ -308,7 +311,7 @@ namespace Plank
 					var urgent_color = get_styled_color ();
 					urgent_color.add_hue (theme.UrgentHueShift);
 					urgent_color.set_sat (1.0);
-					urgent_glow_buffer = theme.create_urgent_glow (controller.position_manager.GlowSize, urgent_color, background_buffer);
+					urgent_glow_buffer = theme.create_urgent_glow (position_manager.GlowSize, urgent_color, background_buffer);
 				}
 				
 				foreach (var item in controller.items.Items) {
@@ -319,7 +322,7 @@ namespace Plank
 					if (diff >= theme.GlowTime * 1000)
 						continue;
 					
-					controller.position_manager.get_urgent_glow_position (item, out x_offset, out y_offset);
+					position_manager.get_urgent_glow_position (item, out x_offset, out y_offset);
 					
 					cr.set_source_surface (urgent_glow_buffer.Internal, x_offset, y_offset);
 					var opacity = 0.2 + (0.75 * (Math.sin (diff / (double) (theme.GlowPulseTime * 1000) * 2 * Math.PI) + 1) / 2);
@@ -338,24 +341,30 @@ namespace Plank
 		
 		void draw_dock_background ()
 		{
-			var width = controller.position_manager.DockBackgroundWidth;
-			var height = controller.position_manager.DockBackgroundHeight;
+			unowned PositionManager position_manager = controller.position_manager;
+			
+			var width = position_manager.DockBackgroundWidth;
+			var height = position_manager.DockBackgroundHeight;
 			
 			if (background_buffer == null || background_buffer.Width != width || background_buffer.Height != height)
 				background_buffer = theme.create_background (width, height, controller.prefs.Position, main_buffer);
 			
 			var x_offset = 0, y_offset = 0;
-			controller.position_manager.get_background_position (out x_offset, out y_offset);
+			position_manager.get_background_position (out x_offset, out y_offset);
 			background_rect = Gdk.Rectangle () { x = x_offset, y = y_offset, width = width, height = height };
 			
-			var cr = main_buffer.Context;
+			unowned Context cr = main_buffer.Context;
 			cr.set_source_surface (background_buffer.Internal, x_offset, y_offset);
 			cr.paint ();
 		}
 		
 		void draw_item (DockItem item)
 		{
-			var main_cr = main_buffer.Context;
+			unowned PositionManager position_manager = controller.position_manager;
+			unowned DockItem hovered_item = controller.window.HoveredItem;
+			unowned DragManager drag_manager = controller.drag_manager;
+			
+			unowned Context main_cr = main_buffer.Context;
 			var icon_size = controller.prefs.IconSize;
 			
 			// load the icon
@@ -363,15 +372,15 @@ namespace Plank
 			var start = new DateTime.now_local ();
 #endif
 			var icon_surface = item.get_surface_copy (icon_size, icon_size, main_buffer);
-			var icon_cr = icon_surface.Context;
+			unowned Context icon_cr = icon_surface.Context;
 #if BENCHMARK
 			var end = new DateTime.now_local ();
 			benchmark.add ("	item.get_surface time - %f ms".printf (end.difference (start) / 1000.0));
 #endif
 			
 			// get regions
-			var hover_rect = controller.position_manager.item_hover_region (item);
-			var draw_rect = controller.position_manager.item_draw_region (hover_rect);
+			var hover_rect = position_manager.item_hover_region (item);
+			var draw_rect = position_manager.item_draw_region (hover_rect);
 			
 			// lighten or darken the icon
 			var lighten = 0.0, darken = 0.0;
@@ -415,14 +424,14 @@ namespace Plank
 				}
 			}
 			
-			if (controller.window.HoveredItem == item)
+			if (hovered_item == item)
 				lighten = 0.2;
 			
-			if (controller.window.HoveredItem == item && controller.window.menu_is_visible ())
+			if (hovered_item == item && controller.window.menu_is_visible ())
 				darken += 0.4;
-			else if (controller.drag_manager.ExternalDragActive
-				&& !controller.drag_manager.DragIsDesktopFile
-				&& !controller.drag_manager.drop_is_accepted_by (item))
+			else if (drag_manager.ExternalDragActive
+				&& !drag_manager.DragIsDesktopFile
+				&& !drag_manager.drop_is_accepted_by (item))
 				darken += 0.6;
 			
 			// glow the icon
@@ -485,7 +494,7 @@ namespace Plank
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
 			if (opacity > 0) {
-				var glow_rect = controller.position_manager.item_background_region (hover_rect);
+				var glow_rect = position_manager.item_background_region (hover_rect);
  				theme.draw_active_glow (main_buffer, background_rect, glow_rect, item.AverageIconColor, opacity, controller.prefs.Position);
 			}
 			
@@ -512,8 +521,8 @@ namespace Plank
 				urgent_indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, urgent_indicator_color, background_buffer);
 			}
 			
-			var indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
-			var main_cr = main_buffer.Context;
+			unowned DockSurface indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
+			unowned Context main_cr = main_buffer.Context;
 			
 			var x = 0.0, y = 0.0;
 			switch (controller.prefs.Position) {
@@ -593,7 +602,7 @@ namespace Plank
 					return true;
 			}
 			
-			foreach (DockItem item in controller.items.Items) {
+			foreach (var item in controller.items.Items) {
 				if (render_time.difference (item.LastClicked) <= (item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
 					return true;
 				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)

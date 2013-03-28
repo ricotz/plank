@@ -365,11 +365,11 @@ namespace Plank.Items
 		public DockSurface get_surface_copy (int width, int height, DockSurface model)
 		{
 			var surface_copy = new DockSurface.with_dock_surface (width, height, model);
-			var cr = surface_copy.Context;
+			unowned Cairo.Context cr = surface_copy.Context;
 			
 			cr.set_source_surface (get_surface (width, height, model).Internal, 0, 0);
 			cr.paint ();
-						
+			
 			return surface_copy;
 		}
 

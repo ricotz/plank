@@ -109,7 +109,7 @@ namespace Plank.Items
 				return;
 			}
 			
-			var cr = surface.Context;
+			unowned Context cr = surface.Context;
 			var width = surface.Width;
 			var height = surface.Height;
 			var radius = 3 + 6 * height / (128 - 48);
