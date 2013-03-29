@@ -105,51 +105,9 @@ namespace Plank.Drawing
 		 *
 		 * @return the {@link Gdk.Pixbuf}
 		 */
-		public Gdk.Pixbuf load_to_pixbuf ()
+		public Gdk.Pixbuf to_pixbuf ()
 		{
-			var image_surface = new ImageSurface (Format.ARGB32, Width, Height);
-			var cr = new Cairo.Context (image_surface);
-			
-			cr.set_operator (Operator.SOURCE);
-			cr.set_source_surface (Internal, 0, 0);
-			cr.paint ();
-			
-			var width = image_surface.get_width ();
-			var height = image_surface.get_height ();
-
-			var pb = new Gdk.Pixbuf (Gdk.Colorspace.RGB, true, 8, width, height);
-			pb.fill (0x00000000);
-			
-			uint8 *data = image_surface.get_data ();
-			uint8 *pixels = pb.get_pixels ();
-			var length = width * height;
-			
-			if (image_surface.get_format () == Format.ARGB32) {
-				for (var i = 0; i < length; i++) {
-					// if alpha is 0 set nothing
-					if (data[3] > 0) {
-						pixels[0] = (uint8) (data[2] * 255 / data[3]);
-						pixels[1] = (uint8) (data[1] * 255 / data[3]);
-						pixels[2] = (uint8) (data[0] * 255 / data[3]);
-						pixels[3] = data[3];
-					}
-		
-					pixels += 4;
-					data += 4;
-				}
-			} else if (image_surface.get_format () == Format.RGB24) {
-				for (var i = 0; i < length; i++) {
-					pixels[0] = data[2];
-					pixels[1] = data[1];
-					pixels[2] = data[0];
-					pixels[3] = data[3];
-		
-					pixels += 4;
-					data += 4;
-				}
-			}
-			
-			return pb;
+			return Gdk.pixbuf_get_from_surface (Internal, 0, 0, Width, Height);
 		}
 		
 		/**
@@ -159,47 +117,7 @@ namespace Plank.Drawing
 		 */
 		public Drawing.Color average_color ()
 		{
-			var bTotal = 0.0;
-			var gTotal = 0.0;
-			var rTotal = 0.0;
-			
-			var w = Width;
-			var h = Height;
-			
-			var original = new ImageSurface (Format.ARGB32, w, h);
-			var cr = new Cairo.Context (original);
-			
-			cr.set_operator (Operator.SOURCE);
-			cr.set_source_surface (Internal, 0, 0);
-			cr.paint ();
-			
-			uint8 *data = original.get_data ();
-			var length = w * h;
-			
-			for (var i = 0; i < length; i++) {
-				uint8 b = data [0];
-				uint8 g = data [1];
-				uint8 r = data [2];
-				
-				uint8 max = (uint8) double.max (r, double.max (g, b));
-				uint8 min = (uint8) double.min (r, double.min (g, b));
-				double delta = max - min;
-				
-				var sat = delta == 0 ? 0.0 : delta / max;
-				var score = 0.2 + 0.8 * sat;
-				
-				bTotal += b * score;
-				gTotal += g * score;
-				rTotal += r * score;
-				
-				data += 4;
-			}
-			
-			Drawing.Color color = { rTotal / uint8.MAX / length, gTotal / uint8.MAX / length, bTotal / uint8.MAX / length, 1.0 };
-			color.set_val (0.8);
-			color.multiply_sat (1.15);
-			
-			return color;
+			return DrawingService.average_color (Gdk.pixbuf_get_from_surface (Internal, 0, 0, Width, Height));
 		}
 		
 		/**
