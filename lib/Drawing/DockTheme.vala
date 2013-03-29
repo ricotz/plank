@@ -352,16 +352,16 @@ namespace Plank.Drawing
 			var x = Math.floor ((surface.Width - icon_size) / 2);
 			var y = Math.floor ((surface.Height - icon_size) / 2);
 			
-			var badge_color_start = color.copy ();
+			var badge_color_start = color;
 			badge_color_start.brighten_val (1.0);
-			var badge_color_middle = color.copy ();
+			var badge_color_middle = color;
 			badge_color_middle.set_sat (0.87);
-			var badge_color_end = color.copy ();
+			var badge_color_end = color;
 			badge_color_end.set_sat (0.87);
 			badge_color_end.darken_val (0.7);
-			var stroke_color_start = color.copy ();
+			var stroke_color_start = color;
 			stroke_color_start.set_sat (0.9);
-			var stroke_color_end = color.copy ();
+			var stroke_color_end = color;
 			stroke_color_end.set_sat (0.9);
 			stroke_color_end.darken_val (0.9);
 			

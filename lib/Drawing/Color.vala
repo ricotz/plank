@@ -91,16 +91,6 @@ namespace Plank.Drawing
 		}
 		
 		/**
-		 * Makes a copy of this color.
-		 *
-		 * @return the new color
-		 */
-		public Color copy ()
-		{
-			return Color () { R = R, G = G, B = B, A = A };
-		}
-		
-		/**
 		 * Check equality with the give color
 		 *
 		 * @return whether the give color equals this color.
