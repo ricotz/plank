@@ -413,8 +413,8 @@ namespace Plank.Drawing
 			layout.set_font_description (font_description);
 			
 			layout.set_text (count.to_string (), -1);
-			Pango.Rectangle ink_rect, logical_rect;
-			layout.get_pixel_extents (out ink_rect, out logical_rect);
+			Pango.Rectangle logical_rect;
+			layout.get_pixel_extents (null, out logical_rect);
 			
 			var scale = double.min (1.0, double.min ((width - 2.0 * padding - 2.0 * line_width) / (double) logical_rect.width, (height - 2.0 * padding) / (double) logical_rect.height));
 			

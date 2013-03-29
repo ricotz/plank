@@ -92,8 +92,8 @@ namespace Plank.Widgets
 			layout.set_width ((int) ((alloc.width - 2 * horizontal_padding) * Pango.SCALE));
 			layout.set_text (text, -1);
 			
-			Pango.Rectangle ink_rect, logical_rect;
-			layout.get_pixel_extents (out ink_rect, out logical_rect);
+			Pango.Rectangle logical_rect;
+			layout.get_pixel_extents (null, out logical_rect);
 			
 			Gtk.paint_flat_box (parent.get_style (),
 				cr, StateType.NORMAL, ShadowType.NONE,
