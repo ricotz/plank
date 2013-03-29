@@ -40,6 +40,8 @@ namespace Plank.Widgets
 		 */
 		public string Text { get; set; default = ""; }
 		
+		DockSurface? background_buffer = null;
+		
 		HoverTheme theme;
 		
 		Pango.Layout layout;
@@ -52,7 +54,7 @@ namespace Plank.Widgets
 		}
 		
 		construct
-		{			
+		{
 			accept_focus = false;
 			can_focus = false;
 			skip_pager_hint = true;
@@ -152,11 +154,11 @@ namespace Plank.Widgets
 			invalidate ();
 		}
 		
-		DockSurface? background_buffer = null;
-		
 		void invalidate ()
 		{
 			unowned Screen screen = get_screen ();
+			var max_width = 0.8 * screen.get_width ();
+			
 			background_buffer = null;
 			
 			if (Text == "")
@@ -166,11 +168,11 @@ namespace Plank.Widgets
 			layout.set_text (Text, -1);
 			
 			// make the buffer
-			Pango.Rectangle ink_rect, logical_rect;
-			layout.get_pixel_extents (out ink_rect, out logical_rect);
-			if (logical_rect.width > 0.8 * screen.get_width ()) {
-				layout.set_width ((int) (0.8 * screen.get_width () * Pango.SCALE));
-				layout.get_pixel_extents (out ink_rect, out logical_rect);
+			Pango.Rectangle logical_rect;
+			layout.get_pixel_extents (null, out logical_rect);
+			if (logical_rect.width > max_width) {
+				layout.set_width ((int) (max_width * Pango.SCALE));
+				layout.get_pixel_extents (null, out logical_rect);
 			}
 			
 			var buffer = (int) (logical_rect.height / 4.0) * 2;
@@ -188,9 +190,10 @@ namespace Plank.Widgets
 			theme.draw_background (background_buffer);
 			
 			// draw the text
-			background_buffer.Context.move_to (text_offset, text_offset);
-			background_buffer.Context.set_source_rgb (1, 1, 1);
-			Pango.cairo_show_layout (background_buffer.Context, layout);
+			unowned Cairo.Context cr = background_buffer.Context;
+			cr.move_to (text_offset, text_offset);
+			cr.set_source_rgb (1, 1, 1);
+			Pango.cairo_show_layout (cr, layout);
 		}
 		
 		public override bool draw (Cairo.Context cr)
