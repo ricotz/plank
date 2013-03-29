@@ -54,6 +54,11 @@ src/.libs
 src/plank
 src/*.c
 src/*.stamp
+tests/.deps
+tests/.libs
+tests/*.c
+tests/*.stamp
+tests/tests
 data/plank.desktop
 m4/intltool.m4
 m4/libtool.m4

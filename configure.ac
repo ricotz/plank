@@ -243,6 +243,7 @@ man/Makefile
 src/Makefile
 docs/Makefile
 po/Makefile.in
+tests/Makefile
 vapi/Makefile
 ])
 
