@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Plank
+GenericName=Dock
+Comment=Plank. Stupidly simple.
+Categories=Utility;
+Type=Application
+Exec=plank
+Icon=plank
+Terminal=false
+NoDisplay=false

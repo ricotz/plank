@@ -25,15 +25,18 @@ namespace Plank.Tests
 {
 	public static void register_drawing_tests ()
 	{
-		Test.add_func ("/Drawing/Color", drawing_color);
+		Test.add_func ("/Drawing/Color/basics", drawing_color);
 		
-		Test.add_func ("/Drawing/DrawingService", drawing_drawingservice);
+		Test.add_func ("/Drawing/DrawingService/basics", drawing_drawingservice);
 		Test.add_func ("/Drawing/DrawingService/average_color", drawing_drawingservice_average_color);
 		
-		Test.add_func ("/Drawing/DockSurface", drawing_docksurface);
-		Test.add_func ("/Drawing/DockSurface/blur", drawing_docksurface_blur);
+		Test.add_func ("/Drawing/DockSurface/basics", drawing_docksurface);
+		Test.add_func ("/Drawing/DockSurface/exponential_blur", drawing_docksurface_gaussian_blur);
+		Test.add_func ("/Drawing/DockSurface/fast_blur", drawing_docksurface_fast_blur);
+		Test.add_func ("/Drawing/DockSurface/gaussian_blur", drawing_docksurface_exponential_blur);
+		Test.add_func ("/Drawing/DockSurface/to_pixbuf", drawing_docksurface_to_pixbuf);
 		
-		Test.add_func ("/Drawing/Theme", drawing_theme);
+		Test.add_func ("/Drawing/Theme/basics", drawing_theme);
 	}
 	
 	void drawing_color ()
@@ -94,7 +97,7 @@ namespace Plank.Tests
 	
 	void drawing_drawingservice ()
 	{
-		var icon = DrawingService.load_icon (PLANK_ICON, 256, 256);
+		var icon = DrawingService.load_icon (TEST_ICON, 256, 256);
 		assert (icon != null);
 		assert (icon.width == 256);
 		assert (icon.height == 256);
@@ -164,13 +167,73 @@ namespace Plank.Tests
 		assert (surface.Height == pixbuf.height);
 	}
 	
-	void drawing_docksurface_blur ()
+	void drawing_docksurface_fast_blur ()
 	{
 		Drawing.Color color, color2;
 		Drawing.DockSurface surface, surface2;
-		Gdk.Pixbuf pixbuf, pixbuf2;
+		Gdk.Pixbuf pixbuf;
 		
-		pixbuf = DrawingService.load_icon (PLANK_ICON, 256, 256);
+		pixbuf = DrawingService.load_icon (TEST_ICON, 256, 256);
+		surface = new DockSurface (256, 256);
+		surface2 = new DockSurface (256, 256);
+		
+		unowned Context cr = surface.Context;
+		cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
+		cr.paint ();
+		
+		unowned Context cr2 = surface2.Context;
+		cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
+		cr2.paint ();
+		
+		surface.fast_blur (7, 3);
+		surface.fast_blur (15, 3);
+		surface.fast_blur (31, 3);
+		surface2.fast_blur (7, 3);
+		surface2.fast_blur (15, 3);
+		surface2.fast_blur (31, 3);
+		
+		color = surface.average_color ();
+		color2 = surface2.average_color ();
+		assert (color == color2);
+	}
+	
+	void drawing_docksurface_exponential_blur ()
+	{
+		Drawing.Color color, color2;
+		Drawing.DockSurface surface, surface2;
+		Gdk.Pixbuf pixbuf;
+		
+		pixbuf = DrawingService.load_icon (TEST_ICON, 256, 256);
+		surface = new DockSurface (256, 256);
+		surface2 = new DockSurface (256, 256);
+		
+		unowned Context cr = surface.Context;
+		cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
+		cr.paint ();
+		
+		unowned Context cr2 = surface2.Context;
+		cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
+		cr2.paint ();
+		
+		surface.exponential_blur (7);
+		surface.exponential_blur (15);
+		surface.exponential_blur (31);
+		surface2.exponential_blur (7);
+		surface2.exponential_blur (15);
+		surface2.exponential_blur (31);
+		
+		color = surface.average_color ();
+		color2 = surface2.average_color ();
+		assert (color == color2);
+	}
+	
+	void drawing_docksurface_gaussian_blur ()
+	{
+		Drawing.Color color, color2;
+		Drawing.DockSurface surface, surface2;
+		Gdk.Pixbuf pixbuf;
+		
+		pixbuf = DrawingService.load_icon (TEST_ICON, 256, 256);
 		surface = new DockSurface (256, 256);
 		surface2 = new DockSurface (256, 256);
 		
@@ -183,16 +246,34 @@ namespace Plank.Tests
 		cr2.paint ();
 		
 		surface.gaussian_blur (7);
-		surface.fast_blur (7, 3);
-		surface.exponential_blur (7);
-		
+		surface.gaussian_blur (15);
+		surface.gaussian_blur (31);
 		surface2.gaussian_blur (7);
-		surface2.fast_blur (7, 3);
-		surface2.exponential_blur (7);
+		surface2.gaussian_blur (15);
+		surface2.gaussian_blur (31);
 		
 		color = surface.average_color ();
 		color2 = surface2.average_color ();
 		assert (color == color2);
+	}
+	
+	void drawing_docksurface_to_pixbuf ()
+	{
+		Drawing.Color color, color2;
+		Drawing.DockSurface surface, surface2;
+		Gdk.Pixbuf pixbuf, pixbuf2;
+		
+		pixbuf = DrawingService.load_icon (TEST_ICON, 256, 256);
+		surface = new DockSurface (256, 256);
+		surface2 = new DockSurface (256, 256);
+		
+		unowned Context cr = surface.Context;
+		cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
+		cr.paint ();
+		
+		unowned Context cr2 = surface2.Context;
+		cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
+		cr2.paint ();
 		
 		pixbuf = surface.to_pixbuf ();
 		pixbuf2 = surface2.to_pixbuf ();
@@ -204,14 +285,31 @@ namespace Plank.Tests
 	
 	void drawing_theme ()
 	{
-		Drawing.DockSurface surface;
+		Drawing.DockSurface surface, surface2, surface3;
 		DockTheme docktheme;
 		HoverTheme hovertheme;
 		
-		surface = new DockSurface (512, 256);
+		surface = new DockSurface (512, 512);
 		
-		//TODO initalize special testing paths
-		//docktheme = new DockTheme ("dock");
-		//hovertheme = new HoverTheme ("hover");
+		surface.clear ();
+		hovertheme = new HoverTheme ("Test");
+		hovertheme.draw_background (surface);
+		
+		surface.clear ();
+		docktheme = new DockTheme ("Test");
+		docktheme.draw_background (surface);
+		
+		surface.clear ();
+		Drawing.Color color = { 0.5, 0.4, 0.3, 1.0 };
+		
+		docktheme.draw_item_count (surface, 64, color, 42);
+		docktheme.draw_item_progress (surface, 64, color, 0.7);
+		
+		surface2 = docktheme.create_indicator (64, color, surface);
+		surface2 = docktheme.create_urgent_glow (512, color, surface);
+		
+		surface2 = docktheme.create_background (1024, 256, Gtk.PositionType.RIGHT, surface);
+		surface3 = docktheme.create_background (256, 1024, Gtk.PositionType.BOTTOM, surface);
+		assert (DrawingService.average_color (surface2.to_pixbuf ()) == DrawingService.average_color (surface3.to_pixbuf ()));
 	}
 }

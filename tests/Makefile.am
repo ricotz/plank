@@ -15,10 +15,11 @@ BUILT_SOURCES = tests_vala.stamp
 check_PROGRAMS = tests
 
 tests_CFLAGS = \
+	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
 	$(PLANK_CORE_CFLAGS) \
 	-include config.h \
-	-DTEST_DATA_DIR=\"$(abs_top_srcdir)/data\" \
-	-DTEST_HOME_DIR=\"$(abs_builddir)\" \
+	-DTEST_DATA_DIR=\"$(abs_srcdir)/data\" \
+	-DTEST_HOME_DIR=\"$(abs_builddir)/home\" \
 	-I$(top_builddir)/lib \
 	-I$(top_srcdir) \
 	$(NULL)
@@ -40,7 +41,7 @@ nodist_tests_SOURCES = \
 	$(tests_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-tests_vala.stamp: $(tests_VALASOURCES)
+tests_vala.stamp: $(tests_VALASOURCES) Makefile
 	$(AM_V_VALA)$(VALAC) \
 		$(tests_VALAFLAGS) \
 		$(filter %.vala %.c,$^)
@@ -54,8 +55,11 @@ EXTRA_DIST = \
 	$(tests_VALASOURCES) \
 	test-config.h \
 	test-config.vapi \
+	data \
 	$(NULL)
 
 check-local:
-	gtester --verbose $(builddir)/tests
+	HOME=$(abs_builddir)/home gtester --verbose --keep-going -o=$(builddir)/gtester.log $(builddir)/tests
 
+clean-local:
+	rm -rf $(abs_builddir)/home $(builddir)/gtester.log

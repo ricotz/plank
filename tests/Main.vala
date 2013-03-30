@@ -18,18 +18,21 @@
 using Cairo;
 using Gdk;
 
-using Plank.Drawing;
-using Plank.Items;
+using Plank.Services;
 
 namespace Plank.Tests
 {
-	public const string PLANK_ICON = Config.DATA_DIR + "/icons/128x128/plank.svg";
+	public const string TEST_ICON = Config.DATA_DIR + "/test-icon.svg";
 	
 	public static int main (string[] args)
 	{
 		Test.init (ref args);
 		
 		Gtk.init (ref args);
+		
+		Log.set_always_fatal (LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL);
+		
+		Paths.initialize ("test", Config.DATA_DIR);
 		
 		register_drawing_tests ();
 		register_items_tests ();
