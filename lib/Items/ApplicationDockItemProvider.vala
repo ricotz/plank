@@ -159,6 +159,25 @@ namespace Plank.Items
 			return null;
 		}
 		
+		static File? desktop_file_for_application_uri (string app_uri)
+		{
+			foreach (var folder in Paths.DataDirFolders) {
+				var applications_folder = folder.get_child ("applications");
+				if (!applications_folder.query_exists ())
+					continue;
+				
+				var desktop_file = applications_folder.get_child (app_uri.replace ("application://", ""));
+				if (!desktop_file.query_exists ())
+					continue;
+				
+				return desktop_file;
+			}
+			
+			debug ("Matching application for '%s' not found or not installed!", app_uri);
+			
+			return null;
+		}
+
 		public bool item_exists_for_uri (string uri)
 		{
 			foreach (var item in internal_items)
@@ -569,23 +588,14 @@ namespace Plank.Items
 					controller.renderer.animated_draw ();
 			} else {
 				// Find a matching desktop-file and create new TransientDockItem for this LauncherEntry
-				foreach (var folder in Paths.DataDirFolders) {
-					var applications_folder = folder.get_child ("applications");
-					if (!applications_folder.query_exists ())
-						continue;
-					
-					var desktop_file = applications_folder.get_child (app_uri.replace ("application://", ""));
-					if (!desktop_file.query_exists ())
-						continue;
-					
+				var desktop_file = desktop_file_for_application_uri (app_uri);
+				if (desktop_file != null) {
 					current_item = new TransientDockItem.with_launcher (desktop_file.get_uri ());
 					current_item.unity_update (sender_name, prop_iter);
 					
 					// Only add item if there is actually a visible progress-bar or badge
 					if (current_item.ProgressVisible || current_item.CountVisible)
 						add_item (current_item);
-					
-					break;
 				}
 				
 				if (current_item == null)
