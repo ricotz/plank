@@ -135,7 +135,6 @@ namespace Plank.Items
 				return;
 			
 			load_from_launcher ();
-			unity_update_application_uri ();
 		}
 		
 		~ApplicationDockItem ()
@@ -193,6 +192,8 @@ namespace Plank.Items
 		void handle_launcher_changed ()
 		{
 			App = Matcher.get_default ().app_for_uri (Prefs.Launcher);
+			
+			load_from_launcher ();
 			
 			launcher_changed ();
 		}
@@ -475,6 +476,8 @@ namespace Plank.Items
 		 */
 		protected void load_from_launcher ()
 		{
+			unity_update_application_uri ();
+			
 			var launcher = Prefs.Launcher;
 			if (launcher == null || launcher == "")
 				return;
