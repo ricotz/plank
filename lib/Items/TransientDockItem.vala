@@ -23,9 +23,9 @@ using Plank.Services.Windows;
 
 namespace Plank.Items
 {
-	internal class TransientDockItem : ApplicationDockItem
+	public class TransientDockItem : ApplicationDockItem
 	{
-		public TransientDockItem.with_application (Bamf.Application app)
+		internal TransientDockItem.with_application (Bamf.Application app)
 		{
 			GLib.Object (Prefs: new DockItemPreferences (), App: app);
 		}
