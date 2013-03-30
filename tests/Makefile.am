@@ -58,8 +58,14 @@ EXTRA_DIST = \
 	data \
 	$(NULL)
 
+TESTS_ENVIRONMENT = HOME=$(abs_builddir)/home
+
+if HAVE_XVFB_RUN
+TESTS_ENVIRONMENT += $(XVFB_RUN) --server-args="-screen 0 1280x1024x24"
+
 check-local:
-	HOME=$(abs_builddir)/home gtester --verbose --keep-going -o=$(builddir)/gtester.log $(builddir)/tests
+	$(TESTS_ENVIRONMENT) gtester --verbose --keep-going -o=$(builddir)/test-report.xml $(builddir)/tests
+endif
 
 clean-local:
-	rm -rf $(abs_builddir)/home $(builddir)/gtester.log
+	rm -rf $(abs_builddir)/home $(builddir)/test-report.xml

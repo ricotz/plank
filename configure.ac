@@ -220,6 +220,23 @@ fi
 
 
 # -----------------------------------------------------------
+# Test Dependencies
+# -----------------------------------------------------------
+AC_ARG_ENABLE([tests],
+              AS_HELP_STRING([--disable-tests],[Disable running tests]),
+              [enable_tests=$enableval], [enable_tests=yes])
+if test "x$enable_tests" != "xno"; then
+    AC_PATH_PROG([XVFB_RUN], [xvfb-run], [:])
+    AS_IF([test "$XVFB_RUN" != :], [have_xvfb_run=yes], [have_xvfb_run=no])
+fi
+AM_CONDITIONAL(HAVE_XVFB_RUN, [test "x$have_xvfb_run" == "xyes"])
+
+if test "x$enable_tests" = "xyes" -a "x$have_xvfb_run" != "xyes"; then
+    AC_MSG_ERROR([Tests requested but xvfb-run not installed.])
+fi
+
+
+# -----------------------------------------------------------
 # Gettext
 # -----------------------------------------------------------
 GETTEXT_PACKAGE=AC_PACKAGE_NAME
@@ -259,5 +276,6 @@ ${PACKAGE} ${VERSION}
 
     Dbusmenu support............:  ${enable_dbusmenu}
 
+    Tests.......................:  ${enable_tests}
     Documentation...............:  ${have_valadoc}
 "
