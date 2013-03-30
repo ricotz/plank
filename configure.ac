@@ -222,17 +222,21 @@ fi
 # -----------------------------------------------------------
 # Test Dependencies
 # -----------------------------------------------------------
-AC_ARG_ENABLE([tests],
-              AS_HELP_STRING([--disable-tests],[Disable running tests]),
-              [enable_tests=$enableval], [enable_tests=yes])
-if test "x$enable_tests" != "xno"; then
+AC_ARG_ENABLE([headless-tests],
+              AS_HELP_STRING([--enable-headless-tests], [Enable running tests in headless mode]),
+              [enable_headless_tests=$enableval], [enable_headless_tests=no])
+if test "x$enable_headless_tests" != "xno"; then
     AC_PATH_PROG([XVFB_RUN], [xvfb-run], [:])
+    AC_PATH_PROG([DBUS_LAUNCH], [dbus-launch], [:])
     AS_IF([test "$XVFB_RUN" != :], [have_xvfb_run=yes], [have_xvfb_run=no])
+    AS_IF([test "$DBUS_LAUNCH" != :], [have_dbus_launch=yes], [have_dbus_launch=no])
 fi
-AM_CONDITIONAL(HAVE_XVFB_RUN, [test "x$have_xvfb_run" == "xyes"])
+AM_CONDITIONAL(HAVE_HEADLESS_TESTS, [test "x$have_xvfb_run" == "xyes" -a "x$have_dbus_launch" == "xyes"])
 
-if test "x$enable_tests" = "xyes" -a "x$have_xvfb_run" != "xyes"; then
-    AC_MSG_ERROR([Tests requested but xvfb-run not installed.])
+if test "x$enable_headless_tests" = "xyes"; then
+  if test "x$have_xvfb_run" != "xyes" -o "x$have_dbus_launch" != "xyes"; then
+    AC_MSG_ERROR([Headless Tests requested but xvfb-run/dbus-launch not installed.])
+  fi
 fi
 
 
@@ -276,6 +280,6 @@ ${PACKAGE} ${VERSION}
 
     Dbusmenu support............:  ${enable_dbusmenu}
 
-    Tests.......................:  ${enable_tests}
+    Headless Tests..............:  ${enable_headless_tests}
     Documentation...............:  ${have_valadoc}
 "

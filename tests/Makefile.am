@@ -60,12 +60,12 @@ EXTRA_DIST = \
 
 TESTS_ENVIRONMENT = HOME=$(abs_builddir)/home
 
-if HAVE_XVFB_RUN
-TESTS_ENVIRONMENT += $(XVFB_RUN) --server-args="-screen 0 1280x1024x24"
+if HAVE_HEADLESS_TESTS
+TESTS_ENVIRONMENT += $(XVFB_RUN) --server-args="-screen 0 1280x1024x24" $(DBUS_LAUNCH)
+endif
 
 check-local:
 	$(TESTS_ENVIRONMENT) gtester --verbose --keep-going -o=$(builddir)/test-report.xml $(builddir)/tests
-endif
 
 clean-local:
 	rm -rf $(abs_builddir)/home $(builddir)/test-report.xml
