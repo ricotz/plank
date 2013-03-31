@@ -31,9 +31,9 @@ namespace Plank.Tests
 		Test.add_func ("/Drawing/DrawingService/average_color", drawing_drawingservice_average_color);
 		
 		Test.add_func ("/Drawing/DockSurface/basics", drawing_docksurface);
-		Test.add_func ("/Drawing/DockSurface/exponential_blur", drawing_docksurface_gaussian_blur);
+		Test.add_func ("/Drawing/DockSurface/exponential_blur", drawing_docksurface_exponential_blur);
 		Test.add_func ("/Drawing/DockSurface/fast_blur", drawing_docksurface_fast_blur);
-		Test.add_func ("/Drawing/DockSurface/gaussian_blur", drawing_docksurface_exponential_blur);
+		Test.add_func ("/Drawing/DockSurface/gaussian_blur", drawing_docksurface_gaussian_blur);
 		Test.add_func ("/Drawing/DockSurface/to_pixbuf", drawing_docksurface_to_pixbuf);
 		
 		Test.add_func ("/Drawing/Theme/basics", drawing_theme);
