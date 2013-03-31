@@ -47,6 +47,8 @@ namespace Plank
 		
 		DateTime last_hide = new DateTime.from_unix_utc (0);
 		
+		DateTime frame_time = new DateTime.from_unix_utc (0);
+		
 		bool screen_is_composited;
 		uint reset_position_manager_timer = 0;
 		
@@ -246,6 +248,8 @@ namespace Plank
 		 */
 		public void draw_dock (Context cr)
 		{
+			frame_time = new DateTime.now_utc ();
+			
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockItem dragged_item = controller.drag_manager.DragItem;
 			
@@ -318,7 +322,7 @@ namespace Plank
 					if ((item.State & ItemState.URGENT) == 0)
 						continue;
 					
-					var diff = new DateTime.now_utc ().difference (item.LastUrgent);
+					var diff = frame_time.difference (item.LastUrgent);
 					if (diff >= theme.GlowTime * 1000)
 						continue;
 					
@@ -387,7 +391,7 @@ namespace Plank
 			
 			var max_click_time = item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
 			max_click_time *= 1000;
-			var click_time = new DateTime.now_utc ().difference (item.LastClicked);
+			var click_time = frame_time.difference (item.LastClicked);
 			if (click_time < max_click_time) {
 				var clickAnimationProgress = click_time / (double) max_click_time;
 				
@@ -468,7 +472,7 @@ namespace Plank
 			}
 			
 			// bounce icon on urgent state
-			var urgent_time = new DateTime.now_utc ().difference (item.LastUrgent);
+			var urgent_time = frame_time.difference (item.LastUrgent);
 			if (screen_is_composited && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.UrgentBounceTime * 1000) {
 				var change = (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * icon_size * theme.UrgentBounceHeight);
 				switch (controller.prefs.Position) {
@@ -489,7 +493,7 @@ namespace Plank
 			}
 			
 			// draw active glow
-			var active_time = new DateTime.now_utc ().difference (item.LastActive);
+			var active_time = frame_time.difference (item.LastActive);
 			var opacity = double.min (1, active_time / (double) (theme.ActiveTime * 1000));
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
@@ -577,7 +581,7 @@ namespace Plank
 			if (diff < theme.HideTime * 1000)
 				last_hide = now.add_seconds ((diff - theme.HideTime * 1000) / 1000000.0);
 			else
-				last_hide = new DateTime.now_utc ();
+				last_hide = now;
 			
 			if (!screen_is_composited) {
 				controller.window.update_size_and_position ();
