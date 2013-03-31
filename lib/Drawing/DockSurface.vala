@@ -289,13 +289,13 @@ namespace Plank.Drawing
 			th.join ();
 			
 			// Process Columns
-			th = new Thread<void*> (null, () => {
+			var th2 = new Thread<void*> (null, () => {
 				exponential_blur_columns (pixels, width, height, 0, width / 2, 0, height, alpha);
 				return null;
 			});
 			
 			exponential_blur_columns (pixels, width, height, width / 2, width, 0, height, alpha);
-			th.join ();
+			th2.join ();
 			
 			original.mark_dirty ();
 			
@@ -426,13 +426,13 @@ namespace Plank.Drawing
 				}
 			
 			// Vertical Pass
-			th = new Thread<void*> (null, () => {
+			var th2 = new Thread<void*> (null, () => {
 				gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, 0, width / 2, shiftar);
 				return null;
 			});
 			
 			gaussian_blur_vertical (bbuffer, abuffer, kernel, gaussWidth, width, height, width / 2, width, shiftar);
-			th.join ();
+			th2.join ();
 			
 			// Save blurred image to original uint8[]
 			for (var i = 0; i < size; i++)
