@@ -56,6 +56,7 @@ namespace Plank.Widgets
 		
 		bool dock_is_starting = true;
 		
+		Cairo.RectangleInt input_rect;
 		
 		/**
 		 * Creates a new dock window.
@@ -517,8 +518,11 @@ namespace Plank.Widgets
 			return_if_fail (cursor.width > 0);
 			return_if_fail (cursor.height > 0);
 			
-			var region = new Region.rectangle (RectangleInt () {x = 0, y = 0, width = cursor.width, height = cursor.height});
-			get_window ().input_shape_combine_region (region, cursor.x, cursor.y);
+			RectangleInt rect = {cursor.x, cursor.y, cursor.width, cursor.height};
+			if (rect != input_rect) {
+				input_rect = rect;
+				get_window ().input_shape_combine_region (new Region.rectangle (rect), 0, 0);
+			}
 		}
 		
 		void set_struts ()
