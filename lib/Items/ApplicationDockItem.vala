@@ -97,6 +97,8 @@ namespace Plank.Items
 				if (app != null) {
 					app_signals_connect (app);
 					initialize_states ();
+				} else {
+					reset_application_status ();
 				}
 				
 				unity_update_application_uri ();
@@ -214,9 +216,7 @@ namespace Plank.Items
 			if (this is TransientDockItem)
 				App = null;
 			
-			handle_urgent_changed (false);
-			handle_active_changed (false);
-			update_indicator (0);
+			reset_application_status ();
 			
 			app_closed ();
 		}
@@ -239,9 +239,7 @@ namespace Plank.Items
 			if (is_running)
 				return;
 			
-			handle_urgent_changed (false);
-			handle_active_changed (false);
-			update_indicator (0);
+			reset_application_status ();
 		}
 		
 		public void set_urgent (bool is_urgent)
@@ -287,6 +285,13 @@ namespace Plank.Items
 				if (Indicator != IndicatorState.SINGLE_PLUS)
 					Indicator = IndicatorState.SINGLE_PLUS;
 			}
+		}
+		
+		inline void reset_application_status ()
+		{
+			handle_urgent_changed (false);
+			handle_active_changed (false);
+			update_indicator (0);
 		}
 		
 		void launch ()
