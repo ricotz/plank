@@ -68,7 +68,7 @@ namespace Plank
 				return 0;
 			
 			var time = theme.FadeOpacity == 1.0 ? theme.HideTime : theme.FadeTime;
-			var diff = double.min (1, new DateTime.now_utc ().difference (last_hide) / (double) (time * 1000));
+			var diff = double.min (1, frame_time.difference (last_hide) / (double) (time * 1000));
 			return Hidden ? diff : 1 - diff;
 		}
 		
