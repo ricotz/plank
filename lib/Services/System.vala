@@ -145,8 +145,7 @@ namespace Plank.Services
 				
 				warning ("The application '%s' doesn't support files/URIs or wasn't found.", info.get_name ());
 			} catch (Error e) {
-				debug ("Error: " + e.domain.to_string ());
-				error (e.message);
+				critical (e.message);
 			}
 		}
 	}
