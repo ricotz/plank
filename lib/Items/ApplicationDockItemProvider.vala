@@ -78,7 +78,7 @@ namespace Plank.Items
 				items_monitor = Factory.item_factory.launchers_dir.monitor (0);
 				items_monitor.changed.connect (handle_items_dir_changed);
 			} catch (Error e) {
-				error ("Unable to watch the launchers directory. (%s)", e.message);
+				critical ("Unable to watch the launchers directory. (%s)", e.message);
 			}
 			
 			// Initialize Unity DBus
