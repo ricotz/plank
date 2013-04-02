@@ -304,35 +304,17 @@ namespace Plank
 			cr.paint ();
 			
 			// fade the dock if need be
-			if (get_opacity () < 1.0) {
+			var opacity = get_opacity ();
+			if (opacity < 1.0) {
 				cr.set_source_rgba (0, 0, 0, 0);
-				cr.paint_with_alpha (1 - get_opacity ());
+				cr.paint_with_alpha (1 - opacity);
 			}
 			
-			// dock is completely hidden
+			// draw urgent-glow if dock is completely hidden
 			if (get_hide_offset () == 1) {
-				if (urgent_glow_buffer == null) {
-					var urgent_color = get_styled_color ();
-					urgent_color.add_hue (theme.UrgentHueShift);
-					urgent_color.set_sat (1.0);
-					urgent_glow_buffer = theme.create_urgent_glow (position_manager.GlowSize, urgent_color, background_buffer);
-				}
-				
-				foreach (var item in controller.items.Items) {
-					if ((item.State & ItemState.URGENT) == 0)
-						continue;
-					
-					var diff = frame_time.difference (item.LastUrgent);
-					if (diff >= theme.GlowTime * 1000)
-						continue;
-					
-					position_manager.get_urgent_glow_position (item, out x_offset, out y_offset);
-					
-					cr.set_source_surface (urgent_glow_buffer.Internal, x_offset, y_offset);
-					var opacity = 0.2 + (0.75 * (Math.sin (diff / (double) (theme.GlowPulseTime * 1000) * 2 * Math.PI) + 1) / 2);
-					cr.paint_with_alpha (opacity);
-				}
+				draw_urgent_glow (cr);
 			}
+			
 #if BENCHMARK
 			var end = new DateTime.now_local ();
 			var diff = end.difference (start) / 1000.0;
@@ -563,6 +545,34 @@ namespace Plank
 				main_cr.paint ();
 				main_cr.set_source_surface (indicator_surface.Internal, x + x_offset, y + y_offset);
 				main_cr.paint ();
+			}
+		}
+		
+		void draw_urgent_glow (Context cr)
+		{
+			unowned PositionManager position_manager = controller.position_manager;
+			var x_offset = 0, y_offset = 0;
+			
+			if (urgent_glow_buffer == null) {
+				var urgent_color = get_styled_color ();
+				urgent_color.add_hue (theme.UrgentHueShift);
+				urgent_color.set_sat (1.0);
+				urgent_glow_buffer = theme.create_urgent_glow (position_manager.GlowSize, urgent_color, main_buffer);
+			}
+			
+			foreach (var item in controller.items.Items) {
+				if ((item.State & ItemState.URGENT) == 0)
+					continue;
+				
+				var diff = frame_time.difference (item.LastUrgent);
+				if (diff >= theme.GlowTime * 1000)
+					continue;
+				
+				position_manager.get_urgent_glow_position (item, out x_offset, out y_offset);
+				
+				cr.set_source_surface (urgent_glow_buffer.Internal, x_offset, y_offset);
+				var opacity = 0.2 + (0.75 * (Math.sin (diff / (double) (theme.GlowPulseTime * 1000) * 2 * Math.PI) + 1) / 2);
+				cr.paint_with_alpha (opacity);
 			}
 		}
 		
