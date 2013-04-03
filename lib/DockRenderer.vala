@@ -18,9 +18,7 @@
 using Cairo;
 using Gdk;
 using Gtk;
-#if BENCHMARK
 using Gee;
-#endif
 
 using Plank.Items;
 using Plank.Drawing;
@@ -252,19 +250,18 @@ namespace Plank
 			
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockItem dragged_item = controller.drag_manager.DragItem;
-			
-			var width = position_manager.DockWidth;
-			var height = position_manager.DockHeight;
+			unowned ArrayList<DockItem> items = controller.items.Items;
 			
 #if BENCHMARK
 			benchmark.clear ();
 			var start = new DateTime.now_local ();
 #endif
-			if (main_buffer != null && (main_buffer.Width != width || main_buffer.Height != height))
-				reset_buffers ();
 			
-			if (main_buffer == null)
+			if (main_buffer == null) {
+				var width = position_manager.DockWidth;
+				var height = position_manager.DockHeight;
 				main_buffer = new DockSurface.with_surface (width, height, cr.get_target ());
+			}
 			
 			main_buffer.clear ();
 			
@@ -279,7 +276,7 @@ namespace Plank
 			
 			
 			// draw each item onto the dock buffer
-			foreach (var item in controller.items.Items)
+			foreach (var item in items)
 			{
 #if BENCHMARK
 				start2 = new DateTime.now_local ();
@@ -312,7 +309,8 @@ namespace Plank
 			
 			// draw urgent-glow if dock is completely hidden
 			if (get_hide_offset () == 1) {
-				draw_urgent_glow (cr);
+				foreach (var item in items)
+					draw_urgent_glow (item, cr);
 			}
 			
 #if BENCHMARK
@@ -548,8 +546,15 @@ namespace Plank
 			}
 		}
 		
-		void draw_urgent_glow (Context cr)
+		void draw_urgent_glow (DockItem item, Context cr)
 		{
+			if ((item.State & ItemState.URGENT) == 0)
+				return;
+			
+			var diff = frame_time.difference (item.LastUrgent);
+			if (diff >= theme.GlowTime * 1000)
+				return;
+			
 			unowned PositionManager position_manager = controller.position_manager;
 			var x_offset = 0, y_offset = 0;
 			
@@ -560,20 +565,11 @@ namespace Plank
 				urgent_glow_buffer = theme.create_urgent_glow (position_manager.GlowSize, urgent_color, main_buffer);
 			}
 			
-			foreach (var item in controller.items.Items) {
-				if ((item.State & ItemState.URGENT) == 0)
-					continue;
-				
-				var diff = frame_time.difference (item.LastUrgent);
-				if (diff >= theme.GlowTime * 1000)
-					continue;
-				
-				position_manager.get_urgent_glow_position (item, out x_offset, out y_offset);
-				
-				cr.set_source_surface (urgent_glow_buffer.Internal, x_offset, y_offset);
-				var opacity = 0.2 + (0.75 * (Math.sin (diff / (double) (theme.GlowPulseTime * 1000) * 2 * Math.PI) + 1) / 2);
-				cr.paint_with_alpha (opacity);
-			}
+			position_manager.get_urgent_glow_position (item, out x_offset, out y_offset);
+			
+			cr.set_source_surface (urgent_glow_buffer.Internal, x_offset, y_offset);
+			var opacity = 0.2 + (0.75 * (Math.sin (diff / (double) (theme.GlowPulseTime * 1000) * 2 * Math.PI) + 1) / 2);
+			cr.paint_with_alpha (opacity);
 		}
 		
 		Drawing.Color get_styled_color ()
