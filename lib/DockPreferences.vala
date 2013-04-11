@@ -149,7 +149,7 @@ namespace Plank
 		 */
 		public bool is_horizontal_dock ()
 		{
-			return Position == PositionType.TOP || Position == PositionType.BOTTOM;
+			return (Position == PositionType.TOP || Position == PositionType.BOTTOM);
 		}
 		
 		/**

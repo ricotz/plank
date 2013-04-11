@@ -145,7 +145,7 @@ namespace Plank.Drawing
 		
 		static bool icon_is_file (string name)
 		{
-			return name.has_prefix ("/") || name.has_prefix ("~/") || name.down ().has_prefix ("file://");
+			return (name.has_prefix ("/") || name.has_prefix ("~/") || name.down ().has_prefix ("file://"));
 		}
 		
 		static Pixbuf? load_pixbuf_from_file (string name, int width, int height)

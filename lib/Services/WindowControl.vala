@@ -389,8 +389,8 @@ namespace Plank.Services.Windows
 				}
 			
 			foreach (var window in windows)
-				if ((window.is_active () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) ||
-					window == Screen.get_default ().get_active_window ()) {
+				if ((window.is_active () && window.is_in_viewport (window.get_screen ().get_active_workspace ()))
+					|| window == Screen.get_default ().get_active_window ()) {
 					foreach (var w in windows)
 						if (!w.is_minimized () && w.is_in_viewport (w.get_screen ().get_active_workspace ())) {
 							w.minimize ();

@@ -305,9 +305,9 @@ namespace Plank.Items
 		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
 		{
 			if (!is_window ())
-				if (button == PopupButton.MIDDLE ||
-					(button == PopupButton.LEFT && (App == null || WindowControl.get_num_windows (App) == 0 ||
-					(mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))) {
+				if (button == PopupButton.MIDDLE
+					|| (button == PopupButton.LEFT && (App == null || WindowControl.get_num_windows (App) == 0
+					|| (mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))) {
 					launch ();
 					return ClickAnimation.BOUNCE;
 				}
@@ -325,8 +325,8 @@ namespace Plank.Items
 		 */
 		protected override void on_scrolled (ScrollDirection direction, ModifierType mod)
 		{
-			if (App == null || WindowControl.get_num_windows (App) == 0 ||
-				(new DateTime.now_utc ().difference (LastScrolled) < WindowControl.VIEWPORT_CHANGE_DELAY * 1000))
+			if (App == null || WindowControl.get_num_windows (App) == 0
+				|| (new DateTime.now_utc ().difference (LastScrolled) < WindowControl.VIEWPORT_CHANGE_DELAY * 1000))
 				return;
 			
 			LastScrolled = new DateTime.now_utc ();
@@ -630,8 +630,8 @@ namespace Plank.Items
 		
 		void monitor_changed (File f, File? other, FileMonitorEvent event)
 		{
-			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) != FileMonitorEvent.CHANGES_DONE_HINT &&
-				(event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
+			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) != FileMonitorEvent.CHANGES_DONE_HINT
+				&& (event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
 				return;
 			
 			if (!f.query_exists ())

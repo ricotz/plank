@@ -115,8 +115,8 @@ namespace Plank.Widgets
 				return true;
 			
 			var button = PopupButton.from_event_button (event);
-			if ((button & PopupButton.RIGHT) == PopupButton.RIGHT &&
-					(HoveredItem == null || (event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))
+			if ((button & PopupButton.RIGHT) == PopupButton.RIGHT
+				&& (HoveredItem == null || (event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))
 				show_menu (event.button, true);
 			else if (HoveredItem != null && (HoveredItem.Button & button) == button)
 				show_menu (event.button, false);

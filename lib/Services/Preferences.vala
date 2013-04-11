@@ -183,7 +183,7 @@ namespace Plank.Services
 					else
 						info = file.get_parent ().query_info (FileAttribute.ACCESS_CAN_WRITE, FileQueryInfoFlags.NONE, null);
 					
-					read_only = read_only || !info.get_attribute_boolean (FileAttribute.ACCESS_CAN_WRITE);
+					read_only = (read_only || !info.get_attribute_boolean (FileAttribute.ACCESS_CAN_WRITE));
 					
 					if (read_only)
 						warning ("'%s' is read-only!", file.get_path () ?? "");
@@ -317,8 +317,8 @@ namespace Plank.Services
 		void backing_file_changed (File f, File? other, FileMonitorEvent event)
 		{
 			// only watch for change or delete events
-			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) != FileMonitorEvent.CHANGES_DONE_HINT &&
-				(event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
+			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) != FileMonitorEvent.CHANGES_DONE_HINT
+				&& (event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
 				return;
 			
 			if ((event & FileMonitorEvent.DELETED) == FileMonitorEvent.DELETED) {
