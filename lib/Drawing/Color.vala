@@ -1,19 +1,19 @@
-//  
+//
 //  Copyright (C) 2011 Robert Dyer
-// 
+//
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-// 
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-// 
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 
 using Gdk;
 
@@ -43,11 +43,11 @@ namespace Plank.Drawing
 		 */
 		public double A;
 		
- 		/**
+		/**
 		 * Creates a new color from a {@link Gdk.Color}.
- 		 *
- 		 * @param color the color to use
- 		 * @return new {@link Color} based on the given one
+		 *
+		 * @param color the color to use
+		 * @return new {@link Color} based on the given one
 		 */
 		public static Color from_gdk_color (Gdk.Color color)
 		{
@@ -59,8 +59,8 @@ namespace Plank.Drawing
 		
 		/**
 		 * Creates a new {@link Gdk.Color}.from this color
- 		 *
- 		 * @return new {@link Gdk.Color}
+		 *
+		 * @return new {@link Gdk.Color}
 		 */
 		public Gdk.Color to_gdk_color ()
 		{
@@ -69,11 +69,11 @@ namespace Plank.Drawing
 				blue = (uint16) (B * uint16.MAX) };
 		}
 		
- 		/**
+		/**
 		 * Creates a new color from a {@link Gdk.RGBA}.
- 		 *
- 		 * @param color the color to use
- 		 * @return new {@link Color} based on the given one
+		 *
+		 * @param color the color to use
+		 * @return new {@link Color} based on the given one
 		 */
 		public static Color from_gdk_rgba (Gdk.RGBA color)
 		{
@@ -82,8 +82,8 @@ namespace Plank.Drawing
 		
 		/**
 		 * Creates a new {@link Gdk.RGBA}.from this color
- 		 *
- 		 * @return new {@link Gdk.RGBA}
+		 *
+		 * @return new {@link Gdk.RGBA}
 		 */
 		public Gdk.RGBA to_gdk_rgba ()
 		{
@@ -379,8 +379,8 @@ namespace Plank.Drawing
 			requires (s >= 0 && s <= 1)
 			requires (v >= 0 && v <= 1)
 		{
-			r = 0; 
-			g = 0; 
+			r = 0;
+			g = 0;
 			b = 0;
 
 			if (s == 0) {
@@ -445,10 +445,10 @@ namespace Plank.Drawing
 		}
 		
 		/**
-		 * Create new color converted from string formatted like 
+		 * Create new color converted from string formatted like
 		 * "%d;;%d;;%d;;%d" with numeric entries ranged in 0..255
 		 *
- 		 * @return new {@link Color} based on the given string
+		 * @return new {@link Color} based on the given string
 		 */
 		public static Color from_string (string s)
 		{

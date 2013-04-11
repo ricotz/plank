@@ -1,19 +1,19 @@
-//  
+//
 //  Copyright (C) 2011-2012 Robert Dyer, Michal Hruby, Rico Tzschichholz
-// 
+//
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-// 
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-// 
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 
 using Cairo;
 using Gdk;
@@ -109,7 +109,7 @@ namespace Plank.Widgets
 		 */
 		public override bool button_press_event (EventButton event)
 		{
-			// This event gets fired before the drag end event, 
+			// This event gets fired before the drag end event,
 			// in this case we ignore it.
 			if (controller.drag_manager.InternalDragActive)
 				return true;
@@ -545,7 +545,7 @@ namespace Plank.Widgets
 			Gdk.error_trap_push ();
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,
 			                      32, X.PropMode.Replace, (uchar[]) struts, struts.length);
-			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL, 
+			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL,
 			                      32, X.PropMode.Replace, (uchar[]) first_struts, first_struts.length);
 			Gdk.error_trap_pop ();
 		}

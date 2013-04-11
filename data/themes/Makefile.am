@@ -1,4 +1,4 @@
-EXTRA_DIST = 
+EXTRA_DIST =
 
 defaultthemedir = $(pkgdatadir)/themes/Default
 defaulttheme_DATA = \

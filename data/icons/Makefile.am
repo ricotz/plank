@@ -1,4 +1,4 @@
-EXTRA_DIST = 
+EXTRA_DIST =
 
 pkgicon16dir = @datadir@/icons/hicolor/16x16/apps
 pkgicon16_DATA = 16x16/plank.svg

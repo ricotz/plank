@@ -1,4 +1,4 @@
-EXTRA_DIST = 
+EXTRA_DIST =
 
 hookdir = $(datadir)/apport/package-hooks
 hook_DATA = source_plank.py

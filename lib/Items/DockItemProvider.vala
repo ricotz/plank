@@ -1,19 +1,19 @@
-//  
+//
 //  Copyright (C) 2011-2013 Robert Dyer, Rico Tzschichholz
-// 
+//
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
-// 
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
-// 
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 
 using Gee;
 
@@ -186,13 +186,13 @@ namespace Plank.Items
 			
 			foreach (var entry in saved_item_positions.entries)
 				entry.key.Position = entry.value;
- 			visible_items.sort ((CompareFunc) compare_items);
+			visible_items.sort ((CompareFunc) compare_items);
 			
 			saved_item_positions.clear ();
 			
 			set_item_positions ();
 			item_position_changed ();
- 		}
+		}
 		
 		/**
 		 * Serializes the item positions to the preferences.
