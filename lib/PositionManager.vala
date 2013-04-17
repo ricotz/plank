@@ -168,6 +168,12 @@ namespace Plank
 		public int DockBackgroundWidth { get; private set; }
 		
 		/**
+		 * The maximum item count which fit the dock in its maximum
+		 * size with the current theme and icon-size.
+		 */
+		public int MaxItemCount { get; private set; }
+		
+		/**
 		 * Resets all internal caches.
 		 *
 		 * @param theme the current dock theme
@@ -253,6 +259,7 @@ namespace Plank
 				DockWidth = (screen_is_composited ? monitor_geo.width : width);
 				DockBackgroundHeight = background_height;
 				DockBackgroundWidth = background_width;
+				MaxItemCount = (int) Math.floor ((double) (monitor_geo.width - 2 * HorizPadding + 4 * LineWidth) / (ItemPadding + IconSize));
 			} else {
 				width = int.min (monitor_geo.height, width);
 				VisibleDockHeight = width;
@@ -261,6 +268,7 @@ namespace Plank
 				DockWidth = dock_height;
 				DockBackgroundHeight = background_width;
 				DockBackgroundWidth = background_height;
+				MaxItemCount = (int) Math.floor ((double) (monitor_geo.height - 2 * HorizPadding + 4 * LineWidth) / (ItemPadding + IconSize));
 			}
 		}
 		
