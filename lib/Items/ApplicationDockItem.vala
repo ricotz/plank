@@ -641,8 +641,13 @@ namespace Plank.Items
 				&& (event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
 				return;
 			
-			if (!f.query_exists ())
+			// If the desktop-file for the corresponding application was deleted
+			// request removal of this item from dock
+			if (!f.query_exists ()) {
+				debug ("Launcher file '%s' deleted, removing item '%s'", Prefs.Launcher, Text);
+				deleted ();
 				return;
+			}
 			
 			debug ("Launcher file '%s' changed, reloading", Prefs.Launcher);
 			load_from_launcher ();
