@@ -195,7 +195,6 @@ namespace Plank.Services
 			
 			// ensure the preferences file exists
 			if (!file_exists) {
-				reset_properties ();
 				save_prefs ();
 			} else {
 				load_prefs ();
