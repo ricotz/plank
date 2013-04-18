@@ -56,13 +56,11 @@ namespace Plank.Drawing
 		
 		public Theme ()
 		{
-			base ();
 			theme_folder = get_theme_folder (DEFAULT_NAME);
 		}
 		
 		public Theme.with_name (string name)
 		{
-			base ();
 			theme_folder = get_theme_folder (name);
 		}
 		
