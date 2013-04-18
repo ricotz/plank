@@ -175,7 +175,7 @@ namespace Plank
 				controller.items.save_item_positions ();
 				
 				// FIXME
-				var drag_icon_size = (int) (1.2 * controller.prefs.IconSize);
+				var drag_icon_size = (int) (1.2 * controller.position_manager.IconSize);
 				var icon_surface = new DockSurface (drag_icon_size, drag_icon_size);
 				pbuf = DragItem.get_surface_copy (drag_icon_size, drag_icon_size, icon_surface).to_pixbuf ();
 				controller.renderer.animated_draw ();

@@ -349,7 +349,7 @@ namespace Plank
 			var old_region = static_dock_region;
 			
 			// width of the items-area of the dock
-			items_width = controller.items.Items.size * (ItemPadding + prefs.IconSize);
+			items_width = controller.items.Items.size * (ItemPadding + IconSize);
 			
 			static_dock_region.width = VisibleDockWidth;
 			static_dock_region.height = VisibleDockHeight;

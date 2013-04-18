@@ -349,7 +349,7 @@ namespace Plank
 			unowned DragManager drag_manager = controller.drag_manager;
 			
 			unowned Context main_cr = main_buffer.Context;
-			var icon_size = controller.prefs.IconSize;
+			var icon_size = position_manager.IconSize;
 			
 			// load the icon
 #if BENCHMARK
@@ -535,9 +535,9 @@ namespace Plank
 			} else {
 				var x_offset = 0.0, y_offset = 0.0;
 				if (controller.prefs.is_horizontal_dock ())
-					x_offset = controller.prefs.IconSize / 16.0;
+					x_offset = controller.position_manager.IconSize / 16.0;
 				else
-					y_offset = controller.prefs.IconSize / 16.0;
+					y_offset = controller.position_manager.IconSize / 16.0;
 				
 				main_cr.set_source_surface (indicator_surface.Internal, x - x_offset, y - y_offset);
 				main_cr.paint ();
