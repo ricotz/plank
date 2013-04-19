@@ -239,6 +239,15 @@ namespace Plank.Items
 			item_position_changed ();
 		}
 		
+		/**
+		 * Reset internal buffers of all items.
+		 */
+		public void reset_item_buffers ()
+		{
+			foreach (var item in internal_items)
+				item.reset_buffers ();
+		}
+		
 		protected virtual void add_item_without_signaling (DockItem item)
 		{
 			if (item.Position > -1 && item.Position <= internal_items.size) {

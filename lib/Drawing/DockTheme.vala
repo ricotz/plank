@@ -29,6 +29,7 @@ namespace Plank.Drawing
 	{
 		const double MIN_INDICATOR_SIZE = 0.0;
 		const double MAX_INDICATOR_SIZE = 10.0;
+		const double MAX_ICON_SHADOW_SIZE = 3.0;
 		
 		[Description(nick = "horizontal-padding", blurb = "The padding on the left/right dock edges, in tenths of a percent of IconSize.")]
 		public double HorizPadding { get; set; }
@@ -44,6 +45,9 @@ namespace Plank.Drawing
 		
 		[Description(nick = "indicator-size", blurb = "The size of item indicators, in tenths of a percent of IconSize.")]
 		public double IndicatorSize { get; set; }
+		
+		[Description(nick = "icon-shadow-size", blurb = "The size of the icon-shadow behind every item, in tenths of a percent of IconSize.")]
+		public double IconShadowSize { get; set; }
 		
 		[Description(nick = "urgent-bounce", blurb = "The height (in percent of IconSize) to bounce an icon when the application sets urgent.")]
 		public double UrgentBounceHeight { get; set; }
@@ -105,6 +109,7 @@ namespace Plank.Drawing
 			BottomPadding = 2.5;
 			ItemPadding = 2.0;
 			IndicatorSize = 5.0;
+			IconShadowSize = 1.0;
 			UrgentBounceHeight = 5.0 / 3.0;
 			LaunchBounceHeight = 0.625;
 			FadeOpacity = 1.0;
@@ -530,6 +535,13 @@ namespace Plank.Drawing
 					IndicatorSize = MIN_INDICATOR_SIZE;
 				else if (IndicatorSize > MAX_INDICATOR_SIZE)
 					IndicatorSize = MAX_INDICATOR_SIZE;
+				break;
+			
+			case "IconShadowSize":
+				if (IconShadowSize < 0)
+					IconShadowSize = 0;
+				else if (IconShadowSize > MAX_ICON_SHADOW_SIZE)
+					IconShadowSize = MAX_ICON_SHADOW_SIZE;
 				break;
 			
 			case "UrgentBounceHeight":

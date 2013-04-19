@@ -110,6 +110,7 @@ namespace Plank
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
 			controller.window.notify["HoveredItem"].connect (animated_draw);
+			controller.prefs.notify["Position"].connect (dock_position_changed);
 			controller.prefs.notify["Theme"].connect (load_theme);
 		}
 		
@@ -126,6 +127,7 @@ namespace Plank
 
 			notify["Hidden"].disconnect (hidden_changed);
 			
+			controller.prefs.notify["Position"].disconnect (dock_position_changed);
 			controller.prefs.notify["Theme"].disconnect (load_theme);
 			controller.window.notify["HoveredItem"].disconnect (animated_draw);
 		}
@@ -152,6 +154,13 @@ namespace Plank
 		
 		void item_state_changed ()
 		{
+			animated_draw ();
+		}
+		
+		void dock_position_changed ()
+		{
+			reset_item_buffers ();
+			
 			animated_draw ();
 		}
 		
@@ -231,6 +240,18 @@ namespace Plank
 			indicator_buffer = null;
 			urgent_indicator_buffer = null;
 			urgent_glow_buffer = null;
+			
+			animated_draw ();
+		}
+		
+		/**
+		 * Resets all internal item buffers and forces a redraw.
+		 */
+		public void reset_item_buffers ()
+		{
+			Logger.verbose ("DockRenderer.reset_item_buffers ()");
+			
+			controller.items.reset_item_buffers ();
 			
 			animated_draw ();
 		}
@@ -350,12 +371,17 @@ namespace Plank
 			
 			unowned Context main_cr = main_buffer.Context;
 			var icon_size = position_manager.IconSize;
+			var shadow_size = controller.position_manager.IconShadowSize;
 			
 			// load the icon
 #if BENCHMARK
 			var start = new DateTime.now_local ();
 #endif
-			var icon_surface = item.get_surface_copy (icon_size, icon_size, main_buffer);
+			unowned DrawItemFunc? shadow_func = null;
+			if (shadow_size > 0)
+				shadow_func = draw_item_shadow;
+			
+			var icon_surface = item.get_surface_copy (icon_size, icon_size, main_buffer, shadow_func);
 			unowned Context icon_cr = icon_surface.Context;
 #if BENCHMARK
 			var end = new DateTime.now_local ();
@@ -483,12 +509,55 @@ namespace Plank
 			}
 			
 			// draw the icon
-			main_cr.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);
+			main_cr.set_source_surface (icon_surface.Internal, draw_rect.x - shadow_size, draw_rect.y - shadow_size);
 			main_cr.paint ();
 			
 			// draw indicators
 			if (item.Indicator != IndicatorState.NONE)
 				draw_indicator_state (hover_rect, item.Indicator, item.State);
+		}
+		
+		DockSurface draw_item_shadow (DockSurface icon_surface, DockSurface? current_surface)
+		{
+			var shadow_size = controller.position_manager.IconShadowSize;
+			
+			// Inflate size to fit shadow
+			var width = icon_surface.Width + 2 * shadow_size;
+			var height = icon_surface.Height + 2 * shadow_size;
+			
+			if (current_surface != null && width == current_surface.Width && height == current_surface.Height)
+				return current_surface;
+			
+			Logger.verbose ("DockItem.draw_icon_with_shadow (width = %i, height = %i, shadow_size = %i)", width, height, shadow_size);
+			var surface = new DockSurface.with_dock_surface (width, height, icon_surface);
+			unowned Cairo.Context cr = surface.Context;
+			var shadow_surface = icon_surface.create_mask (0.4, null);
+			
+			var xoffset = 0, yoffset = 0;
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				yoffset = -shadow_size / 4;
+				break;
+			case PositionType.TOP:
+				yoffset = shadow_size / 4;
+				break;
+			case PositionType.LEFT:
+				xoffset = shadow_size / 4;
+				break;
+			case PositionType.RIGHT:
+				xoffset = -shadow_size / 4;
+				break;
+			}
+			
+			cr.set_source_surface (shadow_surface.Internal, shadow_size + xoffset, shadow_size + yoffset);
+			cr.paint_with_alpha (0.44);
+			surface.gaussian_blur (shadow_size);
+			
+			cr.set_source_surface (icon_surface.Internal, shadow_size, shadow_size);
+			cr.paint ();
+			
+			return surface;
 		}
 		
 		void draw_indicator_state (Gdk.Rectangle item_rect, IndicatorState indicator, ItemState item_state)

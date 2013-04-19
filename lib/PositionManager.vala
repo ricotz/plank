@@ -114,6 +114,10 @@ namespace Plank
 		 */
 		public int IndicatorSize { get; private set; }
 		/**
+		 * Theme-based icon-shadow size, scaled by icon size.
+		 */
+		public int IconShadowSize { get; private set; }
+		/**
 		 * Theme-based urgent glow size, scaled by icon size.
 		 */
 		public int GlowSize { get; private set; }
@@ -187,6 +191,7 @@ namespace Plank
 			IconSize = controller.prefs.IconSize;
 			var scaled_icon_size = IconSize / 10.0;
 			
+			IconShadowSize = (int) Math.ceil (theme.IconShadowSize * scaled_icon_size);
 			IndicatorSize = (int) (theme.IndicatorSize * scaled_icon_size);
 			GlowSize      = (int) (theme.GlowSize      * scaled_icon_size);
 			HorizPadding  = (int) (theme.HorizPadding  * scaled_icon_size);
