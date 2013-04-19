@@ -81,6 +81,16 @@ namespace Plank.Drawing
 			Object (Width: width, Height: height, Internal: new Surface.similar (model.Internal, Content.COLOR_ALPHA, width, height));
 		}
 		
+		/**
+		 * Creates a new dock surface with the given {@link Cairo.ImageSurface} as Internal.
+		 *
+		 * @param image existing {@link Cairo.ImageSurface} as Internal
+		 */
+		public DockSurface.with_internal (ImageSurface image)
+		{
+			Object (Width: image.get_width (), Height: image.get_height (), Internal: image);
+		}
+		
 		construct
 		{
 			Context = new Cairo.Context (Internal);
@@ -108,6 +118,65 @@ namespace Plank.Drawing
 		public Gdk.Pixbuf to_pixbuf ()
 		{
 			return Gdk.pixbuf_get_from_surface (Internal, 0, 0, Width, Height);
+		}
+		
+		/**
+		 * Computes the mask of the surface.
+		 *
+		 * @param threshold value defining the minimum opacity [0.0 .. 1.0]
+		 * @param extent bounding box of the found mask
+		 * @return a new surface containing the mask
+		 */
+		public DockSurface create_mask (double threshold, out Gdk.Rectangle extent)
+			requires (threshold >= 0.0 && threshold <= 1.0)
+		{
+			var surface = new ImageSurface (Format.ARGB32, Width, Height);
+			var cr = new Cairo.Context (surface);
+			
+			cr.set_operator (Operator.SOURCE);
+			cr.set_source_surface (Internal, 0, 0);
+			cr.paint ();
+			
+			int w = surface.get_width ();
+			int h = surface.get_height ();
+			uint8 slice = (uint8) (uint8.MAX * threshold);
+			
+			int left = w;
+			int right = 0;
+			int top = h;
+			int bottom = 0;
+			
+			uint8 *data = surface.get_data ();
+			
+			int src;
+			bool mask;
+			for (int y = 0; y < h; y++) {
+				for (int x = 0; x < w; x++) {
+					src = (y * w + x) * 4;
+					
+					mask = data[src + 3] > slice;
+					
+					data[src + 0] = 0;
+					data[src + 1] = 0;
+					data[src + 2] = 0;
+					data[src + 3] = (mask ? uint8.MAX : 0);
+					
+					if (mask) {
+						if (y < top)
+							top = y;
+						if (y > bottom)
+							bottom = y;
+						if (x < left)
+							left = x;
+						if (x > right)
+							right = x;
+					}
+				}
+			}
+			
+			extent = {left, top, right - left, bottom - top};
+			
+			return new DockSurface.with_internal (surface);
 		}
 		
 		/**
