@@ -102,7 +102,6 @@ PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  gdk-pixbuf-2.0 >= $GDK_PIXBUF_MIN_VERSION \
                  libbamf3 >= $BAMF_MIN_VERSION \
                  libwnck-3.0 \
-                 gee-1.0 \
                  x11"
 PLANK_CORE_OPTIONAL_PKGS=""
 
@@ -112,7 +111,6 @@ PLANK_CORE_VALA_PKGS="--pkg gio-unix-2.0 \
                       --pkg gdk-pixbuf-2.0 \
                       --pkg libbamf3 \
                       --pkg libwnck-3.0 \
-                      --pkg gee-1.0 \
                       --pkg posix \
                       --pkg x11"
 
@@ -146,6 +144,25 @@ if test "x$enable_bamf_0_4" = "xyes" ; then
     VALAFLAGS="$VALAFLAGS --define HAVE_BAMF_0_4"
 fi
 AM_CONDITIONAL([HAVE_BAMF_0_4], [test "x$enable_bamf_0_4" = "xyes"])
+
+# Check for gee-0.8 and use it if available, fallback to gee-1.0 (0.6) by default
+AC_ARG_ENABLE([gee-0.8],
+              AS_HELP_STRING([--enable-gee-0.8],
+                             [Enable use of gee-0.8 instead of gee-1.0]),
+              [enable_gee_0_8=$enableval],
+              [PKG_CHECK_MODULES(GEE_0_8, gee-0.8, [enable_gee_0_8=yes], [enable_gee_0_8=no])])
+if test "x$enable_gee_0_8" = "xyes" ; then
+    GEE_DEPEND=gee-0.8
+    PLANK_CORE_PKGS="$PLANK_CORE_PKGS gee-0.8"
+    PLANK_CORE_VALA_PKGS="$PLANK_CORE_VALA_PKGS --pkg gee-0.8"
+    VALAFLAGS="$VALAFLAGS --define HAVE_GEE_0_8"
+else
+    GEE_DEPEND=gee-1.0
+    PLANK_CORE_PKGS="$PLANK_CORE_PKGS gee-1.0"
+    PLANK_CORE_VALA_PKGS="$PLANK_CORE_VALA_PKGS --pkg gee-1.0"
+fi
+AM_CONDITIONAL([HAVE_GEE_0_8], [test "x$enable_gee_0_8" = "xyes"])
+AC_SUBST(GEE_DEPEND)
 
 # Support dynamic quicklists provided with dbusmenu
 DBUSMENU_MIN_VERSION=0.4
@@ -259,6 +276,7 @@ data/apport/Makefile
 data/icons/Makefile
 data/themes/Makefile
 lib/Makefile
+lib/plank.deps
 lib/plank.pc
 man/Makefile
 src/Makefile
@@ -278,6 +296,7 @@ ${PACKAGE} ${VERSION}
     Vala Flags..................:  ${VALAFLAGS}
     C Compiler Flags............:  ${CFLAGS}
 
+    Use gee-0.8.................:  ${enable_gee_0_8}
     Dbusmenu support............:  ${enable_dbusmenu}
 
     Headless Tests..............:  ${enable_headless_tests}

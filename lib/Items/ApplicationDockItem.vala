@@ -108,7 +108,11 @@ namespace Plank.Items
 		ArrayList<string> supported_mime_types = new ArrayList<string> ();
 		
 		ArrayList<string> actions = new ArrayList<string> ();
+#if HAVE_GEE_0_8
+		HashMap<string, string> actions_map = new HashMap<string, string> ((HashDataFunc) str_hash, (EqualDataFunc) str_equal);
+#else
 		HashMap<string, string> actions_map = new HashMap<string, string> (str_hash, str_equal);
+#endif
 		
 		string? unity_application_uri = null;
 		string? unity_dbusname = null;

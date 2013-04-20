@@ -106,11 +106,6 @@ plank-resources.c: plank.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES
 
 plank.h plank.vapi: libplank_la_vala.stamp
 
-plank.deps: Makefile
-	@echo Creating $@
-	@touch $@
-	@cp $(srcdir)/plank.deps.in $@
-
 libplank_la_vala.stamp build-abi: libplank_internal_la_vala.stamp $(libplank_la_VALASOURCES) Makefile
 	$(AM_V_VALA)$(VALAC) \
 		$(AM_VALAFLAGS) $(libplank_la_VALAFLAGS) \

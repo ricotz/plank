@@ -82,7 +82,7 @@ plank_doc_files = \
 plank_doc_deps = \
 	plank-internal \
 	compat \
-	gee-1.0 \
+	$(GEE_DEPEND) \
 	gio-unix-2.0 \
 	gdk-x11-3.0 \
 	gtk+-3.0 \

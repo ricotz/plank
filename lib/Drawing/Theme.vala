@@ -311,7 +311,11 @@ namespace Plank.Drawing
 		 */
 		public static ArrayList<string> get_theme_list ()
 		{
+#if HAVE_GEE_0_8
+			var list = new HashSet<string> ((HashDataFunc) str_hash, (EqualDataFunc) str_equal);
+#else
 			var list = new HashSet<string> (str_hash, str_equal);
+#endif
 			
 			list.add (DEFAULT_NAME);
 			
@@ -345,7 +349,11 @@ namespace Plank.Drawing
 			
 			var result = new ArrayList<string> ();
 			result.add_all (list);
+#if HAVE_GEE_0_8
+			result.sort ((CompareDataFunc) strcmp);
+#else
 			result.sort ((CompareFunc) strcmp);
+#endif
 			
 			return result;
 		}

@@ -131,7 +131,11 @@ namespace Plank.Items
 			cr.set_source (rg);
 			cr.fill ();
 			
+#if HAVE_GEE_0_8
+			var icons = new HashMap<string, string> ((HashDataFunc) str_hash, (EqualDataFunc) str_equal);
+#else
 			var icons = new HashMap<string, string> (str_hash, str_equal);
+#endif
 			var keys = new ArrayList<string> ();
 			
 			foreach (var file in get_files ()) {
@@ -153,7 +157,11 @@ namespace Plank.Items
 			var icon_height = (int) ((height - 80 * radius / 33.0) / 2.0);
 			var offset = (int) ((width - 2 * icon_width) / 3.0);
 			
+#if HAVE_GEE_0_8
+			keys.sort ((CompareDataFunc) strcmp);
+#else
 			keys.sort ((CompareFunc) strcmp);
+#endif
 			foreach (var s in keys) {
 				var x = pos % 2;
 				int y = pos / 2;
@@ -218,7 +226,11 @@ namespace Plank.Items
 		{
 			var items = new ArrayList<Gtk.MenuItem> ();
 		
+#if HAVE_GEE_0_8
+			var menu_items = new HashMap<string, Gtk.MenuItem> ((HashDataFunc) str_hash, (EqualDataFunc) str_equal);
+#else
 			var menu_items = new HashMap<string, Gtk.MenuItem> (str_hash, str_equal);
+#endif
 			var keys = new ArrayList<string> ();
 			
 			foreach (var file in get_files ()) {
@@ -248,7 +260,11 @@ namespace Plank.Items
 				keys.add (text + uri);
 			}
 			
+#if HAVE_GEE_0_8
+			keys.sort ((CompareDataFunc) strcmp);
+#else
 			keys.sort ((CompareFunc) strcmp);
+#endif
 			foreach (var s in keys)
 				items.add (menu_items.get (s));
 			
