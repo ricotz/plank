@@ -1,7 +1,7 @@
 cairo
 gdk-pixbuf-2.0
-gdk-3.0 
-gee-1.0
+gdk-3.0
+@GEE_DEPEND@
 gio-2.0
 glib-2.0
 gobject-2.0

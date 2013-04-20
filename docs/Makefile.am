@@ -39,7 +39,6 @@ valadoc_flags = \
 	--verbose \
 	--package-name $(PACKAGE_NAME) \
 	--package-version $(PACKAGE_VERSION) \
-	--target-glib=2.32 \
 	$(NULL)
 
 # plank documentation
@@ -79,22 +78,11 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Widgets/TitledSeparatorMenuItem.vala \
 	$(NULL)
 
-plank_doc_deps = \
-	plank-internal \
-	compat \
-	gee-1.0 \
-	gio-unix-2.0 \
-	gdk-x11-3.0 \
-	gtk+-3.0 \
-	libbamf3 \
-	libwnck-3.0 \
-	posix \
-	x11 \
-	$(NULL)
-
 valadoc_flags_plank = \
 	$(valadoc_flags) \
-	$(addprefix --pkg=,$(plank_doc_deps)) \
+	$(PLANK_DOCS_VALAFLAGS) \
+	--pkg plank-internal \
+	--pkg compat \
 	--vapidir=$(top_builddir)/lib \
 	--vapidir=$(top_srcdir)/vapi \
 	$(plank_doc_files) \

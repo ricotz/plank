@@ -186,7 +186,11 @@ namespace Plank.Items
 			
 			foreach (var entry in saved_item_positions.entries)
 				entry.key.Position = entry.value;
+#if HAVE_GEE_0_8
+			visible_items.sort ((CompareDataFunc) compare_items);
+#else
 			visible_items.sort ((CompareFunc) compare_items);
+#endif
 			
 			saved_item_positions.clear ();
 			

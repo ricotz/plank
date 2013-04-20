@@ -407,7 +407,11 @@ namespace Plank.Services.Windows
 		
 		static void intelligent_focus_off_viewport_window (Wnck.Window targetWindow, ArrayList<Wnck.Window> additional_windows)
 		{
+#if HAVE_GEE_0_8
+			var iterator = additional_windows.bidir_list_iterator ();
+#else
 			var iterator = additional_windows.list_iterator ();
+#endif
 			iterator.last ();
 			
 			while (iterator.previous ()) {
