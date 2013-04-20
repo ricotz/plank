@@ -114,7 +114,8 @@ PLANK_CORE_VALA_PKGS="--pkg gio-unix-2.0 \
                       --pkg posix \
                       --pkg x11"
 
-VALAFLAGS="--thread --target-glib=2.32"
+VALAFLAGS="--target-glib=2.32"
+VALAFLAGS_EXTRA="--thread"
 
 # -----------------------------------------------------------
 # GLib Resources
@@ -195,7 +196,7 @@ AC_ARG_ENABLE([debug],
               AS_HELP_STRING([--disable-debug],[compile without debug code]),
               [enable_debug=$enableval], [m4_if(plank_released, [1], [enable_debug=no], [enable_debug=yes])])
 if test "x$enable_debug" = "xyes" ; then
-    VALAFLAGS="$VALAFLAGS -g"
+    VALAFLAGS_EXTRA="$VALAFLAGS_EXTRA -g"
 fi
 
 # Enable output of benchmarking data
@@ -208,8 +209,10 @@ if test "x$enable_benchmark" = "xyes" ; then
     VALAFLAGS="$VALAFLAGS --define BENCHMARK"
 fi
 
-PLANK_CORE_VALAFLAGS="$VALAFLAGS $PLANK_CORE_VALA_PKGS"
+PLANK_CORE_VALAFLAGS="$VALAFLAGS_EXTRA $VALAFLAGS $PLANK_CORE_VALA_PKGS"
 AC_SUBST(PLANK_CORE_VALAFLAGS)
+PLANK_DOCS_VALAFLAGS="$VALAFLAGS $PLANK_CORE_VALA_PKGS"
+AC_SUBST(PLANK_DOCS_VALAFLAGS)
 
 
 # -----------------------------------------------------------
