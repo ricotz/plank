@@ -287,7 +287,7 @@ namespace Plank.Items
 		public DockItemPreferences Prefs { get; construct; }
 		
 		DockSurface? surface = null;
-		DockSurface? themed_surface = null;
+		DockSurface? background_surface = null;
 		
 		/**
 		 * Creates a new dock item.
@@ -335,7 +335,7 @@ namespace Plank.Items
 		protected void reset_icon_buffer ()
 		{
 			surface = null;
-			themed_surface = null;
+			background_surface = null;
 			
 			needs_redraw ();
 		}
@@ -345,7 +345,7 @@ namespace Plank.Items
 		 */
 		public void reset_buffers ()
 		{
-			themed_surface = null;
+			background_surface = null;
 		}
 		
 		void icon_theme_changed ()
@@ -396,12 +396,12 @@ namespace Plank.Items
 				return surface_copy;
 			}
 			
-			themed_surface = draw_func (icon_surface, themed_surface);
+			background_surface = draw_func (icon_surface, background_surface);
 			
-			var surface_copy = new DockSurface.with_dock_surface (themed_surface.Width, themed_surface.Height, model);
+			var surface_copy = new DockSurface.with_dock_surface (background_surface.Width, background_surface.Height, model);
 			unowned Cairo.Context cr = surface_copy.Context;
 			
-			cr.set_source_surface (themed_surface.Internal, 0, 0);
+			cr.set_source_surface (background_surface.Internal, 0, 0);
 			cr.paint ();
 			
 			return surface_copy;
