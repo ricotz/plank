@@ -26,8 +26,10 @@ using Plank.Services;
 namespace Plank.Items
 {
 	/**
-	 * A dock item for files or folders on the dock.  Folders act like stacks and display the contents
-	 * of the folder in the popup menu.  Files just open the associated file.
+	 * A dock item for files or folders on the dock.
+	 *
+	 * Folders act like stacks and display the contents of the folder in the
+	 * popup menu. Files just open the associated file.
 	 */
 	public class FileDockItem : DockItem
 	{

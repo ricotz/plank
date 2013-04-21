@@ -23,6 +23,12 @@ using Plank.Services.Windows;
 
 namespace Plank.Items
 {
+	/**
+	 * A dock item for applications which aren't pinned or doesn't have a matched desktop-files.
+	 *
+	 * Usually this represents a running application while it is possible it is a virtual item
+	 * added through e.g. libunity-support to show specific application information.
+	 */
 	public class TransientDockItem : ApplicationDockItem
 	{
 		internal TransientDockItem.with_application (Bamf.Application app)

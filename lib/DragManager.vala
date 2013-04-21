@@ -27,6 +27,9 @@ using Plank.Widgets;
 
 namespace Plank
 {
+	/**
+	 * Handles all of the drag'n'drop events for a dock.
+	 */
 	public class DragManager : GLib.Object
 	{
 		DockController controller;
