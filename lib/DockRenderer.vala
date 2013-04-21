@@ -160,8 +160,6 @@ namespace Plank
 		void dock_position_changed ()
 		{
 			reset_item_buffers ();
-			
-			animated_draw ();
 		}
 		
 		void prefs_changed ()
@@ -247,7 +245,7 @@ namespace Plank
 		/**
 		 * Resets all internal item buffers and forces a redraw.
 		 */
-		public void reset_item_buffers ()
+		void reset_item_buffers ()
 		{
 			Logger.verbose ("DockRenderer.reset_item_buffers ()");
 			
