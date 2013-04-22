@@ -374,7 +374,11 @@ namespace Plank
 			if (shadow_size > 0)
 				shadow_func = draw_item_shadow;
 			
-			var icon_surface = item.get_surface_copy (icon_size, icon_size, main_buffer, shadow_func);
+			unowned DrawItemFunc? overlay_func = null;
+			if (item.CountVisible || item.ProgressVisible)
+				overlay_func = draw_item_overlay;
+			
+			var icon_surface = item.get_surface_copy (icon_size, icon_size, main_buffer, shadow_func, overlay_func);
 			unowned Context icon_cr = icon_surface.Context;
 #if BENCHMARK
 			var end = new DateTime.now_local ();
@@ -444,22 +448,6 @@ namespace Plank
 				icon_cr.set_operator (Cairo.Operator.OVER);
 			}
 			
-			
-			// TODO put them onto a cached icon_overlay_surface for performance reasons?
-			// maybe even draw outside of the item-draw-area (considering the hover-area)
-			
-			var urgent_color = get_styled_color ();
-			urgent_color.add_hue (theme.UrgentHueShift);
-			
-			// draw item's count
-			if (item.CountVisible)
-				theme.draw_item_count (icon_surface, icon_size, urgent_color, item.Count);
-			
-			// draw item's progress
-			if (item.ProgressVisible)
-				theme.draw_item_progress (icon_surface, icon_size, urgent_color, item.Progress);
-			
-			
 			// darken the icon
 			if (darken > 0) {
 				icon_cr.rectangle (0, 0, icon_surface.Width, icon_surface.Height);
@@ -510,6 +498,38 @@ namespace Plank
 				draw_indicator_state (hover_rect, item.Indicator, item.State);
 		}
 		
+		DockSurface draw_item_overlay (DockItem item, DockSurface icon_surface, DockSurface? current_surface)
+		{
+			unowned PositionManager position_manager = controller.position_manager;
+			var shadow_size = position_manager.IconShadowSize;
+			
+			// shadow-size can match the overlay-size while we can benefit
+			// from the greater drawer area
+			var width = icon_surface.Width + 2 * shadow_size;
+			var height = icon_surface.Height + 2 * shadow_size;
+			
+			if (current_surface != null
+				&& width == current_surface.Width && height == current_surface.Height)
+				return current_surface;
+			
+			Logger.verbose ("DockItem.draw_item_overlay (width = %i, height = %i)", width, height);
+			var surface = new DockSurface.with_dock_surface (width, height, icon_surface);
+			
+			var icon_size = position_manager.IconSize;
+			var urgent_color = get_styled_color ();
+			urgent_color.add_hue (theme.UrgentHueShift);
+			
+			// draw item's count
+			if (item.CountVisible)
+				theme.draw_item_count (surface, icon_size, urgent_color, item.Count);
+			
+			// draw item's progress
+			if (item.ProgressVisible)
+				theme.draw_item_progress (surface, icon_size, urgent_color, item.Progress);
+			
+			return surface;
+		}
+		
 		DockSurface draw_item_shadow (DockItem item, DockSurface icon_surface, DockSurface? current_surface)
 		{
 			var shadow_size = controller.position_manager.IconShadowSize;
@@ -547,9 +567,6 @@ namespace Plank
 			cr.set_source_surface (shadow_surface.Internal, shadow_size + xoffset, shadow_size + yoffset);
 			cr.paint_with_alpha (0.44);
 			surface.gaussian_blur (shadow_size);
-			
-			cr.set_source_surface (icon_surface.Internal, shadow_size, shadow_size);
-			cr.paint ();
 			
 			return surface;
 		}
