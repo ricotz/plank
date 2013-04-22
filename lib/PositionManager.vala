@@ -144,6 +144,7 @@ namespace Plank
 		int items_offset;
 		int top_offset;
 		int bottom_offset;
+		int extra_hide_offset;
 		
 		/**
 		 * The currently visible height of the dock.
@@ -205,6 +206,14 @@ namespace Plank
 			
 			top_offset = theme.get_top_offset ();
 			bottom_offset = theme.get_bottom_offset ();
+			
+			var top_padding = top_offset + TopPadding;
+			if (top_padding < 0)
+				extra_hide_offset = IconShadowSize;
+			else if (top_padding < IconShadowSize)
+				extra_hide_offset = (IconShadowSize - top_padding);
+			else
+				extra_hide_offset = 0;
 			
 			update_dimensions ();
 			update_dock_position ();
@@ -761,18 +770,18 @@ namespace Plank
 			default:
 			case PositionType.BOTTOM:
 				x = 0;
-				y = (int) (VisibleDockHeight * controller.renderer.get_hide_offset ());
+				y = (int) ((VisibleDockHeight + extra_hide_offset) * controller.renderer.get_hide_offset ());
 				break;
 			case PositionType.TOP:
 				x = 0;
-				y = (int) (- VisibleDockHeight * controller.renderer.get_hide_offset ());
+				y = (int) (- (VisibleDockHeight + extra_hide_offset) * controller.renderer.get_hide_offset ());
 				break;
 			case PositionType.LEFT:
-				x = (int) (- VisibleDockWidth * controller.renderer.get_hide_offset ());
+				x = (int) (- (VisibleDockWidth + extra_hide_offset) * controller.renderer.get_hide_offset ());
 				y = 0;
 				break;
 			case PositionType.RIGHT:
-				x = (int) (VisibleDockWidth * controller.renderer.get_hide_offset ());
+				x = (int) ((VisibleDockWidth + extra_hide_offset) * controller.renderer.get_hide_offset ());
 				y = 0;
 				break;
 			}
