@@ -26,6 +26,16 @@ using Plank.Services.Windows;
 namespace Plank.Items
 {
 	/**
+	 * Draws a modified surface onto another newly created or given surface
+	 *
+	 * @param item the dock-item
+	 * @param source original surface
+	 * @param target the previously modified surface
+	 * @return the modified surface or passed through target
+	 */
+	public delegate DockSurface DrawItemFunc (DockItem item, DockSurface source, DockSurface? target);
+	
+	/**
 	 * What item indicator to show.
 	 */
 	public enum IndicatorState
@@ -278,6 +288,7 @@ namespace Plank.Items
 		public DockItemPreferences Prefs { get; construct; }
 		
 		DockSurface? surface = null;
+		DockSurface? background_surface = null;
 		
 		/**
 		 * Creates a new dock item.
@@ -325,8 +336,17 @@ namespace Plank.Items
 		protected void reset_icon_buffer ()
 		{
 			surface = null;
+			background_surface = null;
 			
 			needs_redraw ();
+		}
+		
+		/**
+		 * Resets the buffers for this item's icon.
+		 */
+		public void reset_buffers ()
+		{
+			background_surface = null;
 		}
 		
 		void icon_theme_changed ()
@@ -360,14 +380,29 @@ namespace Plank.Items
 		 * @param width width of the requested surface
 		 * @param height height of the requested surface
 		 * @param model existing surface to use as basis of new surface
+		 * @param draw_func function which manipulates the resulting surface
 		 * @return the copied dock surface for this item
 		 */
-		public DockSurface get_surface_copy (int width, int height, DockSurface model)
+		public DockSurface get_surface_copy (int width, int height, DockSurface model, DrawItemFunc? draw_func = null)
 		{
-			var surface_copy = new DockSurface.with_dock_surface (width, height, model);
+			var icon_surface = get_surface (width, height, model);
+			
+			if (draw_func == null) {
+				var surface_copy = new DockSurface.with_dock_surface (width, height, model);
+				unowned Cairo.Context cr = surface_copy.Context;
+				
+				cr.set_source_surface (icon_surface.Internal, 0, 0);
+				cr.paint ();
+			
+				return surface_copy;
+			}
+			
+			background_surface = draw_func (this, icon_surface, background_surface);
+			
+			var surface_copy = new DockSurface.with_dock_surface (background_surface.Width, background_surface.Height, model);
 			unowned Cairo.Context cr = surface_copy.Context;
 			
-			cr.set_source_surface (get_surface (width, height, model).Internal, 0, 0);
+			cr.set_source_surface (background_surface.Internal, 0, 0);
 			cr.paint ();
 			
 			return surface_copy;

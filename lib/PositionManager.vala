@@ -114,6 +114,10 @@ namespace Plank
 		 */
 		public int IndicatorSize { get; private set; }
 		/**
+		 * Theme-based icon-shadow size, scaled by icon size.
+		 */
+		public int IconShadowSize { get; private set; }
+		/**
 		 * Theme-based urgent glow size, scaled by icon size.
 		 */
 		public int GlowSize { get; private set; }
@@ -140,6 +144,7 @@ namespace Plank
 		int items_offset;
 		int top_offset;
 		int bottom_offset;
+		int extra_hide_offset;
 		
 		/**
 		 * The currently visible height of the dock.
@@ -187,6 +192,7 @@ namespace Plank
 			IconSize = controller.prefs.IconSize;
 			var scaled_icon_size = IconSize / 10.0;
 			
+			IconShadowSize = (int) Math.ceil (theme.IconShadowSize * scaled_icon_size);
 			IndicatorSize = (int) (theme.IndicatorSize * scaled_icon_size);
 			GlowSize      = (int) (theme.GlowSize      * scaled_icon_size);
 			HorizPadding  = (int) (theme.HorizPadding  * scaled_icon_size);
@@ -200,6 +206,14 @@ namespace Plank
 			
 			top_offset = theme.get_top_offset ();
 			bottom_offset = theme.get_bottom_offset ();
+			
+			var top_padding = top_offset + TopPadding;
+			if (top_padding < 0)
+				extra_hide_offset = IconShadowSize;
+			else if (top_padding < IconShadowSize)
+				extra_hide_offset = (IconShadowSize - top_padding);
+			else
+				extra_hide_offset = 0;
 			
 			update_dimensions ();
 			update_dock_position ();
@@ -756,18 +770,18 @@ namespace Plank
 			default:
 			case PositionType.BOTTOM:
 				x = 0;
-				y = (int) (VisibleDockHeight * controller.renderer.get_hide_offset ());
+				y = (int) ((VisibleDockHeight + extra_hide_offset) * controller.renderer.get_hide_offset ());
 				break;
 			case PositionType.TOP:
 				x = 0;
-				y = (int) (- VisibleDockHeight * controller.renderer.get_hide_offset ());
+				y = (int) (- (VisibleDockHeight + extra_hide_offset) * controller.renderer.get_hide_offset ());
 				break;
 			case PositionType.LEFT:
-				x = (int) (- VisibleDockWidth * controller.renderer.get_hide_offset ());
+				x = (int) (- (VisibleDockWidth + extra_hide_offset) * controller.renderer.get_hide_offset ());
 				y = 0;
 				break;
 			case PositionType.RIGHT:
-				x = (int) (VisibleDockWidth * controller.renderer.get_hide_offset ());
+				x = (int) ((VisibleDockWidth + extra_hide_offset) * controller.renderer.get_hide_offset ());
 				y = 0;
 				break;
 			}
