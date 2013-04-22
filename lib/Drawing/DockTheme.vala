@@ -29,7 +29,7 @@ namespace Plank.Drawing
 	{
 		const double MIN_INDICATOR_SIZE = 0.0;
 		const double MAX_INDICATOR_SIZE = 10.0;
-		const double MAX_ICON_SHADOW_SIZE = 3.0;
+		const double MAX_ICON_SHADOW_SIZE = 5.0;
 		
 		[Description(nick = "horizontal-padding", blurb = "The padding on the left/right dock edges, in tenths of a percent of IconSize.")]
 		public double HorizPadding { get; set; }
