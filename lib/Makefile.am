@@ -7,7 +7,7 @@ AM_CFLAGS = \
 	$(NULL)
 
 AM_LDFLAGS = \
-	-lm \
+	$(LIBM) \
 	$(NULL)
 
 AM_VALAFLAGS = \
