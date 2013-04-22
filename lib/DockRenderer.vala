@@ -515,7 +515,7 @@ namespace Plank
 				draw_indicator_state (hover_rect, item.Indicator, item.State);
 		}
 		
-		DockSurface draw_item_shadow (DockSurface icon_surface, DockSurface? current_surface)
+		DockSurface draw_item_shadow (DockItem item, DockSurface icon_surface, DockSurface? current_surface)
 		{
 			var shadow_size = controller.position_manager.IconShadowSize;
 			
@@ -523,7 +523,8 @@ namespace Plank
 			var width = icon_surface.Width + 2 * shadow_size;
 			var height = icon_surface.Height + 2 * shadow_size;
 			
-			if (current_surface != null && width == current_surface.Width && height == current_surface.Height)
+			if (current_surface != null
+				&& width == current_surface.Width && height == current_surface.Height)
 				return current_surface;
 			
 			Logger.verbose ("DockItem.draw_icon_with_shadow (width = %i, height = %i, shadow_size = %i)", width, height, shadow_size);

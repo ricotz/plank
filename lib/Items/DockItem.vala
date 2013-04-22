@@ -28,11 +28,12 @@ namespace Plank.Items
 	/**
 	 * Draws a modified surface onto another newly created or given surface
 	 *
+	 * @param item the dock-item
 	 * @param source original surface
 	 * @param target the previously modified surface
 	 * @return the modified surface or passed through target
 	 */
-	public delegate DockSurface DrawItemFunc (DockSurface source, DockSurface? target);
+	public delegate DockSurface DrawItemFunc (DockItem item, DockSurface source, DockSurface? target);
 	
 	/**
 	 * What item indicator to show.
@@ -396,7 +397,7 @@ namespace Plank.Items
 				return surface_copy;
 			}
 			
-			background_surface = draw_func (icon_surface, background_surface);
+			background_surface = draw_func (this, icon_surface, background_surface);
 			
 			var surface_copy = new DockSurface.with_dock_surface (background_surface.Width, background_surface.Height, model);
 			unowned Cairo.Context cr = surface_copy.Context;
