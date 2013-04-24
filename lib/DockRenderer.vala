@@ -344,20 +344,15 @@ namespace Plank
 		
 		void draw_dock_background ()
 		{
-			unowned PositionManager position_manager = controller.position_manager;
+			background_rect = controller.position_manager.get_background_region ();
 			
-			var width = position_manager.DockBackgroundWidth;
-			var height = position_manager.DockBackgroundHeight;
-			
-			if (background_buffer == null || background_buffer.Width != width || background_buffer.Height != height)
-				background_buffer = theme.create_background (width, height, controller.prefs.Position, main_buffer);
-			
-			var x_offset = 0, y_offset = 0;
-			position_manager.get_background_position (out x_offset, out y_offset);
-			background_rect = Gdk.Rectangle () { x = x_offset, y = y_offset, width = width, height = height };
+			if (background_buffer == null || background_buffer.Width != background_rect.width
+				|| background_buffer.Height != background_rect.height)
+				background_buffer = theme.create_background (background_rect.width, background_rect.height,
+					controller.prefs.Position, main_buffer);
 			
 			unowned Context cr = main_buffer.Context;
-			cr.set_source_surface (background_buffer.Internal, x_offset, y_offset);
+			cr.set_source_surface (background_buffer.Internal, background_rect.x, background_rect.y);
 			cr.paint ();
 		}
 		

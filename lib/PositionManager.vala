@@ -788,19 +788,18 @@ namespace Plank
 		}
 		
 		/**
-		 * Get's the x and y position to display the background of the dock.
+		 * Get's the region for background of the dock.
 		 *
-		 * @param x the resulting x position
-		 * @param y the resulting y position
+		 * @return the region for the dock background
 		 */
-		public void get_background_position (out int x, out int y)
+		public Gdk.Rectangle get_background_region ()
 		{
-			var xoffset = 0, yoffset = 0;
+			var x = 0, y = 0;
 			var width = 0, height = 0;
 			
 			if (screen_is_composited) {
-				xoffset = static_dock_region.x;
-				yoffset = static_dock_region.y;
+				x = static_dock_region.x;
+				y = static_dock_region.y;
 				width = VisibleDockWidth;
 				height = VisibleDockHeight;
 			} else {
@@ -811,22 +810,24 @@ namespace Plank
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				x = xoffset + (width - DockBackgroundWidth) / 2;
-				y = yoffset + height - DockBackgroundHeight;
+				x += (width - DockBackgroundWidth) / 2;
+				y += height - DockBackgroundHeight;
 				break;
 			case PositionType.TOP:
-				x = xoffset + (width - DockBackgroundWidth) / 2;
+				x += (width - DockBackgroundWidth) / 2;
 				y = 0;
 				break;
 			case PositionType.LEFT:
 				x = 0;
-				y = yoffset + (height - DockBackgroundHeight) / 2;
+				y += (height - DockBackgroundHeight) / 2;
 				break;
 			case PositionType.RIGHT:
-				x = xoffset + width - DockBackgroundWidth;
-				y = yoffset + (height - DockBackgroundHeight) / 2;
+				x += width - DockBackgroundWidth;
+				y += (height - DockBackgroundHeight) / 2;
 				break;
 			}
+			
+			return { x, y, DockBackgroundWidth, DockBackgroundHeight };
 		}
 		
 		/**
