@@ -1,6 +1,7 @@
 //
 //  Copyright (C) 2010 Michal Hruby <michal.mhr@gmail.com>
 //  Copyright (C) 2011-2012 Robert Dyer, Rico Tzschichholz
+//  Copyright (C) 2013 Rico Tzschichholz
 //
 //  This library is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -49,62 +50,55 @@ namespace Plank.Widgets
 		
 		protected override bool draw (Cairo.Context cr)
 		{
-			Gtk.Allocation alloc;
-			get_allocation (out alloc);
+			unowned StyleContext context = get_style_context ();
+			var state = get_state_flags ();
 			
-			bool wide_separators;
-			int separator_height;
-			int horizontal_padding;
+			int x, y, w, h;
+			int border_width = (int) get_border_width ();
 			
-			style_get ("wide-separators", out wide_separators,
-				"separator-height", out separator_height,
-				"horizontal-padding", out horizontal_padding);
+			x = border_width;
+			y = border_width;
+			w = get_allocated_width () - 2 * border_width;
+			h = get_allocated_height () - 2 * border_width;
 			
-			var style = get_style ();
+			var padding = context.get_padding (state);
+			
+			context.render_background (cr, x, y, w, h);
+			context.render_frame (cr, x, y, w, h);
 			
 			if (draw_line) {
-				var xthickness = style.xthickness;
-				var ythickness = style.ythickness;
+				bool wide_separators;
+				int separator_height;
+				
+				style_get ("wide-separators", out wide_separators,
+					"separator-height", out separator_height);
 				
 				if (wide_separators)
-					Gtk.paint_box (style,
-						cr, StateType.NORMAL, ShadowType.ETCHED_OUT,
-						this, "hseparator",
-						alloc.x + horizontal_padding + xthickness,
-						alloc.y + (alloc.height - separator_height - ythickness)/2,
-						alloc.width - 2 * (horizontal_padding + xthickness),
-						separator_height);
+					context.render_frame (cr, x + padding.left, y + padding.top,
+						w - padding.left - padding.right, separator_height);
 				else
-					Gtk.paint_hline (style,
-						cr, StateType.NORMAL,
-						this, "menuitem",
-						alloc.x + horizontal_padding + xthickness,
-						alloc.x + alloc.width - horizontal_padding - xthickness - 1,
-						alloc.y + (alloc.height - ythickness) / 2);
+					context.render_line (cr, x + padding.left, y + padding.top,
+						x + w - padding.right - 1, y + padding.top);
 			}
 			
 			var font_desc = style.font_desc;
-			font_desc.set_absolute_size ((int) (alloc.height * Pango.SCALE * Pango.Scale.LARGE));
+			font_desc.set_absolute_size ((int) (h * Pango.SCALE * Pango.Scale.LARGE));
 			font_desc.set_weight (Weight.BOLD);
 			
 			var layout = new Pango.Layout (pango_context_get ());
 			layout.set_font_description (font_desc);
-			layout.set_width ((int) ((alloc.width - 2 * horizontal_padding) * Pango.SCALE));
+			layout.set_width ((int) ((w - padding.left - padding.right) * Pango.SCALE));
 			layout.set_text (text, -1);
 			
 			Pango.Rectangle logical_rect;
 			layout.get_pixel_extents (null, out logical_rect);
 			
-			Gtk.paint_flat_box (parent.get_style (),
-				cr, StateType.NORMAL, ShadowType.NONE,
-				this, null,
-				0, alloc.y,
-				alloc.x + logical_rect.width + 2 * horizontal_padding, alloc.height);
+			context.render_background (cr, 0, y, x + logical_rect.width + padding.left + padding.right, h);
+			context.render_frame (cr, 0, y, x + logical_rect.width + padding.left + padding.right, h);
 			
-			var color = style.fg[StateType.NORMAL];
-			
-			cr.move_to (alloc.x + horizontal_padding, alloc.y + (alloc.height - logical_rect.height) / 2);
-			cr.set_source_rgba (color.red, color.green, color.blue, 0.6);
+			var color = context.get_color (Gtk.StateFlags.NORMAL);
+			cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
+			cr.move_to (x + padding.left, y + (h - logical_rect.height) / 2);
 			Pango.cairo_show_layout (cr, layout);
 			
 			return true;
