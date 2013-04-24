@@ -403,12 +403,12 @@ namespace Plank
 				window.get_position (out w_x, out w_y);
 				w_width = window.get_width ();
 				w_height = window.get_height ();
-				var w_geo = Gdk.Rectangle () {x = w_x, y = w_y, width = w_width, height = w_height};
+				Gdk.Rectangle w_geo = { w_x, w_y, w_width, w_height };
 				
 				int x, y;
 				controller.window.get_display ().get_device_manager ().get_client_pointer ().get_position (null, out x, out y);
 				
-				if (window.is_visible () && w_geo.intersect (Gdk.Rectangle () {x = x, y = y}, null))
+				if (window.is_visible () && w_geo.intersect ({ x, y, 0, 0 }, null))
 					return window;
 			}
 			

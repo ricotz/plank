@@ -870,7 +870,7 @@ namespace Plank
 				break;
 			}
 			
-			return Gdk.Rectangle () { x = x, y = y, width = 0, height = 0};
+			return { x, y, 0, 0 };
 		}
 		
 		/**

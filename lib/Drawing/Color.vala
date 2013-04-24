@@ -51,10 +51,10 @@ namespace Plank.Drawing
 		 */
 		public static Color from_gdk_color (Gdk.Color color)
 		{
-			return Color () { R = color.red / (double) uint16.MAX,
-				G = color.green / (double) uint16.MAX,
-				B = color.blue / (double) uint16.MAX,
-				A = 1.0 };
+			return { (double) color.red / uint16.MAX,
+				(double) color.green / uint16.MAX,
+				(double) color.blue / uint16.MAX,
+				1.0 };
 		}
 		
 		/**
@@ -64,9 +64,10 @@ namespace Plank.Drawing
 		 */
 		public Gdk.Color to_gdk_color ()
 		{
-			return Gdk.Color () { red = (uint16) (R * uint16.MAX),
-				green = (uint16) (G * uint16.MAX),
-				blue = (uint16) (B * uint16.MAX) };
+			return { 0,
+				(uint16) (R * uint16.MAX),
+				(uint16) (G * uint16.MAX),
+				(uint16) (B * uint16.MAX) };
 		}
 		
 		/**
@@ -77,7 +78,7 @@ namespace Plank.Drawing
 		 */
 		public static Color from_gdk_rgba (Gdk.RGBA color)
 		{
-			return Color () { R = color.red, G = color.green, B = color.blue, A = color.alpha };
+			return { color.red, color.green, color.blue, color.alpha };
 		}
 		
 		/**
@@ -87,7 +88,7 @@ namespace Plank.Drawing
 		 */
 		public Gdk.RGBA to_gdk_rgba ()
 		{
-			return Gdk.RGBA () { red = R, green = G, blue = B, alpha = A };
+			return { R, G, B, A };
 		}
 		
 		/**
@@ -459,10 +460,10 @@ namespace Plank.Drawing
 				return {0};
 			}
 			
-			return Color () { R = double.min (uint8.MAX, double.max (0, int.parse (parts [0]))) / uint8.MAX,
-				G = double.min (uint8.MAX, double.max (0, int.parse (parts [1]))) / uint8.MAX,
-				B = double.min (uint8.MAX, double.max (0, int.parse (parts [2]))) / uint8.MAX,
-				A = double.min (uint8.MAX, double.max (0, int.parse (parts [3]))) / uint8.MAX };
+			return { double.min (uint8.MAX, double.max (0, int.parse (parts [0]))) / uint8.MAX,
+				double.min (uint8.MAX, double.max (0, int.parse (parts [1]))) / uint8.MAX,
+				double.min (uint8.MAX, double.max (0, int.parse (parts [2]))) / uint8.MAX,
+				double.min (uint8.MAX, double.max (0, int.parse (parts [3]))) / uint8.MAX };
 		}
 	}
 }
