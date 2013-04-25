@@ -392,63 +392,50 @@ namespace Plank.Items
 		}
 		
 		/**
-		 * Returns a copy of the dock surface for this item and triggers an
+		 * Returns the background surface for this item and triggers an
 		 * internal redraw if the requested size isn't matching the cache.
 		 *
 		 * @param width width of the requested surface
 		 * @param height height of the requested surface
 		 * @param model existing surface to use as basis of new surface
 		 * @param background_draw_func function which creates the background of the resulting surface
+		 * @return the background surface for this item
+		 */
+		public DockSurface? get_background_surface (int width, int height, DockSurface model, DrawItemFunc? background_draw_func = null)
+		{
+			if (background_draw_func != null) {
+				var icon_surface = get_surface (width, height, model);
+				background_surface = background_draw_func (this, icon_surface, background_surface);
+			}
+			
+			return background_surface;
+		}
+		
+		/**
+		 * Returns a copy of the dock surface for this item and triggers an
+		 * internal redraw if the requested size isn't matching the cache.
+		 *
+		 * @param width width of the requested surface
+		 * @param height height of the requested surface
+		 * @param model existing surface to use as basis of new surface
 		 * @param foreground_draw_func function which creates the foreground of the resulting surface
 		 * @return the copied dock surface for this item
 		 */
-		public DockSurface get_surface_copy (int width, int height, DockSurface model, DrawItemFunc? background_draw_func = null, DrawItemFunc? foreground_draw_func = null)
+		public DockSurface get_surface_copy (int width, int height, DockSurface model, DrawItemFunc? foreground_draw_func = null)
 		{
 			DockSurface? surface_copy = null;
 			
 			var icon_surface = get_surface (width, height, model);
 			
-			if (background_draw_func == null && foreground_draw_func == null) {
-				surface_copy = new DockSurface.with_dock_surface (width, height, model);
-				unowned Cairo.Context cr = surface_copy.Context;
-				
-				cr.set_source_surface (icon_surface.Internal, 0, 0);
-				cr.paint ();
-				
-				return surface_copy;
-			}
+			surface_copy = new DockSurface.with_dock_surface (width, height, model);
+			unowned Cairo.Context cr = surface_copy.Context;
 			
-			if (background_draw_func != null) {
-				background_surface = background_draw_func (this, icon_surface, background_surface);
-				
-				surface_copy = new DockSurface.with_dock_surface (background_surface.Width, background_surface.Height, model);
-				
-				unowned Cairo.Context cr = surface_copy.Context;
-				// Draw icon centered on the background surface
-				cr.set_source_surface (icon_surface.Internal, (surface_copy.Width - icon_surface.Width) / 2,
-					(surface_copy.Height - icon_surface.Height) / 2);
-				cr.paint ();
-				
-				cr.set_source_surface (background_surface.Internal, 0, 0);
-				cr.paint ();
-			}
+			cr.set_source_surface (icon_surface.Internal, 0, 0);
+			cr.paint ();
 			
 			if (foreground_draw_func != null) {
 				foreground_surface = foreground_draw_func (this, icon_surface, foreground_surface);
-				
-				// While there is no background_func create the surface_copy with actual icon here
-				if (surface_copy == null) {
-					surface_copy = new DockSurface.with_dock_surface (foreground_surface.Width, foreground_surface.Height, model);
-					unowned Cairo.Context cr = surface_copy.Context;
-					// Draw icon centered on the foreground surface
-					cr.set_source_surface (icon_surface.Internal, (surface_copy.Width - icon_surface.Width) / 2,
-						(surface_copy.Height - icon_surface.Height) / 2);
-					cr.paint ();
-				}
-				
-				unowned Cairo.Context cr = surface_copy.Context;
-				cr.set_source_surface (foreground_surface.Internal, (surface_copy.Width - foreground_surface.Width) / 2,
-					(surface_copy.Height - foreground_surface.Height) / 2);
+				cr.set_source_surface (foreground_surface.Internal, 0, 0);
 				cr.paint ();
 			}
 			
