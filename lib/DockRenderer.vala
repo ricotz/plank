@@ -382,19 +382,20 @@ namespace Plank
 #if BENCHMARK
 			var start = new DateTime.now_local ();
 #endif
-			unowned DrawItemFunc? shadow_func = null;
-			if (shadow_size > 0)
-				shadow_func = draw_item_shadow;
-			
-			var icon_shadow_surface = item.get_background_surface (icon_size, icon_size, shadow_buffer, shadow_func);
-			
-			unowned DrawItemFunc? overlay_func = null;
-			if (item.CountVisible || item.ProgressVisible)
-				overlay_func = draw_item_overlay;
-			
-			var icon_surface = item.get_surface_copy (icon_size, icon_size, main_buffer, overlay_func);
-			
+			var icon_surface = item.get_surface_copy (icon_size, icon_size, main_buffer);
 			unowned Context icon_cr = icon_surface.Context;
+			
+			DockSurface? icon_shadow_surface = null;
+			if (shadow_size > 0)
+				icon_shadow_surface = item.get_background_surface (draw_item_shadow);
+			
+			DockSurface? icon_overlay_surface = null;
+			if (item.CountVisible || item.ProgressVisible)
+				icon_overlay_surface = item.get_foreground_surface (draw_item_overlay);
+			
+			if (icon_overlay_surface != null)
+				icon_cr.set_source_surface (icon_overlay_surface.Internal, 0, 0);
+			
 #if BENCHMARK
 			var end = new DateTime.now_local ();
 			benchmark.add ("	item.get_surface time - %f ms".printf (end.difference (start) / 1000.0));

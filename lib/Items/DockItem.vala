@@ -377,7 +377,7 @@ namespace Plank.Items
 			});
 		}
 		
-		DockSurface get_surface (int width, int height, DockSurface model)
+		unowned DockSurface get_surface (int width, int height, DockSurface model)
 		{
 			if (surface == null || width != surface.Width || height != surface.Height) {
 				surface = new DockSurface.with_dock_surface (width, height, model);
@@ -392,54 +392,63 @@ namespace Plank.Items
 		}
 		
 		/**
-		 * Returns the background surface for this item and triggers an
-		 * internal redraw if the requested size isn't matching the cache.
+		 * Returns the background surface for this item.
 		 *
-		 * @param width width of the requested surface
-		 * @param height height of the requested surface
-		 * @param model existing surface to use as basis of new surface
-		 * @param background_draw_func function which creates the background of the resulting surface
-		 * @return the background surface for this item
+		 * The draw_func may pass through the given previously computed surface
+		 * or change it as needed. This surface will be buffered internally.
+		 *
+		 * Passing null as draw_func will destroy the internal background buffer.
+		 *
+		 * @param draw_func function which creates/changes the background surface
+		 * @return the background surface of this item which may not be changed
 		 */
-		public DockSurface? get_background_surface (int width, int height, DockSurface model, DrawItemFunc? background_draw_func = null)
+		public unowned DockSurface? get_background_surface (DrawItemFunc? draw_func = null)
+			requires (surface != null)
 		{
-			if (background_draw_func != null) {
-				var icon_surface = get_surface (width, height, model);
-				background_surface = background_draw_func (this, icon_surface, background_surface);
-			}
+			if (draw_func != null)
+				background_surface = draw_func (this, surface, background_surface);
+			else
+				background_surface = null;
 			
 			return background_surface;
 		}
 		
 		/**
-		 * Returns a copy of the dock surface for this item and triggers an
-		 * internal redraw if the requested size isn't matching the cache.
+		 * Returns the foreground surface for this item.
 		 *
-		 * @param width width of the requested surface
-		 * @param height height of the requested surface
+		 * The draw_func may pass through the given previously computed surface
+		 * or change it as needed. This surface will be buffered internally.
+		 *
+		 * Passing null as draw_func will destroy the internal foreground buffer.
+		 *
+		 * @param draw_func function which creates/changes the foreground surface
+		 * @return the background surface of this item which may not be changed
+		 */
+		public unowned DockSurface? get_foreground_surface (DrawItemFunc? draw_func = null)
+			requires (surface != null)
+		{
+			if (draw_func != null)
+				foreground_surface = draw_func (this, surface, foreground_surface);
+			else
+				foreground_surface = null;
+			
+			return foreground_surface;
+		}
+		
+		/**
+		 * Returns a copy of the dock surface for this item.
+		 *
+		 * It will trigger an internal redraw if the requested size
+		 * isn't matching the cache.
+		 *
+		 * @param width width of the icon surface
+		 * @param height height of the icon surface
 		 * @param model existing surface to use as basis of new surface
-		 * @param foreground_draw_func function which creates the foreground of the resulting surface
 		 * @return the copied dock surface for this item
 		 */
-		public DockSurface get_surface_copy (int width, int height, DockSurface model, DrawItemFunc? foreground_draw_func = null)
+		public DockSurface get_surface_copy (int width, int height, DockSurface model)
 		{
-			DockSurface? surface_copy = null;
-			
-			var icon_surface = get_surface (width, height, model);
-			
-			surface_copy = new DockSurface.with_dock_surface (width, height, model);
-			unowned Cairo.Context cr = surface_copy.Context;
-			
-			cr.set_source_surface (icon_surface.Internal, 0, 0);
-			cr.paint ();
-			
-			if (foreground_draw_func != null) {
-				foreground_surface = foreground_draw_func (this, icon_surface, foreground_surface);
-				cr.set_source_surface (foreground_surface.Internal, 0, 0);
-				cr.paint ();
-			}
-			
-			return surface_copy;
+			return get_surface (width, height, model).copy ();
 		}
 
 		/**
