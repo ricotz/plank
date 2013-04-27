@@ -32,7 +32,7 @@ namespace Plank
 	 */
 	public class DragManager : GLib.Object
 	{
-		DockController controller;
+		public DockController controller { private get; construct; }
 		
 		Gdk.Window proxy_window;
 		
@@ -86,7 +86,7 @@ namespace Plank
 		
 		public DragManager (DockController controller)
 		{
-			this.controller = controller;
+			GLib.Object (controller : controller);
 		}
 		
 		public void initialize ()

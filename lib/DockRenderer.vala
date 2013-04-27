@@ -32,7 +32,7 @@ namespace Plank
 	 */
 	public class DockRenderer : AnimatedRenderer
 	{
-		DockController controller;
+		public DockController controller { private get; construct; }
 		
 		DockTheme theme;
 		
@@ -82,8 +82,11 @@ namespace Plank
 		 */
 		public DockRenderer (DockController controller)
 		{
-			this.controller = controller;
-			
+			GLib.Object (controller : controller);
+		}
+		
+		construct
+		{
 			controller.prefs.notify.connect (prefs_changed);
 			
 			controller.items.item_state_changed.connect (item_state_changed);

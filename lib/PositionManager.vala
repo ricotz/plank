@@ -30,7 +30,7 @@ namespace Plank
 	 */
 	public class PositionManager : GLib.Object
 	{
-		DockController controller;
+		public DockController controller { private get; construct; }
 		
 		Gdk.Rectangle cursor_region;
 		Gdk.Rectangle static_dock_region;
@@ -46,8 +46,11 @@ namespace Plank
 		 */
 		public PositionManager (DockController controller)
 		{
-			this.controller = controller;
-			
+			GLib.Object (controller : controller);
+		}
+		
+		construct
+		{
 			cursor_region = Gdk.Rectangle ();
 			static_dock_region = Gdk.Rectangle ();
 			

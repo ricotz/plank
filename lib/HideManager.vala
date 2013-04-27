@@ -52,7 +52,7 @@ namespace Plank
 		// the results of our update
 		const uint UPDATE_TIMEOUT = 200;
 		
-		DockController controller;
+		public DockController controller { private get; construct; }
 		
 		/**
 		 * If hiding the dock is currently disabled
@@ -75,8 +75,11 @@ namespace Plank
 		 */
 		public HideManager (DockController controller)
 		{
-			this.controller = controller;
-			
+			GLib.Object (controller : controller);
+		}
+		
+		construct
+		{
 			windows_intersect = false;
 			hide ();
 			

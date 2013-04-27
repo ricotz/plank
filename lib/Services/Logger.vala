@@ -73,13 +73,12 @@ namespace Plank.Services
 	{
 		class LogMessage : GLib.Object
 		{
-			public LogLevel Level { get; private set; }
-			public string Message { get; private set; }
+			public LogLevel Level { get; construct; }
+			public string Message { get; construct; }
 			
 			public LogMessage (LogLevel level, string message)
 			{
-				Level = level;
-				Message = message;
+				GLib.Object (Level : level, Message : message);
 			}
 		}
 		
