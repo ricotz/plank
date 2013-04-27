@@ -179,7 +179,7 @@ namespace Plank.Factories
 			message ("%s version: %s", program_name, build_version);
 			message ("Kernel version: %s", Posix.utsname ().release);
 			message ("GLib version: %u.%u.%u", glib_major_version, glib_minor_version, glib_micro_version);
-			message ("GTK version: %d.%d.%d", Gtk.MAJOR_VERSION, Gtk.MINOR_VERSION, Gtk.MICRO_VERSION);
+			message ("GTK+ version: %u.%u.%u", Gtk.get_major_version (), Gtk.get_minor_version () , Gtk.get_micro_version ());
 			message ("Wnck version: %d.%d.%d", Wnck.Version.MAJOR_VERSION, Wnck.Version.MINOR_VERSION, Wnck.Version.MICRO_VERSION);
 			message ("Cairo version: %s", Cairo.version_string ());
 			message ("Pango version: %s", Pango.version_string ());
