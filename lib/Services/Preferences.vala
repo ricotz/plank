@@ -74,6 +74,10 @@ namespace Plank.Services
 		 */
 		public Preferences ()
 		{
+		}
+		
+		construct
+		{
 			reset_properties ();
 			notify.connect (handle_notify);
 		}
