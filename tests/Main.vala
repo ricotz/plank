@@ -23,6 +23,7 @@ using Plank.Services;
 namespace Plank.Tests
 {
 	public const string TEST_ICON = Config.DATA_DIR + "/test-icon.svg";
+	public const uint IO_WAIT_MS = 1500;
 	
 	public static int main (string[] args)
 	{
@@ -40,4 +41,17 @@ namespace Plank.Tests
 		
 		return Test.run ();
 	}
+	
+	void wait (uint milliseconds)
+	{
+		var main_loop = new MainLoop ();
+		
+		Timeout.add (milliseconds, () => {
+			main_loop.quit ();
+			return false;
+		});
+		
+		main_loop.run ();
+	}
+
 }

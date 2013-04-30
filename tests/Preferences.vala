@@ -24,8 +24,9 @@ namespace Plank.Tests
 {
 	public static void register_preferences_tests ()
 	{
-		Test.add_func ("/Preferences/basics", preferences_basics);
-		Test.add_func ("/Preferences/signals", preferences_signals);
+		Test.add_func ("/Services/Preferences/basics", preferences_basics);
+		Test.add_func ("/Services/Preferences/delay", preferences_delay);
+		Test.add_func ("/Services/Preferences/signals", preferences_signals);
 	}
 	
 	class TestPreferences : Preferences
@@ -76,6 +77,37 @@ namespace Plank.Tests
 	
 	bool triggered;
 	
+	void preferences_delay ()
+	{
+		var prefs = new TestPreferences ("test_preferences_delay");
+		var prefs2 = new TestPreferences ("test_preferences_delay");
+		
+		triggered = false;
+		prefs2.changed.connect (preferences_triggered_cb);
+		
+		prefs.delay ();
+		prefs.BoolSetting = false;
+		prefs.IntSetting = 4711;
+		prefs.DoubleSetting = 0.4711;
+		prefs.StringSetting = "test_changed";
+		
+		wait (IO_WAIT_MS);
+		assert (triggered == false);
+		assert (prefs2.BoolSetting == true);
+		assert (prefs2.DoubleSetting == 0.42);
+		assert (prefs2.IntSetting == 42);
+		assert (prefs2.StringSetting == "test");
+		
+		prefs.apply ();
+		
+		wait (IO_WAIT_MS);
+		assert (triggered == true);
+		assert (prefs2.BoolSetting == false);
+		assert (prefs2.DoubleSetting == 0.4711);
+		assert (prefs2.IntSetting == 4711);
+		assert (prefs2.StringSetting == "test_changed");
+	}
+	
 	void preferences_signals ()
 	{
 		var prefs = new TestPreferences ("test_preferences_signals");
@@ -93,8 +125,9 @@ namespace Plank.Tests
 		triggered = false;
 		prefs.deleted.connect (preferences_triggered_cb);
 		var file = Paths.AppConfigFolder.get_child ("test_preferences_signals");
-		file.delete ();
-		//assert (triggered == true);
+		try { file.delete (); } catch {};
+		wait (IO_WAIT_MS);
+		assert (triggered == true);
 	}
 	
 	void preferences_triggered_cb (Preferences prefs)
