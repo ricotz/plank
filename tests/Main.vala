@@ -36,6 +36,7 @@ namespace Plank.Tests
 		
 		register_drawing_tests ();
 		register_items_tests ();
+		register_preferences_tests ();
 		
 		return Test.run ();
 	}

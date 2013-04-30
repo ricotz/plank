@@ -33,6 +33,7 @@ tests_LDADD = \
 tests_VALASOURCES = \
 	Drawing.vala \
 	Items.vala \
+	Preferences.vala \
 	Main.vala \
 	$(NULL)
 
@@ -65,6 +66,7 @@ TESTS_ENVIRONMENT += $(XVFB_RUN) --server-args="-screen 0 1280x1024x24" $(DBUS_L
 endif
 
 check-local:
+	rm -rf $(abs_builddir)/home $(builddir)/test-report.xml; \
 	$(TESTS_ENVIRONMENT) gtester --verbose --keep-going -o=$(builddir)/test-report.xml $(builddir)/tests
 
 clean-local:
