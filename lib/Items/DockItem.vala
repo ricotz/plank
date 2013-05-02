@@ -29,7 +29,7 @@ namespace Plank.Items
 	 * Draws a modified surface onto another newly created or given surface
 	 *
 	 * @param item the dock-item
-	 * @param source original surface
+	 * @param source original surface which may not be changed
 	 * @param target the previously modified surface
 	 * @return the modified surface or passed through target
 	 */
@@ -289,6 +289,7 @@ namespace Plank.Items
 		
 		DockSurface? surface = null;
 		DockSurface? background_surface = null;
+		DockSurface? foreground_surface = null;
 		
 		/**
 		 * Creates a new dock item.
@@ -304,6 +305,11 @@ namespace Plank.Items
 			Gtk.IconTheme.get_default ().changed.connect (icon_theme_changed);
 			notify["Icon"].connect (reset_icon_buffer);
 			notify["ForcePixbuf"].connect (reset_icon_buffer);
+			
+			notify["Count"].connect (reset_foreground_buffer);
+			notify["CountVisible"].connect (reset_foreground_buffer);
+			notify["Progress"].connect (reset_foreground_buffer);
+			notify["ProgressVisible"].connect (reset_foreground_buffer);
 		}
 		
 		~DockItem ()
@@ -312,6 +318,11 @@ namespace Plank.Items
 			Gtk.IconTheme.get_default ().changed.disconnect (icon_theme_changed);
 			notify["Icon"].disconnect (reset_icon_buffer);
 			notify["ForcePixbuf"].disconnect (reset_icon_buffer);
+			
+			notify["Count"].disconnect (reset_foreground_buffer);
+			notify["CountVisible"].disconnect (reset_foreground_buffer);
+			notify["Progress"].disconnect (reset_foreground_buffer);
+			notify["ProgressVisible"].disconnect (reset_foreground_buffer);
 		}
 		
 		/**
@@ -337,6 +348,7 @@ namespace Plank.Items
 		{
 			surface = null;
 			background_surface = null;
+			foreground_surface = null;
 			
 			needs_redraw ();
 		}
@@ -347,6 +359,12 @@ namespace Plank.Items
 		public void reset_buffers ()
 		{
 			background_surface = null;
+			foreground_surface = null;
+		}
+		
+		void reset_foreground_buffer ()
+		{
+			foreground_surface = null;
 		}
 		
 		void icon_theme_changed ()
@@ -359,7 +377,7 @@ namespace Plank.Items
 			});
 		}
 		
-		DockSurface get_surface (int width, int height, DockSurface model)
+		unowned DockSurface get_surface (int width, int height, DockSurface model)
 		{
 			if (surface == null || width != surface.Width || height != surface.Height) {
 				surface = new DockSurface.with_dock_surface (width, height, model);
@@ -374,38 +392,63 @@ namespace Plank.Items
 		}
 		
 		/**
-		 * Returns a copy of the dock surface for this item and triggers an
-		 * internal redraw if the requested size isn't matching the cache.
+		 * Returns the background surface for this item.
 		 *
-		 * @param width width of the requested surface
-		 * @param height height of the requested surface
+		 * The draw_func may pass through the given previously computed surface
+		 * or change it as needed. This surface will be buffered internally.
+		 *
+		 * Passing null as draw_func will destroy the internal background buffer.
+		 *
+		 * @param draw_func function which creates/changes the background surface
+		 * @return the background surface of this item which may not be changed
+		 */
+		public unowned DockSurface? get_background_surface (DrawItemFunc? draw_func = null)
+			requires (surface != null)
+		{
+			if (draw_func != null)
+				background_surface = draw_func (this, surface, background_surface);
+			else
+				background_surface = null;
+			
+			return background_surface;
+		}
+		
+		/**
+		 * Returns the foreground surface for this item.
+		 *
+		 * The draw_func may pass through the given previously computed surface
+		 * or change it as needed. This surface will be buffered internally.
+		 *
+		 * Passing null as draw_func will destroy the internal foreground buffer.
+		 *
+		 * @param draw_func function which creates/changes the foreground surface
+		 * @return the background surface of this item which may not be changed
+		 */
+		public unowned DockSurface? get_foreground_surface (DrawItemFunc? draw_func = null)
+			requires (surface != null)
+		{
+			if (draw_func != null)
+				foreground_surface = draw_func (this, surface, foreground_surface);
+			else
+				foreground_surface = null;
+			
+			return foreground_surface;
+		}
+		
+		/**
+		 * Returns a copy of the dock surface for this item.
+		 *
+		 * It will trigger an internal redraw if the requested size
+		 * isn't matching the cache.
+		 *
+		 * @param width width of the icon surface
+		 * @param height height of the icon surface
 		 * @param model existing surface to use as basis of new surface
-		 * @param draw_func function which manipulates the resulting surface
 		 * @return the copied dock surface for this item
 		 */
-		public DockSurface get_surface_copy (int width, int height, DockSurface model, DrawItemFunc? draw_func = null)
+		public DockSurface get_surface_copy (int width, int height, DockSurface model)
 		{
-			var icon_surface = get_surface (width, height, model);
-			
-			if (draw_func == null) {
-				var surface_copy = new DockSurface.with_dock_surface (width, height, model);
-				unowned Cairo.Context cr = surface_copy.Context;
-				
-				cr.set_source_surface (icon_surface.Internal, 0, 0);
-				cr.paint ();
-			
-				return surface_copy;
-			}
-			
-			background_surface = draw_func (this, icon_surface, background_surface);
-			
-			var surface_copy = new DockSurface.with_dock_surface (background_surface.Width, background_surface.Height, model);
-			unowned Cairo.Context cr = surface_copy.Context;
-			
-			cr.set_source_surface (background_surface.Internal, 0, 0);
-			cr.paint ();
-			
-			return surface_copy;
+			return get_surface (width, height, model).copy ();
 		}
 
 		/**

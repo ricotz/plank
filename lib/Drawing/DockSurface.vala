@@ -111,6 +111,22 @@ namespace Plank.Drawing
 		}
 		
 		/**
+		 * Create a copy of the surface
+		 *
+		 * @return copy of this surface
+		 */
+		public DockSurface copy ()
+		{
+			var copy = new DockSurface.with_dock_surface (Width, Height, this);
+			unowned Cairo.Context cr = copy.Context;
+			
+			cr.set_source_surface (Internal, 0, 0);
+			cr.paint ();
+			
+			return copy;
+		}
+		
+		/**
 		 * Saves the current dock surface to a {@link Gdk.Pixbuf}.
 		 *
 		 * @return the {@link Gdk.Pixbuf}
