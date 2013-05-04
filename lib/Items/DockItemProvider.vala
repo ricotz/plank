@@ -17,11 +17,7 @@
 
 using Gee;
 
-using Plank.Factories;
-using Plank.Widgets;
-
 using Plank.Services;
-using Plank.Services.Windows;
 
 namespace Plank.Items
 {
@@ -30,8 +26,6 @@ namespace Plank.Items
 	 */
 	public class DockItemProvider : GLib.Object
 	{
-		public DockController controller { get; protected set construct; }
-		
 		/**
 		 * Triggered when the items collection has changed.
 		 *
@@ -65,12 +59,10 @@ namespace Plank.Items
 		
 		/**
 		 * Creates a new container for dock items.
-		 *
-		 * @param controller the dock controller that owns these items
 		 */
-		public DockItemProvider (DockController controller)
+		public DockItemProvider ()
 		{
-			Object (controller : controller);
+			Object ();
 		}
 		
 		construct
@@ -78,16 +70,10 @@ namespace Plank.Items
 			visible_items = new ArrayList<DockItem> ();
 			internal_items = new ArrayList<DockItem> ();
 			saved_item_positions = new HashMap<DockItem, int> ();
-			
-			item_position_changed.connect (serialize_item_positions);
-			items_changed.connect (serialize_item_positions);
 		}
 		
 		~DockItemProvider ()
 		{
-			item_position_changed.disconnect (serialize_item_positions);
-			items_changed.disconnect (serialize_item_positions);
-			
 			saved_item_positions.clear ();
 			visible_items.clear ();
 			
@@ -196,24 +182,6 @@ namespace Plank.Items
 			
 			set_item_positions ();
 			item_position_changed ();
-		}
-		
-		/**
-		 * Serializes the item positions to the preferences.
-		 */
-		protected void serialize_item_positions ()
-		{
-			var item_list = "";
-			foreach (var item in internal_items) {
-				if (!(item is TransientDockItem) && item.DockItemFilename.length > 0) {
-					if (item_list.length > 0)
-						item_list += ";;";
-					item_list += item.DockItemFilename;
-				}
-			}
-			
-			if (controller.prefs.DockItems != item_list)
-				controller.prefs.DockItems = item_list;
 		}
 		
 		/**

@@ -30,6 +30,8 @@ namespace Plank.Items
 	 */
 	public class ApplicationDockItemProvider : DockItemProvider
 	{
+		public DockController controller { get; protected set construct; }
+		
 		FileMonitor? items_monitor = null;
 		bool delay_items_monitor_handle = false;
 		ArrayList<GLib.File> queued_files = new ArrayList<GLib.File> ();
@@ -66,6 +68,9 @@ namespace Plank.Items
 			serialize_item_positions ();
 			
 			controller.prefs.changed["CurrentWorkspaceOnly"].connect (handle_setting_changed);
+			
+			item_position_changed.connect (serialize_item_positions);
+			items_changed.connect (serialize_item_positions);
 			
 			Matcher.get_default ().app_opened.connect (app_opened);
 			
@@ -104,6 +109,9 @@ namespace Plank.Items
 		~ApplicationDockItemProvider ()
 		{
 			controller.prefs.changed["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
+			
+			item_position_changed.disconnect (serialize_item_positions);
+			items_changed.disconnect (serialize_item_positions);
 			
 			Matcher.get_default ().app_opened.disconnect (app_opened);
 			
@@ -277,6 +285,24 @@ namespace Plank.Items
 			}
 			
 			base.update_visible_items ();
+		}
+		
+		/**
+		 * Serializes the item positions to the preferences.
+		 */
+		void serialize_item_positions ()
+		{
+			var item_list = "";
+			foreach (var item in internal_items) {
+				if (!(item is TransientDockItem) && item.DockItemFilename.length > 0) {
+					if (item_list.length > 0)
+						item_list += ";;";
+					item_list += item.DockItemFilename;
+				}
+			}
+			
+			if (controller.prefs.DockItems != item_list)
+				controller.prefs.DockItems = item_list;
 		}
 		
 		void add_running_app (Bamf.Application app, bool without_signaling)
