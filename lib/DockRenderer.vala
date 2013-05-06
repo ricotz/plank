@@ -396,8 +396,10 @@ namespace Plank
 			if (item.CountVisible || item.ProgressVisible)
 				icon_overlay_surface = item.get_foreground_surface (draw_item_overlay);
 			
-			if (icon_overlay_surface != null)
+			if (icon_overlay_surface != null) {
 				icon_cr.set_source_surface (icon_overlay_surface.Internal, 0, 0);
+				icon_cr.paint ();
+			}
 			
 #if BENCHMARK
 			var end = new DateTime.now_local ();
