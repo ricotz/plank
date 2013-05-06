@@ -79,6 +79,15 @@ namespace Plank
 		/**
 		 * {@inheritDoc}
 		 */
+		public DockPreferences.with_file (File file)
+		{
+			base.with_file (file);
+			Screen.get_default ().monitors_changed.connect (monitors_changed);
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
 		public DockPreferences.with_filename (string filename)
 		{
 			base.with_filename (filename);

@@ -29,19 +29,33 @@ namespace Plank
 	 */
 	public class DockController : GLib.Object
 	{
-		public DockPreferences prefs;
-		public ApplicationDockItemProvider items;
-		public PositionManager position_manager;
-		public DockRenderer renderer;
-		public DragManager drag_manager;
-		public HideManager hide_manager;
-		public HoverWindow hover;
-		public DockWindow window;
+		public File config_folder { get; construct; }
+		public DockPreferences prefs { get; construct; }
 		
-		public DockController ()
+		public DragManager drag_manager { get; protected set; }
+		public HideManager hide_manager { get; protected set; }
+		public HoverWindow hover { get; protected set; }
+		public ApplicationDockItemProvider items { get; protected set; }
+		public PositionManager position_manager { get; protected set; }
+		public DockRenderer renderer { get; protected set; }
+		public DockWindow window { get; protected set; }
+		
+		/**
+		 * Create a new DockController which manages a single dock
+		 *
+		 * @param config_folder the base-folder to load settings from and save them to
+		 */
+		public DockController (File config_folder)
 		{
-			prefs = new DockPreferences.with_filename (Factories.AbstractMain.dock_path + "/settings");
-			items = new ApplicationDockItemProvider (this);
+			Logger.verbose ("DockController (config_folder = %s)", config_folder.get_path ());
+			
+			Object (config_folder : config_folder,
+				prefs : new DockPreferences.with_file (config_folder.get_child ("settings")));
+		}
+		
+		construct
+		{
+			items = new ApplicationDockItemProvider (this, config_folder.get_child ("launchers"));
 			position_manager = new PositionManager (this);
 			renderer = new DockRenderer (this);
 			drag_manager = new DragManager (this);

@@ -32,6 +32,8 @@ namespace Plank.Items
 	{
 		public DockController controller { get; protected set construct; }
 		
+		public File launchers_dir { get; construct; }
+		
 		FileMonitor? items_monitor = null;
 		bool delay_items_monitor_handle = false;
 		ArrayList<GLib.File> queued_files = new ArrayList<GLib.File> ();
@@ -46,17 +48,15 @@ namespace Plank.Items
 		 *
 		 * @param controller the dock controller that owns these items
 		 */
-		public ApplicationDockItemProvider (DockController controller)
+		public ApplicationDockItemProvider (DockController controller, File launchers_dir)
 		{
-			Object (controller : controller);
+			Object (controller : controller, launchers_dir : launchers_dir);
 		}
 		
 		construct
 		{
-			Factory.item_factory.launchers_dir = Paths.AppConfigFolder.get_child (Factories.AbstractMain.dock_path + "/launchers");
-			
 			// if we made the launcher directory, assume a first run and pre-populate with launchers
-			if (Paths.ensure_directory_exists (Factory.item_factory.launchers_dir)) {
+			if (Paths.ensure_directory_exists (launchers_dir)) {
 				debug ("Adding default dock items...");
 				Factory.item_factory.make_default_items ();
 				debug ("done.");
@@ -80,7 +80,7 @@ namespace Plank.Items
 			wnck_screen.viewports_changed.connect (handle_viewports_changed);
 			
 			try {
-				items_monitor = Factory.item_factory.launchers_dir.monitor (0);
+				items_monitor = launchers_dir.monitor (0);
 				items_monitor.changed.connect (handle_items_dir_changed);
 			} catch (Error e) {
 				critical ("Unable to watch the launchers directory. (%s)", e.message);
@@ -224,11 +224,11 @@ namespace Plank.Items
 			var favs = new ArrayList<string> ();
 			
 			try {
-				var enumerator = Factory.item_factory.launchers_dir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0);
+				var enumerator = launchers_dir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0);
 				FileInfo info;
 				while ((info = enumerator.next_file ()) != null)
 					if (file_is_dockitem (info)) {
-						var file = Factory.item_factory.launchers_dir.get_child (info.get_name ());
+						var file = launchers_dir.get_child (info.get_name ());
 						var item = Factory.item_factory.make_item (file);
 						
 						if (!item.ValidItem) {
