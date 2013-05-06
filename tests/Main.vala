@@ -24,6 +24,7 @@ namespace Plank.Tests
 {
 	public const string TEST_ICON = Config.DATA_DIR + "/test-icon.svg";
 	public const uint IO_WAIT_MS = 1500;
+	public const uint EVENT_WAIT_MS = 100;
 	
 	public static int main (string[] args)
 	{

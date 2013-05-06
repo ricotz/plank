@@ -29,6 +29,9 @@ namespace Plank.Tests
 		Test.add_func ("/Items/FileDockItem/basics", items_filedockitem);
 		Test.add_func ("/Items/ApplicationDockItem/basics", items_applicationdockitem);
 		Test.add_func ("/Items/TransientDockItem/basics", items_transientdockitem);
+		
+		Test.add_func ("/Items/DockItemProvider/basics", items_dockitemprovider);
+		Test.add_func ("/Items/DockItemProvider/signals", items_dockitemprovider_signals);
 	}
 	
 	void items_dockitem ()
@@ -131,5 +134,98 @@ namespace Plank.Tests
 		assert (item.Icon == icon);
 		assert (item.Text == text);
 		assert (item.get_unity_application_uri () == "application://test.desktop");
+	}
+	
+	DockItem create_testitem ()
+	{
+		var file = File.new_for_path (Config.DATA_DIR + "/test.desktop");
+		var item = new DockItem ();
+		item.Prefs.Launcher = file.get_uri ();
+		item.Text = "Plank";
+		item.Icon = TEST_ICON;
+		item.Count = 42;
+		item.CountVisible = true;
+		item.Progress = 0.42;
+		item.ProgressVisible = true;
+		item.Position = 1;
+		
+		return item;
+	}
+	
+	void items_dockitemprovider ()
+	{
+		DockItemProvider provider;
+		
+		provider = new DockItemProvider ();
+		var item = create_testitem ();
+		
+		provider.add_item (item);
+		assert (item.ref_count > 1);
+		
+		provider.remove_item (item);
+		assert (item.ref_count == 1);
+	}
+	
+	DockItem? added_item;
+	DockItem? removed_item;
+	bool items_triggered;
+	
+	void items_dockitemprovider_signals ()
+	{
+		DockItemProvider provider;
+		DateTime now;
+		
+		provider = new DockItemProvider ();
+		var item = create_testitem ();
+		
+		// add item
+		provider.items_changed.connect (itemprovider_added_cb);
+		provider.add_item (item);
+		wait (EVENT_WAIT_MS);
+		now = new DateTime.now_utc ();
+		provider.items_changed.disconnect (itemprovider_added_cb);
+		
+		assert (item == added_item);
+		added_item = null;
+		assert (item.ref_count > 1);
+		assert (item.AddTime.difference (now) < 100);
+		
+		// change item state
+		items_triggered = false;
+		provider.item_state_changed.connect (itemprovider_state_cb);
+		item.clicked (0, 0);
+		wait (EVENT_WAIT_MS);
+		provider.item_state_changed.disconnect (itemprovider_state_cb);
+		
+		assert (items_triggered = true);
+		
+		// remove item
+		provider.items_changed.connect (itemprovider_removed_cb);
+		provider.remove_item (item);
+		wait (EVENT_WAIT_MS);
+		now = new DateTime.now_utc ();
+		provider.items_changed.disconnect (itemprovider_removed_cb);
+		
+		assert (item == removed_item);
+		removed_item = null;
+		assert (item.ref_count == 1);
+		assert (item.RemoveTime.difference (now) < 100);
+	}
+	
+	void itemprovider_added_cb (Gee.List<DockItem> added, Gee.List<DockItem> removed)
+	{
+		assert (added.size > 0);
+		added_item = added.first ();
+	}
+	
+	void itemprovider_removed_cb (Gee.List<DockItem> added, Gee.List<DockItem> removed)
+	{
+		assert (removed.size > 0);
+		removed_item = removed.first ();
+	}
+	
+	void itemprovider_state_cb ()
+	{
+		items_triggered = true;
 	}
 }
