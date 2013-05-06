@@ -91,6 +91,11 @@ namespace Plank.Items
 		 */
 		public void add_item (DockItem item)
 		{
+			if (internal_items.contains (item)) {
+				critical ("Item '%s' already exists in this item-provider.", item.Text);
+				return;
+			}
+			
 			add_item_without_signaling (item);
 			
 			update_visible_items ();
@@ -103,6 +108,11 @@ namespace Plank.Items
 		 */
 		public void remove_item (DockItem item)
 		{
+			if (!internal_items.contains (item)) {
+				critical ("Item '%s' does not exist in this item-provider.", item.Text);
+				return;
+			}
+			
 			remove_item_without_signaling (item);
 			
 			update_visible_items ();
@@ -193,7 +203,7 @@ namespace Plank.Items
 		 */
 		public virtual void move_item_to (DockItem move, DockItem target)
 		{
-			if (move == target)
+			if (move == target || !internal_items.contains (target))
 				return;
 			
 			var index_target = internal_items.index_of (target);
