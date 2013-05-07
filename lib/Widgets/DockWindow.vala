@@ -289,10 +289,17 @@ namespace Plank.Widgets
 				return false;
 			}
 			
-			foreach (var item in controller.items.Items) {
-				var rect = position_manager.item_hover_region (item);
+			Gdk.Rectangle rect;
+			foreach (var provider in controller.Providers) {
+				rect = position_manager.provider_hover_region (provider);
+				if (y <= rect.y || y >= rect.y + rect.height || x <= rect.x || x >= rect.x + rect.width)
+					continue;
 				
-				if (y >= rect.y && y <= rect.y + rect.height && x >= rect.x && x <= rect.x + rect.width) {
+				foreach (var item in provider.Items) {
+					rect = position_manager.item_hover_region (item);
+					if (y <= rect.y || y >= rect.y + rect.height || x <= rect.x || x >= rect.x + rect.width)
+						continue;
+				
 					set_hovered (item);
 					return true;
 				}
@@ -409,7 +416,7 @@ namespace Plank.Widgets
 			
 			var use_hidden_region = (menu_is_visible () || controller.hide_manager.Hidden);
 			
-			foreach (var item in controller.items.Items) {
+			foreach (var item in controller.Items) {
 				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 				if (appitem == null || !appitem.is_running ())
 					continue;

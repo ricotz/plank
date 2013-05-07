@@ -15,6 +15,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Gee;
+
 using Plank.Factories;
 using Plank.Items;
 using Plank.Widgets;
@@ -35,10 +37,29 @@ namespace Plank
 		public DragManager drag_manager { get; protected set; }
 		public HideManager hide_manager { get; protected set; }
 		public HoverWindow hover { get; protected set; }
-		public ApplicationDockItemProvider items { get; protected set; }
 		public PositionManager position_manager { get; protected set; }
 		public DockRenderer renderer { get; protected set; }
 		public DockWindow window { get; protected set; }
+		
+		DockItemProvider? default_provider;
+		ArrayList<DockItemProvider> item_providers;
+		
+		public ArrayList<DockItemProvider> Providers {
+			get {
+				return item_providers;
+			}
+		}
+		
+		public ArrayList<DockItem> Items {
+			owned get {
+				var all_items = new ArrayList<DockItem> ();
+				foreach (var provider in item_providers) {
+					var items = provider.Items;
+					all_items.add_all (items);
+				}
+				return all_items;
+			}
+		}
 		
 		/**
 		 * Create a new DockController which manages a single dock
@@ -55,13 +76,28 @@ namespace Plank
 		
 		construct
 		{
-			items = new ApplicationDockItemProvider (this, config_folder.get_child ("launchers"));
+			item_providers = new ArrayList<DockItemProvider> ();
+			
 			position_manager = new PositionManager (this);
 			renderer = new DockRenderer (this);
 			drag_manager = new DragManager (this);
 			hide_manager = new HideManager (this);
 			hover = new HoverWindow (this);
 			window = new DockWindow (this);
+		}
+		
+		~DockController ()
+		{
+			foreach (var provider in item_providers)
+				disconnect_provider (provider);
+			
+			item_providers.clear ();
+		}
+		
+		public void initialize ()
+		{
+			if (item_providers.size <= 0)
+				add_default_provider ();
 			
 			position_manager.initialize ();
 			renderer.initialize ();
@@ -69,6 +105,90 @@ namespace Plank
 			hide_manager.initialize ();
 			
 			window.show_all ();
+		}
+		
+		/**
+		 * Reset internal buffers of all providers.
+		 */
+		public void reset_provider_buffers ()
+		{
+			foreach (var provider in item_providers)
+				provider.reset_item_buffers ();
+		}
+		
+		public void add_default_provider ()
+		{
+			if (default_provider == null) {
+				default_provider = new ApplicationDockItemProvider (this, config_folder.get_child ("launchers"));
+				add_provider (default_provider);
+			}
+		}
+		
+		public void add_provider (DockItemProvider provider)
+		{
+			if (item_providers.contains (provider)) {
+				critical ("Provider already exists in this dock-controller.");
+				return;
+			}
+			
+			if (item_providers.size > 0)
+				provider.FirstItemPosition = item_providers.last ().FirstItemPosition;
+			item_providers.add (provider);
+			
+			connect_provider (provider);
+		}
+		
+		public void remove_provider (DockItemProvider provider)
+		{
+			if (!item_providers.contains (provider)) {
+				critical ("Provider does not exist in this dock-controller.");
+				return;
+			}
+			
+			disconnect_provider (provider);
+			
+			item_providers.remove (provider);
+			update_first_item_positions ();
+		}
+		
+		void connect_provider (DockItemProvider provider)
+		{
+			provider.item_position_changed.connect (item_position_changed);
+			provider.item_state_changed.connect (item_state_changed);
+			provider.items_changed.connect (items_changed);
+		}
+		
+		void disconnect_provider (DockItemProvider provider)
+		{
+			provider.item_position_changed.disconnect (item_position_changed);
+			provider.item_state_changed.disconnect (item_state_changed);
+			provider.items_changed.disconnect (items_changed);
+		}
+		
+		void update_first_item_positions ()
+		{
+			var current_pos = 0;
+			foreach (var provider in item_providers) {
+				provider.FirstItemPosition = current_pos;
+				current_pos += provider.Items.size;
+			}
+		}
+		
+		void items_changed (DockItemProvider provider, Gee.List<DockItem> added, Gee.List<DockItem> removed)
+		{
+			if (prefs.Alignment != Gtk.Align.FILL)
+				position_manager.reset_caches (renderer.theme);
+			position_manager.update_regions ();
+		}
+		
+		void item_position_changed (DockItemProvider provider)
+		{
+			renderer.animated_draw ();
+		}
+		
+		void item_state_changed (DockItemProvider provider)
+		{
+			renderer.animated_draw ();
 		}
 	}
 }

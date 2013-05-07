@@ -195,7 +195,9 @@ namespace Plank
 				DragItem = null;
 			
 			if (DragItem != null) {
-				controller.items.save_item_positions ();
+				unowned ApplicationDockItemProvider app_provider = (DragItem.Provider as ApplicationDockItemProvider);
+				if (app_provider != null)
+					app_provider.save_item_positions ();
 				
 				// FIXME
 				var drag_icon_size = (int) (1.2 * controller.position_manager.IconSize);
@@ -246,8 +248,8 @@ namespace Plank
 			if (drag_data == null)
 				return true;
 			
-			unowned ApplicationDockItemProvider items = controller.items;
 			unowned DockItem item = controller.window.HoveredItem;
+			unowned DockItemProvider items = item.Provider;
 			
 			if (DragIsDesktopFile) {
 				var uri = drag_data[0];
@@ -279,7 +281,7 @@ namespace Plank
 						// Remove from dock
 						unowned ApplicationDockItem? app_item = (DragItem as ApplicationDockItem);
 						if (app_item == null || !(app_item.is_running ()))
-							controller.items.remove_item (DragItem);
+							app_item.Provider.remove_item (DragItem);
 						DragItem.delete ();
 						
 						int x, y;
@@ -342,16 +344,22 @@ namespace Plank
 			if (DragItem == null)
 				return;
 			
-			if (!controller.hide_manager.DockHovered)
-				controller.items.restore_item_positions ();
+			if (!controller.hide_manager.DockHovered) {
+				unowned ApplicationDockItemProvider app_provider = (DragItem.Provider as ApplicationDockItemProvider);
+				if (app_provider != null)
+					app_provider.restore_item_positions ();
+			}
 		}
 		
 		bool drag_failed (Widget w, DragContext context, DragResult result)
 		{
 			drag_canceled = result == DragResult.USER_CANCELLED;
 			
-			if (drag_canceled)
-				controller.items.restore_item_positions ();
+			if (drag_canceled) {
+				unowned ApplicationDockItemProvider app_provider = (DragItem.Provider as ApplicationDockItemProvider);
+				if (app_provider != null)
+					app_provider.restore_item_positions ();
+			}
 			
 			return !drag_canceled;
 		}
@@ -398,8 +406,7 @@ namespace Plank
 			
 			if (InternalDragActive && DragItem != null && hovered_item != null
 				&& DragItem != hovered_item) {
-				
-				controller.items.move_item_to (DragItem, hovered_item);
+				DragItem.Provider.move_item_to (DragItem, hovered_item);
 			}
 			
 			if (drag_hover_timer > 0) {

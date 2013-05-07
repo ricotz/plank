@@ -46,9 +46,26 @@ namespace Plank.Items
 		/**
 		 * A list of the dock items.
 		 */
-		public unowned ArrayList<DockItem> Items {
+		public ArrayList<DockItem> Items {
 			get {
 				return visible_items;
+			}
+		}
+		
+		int first_item_position = 0;
+		/**
+		 * The absolute position of the first item of this provider on the dock.
+		 */
+		public int FirstItemPosition { 
+			get {
+				return first_item_position;
+			}
+			set {
+				if (first_item_position == value)
+					return;
+				
+				first_item_position = value;
+				set_item_positions ();
 			}
 		}
 		
@@ -79,8 +96,10 @@ namespace Plank.Items
 			
 			var items = new HashSet<DockItem> ();
 			items.add_all (internal_items);
-			foreach (var item in items)
+			foreach (var item in items) {
 				remove_item_without_signaling (item);
+				item.Provider = null;
+			}
 			internal_items.clear ();
 		}
 		
@@ -151,7 +170,7 @@ namespace Plank.Items
 		
 		protected void set_item_positions ()
 		{
-			int pos = 0;
+			int pos = FirstItemPosition;
 			foreach (var i in visible_items)
 				i.Position = pos++;
 		}
@@ -230,6 +249,20 @@ namespace Plank.Items
 				item.reset_buffers ();
 		}
 		
+		public virtual bool item_exists_for_uri (string uri)
+		{
+			foreach (var item in internal_items)
+				if (item.Launcher == uri)
+					return true;
+			
+			return false;
+		}
+		
+		public virtual void add_item_with_uri (string uri, DockItem? target = null)
+		{
+			warning ("Not implemented by default");
+		}
+		
 		protected virtual void add_item_without_signaling (DockItem item)
 		{
 			if (item.Position > -1 && item.Position <= internal_items.size) {
@@ -238,6 +271,7 @@ namespace Plank.Items
 				internal_items.add (item);
 			}
 			
+			item.Provider = this;
 			item.AddTime = new DateTime.now_utc ();
 			item_signals_connect (item);
 		}
@@ -259,7 +293,9 @@ namespace Plank.Items
 			
 			var index = internal_items.index_of (old_item);
 			internal_items.remove (old_item);
+			old_item.Provider = null;
 			internal_items.insert (index, new_item);
+			new_item.Provider = this;
 			
 			new_item.AddTime = old_item.AddTime;
 			new_item.Position = old_item.Position;
@@ -281,6 +317,7 @@ namespace Plank.Items
 			item_signals_disconnect (item);
 			
 			internal_items.remove (item);
+			item.Provider = null;
 		}
 		
 		protected virtual void item_signals_connect (DockItem item)
@@ -306,6 +343,28 @@ namespace Plank.Items
 		protected virtual void handle_item_deleted (DockItem item)
 		{
 			remove_item (item);
+		}
+		
+		/**
+		 * Returns if the provider accepts a drop of the given URIs.
+		 *
+		 * @param uris the URIs to check
+		 * @return if the provider accepts a drop of the given URIs
+		 */
+		public virtual bool can_accept_drop (ArrayList<string> uris)
+		{
+			return false;
+		}
+		
+		/**
+		 * Accepts a drop of the given URIs.
+		 *
+		 * @param uris the URIs to accept
+		 * @return if the item accepted a drop of the given URIs
+		 */
+		public virtual bool accept_drop (ArrayList<string> uris)
+		{
+			return false;
 		}
 		
 		protected static int compare_items (DockItem left, DockItem right)

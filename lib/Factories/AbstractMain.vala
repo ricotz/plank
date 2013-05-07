@@ -18,6 +18,8 @@
 using Gtk;
 using Posix;
 
+using Plank.Items;
+
 using Plank.Services;
 using Plank.Services.Windows;
 using Plank.Widgets;
@@ -296,7 +298,8 @@ namespace Plank.Factories
 		 */
 		protected virtual void create_controller ()
 		{
-			new DockController (Paths.AppConfigFolder.get_child (dock_name));
+			var controller = new DockController (Paths.AppConfigFolder.get_child (dock_name));
+			controller.initialize ();
 		}
 		
 		/**

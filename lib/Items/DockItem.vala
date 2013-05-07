@@ -165,6 +165,11 @@ namespace Plank.Items
 		public signal void needs_redraw ();
 		
 		/**
+		 * The dock item's provider which it is added too (if any).
+		 */
+		public DockItemProvider? Provider { get; set; }
+		
+		/**
 		 * The dock item's icon.
 		 */
 		public string Icon { get; set; default = ""; }

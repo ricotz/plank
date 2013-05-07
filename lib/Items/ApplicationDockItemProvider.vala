@@ -186,16 +186,7 @@ namespace Plank.Items
 			return null;
 		}
 
-		public bool item_exists_for_uri (string uri)
-		{
-			foreach (var item in internal_items)
-				if (item.Launcher == uri)
-					return true;
-			
-			return false;
-		}
-		
-		public void add_item_with_uri (string uri, DockItem? target = null)
+		public override void add_item_with_uri (string uri, DockItem? target = null)
 		{
 			if (uri == null || uri == "")
 				return;
@@ -485,6 +476,16 @@ namespace Plank.Items
 			item.copy_values_to (new_item);
 			
 			replace_item (new_item, item);
+		}
+		
+		public override bool can_accept_drop (ArrayList<string> uris)
+		{
+			return false;
+		}
+		
+		public override bool accept_drop (ArrayList<string> uris)
+		{
+			return false;
 		}
 		
 		void pin_item (DockItem item)
