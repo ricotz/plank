@@ -107,6 +107,12 @@ namespace Plank.Tests
 		assert (icon.width == 127);
 		assert (icon.height == 127);
 		
+		var icon2 = DrawingService.load_icon (TEST_ICON, 256, 256);
+		icon2 = DrawingService.ar_scale (icon2, 1, 1);
+		assert (icon2 != null);
+		assert (icon2.width == 1);
+		assert (icon2.height == 1);
+		
 		var icon_copy = icon.copy ();
 		var color = DrawingService.average_color (icon);
 		var color_copy = DrawingService.average_color (icon_copy);

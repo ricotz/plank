@@ -133,12 +133,14 @@ namespace Plank.Drawing
 				return pbuf;
 			}
 			
-			return get_empty_pixbuf ();
+			warning ("No icon found, return empty pixbuf");
+			
+			return get_empty_pixbuf (int.max (1, width), int.max (1, height));
 		}
 		
-		static Pixbuf get_empty_pixbuf ()
+		static Pixbuf get_empty_pixbuf (int width, int height)
 		{
-			var pbuf = new Pixbuf (Colorspace.RGB, true, 8, 1, 1);
+			var pbuf = new Pixbuf (Colorspace.RGB, true, 8, width, height);
 			pbuf.fill (0x00000000);
 			return pbuf;
 		}
@@ -201,11 +203,10 @@ namespace Plank.Drawing
 			if (scale == 1)
 				return source;
 			
-			var tmp = source.scale_simple ((int) (source.width * scale),
-				(int) (source.height * scale),
-				InterpType.HYPER);
+			var scaled_width = int.max (1, (int) (source.width * scale));
+			var scaled_height = int.max (1, (int) (source.height * scale));
 			
-			return tmp;
+			return source.scale_simple (scaled_width, scaled_height, InterpType.HYPER);
 		}
 		
 		/**
