@@ -325,20 +325,24 @@ namespace Plank
 			if (theme.FadeOpacity == 1.0)
 				position_manager.get_dock_draw_position (out x_offset, out y_offset);
 			
-			// draw the dock on the window
-			cr.set_operator (Operator.SOURCE);
-			cr.set_source_surface (shadow_buffer.Internal, x_offset, y_offset);
-			cr.paint ();
-			cr.set_operator (Operator.OVER);
-			cr.set_source_surface (main_buffer.Internal, x_offset, y_offset);
-			cr.paint ();
+			// composite dock layers and make sure to draw onto the window's context with one operation
+			unowned Cairo.Context composite_cr = shadow_buffer.Context;
+			composite_cr.set_operator (Operator.OVER);
+			composite_cr.set_source_surface (main_buffer.Internal, x_offset, y_offset);
+			composite_cr.paint ();
 			
 			// fade the dock if need be
 			var opacity = get_opacity ();
 			if (opacity < 1.0) {
-				cr.set_source_rgba (0, 0, 0, 0);
-				cr.paint_with_alpha (1 - opacity);
+				composite_cr.set_operator (Operator.SOURCE);
+				composite_cr.set_source_rgba (0, 0, 0, 0);
+				composite_cr.paint_with_alpha (1 - opacity);
 			}
+			
+			// draw the dock on the window
+			cr.set_operator (Operator.SOURCE);
+			cr.set_source_surface (shadow_buffer.Internal, x_offset, y_offset);
+			cr.paint ();
 			
 			// draw urgent-glow if dock is completely hidden
 			if (get_hide_offset () == 1) {
