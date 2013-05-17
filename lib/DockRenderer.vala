@@ -328,7 +328,7 @@ namespace Plank
 			// composite dock layers and make sure to draw onto the window's context with one operation
 			unowned Cairo.Context composite_cr = shadow_buffer.Context;
 			composite_cr.set_operator (Operator.OVER);
-			composite_cr.set_source_surface (main_buffer.Internal, x_offset, y_offset);
+			composite_cr.set_source_surface (main_buffer.Internal, 0, 0);
 			composite_cr.paint ();
 			
 			// fade the dock if need be
