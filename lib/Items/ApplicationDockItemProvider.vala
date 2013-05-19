@@ -67,7 +67,7 @@ namespace Plank.Items
 			update_visible_items ();
 			serialize_item_positions ();
 			
-			controller.prefs.changed["CurrentWorkspaceOnly"].connect (handle_setting_changed);
+			controller.prefs.notify["CurrentWorkspaceOnly"].connect (handle_setting_changed);
 			
 			item_position_changed.connect (serialize_item_positions);
 			items_changed.connect (serialize_item_positions);
@@ -108,7 +108,7 @@ namespace Plank.Items
 		
 		~ApplicationDockItemProvider ()
 		{
-			controller.prefs.changed["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
+			controller.prefs.notify["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
 			
 			item_position_changed.disconnect (serialize_item_positions);
 			items_changed.disconnect (serialize_item_positions);

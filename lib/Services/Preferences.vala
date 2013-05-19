@@ -53,18 +53,6 @@ namespace Plank.Services
 	public abstract class Preferences : GLib.Object
 	{
 		/**
-		 * This signal is to be used in place of the standard {@link GLib.Object.notify} signal.
-		 *
-		 * This signal ''only'' emits after a property's value was verified.
-		 *
-		 * Note that in the case where a property was set to an invalid value,
-		 * (and thus, sanitized to a valid value), the {@link GLib.Object.notify} signal will emit
-		 * twice: once with the invalid value and once with the sanitized value.
-		 */
-		[Signal (no_recurse = true, run = "first", action = true, no_hooks = true, detailed = true)]
-		public signal void changed ();
-		
-		/**
 		 * This signal indicates that the backing file for this preferences was deleted.
 		 */
 		public signal void deleted ();
@@ -84,6 +72,7 @@ namespace Plank.Services
 		
 		~Preferences ()
 		{
+			notify.disconnect (handle_notify);
 			apply ();
 			stop_monitor ();
 		}
@@ -93,19 +82,23 @@ namespace Plank.Services
 			if (read_only)
 				return;
 			
+			notify.disconnect (handle_notify);
+			freeze_notify ();
+			
 			Logger.verbose ("property changed: %s", property.name);
 			
 			is_delayed_internal = true;
 			if (backing_file != null)
 				save_prefs ();
 			
-			notify.disconnect (handle_notify);
 			call_verify (property.name);
-			notify.connect (handle_notify);
 			
 			is_delayed_internal = false;
 			if (!is_delayed && is_changed && backing_file != null)
 				save_prefs ();
+			
+			thaw_notify ();
+			notify.connect (handle_notify);
 		}
 		
 		void handle_verify_notify (Object sender, ParamSpec property)
@@ -119,10 +112,11 @@ namespace Plank.Services
 		
 		void call_verify (string prop)
 		{
+			freeze_notify ();
 			notify.connect (handle_verify_notify);
 			verify (prop);
-			changed[prop] ();
 			notify.disconnect (handle_verify_notify);
+			thaw_notify ();
 		}
 		
 		/**
@@ -339,8 +333,9 @@ namespace Plank.Services
 			var missing_keys = false;
 			
 			notify.disconnect (handle_notify);
+			freeze_notify ();
+			
 			is_delayed_internal = true;
-			reset_properties ();
 			try {
 				var file = new KeyFile ();
 				file.load_from_file (backing_file.get_path () ?? "", 0);
@@ -355,34 +350,71 @@ namespace Plank.Services
 					}
 					
 					var type = prop.value_type;
-					var val = Value (type);
 					
 					try {
-						if (type == typeof (int))
-							val.set_int (file.get_integer (group_name, prop.name));
-						else if (type == typeof (uint))
-							val.set_uint ((uint) file.get_integer (group_name, prop.name));
-						else if (type == typeof (double))
-							val.set_double (file.get_double (group_name, prop.name));
-						else if (type == typeof (string))
-							val.set_string (file.get_string (group_name, prop.name));
-						else if (type == typeof (bool))
-							val.set_boolean (file.get_boolean (group_name, prop.name));
-						else if (type.is_enum ())
-							val.set_enum (file.get_integer (group_name, prop.name));
-						else if (type.is_a (typeof (Drawing.Color))) {
-							var color = Drawing.Color.from_string (file.get_string (group_name, prop.name));
-							val.set_boxed (&color);
-						} else if (type.is_a (typeof (PrefsSerializable))) {
+						if (type == typeof (int)) {
+							int old_val;
+							@get (prop.name, out old_val);
+							var new_val = file.get_integer (group_name, prop.name);
+							if (old_val == new_val)
+								continue;
+							@set (prop.name, new_val);
+						} else if (type == typeof (uint)) {
+							uint old_val;
+							@get (prop.name, out old_val);
+							var new_val = (uint) file.get_integer (group_name, prop.name);
+							if (old_val == new_val)
+								continue;
+							@set (prop.name, new_val);
+						} else if (type == typeof (double)) {
+							double old_val;
+							@get (prop.name, out old_val);
+							var new_val = file.get_double (group_name, prop.name);
+							if (old_val == new_val)
+								continue;
+							@set (prop.name, new_val);
+						} else if (type == typeof (string)) {
+							string old_val;
+							@get (prop.name, out old_val);
+							var new_val = file.get_string (group_name, prop.name);
+							if (old_val == new_val)
+								continue;
+							@set (prop.name, new_val);
+						} else if (type == typeof (bool)) {
+							bool old_val;
+							@get (prop.name, out old_val);
+							var new_val = file.get_boolean (group_name, prop.name);
+							if (old_val == new_val)
+								continue;
+							@set (prop.name, new_val);
+						} else if (type.is_enum ()) {
+							int old_val;
+							@get (prop.name, out old_val);
+							var new_val = file.get_integer (group_name, prop.name);
+							if (old_val == new_val)
+								continue;
+							@set (prop.name, new_val);
+						} else if (type.is_a (typeof (Drawing.Color))) {
+							var val = Value (type);
 							get_property (prop.name, ref val);
-							(val.get_object () as PrefsSerializable).prefs_deserialize (file.get_string (group_name, prop.name));
+							Drawing.Color* old_val = val.get_boxed ();
+							var old_val_string = old_val.to_string ();
+							var new_val_string = file.get_string (group_name, prop.name);
+							if (old_val_string == new_val_string)
+								continue;
+							var new_val = Drawing.Color.from_string (new_val_string);
+							val.set_boxed (&new_val);
+							set_property (prop.name, val);
+						} else if (type.is_a (typeof (PrefsSerializable))) {
+							PrefsSerializable val;
+							@get (prop.name, out val);
+							val.prefs_deserialize (file.get_string (group_name, prop.name));
 							continue;
 						} else {
 							debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
 							continue;
 						}
 						
-						set_property (prop.name, val);
 						call_verify (prop.name);
 					} catch (KeyFileError e) {
 						warning ("Problem loading preferences from file '%s' for property '%s'", backing_file.get_path () ?? "", prop.name);
@@ -394,6 +426,8 @@ namespace Plank.Services
 				debug (e.message);
 				deleted ();
 			}
+			
+			thaw_notify ();
 			notify.connect (handle_notify);
 			
 			if (missing_keys)
@@ -421,6 +455,7 @@ namespace Plank.Services
 			}
 			
 			stop_monitor ();
+			freeze_notify ();
 			
 			var file = new KeyFile ();
 			
@@ -430,27 +465,40 @@ namespace Plank.Services
 			
 			foreach (var prop in get_class ().list_properties ()) {
 				var group_name = prop.owner_type.name ();
-				
 				var type = prop.value_type;
-				var val = Value (type);
-				get_property (prop.name, ref val);
 				
-				if (type == typeof (int))
-					file.set_integer (group_name, prop.name, val.get_int ());
-				else if (type == typeof (uint))
-					file.set_integer (group_name, prop.name, (int) val.get_uint ());
-				else if (type == typeof (double))
-					file.set_double (group_name, prop.name, val.get_double ());
-				else if (type == typeof (string))
-					file.set_string (group_name, prop.name, val.get_string ());
-				else if (type == typeof (bool))
-					file.set_boolean (group_name, prop.name, val.get_boolean ());
-				else if (type.is_enum ())
-					file.set_integer (group_name, prop.name, val.get_enum ());
-				else if (type.is_a (typeof (Drawing.Color))) {
+				if (type == typeof (int)) {
+					int new_val;
+					@get (prop.name, out new_val);
+					file.set_integer (group_name, prop.name, new_val);
+				} else if (type == typeof (uint)) {
+					uint new_val;
+					@get (prop.name, out new_val);
+					file.set_integer (group_name, prop.name, (int) new_val);
+				} else if (type == typeof (double)) {
+					double new_val;
+					@get (prop.name, out new_val);
+					file.set_double (group_name, prop.name, new_val);
+				} else if (type == typeof (string)) {
+					string new_val;
+					@get (prop.name, out new_val);
+					file.set_string (group_name, prop.name, new_val);
+				} else if (type == typeof (bool)) {
+					bool new_val;
+					@get (prop.name, out new_val);
+					file.set_boolean (group_name, prop.name, new_val);
+				} else if (type.is_enum ()) {
+					int new_val;
+					@get (prop.name, out new_val);
+					file.set_integer (group_name, prop.name, new_val);
+				} else if (type.is_a (typeof (Drawing.Color))) {
+					var val = Value (type);
+					get_property (prop.name, ref val);
 					Drawing.Color* color = val.get_boxed ();
 					file.set_string (group_name, prop.name, (color.to_string ()));
 				} else if (type.is_a (typeof (PrefsSerializable))) {
+					var val = Value (type);
+					get_property (prop.name, ref val);
 					file.set_string (group_name, prop.name, (val.get_object () as PrefsSerializable).prefs_serialize ());
 				} else {
 					debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
@@ -480,6 +528,7 @@ namespace Plank.Services
 				debug (e.message);
 			}
 			
+			thaw_notify ();
 			start_monitor ();
 		}
 	}

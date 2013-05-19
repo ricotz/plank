@@ -85,7 +85,7 @@ namespace Plank
 			
 			notify["Disabled"].connect (update_hidden);
 			notify["DockHovered"].connect (update_hidden);
-			controller.prefs.changed.connect (prefs_changed);
+			controller.prefs.notify.connect (prefs_changed);
 		}
 		
 		/**
@@ -114,7 +114,7 @@ namespace Plank
 		{
 			notify["Disabled"].disconnect (update_hidden);
 			notify["DockHovered"].disconnect (update_hidden);
-			controller.prefs.changed.disconnect (prefs_changed);
+			controller.prefs.notify.disconnect (prefs_changed);
 			
 			controller.window.enter_notify_event.disconnect (enter_notify_event);
 			controller.window.leave_notify_event.disconnect (leave_notify_event);

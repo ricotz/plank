@@ -54,7 +54,7 @@ namespace Plank
 			cursor_region = Gdk.Rectangle ();
 			static_dock_region = Gdk.Rectangle ();
 			
-			controller.prefs.changed["Monitor"].connect (update_monitor_geo);
+			controller.prefs.notify["Monitor"].connect (update_monitor_geo);
 		}
 		
 		/**
@@ -80,7 +80,7 @@ namespace Plank
 			
 			screen.monitors_changed.disconnect (update_monitor_geo);
 			screen.size_changed.disconnect (update_monitor_geo);
-			controller.prefs.changed["Monitor"].disconnect (update_monitor_geo);
+			controller.prefs.notify["Monitor"].disconnect (update_monitor_geo);
 		}
 		
 		void update_monitor_geo ()

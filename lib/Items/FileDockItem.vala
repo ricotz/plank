@@ -56,7 +56,7 @@ namespace Plank.Items
 		
 		construct
 		{
-			Prefs.changed["Launcher"].connect (handle_launcher_changed);
+			Prefs.notify["Launcher"].connect (handle_launcher_changed);
 			
 			if (!ValidItem)
 				return;
@@ -87,7 +87,7 @@ namespace Plank.Items
 		
 		~FileDockItem ()
 		{
-			Prefs.changed["Launcher"].disconnect (handle_launcher_changed);
+			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
 			
 			if (dir_monitor != null) {
 				dir_monitor.changed.disconnect (handle_dir_changed);

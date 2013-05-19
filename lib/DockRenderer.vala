@@ -121,7 +121,7 @@ namespace Plank
 		~DockRenderer ()
 		{
 			controller.prefs.notify.disconnect (prefs_changed);
-			theme.changed.disconnect (theme_changed);
+			theme.notify.disconnect (theme_changed);
 			
 			controller.items.item_state_changed.disconnect (item_state_changed);
 			controller.items.item_position_changed.disconnect (item_position_changed);
@@ -198,11 +198,11 @@ namespace Plank
 			var is_reload = (theme != null);
 			
 			if (is_reload)
-				theme.changed.disconnect (theme_changed);
+				theme.notify.disconnect (theme_changed);
 			
 			theme = new DockTheme (controller.prefs.Theme);
 			theme.load ("dock");
-			theme.changed.connect (theme_changed);
+			theme.notify.connect (theme_changed);
 			
 			controller.position_manager.reset_caches (theme);
 			

@@ -87,11 +87,11 @@ namespace Plank.Widgets
 			var is_reload = (theme != null);
 			
 			if (is_reload)
-				theme.changed.disconnect (theme_changed);
+				theme.notify.disconnect (theme_changed);
 			
 			theme = new HoverTheme (controller.prefs.Theme);
 			theme.load ("hover");
-			theme.changed.connect (theme_changed);
+			theme.notify.connect (theme_changed);
 			
 			if (is_reload)
 				theme_changed ();
