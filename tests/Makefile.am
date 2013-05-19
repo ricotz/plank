@@ -34,6 +34,7 @@ tests_VALASOURCES = \
 	Drawing.vala \
 	Items.vala \
 	Preferences.vala \
+	Widgets.vala \
 	Main.vala \
 	$(NULL)
 
