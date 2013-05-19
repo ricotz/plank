@@ -27,6 +27,10 @@ namespace Plank.Tests
 		Test.add_func ("/Services/Preferences/basics", preferences_basics);
 		Test.add_func ("/Services/Preferences/delay", preferences_delay);
 		Test.add_func ("/Services/Preferences/signals", preferences_signals);
+		Test.add_func ("/Services/Preferences/signals2", preferences_signals2);
+		Test.add_func ("/Services/Preferences/signals3", preferences_signals3);
+		Test.add_func ("/Services/Preferences/signals4", preferences_signals4);
+		Test.add_func ("/Services/Preferences/signals5", preferences_signals5);
 		Test.add_func ("/Services/Preferences/subclass", preferences_subclass);
 	}
 	
@@ -36,6 +40,7 @@ namespace Plank.Tests
 		public double DoubleSetting { get; set; }
 		public int IntSetting { get; set; }
 		public string StringSetting { get; set; }
+		public Plank.Drawing.Color ColorSetting  { get; set; }
 		
 		public TestPreferences (string filename)
 		{
@@ -48,6 +53,7 @@ namespace Plank.Tests
 			DoubleSetting = 0.42;
 			IntSetting = 42;
 			StringSetting = "test";
+			ColorSetting = { 0.3, 0.6, 0.1, 1.0 };
 		}
 	}
 	
@@ -76,30 +82,39 @@ namespace Plank.Tests
 
 	void preferences_basics ()
 	{
+		Plank.Drawing.Color color = { 0.3, 0.6, 0.1, 1.0 };
+		Plank.Drawing.Color color2 = { 0.5, 0.3, 0.7, 0.9 };
+		
 		var prefs = new TestPreferences ("test_preferences_basics");
 		assert (prefs.BoolSetting == true);
 		assert (prefs.DoubleSetting == 0.42);
 		assert (prefs.IntSetting == 42);
 		assert (prefs.StringSetting == "test");
+		assert (prefs.ColorSetting == color);
 		
 		prefs.BoolSetting = false;
 		prefs.IntSetting = 4711;
 		prefs.DoubleSetting = 0.4711;
 		prefs.StringSetting = "test_changed";
+		prefs.ColorSetting = { 0.5, 0.3, 0.7, 0.9 };
 		
 		assert (prefs.BoolSetting == false);
 		assert (prefs.DoubleSetting == 0.4711);
 		assert (prefs.IntSetting == 4711);
 		assert (prefs.StringSetting == "test_changed");
-
+		assert (prefs.ColorSetting == color2);
+		
 		var prefs2 = new TestPreferences ("test_preferences_basics");
 		assert (prefs2.BoolSetting == false);
 		assert (prefs2.DoubleSetting == 0.4711);
 		assert (prefs2.IntSetting == 4711);
 		assert (prefs2.StringSetting == "test_changed");
+		// Compare string representations since the double values are likely to differ
+		assert (prefs2.ColorSetting.to_string () == color2.to_string ());
 	}
 	
 	bool triggered;
+	uint triggered_count;
 	
 	void preferences_delay ()
 	{
@@ -107,7 +122,7 @@ namespace Plank.Tests
 		var prefs2 = new TestPreferences ("test_preferences_delay");
 		
 		triggered = false;
-		prefs2.changed.connect (preferences_triggered_cb);
+		prefs2.notify.connect (preferences_triggered_cb);
 		
 		prefs.delay ();
 		prefs.BoolSetting = false;
@@ -130,6 +145,8 @@ namespace Plank.Tests
 		assert (prefs2.DoubleSetting == 0.4711);
 		assert (prefs2.IntSetting == 4711);
 		assert (prefs2.StringSetting == "test_changed");
+		
+		prefs2.notify.disconnect (preferences_triggered_cb);
 	}
 	
 	void preferences_signals ()
@@ -137,12 +154,12 @@ namespace Plank.Tests
 		var prefs = new TestPreferences ("test_preferences_signals");
 		
 		triggered = false;
-		prefs.changed.connect (preferences_triggered_cb);
+		prefs.notify.connect (preferences_triggered_cb);
 		prefs.StringSetting = "test_changed";
 		assert (triggered == true);
 		
 		triggered = false;
-		prefs.changed.disconnect (preferences_triggered_cb);
+		prefs.notify.disconnect (preferences_triggered_cb);
 		prefs.StringSetting = "test_changed";
 		assert (triggered == false);
 		
@@ -152,11 +169,107 @@ namespace Plank.Tests
 		try { file.delete (); } catch {};
 		wait (IO_WAIT_MS);
 		assert (triggered == true);
+		prefs.deleted.disconnect (preferences_triggered_cb);
 	}
 	
-	void preferences_triggered_cb (Preferences prefs)
+	void preferences_signals2 ()
+	{
+		var prefs = new TestPreferences ("test_preferences_signals2");
+		prefs.notify["IntSetting"].connect (preferences_triggered_cb);
+		
+		triggered = false;
+		triggered_count = 0;
+		prefs.IntSetting = 77;
+		prefs.StringSetting = "test_changed";
+		
+		assert (triggered == true);
+		assert (prefs.IntSetting == 77);
+		assert (triggered_count == 1);
+		
+		prefs.notify["IntSetting"].disconnect (preferences_triggered_cb);
+	}
+	
+	void preferences_signals3 ()
+	{
+		var prefs = new TestPreferences ("test_preferences_signals3");
+		prefs.notify.connect (preferences_triggered_cb);
+		
+		triggered = false;
+		triggered_count = 0;
+		prefs.IntSetting = 77;
+		prefs.StringSetting = "test_changed";
+		
+		assert (triggered == true);
+		assert (prefs.IntSetting == 77);
+		assert (triggered_count == 2);
+		
+		prefs.notify.disconnect (preferences_triggered_cb);
+	}
+	
+	void preferences_signals4 ()
+	{
+		var prefs = new TestPreferences ("test_preferences_signals4");
+		var prefs_proxy = new TestPreferences ("test_preferences_signals4");
+		prefs.notify["IntSetting"].connect (preferences_triggered_cb);
+		
+		triggered = false;
+		triggered_count = 0;
+		prefs_proxy.IntSetting = 77;
+		prefs_proxy.StringSetting = "test_changed";
+		
+		wait (IO_WAIT_MS);
+		assert (triggered == true);
+		assert (prefs.IntSetting == 77);
+		assert (triggered_count == 1);
+		
+		triggered = false;
+		triggered_count = 0;
+		prefs_proxy.IntSetting = 77;
+		prefs_proxy.StringSetting = "test_changed";
+		
+		wait (IO_WAIT_MS);
+		assert (triggered == false);
+		assert (prefs.IntSetting == 77);
+		assert (triggered_count == 0);
+		
+		prefs.notify["IntSetting"].disconnect (preferences_triggered_cb);
+	}
+	
+	void preferences_signals5 ()
+	{
+		var prefs = new TestPreferences ("test_preferences_signals5");
+		var prefs_proxy = new TestPreferences ("test_preferences_signals5");
+		prefs.notify.connect (preferences_triggered_cb);
+		
+		triggered = false;
+		triggered_count = 0;
+		prefs_proxy.IntSetting = 77;
+		prefs_proxy.StringSetting = "test_changed";
+		
+		wait (IO_WAIT_MS);
+		assert (triggered == true);
+		assert (prefs.IntSetting == 77);
+		assert (prefs.StringSetting == "test_changed");
+		assert (triggered_count == 2);
+		
+		triggered = false;
+		triggered_count = 0;
+		prefs_proxy.IntSetting = 77;
+		prefs_proxy.StringSetting = "test_changed";
+		
+		wait (IO_WAIT_MS);
+		assert (triggered == false);
+		assert (prefs.IntSetting == 77);
+		assert (prefs.StringSetting == "test_changed");
+		assert (triggered_count == 0);
+		
+		prefs.notify.disconnect (preferences_triggered_cb);
+	}
+	
+	void preferences_triggered_cb ()
 	{
 		triggered = true;
+		triggered_count++;
 	}
 	
 	void preferences_subclass ()
