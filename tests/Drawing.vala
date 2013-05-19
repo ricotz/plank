@@ -51,19 +51,21 @@ namespace Plank.Tests
 		assert (color == color2);
 		
 		color3 = color;
-		color3.R = 0.7;
-		color3.G = 0.7;
-		color3.B = 0.7;
-		color3.A = 0.7;
+		color3.R = 0.75;
+		color3.G = 0.37;
+		color3.B = 0.66;
+		color3.A = 0.97;
 		assert (color != color3);
 		
 		color.get_hsv (out h, out s, out v);
 		color2.set_hsv (h, s, v);
 		assert (color == color2);
 		
+		assert (color.get_hue () == 0.0);
+
 		color = color3;
 		color.set_hue (187);
-		//FIXME assert (color.get_hue () == 187);
+		assert (color.get_hue () == 187);
 		
 		color = color3;
 		color.set_sat (0.75);
@@ -76,7 +78,7 @@ namespace Plank.Tests
 		color = color3;
 		color.set_hue (187);
 		color.add_hue (15);
-		//FIXME assert (color.get_hue () == 202);
+		assert (color.get_hue () == 202);
 		
 		color = color3;
 		color.set_sat (0.35);
@@ -121,33 +123,33 @@ namespace Plank.Tests
 	
 	void drawing_drawingservice_average_color ()
 	{
-		Drawing.Color color;
-		Drawing.DockSurface surface;
-		
-		surface = new DockSurface (256, 256);
-		
-		unowned Context cr = surface.Context;
-		
 		// fully transparent surface
-		cr.set_source_rgba (0.0, 0.0, 0.0, 0.0);
-		cr.set_operator (Operator.SOURCE);
-		cr.paint ();
-		color = surface.average_color ();
-		assert (color == Drawing.Color () { R = 0.0, G = 0.0, B = 0.0, A = 0.0 });
+		drawing_drawingservice_average_color_helper ({ 0.0, 0.0, 0.0, 0.0 }, 0.0);
 		
 		// fully black surface
-		cr.set_source_rgba (0.0, 0.0, 0.0, 1.0);
-		cr.set_operator (Operator.SOURCE);
-		cr.paint ();
-		color = surface.average_color ();
-		assert (color == Drawing.Color () { R = 0.0, G = 0.0, B = 0.0, A = 1.0 });
+		drawing_drawingservice_average_color_helper ({ 0.0, 0.0, 0.0, 1.0 }, 0.0);
+		
+		// fully grey surface
+		drawing_drawingservice_average_color_helper ({ 0.5, 0.5, 0.5, 1.0 }, 0.02);
 		
 		// fully white surface
-		cr.set_source_rgba (1.0, 1.0, 1.0, 1.0);
+		drawing_drawingservice_average_color_helper ({ 1.0, 1.0, 1.0, 1.0 }, 0.0);
+	}
+	
+	void drawing_drawingservice_average_color_helper (Drawing.Color color, double delta)
+	{
+		Drawing.Color average;
+		Drawing.DockSurface surface;
+		surface = new DockSurface (256, 256);
+		unowned Context cr = surface.Context;
+		
+		cr.set_source_rgba (color.R, color.G, color.B, color.A);
 		cr.set_operator (Operator.SOURCE);
 		cr.paint ();
-		color = surface.average_color ();
-		assert (color == Drawing.Color () { R = 1.0, G = 1.0, B = 1.0, A = 1.0 });
+		average = surface.average_color ();
+		
+		assert ((Math.fabs (average.R - color.R) <= delta) && (Math.fabs (average.G - color.G) <= delta)
+			&& (Math.fabs (average.B - color.B) <= delta) && (Math.fabs (average.A - color.A) <= delta));
 	}
 
 	void drawing_docksurface ()
