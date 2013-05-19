@@ -115,6 +115,10 @@ namespace Plank.Factories
 		 * The list of translators (to show in about dialog).
 		 */
 		protected string about_translators = "";
+		/**
+		 * The license of this program (to show in about dialog).
+		 */
+		protected Gtk.License about_license_type = Gtk.License.UNKNOWN;
 		
 		/**
 		 * The Application for preserving uniqueness
@@ -370,6 +374,7 @@ namespace Plank.Factories
 			about_dlg.set_documenters (about_documenters);
 			about_dlg.set_artists (about_artists);
 			about_dlg.set_translator_credits (about_translators);
+			about_dlg.set_license_type (about_license_type);
 			
 			about_dlg.response.connect (() => {
 				about_dlg.hide ();

@@ -60,6 +60,7 @@ namespace PlankMain
 				"Daniel Foré <bunny@go-docky.com>"
 			};
 			about_translators = "";
+			about_license_type = Gtk.License.GPL_3_0;
 		}
 	}
 }
