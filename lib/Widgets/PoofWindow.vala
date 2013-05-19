@@ -76,15 +76,20 @@ namespace Plank.Widgets
 		
 		public void run ()
 		{
+			if (animation_timer != 0) {
+				GLib.Source.remove (animation_timer);
+				hide ();
+			}
+			
 			animation_timer = Timeout.add (30, () => {
-				if (get_animation_state () == 1) {
-					animation_timer = 0;
-					hide ();
-					destroy ();
-					return false;
+				if (get_animation_state () < 0) {
+					queue_draw ();
+					return true;
 				}
-				queue_draw ();
-				return true;
+				
+				animation_timer = 0;
+				hide ();
+				return false;
 			});
 			
 			start_time = new DateTime.now_utc ();
