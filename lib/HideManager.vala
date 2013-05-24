@@ -55,14 +55,19 @@ namespace Plank
 		public DockController controller { private get; construct; }
 		
 		/**
+		 * If the dock is currently hidden.
+		 */
+		public bool Hidden { get; private set; default = true; }
+		
+		/**
 		 * If hiding the dock is currently disabled
 		 */
-		public bool Disabled { get; set; default = false; }
+		public bool Disabled { get; private set; default = false; }
 		
 		/**
 		 * If the dock is currently hovered by the mouse cursor.
 		 */
-		public bool DockHovered { get; set; default = false; }
+		public bool DockHovered { get; private set; default = false; }
 		
 		uint timer_unhide = 0;
 		bool pointer_update = true;
@@ -187,7 +192,8 @@ namespace Plank
 		void update_hidden ()
 		{
 			if (Disabled) {
-				controller.renderer.show ();
+				if (Hidden)
+					Hidden = false;
 				return;
 			}
 			
@@ -220,20 +226,25 @@ namespace Plank
 				GLib.Source.remove (timer_unhide);
 				timer_unhide = 0;
 			}
-			controller.renderer.hide ();
+			
+			if (!Hidden)
+				Hidden = true;
 		}
 
 		void show ()
 		{
 			if (!pointer_update || controller.prefs.UnhideDelay == 0) {
-				controller.renderer.show ();
+				if (Hidden)
+					Hidden = false;
 				return;
 			}
 			
 			if (timer_unhide > 0)
 				return;
+			
 			timer_unhide = GLib.Timeout.add (controller.prefs.UnhideDelay, () => {
-				controller.renderer.show ();
+				if (Hidden)
+					Hidden = false;
 				timer_unhide = 0;
 				return false;
 			});
@@ -246,7 +257,7 @@ namespace Plank
 			else
 				update_dock_hovered ();
 			
-			return controller.renderer.Hidden;
+			return Hidden;
 		}
 		
 		bool leave_notify_event (EventCrossing event)
@@ -265,7 +276,7 @@ namespace Plank
 		{
 			update_dock_hovered ();
 			
-			return controller.renderer.Hidden;
+			return Hidden;
 		}
 		
 		//

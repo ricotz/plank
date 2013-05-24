@@ -334,7 +334,7 @@ namespace Plank
 			dock_region.y += win_y;
 			
 			// Revert adjustments made by update_dock_position () for non-compositing mode
-			if (!screen_is_composited && controller.renderer.Hidden) {
+			if (!screen_is_composited && controller.hide_manager.Hidden) {
 				switch (controller.prefs.Position) {
 				default:
 				case PositionType.BOTTOM:
@@ -725,7 +725,7 @@ namespace Plank
 			}
 			
 			// Actually change the window position while hidden for non-compositing mode
-			if (!screen_is_composited && controller.renderer.Hidden) {
+			if (!screen_is_composited && controller.hide_manager.Hidden) {
 				switch (prefs.Position) {
 				default:
 				case PositionType.BOTTOM:

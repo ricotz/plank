@@ -405,7 +405,7 @@ namespace Plank.Widgets
 		{
 			Logger.verbose ("DockWindow.update_icon_regions ()");
 			
-			var use_hidden_region = (menu_is_visible () || controller.renderer.Hidden);
+			var use_hidden_region = (menu_is_visible () || controller.hide_manager.Hidden);
 			
 			foreach (var item in controller.items.Items) {
 				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);

@@ -52,11 +52,6 @@ namespace Plank
 		uint reset_position_manager_timer = 0;
 		
 		/**
-		 * If the dock is currently hidden.
-		 */
-		public bool Hidden { get; private set; default = true; }
-		
-		/**
 		 * Returns an offset (as a percent) based on the current hide animation state.
 		 *
 		 * @return the offset (as a percent)
@@ -68,7 +63,7 @@ namespace Plank
 			
 			var time = theme.FadeOpacity == 1.0 ? theme.HideTime : theme.FadeTime;
 			var diff = double.min (1, frame_time.difference (last_hide) / (double) (time * 1000));
-			return Hidden ? diff : 1 - diff;
+			return controller.hide_manager.Hidden ? diff : 1 - diff;
 		}
 		
 		double get_opacity ()
@@ -93,8 +88,6 @@ namespace Plank
 			controller.items.item_state_changed.connect (item_state_changed);
 			controller.items.item_position_changed.connect (item_position_changed);
 			controller.items.items_changed.connect (items_changed);
-			
-			notify["Hidden"].connect (hidden_changed);
 		}
 		
 		/**
@@ -116,6 +109,7 @@ namespace Plank
 			controller.window.notify["HoveredItem"].connect (animated_draw);
 			controller.prefs.notify["Position"].connect (dock_position_changed);
 			controller.prefs.notify["Theme"].connect (load_theme);
+			controller.hide_manager.notify["Hidden"].connect (hidden_changed);
 		}
 		
 		~DockRenderer ()
@@ -129,8 +123,7 @@ namespace Plank
 			
 			controller.window.get_screen ().composited_changed.disconnect (composited_changed);
 
-			notify["Hidden"].disconnect (hidden_changed);
-			
+			controller.hide_manager.notify["Hidden"].disconnect (hidden_changed);
 			controller.prefs.notify["Position"].disconnect (dock_position_changed);
 			controller.prefs.notify["Theme"].disconnect (load_theme);
 			controller.window.notify["HoveredItem"].disconnect (animated_draw);
@@ -208,26 +201,6 @@ namespace Plank
 			
 			if (is_reload)
 				controller.position_manager.update_regions ();
-		}
-		
-		/**
-		 * The dock should be shown.
-		 */
-		public void show ()
-		{
-			if (!Hidden)
-				return;
-			Hidden = false;
-		}
-		
-		/**
-		 * The dock should be hidden.
-		 */
-		public void hide ()
-		{
-			if (Hidden)
-				return;
-			Hidden = true;
 		}
 		
 		/**
