@@ -28,8 +28,8 @@ namespace Plank
 	 */
 	public class DockPreferences : Preferences
 	{
-		const int MIN_ICON_SIZE = 24;
-		const int MAX_ICON_SIZE = 128;
+		public const int MIN_ICON_SIZE = 24;
+		public const int MAX_ICON_SIZE = 128;
 		
 		[Description(nick = "current-workspace-only", blurb = "Whether to show only windows of the current workspace.")]
 		public bool CurrentWorkspaceOnly { get; set; }

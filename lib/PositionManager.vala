@@ -180,6 +180,12 @@ namespace Plank
 		public int MaxItemCount { get; private set; }
 		
 		/**
+		 * The maximum icon-size which results in a dock which fits on
+		 * the target screen edge.
+		 */
+		int MaxIconSize { get; private set; default = DockPreferences.MAX_ICON_SIZE; }
+		
+		/**
 		 * Resets all internal caches.
 		 *
 		 * @param theme the current dock theme
@@ -190,7 +196,16 @@ namespace Plank
 			
 			screen_is_composited = controller.window.get_screen ().is_composited ();
 			
-			IconSize = controller.prefs.IconSize;
+			update_caches (theme);
+			update_max_icon_size (theme);
+			update_dimensions ();
+			update_dock_position ();
+		}
+		
+		void update_caches (DockTheme theme)
+		{
+			IconSize = int.min (MaxIconSize, controller.prefs.IconSize);
+			
 			var scaled_icon_size = IconSize / 10.0;
 			
 			IconShadowSize = (int) Math.ceil (theme.IconShadowSize * scaled_icon_size);
@@ -216,8 +231,40 @@ namespace Plank
 			else
 				extra_hide_offset = 0;
 			
-			update_dimensions ();
-			update_dock_position ();
+			if (!screen_is_composited) {
+				HorizPadding = int.max (0, HorizPadding);
+				TopPadding = int.max (0, TopPadding);
+			}
+		}
+		
+		/**
+		 * Find an appropriate MaxIconSize
+		 */
+		void update_max_icon_size (DockTheme theme)
+		{
+			unowned DockPreferences prefs = controller.prefs;
+			
+			// Check if the dock is oversized and doesn't fit the targeted screen-edge
+			var item_count = controller.items.Items.size;
+			var width = item_count * (ItemPadding + IconSize) + 2 * HorizPadding + 4 * LineWidth;
+			var max_width = (prefs.is_horizontal_dock () ? monitor_geo.width : monitor_geo.height);
+			var step_size = int.max (1, (int) (Math.fabs (width - max_width) / item_count));
+			
+			if (width > max_width && MaxIconSize > DockPreferences.MIN_ICON_SIZE) {
+				MaxIconSize -= step_size;
+			} else if (width < max_width && MaxIconSize < prefs.IconSize && step_size > 1) {
+				MaxIconSize += step_size;
+			} else {
+				// Make sure the MaxIconSize is even and restricted properly
+				MaxIconSize = int.max (DockPreferences.MIN_ICON_SIZE,
+					int.min (DockPreferences.MAX_ICON_SIZE, (int) (MaxIconSize / 2.0) * 2));
+				Logger.verbose ("PositionManager.MaxIconSize = %i", MaxIconSize);
+				update_caches (theme);
+				return;
+			}
+			
+			update_caches (theme);
+			update_max_icon_size (theme);
 		}
 		
 		void update_dimensions ()
@@ -225,11 +272,6 @@ namespace Plank
 			unowned DockPreferences prefs = controller.prefs;
 			
 			Logger.verbose ("PositionManager.update_dimensions ()");
-			
-			if (!screen_is_composited) {
-				HorizPadding = int.max (0, HorizPadding);
-				TopPadding = int.max (0, TopPadding);
-			}
 			
 			// height of the visible (cursor) rect of the dock
 			var height = IconSize + top_offset + TopPadding + bottom_offset + BottomPadding;
