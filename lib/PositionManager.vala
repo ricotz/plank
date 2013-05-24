@@ -32,7 +32,6 @@ namespace Plank
 	{
 		public DockController controller { private get; construct; }
 		
-		Gdk.Rectangle cursor_region;
 		Gdk.Rectangle static_dock_region;
 		
 		Gdk.Rectangle monitor_geo;
@@ -51,7 +50,6 @@ namespace Plank
 		
 		construct
 		{
-			cursor_region = Gdk.Rectangle ();
 			static_dock_region = Gdk.Rectangle ();
 			
 			controller.prefs.notify["Monitor"].connect (update_monitor_geo);
@@ -297,22 +295,25 @@ namespace Plank
 		 */
 		public Gdk.Rectangle get_cursor_region ()
 		{
+			var cursor_region = static_dock_region;
+			var offset = 1.0 - controller.renderer.get_hide_offset ();
+			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
+				cursor_region.height = int.max (1, (int) (offset * cursor_region.height));
 				cursor_region.y = DockHeight - cursor_region.height;
 				break;
 			case PositionType.TOP:
-				cursor_region.height = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockHeight));
+				cursor_region.height = int.max (1, (int) (offset * cursor_region.height));
 				cursor_region.y = 0;
 				break;
 			case PositionType.LEFT:
-				cursor_region.width = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockWidth));
+				cursor_region.width = int.max (1, (int) (offset * cursor_region.width));
 				cursor_region.x = 0;
 				break;
 			case PositionType.RIGHT:
-				cursor_region.width = int.max (1, (int) ((1 - controller.renderer.get_hide_offset ()) * VisibleDockWidth));
+				cursor_region.width = int.max (1, (int) (offset * cursor_region.width));
 				cursor_region.x = DockWidth - cursor_region.width;
 				break;
 			}
@@ -400,30 +401,18 @@ namespace Plank
 			case PositionType.BOTTOM:
 				static_dock_region.x = xoffset;
 				static_dock_region.y = DockHeight - static_dock_region.height;
-				
-				cursor_region.x = static_dock_region.x;
-				cursor_region.width = static_dock_region.width;
 				break;
 			case PositionType.TOP:
 				static_dock_region.x = xoffset;
 				static_dock_region.y = 0;
-				
-				cursor_region.x = static_dock_region.x;
-				cursor_region.width = static_dock_region.width;
 				break;
 			case PositionType.LEFT:
 				static_dock_region.y = yoffset;
 				static_dock_region.x = 0;
-				
-				cursor_region.y = static_dock_region.y;
-				cursor_region.height = static_dock_region.height;
 				break;
 			case PositionType.RIGHT:
 				static_dock_region.y = yoffset;
 				static_dock_region.x = DockWidth - static_dock_region.width;
-				
-				cursor_region.y = static_dock_region.y;
-				cursor_region.height = static_dock_region.height;
 				break;
 			}
 			
