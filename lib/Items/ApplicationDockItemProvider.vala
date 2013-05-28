@@ -30,7 +30,9 @@ namespace Plank.Items
 	 */
 	public class ApplicationDockItemProvider : DockItemProvider
 	{
-		public DockController controller { get; protected set construct; }
+		public signal void item_window_added (ApplicationDockItem item);
+		
+		public DockPreferences prefs { get; construct; }
 		
 		public File launchers_dir { get; construct; }
 		
@@ -46,11 +48,11 @@ namespace Plank.Items
 		/**
 		 * Creates a new container for dock items.
 		 *
-		 * @param controller the dock controller that owns these items
+		 * @param prefs the preferences of the dock which owns this provider
 		 */
-		public ApplicationDockItemProvider (DockController controller, File launchers_dir)
+		public ApplicationDockItemProvider (DockPreferences prefs, File launchers_dir)
 		{
-			Object (controller : controller, launchers_dir : launchers_dir);
+			Object (prefs : prefs, launchers_dir : launchers_dir);
 		}
 		
 		construct
@@ -67,7 +69,7 @@ namespace Plank.Items
 			update_visible_items ();
 			serialize_item_positions ();
 			
-			controller.prefs.notify["CurrentWorkspaceOnly"].connect (handle_setting_changed);
+			prefs.notify["CurrentWorkspaceOnly"].connect (handle_setting_changed);
 			
 			item_position_changed.connect (serialize_item_positions);
 			items_changed.connect (serialize_item_positions);
@@ -108,7 +110,7 @@ namespace Plank.Items
 		
 		~ApplicationDockItemProvider ()
 		{
-			controller.prefs.notify["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
+			prefs.notify["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
 			
 			item_position_changed.disconnect (serialize_item_positions);
 			items_changed.disconnect (serialize_item_positions);
@@ -227,7 +229,7 @@ namespace Plank.Items
 							continue;
 						}
 						
-						if (controller.prefs.DockItems.contains (info.get_name ()))
+						if (prefs.DockItems.contains (info.get_name ()))
 							existing_items.add (item);
 						else
 							new_items.add (item);
@@ -240,7 +242,7 @@ namespace Plank.Items
 			}
 			
 			// add saved dockitems based on their serialized order
-			var dockitems = controller.prefs.DockItems.split (";;");
+			var dockitems = prefs.DockItems.split (";;");
 			var pos = 0;
 			foreach (var dockitem in dockitems)
 				foreach (var item in existing_items)
@@ -263,7 +265,7 @@ namespace Plank.Items
 		{
 			Logger.verbose ("ApplicationDockItemProvider.update_visible_items ()");
 			
-			if (controller.prefs.CurrentWorkspaceOnly) {
+			if (prefs.CurrentWorkspaceOnly) {
 				var active_workspace = Wnck.Screen.get_default ().get_active_workspace ();
 				foreach (var item in internal_items) {
 					unowned TransientDockItem? transient = (item as TransientDockItem);
@@ -292,8 +294,8 @@ namespace Plank.Items
 				}
 			}
 			
-			if (controller.prefs.DockItems != item_list)
-				controller.prefs.DockItems = item_list;
+			if (prefs.DockItems != item_list)
+				prefs.DockItems = item_list;
 		}
 		
 		void add_running_app (Bamf.Application app, bool without_signaling)
@@ -404,7 +406,7 @@ namespace Plank.Items
 		
 		void handle_window_changed (Wnck.Window? previous)
 		{
-			if (!controller.prefs.CurrentWorkspaceOnly)
+			if (!prefs.CurrentWorkspaceOnly)
 				return;
 			
 			if (previous == null
@@ -416,7 +418,7 @@ namespace Plank.Items
 		
 		void handle_workspace_changed (Wnck.Screen screen, Wnck.Workspace previously_active_space)
 		{
-			if (!controller.prefs.CurrentWorkspaceOnly
+			if (!prefs.CurrentWorkspaceOnly
 				|| screen.get_active_workspace ().is_virtual ())
 				return;
 			
@@ -425,7 +427,7 @@ namespace Plank.Items
 		
 		void handle_viewports_changed (Wnck.Screen screen)
 		{
-			if (!controller.prefs.CurrentWorkspaceOnly
+			if (!prefs.CurrentWorkspaceOnly
 				|| !screen.get_active_workspace ().is_virtual ())
 				return;
 			
@@ -456,9 +458,9 @@ namespace Plank.Items
 			}
 		}
 		
-		void handle_item_app_window_added ()
+		void handle_item_app_window_added (ApplicationDockItem item)
 		{
-			controller.window.update_icon_regions ();
+			item_window_added (item);
 		}
 		
 		protected override void handle_item_deleted (DockItem item)
@@ -562,7 +564,7 @@ namespace Plank.Items
 				app_item.unity_reset ();
 				transient_item = item as TransientDockItem;
 				
-				controller.renderer.animated_draw ();
+				item_state_changed ();
 				break;
 			}
 			
@@ -612,7 +614,7 @@ namespace Plank.Items
 					&& !(transient_item.ProgressVisible || transient_item.CountVisible))
 					remove_item (transient_item);
 				else
-					controller.renderer.animated_draw ();
+					item_state_changed ();
 			} else {
 				// Find a matching desktop-file and create new TransientDockItem for this LauncherEntry
 				var desktop_file = desktop_file_for_application_uri (app_uri);

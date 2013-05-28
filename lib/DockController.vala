@@ -119,7 +119,7 @@ namespace Plank
 		public void add_default_provider ()
 		{
 			if (default_provider == null) {
-				default_provider = new ApplicationDockItemProvider (this, config_folder.get_child ("launchers"));
+				default_provider = new ApplicationDockItemProvider (prefs, config_folder.get_child ("launchers"));
 				add_provider (default_provider);
 			}
 		}
@@ -156,6 +156,10 @@ namespace Plank
 			provider.item_position_changed.connect (item_position_changed);
 			provider.item_state_changed.connect (item_state_changed);
 			provider.items_changed.connect (items_changed);
+			
+			unowned ApplicationDockItemProvider? app_provider = (provider as ApplicationDockItemProvider);
+			if (app_provider != null)
+				app_provider.item_window_added.connect (window.update_icon_region);
 		}
 		
 		void disconnect_provider (DockItemProvider provider)
@@ -163,6 +167,10 @@ namespace Plank
 			provider.item_position_changed.disconnect (item_position_changed);
 			provider.item_state_changed.disconnect (item_state_changed);
 			provider.items_changed.disconnect (items_changed);
+			
+			unowned ApplicationDockItemProvider? app_provider = (provider as ApplicationDockItemProvider);
+			if (app_provider != null)
+				app_provider.item_window_added.disconnect (window.update_icon_region);
 		}
 		
 		void update_first_item_positions ()

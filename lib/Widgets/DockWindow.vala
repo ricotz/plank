@@ -427,6 +427,23 @@ namespace Plank.Widgets
 		}
 		
 		/**
+		 * Updates the icon region for the given item.
+		 *
+		 + @param appitem the item to update the icon region for
+		 */
+		public void update_icon_region (ApplicationDockItem appitem)
+		{
+			if (!appitem.is_running ())
+				return;
+			
+			Logger.verbose ("DockWindow.update_icon_region ('%s')", appitem.Text);
+			
+			var use_hidden_region = (menu_is_visible () || controller.hide_manager.Hidden);
+			var region = controller.position_manager.get_icon_geometry (appitem, use_hidden_region);
+			WindowControl.update_icon_regions (appitem.App, region);
+		}
+		
+		/**
 		 * If the popup menu is currently visible.
 		 */
 		public bool menu_is_visible ()
