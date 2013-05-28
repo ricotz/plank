@@ -692,7 +692,7 @@ namespace Plank
 		public void get_urgent_glow_position (DockItem item, out int x, out int y)
 		{
 			var rect = item_hover_region (item);
-			var glow_size = controller.position_manager.GlowSize;
+			var glow_size = GlowSize;
 			
 			switch (controller.prefs.Position) {
 			default:
