@@ -52,11 +52,11 @@ namespace Plank
 		uint reset_position_manager_timer = 0;
 		
 		/**
-		 * Returns an offset (as a percent) based on the current hide animation state.
+		 * Returns the current progress of the hide-animation of the dock.
 		 *
-		 * @return the offset (as a percent)
+		 * @return the hide-animation progress [0.0..1.0]
 		 */
-		public double get_hide_offset ()
+		public double get_hide_progress ()
 		{
 			if (!screen_is_composited)
 				return 0;
@@ -68,7 +68,7 @@ namespace Plank
 		
 		double get_opacity ()
 		{
-			return double.min (1, (1 - get_hide_offset ()) + theme.FadeOpacity);
+			return double.min (1.0, (1.0 - get_hide_progress ()) + theme.FadeOpacity);
 		}
 		
 		/**
@@ -318,7 +318,7 @@ namespace Plank
 			cr.paint ();
 			
 			// draw urgent-glow if dock is completely hidden
-			if (get_hide_offset () == 1) {
+			if (get_hide_progress () == 1.0) {
 				foreach (var item in items)
 					draw_urgent_glow (item, cr);
 			}
@@ -697,7 +697,7 @@ namespace Plank
 					return true;
 				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)
 					return true;
-				if (render_time.difference (item.LastUrgent) <= (get_hide_offset () == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
+				if (render_time.difference (item.LastUrgent) <= (get_hide_progress () == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
 					return true;
 			}
 				

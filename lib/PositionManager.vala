@@ -338,24 +338,24 @@ namespace Plank
 		public Gdk.Rectangle get_cursor_region ()
 		{
 			var cursor_region = static_dock_region;
-			var offset = 1.0 - controller.renderer.get_hide_offset ();
+			var progress = 1.0 - controller.renderer.get_hide_progress ();
 			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				cursor_region.height = int.max (1, (int) (offset * cursor_region.height));
+				cursor_region.height = int.max (1, (int) (progress * cursor_region.height));
 				cursor_region.y = DockHeight - cursor_region.height;
 				break;
 			case PositionType.TOP:
-				cursor_region.height = int.max (1, (int) (offset * cursor_region.height));
+				cursor_region.height = int.max (1, (int) (progress * cursor_region.height));
 				cursor_region.y = 0;
 				break;
 			case PositionType.LEFT:
-				cursor_region.width = int.max (1, (int) (offset * cursor_region.width));
+				cursor_region.width = int.max (1, (int) (progress * cursor_region.width));
 				cursor_region.x = 0;
 				break;
 			case PositionType.RIGHT:
-				cursor_region.width = int.max (1, (int) (offset * cursor_region.width));
+				cursor_region.width = int.max (1, (int) (progress * cursor_region.width));
 				cursor_region.x = DockWidth - cursor_region.width;
 				break;
 			}
@@ -800,22 +800,24 @@ namespace Plank
 				return;
 			}
 			
+			var progress = controller.renderer.get_hide_progress ();
+			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
 				x = 0;
-				y = (int) ((VisibleDockHeight + extra_hide_offset) * controller.renderer.get_hide_offset ());
+				y = (int) ((VisibleDockHeight + extra_hide_offset) * progress);
 				break;
 			case PositionType.TOP:
 				x = 0;
-				y = (int) (- (VisibleDockHeight + extra_hide_offset) * controller.renderer.get_hide_offset ());
+				y = (int) (- (VisibleDockHeight + extra_hide_offset) * progress);
 				break;
 			case PositionType.LEFT:
-				x = (int) (- (VisibleDockWidth + extra_hide_offset) * controller.renderer.get_hide_offset ());
+				x = (int) (- (VisibleDockWidth + extra_hide_offset) * progress);
 				y = 0;
 				break;
 			case PositionType.RIGHT:
-				x = (int) ((VisibleDockWidth + extra_hide_offset) * controller.renderer.get_hide_offset ());
+				x = (int) ((VisibleDockWidth + extra_hide_offset) * progress);
 				y = 0;
 				break;
 			}
