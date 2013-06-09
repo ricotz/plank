@@ -252,6 +252,9 @@ namespace Plank
 		
 		bool enter_notify_event (EventCrossing event)
 		{
+			if (event.detail == NotifyType.INFERIOR)
+				return Hidden;
+			
 			if ((bool) event.send_event)
 				DockHovered = true;
 			else
@@ -262,12 +265,15 @@ namespace Plank
 		
 		bool leave_notify_event (EventCrossing event)
 		{
+			if (event.detail == NotifyType.INFERIOR)
+				return false;
+			
 			// ignore this event if it was sent explicitly
 			if ((bool) event.send_event)
 				return false;
 			
 			if (DockHovered && !controller.window.menu_is_visible ())
-				DockHovered = false;
+				update_dock_hovered ();
 			
 			return false;
 		}
