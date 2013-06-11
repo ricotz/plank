@@ -131,9 +131,8 @@ namespace Plank
 				return;
 			}
 			
-			if (item_providers.size > 0)
-				provider.FirstItemPosition = item_providers.last ().FirstItemPosition;
 			item_providers.add (provider);
+			update_first_item_positions ();
 			
 			connect_provider (provider);
 		}
@@ -187,6 +186,7 @@ namespace Plank
 			if (prefs.Alignment != Gtk.Align.FILL)
 				position_manager.reset_caches (renderer.theme);
 			position_manager.update_regions ();
+			update_first_item_positions ();
 		}
 		
 		void item_position_changed (DockItemProvider provider)
