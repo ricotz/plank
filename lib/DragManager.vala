@@ -195,7 +195,7 @@ namespace Plank
 				DragItem = null;
 			
 			if (DragItem != null) {
-				unowned ApplicationDockItemProvider app_provider = (DragItem.Provider as ApplicationDockItemProvider);
+				unowned ApplicationDockItemProvider app_provider = (DragItem.Parent as ApplicationDockItemProvider);
 				if (app_provider != null)
 					app_provider.save_item_positions ();
 				
@@ -249,7 +249,7 @@ namespace Plank
 				return true;
 			
 			unowned DockItem item = controller.window.HoveredItem;
-			unowned DockItemProvider items = item.Provider;
+			unowned DockItemProvider items = item.Parent;
 			
 			if (DragIsDesktopFile) {
 				var uri = drag_data[0];
@@ -281,7 +281,7 @@ namespace Plank
 						// Remove from dock
 						unowned ApplicationDockItem? app_item = (DragItem as ApplicationDockItem);
 						if (app_item == null || !(app_item.is_running ()))
-							app_item.Provider.remove_item (DragItem);
+							app_item.Parent.remove_item (DragItem);
 						DragItem.delete ();
 						
 						int x, y;
@@ -345,7 +345,7 @@ namespace Plank
 				return;
 			
 			if (!controller.hide_manager.DockHovered) {
-				unowned ApplicationDockItemProvider app_provider = (DragItem.Provider as ApplicationDockItemProvider);
+				unowned ApplicationDockItemProvider app_provider = (DragItem.Parent as ApplicationDockItemProvider);
 				if (app_provider != null)
 					app_provider.restore_item_positions ();
 			}
@@ -356,7 +356,7 @@ namespace Plank
 			drag_canceled = result == DragResult.USER_CANCELLED;
 			
 			if (drag_canceled) {
-				unowned ApplicationDockItemProvider app_provider = (DragItem.Provider as ApplicationDockItemProvider);
+				unowned ApplicationDockItemProvider app_provider = (DragItem.Parent as ApplicationDockItemProvider);
 				if (app_provider != null)
 					app_provider.restore_item_positions ();
 			}
@@ -406,7 +406,7 @@ namespace Plank
 			
 			if (InternalDragActive && DragItem != null && hovered_item != null
 				&& DragItem != hovered_item) {
-				DragItem.Provider.move_item_to (DragItem, hovered_item);
+				DragItem.Parent.move_item_to (DragItem, hovered_item);
 			}
 			
 			if (drag_hover_timer > 0) {

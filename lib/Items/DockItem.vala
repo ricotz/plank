@@ -167,7 +167,7 @@ namespace Plank.Items
 		/**
 		 * The dock item's provider which it is added too (if any).
 		 */
-		public DockItemProvider? Provider { get; set; }
+		public DockItemProvider? Parent { get; set; }
 		
 		/**
 		 * The dock item's icon.
