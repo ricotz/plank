@@ -153,10 +153,14 @@ namespace Plank.Factories
 		 * Creates a new .dockitem for a uri.
 		 *
 		 * @param uri the uri or path to create a .dockitem for
+		 * @param target_dir the folder where to put the newly created .dockitem (defaults to launchers_dir)
 		 * @return the new {@link GLib.File} of the new .dockitem created
 		 */
-		public GLib.File? make_dock_item (string uri)
+		public GLib.File? make_dock_item (string uri, File? target_dir = null)
 		{
+			if (target_dir == null)
+				target_dir = launchers_dir;
+			
 			var launcher_file = File.new_for_uri (uri);
 			
 			if (launcher_file.query_exists ()) {
@@ -168,12 +172,12 @@ namespace Plank.Factories
 					// find a unique file name, based on the name of the launcher
 					var launcher_base = (launcher_file.get_basename () ?? "unknown").split (".") [0];
 					var dockitem = launcher_base + ".dockitem";
-					var dockitem_file = launchers_dir.get_child (dockitem);
+					var dockitem_file = target_dir.get_child (dockitem);
 					var counter = 1;
 					
 					while (dockitem_file.query_exists ()) {
 						dockitem = "%s-%d.dockitem".printf (launcher_base, counter++);
-						dockitem_file = launchers_dir.get_child (dockitem);
+						dockitem_file = target_dir.get_child (dockitem);
 					}
 					
 					// save the key file

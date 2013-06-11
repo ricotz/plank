@@ -196,7 +196,7 @@ namespace Plank.Items
 			// delay automatic add of new dockitems while creating this new one
 			delay_items_monitor ();
 			
-			var dockitem_file = Factory.item_factory.make_dock_item (uri);
+			var dockitem_file = Factory.item_factory.make_dock_item (uri, launchers_dir);
 			if (dockitem_file == null)
 				return;
 			
@@ -502,7 +502,7 @@ namespace Plank.Items
 			delay_items_monitor ();
 			
 			if (item is TransientDockItem) {
-				var dockitem_file = Factory.item_factory.make_dock_item (item.Launcher);
+				var dockitem_file = Factory.item_factory.make_dock_item (item.Launcher, launchers_dir);
 				if (dockitem_file == null)
 					return;
 				
