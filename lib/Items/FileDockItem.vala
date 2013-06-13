@@ -134,7 +134,7 @@ namespace Plank.Items
 			cr.fill ();
 			
 #if HAVE_GEE_0_8
-			var icons = new HashMap<string, string> ((HashDataFunc) str_hash, (EqualDataFunc) str_equal);
+			var icons = new HashMap<string, string> ();
 #else
 			var icons = new HashMap<string, string> (str_hash, str_equal);
 #endif
@@ -160,7 +160,7 @@ namespace Plank.Items
 			var offset = (int) ((width - 2 * icon_width) / 3.0);
 			
 #if HAVE_GEE_0_8
-			keys.sort ((CompareDataFunc) strcmp);
+			keys.sort ();
 #else
 			keys.sort ((CompareFunc) strcmp);
 #endif
@@ -229,7 +229,7 @@ namespace Plank.Items
 			var items = new ArrayList<Gtk.MenuItem> ();
 		
 #if HAVE_GEE_0_8
-			var menu_items = new HashMap<string, Gtk.MenuItem> ((HashDataFunc) str_hash, (EqualDataFunc) str_equal);
+			var menu_items = new HashMap<string, Gtk.MenuItem> ();
 #else
 			var menu_items = new HashMap<string, Gtk.MenuItem> (str_hash, str_equal);
 #endif
@@ -263,7 +263,7 @@ namespace Plank.Items
 			}
 			
 #if HAVE_GEE_0_8
-			keys.sort ((CompareDataFunc) strcmp);
+			keys.sort ();
 #else
 			keys.sort ((CompareFunc) strcmp);
 #endif
