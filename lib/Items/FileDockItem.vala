@@ -63,6 +63,20 @@ namespace Plank.Items
 			
 			OwnedFile = File.new_for_uri (Prefs.Launcher);
 			
+			load_from_launcher ();
+		}
+		
+		~FileDockItem ()
+		{
+			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
+			
+			stop_monitor ();
+		}
+		
+		void load_from_launcher ()
+		{
+			stop_monitor ();
+			
 			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? DEFAULT_ICON;
 			
 			if (!OwnedFile.is_native ()) {
@@ -85,10 +99,8 @@ namespace Plank.Items
 			}
 		}
 		
-		~FileDockItem ()
+		void stop_monitor ()
 		{
-			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
-			
 			if (dir_monitor != null) {
 				dir_monitor.changed.disconnect (handle_dir_changed);
 				dir_monitor.cancel ();
@@ -180,6 +192,8 @@ namespace Plank.Items
 		void handle_launcher_changed ()
 		{
 			OwnedFile = File.new_for_uri (Prefs.Launcher);
+			
+			load_from_launcher ();
 			
 			launcher_changed ();
 		}
