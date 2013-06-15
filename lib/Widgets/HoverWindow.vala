@@ -146,7 +146,7 @@ namespace Plank.Widgets
 			layout = new Pango.Layout (pango_context_get ());
 			layout.set_ellipsize (EllipsizeMode.END);
 			
-			unowned FontDescription font_description = get_style ().font_desc;
+			unowned FontDescription font_description = get_style_context ().get_font (StateFlags.NORMAL);
 			font_description.set_size ((int) (9 * Pango.SCALE));
 			font_description.set_weight (Weight.BOLD);
 			layout.set_font_description (font_description);

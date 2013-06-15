@@ -17,6 +17,7 @@
 
 using Cairo;
 using Gdk;
+using Gtk;
 
 using Plank.Services;
 
@@ -90,6 +91,15 @@ namespace Plank.Drawing
 		
 		[Description(nick = "urgent-hue-shift", blurb = "The hue-shift (-180 to 180) of the urgent indicator color.")]
 		public int UrgentHueShift { get; set; }
+		
+		static StyleContext style_context;
+		
+		static construct
+		{
+			style_context = new Gtk.StyleContext ();
+			style_context.set_path (new WidgetPath ());
+			style_context.set_screen (Gdk.Screen.get_default ());
+		}
 		
 		public DockTheme (string name)
 		{
@@ -412,7 +422,11 @@ namespace Plank.Drawing
 			layout.set_width ((int) (width * Pango.SCALE));
 			layout.set_ellipsize (Pango.EllipsizeMode.NONE);
 			
-			var font_description = new Gtk.Style ().font_desc;
+			//FIXME This is not actually needed if we would listen to some signals.
+			// So just to make sure we follow the current theme settings.
+			style_context.invalidate ();
+			
+			var font_description = style_context.get_font (StateFlags.NORMAL);
 			font_description.set_absolute_size ((int) (height * Pango.SCALE));
 			font_description.set_weight (Pango.Weight.BOLD);
 			layout.set_font_description (font_description);
