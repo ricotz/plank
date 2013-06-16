@@ -8,11 +8,9 @@ plank_VALAFLAGS = \
 	-C \
 	$(NULL)
 
-plankdir = $(bindir)
-
 BUILT_SOURCES = plank_vala.stamp
 
-plank_PROGRAMS = plank
+bin_PROGRAMS = plank
 
 plank_CFLAGS = \
 	$(PLANK_CORE_CFLAGS) \

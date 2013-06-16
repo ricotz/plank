@@ -41,8 +41,6 @@ nodist_pkgconfig_DATA = plank.pc
 
 lib_LTLIBRARIES = libplank.la
 
-libplankdir = $(libdir)
-
 libplank_la_LDFLAGS = \
 	$(AM_LDLAGS) \
 	-no-undefined \

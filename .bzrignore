@@ -1,7 +1,5 @@
 aclocal.m4
 autom4te.cache
-bin
-build
 ChangeLog
 compile
 config.guess
@@ -21,10 +19,8 @@ ltmain.sh
 m4
 missing
 mkinstalldirs
-shave/shave
-shave/shave-libtool
 stamp-h1
-py-compile
+test-driver
 Makefile
 Makefile.in
 .version
@@ -60,9 +56,3 @@ tests/*.c
 tests/*.stamp
 tests/tests
 data/plank.desktop
-m4/intltool.m4
-m4/libtool.m4
-m4/ltoptions.m4
-m4/ltsugar.m4
-m4/ltversion.m4
-m4/lt~obsolete.m4
