@@ -15,8 +15,8 @@ namespace Bamf {
 		public string[] get_supported_mime_types ();
 		public GLib.List<weak Bamf.Window> get_windows ();
 		public GLib.Array<uint32> get_xids ();
-		public signal void window_added (Bamf.View object);
-		public signal void window_removed (Bamf.View object);
+		public signal void window_added (Bamf.Window object);
+		public signal void window_removed (Bamf.Window object);
 	}
 	[CCode (cheader_filename = "libbamf/libbamf.h", type_id = "bamf_control_get_type ()")]
 	public class Control : GLib.Object {
@@ -24,14 +24,15 @@ namespace Bamf {
 		protected Control ();
 		public static unowned Bamf.Control get_default ();
 		public void insert_desktop_file (string desktop_file);
-		public void register_application_for_pid (string application, int32 pid);
+		public void register_application_for_pid (string desktop_file, int32 pid);
 		public void register_tab_provider (string path);
+		public void set_approver_behavior (int32 behavior);
 	}
 	[CCode (cheader_filename = "libbamf/libbamf.h", type_id = "bamf_matcher_get_type ()")]
 	public class Matcher : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Matcher ();
-		public bool application_is_running (string application);
+		public bool application_is_running (string desktop_file);
 		public unowned Bamf.Application get_active_application ();
 		public unowned Bamf.Window get_active_window ();
 		public unowned Bamf.Application get_application_for_desktop_file (string desktop_file_path, bool create_if_not_found);
@@ -40,13 +41,13 @@ namespace Bamf {
 		public GLib.List<weak Bamf.Application> get_applications ();
 		public static Bamf.Matcher get_default ();
 		public GLib.List<weak Bamf.Application> get_running_applications ();
-		public GLib.List<weak Bamf.View> get_tabs ();
-		public GLib.List<weak Bamf.View> get_window_stack_for_monitor (int monitor);
-		public GLib.List<weak Bamf.View> get_windows ();
-		public GLib.Array<uint32> get_xids_for_application (string application);
+		public GLib.List<weak Bamf.Tab> get_tabs ();
+		public GLib.List<weak Bamf.Window> get_window_stack_for_monitor (int monitor);
+		public GLib.List<weak Bamf.Window> get_windows ();
+		public GLib.Array<uint32> get_xids_for_application (string desktop_file);
 		public void register_favorites ([CCode (array_length = false)] string[] favorites);
-		public signal void active_application_changed (Bamf.View object, Bamf.View p0);
-		public signal void active_window_changed (Bamf.View object, Bamf.View p0);
+		public signal void active_application_changed (Bamf.Application object, Bamf.Application p0);
+		public signal void active_window_changed (Bamf.Window object, Bamf.Window p0);
 		public signal void stacking_order_changed ();
 		public signal void view_closed (Bamf.View object);
 		public signal void view_opened (Bamf.View object);
@@ -54,21 +55,19 @@ namespace Bamf {
 	[CCode (cheader_filename = "libbamf/libbamf.h", type_id = "bamf_tab_get_type ()")]
 	public class Tab : Bamf.View {
 		[CCode (has_construct_function = false)]
-		public Tab (string path);
+		protected Tab ();
 		public bool close ();
 		public virtual unowned string get_desktop_name ();
 		public virtual bool get_is_foreground_tab ();
 		public virtual unowned string get_location ();
 		public virtual uint64 get_xid ();
 		public bool raise ();
+		public void request_preview (Bamf.TabPreviewReadyCallback callback);
 		[NoAccessorMethod]
-		public string desktop_id { owned get; set; }
-		[NoAccessorMethod]
-		public bool is_foreground_tab { get; set; }
-		[NoAccessorMethod]
-		public string location { owned get; set; }
-		[NoAccessorMethod]
-		public uint64 xid { get; set; }
+		public string desktop_id { owned get; }
+		public bool is_foreground_tab { get; }
+		public string location { get; }
+		public uint64 xid { get; }
 	}
 	[CCode (cheader_filename = "libbamf/libbamf.h", type_id = "bamf_tab_source_get_type ()")]
 	public class TabSource : GLib.Object {
@@ -108,10 +107,10 @@ namespace Bamf {
 #if !HAVE_BAMF_0_4
 		[CCode (cname = "bamf_view_user_visible")]
 #endif
-		public bool is_user_visible ();
+		public virtual bool is_user_visible ();
 		[NoWrapper]
 		public virtual void set_path (string path);
-		public void set_sticky (bool value);
+		public virtual void set_sticky (bool value);
 		[NoAccessorMethod]
 		public bool active { get; }
 		[NoAccessorMethod]
@@ -174,7 +173,8 @@ namespace Bamf {
 		TOOLBAR,
 		MENU,
 		UTILITY,
-		SPLASHSCREEN
+		SPLASHSCREEN,
+		UNKNOWN
 	}
 	[CCode (cheader_filename = "libbamf/libbamf.h", instance_pos = 2.9)]
 	public delegate void TabPreviewReadyCallback (Bamf.Tab self, string preview_data);
