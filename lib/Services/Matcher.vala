@@ -19,15 +19,18 @@ using Gee;
 
 namespace Plank.Services.Windows
 {
+	/**
+	 * Wrapper for Bamf.Matcher
+	 */
 	public class Matcher : GLib.Object
 	{
-		public signal void window_changed (Bamf.Window? old_win, Bamf.Window? new_win);
+		public signal void active_window_changed (Bamf.Window? old_win, Bamf.Window? new_win);
 		public signal void window_opened (Bamf.Window w);
 		public signal void window_closed (Bamf.Window w);
 		
-		public signal void app_changed (Bamf.Application? old_app, Bamf.Application? new_app);
-		public signal void app_opened (Bamf.Application app);
-		public signal void app_closed (Bamf.Application app);
+		public signal void active_application_changed (Bamf.Application? old_app, Bamf.Application? new_app);
+		public signal void application_opened (Bamf.Application app);
+		public signal void application_closed (Bamf.Application app);
 		
 		static Matcher? matcher = null;
 		
@@ -44,67 +47,67 @@ namespace Plank.Services.Windows
 		private Matcher ()
 		{
 			bamf_matcher = Bamf.Matcher.get_default ();
-			bamf_matcher.active_application_changed.connect (handle_app_changed);
-			bamf_matcher.active_window_changed.connect (handle_window_changed);
-			bamf_matcher.view_opened.connect (view_opened);
-			bamf_matcher.view_closed.connect (view_closed);
+			bamf_matcher.active_application_changed.connect (handle_active_application_changed);
+			bamf_matcher.active_window_changed.connect (handle_active_window_changed);
+			bamf_matcher.view_opened.connect (handle_view_opened);
+			bamf_matcher.view_closed.connect (handle_view_closed);
 		}
 		
 		~Matcher ()
 		{
 			foreach (var view in pending_views)
-				view.user_visible_changed.disconnect (view_user_visible_changed);
+				view.user_visible_changed.disconnect (handle_view_user_visible_changed);
 			
-			bamf_matcher.active_application_changed.disconnect (handle_app_changed);
-			bamf_matcher.active_window_changed.disconnect (handle_window_changed);
-			bamf_matcher.view_opened.disconnect (view_opened);
-			bamf_matcher.view_closed.disconnect (view_closed);
+			bamf_matcher.active_application_changed.disconnect (handle_active_application_changed);
+			bamf_matcher.active_window_changed.disconnect (handle_active_window_changed);
+			bamf_matcher.view_opened.disconnect (handle_view_opened);
+			bamf_matcher.view_closed.disconnect (handle_view_closed);
 			bamf_matcher = null;
 		}
 		
-		void handle_app_changed (Bamf.View? arg1, Bamf.View? arg2)
+		void handle_active_application_changed (Bamf.Application? arg1, Bamf.Application? arg2)
 		{
-			app_changed (arg1 as Bamf.Application, arg2 as Bamf.Application);
+			active_application_changed (arg1, arg2);
 		}
 		
-		void handle_window_changed (Bamf.View? arg1, Bamf.View? arg2)
+		void handle_active_window_changed (Bamf.Window? arg1, Bamf.Window? arg2)
 		{
-			window_changed (arg1 as Bamf.Window, arg2 as Bamf.Window);
+			active_window_changed (arg1, arg2);
 		}
 		
-		void view_user_visible_changed (Bamf.View view, bool user_visible)
+		void handle_view_user_visible_changed (Bamf.View view, bool user_visible)
 		{
 			if (!user_visible)
 				return;
 			
-			view_opened (view);
+			handle_view_opened (view);
 		}
 		
-		void view_opened (Bamf.View arg1)
+		void handle_view_opened (Bamf.View arg1)
 		{
 			if (arg1 is Bamf.Application && !arg1.is_user_visible ()) {
 				pending_views.add (arg1);
-				arg1.user_visible_changed.connect (view_user_visible_changed);
+				arg1.user_visible_changed.connect (handle_view_user_visible_changed);
 				return;
 			}
 			
 			if (arg1 is Bamf.Window)
 				window_opened (arg1 as Bamf.Window);
 			else if (arg1 is Bamf.Application)
-				app_opened (arg1 as Bamf.Application);
+				application_opened (arg1 as Bamf.Application);
 		}
 		
-		void view_closed (Bamf.View arg1)
+		void handle_view_closed (Bamf.View arg1)
 		{
 			if (pending_views.remove (arg1)) {
-				arg1.user_visible_changed.disconnect (view_user_visible_changed);
+				arg1.user_visible_changed.disconnect (handle_view_user_visible_changed);
 				return;
 			}
 			
 			if (arg1 is Bamf.Window)
 				window_closed (arg1 as Bamf.Window);
 			else if (arg1 is Bamf.Application)
-				app_closed (arg1 as Bamf.Application);
+				application_closed (arg1 as Bamf.Application);
 		}
 		
 		public ArrayList<Bamf.Application> active_launchers ()

@@ -72,7 +72,7 @@ namespace Plank.Items
 			item_position_changed.connect (serialize_item_positions);
 			items_changed.connect (serialize_item_positions);
 			
-			Matcher.get_default ().app_opened.connect (app_opened);
+			Matcher.get_default ().application_opened.connect (app_opened);
 			
 			var wnck_screen = Wnck.Screen.get_default ();
 			wnck_screen.active_window_changed.connect (handle_window_changed);
@@ -113,7 +113,7 @@ namespace Plank.Items
 			item_position_changed.disconnect (serialize_item_positions);
 			items_changed.disconnect (serialize_item_positions);
 			
-			Matcher.get_default ().app_opened.disconnect (app_opened);
+			Matcher.get_default ().application_opened.disconnect (app_opened);
 			
 			var wnck_screen = Wnck.Screen.get_default ();
 			wnck_screen.active_window_changed.disconnect (handle_window_changed);
