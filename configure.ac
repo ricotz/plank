@@ -43,12 +43,13 @@ AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_SRCDIR([configure.ac])
 AM_INIT_AUTOMAKE([1.11 tar-ustar dist-xz no-dist-gzip -Wno-portability])
+
 AM_MAINTAINER_MODE
 
 AC_PROG_CC
 AM_PROG_CC_C_O
-AC_DISABLE_STATIC
-LT_INIT
+AC_PROG_INSTALL
+LT_INIT([disable-static])
 PKG_PROG_PKG_CONFIG([0.21])
 
 LT_LIB_M
