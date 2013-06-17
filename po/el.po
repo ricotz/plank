@@ -7,46 +7,46 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: Kostas Milonas <milonas.ko@gmail.com>\n"
-"POT-Creation-Date: 2013-01-30 21:37+0000\n"
+"POT-Creation-Date: 2013-06-16 15:15+0000\n"
 "PO-Revision-Date: 2011-07-27 00:48+0000\n"
 "Last-Translator: Kostas Milonas <milonas.ko@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-30 21:56+0000\n"
-"X-Generator: Launchpad (build 16455)\n"
+"X-Launchpad-Export-Date: 2013-06-17 07:12+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
 msgstr "Plank. Βλακωδώς απλό."
 
-#: ../lib/Items/ApplicationDockItem.vala:340
-#: ../lib/Items/FileDockItem.vala:258 ../lib/Items/FileDockItem.vala:276
+#: ../lib/Items/ApplicationDockItem.vala:356
+#: ../lib/Items/FileDockItem.vala:290 ../lib/Items/FileDockItem.vala:308
 msgid "_Keep in Dock"
 msgstr "Παραμονή _στο dock"
 
-#: ../lib/Items/ApplicationDockItem.vala:350
+#: ../lib/Items/ApplicationDockItem.vala:366
 msgid "Unma_ximize"
 msgstr "_Απομεγιστοποίηση"
 
-#: ../lib/Items/ApplicationDockItem.vala:354
+#: ../lib/Items/ApplicationDockItem.vala:370
 msgid "Ma_ximize"
 msgstr "_Μεγιστοποίηση"
 
-#: ../lib/Items/ApplicationDockItem.vala:359
+#: ../lib/Items/ApplicationDockItem.vala:375
 msgid "_Close All"
 msgstr "_Κλείσιμο όλων"
 
-#: ../lib/Items/FileDockItem.vala:263
+#: ../lib/Items/FileDockItem.vala:295
 msgid "_Open in File Browser"
 msgstr "Άνοιγμα στον πε_ριηγητή αρχείων"
 
-#: ../lib/Items/FileDockItem.vala:281
+#: ../lib/Items/FileDockItem.vala:313
 msgid "_Open"
 msgstr "Ά_νοιγμα"
 
-#: ../lib/Items/FileDockItem.vala:285
+#: ../lib/Items/FileDockItem.vala:317
 msgid "Open Containing _Folder"
 msgstr "Άνοιγμα του _φακέλου που περιέχει"
 
