@@ -156,23 +156,13 @@ namespace Plank.Factories
 			return Posix.EXIT_SUCCESS;
 		}
 		
-		[CCode (cheader_filename = "sys/prctl.h", cname = "prctl")]
-		extern static int prctl (int option, string arg2, ulong arg3, ulong arg4, ulong arg5);
-		
-		[CCode (cheader_filename = "glib/glib.h", cname = "glib_major_version")]
-		extern const uint glib_major_version;
-		[CCode (cheader_filename = "glib/glib.h", cname = "glib_minor_version")]
-		extern const uint glib_minor_version;
-		[CCode (cheader_filename = "glib/glib.h", cname = "glib_micro_version")]
-		extern const uint glib_micro_version;
-
 		/**
 		 * Sets the program executable's name, traps signals and intializes logging.
 		 */
 		protected virtual void initialize_program ()
 		{
 			// set program name
-			prctl (15, exec_name, 0, 0, 0);
+			Linux.prctl (15, exec_name);
 			Environment.set_prgname (exec_name);
 			
 			Posix.signal(Posix.SIGINT, sig_handler);
@@ -182,7 +172,7 @@ namespace Plank.Factories
 			Logger.DisplayLevel = LogLevel.INFO;
 			message ("%s version: %s", program_name, build_version);
 			message ("Kernel version: %s", Posix.utsname ().release);
-			message ("GLib version: %u.%u.%u", glib_major_version, glib_minor_version, glib_micro_version);
+			message ("GLib version: %u.%u.%u", GLib.Version.major, GLib.Version.minor, GLib.Version.micro);
 			message ("GTK+ version: %u.%u.%u", Gtk.get_major_version (), Gtk.get_minor_version () , Gtk.get_micro_version ());
 			message ("Wnck version: %d.%d.%d", Wnck.Version.MAJOR_VERSION, Wnck.Version.MINOR_VERSION, Wnck.Version.MICRO_VERSION);
 			message ("Cairo version: %s", Cairo.version_string ());

@@ -22,3 +22,26 @@ namespace Plank
 	public Gdk.Pixbuf gdk_pixbuf_new_from_resource (string resource_path) throws GLib.Error;
 #endif
 }
+
+[CCode (cheader_filename = "glib.h")]
+namespace GLib
+{
+#if !VALA_0_22
+	[CCode (lower_case_cprefix = "glib_version_")]
+	namespace Version {
+		[CCode (cname = "glib_major_version")]
+		public const uint major;
+		[CCode (cname = "glib_minor_version")]
+		public const uint minor;
+		[CCode (cname = "glib_micro_version")]
+		public const uint micro;
+	}
+#endif
+}
+
+[CCode (cprefix = "", lower_case_cprefix = "")]
+namespace Linux
+{
+	[CCode (cheader_filename = "sys/prctl.h", sentinel = "")]
+	public int prctl (int option, ...);
+}
