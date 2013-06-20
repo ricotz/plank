@@ -197,6 +197,9 @@ namespace Plank.Items
 		
 		void handle_launcher_changed ()
 		{
+			if (this is TransientDockItem)
+				return;
+			
 			App = Matcher.get_default ().app_for_uri (Prefs.Launcher);
 			
 			load_from_launcher ();
