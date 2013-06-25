@@ -1,8 +1,8 @@
 # If not 1, append revision to the version number and enable other development stuff
-m4_define([plank_released], [0])
+m4_define([plank_released], [1])
 
 m4_define([plank_major_version], [0])
-m4_define([plank_minor_version], [2])
+m4_define([plank_minor_version], [3])
 m4_define([plank_micro_version], [0])
 m4_define([plank_nano_version], [0])
 
@@ -68,7 +68,7 @@ AC_SUBST([LT_AGE])
 PLANK_MAJOR_MINOR_VERSION=plank_major_minor_version
 AC_SUBST([PLANK_MAJOR_MINOR_VERSION])
 
-API_VERSION=0.2
+API_VERSION=0.3
 AC_SUBST([API_VERSION])
 
 
