@@ -1,47 +1,27 @@
-distclean_dirs = \
-	plank \
-	gtk-doc \
+BUILT_SOURCES = \
+	plank_c_doc.stamp \
+	plank_vala_doc.stamp \
 	$(NULL)
 
-phony_deps = \
-	plank-doc \
-	plank-gtk-doc \
+EXTRA_DIST = \
+	$(BUILT_SOURCES) \
+	c-doc/* \
+	vala-doc/* \
 	$(NULL)
-
-plankdocdir=$(datadir)/devhelp/references/plank
-plankimgdir=$(datadir)/devhelp/references/plank/img
-plankgtkdocdir=$(datadir)/gtk-doc/html/plank
 
 common_doc_files = \
 	*.css \
-	*.png \
-	*.js \
-	index.htm \
+	*.devhelp2 \
 	*.html \
+	*.png \
 	$(NULL)
 
-plankdoc_DATA = \
-	plank/plank/plank.devhelp2 \
-	$(addprefix plank/plank/,$(common_doc_files)) \
+doc_DATA = \
+	$(addprefix c-doc/html/,$(common_doc_files) *.sgml) \
+	$(addprefix vala-doc/plank/,$(common_doc_files) index.htm *.js) \
+	vala-doc/plank/img/*.png \
 	$(NULL)
 
-plankgtkdoc_DATA = gtk-doc/plank/html/*
-
-plankimg_DATA = \
-	plank/plank/img/*.png \
-	$(NULL)
-
-$(plankdoc_DATA) $(plankimg_DATA): plank-doc
-$(plankgtkdoc_DATA): plank-gtk-doc
-
-valadoc_flags = \
-	--force \
-	--verbose \
-	--package-name $(PACKAGE_NAME) \
-	--package-version $(PACKAGE_VERSION) \
-	$(NULL)
-
-# plank documentation
 plank_doc_files = \
 	$(top_srcdir)/lib/DockController.vala \
 	$(top_srcdir)/lib/DockPreferences.vala \
@@ -79,34 +59,51 @@ plank_doc_files = \
 	$(NULL)
 
 valadoc_flags_plank = \
-	$(valadoc_flags) \
+	--force \
+	--verbose \
+	--package-name $(PACKAGE_NAME) \
+	--package-version $(PACKAGE_VERSION) \
 	$(PLANK_DOCS_VALAFLAGS) \
 	--pkg plank-internal \
 	--pkg compat \
 	--vapidir=$(top_builddir)/lib \
 	--vapidir=$(top_srcdir)/vapi \
-	$(plank_doc_files) \
 	$(NULL)
 
-plank-doc: $(plank_doc_files)
-	$(AM_V_GEN)$(VALADOC) \
-		-o plank/ \
-		--doclet=html \
-		$(valadoc_flags_plank) \
-		$(NULL)
-
-plank-gtk-doc: $(plank_doc_files)
+plank_c_doc.stamp: $(plank_doc_files) Makefile
 	$(AM_V_GEN)$(VALADOC) \
 		-X -l -X $(top_builddir)/lib/.libs/libplank.so \
 		-X $(top_builddir)/lib/plank.h \
-		-o gtk-doc/plank \
+		-o c-doc/ \
 		--doclet=gtkdoc \
 		$(valadoc_flags_plank) \
-		$(NULL)
+		$(filter %.vala,$^)
+	$(AM_V_at)touch $@
 
-.PHONY: $(phony_deps)
+plank_vala_doc.stamp: $(plank_doc_files) Makefile
+	$(AM_V_GEN)$(VALADOC) \
+		-o vala-doc/ \
+		--doclet=devhelp \
+		$(valadoc_flags_plank) \
+		$(filter %.vala,$^)
+	$(AM_V_at)touch $@
+
+html: plank_web_doc.stamp
+plank_web_doc.stamp: $(plank_doc_files) Makefile
+	$(AM_V_GEN)$(VALADOC) \
+		-o web-doc/ \
+		--doclet=html \
+		$(valadoc_flags_plank) \
+		$(filter %.vala,$^)
+	$(AM_V_at)touch $@
+
+DISTCLEANFILES = \
+	plank_c_doc.stamp \
+	plank_vala_doc.stamp \
+	plank_web_doc.stamp \
+	$(NULL)
 
 distclean-local: distclean-docs
 distclean-docs:
-	rm -rf $(distclean_dirs)
+	rm -rf c-doc vala-doc web-doc
 

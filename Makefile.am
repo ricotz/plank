@@ -17,7 +17,7 @@ SUBDIRS += docs
 endif
 
 DISTCHECK_CONFIGURE_FLAGS = \
-	--disable-docs \
+	--enable-docs \
 	$(NULL)
 
 EXTRA_DIST = \
