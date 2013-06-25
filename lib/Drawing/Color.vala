@@ -293,7 +293,6 @@ namespace Plank.Drawing
 		 * Brighten the color's value using the value.
 		 *
 		 * @param amount percent of the value to brighten by
-		 * @return the new color
 		 */
 		public void brighten_val (double amount)
 			requires (amount >= 0 && amount <= 1)

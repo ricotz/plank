@@ -697,7 +697,7 @@ namespace Plank.Items
 		 * Update this item's remote libunity value based on the given data
 		 *
 		 * @param sender_name the corressponding dbusname
-		 * @param proper_iter the data in a standardize format from libunity
+		 * @param prop_iter the data in a standardize format from libunity
 		 */
 		public void unity_update (string sender_name, VariantIter prop_iter)
 		{

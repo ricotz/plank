@@ -153,7 +153,6 @@ namespace Plank.Factories
 		 * Creates a new .dockitem for a uri.
 		 *
 		 * @param uri the uri or path to create a .dockitem for
-		 * @param sort the Sort value in the new .dockitem
 		 * @return the new {@link GLib.File} of the new .dockitem created
 		 */
 		public GLib.File? make_dock_item (string uri)

@@ -364,7 +364,7 @@ namespace Plank.Drawing
 		 * If there is no folder found we fallback to the "Default" theme.
 		 * If even that folder doesn't exist return NULL (and use built-in defaults)
 		 *
-		 * @param basename the name of the folder
+		 * @param name the basename of the folder
 		 * @return {@link GLib.File} the folder of the theme or NULL
 		 */
 		public static File? get_theme_folder (string name)
