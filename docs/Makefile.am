@@ -70,7 +70,7 @@ valadoc_flags_plank = \
 	--vapidir=$(top_srcdir)/vapi \
 	$(NULL)
 
-plank_c_doc.stamp: $(plank_doc_files) Makefile
+plank_c_doc.stamp: $(plank_doc_files) $(top_builddir)/lib/plank-internal.vapi Makefile
 	$(AM_V_GEN)$(VALADOC) \
 		-X -l -X $(top_builddir)/lib/.libs/libplank.so \
 		-X $(top_builddir)/lib/plank.h \
@@ -80,7 +80,7 @@ plank_c_doc.stamp: $(plank_doc_files) Makefile
 		$(filter %.vala,$^)
 	$(AM_V_at)touch $@
 
-plank_vala_doc.stamp: $(plank_doc_files) Makefile
+plank_vala_doc.stamp: $(plank_doc_files) $(top_builddir)/lib/plank-internal.vapi Makefile
 	$(AM_V_GEN)$(VALADOC) \
 		-o vala-doc/ \
 		--doclet=devhelp \
