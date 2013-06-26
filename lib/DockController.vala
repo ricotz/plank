@@ -32,6 +32,8 @@ namespace Plank
 	public class DockController : GLib.Object
 	{
 		public File config_folder { get; construct; }
+		public File launchers_folder { get; construct; }
+		
 		public DockPreferences prefs { get; construct; }
 		
 		public DragManager drag_manager { get; protected set; }
@@ -41,7 +43,7 @@ namespace Plank
 		public DockRenderer renderer { get; protected set; }
 		public DockWindow window { get; protected set; }
 		
-		DockItemProvider? default_provider;
+		DefaultDockItemProvider? default_provider;
 		ArrayList<DockItemProvider> item_providers;
 		
 		public ArrayList<DockItemProvider> Providers {
@@ -76,6 +78,17 @@ namespace Plank
 		
 		construct
 		{
+			launchers_folder = config_folder.get_child ("launchers");
+			Factory.item_factory.launchers_dir = launchers_folder;
+			
+			// If we made the default-launcher-directory,
+			// assume a first run and pre-populate with launchers
+			if (Paths.ensure_directory_exists (launchers_folder)) {
+				debug ("Adding default dock items...");
+				Factory.item_factory.make_default_items ();
+				debug ("done.");
+			}
+			
 			item_providers = new ArrayList<DockItemProvider> ();
 			
 			position_manager = new PositionManager (this);
@@ -119,7 +132,7 @@ namespace Plank
 		public void add_default_provider ()
 		{
 			if (default_provider == null) {
-				default_provider = new ApplicationDockItemProvider (prefs, config_folder.get_child ("launchers"));
+				default_provider = new DefaultDockItemProvider (prefs, launchers_folder);
 				add_provider (default_provider);
 			}
 		}

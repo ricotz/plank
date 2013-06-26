@@ -77,6 +77,7 @@ libplank_la_VALASOURCES = \
 	Factories/ItemFactory.vala \
 	Items/ApplicationDockItem.vala \
 	Items/ApplicationDockItemProvider.vala \
+	Items/DefaultDockItemProvider.vala \
 	Items/DockItem.vala \
 	Items/DockItemProvider.vala \
 	Items/DockItemPreferences.vala \
