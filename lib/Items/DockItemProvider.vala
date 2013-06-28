@@ -98,7 +98,7 @@ namespace Plank.Items
 			items.add_all (internal_items);
 			foreach (var item in items) {
 				remove_item_without_signaling (item);
-				item.Parent = null;
+				item.Provider = null;
 			}
 			internal_items.clear ();
 		}
@@ -271,7 +271,7 @@ namespace Plank.Items
 				internal_items.add (item);
 			}
 			
-			item.Parent = this;
+			item.Provider = this;
 			item.AddTime = new DateTime.now_utc ();
 			item_signals_connect (item);
 		}
@@ -293,9 +293,9 @@ namespace Plank.Items
 			
 			var index = internal_items.index_of (old_item);
 			internal_items.remove (old_item);
-			old_item.Parent = null;
+			old_item.Provider = null;
 			internal_items.insert (index, new_item);
-			new_item.Parent = this;
+			new_item.Provider = this;
 			
 			new_item.AddTime = old_item.AddTime;
 			new_item.Position = old_item.Position;
@@ -317,7 +317,7 @@ namespace Plank.Items
 			item_signals_disconnect (item);
 			
 			internal_items.remove (item);
-			item.Parent = null;
+			item.Provider = null;
 		}
 		
 		protected virtual void item_signals_connect (DockItem item)
