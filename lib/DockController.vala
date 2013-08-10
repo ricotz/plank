@@ -102,7 +102,7 @@ namespace Plank
 		/**
 		 * Initialize this controller.
 		 * Call this when added at least one DockItemProvider otherwise the
-		 * {@link DefaultDockItemProvider} will be added by default.
+		 * {@link Plank.Items.DefaultDockItemProvider} will be added by default.
 		 */
 		public void initialize ()
 		{

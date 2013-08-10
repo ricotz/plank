@@ -48,7 +48,7 @@ namespace Plank.Items
 		/**
 		 * Creates a new container for dock items.
 		 *
-		 * @param launcher_dir the directory where to load/save .dockitems files from/to
+		 * @param launchers_dir the directory where to load/save .dockitems files from/to
 		 */
 		public ApplicationDockItemProvider (File launchers_dir)
 		{
