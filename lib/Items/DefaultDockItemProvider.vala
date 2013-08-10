@@ -39,6 +39,14 @@ namespace Plank.Items
 		 */
 		public DefaultDockItemProvider (DockPreferences prefs, File launchers_dir)
 		{
+			// If we made the default-launcher-directory,
+			// assume a first run and pre-populate with launchers
+			if (Paths.ensure_directory_exists (launchers_dir)) {
+				debug ("Adding default dock items...");
+				Factory.item_factory.make_default_items ();
+				debug ("done.");
+			}
+			
 			Object (Prefs : prefs, LaunchersDir : launchers_dir, HandlesTransients : true);
 		}
 		

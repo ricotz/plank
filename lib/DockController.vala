@@ -81,14 +81,6 @@ namespace Plank
 			launchers_folder = config_folder.get_child ("launchers");
 			Factory.item_factory.launchers_dir = launchers_folder;
 			
-			// If we made the default-launcher-directory,
-			// assume a first run and pre-populate with launchers
-			if (Paths.ensure_directory_exists (launchers_folder)) {
-				debug ("Adding default dock items...");
-				Factory.item_factory.make_default_items ();
-				debug ("done.");
-			}
-			
 			item_providers = new ArrayList<DockItemProvider> ();
 			
 			position_manager = new PositionManager (this);
@@ -107,6 +99,11 @@ namespace Plank
 			item_providers.clear ();
 		}
 		
+		/**
+		 * Initialize this controller.
+		 * Call this when added at least one DockItemProvider otherwise the
+		 * {@link DefaultDockItemProvider} will be added by default.
+		 */
 		public void initialize ()
 		{
 			if (item_providers.size <= 0)
