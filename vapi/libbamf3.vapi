@@ -6,7 +6,7 @@ namespace Bamf {
 	public class Application : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Application ();
-		public bool get_application_menu (string name, string object_path);
+		public bool get_application_menu (out string name, out string object_path);
 		public unowned string get_application_type ();
 		public unowned string get_desktop_file ();
 		public unowned Bamf.View get_focusable_child ();
@@ -15,6 +15,7 @@ namespace Bamf {
 		public string[] get_supported_mime_types ();
 		public GLib.List<weak Bamf.Window> get_windows ();
 		public GLib.Array<uint32> get_xids ();
+		public signal void desktop_file_updated (string object);
 		public signal void window_added (Bamf.Window object);
 		public signal void window_removed (Bamf.Window object);
 	}
@@ -22,10 +23,10 @@ namespace Bamf {
 	public class Control : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Control ();
-		public static unowned Bamf.Control get_default ();
+		public void create_local_desktop_file (Bamf.Application application);
+		public static Bamf.Control get_default ();
 		public void insert_desktop_file (string desktop_file);
 		public void register_application_for_pid (string desktop_file, int32 pid);
-		public void register_tab_provider (string path);
 		public void set_approver_behavior (int32 behavior);
 	}
 	[CCode (cheader_filename = "libbamf/libbamf.h", type_id = "bamf_matcher_get_type ()")]
@@ -69,24 +70,6 @@ namespace Bamf {
 		public string location { get; }
 		public uint64 xid { get; }
 	}
-	[CCode (cheader_filename = "libbamf/libbamf.h", type_id = "bamf_tab_source_get_type ()")]
-	public class TabSource : GLib.Object {
-		[CCode (has_construct_function = false)]
-		protected TabSource ();
-		[CCode (array_length = false, array_null_terminated = true)]
-		public unowned string[] get_tab_ids ();
-		public string get_tab_uri (string tab_id);
-		public uint32 get_tab_xid (string tab_id);
-		[NoWrapper]
-		public virtual string tab_uri (string tab_id);
-		[NoWrapper]
-		public virtual uint32 tab_xid (string tab_id);
-		[NoAccessorMethod]
-		public string id { owned get; set construct; }
-		public signal void tab_closed (string object);
-		public signal void tab_opened (string object);
-		public signal void tab_uri_changed (string object, string p0, string p1);
-	}
 	[CCode (cheader_filename = "libbamf/libbamf.h", type_id = "bamf_view_get_type ()")]
 	public class View : GLib.InitiallyUnowned {
 		[CCode (has_construct_function = false)]
@@ -126,6 +109,7 @@ namespace Bamf {
 		public virtual signal void child_moved (Bamf.View child);
 		public virtual signal void child_removed (Bamf.View child);
 		public virtual signal void closed ();
+		public virtual signal void icon_changed (string icon);
 		public virtual signal void name_changed (string old_name, string new_name);
 		public virtual signal void running_changed (bool running);
 		public virtual signal void urgent_changed (bool urgent);
