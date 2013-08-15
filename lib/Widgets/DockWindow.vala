@@ -83,6 +83,7 @@ namespace Plank.Widgets
 						EventMask.SCROLL_MASK);
 			
 			controller.drag_manager.notify["DragItem"].connect (drag_item_changed);
+			controller.prefs.notify["HideMode"].connect (set_struts);
 		}
 		
 		~DockWindow ()
@@ -93,6 +94,7 @@ namespace Plank.Widgets
 			}
 			
 			controller.drag_manager.notify["DragItem"].disconnect (drag_item_changed);
+			controller.prefs.notify["HideMode"].disconnect (set_struts);
 			
 			if (hover_reposition_timer > 0) {
 				GLib.Source.remove (hover_reposition_timer);
