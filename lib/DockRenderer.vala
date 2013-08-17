@@ -489,6 +489,7 @@ namespace Plank
 			
 			// draw the icon shadow
 			if (icon_shadow_surface != null) {
+				shadow_cr.set_operator (Cairo.Operator.OVER);
 				shadow_cr.set_source_surface (icon_shadow_surface.Internal, draw_rect.x - shadow_size, draw_rect.y - shadow_size);
 				shadow_cr.paint ();
 			}
