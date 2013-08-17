@@ -68,7 +68,7 @@ namespace Plank
 		
 		double get_opacity ()
 		{
-			return double.min (1.0, (1.0 - get_hide_progress ()) + theme.FadeOpacity);
+			return double.min (1.0, double.max (0.0, 1.0 - (1.0 - theme.FadeOpacity) * get_hide_progress ()));
 		}
 		
 		/**
