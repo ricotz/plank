@@ -34,6 +34,16 @@ namespace Plank
 	{
 		public DockController controller { private get; construct; }
 		
+		/**
+		 * The current progress [0.0..1.0] of the hide-animation of the dock.
+		 */
+		public double hide_progress { get; private set; }
+		
+		/**
+		 * The current opacity of the dock.
+		 */
+		double opacity { get; private set; }
+
 		DockTheme theme;
 		
 		DockSurface? background_buffer;
@@ -50,26 +60,6 @@ namespace Plank
 		
 		bool screen_is_composited;
 		uint reset_position_manager_timer = 0;
-		
-		/**
-		 * Returns the current progress of the hide-animation of the dock.
-		 *
-		 * @return the hide-animation progress [0.0..1.0]
-		 */
-		public double get_hide_progress ()
-		{
-			if (!screen_is_composited)
-				return 0;
-			
-			var time = theme.FadeOpacity == 1.0 ? theme.HideTime : theme.FadeTime;
-			var diff = double.min (1, frame_time.difference (last_hide) / (double) (time * 1000));
-			return controller.hide_manager.Hidden ? diff : 1 - diff;
-		}
-		
-		double get_opacity ()
-		{
-			return double.min (1.0, double.max (0.0, 1.0 - (1.0 - theme.FadeOpacity) * get_hide_progress ()));
-		}
 		
 		/**
 		 * Create a new dock renderer for a dock.
@@ -104,6 +94,8 @@ namespace Plank
 
 			load_theme ();
 			
+			init_current_frame ();
+			
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
 			controller.window.notify["HoveredItem"].connect (animated_draw);
@@ -129,9 +121,9 @@ namespace Plank
 			controller.window.notify["HoveredItem"].disconnect (animated_draw);
 		}
 		
-		void composited_changed ()
+		void composited_changed (Gdk.Screen screen)
 		{
-			screen_is_composited = controller.window.get_screen ().is_composited ();
+			screen_is_composited = screen.is_composited ();
 			
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
@@ -232,6 +224,27 @@ namespace Plank
 			animated_draw ();
 		}
 		
+		void init_current_frame ()
+			requires (theme != null)
+		{
+			frame_time = new DateTime.now_utc ();
+			
+			var fade_opacity = theme.FadeOpacity;
+			
+			if (screen_is_composited) {
+				var time = (fade_opacity == 1.0 ? theme.HideTime : theme.FadeTime);
+				var diff = double.min (1, frame_time.difference (last_hide) / (double) (time * 1000));
+				hide_progress = (controller.hide_manager.Hidden ? diff : 1.0 - diff);
+			} else {
+				hide_progress = 0.0;
+			}
+			
+			if (fade_opacity < 1.0)
+				opacity = double.min (1.0, double.max (0.0, 1.0 - (1.0 - theme.FadeOpacity) * hide_progress));
+			else
+				opacity = 1.0;
+		}
+		
 #if BENCHMARK
 		ArrayList<string> benchmark = new ArrayList<string> ();
 #endif
@@ -243,7 +256,7 @@ namespace Plank
 		 */
 		public void draw_dock (Context cr)
 		{
-			frame_time = new DateTime.now_utc ();
+			init_current_frame ();
 			
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockItem dragged_item = controller.drag_manager.DragItem;
@@ -305,7 +318,6 @@ namespace Plank
 			composite_cr.paint ();
 			
 			// fade the dock if need be
-			var opacity = get_opacity ();
 			if (opacity < 1.0) {
 				composite_cr.set_operator (Operator.SOURCE);
 				composite_cr.set_source_rgba (0, 0, 0, 0);
@@ -318,7 +330,7 @@ namespace Plank
 			cr.paint ();
 			
 			// draw urgent-glow if dock is completely hidden
-			if (get_hide_progress () == 1.0) {
+			if (hide_progress == 1.0) {
 				foreach (var item in items)
 					draw_urgent_glow (item, cr);
 			}
@@ -699,7 +711,7 @@ namespace Plank
 					return true;
 				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)
 					return true;
-				if (render_time.difference (item.LastUrgent) <= (get_hide_progress () == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
+				if (render_time.difference (item.LastUrgent) <= (hide_progress == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
 					return true;
 			}
 				

@@ -338,7 +338,7 @@ namespace Plank
 		public Gdk.Rectangle get_cursor_region ()
 		{
 			var cursor_region = static_dock_region;
-			var progress = 1.0 - controller.renderer.get_hide_progress ();
+			var progress = 1.0 - controller.renderer.hide_progress;
 			
 			switch (controller.prefs.Position) {
 			default:
@@ -800,7 +800,7 @@ namespace Plank
 				return;
 			}
 			
-			var progress = controller.renderer.get_hide_progress ();
+			var progress = controller.renderer.hide_progress;
 			
 			switch (controller.prefs.Position) {
 			default:
