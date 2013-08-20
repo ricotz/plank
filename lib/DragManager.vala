@@ -93,6 +93,7 @@ namespace Plank
 			requires (controller.window != null)
 		{
 			unowned DockWindow window = controller.window;
+			unowned DockPreferences prefs = controller.prefs;
 			
 			window.drag_motion.connect (drag_motion);
 			window.drag_begin.connect (drag_begin);
@@ -104,9 +105,13 @@ namespace Plank
 			window.drag_failed.connect (drag_failed);
 			
 			window.motion_notify_event.connect (window_motion_notify_event);
+
+			prefs.notify["LockItems"].connect (lock_items_changed);
 			
-			enable_drag_to (window);
-			enable_drag_from (window);
+			if (!prefs.LockItems) {
+				enable_drag_to (window);
+				enable_drag_from (window);
+			}
 		}
 		
 		~DragManager ()
@@ -124,6 +129,8 @@ namespace Plank
 			
 			window.motion_notify_event.disconnect (window_motion_notify_event);
 			
+			controller.prefs.notify["LockItems"].disconnect (lock_items_changed);
+			
 			disable_drag_to (window);
 			disable_drag_from (window);
 		}
@@ -132,6 +139,19 @@ namespace Plank
 		{
 			ExternalDragActive = false;
 			return false;
+		}
+		
+		void lock_items_changed ()
+		{
+			unowned DockWindow window = controller.window;
+			
+			if (controller.prefs.LockItems) {
+				disable_drag_from (window);
+				disable_drag_to (window);
+			} else {
+				enable_drag_from (window);
+				enable_drag_to (window);
+			}
 		}
 		
 		void drag_data_get (Widget w, DragContext context, SelectionData selection_data, uint info, uint time_)

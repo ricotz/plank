@@ -64,6 +64,9 @@ namespace Plank
 		[Description(nick = "items-alignment", blurb = "The alignment of the items in this dock.")]
 		public Gtk.Align ItemsAlignment { get; set; }
 		
+		[Description(nick = "lock-items", blurb = "Whether to prevent drag'n'drop actions and lock items on the dock.")]
+		public bool LockItems { get; set; }
+		
 		/**
 		 * {@inheritDoc}
 		 */
@@ -105,6 +108,7 @@ namespace Plank
 			Theme = Plank.Drawing.Theme.DEFAULT_NAME;
 			Alignment = Gtk.Align.CENTER;
 			ItemsAlignment = Gtk.Align.CENTER;
+			LockItems = false;
 		}
 		
 		void monitors_changed ()
@@ -205,6 +209,9 @@ namespace Plank
 				break;
 			
 			case "ItemsAlignment":
+				break;
+			
+			case "LockItems":
 				break;
 			}
 		}
