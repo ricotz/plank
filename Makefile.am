@@ -44,7 +44,7 @@ distclean-local:
 ChangeLog:
 	@echo Creating $@
 	@if test -d "$(srcdir)/.bzr"; then \
-		(bzr log --gnu) | fmt --split-only > $@.tmp \
+		(bzr log --gnu -n1) | fmt --split-only --width=80 > $@.tmp \
 		&& mv -f $@.tmp $@ \
 		|| ($(RM) $@.tmp; \
 			echo Failed to generate ChangeLog, your ChangeLog may be outdated >&2; \
