@@ -209,7 +209,7 @@ namespace Plank.Widgets
 				dock_is_starting = false;
 				
 				// slide the dock in, if it shouldnt start hidden
-				GLib.Timeout.add (400, () => {
+				Gdk.threads_add_timeout (400, () => {
 					controller.hide_manager.update_dock_hovered ();
 					return false;
 				});
@@ -251,7 +251,7 @@ namespace Plank.Widgets
 			if (hover_reposition_timer > 0)
 				return;
 			
-			hover_reposition_timer = GLib.Timeout.add (1000 / 60, () => {
+			hover_reposition_timer = Gdk.threads_add_timeout (1000 / 60, () => {
 				hover_reposition_timer = 0;
 				
 				unowned HoverWindow hover = controller.hover;
@@ -375,7 +375,7 @@ namespace Plank.Widgets
 				reposition_timer = 0;
 			}
 			
-			reposition_timer = GLib.Timeout.add (50, () => {
+			reposition_timer = Gdk.threads_add_timeout (50, () => {
 				reposition_timer = 0;
 				
 				unowned PositionManager position_manager = controller.position_manager;

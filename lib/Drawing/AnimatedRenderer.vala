@@ -88,7 +88,7 @@ namespace Plank.Drawing
 			widget.queue_draw ();
 			
 			if (animation_needed (new DateTime.now_utc ()))
-				animation_timer = GLib.Timeout.add (1000 / FPS, draw_timeout);
+				animation_timer = Gdk.threads_add_timeout (1000 / FPS, draw_timeout);
 		}
 		
 		bool draw_timeout ()

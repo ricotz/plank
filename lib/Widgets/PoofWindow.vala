@@ -81,7 +81,7 @@ namespace Plank.Widgets
 				hide ();
 			}
 			
-			animation_timer = Timeout.add (30, () => {
+			animation_timer = Gdk.threads_add_timeout (30, () => {
 				if (get_animation_state () < 0) {
 					queue_draw ();
 					return true;

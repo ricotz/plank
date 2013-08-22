@@ -430,7 +430,7 @@ namespace Plank.Services.Windows
 			// we do this to make sure our active window is also at the front... Its a tricky thing to do.
 			// sometimes compiz plays badly.  This hacks around it
 			var time = Gtk.get_current_event_time () + VIEWPORT_CHANGE_DELAY;
-			Timeout.add (VIEWPORT_CHANGE_DELAY, () => {
+			Gdk.threads_add_timeout (VIEWPORT_CHANGE_DELAY, () => {
 				targetWindow.activate (time);
 				return false;
 			});

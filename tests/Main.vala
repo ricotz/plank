@@ -49,7 +49,7 @@ namespace Plank.Tests
 	{
 		var main_loop = new MainLoop ();
 		
-		Timeout.add (milliseconds, () => {
+		Gdk.threads_add_timeout (milliseconds, () => {
 			main_loop.quit ();
 			return false;
 		});

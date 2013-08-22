@@ -169,7 +169,7 @@ namespace Plank
 			if (reset_position_manager_timer > 0)
 				Source.remove (reset_position_manager_timer);
 			
-			reset_position_manager_timer = Timeout.add (50, () => {
+			reset_position_manager_timer = Gdk.threads_add_timeout (50, () => {
 				reset_position_manager_timer = 0;
 				controller.position_manager.reset_caches (theme);
 				controller.position_manager.update_regions ();

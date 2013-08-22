@@ -371,7 +371,7 @@ namespace Plank.Items
 		{
 			// Put Gtk.IconTheme.changed emmitted signals in idle queue to avoid
 			// race conditions with concurrent handles
-			Idle.add (() => {
+			Gdk.threads_add_idle (() => {
 				reset_icon_buffer ();
 				return false;
 			});

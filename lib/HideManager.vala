@@ -182,7 +182,7 @@ namespace Plank
 				timer_prefs_changed = 0;
 			}
 			
-			timer_prefs_changed = GLib.Timeout.add (UPDATE_TIMEOUT, () => {
+			timer_prefs_changed = Gdk.threads_add_timeout (UPDATE_TIMEOUT, () => {
 				update_window_intersect ();
 				timer_prefs_changed = 0;
 				return false;
@@ -242,7 +242,7 @@ namespace Plank
 			if (timer_unhide > 0)
 				return;
 			
-			timer_unhide = GLib.Timeout.add (controller.prefs.UnhideDelay, () => {
+			timer_unhide = Gdk.threads_add_timeout (controller.prefs.UnhideDelay, () => {
 				if (Hidden)
 					Hidden = false;
 				timer_unhide = 0;
@@ -335,7 +335,7 @@ namespace Plank
 			if (timer_window_changed > 0)
 				return;
 			
-			timer_window_changed = GLib.Timeout.add (UPDATE_TIMEOUT, () => {
+			timer_window_changed = Gdk.threads_add_timeout (UPDATE_TIMEOUT, () => {
 				update_window_intersect ();
 				timer_window_changed = 0;
 				return false;
@@ -391,7 +391,7 @@ namespace Plank
 			if (timer_geo > 0)
 				return;
 			
-			timer_geo = GLib.Timeout.add (UPDATE_TIMEOUT, () => {
+			timer_geo = Gdk.threads_add_timeout (UPDATE_TIMEOUT, () => {
 				update_window_intersect ();
 				timer_geo = 0;
 				return false;

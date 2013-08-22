@@ -325,7 +325,7 @@ namespace Plank
 				// Make sure ExternalDragActive gets set to false to reactivate HideManager.
 				// This is needed while getting a leave event without followed by a drop.
 				// Delay it to preserve functionality in drag_drop.
-				Idle.add (() => {
+				Gdk.threads_add_idle (() => {
 					ExternalDragActive = false;
 					
 					// If an item was hovered we need it in drag_drop,
@@ -408,7 +408,7 @@ namespace Plank
 			}
 			
 			if (ExternalDragActive && drag_data != null)
-				drag_hover_timer = GLib.Timeout.add (1500, () => {
+				drag_hover_timer = Gdk.threads_add_timeout (1500, () => {
 					unowned DockItem item = controller.window.HoveredItem;
 					if (item != null)
 						item.scrolled (ScrollDirection.DOWN, 0);
