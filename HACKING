@@ -8,8 +8,7 @@ Get daily builds on Launchpad for Ubuntu 12.04 and later.
 
 ====== Join IRC chat rooms ======
 
-Join #plank on Freenode.
-    https://kiwiirc.com/client/irc.freenode.net/plank
+Join #plank on Freenode (irc.freenode.net).
 
 
 ====== Contribute without touching code ======
@@ -45,9 +44,9 @@ Run Plank:
 
 ====== Debugging issues ======
 
-Testing an installed release may reveal crashers or memory corruption which
-requires investigating from a local build and obtaining a stacktrace (backtrace,
-crash log).
+Testing an installed release may reveal crashers or memory corruption issues
+which require investigating from a local build to obtain a stacktrace
+(backtrace, crash log).
 
     libtool --mode=execute gdb --args src/plank -d
 
@@ -56,8 +55,8 @@ crash log).
 
 Branches that contain patches to fix more than one bug will be rejected, and you
 will be asked to supply a separate branch for every bug fix.
-This doesn't apply to patches that are indivisible by nature, and that fix
-multiple bugs.
+However, this doesn't apply to patches that are indivisible by nature, and that
+fix multiple bugs.
 
 The reasons to work in this way are the following:
 
@@ -83,6 +82,7 @@ Plank's source code in general follows the K&R "One True Brace Style" (1TBS),
 with a caveat: spaces are inserted before opening parenthesis.
 
 For indenting the source code only tabs are used!
+Tabs should be 4 spaces wide for code to look good.
 
 Consider the following snippet as an example:
 
