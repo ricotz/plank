@@ -22,6 +22,7 @@ DISTCHECK_CONFIGURE_FLAGS = \
 
 EXTRA_DIST = \
 	COPYRIGHT \
+	HACKING \
 	.version \
 	build-aux/bzr-version-gen \
 	$(NULL)

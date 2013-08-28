@@ -1,0 +1,237 @@
+====== Plank - Contribute ======
+
+====== Testing the latest build ======
+
+Get daily builds on Launchpad for Ubuntu 12.04 and later.
+    https://launchpad.net/~ricotz/+archive/docky
+
+
+====== Join IRC chat rooms ======
+
+Join #plank on Freenode (irc.freenode.net).
+
+
+====== Contribute without touching code ======
+
+Go through problem reports and check unconfirmed bugs or those lacking
+information and mark any duplicates you spot.
+    http://bugs.launchpad.net/plank
+
+Help getting Plank translated in your language!
+    https://translations.launchpad.net/plank
+
+Answer questions.
+    https://answers.launchpad.net/plank
+
+
+====== Check out the sources ======
+
+    bzr branch lp:plank
+
+The development trunk (master, tip) is the latest iteration of the next release.
+Browse it online and look for other branches at http://code.launchpad.net/plank
+
+
+====== Build the code ======
+
+Prepare the source and compile:
+    ./autogen.sh --prefix=/usr
+    make -j2
+
+Run Plank:
+    ./src/plank
+
+
+====== Debugging issues ======
+
+Testing an installed release may reveal crashers or memory corruption issues
+which require investigating from a local build to obtain a stacktrace
+(backtrace, crash log).
+
+    libtool --mode=execute gdb --args src/plank -d
+
+
+====== Important: Keep fixes for different bugs in different branches ======
+
+Branches that contain patches to fix more than one bug will be rejected, and you
+will be asked to supply a separate branch for every bug fix.
+However, this doesn't apply to patches that are indivisible by nature, and that
+fix multiple bugs.
+
+The reasons to work in this way are the following:
+
+If one of the bugs targeted by your branch is correctly fixed, but one of the
+other bugs is incorrectly fixed or needs corrections, the branch won't be
+accepted until everything looks ok for all bugs. This causes an unnecessary
+delay for the bugs that where fixed correctly.
+
+Suppose your branch was accepted for merging in the main one. Later, it is 
+discovered that your branch introduces faulty behavior. The standard course of
+action for these situations is to revert the merge that introduced that faulty
+behavior. This will cause that all of your fixes are reverted (even the ones
+that didn't cause problems) because there was no way of discriminating between
+them. If a separate branch for each bug fixed existed, only the offending one
+would have been reverted, and not all of them.
+
+Be sure to understand this, and avoid a headache later!
+
+
+====== Coding style ======
+
+Plank's source code in general follows the K&R "One True Brace Style" (1TBS),
+with a caveat: spaces are inserted before opening parenthesis.
+
+For indenting the source code only tabs are used!
+Tabs should be 4 spaces wide for code to look good.
+
+Consider the following snippet as an example:
+
+    int test_check ()
+    {
+        if (x < 0) {
+            message ("Negative");
+            negative (x);
+        } else {
+            message ("Non-negative");
+            nonnegative (x);
+        }
+        
+        return 0;
+    }
+
+Of course the best example is the current source code itself.
+
+
+====== Committing code ======
+
+Make a branch which will contain your changes for fixing bug 123456:
+    bzr branch lp:plank fix-123456
+
+Tell Bazaar your name if you haven't yet:
+    bzr whoami "Real Name <email@address>"
+
+See what you did so far:
+    bzr diff
+    bzr diff | less
+
+Get an overview of changed and new files:
+    bzr status
+
+Add new files, move/ rename or delete:
+    bzr add FILENAME
+    bzr mv OLDFILENAME NEWFILENAME
+    bzr rm FILENAME
+
+Note: 'bzr add' should be used only when new source or data files are added
+to Plank's source directory.
+
+After making your changes, you need to commit your work as a new revision.
+    bzr commit
+
+Bazaar will open the default text editor (in most systems, nano) where you will
+write the commit message, save the document, and close it.
+Bazaar will use the commit message as commentary for the new revision, so it
+should be a concise summary of what you did.
+
+To change Bazaar's text editor, add the following line to Bazaar's
+configuration file (usually located at ~/.bazaar/bazaar.conf):
+    editor = your_text_editor_here
+For example:
+    editor = gedit
+
+Commit your changes in small increments. It is better to keep different changes
+in different commits.
+
+If a commit fixes a reported bug in Launchpad, it is useful to make a reference
+to that bug report when committing:
+    bzr commit --fixes lp:123456
+
+Did you make changes to more than one file, but don't want to commit the changes
+of them all? You can specify which files you want to commit:
+    bzr commit file1 file2
+
+To see the last 5 revisions in the current branch:
+    bzr log -l5
+    bzr log -l5 -p | less
+
+In the case you committed something wrong or want to ammend it:
+    bzr uncommit
+
+If you want to revert all the changes made after the last revision:
+    bzr revert
+
+Remember to keep your branch updated:
+    bzr pull
+
+As a general rule of thumb, 'bzr help COMMAND' gives you an explanation of any
+command and 'bzr help commands' lists all available commands.
+
+
+====== Push proposed changes ======
+
+If you haven't yet, https://launchpad.net/~/+editsshkeys check that Launchpad
+has your SSH key - you can create an SSH key with Passwords and Keys aka
+Seahorse or 'ssh-keygen -t rsa' - and use 'bzr launchpad-login' to make youself
+known to bzr locally.
+
+If you checked out trunk, and commited your patch(es), just push it under your
+username in Launchpad and you can propose it for merging into trunk. This will
+automatically request a review from other developers who can then comment on it
+and provide feedback.
+
+    bzr push lp:~USERNAME/plank/fix-123456
+    bzr lp-open
+
+The last command will open a summary of the current branch in your web browser.
+There, you will be able to propose it for merging into trunk.
+Your branch will be reviewed by another developer. At this stage, you may be
+notified that changes need to be made to your branch, so keep an eye on your
+email inbox!
+After the branch is approved by the reviewer, it will get merged into the main
+project's source code.
+
+
+What happens to all the branches?
+
+Leave the branches alone, approved branches are cleared automatically by
+Launchpad.
+
+For larger feature branches, use the team in Launchpad to allow other developers
+to work on the code with you.
+
+
+What if I want to help out on an existing merge request that I can't push to?
+
+    bzr branch lp:~OTHERPERSON/plank/fix-123456
+    cd fix-123456
+    # make commits
+    bzr push lp:~USERNAME/plank/fix-123456
+    bzr lp-open
+
+And in the Launchpad web overview of your branch, propose your branch for
+merging into lp:~OTHERPERSON/plank/fix-123456
+
+
+Updating a branch that may be out of sync with trunk:
+
+    bzr pull
+    bzr: ERROR: These branches have diverged
+    bzr merge lp:plank
+    # Hand-edit conflicting changes
+    bzr resolve FILENAME
+    # If any conflicts remain continue fixing
+    bzr commit -m 'Merge changes from lp:plank'
+
+
+Save a little bandwidth, branch from an existing local copy that you keep
+around:
+
+    bzr branch lp:plank plank
+    bzr branch plank/ plank-fix-123456
+    cd plank-fix-123456
+    bzr pull lp:plank
+
+
+====== License ======
+
+This document is licensed under the GPL version 3.
