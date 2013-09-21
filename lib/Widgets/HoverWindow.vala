@@ -72,8 +72,6 @@ namespace Plank.Widgets
 			controller.prefs.notify["Theme"].connect (load_theme);
 			
 			stick ();
-			show_all ();
-			hide ();
 		}
 		
 		void theme_changed ()
