@@ -28,7 +28,7 @@ namespace Plank.Items
 	/**
 	 * The default container and controller class for managing application dock items on a dock.
 	 */
-	public class DefaultDockItemProvider : ApplicationDockItemProvider
+	public class DefaultApplicationDockItemProvider : ApplicationDockItemProvider
 	{
 		public DockPreferences Prefs { get; construct; }
 		
@@ -37,7 +37,7 @@ namespace Plank.Items
 		 *
 		 * @param prefs the preferences of the dock which owns this provider
 		 */
-		public DefaultDockItemProvider (DockPreferences prefs, File launchers_dir)
+		public DefaultApplicationDockItemProvider (DockPreferences prefs, File launchers_dir)
 		{
 			// If we made the default-launcher-directory,
 			// assume a first run and pre-populate with launchers
@@ -67,7 +67,7 @@ namespace Plank.Items
 			items_changed.connect (serialize_item_positions);
 		}
 		
-		~DefaultDockItemProvider ()
+		~DefaultApplicationDockItemProvider ()
 		{
 			Prefs.notify["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
 			

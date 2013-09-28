@@ -43,7 +43,7 @@ namespace Plank
 		public DockRenderer renderer { get; protected set; }
 		public DockWindow window { get; protected set; }
 		
-		DefaultDockItemProvider? default_provider;
+		DefaultApplicationDockItemProvider? default_provider;
 		ArrayList<DockItemProvider> item_providers;
 		
 		public ArrayList<DockItemProvider> Providers {
@@ -102,7 +102,7 @@ namespace Plank
 		/**
 		 * Initialize this controller.
 		 * Call this when added at least one DockItemProvider otherwise the
-		 * {@link Plank.Items.DefaultDockItemProvider} will be added by default.
+		 * {@link Plank.Items.RunningApplicationDockItemProvider} will be added by default.
 		 */
 		public void initialize ()
 		{
@@ -129,7 +129,7 @@ namespace Plank
 		public void add_default_provider ()
 		{
 			if (default_provider == null) {
-				default_provider = new DefaultDockItemProvider (prefs, launchers_folder);
+				default_provider = new DefaultApplicationDockItemProvider (prefs, launchers_folder);
 				add_provider (default_provider);
 			}
 		}
