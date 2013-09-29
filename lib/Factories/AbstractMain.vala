@@ -18,6 +18,8 @@
 using Gtk;
 using Posix;
 
+using Plank.Items;
+
 using Plank.Services;
 using Plank.Services.Windows;
 using Plank.Widgets;
@@ -76,7 +78,7 @@ namespace Plank.Factories
 		/**
 		 * The name of the path containing the dock's preferences.
 		 */
-		public static string dock_path = "dock1";
+		protected string dock_name = "dock1";
 		/**
 		 * The name of this program's icon.
 		 */
@@ -197,12 +199,17 @@ namespace Plank.Factories
 		protected static bool VERBOSE = false;
 		
 		/**
+		 * The given dock_name
+		 */
+		protected static string DOCK_NAME = "dock1";
+		
+		/**
 		 * The default command-line options for the dock.
 		 */
 		protected const OptionEntry[] options = {
 			{ "debug", 'd', 0, OptionArg.NONE, out DEBUG, "Enable debug logging", null },
 			{ "verbose", 'v', 0, OptionArg.NONE, out VERBOSE, "Enable verbose logging", null },
-			{ "name", 'n', 0, OptionArg.STRING, out dock_path, "The name of this dock", null },
+			{ "name", 'n', 0, OptionArg.STRING, out DOCK_NAME, "The name of this dock", null },
 			{ null }
 		};
 		
@@ -225,6 +232,8 @@ namespace Plank.Factories
 			} catch {
 				return false;
 			}
+			
+			dock_name = DOCK_NAME;
 			
 			return true;
 		}
@@ -258,19 +267,19 @@ namespace Plank.Factories
 			Gdk.threads_init ();
 			Gtk.init (ref args);
 			
-			// ensure only one instance per dock_path
-			var path = app_dbus + "." + dock_path;
+			// ensure only one instance per dock_name
+			var path = app_dbus + "." + dock_name;
 			
 			application = new Gtk.Application (path, ApplicationFlags.FLAGS_NONE);
 			try {
 				if (application.register () && !application.get_is_remote ())
 					return true;
 			} catch (Error e) {
-				critical ("Registering application as '%s' failed. (%s)", dock_path, e.message);
+				critical ("Registering application as '%s' failed. (%s)", dock_name, e.message);
 				return false;
 			}
 			
-			warning ("Exiting because another instance of this application is already running with the name '%s'.", dock_path);
+			warning ("Exiting because another instance of this application is already running with the name '%s'.", dock_name);
 			return false;
 		}
 		
@@ -280,7 +289,7 @@ namespace Plank.Factories
 		protected virtual void initialize_services ()
 		{
 			Paths.initialize (exec_name, build_pkg_data_dir);
-			Paths.ensure_directory_exists (Paths.AppConfigFolder.get_child (dock_path));
+			Paths.ensure_directory_exists (Paths.AppConfigFolder.get_child (dock_name));
 			WindowControl.initialize ();
 		}
 		
@@ -289,7 +298,8 @@ namespace Plank.Factories
 		 */
 		protected virtual void create_controller ()
 		{
-			new DockController ();
+			var controller = new DockController (Paths.AppConfigFolder.get_child (dock_name));
+			controller.initialize ();
 		}
 		
 		/**

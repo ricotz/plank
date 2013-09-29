@@ -16,6 +16,7 @@
 //
 
 using Gdk;
+using Gee;
 using Gtk;
 
 using Plank.Items;
@@ -245,7 +246,7 @@ namespace Plank
 			unowned DockPreferences prefs = controller.prefs;
 			
 			// Check if the dock is oversized and doesn't fit the targeted screen-edge
-			var item_count = controller.items.Items.size;
+			var item_count = controller.Items.size;
 			var width = item_count * (ItemPadding + IconSize) + 2 * HorizPadding + 4 * LineWidth;
 			var max_width = (prefs.is_horizontal_dock () ? monitor_geo.width : monitor_geo.height);
 			var step_size = int.max (1, (int) (Math.fabs (width - max_width) / item_count));
@@ -291,7 +292,7 @@ namespace Plank
 			case Align.START:
 			case Align.END:
 			case Align.CENTER:
-				width = controller.items.Items.size * (ItemPadding + IconSize) + 2 * HorizPadding + 4 * LineWidth;
+				width = controller.Items.size * (ItemPadding + IconSize) + 2 * HorizPadding + 4 * LineWidth;
 				break;
 			case Align.FILL:
 				if (prefs.is_horizontal_dock ())
@@ -409,7 +410,7 @@ namespace Plank
 			var old_region = static_dock_region;
 			
 			// width of the items-area of the dock
-			items_width = controller.items.Items.size * (ItemPadding + IconSize);
+			items_width = controller.Items.size * (ItemPadding + IconSize);
 			
 			static_dock_region.width = VisibleDockWidth;
 			static_dock_region.height = VisibleDockHeight;
@@ -550,7 +551,29 @@ namespace Plank
 			
 			return rect;
 		}
-
+		
+		/**
+		 * The cursor region for interacting with a dock provider.
+		 *
+		 * @param provider the dock provider to find a region for
+		 * @return the region for the dock provider
+		 */
+		public Gdk.Rectangle provider_hover_region (DockItemProvider provider)
+		{
+			unowned ArrayList<DockItem> items = provider.Items;
+			
+			if (items.size == 0)
+				return { 0 };
+			
+			var first_rect = item_hover_region (items.first ());
+			if (items.size == 1)
+				return first_rect;
+			
+			var last_rect = item_hover_region (items.last ());
+			
+			return { first_rect.x, first_rect.y, last_rect.x + last_rect.width, last_rect.y + last_rect.height };
+		}
+		
 		/**
 		 * The cursor region for interacting with a dock item.
 		 *

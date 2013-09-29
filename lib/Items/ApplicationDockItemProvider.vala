@@ -30,7 +30,11 @@ namespace Plank.Items
 	 */
 	public class ApplicationDockItemProvider : DockItemProvider
 	{
-		public DockController controller { get; protected set construct; }
+		public signal void item_window_added (ApplicationDockItem item);
+		
+		public File LaunchersDir { get; construct; }
+		
+		public bool HandlesTransients { get; construct; }
 		
 		FileMonitor? items_monitor = null;
 		bool delay_items_monitor_handle = false;
@@ -44,43 +48,27 @@ namespace Plank.Items
 		/**
 		 * Creates a new container for dock items.
 		 *
-		 * @param controller the dock controller that owns these items
+		 * @param launchers_dir the directory where to load/save .dockitems files from/to
 		 */
-		public ApplicationDockItemProvider (DockController controller)
+		public ApplicationDockItemProvider (File launchers_dir)
 		{
-			Object (controller : controller);
+			Object (LaunchersDir : launchers_dir, HandlesTransients : false);
 		}
 		
 		construct
 		{
-			Factory.item_factory.launchers_dir = Paths.AppConfigFolder.get_child (Factories.AbstractMain.dock_path + "/launchers");
+			// Make sure our launchers-directory exists
+			Paths.ensure_directory_exists (LaunchersDir);
 			
-			// if we made the launcher directory, assume a first run and pre-populate with launchers
-			if (Paths.ensure_directory_exists (Factory.item_factory.launchers_dir)) {
-				debug ("Adding default dock items...");
-				Factory.item_factory.make_default_items ();
-				debug ("done.");
-			}
-			
-			load_items ();
+			foreach (var item in load_items ())
+				add_item_without_signaling (item);
 			add_running_apps ();
 			update_visible_items ();
-			serialize_item_positions ();
-			
-			controller.prefs.notify["CurrentWorkspaceOnly"].connect (handle_setting_changed);
-			
-			item_position_changed.connect (serialize_item_positions);
-			items_changed.connect (serialize_item_positions);
 			
 			Matcher.get_default ().application_opened.connect (app_opened);
 			
-			var wnck_screen = Wnck.Screen.get_default ();
-			wnck_screen.active_window_changed.connect (handle_window_changed);
-			wnck_screen.active_workspace_changed.connect (handle_workspace_changed);
-			wnck_screen.viewports_changed.connect (handle_viewports_changed);
-			
 			try {
-				items_monitor = Factory.item_factory.launchers_dir.monitor (0);
+				items_monitor = LaunchersDir.monitor (0);
 				items_monitor.changed.connect (handle_items_dir_changed);
 			} catch (Error e) {
 				critical ("Unable to watch the launchers directory. (%s)", e.message);
@@ -108,17 +96,7 @@ namespace Plank.Items
 		
 		~ApplicationDockItemProvider ()
 		{
-			controller.prefs.notify["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
-			
-			item_position_changed.disconnect (serialize_item_positions);
-			items_changed.disconnect (serialize_item_positions);
-			
 			Matcher.get_default ().application_opened.disconnect (app_opened);
-			
-			var wnck_screen = Wnck.Screen.get_default ();
-			wnck_screen.active_window_changed.disconnect (handle_window_changed);
-			wnck_screen.active_workspace_changed.disconnect (handle_workspace_changed);
-			wnck_screen.viewports_changed.disconnect (handle_viewports_changed);
 			
 			if (items_monitor != null) {
 				items_monitor.changed.disconnect (handle_items_dir_changed);
@@ -140,7 +118,7 @@ namespace Plank.Items
 			}
 		}
 		
-		ApplicationDockItem? item_for_application (Bamf.Application app)
+		protected ApplicationDockItem? item_for_application (Bamf.Application app)
 		{
 			var app_desktop_file = app.get_desktop_file ();
 			if (app_desktop_file != null && app_desktop_file.has_prefix ("/"))
@@ -186,16 +164,7 @@ namespace Plank.Items
 			return null;
 		}
 
-		public bool item_exists_for_uri (string uri)
-		{
-			foreach (var item in internal_items)
-				if (item.Launcher == uri)
-					return true;
-			
-			return false;
-		}
-		
-		public void add_item_with_uri (string uri, DockItem? target = null)
+		public override void add_item_with_uri (string uri, DockItem? target = null)
 		{
 			if (uri == null || uri == "")
 				return;
@@ -203,7 +172,7 @@ namespace Plank.Items
 			// delay automatic add of new dockitems while creating this new one
 			delay_items_monitor ();
 			
-			var dockitem_file = Factory.item_factory.make_dock_item (uri);
+			var dockitem_file = Factory.item_factory.make_dock_item (uri, LaunchersDir);
 			if (dockitem_file == null)
 				return;
 			
@@ -216,19 +185,20 @@ namespace Plank.Items
 			resume_items_monitor ();
 		}
 		
-		void load_items ()
+		protected virtual ArrayList<DockItem> load_items ()
 		{
-			debug ("Reloading dock items...");
-			var existing_items = new ArrayList<DockItem> ();
-			var new_items = new ArrayList<DockItem> ();
-			var favs = new ArrayList<string> ();
+			Paths.ensure_directory_exists (LaunchersDir);
+			
+			debug ("Loading dock items from '%s'", LaunchersDir.get_path ());
+			
+			var result = new ArrayList<DockItem> ();
 			
 			try {
-				var enumerator = Factory.item_factory.launchers_dir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0);
+				var enumerator = LaunchersDir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0);
 				FileInfo info;
 				while ((info = enumerator.next_file ()) != null)
 					if (file_is_dockitem (info)) {
-						var file = Factory.item_factory.launchers_dir.get_child (info.get_name ());
+						var file = LaunchersDir.get_child (info.get_name ());
 						var item = Factory.item_factory.make_item (file);
 						
 						if (!item.ValidItem) {
@@ -236,110 +206,29 @@ namespace Plank.Items
 							continue;
 						}
 						
-						if (controller.prefs.DockItems.contains (info.get_name ()))
-							existing_items.add (item);
-						else
-							new_items.add (item);
-						
-						if ((item is ApplicationDockItem) && !(item is TransientDockItem))
-							favs.add (item.Launcher);
+						result.add (item);
 					}
 			} catch (Error e) {
 				error ("Error loading dock items. (%s)", e.message);
 			}
 			
-			// add saved dockitems based on their serialized order
-			var dockitems = controller.prefs.DockItems.split (";;");
-			var pos = 0;
-			foreach (var dockitem in dockitems)
-				foreach (var item in existing_items)
-					if (dockitem == item.DockItemFilename) {
-						item.Position = ++pos;
-						add_item_without_signaling (item);
-						break;
-					}
-			
-			// add new dockitems
-			foreach (var item in new_items)
-				add_item_without_signaling (item);
-			
-			Matcher.get_default ().set_favorites (favs);
-			
-			debug ("done.");
+			return result;
 		}
 		
-		protected override void update_visible_items ()
+		protected virtual void add_running_apps ()
 		{
-			Logger.verbose ("ApplicationDockItemProvider.update_visible_items ()");
-			
-			if (controller.prefs.CurrentWorkspaceOnly) {
-				var active_workspace = Wnck.Screen.get_default ().get_active_workspace ();
-				foreach (var item in internal_items) {
-					unowned TransientDockItem? transient = (item as TransientDockItem);
-					item.IsVisible = (transient == null || transient.App == null
-						|| WindowControl.has_window_on_workspace (transient.App, active_workspace));
-				}
-			} else {
-				foreach (var item in internal_items)
-					item.IsVisible = true;
+			foreach (var app in Matcher.get_default ().active_launchers ()) {
+				var found = item_for_application (app);
+				if (found != null)
+					found.App = app;
 			}
-			
-			base.update_visible_items ();
 		}
 		
-		/**
-		 * Serializes the item positions to the preferences.
-		 */
-		void serialize_item_positions ()
-		{
-			var item_list = "";
-			foreach (var item in internal_items) {
-				if (!(item is TransientDockItem) && item.DockItemFilename.length > 0) {
-					if (item_list.length > 0)
-						item_list += ";;";
-					item_list += item.DockItemFilename;
-				}
-			}
-			
-			if (controller.prefs.DockItems != item_list)
-				controller.prefs.DockItems = item_list;
-		}
-		
-		void add_running_app (Bamf.Application app, bool without_signaling)
+		protected virtual void app_opened (Bamf.Application app)
 		{
 			var found = item_for_application (app);
-			if (found != null) {
+			if (found != null)
 				found.App = app;
-				return;
-			}
-			
-			if (!app.is_user_visible () || WindowControl.get_num_windows (app) <= 0)
-				return;
-			
-			var new_item = new TransientDockItem.with_application (app);
-			
-			if (without_signaling)
-				add_item_without_signaling (new_item);
-			else
-				add_item (new_item);
-		}
-		
-		void add_running_apps ()
-		{
-			foreach (var app in Matcher.get_default ().active_launchers ())
-				add_running_app (app, true);
-		}
-		
-		void app_opened (Bamf.Application app)
-		{
-			add_running_app (app, false);
-		}
-		
-		void app_closed (DockItem remove)
-		{
-			if (remove is TransientDockItem
-				&& !(remove.ProgressVisible || remove.CountVisible))
-				remove_item (remove);
 		}
 		
 		bool file_is_dockitem (FileInfo info)
@@ -347,12 +236,12 @@ namespace Plank.Items
 			return !info.get_is_hidden () && info.get_name ().has_suffix (".dockitem");
 		}
 		
-		void delay_items_monitor ()
+		protected void delay_items_monitor ()
 		{
 			delay_items_monitor_handle = true;
 		}
 		
-		void resume_items_monitor ()
+		protected void resume_items_monitor ()
 		{
 			delay_items_monitor_handle = false;
 			process_queued_files ();
@@ -411,45 +300,13 @@ namespace Plank.Items
 				process_queued_files ();
 		}
 		
-		void handle_window_changed (Wnck.Window? previous)
-		{
-			if (!controller.prefs.CurrentWorkspaceOnly)
-				return;
-			
-			if (previous == null
-				|| previous.get_workspace () == previous.get_screen ().get_active_workspace ())
-				return;
-			
-			update_visible_items ();
-		}
-		
-		void handle_workspace_changed (Wnck.Screen screen, Wnck.Workspace previously_active_space)
-		{
-			if (!controller.prefs.CurrentWorkspaceOnly
-				|| screen.get_active_workspace ().is_virtual ())
-				return;
-			
-			update_visible_items ();
-		}
-		
-		void handle_viewports_changed (Wnck.Screen screen)
-		{
-			if (!controller.prefs.CurrentWorkspaceOnly
-				|| !screen.get_active_workspace ().is_virtual ())
-				return;
-			
-			update_visible_items ();
-		}
-		
 		protected override void item_signals_connect (DockItem item)
 		{
 			base.item_signals_connect (item);
 			
 			unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 			if (appitem != null) {
-				appitem.app_closed.connect (app_closed);
 				appitem.app_window_added.connect (handle_item_app_window_added);
-				appitem.pin_launcher.connect (pin_item);
 			}
 		}
 		
@@ -459,15 +316,13 @@ namespace Plank.Items
 			
 			unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 			if (appitem != null) {
-				appitem.app_closed.disconnect (app_closed);
 				appitem.app_window_added.disconnect (handle_item_app_window_added);
-				appitem.pin_launcher.disconnect (pin_item);
 			}
 		}
 		
-		void handle_item_app_window_added ()
+		void handle_item_app_window_added (ApplicationDockItem item)
 		{
-			controller.window.update_icon_regions ();
+			item_window_added (item);
 		}
 		
 		protected override void handle_item_deleted (DockItem item)
@@ -487,31 +342,14 @@ namespace Plank.Items
 			replace_item (new_item, item);
 		}
 		
-		void pin_item (DockItem item)
+		public override bool can_accept_drop (ArrayList<string> uris)
 		{
-			Logger.verbose ("ApplicationDockItemProvider.pin_item ('%s[%s]')", item.Text, item.DockItemFilename);
-
-			unowned ApplicationDockItem? app_item = (item as ApplicationDockItem);
-			if (app_item == null)
-				return;
-			
-			// delay automatic add of new dockitems while creating this new one
-			delay_items_monitor ();
-			
-			if (item is TransientDockItem) {
-				var dockitem_file = Factory.item_factory.make_dock_item (item.Launcher);
-				if (dockitem_file == null)
-					return;
-				
-				var new_item = new ApplicationDockItem.with_dockitem_file (dockitem_file);
-				item.copy_values_to (new_item);
-				
-				replace_item (new_item, item);
-			} else {
-				item.delete ();
-			}
-			
-			resume_items_monitor ();
+			return false;
+		}
+		
+		public override bool accept_drop (ArrayList<string> uris)
+		{
+			return false;
 		}
 		
 		void handle_bus_acquired (DBusConnection conn, string name)
@@ -561,7 +399,7 @@ namespace Plank.Items
 				app_item.unity_reset ();
 				transient_item = item as TransientDockItem;
 				
-				controller.renderer.animated_draw ();
+				item_state_changed ();
 				break;
 			}
 			
@@ -611,8 +449,8 @@ namespace Plank.Items
 					&& !(transient_item.ProgressVisible || transient_item.CountVisible))
 					remove_item (transient_item);
 				else
-					controller.renderer.animated_draw ();
-			} else {
+					item_state_changed ();
+			} else if (HandlesTransients) {
 				// Find a matching desktop-file and create new TransientDockItem for this LauncherEntry
 				var desktop_file = desktop_file_for_application_uri (app_uri);
 				if (desktop_file != null) {

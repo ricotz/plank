@@ -34,6 +34,8 @@ namespace Plank
 	{
 		public DockController controller { private get; construct; }
 		
+		public DockTheme theme { get; private set; }
+		
 		/**
 		 * The current progress [0.0..1.0] of the hide-animation of the dock.
 		 */
@@ -44,8 +46,6 @@ namespace Plank
 		 */
 		double opacity { get; private set; }
 
-		DockTheme theme;
-		
 		DockSurface? background_buffer;
 		Gdk.Rectangle background_rect;
 		DockSurface? main_buffer;
@@ -74,10 +74,6 @@ namespace Plank
 		construct
 		{
 			controller.prefs.notify.connect (prefs_changed);
-			
-			controller.items.item_state_changed.connect (item_state_changed);
-			controller.items.item_position_changed.connect (item_position_changed);
-			controller.items.items_changed.connect (items_changed);
 		}
 		
 		/**
@@ -109,10 +105,6 @@ namespace Plank
 			controller.prefs.notify.disconnect (prefs_changed);
 			theme.notify.disconnect (theme_changed);
 			
-			controller.items.item_state_changed.disconnect (item_state_changed);
-			controller.items.item_position_changed.disconnect (item_position_changed);
-			controller.items.items_changed.disconnect (items_changed);
-			
 			controller.window.get_screen ().composited_changed.disconnect (composited_changed);
 
 			controller.hide_manager.notify["Hidden"].disconnect (hidden_changed);
@@ -127,23 +119,6 @@ namespace Plank
 			
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
-		}
-		
-		void items_changed ()
-		{
-			if (controller.prefs.Alignment != Gtk.Align.FILL)
-				controller.position_manager.reset_caches (theme);
-			controller.position_manager.update_regions ();
-		}
-		
-		void item_position_changed ()
-		{
-			animated_draw ();
-		}
-		
-		void item_state_changed ()
-		{
-			animated_draw ();
 		}
 		
 		void dock_position_changed ()
@@ -219,7 +194,7 @@ namespace Plank
 		{
 			Logger.verbose ("DockRenderer.reset_item_buffers ()");
 			
-			controller.items.reset_item_buffers ();
+			controller.reset_provider_buffers ();
 			
 			animated_draw ();
 		}
@@ -260,7 +235,7 @@ namespace Plank
 			
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockItem dragged_item = controller.drag_manager.DragItem;
-			unowned ArrayList<DockItem> items = controller.items.Items;
+			var items = controller.Items;
 			
 #if BENCHMARK
 			benchmark.clear ();
@@ -706,7 +681,7 @@ namespace Plank
 					return true;
 			}
 			
-			foreach (var item in controller.items.Items) {
+			foreach (var item in controller.Items) {
 				if (render_time.difference (item.LastClicked) <= (item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
 					return true;
 				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)
