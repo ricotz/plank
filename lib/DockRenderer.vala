@@ -123,6 +123,7 @@ namespace Plank
 		
 		void dock_position_changed ()
 		{
+			reset_buffers ();
 			reset_item_buffers ();
 		}
 		
