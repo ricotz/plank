@@ -437,6 +437,17 @@ namespace Plank
 					draw_value = draw_value.move_in (controller.prefs.Position, change);
 				}
 			}
+			
+			// animate icon movement on move state
+			if ((item.State & ItemState.MOVE) != 0) {
+				var move_time = frame_time.difference (item.LastMove);
+				if (move_time < theme.ItemMoveTime * 1000) {
+					var change = (1.0 - move_time / (double) (theme.ItemMoveTime * 1000)) * (icon_size + theme.ItemPadding);
+					draw_value = draw_value.move_right (controller.prefs.Position, (item.Position > item.LastPosition ? change : -change));
+				} else {
+					item.unset_move_state ();
+				}
+			}
 
 			// draw active glow
 			var active_time = frame_time.difference (item.LastActive);
@@ -660,6 +671,8 @@ namespace Plank
 				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)
 					return true;
 				if (render_time.difference (item.LastUrgent) <= (hide_progress == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
+					return true;
+				if (render_time.difference (item.LastMove) <= theme.ItemMoveTime * 1000)
 					return true;
 			}
 				

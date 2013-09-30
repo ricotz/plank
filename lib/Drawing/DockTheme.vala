@@ -92,6 +92,9 @@ namespace Plank.Drawing
 		[Description(nick = "urgent-hue-shift", blurb = "The hue-shift (-180 to 180) of the urgent indicator color.")]
 		public int UrgentHueShift { get; set; }
 		
+		[Description(nick = "item-move-time", blurb = "The time (in ms) to move an item to its new position.")]
+		public int ItemMoveTime { get; set; }
+		
 		static StyleContext style_context;
 		
 		static construct
@@ -134,6 +137,7 @@ namespace Plank.Drawing
 			GlowTime = 10000;
 			GlowPulseTime = 2000;
 			UrgentHueShift = 150;
+			ItemMoveTime = 150;
 		}
 		
 		/**

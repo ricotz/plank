@@ -72,7 +72,11 @@ namespace Plank.Items
 		/**
 		 * The item is currently urgent (a window in the group has the urgent flag).
 		 */
-		URGENT = 1 << 2
+		URGENT = 1 << 2,
+		/**
+		 * The item is currently moved to its new position.
+		 */
+		MOVE = 1 << 3
 	}
 	
 	/**
@@ -201,10 +205,35 @@ namespace Plank.Items
 		 */
 		public bool ProgressVisible { get; set; default = false; }
 		
+		int position = -1;
 		/**
 		 * The dock item's position on the dock.
 		 */
-		public int Position { get; set; default = -1; }
+		public int Position {
+			get {
+				return position;
+			}
+			set {
+				if (position == value)
+					return;
+				
+				if (LastPosition != position)
+					LastPosition = position;
+				
+				position = value;
+				
+				// Only trigger animation if this isn't the initial position set
+				if (LastPosition > -1) {
+					LastMove = new DateTime.now_utc ();
+					State |= ItemState.MOVE;
+				}
+			}
+		}
+		
+		/**
+		 * The dock item's last position on the dock.
+		 */
+		public int LastPosition { get; protected set; default = -1; }
 		
 		/**
 		 * Wether the item is currently visible on the dock.
@@ -260,6 +289,11 @@ namespace Plank.Items
 		 * The last time the item changed its active status.
 		 */
 		public DateTime LastActive { get; protected set; default = new DateTime.from_unix_utc (0); }
+		
+		/**
+		 * The last time the item changed its position.
+		 */
+		public DateTime LastMove { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
 		/**
 		 * Whether or not this item is valid for the .dockitem given.
@@ -365,6 +399,11 @@ namespace Plank.Items
 		{
 			background_surface = null;
 			foreground_surface = null;
+		}
+		
+		public void unset_move_state ()
+		{
+			State &= ~ItemState.MOVE;
 		}
 		
 		void reset_foreground_buffer ()
