@@ -39,9 +39,9 @@ namespace Plank.Items
 		 */
 		public signal void item_state_changed ();
 		/**
-		 * Triggered anytime an item's Position changes.
+		 * Triggered anytime an item's Position was changed.
 		 */
-		public signal void item_position_changed ();
+		public signal void item_position_changed (DockItem item);
 		
 		/**
 		 * A list of the dock items.
@@ -171,8 +171,13 @@ namespace Plank.Items
 		protected void set_item_positions ()
 		{
 			int pos = FirstItemPosition;
-			foreach (var i in visible_items)
-				i.Position = pos++;
+			foreach (var item in visible_items) {
+				if (item.Position != pos) {
+					item.Position = pos;
+					item_position_changed (item);
+				}
+				pos++;
+			}
 		}
 		
 		protected void handle_setting_changed ()
@@ -210,7 +215,6 @@ namespace Plank.Items
 			saved_item_positions.clear ();
 			
 			set_item_positions ();
-			item_position_changed ();
 		}
 		
 		/**
@@ -236,8 +240,6 @@ namespace Plank.Items
 			} else {
 				update_visible_items ();
 			}
-			
-			item_position_changed ();
 		}
 		
 		/**
@@ -307,8 +309,6 @@ namespace Plank.Items
 			} else {
 				update_visible_items ();
 			}
-			
-			item_position_changed ();
 		}
 		
 		protected virtual void remove_item_without_signaling (DockItem item)

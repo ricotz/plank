@@ -31,9 +31,81 @@ namespace Plank
 	 */
 	public class PositionManager : GLib.Object
 	{
+		public struct DockItemDrawValue
+		{
+			public Gdk.Rectangle hover_region;
+			public Gdk.Rectangle draw_region;
+			public Gdk.Rectangle background_region;
+			
+			public DockItemDrawValue move_in (PositionType position, double damount)
+			{
+				var result = this;
+				var amount = (int) damount;
+				
+				switch (position) {
+				default:
+				case PositionType.BOTTOM:
+					result.hover_region.y -= amount;
+					result.draw_region.y -= amount;
+					result.background_region.y -= amount;
+					break;
+				case PositionType.TOP:
+					result.hover_region.y += amount;
+					result.draw_region.y += amount;
+					result.background_region.y += amount;
+					break;
+				case PositionType.LEFT:
+					result.hover_region.x += amount;
+					result.draw_region.x += amount;
+					result.background_region.x += amount;
+					break;
+				case PositionType.RIGHT:
+					result.hover_region.x -= amount;
+					result.draw_region.x -= amount;
+					result.background_region.x -= amount;
+					break;
+				}
+				
+				return result;
+			}
+			
+			public DockItemDrawValue move_right (PositionType position, double damount)
+			{
+				var result = this;
+				var amount = (int) damount;
+				
+				switch (position) {
+				default:
+				case PositionType.BOTTOM:
+					result.hover_region.x -= amount;
+					result.draw_region.x -= amount;
+					result.background_region.x -= amount;
+					break;
+				case PositionType.TOP:
+					result.hover_region.x += amount;
+					result.draw_region.x += amount;
+					result.background_region.x += amount;
+					break;
+				case PositionType.LEFT:
+					result.hover_region.y += amount;
+					result.draw_region.y += amount;
+					result.background_region.y += amount;
+					break;
+				case PositionType.RIGHT:
+					result.hover_region.y -= amount;
+					result.draw_region.y -= amount;
+					result.background_region.y -= amount;
+					break;
+				}
+				
+				return result;
+			}
+		}
+		
 		public DockController controller { private get; construct; }
 		
 		Gdk.Rectangle static_dock_region;
+		HashMap<DockItem, DockItemDrawValue?> draw_values;
 		
 		Gdk.Rectangle monitor_geo;
 		
@@ -52,6 +124,7 @@ namespace Plank
 		construct
 		{
 			static_dock_region = Gdk.Rectangle ();
+			draw_values = new HashMap<DockItem, DockItemDrawValue?> ();			
 			
 			controller.prefs.notify["Monitor"].connect (update_monitor_geo);
 		}
@@ -80,6 +153,8 @@ namespace Plank
 			screen.monitors_changed.disconnect (update_monitor_geo);
 			screen.size_changed.disconnect (update_monitor_geo);
 			controller.prefs.notify["Monitor"].disconnect (update_monitor_geo);
+			
+			draw_values.clear ();
 		}
 		
 		void update_monitor_geo ()
@@ -203,6 +278,16 @@ namespace Plank
 			update_dock_position ();
 		}
 		
+		/**
+		 * Resets all internal caches for the given item.
+		 *
+		 * @param item the dock item
+		 */
+		public void reset_item_caches (DockItem item)
+		{
+			draw_values.unset (item);
+		}
+		
 		void update_caches (DockTheme theme)
 		{
 			IconSize = int.min (MaxIconSize, controller.prefs.IconSize);
@@ -236,6 +321,8 @@ namespace Plank
 				HorizPadding = int.max (0, HorizPadding);
 				TopPadding = int.max (0, TopPadding);
 			}
+			
+			draw_values.clear ();
 		}
 		
 		/**
@@ -459,6 +546,9 @@ namespace Plank
 				break;
 			}
 			
+			// FIXME Maybe no need to purge all cached values?
+			draw_values.clear ();
+			
 			if (old_region.x != static_dock_region.x
 				|| old_region.y != static_dock_region.y
 				|| old_region.width != static_dock_region.width
@@ -475,12 +565,34 @@ namespace Plank
 		}
 		
 		/**
+		 * The draw-value for a dock item.
+		 *
+		 * @param item the dock item to find the drawvalue for
+		 * @return the region for the dock item
+		 */
+		public DockItemDrawValue get_draw_value_for_item (DockItem item)
+		{
+			DockItemDrawValue? draw_value;
+			
+			if ((draw_value = draw_values.get (item)) == null) {
+				var hover_rect = internal_item_hover_region (item);
+				var draw_rect = item_draw_region (hover_rect);
+				var background_rect = item_background_region (hover_rect);
+			
+				draw_value = { hover_rect, draw_rect, background_rect };
+				draw_values.set (item, draw_value);
+			}
+			
+			return draw_value;
+		}
+		
+		/**
 		 * The region for drawing a dock item.
 		 *
 		 * @param hover_rect the item's hover region
 		 * @return the region for the dock item
 		 */
-		public Gdk.Rectangle item_draw_region (Gdk.Rectangle hover_rect)
+		Gdk.Rectangle item_draw_region (Gdk.Rectangle hover_rect)
 		{
 			var item_padding = ItemPadding;
 			var top_padding = top_offset + TopPadding;
@@ -526,7 +638,7 @@ namespace Plank
 		 * @param rect the item's hover region
 		 * @return the region for the dock item
 		 */
-		public Gdk.Rectangle item_background_region (Gdk.Rectangle rect)
+		Gdk.Rectangle item_background_region (Gdk.Rectangle rect)
 		{
 			var top_padding = top_offset + TopPadding;
 			top_padding = (top_padding > 0 ? 0 : top_padding);
@@ -581,6 +693,11 @@ namespace Plank
 		 * @return the region for the dock item
 		 */
 		public Gdk.Rectangle item_hover_region (DockItem item)
+		{
+			return get_draw_value_for_item (item).hover_region;
+		}
+			
+		Gdk.Rectangle internal_item_hover_region (DockItem item)
 		{
 			unowned DockPreferences prefs = controller.prefs;
 			

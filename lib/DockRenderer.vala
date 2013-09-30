@@ -371,9 +371,8 @@ namespace Plank
 			benchmark.add ("	item.get_surface time - %f ms".printf (end.difference (start) / 1000.0));
 #endif
 			
-			// get regions
-			var hover_rect = position_manager.item_hover_region (item);
-			var draw_rect = position_manager.item_draw_region (hover_rect);
+			// get item's draw-value
+			var draw_value = position_manager.get_draw_value_for_item (item);
 			
 			// lighten or darken the icon
 			var lighten = 0.0, darken = 0.0;
@@ -391,22 +390,8 @@ namespace Plank
 				case ClickAnimation.BOUNCE:
 					if (!screen_is_composited)
 						break;
-					var change = ((int) (Math.sin (2 * Math.PI * clickAnimationProgress) * icon_size * theme.LaunchBounceHeight)).abs ();
-					switch (controller.prefs.Position) {
-					default:
-					case PositionType.BOTTOM:
-						draw_rect.y -= change;
-						break;
-					case PositionType.TOP:
-						draw_rect.y += change;
-						break;
-					case PositionType.LEFT:
-						draw_rect.x += change;
-						break;
-					case PositionType.RIGHT:
-						draw_rect.x -= change;
-						break;
-					}
+					var change = Math.fabs (Math.sin (2 * Math.PI * clickAnimationProgress) * icon_size * theme.LaunchBounceHeight);
+					draw_value = draw_value.move_in (controller.prefs.Position, change);
 					break;
 				case ClickAnimation.DARKEN:
 					darken = double.max (0, Math.sin (Math.PI * clickAnimationProgress)) * 0.5;
@@ -445,50 +430,37 @@ namespace Plank
 			}
 			
 			// bounce icon on urgent state
-			var urgent_time = frame_time.difference (item.LastUrgent);
-			if (screen_is_composited && (item.State & ItemState.URGENT) != 0 && urgent_time < theme.UrgentBounceTime * 1000) {
-				var change = (int) Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * icon_size * theme.UrgentBounceHeight);
-				switch (controller.prefs.Position) {
-				default:
-				case PositionType.BOTTOM:
-					draw_rect.y -= change;
-					break;
-				case PositionType.TOP:
-					draw_rect.y += change;
-					break;
-				case PositionType.LEFT:
-					draw_rect.x += change;
-					break;
-				case PositionType.RIGHT:
-					draw_rect.x -= change;
-					break;
+			if (screen_is_composited && (item.State & ItemState.URGENT) != 0) {
+				var urgent_time = frame_time.difference (item.LastUrgent);
+				if (urgent_time < theme.UrgentBounceTime * 1000) {
+					var change = Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * icon_size * theme.UrgentBounceHeight);
+					draw_value = draw_value.move_in (controller.prefs.Position, change);
 				}
 			}
-			
+
 			// draw active glow
 			var active_time = frame_time.difference (item.LastActive);
 			var opacity = double.min (1, active_time / (double) (theme.ActiveTime * 1000));
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
 			if (opacity > 0) {
-				var glow_rect = position_manager.item_background_region (hover_rect);
-				theme.draw_active_glow (main_buffer, background_rect, glow_rect, item.AverageIconColor, opacity, controller.prefs.Position);
+				theme.draw_active_glow (main_buffer, background_rect, draw_value.background_region, item.AverageIconColor, opacity, controller.prefs.Position);
 			}
 			
 			// draw the icon shadow
 			if (icon_shadow_surface != null) {
 				shadow_cr.set_operator (Cairo.Operator.OVER);
-				shadow_cr.set_source_surface (icon_shadow_surface.Internal, draw_rect.x - shadow_size, draw_rect.y - shadow_size);
+				shadow_cr.set_source_surface (icon_shadow_surface.Internal, draw_value.draw_region.x - shadow_size, draw_value.draw_region.y - shadow_size);
 				shadow_cr.paint ();
 			}
 
 			// draw the icon
-			main_cr.set_source_surface (icon_surface.Internal, draw_rect.x, draw_rect.y);
+			main_cr.set_source_surface (icon_surface.Internal, draw_value.draw_region.x, draw_value.draw_region.y);
 			main_cr.paint ();
 			
 			// draw indicators
 			if (item.Indicator != IndicatorState.NONE)
-				draw_indicator_state (hover_rect, item.Indicator, item.State);
+				draw_indicator_state (draw_value.hover_region, item.Indicator, item.State);
 		}
 		
 		DockSurface draw_item_overlay (DockItem item, DockSurface icon_surface, DockSurface? current_surface)

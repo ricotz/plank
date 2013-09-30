@@ -199,8 +199,9 @@ namespace Plank
 			update_first_item_positions ();
 		}
 		
-		void item_position_changed (DockItemProvider provider)
+		void item_position_changed (DockItemProvider provider, DockItem item)
 		{
+			position_manager.reset_item_caches (item);
 			renderer.animated_draw ();
 		}
 		
