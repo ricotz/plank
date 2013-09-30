@@ -143,7 +143,7 @@ namespace Plank.Items
 			foreach (var dockitem in dockitems)
 				foreach (var item in existing_items)
 					if (dockitem == item.DockItemFilename) {
-						item.Position = ++pos;
+						item.Position = pos++;
 						result.add (item);
 						break;
 					}
