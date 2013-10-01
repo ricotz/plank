@@ -442,7 +442,7 @@ namespace Plank
 			if ((item.State & ItemState.MOVE) != 0) {
 				var move_time = frame_time.difference (item.LastMove);
 				if (move_time < theme.ItemMoveTime * 1000) {
-					var change = (1.0 - move_time / (double) (theme.ItemMoveTime * 1000)) * (icon_size + theme.ItemPadding);
+					var change = (1.0 - move_time / (double) (theme.ItemMoveTime * 1000)) * (icon_size + position_manager.ItemPadding);
 					draw_value = draw_value.move_right (controller.prefs.Position, (item.Position > item.LastPosition ? change : -change));
 				} else {
 					item.unset_move_state ();
