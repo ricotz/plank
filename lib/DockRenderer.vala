@@ -390,7 +390,7 @@ namespace Plank
 				case ClickAnimation.BOUNCE:
 					if (!screen_is_composited)
 						break;
-					var change = Math.fabs (Math.sin (2 * Math.PI * click_animation_progress) * icon_size * theme.LaunchBounceHeight);
+					var change = Math.fabs (Math.sin (2 * Math.PI * click_animation_progress) * icon_size * theme.LaunchBounceHeight * (1.0 - click_animation_progress));
 					draw_value = draw_value.move_in (controller.prefs.Position, change);
 					break;
 				case ClickAnimation.DARKEN:
@@ -434,7 +434,7 @@ namespace Plank
 				var urgent_time = frame_time.difference (item.LastUrgent);
 				var bounce_animation_progress = urgent_time / (double) (theme.UrgentBounceTime * 1000);
 				if (bounce_animation_progress < 1.0) {
-					var change = Math.fabs (Math.sin (Math.PI * bounce_animation_progress) * icon_size * theme.UrgentBounceHeight);
+					var change = Math.fabs (Math.sin (Math.PI * bounce_animation_progress) * icon_size * theme.UrgentBounceHeight * (1.0 - bounce_animation_progress));
 					draw_value = draw_value.move_in (controller.prefs.Position, change);
 				}
 			}
