@@ -29,7 +29,7 @@ ItemPadding=2
 #The size of item indicators, in tenths of a percent of IconSize.
 IndicatorSize=5
 #The size of the icon-shadow behind every item, in tenths of a percent of IconSize.
-IconShadowSize=1.0
+IconShadowSize=1
 #The height (in percent of IconSize) to bounce an icon when the application sets urgent.
 UrgentBounceHeight=1.6666666666666667
 #The height (in percent of IconSize) to bounce an icon when launching an application.
@@ -58,3 +58,5 @@ GlowTime=10000
 GlowPulseTime=2000
 #The hue-shift (-180 to 180) of the urgent indicator color.
 UrgentHueShift=150
+#The time (in ms) to move an item to its new position.
+ItemMoveTime=150
