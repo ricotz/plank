@@ -46,6 +46,11 @@ namespace Plank.Widgets
 		
 		
 		/**
+		 * The item which "received" the button-pressed signal (if any).
+		 */
+		unowned DockItem? ClickedItem { get; set; }
+		
+		/**
 		 * The popup menu for this dock.
 		 */
 		protected Gtk.Menu? menu;
@@ -116,6 +121,8 @@ namespace Plank.Widgets
 			if (controller.drag_manager.InternalDragActive)
 				return true;
 			
+			ClickedItem = HoveredItem;
+			
 			var button = PopupButton.from_event_button (event);
 			if ((button & PopupButton.RIGHT) == PopupButton.RIGHT
 				&& (HoveredItem == null || (event.state & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))
@@ -134,7 +141,8 @@ namespace Plank.Widgets
 			if (controller.drag_manager.InternalDragActive)
 				return true;
 
-			if (HoveredItem != null && !menu_is_visible ())
+			// Make sure the HoveredItem is still the same since button-pressed
+			if (ClickedItem != null && HoveredItem == ClickedItem && !menu_is_visible ())
 				HoveredItem.clicked (PopupButton.from_event_button (event), event.state);
 			
 			return true;
@@ -244,6 +252,7 @@ namespace Plank.Widgets
 			HoveredItem = item;
 			
 			if (HoveredItem == null || controller.drag_manager.InternalDragActive) {
+				ClickedItem = null;
 				controller.hover.hide ();
 				return;
 			}
