@@ -381,7 +381,7 @@ namespace Plank
 			max_click_time *= 1000;
 			var click_time = frame_time.difference (item.LastClicked);
 			if (click_time < max_click_time) {
-				var clickAnimationProgress = click_time / (double) max_click_time;
+				var click_animation_progress = click_time / (double) max_click_time;
 				
 				switch (item.ClickedAnimation) {
 				default:
@@ -390,14 +390,14 @@ namespace Plank
 				case ClickAnimation.BOUNCE:
 					if (!screen_is_composited)
 						break;
-					var change = Math.fabs (Math.sin (2 * Math.PI * clickAnimationProgress) * icon_size * theme.LaunchBounceHeight);
+					var change = Math.fabs (Math.sin (2 * Math.PI * click_animation_progress) * icon_size * theme.LaunchBounceHeight);
 					draw_value = draw_value.move_in (controller.prefs.Position, change);
 					break;
 				case ClickAnimation.DARKEN:
-					darken = double.max (0, Math.sin (Math.PI * clickAnimationProgress)) * 0.5;
+					darken = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
 					break;
 				case ClickAnimation.LIGHTEN:
-					lighten = double.max (0, Math.sin (Math.PI * clickAnimationProgress)) * 0.5;
+					lighten = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
 					break;
 				}
 			}
@@ -432,8 +432,9 @@ namespace Plank
 			// bounce icon on urgent state
 			if (screen_is_composited && (item.State & ItemState.URGENT) != 0) {
 				var urgent_time = frame_time.difference (item.LastUrgent);
-				if (urgent_time < theme.UrgentBounceTime * 1000) {
-					var change = Math.fabs (Math.sin (Math.PI * urgent_time / (double) (theme.UrgentBounceTime * 1000)) * icon_size * theme.UrgentBounceHeight);
+				var bounce_animation_progress = urgent_time / (double) (theme.UrgentBounceTime * 1000);
+				if (bounce_animation_progress < 1.0) {
+					var change = Math.fabs (Math.sin (Math.PI * bounce_animation_progress) * icon_size * theme.UrgentBounceHeight);
 					draw_value = draw_value.move_in (controller.prefs.Position, change);
 				}
 			}
@@ -441,8 +442,9 @@ namespace Plank
 			// animate icon movement on move state
 			if ((item.State & ItemState.MOVE) != 0) {
 				var move_time = frame_time.difference (item.LastMove);
-				if (move_time < theme.ItemMoveTime * 1000) {
-					var change = (1.0 - move_time / (double) (theme.ItemMoveTime * 1000)) * (icon_size + position_manager.ItemPadding);
+				var move_animation_progress = move_time / (double) (theme.ItemMoveTime * 1000);
+				if (move_animation_progress < 1.0) {
+					var change = (1.0 - move_animation_progress) * (icon_size + position_manager.ItemPadding);
 					draw_value = draw_value.move_right (controller.prefs.Position, (item.Position > item.LastPosition ? change : -change));
 				} else {
 					item.unset_move_state ();
