@@ -121,6 +121,12 @@ namespace Plank.Widgets
 			if (controller.drag_manager.InternalDragActive)
 				return true;
 			
+			// If the cursor got hidden due inactivity or the HoveredItem got
+			// set null for other reasons we need to make sure this click gets
+			// delegated correctly
+			if (HoveredItem == null)
+				update_hovered ((int) event.x, (int) event.y);
+			
 			ClickedItem = HoveredItem;
 			
 			var button = PopupButton.from_event_button (event);
