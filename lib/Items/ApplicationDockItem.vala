@@ -399,14 +399,7 @@ namespace Plank.Items
 				foreach (var s in actions) {
 					var values = actions_map.get (s).split (";;");
 					
-					Gtk.MenuItem item;
-					if (values[1] != null && values[1] != "") {
-						item = new Gtk.ImageMenuItem.with_mnemonic (s);
-						(item as Gtk.ImageMenuItem).set_image (new Gtk.Image.from_icon_name (values[1], IconSize.MENU));
-					 } else {
-						item = new Gtk.MenuItem.with_mnemonic (s);
-					 }
-						
+					var item = create_menu_item (s, values[1], true);
 					item.activate.connect (() => {
 						try {
 							AppInfo.create_from_commandline (values[0], null, AppInfoCreateFlags.NONE).launch (null, null);
@@ -419,22 +412,17 @@ namespace Plank.Items
 			if (is_running () && windows != null && windows.length () > 0) {
 				items.add (new SeparatorMenuItem ());
 				
-				int width, height;
-				icon_size_lookup (IconSize.MENU, out width, out height);
-				
 				foreach (var view in windows) {
 					unowned Bamf.Window? window = (view as Bamf.Window);
 					if (window == null)
 						continue;
 					
+					Gtk.MenuItem window_item;
 					var pbuf = WindowControl.get_window_icon (window);
 					if (pbuf == null)
-						pbuf = DrawingService.load_icon (Icon, width, height);
-					else
-						pbuf = DrawingService.ar_scale (pbuf, width, height);
-					
-					var window_item = new ImageMenuItem.with_mnemonic (window.get_name ());
-					window_item.set_image (new Gtk.Image.from_pixbuf (pbuf));
+						window_item = create_menu_item_with_pixbuf (window.get_name (), pbuf, true);
+					else 
+						window_item = create_menu_item (window.get_name (), Icon, true);
 					window_item.activate.connect (() => WindowControl.focus_window (window));
 					items.add (window_item);
 				}

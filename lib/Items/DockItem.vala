@@ -626,15 +626,45 @@ namespace Plank.Items
 		 *
 		 * @param title the title of the menu item
 		 * @param icon the icon of the menu item
+		 * @param force_show_icon whether to force showing the icon
 		 * @return the new menu item
 		 */
-		protected static Gtk.MenuItem create_menu_item (string title, string icon)
+		protected static Gtk.MenuItem create_menu_item (string title, string? icon = null, bool force_show_icon = false)
 		{
+			if (icon == null || icon == "")
+				return new Gtk.MenuItem.with_mnemonic (title);
+			
 			int width, height;
 			icon_size_lookup (IconSize.MENU, out width, out height);
 			
 			var item = new ImageMenuItem.with_mnemonic (title);
 			item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon (icon, width, height)));
+			if (force_show_icon)
+				item.always_show_image = true;
+			
+			return item;
+		}
+		
+		/**
+		 * Creates a new menu item.
+		 *
+		 * @param title the title of the menu item
+		 * @param pixbuf the icon of the menu item
+		 * @param force_show_icon whether to force showing the icon
+		 * @return the new menu item
+		 */
+		protected static Gtk.MenuItem create_menu_item_with_pixbuf (string title, owned Gdk.Pixbuf pixbuf, bool force_show_icon = false)
+		{
+			int width, height;
+			icon_size_lookup (IconSize.MENU, out width, out height);
+			
+			if (width != pixbuf.width || height != pixbuf.height)
+				pixbuf = DrawingService.ar_scale (pixbuf, width, height);
+			
+			var item = new ImageMenuItem.with_mnemonic (title);
+			item.set_image (new Gtk.Image.from_pixbuf (pixbuf));
+			if (force_show_icon)
+				item.always_show_image = true;
 			
 			return item;
 		}

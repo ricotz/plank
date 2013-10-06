@@ -469,11 +469,8 @@ namespace Plank.Widgets
 		protected void show_menu (uint button, bool show_plank_menu)
 		{
 			if (menu != null) {
-				foreach (var w in menu.get_children ()) {
-					if (w is ImageMenuItem)
-						(w as ImageMenuItem).get_image ().destroy ();
+				foreach (var w in menu.get_children ())
 					menu.remove (w);
-				}
 				
 				menu.show.disconnect (on_menu_show);
 				menu.hide.disconnect (on_menu_hide);
