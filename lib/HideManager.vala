@@ -86,7 +86,6 @@ namespace Plank
 		construct
 		{
 			windows_intersect = false;
-			hide ();
 			
 			notify["Disabled"].connect (update_hidden);
 			notify["DockHovered"].connect (update_hidden);
