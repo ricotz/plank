@@ -47,22 +47,18 @@ namespace Plank
 				case PositionType.BOTTOM:
 					result.hover_region.y -= amount;
 					result.draw_region.y -= amount;
-					result.background_region.y -= amount;
 					break;
 				case PositionType.TOP:
 					result.hover_region.y += amount;
 					result.draw_region.y += amount;
-					result.background_region.y += amount;
 					break;
 				case PositionType.LEFT:
 					result.hover_region.x += amount;
 					result.draw_region.x += amount;
-					result.background_region.x += amount;
 					break;
 				case PositionType.RIGHT:
 					result.hover_region.x -= amount;
 					result.draw_region.x -= amount;
-					result.background_region.x -= amount;
 					break;
 				}
 				
