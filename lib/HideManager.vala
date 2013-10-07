@@ -39,7 +39,11 @@ namespace Plank
 		/**
 		 * The dock hides if the mouse is not over it.
 		 */
-		AUTO
+		AUTO,
+		/**
+		 * The dock hides if there is an active maximized window.
+		 */
+		DODGE_MAXIMIZED
 	}
 	
 	/**
@@ -215,6 +219,13 @@ namespace Plank
 				else
 					hide ();
 				break;
+			
+			case HideType.DODGE_MAXIMIZED:
+				if (DockHovered || !(active_maximized_window_intersect || dialog_windows_intersect))
+					show ();
+				else
+					hide ();
+				break;
 			}
 			pointer_update = true;
 		}
@@ -289,6 +300,8 @@ namespace Plank
 		//
 		
 		bool windows_intersect;
+		bool active_maximized_window_intersect;
+		bool dialog_windows_intersect;
 		Gdk.Rectangle last_window_rect;
 		
 		uint timer_geo;
@@ -299,6 +312,8 @@ namespace Plank
 			var dock_rect = controller.position_manager.get_static_dock_region ();
 			
 			var intersect = false;
+			var dialog_intersect = false;
+			var active_maximized_intersect = false;
 			var screen = Wnck.Screen.get_default ();
 			var active_window = screen.get_active_window ();
 			var active_workspace = screen.get_active_workspace ();
@@ -318,12 +333,20 @@ namespace Plank
 					
 					if (window_geometry (w).intersect (dock_rect, null)) {
 						intersect = true;
-						break;
+						
+						active_maximized_intersect = active_maximized_intersect || (active_window == w
+							&& (w.is_maximized () || w.is_maximized_vertically () || w.is_maximized_horizontally ()));
+						
+						dialog_intersect = dialog_intersect || type == Wnck.WindowType.DIALOG;
+						
+						if (active_maximized_intersect && dialog_intersect)
+							break;
 					}
 				}
 			
-			if (windows_intersect != intersect)
-				windows_intersect = intersect;
+			windows_intersect = intersect;
+			dialog_windows_intersect = dialog_intersect;
+			active_maximized_window_intersect = active_maximized_intersect;
 			
 			pointer_update = false;
 			update_hidden ();
