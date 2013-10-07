@@ -38,7 +38,7 @@ namespace Plank.Drawing
 		[Description(nick = "top-padding", blurb = "The padding on the top dock edge, in tenths of a percent of IconSize.")]
 		public double TopPadding { get; set; }
 		
-		[Description(nick = "top-padding", blurb = "The padding on the bottom dock edge, in tenths of a percent of IconSize.")]
+		[Description(nick = "bottom-padding", blurb = "The padding on the bottom dock edge, in tenths of a percent of IconSize.")]
 		public double BottomPadding { get; set; }
 		
 		[Description(nick = "item-padding", blurb = "The padding between items on the dock, in tenths of a percent of IconSize.")]
