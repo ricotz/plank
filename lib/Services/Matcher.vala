@@ -92,9 +92,9 @@ namespace Plank.Services.Windows
 			}
 			
 			if (arg1 is Bamf.Window)
-				window_opened (arg1 as Bamf.Window);
+				window_opened ((Bamf.Window) arg1);
 			else if (arg1 is Bamf.Application)
-				application_opened (arg1 as Bamf.Application);
+				application_opened ((Bamf.Application) arg1);
 		}
 		
 		void handle_view_closed (Bamf.View arg1)
@@ -105,9 +105,9 @@ namespace Plank.Services.Windows
 			}
 			
 			if (arg1 is Bamf.Window)
-				window_closed (arg1 as Bamf.Window);
+				window_closed ((Bamf.Window) arg1);
 			else if (arg1 is Bamf.Application)
-				application_closed (arg1 as Bamf.Application);
+				application_closed ((Bamf.Application) arg1);
 		}
 		
 		public ArrayList<Bamf.Application> active_launchers ()
