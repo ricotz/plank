@@ -216,7 +216,7 @@ namespace Plank
 			}
 			
 			if (fade_opacity < 1.0)
-				opacity = double.min (1.0, double.max (0.0, 1.0 - (1.0 - theme.FadeOpacity) * hide_progress));
+				opacity = double.min (1.0, double.max (0.0, 1.0 - (1.0 - fade_opacity) * hide_progress));
 			else
 				opacity = 1.0;
 		}
@@ -284,7 +284,7 @@ namespace Plank
 			
 			// calculate drawing offset
 			var x_offset = 0, y_offset = 0;
-			if (theme.FadeOpacity == 1.0)
+			if (opacity == 1.0)
 				position_manager.get_dock_draw_position (out x_offset, out y_offset);
 			
 			// composite dock layers and make sure to draw onto the window's context with one operation
