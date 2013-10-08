@@ -296,6 +296,15 @@ namespace Plank.Widgets
 		public bool update_hovered (int x, int y)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
+			Gdk.Rectangle rect;
+			
+			// check if there already was a hovered-item and if it is still hovered to speed up things
+			if (HoveredItem != null) {
+				rect = position_manager.item_hover_region (HoveredItem);
+				if (y >= rect.y && y < rect.y + rect.height && x >= rect.x && x < rect.x + rect.width)
+					// nothing changed
+					return true;
+			}
 			
 			var cursor_rect = position_manager.get_cursor_region ();
 			if (y < cursor_rect.y && y > cursor_rect.y + cursor_rect.height
@@ -304,7 +313,6 @@ namespace Plank.Widgets
 				return false;
 			}
 			
-			Gdk.Rectangle rect;
 			foreach (var provider in controller.Providers) {
 				rect = position_manager.provider_hover_region (provider);
 				if (y <= rect.y || y >= rect.y + rect.height || x <= rect.x || x >= rect.x + rect.width)
