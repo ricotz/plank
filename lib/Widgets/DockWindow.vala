@@ -228,11 +228,12 @@ namespace Plank.Widgets
 					return false;
 				});
 				
+				set_input_mask ();
 				return base.draw (cr);
 			}
 			
-			set_input_mask ();
 			controller.renderer.draw_dock (cr);
+			set_input_mask ();
 			
 			return true;
 		}
