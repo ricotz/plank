@@ -232,6 +232,10 @@ namespace Plank
 		 */
 		public void draw_dock (Context cr)
 		{
+			// take the previous frame values into account to decide if we
+			// can bail a full draw to not miss a finishing animation-frame
+			var no_full_draw_needed = (frame_time.to_unix () > 0 && hide_progress == 1.0 && opacity == 1.0);
+			
 			init_current_frame ();
 			
 			unowned PositionManager position_manager = controller.position_manager;
@@ -241,7 +245,7 @@ namespace Plank
 			// if the dock is completely hidden and not transparently drawn
 			// only draw ugent-glow indicators and bail since there is no need
 			// for further things
-			if (hide_progress == 1.0 && opacity == 1.0) {
+			if (no_full_draw_needed && hide_progress == 1.0 && opacity == 1.0) {
 				foreach (var item in items)
 					draw_urgent_glow (item, cr);
 				return;
