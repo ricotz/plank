@@ -227,6 +227,8 @@ namespace Plank.Widgets
 					controller.hide_manager.update_dock_hovered ();
 					return false;
 				});
+				
+				return base.draw (cr);
 			}
 			
 			set_input_mask ();
