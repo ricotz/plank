@@ -238,6 +238,15 @@ namespace Plank
 			unowned DockItem dragged_item = controller.drag_manager.DragItem;
 			var items = controller.Items;
 			
+			// if the dock is completely hidden and not transparently drawn
+			// only draw ugent-glow indicators and bail since there is no need
+			// for further things
+			if (hide_progress == 1.0 && opacity == 1.0) {
+				foreach (var item in items)
+					draw_urgent_glow (item, cr);
+				return;
+			}
+
 #if BENCHMARK
 			benchmark.clear ();
 			var start = new DateTime.now_local ();
