@@ -234,30 +234,15 @@ namespace Plank
 		{
 			// take the previous frame values into account to decide if we
 			// can bail a full draw to not miss a finishing animation-frame
-			var no_full_draw_needed = (frame_time.to_unix () > 0 && hide_progress == 1.0 && opacity == 1.0);
+			var no_full_draw_needed = (hide_progress == 1.0 && opacity == 1.0);
 			
 			init_current_frame ();
 			
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockItem dragged_item = controller.drag_manager.DragItem;
-			var items = controller.Items;
-			
-			// if the dock is completely hidden and not transparently drawn
-			// only draw ugent-glow indicators and bail since there is no need
-			// for further things
-			if (no_full_draw_needed && hide_progress == 1.0 && opacity == 1.0) {
-				foreach (var item in items)
-					draw_urgent_glow (item, cr);
-				return;
-			}
-
-#if BENCHMARK
-			benchmark.clear ();
-			var start = new DateTime.now_local ();
-#endif
-			
 			var width = position_manager.DockWidth;
 			var height = position_manager.DockHeight;
+			var items = controller.Items;
 			
 			if (main_buffer == null) {
 				main_buffer = new DockSurface.with_surface (width, height, cr.get_target ());
@@ -266,6 +251,26 @@ namespace Plank
 			if (shadow_buffer == null) {
 				shadow_buffer = new DockSurface.with_surface (width, height, cr.get_target ());
 			}
+			
+			// if the dock is completely hidden and not transparently drawn
+			// only draw ugent-glow indicators and bail since there is no need
+			// for further things
+			if (no_full_draw_needed && hide_progress == 1.0 && opacity == 1.0) {
+				// we still need to clear out the previous output
+				cr.set_operator (Cairo.Operator.CLEAR);
+				cr.rectangle (0, 0, width, height);
+				cr.fill ();
+				
+				foreach (var item in items)
+					draw_urgent_glow (item, cr);
+				
+				return;
+			}
+
+#if BENCHMARK
+			benchmark.clear ();
+			var start = new DateTime.now_local ();
+#endif
 			
 			main_buffer.clear ();
 			shadow_buffer.clear ();
