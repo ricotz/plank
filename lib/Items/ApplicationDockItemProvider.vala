@@ -30,6 +30,9 @@ namespace Plank.Items
 	 */
 	public class ApplicationDockItemProvider : DockItemProvider
 	{
+		static DBusConnection connection = null;
+		static uint unity_bus_id = 0;
+		
 		public signal void item_window_added (ApplicationDockItem item);
 		
 		public File LaunchersDir { get; construct; }
@@ -40,8 +43,6 @@ namespace Plank.Items
 		bool delay_items_monitor_handle = false;
 		ArrayList<GLib.File> queued_files = new ArrayList<GLib.File> ();
 		
-		DBusConnection connection = null;
-		uint unity_bus_id = 0;
 		uint launcher_entry_dbus_signal_id = 0;
 		uint dbus_name_owner_changed_signal_id = 0;
 		
@@ -74,24 +75,16 @@ namespace Plank.Items
 				critical ("Unable to watch the launchers directory. (%s)", e.message);
 			}
 			
-			// Initialize Unity DBus
-			try {
-				connection = Bus.get_sync (BusType.SESSION, null);
-			} catch (Error e) {
-				warning (e.message);
-				return;
+			acquire_unity_dbus ();
+			
+			if (connection != null) {
+				debug ("Unity: Initalizing LauncherEntry support");
+				
+				launcher_entry_dbus_signal_id = connection.signal_subscribe (null, "com.canonical.Unity.LauncherEntry",
+					null, null, null, DBusSignalFlags.NONE, handle_entry_signal);
+				dbus_name_owner_changed_signal_id = connection.signal_subscribe ("org.freedesktop.DBus", "org.freedesktop.DBus",
+					"NameOwnerChanged", "/org/freedesktop/DBus", null, DBusSignalFlags.NONE, handle_name_owner_changed);
 			}
-			
-			debug ("Unity: Initalizing LauncherEntry support");
-			
-			// Acquire Unity bus-name to activate libunity clients since normally there shouldn't be a running Unity
-			unity_bus_id = Bus.own_name (BusType.SESSION, "com.canonical.Unity", BusNameOwnerFlags.NONE,
-				handle_bus_acquired, handle_name_acquired, handle_name_lost);
-			
-			launcher_entry_dbus_signal_id = connection.signal_subscribe (null, "com.canonical.Unity.LauncherEntry",
-				null, null, null, DBusSignalFlags.NONE, handle_entry_signal);
-			dbus_name_owner_changed_signal_id = connection.signal_subscribe ("org.freedesktop.DBus", "org.freedesktop.DBus",
-				"NameOwnerChanged", "/org/freedesktop/DBus", null, DBusSignalFlags.NONE, handle_name_owner_changed);
 		}
 		
 		~ApplicationDockItemProvider ()
@@ -104,7 +97,6 @@ namespace Plank.Items
 				items_monitor = null;
 			}
 			
-			
 			if (unity_bus_id > 0)
 				Bus.unown_name (unity_bus_id);
 			
@@ -113,9 +105,70 @@ namespace Plank.Items
 					connection.signal_unsubscribe (launcher_entry_dbus_signal_id);
 				if (dbus_name_owner_changed_signal_id > 0)
 					connection.signal_unsubscribe (dbus_name_owner_changed_signal_id);
-				
-				connection.close_sync ();
 			}
+		}
+		
+		static construct
+		{
+			acquire_unity_dbus ();
+		}
+		
+		/**
+		 * Connect DBus connection and try to aquire unity busname
+		 */
+		public static void acquire_unity_dbus ()
+		{
+			// Initialize Unity DBus
+			try {
+				if (connection == null)
+					connection = Bus.get_sync (BusType.SESSION, null);
+			} catch (Error e) {
+				warning (e.message);
+				return;
+			}
+			
+			if (unity_bus_id == 0) {
+				// Acquire Unity bus-name to activate libunity clients since normally there shouldn't be a running Unity
+				unity_bus_id = Bus.own_name (BusType.SESSION, "com.canonical.Unity", BusNameOwnerFlags.NONE,
+					handle_bus_acquired, handle_name_acquired, handle_name_lost);
+			}
+		}
+		
+		/**
+		 * Disconnect DBus connection and release unity busname
+		 */
+		public static void release_unity_dbus ()
+		{
+			if (unity_bus_id > 0) {
+				Bus.unown_name (unity_bus_id);
+				unity_bus_id = 0;
+			}
+			
+			if (connection != null) {
+				try {
+					connection.flush ();
+					connection.close_sync ();
+				} catch (Error e) {
+					warning (e.message);
+				} finally {
+					connection = null;
+				}
+			}
+		}
+		
+		static void handle_bus_acquired (DBusConnection conn, string name)
+		{
+			Logger.verbose ("Unity: %s acquired", name);
+		}
+
+		static void handle_name_acquired (DBusConnection conn, string name)
+		{
+			Logger.verbose ("Unity: %s acquired", name);
+		}
+
+		static void handle_name_lost (DBusConnection conn, string name)
+		{
+			debug ("Unity: %s lost", name);
 		}
 		
 		protected ApplicationDockItem? item_for_application (Bamf.Application app)
@@ -350,21 +403,6 @@ namespace Plank.Items
 		public override bool accept_drop (ArrayList<string> uris)
 		{
 			return false;
-		}
-		
-		void handle_bus_acquired (DBusConnection conn, string name)
-		{
-			Logger.verbose ("Unity: %s acquired", name);
-		}
-
-		void handle_name_acquired (DBusConnection conn, string name)
-		{
-			Logger.verbose ("Unity: %s acquired", name);
-		}
-
-		void handle_name_lost (DBusConnection conn, string name)
-		{
-			debug ("Unity: %s lost", name);
 		}
 		
 		void handle_entry_signal (DBusConnection connection, string sender_name, string object_path,
