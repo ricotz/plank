@@ -579,6 +579,10 @@ namespace Plank.Widgets
 			if (!get_realized ())
 				return;
 			
+			unowned Gdk.Display gdk_display = get_display ();
+			if (!(gdk_display is Gdk.X11Display))
+				return;
+			
 			var struts = new ulong [Struts.N_VALUES];
 			
 			if (controller.prefs.HideMode == HideType.NONE)
@@ -588,7 +592,7 @@ namespace Plank.Widgets
 			for (var i = 0; i < first_struts.length; i++)
 				first_struts [i] = struts [i];
 			
-			unowned X.Display display = X11Display.get_xdisplay (get_display ());
+			unowned X.Display display = X11Display.get_xdisplay (gdk_display);
 			var xid = X11Window.get_xid (get_window ());
 			
 			Gdk.error_trap_push ();
