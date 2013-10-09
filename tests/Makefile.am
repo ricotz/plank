@@ -43,7 +43,7 @@ nodist_tests_SOURCES = \
 	$(tests_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-tests_vala.stamp: $(tests_VALASOURCES) Makefile
+tests_vala.stamp: $(tests_VALASOURCES) $(top_builddir)/lib/plank.vapi $(top_builddir)/lib/plank-internal.vapi Makefile
 	$(AM_V_VALA)$(VALAC) \
 		$(tests_VALAFLAGS) \
 		$(filter %.vala %.c,$^)

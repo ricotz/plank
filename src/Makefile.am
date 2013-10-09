@@ -32,7 +32,7 @@ nodist_plank_SOURCES = \
 	$(plank_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-plank_vala.stamp: $(plank_VALASOURCES) Makefile
+plank_vala.stamp: $(plank_VALASOURCES) $(top_builddir)/lib/plank.vapi Makefile
 	$(AM_V_VALA)$(VALAC) \
 		$(plank_VALAFLAGS) \
 		$(filter %.vala %.c,$^)
