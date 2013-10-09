@@ -157,6 +157,7 @@ namespace Plank.Items
 		void app_signals_connect (Bamf.Application app)
 		{
 			app.active_changed.connect (handle_active_changed);
+			app.name_changed.connect (handle_name_changed);
 			app.running_changed.connect (handle_running_changed);
 			app.urgent_changed.connect (handle_urgent_changed);
 			app.user_visible_changed.connect (handle_user_visible_changed);
@@ -168,6 +169,7 @@ namespace Plank.Items
 		void app_signals_disconnect (Bamf.Application app)
 		{
 			app.active_changed.disconnect (handle_active_changed);
+			app.name_changed.disconnect (handle_name_changed);
 			app.running_changed.disconnect (handle_running_changed);
 			app.urgent_changed.disconnect (handle_urgent_changed);
 			app.user_visible_changed.disconnect (handle_user_visible_changed);
@@ -239,6 +241,13 @@ namespace Plank.Items
 				LastActive = new DateTime.now_utc ();
 				State &= ~ItemState.ACTIVE;
 			}
+		}
+		
+		void handle_name_changed (string old_name, string new_name)
+		{
+			// do nothing if name and icon are coming from the desktop-file
+			if (this is TransientDockItem)
+				Text = new_name;
 		}
 		
 		void handle_running_changed (bool is_running)
