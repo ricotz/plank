@@ -31,6 +31,9 @@ namespace Plank.Drawing
 	{
 		const string MISSING_ICONS = "application-default-icon;;application-x-executable";
 		
+		const string FILE_ATTRIBUTE_CUSTOM_ICON = "metadata::custom-icon";
+		const string FILE_ATTRIBUTE_CUSTOM_ICON_NAME = "metadata::custom-icon-name";
+		
 		// Parameters for average-color calculation
 		const double SATURATION_WEIGHT = 1.5;
 		const double WEIGHT_THRESHOLD = 1.0;
@@ -49,10 +52,17 @@ namespace Plank.Drawing
 		public static string? get_icon_from_file (File file)
 		{
 			try {
-				var info = file.query_info ("*", 0);
+				var info = file.query_info (FileAttribute.STANDARD_ICON + ","
+					+ FILE_ATTRIBUTE_CUSTOM_ICON_NAME + "," + FILE_ATTRIBUTE_CUSTOM_ICON + ","
+					+ FileAttribute.THUMBNAIL_PATH, 0);
 				
-				// look first for a custom icon
-				var custom_icon = info.get_attribute_string ("metadata::custom-icon");
+				// look for a custom icon-name
+				var custom_icon_name = info.get_attribute_string (FILE_ATTRIBUTE_CUSTOM_ICON_NAME);
+				if (custom_icon_name != null && custom_icon_name != "")
+					return custom_icon_name;
+				
+				// look for a custom icon
+				var custom_icon = info.get_attribute_string (FILE_ATTRIBUTE_CUSTOM_ICON);
 				if (custom_icon != null && custom_icon != "") {
 					if (custom_icon.has_prefix ("file://"))
 						return custom_icon;
