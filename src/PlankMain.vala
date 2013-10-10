@@ -54,7 +54,8 @@ namespace PlankMain
 				"Michal Hruby <michal.mhr@gmail.com>"
 			};
 			about_documenters = {
-				"Robert Dyer <robert@go-docky.com>"
+				"Robert Dyer <robert@go-docky.com>",
+				"Rico Tzschichholz <rtz@go-docky.com>"
 			};
 			about_artists = {
 				"Daniel Foré <bunny@go-docky.com>"
