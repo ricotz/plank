@@ -48,9 +48,11 @@ namespace Plank.Widgets
 		
 		public override bool draw (Cairo.Context cr)
 		{
+			cr.save ();
 			cr.set_operator (Cairo.Operator.CLEAR);
 			cr.rectangle (0, 0, width_request, height_request);
 			cr.fill ();
+			cr.restore ();
 			
 			return true;
 		}
