@@ -260,30 +260,32 @@ namespace Plank.Widgets
 			
 			HoveredItem = item;
 			
+			// if HoveredItem changed always stop scheduled popup and hide the tooltip
+			if (hover_reposition_timer > 0)
+				Source.remove (hover_reposition_timer);
+			controller.hover.hide ();
+			
 			if (HoveredItem == null || controller.drag_manager.InternalDragActive) {
 				ClickedItem = null;
-				controller.hover.hide ();
 				return;
 			}
 			
-			if (hover_reposition_timer > 0)
-				return;
-			
-			hover_reposition_timer = Gdk.threads_add_timeout (1000 / 60, () => {
+			// don't be that demanding this delay is still fast enough
+			hover_reposition_timer = Gdk.threads_add_timeout (33, () => {
 				hover_reposition_timer = 0;
-				
-				unowned HoverWindow hover = controller.hover;
-				if (hover.get_visible ())
-					hover.hide ();
 				
 				if (HoveredItem == null)
 					return false;
 				
-				hover.Text = HoveredItem.Text;
-				position_hover ();
+				unowned HoverWindow hover = controller.hover;
 				
-				if (!menu_is_visible () && !hover.get_visible ())
-					hover.show ();
+				int x, y;
+				hover.set_text (HoveredItem.Text);
+				controller.position_manager.get_hover_position (HoveredItem, out x, out y);
+				hover.show_at (x, y);
+				
+				if (menu_is_visible ())
+					hover.hide ();
 				
 				return false;
 			});
@@ -333,17 +335,6 @@ namespace Plank.Widgets
 			
 			set_hovered (null);
 			return false;
-		}
-		
-		/**
-		 * Repositions the hover window for the hovered item.
-		 */
-		protected void position_hover ()
-			requires (HoveredItem != null)
-		{
-			int x, y;
-			controller.position_manager.get_hover_position (HoveredItem, out x, out y);
-			controller.hover.move_hover (x, y);
 		}
 		
 		/**

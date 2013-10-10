@@ -295,13 +295,8 @@ namespace Plank.Tests
 	{
 		Drawing.DockSurface surface, surface2, surface3;
 		DockTheme docktheme;
-		HoverTheme hovertheme;
 		
 		surface = new DockSurface (512, 512);
-		
-		surface.clear ();
-		hovertheme = new HoverTheme ("Test");
-		hovertheme.draw_background (surface);
 		
 		surface.clear ();
 		docktheme = new DockTheme ("Test");

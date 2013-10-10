@@ -18,35 +18,21 @@
 using Cairo;
 using Gdk;
 using Gtk;
-using Pango;
-
-using Plank.Drawing;
 
 namespace Plank.Widgets
 {
 	/**
 	 * A hover window that shows labels for dock items.
 	 * This window floats outside (but near) the dock.
-	 * The window uses a themed renderer and has its own theme file.
 	 */
-	public class HoverWindow : CompositedWindow
+	public class HoverWindow : Gtk.Window
 	{
 		const int PADDING = 10;
 		
 		public DockController controller { private get; construct; }
 		
-		/**
-		 * The text to display in the window.
-		 */
-		public string Text { get; set; default = ""; }
-		
-		DockSurface? background_buffer = null;
-		
-		HoverTheme theme;
-		
-		Pango.Layout layout;
-		
-		double text_offset;
+		Gtk.Box box;
+		Gtk.Label label;
 		
 		public HoverWindow (DockController controller)
 		{
@@ -55,155 +41,123 @@ namespace Plank.Widgets
 		
 		construct
 		{
-			accept_focus = false;
-			can_focus = false;
-			skip_pager_hint = true;
-			skip_taskbar_hint = true;
+			app_paintable = true;
+			resizable = false;
 			
-			set_redraw_on_allocate (true);
+			unowned Screen screen = get_screen ();
+			set_visual (screen.get_rgba_visual () ?? screen.get_system_visual ());
 			
-			load_theme ();
+			get_style_context ().add_class (Gtk.STYLE_CLASS_TOOLTIP);
 			
-			update_layout ();
-			style_set.connect (() => update_layout ());
+			box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+			box.set_margin_left (6);
+			box.set_margin_right (6);
+			box.set_margin_top (6);
+			box.set_margin_bottom (6);
+			add (box);
+			box.show ();
 			
-			notify["Text"].connect (invalidate);
-			
-			controller.prefs.notify["Theme"].connect (load_theme);
-			
-			stick ();
-		}
-		
-		void theme_changed ()
-		{
-			background_buffer = null;
-			queue_draw ();
-		}
-		
-		void load_theme ()
-		{
-			var is_reload = (theme != null);
-			
-			if (is_reload)
-				theme.notify.disconnect (theme_changed);
-			
-			theme = new HoverTheme (controller.prefs.Theme);
-			theme.load ("hover");
-			theme.notify.connect (theme_changed);
-			
-			if (is_reload)
-				theme_changed ();
+			label = new Gtk.Label (null);
+			label.set_line_wrap (true);
+			box.pack_start (label, false, false, 0);
 		}
 		
 		/**
-		 * Centers the window at the x/y location specified.
+		 * Shows and centers the window according to the x/y location specified
+		 * while accounting the dock's position.
 		 *
-		 * @param item_x the x location
-		 * @param item_y the y location
+		 * @param x the x location
+		 * @param y the y location
 		 */
-		public void move_hover (int item_x, int item_y)
+		public void show_at (int x, int y)
 		{
-			var x = 0, y = 0;
+			unowned Screen screen = get_screen ();
+			Gdk.Rectangle monitor;
+			screen.get_monitor_geometry (screen.get_monitor_at_point (x, y), out monitor);
+			
+			// realize and show the window early to have current allocation-dimensions
+			// this is also needed for being able to move override-redirect windows
+			// on mutter-derived window-managers
+			show ();
+			
+			var width = get_allocated_width ();
+			var height = get_allocated_height ();
 			
 			switch (controller.prefs.Position) {
 			case PositionType.BOTTOM:
-				x = item_x - width_request / 2;
-				y = item_y - height_request - PADDING;
+				x = x - width / 2;
+				y = y - height - PADDING;
 				break;
 			case PositionType.TOP:
-				x = item_x - width_request / 2;
-				y = item_y + PADDING;
+				x = x - width / 2;
+				y = y + PADDING;
 				break;
 			case PositionType.LEFT:
-				y = item_y - height_request / 2;
-				x = item_x + PADDING;
+				x = x + PADDING;
+				y = y - height / 2;
 				break;
 			case PositionType.RIGHT:
-				y = item_y - height_request / 2;
-				x = item_x - width_request - PADDING;
+				x = x - width - PADDING;
+				y = y - height / 2;
 				break;
 			}
 			
-			unowned Screen screen = get_screen ();
-			Gdk.Rectangle monitor;
-			screen.get_monitor_geometry (screen.get_monitor_at_point (item_x, item_y), out monitor);
+			x = int.max (monitor.x, int.min (x, monitor.x + monitor.width - width));
+			y = int.max (monitor.y, int.min (y, monitor.y + monitor.height - height));
 			
-			x = int.max (monitor.x, int.min (x, monitor.x + monitor.width - width_request));
-			y = int.max (monitor.y, int.min (y, monitor.y + monitor.height - height_request));
-			
-			show ();
-			Gdk.flush ();
 			move (x, y);
-			Gdk.flush ();
-			hide ();
-			Gdk.flush ();
 		}
 		
-		void update_layout ()
+		/**
+		 * Set the tooltip-text to show
+		 *
+		 * @param text the text to show
+		 */
+		public void set_text (string text)
 		{
-			layout = new Pango.Layout (pango_context_get ());
-			layout.set_ellipsize (EllipsizeMode.END);
-			
-			unowned FontDescription font_description = get_style_context ().get_font (StateFlags.NORMAL);
-			font_description.set_size ((int) (9 * Pango.SCALE));
-			font_description.set_weight (Weight.BOLD);
-			layout.set_font_description (font_description);
-			
-			invalidate ();
+			label.set_text (text);
+			if (text != null)
+				label.show ();
+			else
+				label.hide ();
 		}
 		
-		void invalidate ()
-		{
-			unowned Screen screen = get_screen ();
-			var max_width = 0.8 * screen.get_width ();
-			
-			background_buffer = null;
-			
-			if (Text == "")
-				Text = " ";
-			
-			// calculate the text layout to find the size
-			layout.set_text (Text, -1);
-			
-			// make the buffer
-			Pango.Rectangle logical_rect;
-			layout.get_pixel_extents (null, out logical_rect);
-			if (logical_rect.width > max_width) {
-				layout.set_width ((int) (max_width * Pango.SCALE));
-				layout.get_pixel_extents (null, out logical_rect);
-			}
-			
-			var buffer = (int) (logical_rect.height / 4.0) * 2;
-			text_offset = buffer / 2;
-			
-			set_size_request (logical_rect.width + buffer, logical_rect.height + buffer);
-			queue_resize ();
-		}
-		
-		void draw_background ()
-		{
-			background_buffer = new DockSurface (width_request, height_request);
-			
-			// draw the background
-			theme.draw_background (background_buffer);
-			
-			// draw the text
-			unowned Cairo.Context cr = background_buffer.Context;
-			cr.move_to (text_offset, text_offset);
-			cr.set_source_rgb (1, 1, 1);
-			Pango.cairo_show_layout (cr, layout);
-		}
-		
+		/**
+		 * {@inheritDoc}
+		 */
 		public override bool draw (Cairo.Context cr)
 		{
-			if (background_buffer == null || background_buffer.Height != height_request || background_buffer.Width != width_request)
-				draw_background ();
+			var width = get_allocated_width ();
+			var height = get_allocated_height ();
+			var context = get_style_context ();
 			
-			cr.set_operator (Operator.SOURCE);
-			cr.set_source_surface (background_buffer.Internal, 0, 0);
-			cr.paint ();
+			if (is_composited ()) {
+				cr.save ();
+				cr.set_source_rgba (0, 0, 0, 0);
+				cr.set_operator (Cairo.Operator.SOURCE);
+				cr.paint ();
+				cr.restore ();
+				
+#if VALA_0_24
+				shape_combine_region (null);
+#else
+				gtk_widget_shape_combine_region (this, null);
+#endif
+				
+				context.render_background (cr, 0, 0, width, height);
+				context.render_frame (cr, 0, 0, width, height);  
+			} else {
+				var surface = get_window ().create_similar_surface (Cairo.Content.COLOR_ALPHA, width, height);
+				var compat_cr = new Cairo.Context (surface);
+				
+				context.render_background (compat_cr, 0, 0, width, height);
+				context.render_frame (compat_cr, 0, 0, width, height);  
+				
+				var region = Gdk.cairo_region_create_from_surface (surface);
+				shape_combine_region (region);
+			}
 			
-			return true;
+			return base.draw (cr);
 		}
 	}
 }
