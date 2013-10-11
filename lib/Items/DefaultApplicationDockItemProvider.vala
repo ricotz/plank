@@ -194,7 +194,7 @@ namespace Plank.Items
 		void app_closed (DockItem remove)
 		{
 			if (remove is TransientDockItem
-				&& !(remove.ProgressVisible || remove.CountVisible))
+				&& !(((TransientDockItem) remove).has_unity_info ()))
 				remove_item (remove);
 		}
 		

@@ -696,6 +696,18 @@ namespace Plank.Items
 		}
 		
 		/**
+		 * Whether this item provides information worth showing
+		 */
+		public bool has_unity_info ()
+		{
+#if HAVE_DBUSMENU
+			return (ProgressVisible || CountVisible || Quicklist != null);
+#else
+			return (ProgressVisible || CountVisible);
+#endif
+		}
+		
+		/**
 		 * Update this item's remote libunity value based on the given data
 		 *
 		 * @param sender_name the corressponding dbusname

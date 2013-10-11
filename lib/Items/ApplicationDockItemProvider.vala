@@ -484,7 +484,7 @@ namespace Plank.Items
 				// because of the presence of this LauncherEntry interface
 				unowned TransientDockItem? transient_item = current_item as TransientDockItem;
 				if (transient_item != null && transient_item.App == null
-					&& !(transient_item.ProgressVisible || transient_item.CountVisible))
+					&& !(transient_item.has_unity_info ()))
 					remove_item (transient_item);
 				else
 					item_state_changed ();
@@ -496,7 +496,8 @@ namespace Plank.Items
 					current_item.unity_update (sender_name, prop_iter);
 					
 					// Only add item if there is actually a visible progress-bar or badge
-					if (current_item.ProgressVisible || current_item.CountVisible)
+					// or the backing application provides a quicklist-dbusmenu
+					if (current_item.has_unity_info ())
 						add_item (current_item);
 				}
 				
