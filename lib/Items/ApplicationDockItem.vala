@@ -700,11 +700,7 @@ namespace Plank.Items
 		 */
 		public bool has_unity_info ()
 		{
-#if HAVE_DBUSMENU
-			return (ProgressVisible || CountVisible || Quicklist != null);
-#else
 			return (ProgressVisible || CountVisible);
-#endif
 		}
 		
 		/**
