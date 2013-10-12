@@ -144,7 +144,7 @@ namespace Plank.Services
 					dir.make_directory_with_parents ();
 					return true;
 				} catch (Error e) {
-					error ("Could not access or create the directory '%s'. (%s)", dir.get_path () ?? "", e.message);
+					critical ("Could not access or create the directory '%s'. (%s)", dir.get_path () ?? "", e.message);
 				}
 			
 			return false;

@@ -94,7 +94,7 @@ namespace Plank.Items
 					dir_monitor = OwnedFile.monitor (0);
 					dir_monitor.changed.connect (handle_dir_changed);
 				} catch {
-					error ("Unable to watch the stack directory '%s'.", OwnedFile.get_path () ?? "");
+					critical ("Unable to watch the stack directory '%s'.", OwnedFile.get_path () ?? "");
 				}
 			}
 		}

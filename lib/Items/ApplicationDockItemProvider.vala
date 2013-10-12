@@ -262,7 +262,7 @@ namespace Plank.Items
 						result.add (item);
 					}
 			} catch (Error e) {
-				error ("Error loading dock items. (%s)", e.message);
+				critical ("Error loading dock items from '%s'. (%s)", LaunchersDir.get_path () ?? "", e.message);
 			}
 			
 			return result;
