@@ -236,7 +236,7 @@ namespace Plank.Items
 		public int LastPosition { get; protected set; default = -1; }
 		
 		/**
-		 * Wether the item is currently visible on the dock.
+		 * Whether the item is currently visible on the dock.
 		 */
 		public bool IsVisible { get; set; default = true; }
 		
