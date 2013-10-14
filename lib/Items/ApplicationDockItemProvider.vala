@@ -146,7 +146,7 @@ namespace Plank.Items
 			
 			if (connection != null) {
 				try {
-					connection.flush ();
+					connection.flush_sync ();
 					connection.close_sync ();
 				} catch (Error e) {
 					warning (e.message);

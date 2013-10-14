@@ -91,7 +91,7 @@ namespace Plank.Services
 				try {
 					AppInfo.launch_default_for_uri (f.get_uri (), null);
 				} catch {
-					f.mount_enclosing_volume (0, null);
+					f.mount_enclosing_volume.begin (0, null);
 					mounted_files.append (f);
 				}
 			}
