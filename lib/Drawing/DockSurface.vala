@@ -102,11 +102,9 @@ namespace Plank.Drawing
 		public void clear ()
 		{
 			Context.save ();
-			
 			Context.set_source_rgba (0, 0, 0, 0);
 			Context.set_operator (Operator.SOURCE);
 			Context.paint ();
-			
 			Context.restore ();
 		}
 		
@@ -333,10 +331,11 @@ namespace Plank.Drawing
 			
 			original.mark_dirty ();
 			
+			Context.save ();
 			Context.set_operator (Operator.SOURCE);
 			Context.set_source_surface (original, 0, 0);
 			Context.paint ();
-			Context.set_operator (Operator.OVER);
+			Context.restore ();
 		}
 		
 		const int AlphaPrecision = 16;
@@ -384,10 +383,11 @@ namespace Plank.Drawing
 			
 			original.mark_dirty ();
 			
+			Context.save ();
 			Context.set_operator (Operator.SOURCE);
 			Context.set_source_surface (original, 0, 0);
 			Context.paint ();
-			Context.set_operator (Operator.OVER);
+			Context.restore ();
 		}
 		
 		void exponential_blur_columns (uint8* pixels, int width, int height, int startCol, int endCol, int startY, int endY, int alpha)
@@ -525,10 +525,11 @@ namespace Plank.Drawing
 			
 			original.mark_dirty ();
 			
+			Context.save ();
 			Context.set_operator (Operator.SOURCE);
 			Context.set_source_surface (original, 0, 0);
 			Context.paint ();
-			Context.set_operator (Operator.OVER);
+			Context.restore ();
 		}
 
 		void gaussian_blur_horizontal (double* src, double* dest, double* kernel, int gaussWidth, int width, int height, int startRow, int endRow, int[,] shift)
