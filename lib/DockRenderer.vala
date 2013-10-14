@@ -258,9 +258,9 @@ namespace Plank
 			if (no_full_draw_needed && hide_progress == 1.0 && opacity == 1.0) {
 				// we still need to clear out the previous output
 				cr.save ();
-				cr.set_operator (Cairo.Operator.CLEAR);
-				cr.rectangle (0, 0, width, height);
-				cr.fill ();
+				cr.set_source_rgba (0, 0, 0, 0);
+				cr.set_operator (Cairo.Operator.SOURCE);
+				cr.paint ();
 				cr.restore ();
 				
 				foreach (var item in items)
