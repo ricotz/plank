@@ -58,7 +58,7 @@ namespace Plank.Items
 		{
 			Prefs.notify["Launcher"].connect (handle_launcher_changed);
 			
-			if (!ValidItem)
+			if (!is_valid ())
 				return;
 			
 			OwnedFile = File.new_for_uri (Prefs.Launcher);

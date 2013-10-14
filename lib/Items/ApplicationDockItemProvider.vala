@@ -254,7 +254,7 @@ namespace Plank.Items
 						var file = LaunchersDir.get_child (info.get_name ());
 						var item = Factory.item_factory.make_item (file);
 						
-						if (!item.ValidItem) {
+						if (!item.is_valid ()) {
 							warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());
 							continue;
 						}
@@ -317,7 +317,7 @@ namespace Plank.Items
 				
 				Logger.verbose ("ApplicationDockItemProvider.process_queued_files ('%s')", basename);
 				var item = Factory.item_factory.make_item (file);
-				if (item.ValidItem)
+				if (item.is_valid ())
 					add_item (item);
 				else
 					warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());

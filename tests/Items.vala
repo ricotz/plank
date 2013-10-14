@@ -49,7 +49,7 @@ namespace Plank.Tests
 		item.ProgressVisible = true;
 		item.Position = 1;
 		
-		assert (item.ValidItem == true);
+		assert (item.is_valid () == true);
 		assert (item.Text == "Plank");
 		assert (item.Icon == TEST_ICON);
 		assert (item.Count == 42);
@@ -110,7 +110,7 @@ namespace Plank.Tests
 		string icon, text;
 		ApplicationDockItem.parse_launcher (file.get_uri (), out icon, out text, null, null);
 		
-		assert (item.ValidItem == true);
+		assert (item.is_valid () == true);
 		assert (item.Icon != null && item.Icon != "");
 		assert (item.Text != null && item.Text != "");
 		assert (item.Icon == icon);
@@ -128,7 +128,7 @@ namespace Plank.Tests
 		string icon, text;
 		ApplicationDockItem.parse_launcher (file.get_uri (), out icon, out text, null, null);
 		
-		assert (item.ValidItem == true);
+		assert (item.is_valid () == true);
 		assert (item.Icon != null && item.Icon != "");
 		assert (item.Text != null && item.Text != "");
 		assert (item.Icon == icon);

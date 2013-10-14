@@ -296,13 +296,6 @@ namespace Plank.Items
 		public DateTime LastMove { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
 		/**
-		 * Whether or not this item is valid for the .dockitem given.
-		 */
-		public virtual bool ValidItem {
-			get { return File.new_for_uri (Prefs.Launcher).query_exists (); }
-		}
-		
-		/**
 		 * The average color of this item's icon.
 		 */
 		public Drawing.Color AverageIconColor { get; protected set; default = Drawing.Color () { R = 0.0, G = 0.0, B = 0.0, A = 0.0 }; }
@@ -597,6 +590,16 @@ namespace Plank.Items
 		public virtual bool accept_drop (ArrayList<string> uris)
 		{
 			return false;
+		}
+		
+		/**
+		 * Check the validity of this item.
+		 *
+		 * @return Whether or not this item is valid for the .dockitem given
+		 */
+		public virtual bool is_valid ()
+		{
+			return File.new_for_uri (Prefs.Launcher).query_exists ();
 		}
 		
 		/**

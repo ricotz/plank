@@ -137,7 +137,7 @@ namespace Plank.Items
 		{
 			Prefs.notify["Launcher"].connect (handle_launcher_changed);
 			
-			if (!ValidItem)
+			if (!is_valid ())
 				return;
 			
 			load_from_launcher ();
