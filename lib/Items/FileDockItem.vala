@@ -255,7 +255,7 @@ namespace Plank.Items
 				var uri = file.get_uri ();
 				if (uri.has_suffix (".desktop")) {
 					ApplicationDockItem.parse_launcher (uri, out icon, out text);
-					item = create_menu_item (text, icon);
+					item = create_menu_item (text, icon, true);
 					item.activate.connect (() => {
 						Services.System.launch (file);
 						ClickedAnimation = ClickAnimation.BOUNCE;
