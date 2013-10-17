@@ -33,7 +33,7 @@ namespace Plank.Items
 	 */
 	public class FileDockItem : DockItem
 	{
-		const string DEFAULT_ICON = "inode-directory;;gnome-mime-inode-directory;;inode-x-generic;;folder";
+		const string DEFAULT_ICON = "inode-directory";
 		
 		File OwnedFile { get; set; }
 		FileMonitor? dir_monitor;
@@ -118,7 +118,7 @@ namespace Plank.Items
 		 */
 		protected override void draw_icon (DockSurface surface)
 		{
-			if (Icon != DEFAULT_ICON) {
+			if (!Icon.has_prefix (DEFAULT_ICON)) {
 				base.draw_icon (surface);
 				return;
 			}
