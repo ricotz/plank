@@ -2,6 +2,27 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.4.0 "Jonny 2x4" (2013-10-18)
+===============================================================================
+ * Add developer documentation to HACKING and some information to README
+ * Add LockItems setting (LP: #1182077)
+ * Add dodge-maximized hide-mode
+ * Use Gdk.threads_add_timeout and Gdk.threads_add_idle
+ * Remove app-item if its application got uninstalled (LP: #1119860)
+ * Use "metadata::custom-icon-name" as icon-source
+ * Fix retrieving thumbnails for files
+ * Make DockController able to handle multiple Providers
+ * Force to show menu-icons for all file- and window entries
+ * Fix determining if the folder has a custom icon (LP: #1241158)
+ * Mimic a Gtk.Tooltip drawn based on gtk-css-theme (LP: #1082968)
+ * Don't draw the complete dock if it isn't visible at all
+ * Properly respect the given FadeTime
+ * Decrease icon bounce-height depending on animation-progress (LP: #1094275)
+ * Use Operator.OVER for drawing the icon shadows (LP: #1213418)
+ * Explictly set struts if the HideMode was changed (LP: #1130009)
+ * Update HoveredItem on button-pressed if needed (LP: #1213787)
+ * Update input-mask after calling draw_dock (LP: #1204856)
+
 0.3.0 "Basement Treasure" (2013-06-25)
 ===============================================================================
  * Initial Release
