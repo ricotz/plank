@@ -465,7 +465,7 @@ namespace Plank
 				var move_animation_progress = move_time / (double) (theme.ItemMoveTime * 1000);
 				if (move_animation_progress < 1.0) {
 					var change = (1.0 - move_animation_progress) * (icon_size + position_manager.ItemPadding);
-					draw_value = draw_value.move_right (controller.prefs.Position, (item.Position > item.LastPosition ? change : -change));
+					draw_value = draw_value.move_right (controller.prefs.Position, (item.Position < item.LastPosition ? change : -change));
 				} else {
 					item.unset_move_state ();
 				}
