@@ -165,8 +165,9 @@ namespace Plank
 			dock_rect.y += win_y;
 			
 			// use the dock rect and cursor location to determine if dock is hovered
-			var hovered = (x >= dock_rect.x && x <= dock_rect.x + dock_rect.width
-				&& y >= dock_rect.y && y <= dock_rect.y + dock_rect.height);
+			var hovered = (x >= dock_rect.x && x < dock_rect.x + dock_rect.width
+				&& y >= dock_rect.y && y < dock_rect.y + dock_rect.height);
+			
 			if (DockHovered != hovered)
 				DockHovered = hovered;
 			

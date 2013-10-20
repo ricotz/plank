@@ -312,20 +312,20 @@ namespace Plank.Widgets
 			}
 			
 			var cursor_rect = position_manager.get_cursor_region ();
-			if (y < cursor_rect.y && y > cursor_rect.y + cursor_rect.height
-				&& x < cursor_rect.x && x > cursor_rect.x + cursor_rect.width) {
+			if (y < cursor_rect.y && y >= cursor_rect.y + cursor_rect.height
+				&& x < cursor_rect.x && x >= cursor_rect.x + cursor_rect.width) {
 				set_hovered (null);
 				return false;
 			}
 			
 			foreach (var provider in controller.Providers) {
 				rect = position_manager.provider_hover_region (provider);
-				if (y <= rect.y || y >= rect.y + rect.height || x <= rect.x || x >= rect.x + rect.width)
+				if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width)
 					continue;
 				
 				foreach (var item in provider.Items) {
 					rect = position_manager.item_hover_region (item);
-					if (y <= rect.y || y >= rect.y + rect.height || x <= rect.x || x >= rect.x + rect.width)
+					if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width)
 						continue;
 				
 					set_hovered (item);
