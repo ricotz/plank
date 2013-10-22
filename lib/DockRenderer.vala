@@ -134,6 +134,8 @@ namespace Plank
 		
 		void theme_changed ()
 		{
+			reset_buffers ();
+			reset_item_buffers ();
 			reset_position_manager ();
 		}
 		
