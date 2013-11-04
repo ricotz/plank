@@ -276,17 +276,19 @@ namespace Plank
 		void drag_end (Widget w, DragContext context)
 		{
 			if (!drag_canceled && DragItem != null) {
-				if (!controller.hide_manager.DockHovered) {
+				unowned HideManager hide_manager = controller.hide_manager;
+				hide_manager.update_dock_hovered ();
+				if (!hide_manager.DockHovered) {
 					if (DragItem.can_be_removed ()) {
 						// Remove from dock
 						unowned ApplicationDockItem? app_item = (DragItem as ApplicationDockItem);
 						if (app_item == null || !(app_item.is_running ()))
-							app_item.Provider.remove_item (DragItem);
+							DragItem.Provider.remove_item (DragItem);
 						DragItem.delete ();
 						
 						int x, y;
 						context.get_device ().get_position (null, out x, out y);
-						new PoofWindow (x, y).run ();
+						PoofWindow.get_default ().show_at (x, y);
 					}
 				} else {
 					// Dropped somewhere on dock

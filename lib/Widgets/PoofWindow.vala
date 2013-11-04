@@ -32,25 +32,29 @@ namespace Plank.Widgets
 		const int POOF_FRAMES = 5;
 		const double RUN_LENGTH = 300 * 1000;
 		
+		static PoofWindow? instance = null;
+		
+		public static unowned PoofWindow get_default ()
+		{
+			if (instance == null)
+				instance = new PoofWindow ();
+			
+			return instance;
+		}
+		
 		Gdk.Pixbuf poof_image;
 		
-		DateTime start_time;
+		DateTime start_time = new DateTime.from_unix_utc (0);
+		DateTime frame_time = new DateTime.from_unix_utc (0);
 		
 		uint animation_timer = 0;
 		
-		public int x { private get; construct; }
-
-		public int y { private get; construct; }
-		
 		/**
 		 * Creates a new poof window at the screen-relative coordinates specified.
-		 *
-		 * @param x the x position of the poof window
-		 * @param y the y position of the poof window
 		 */
-		public PoofWindow (int x, int y)
+		public PoofWindow ()
 		{
-			GLib.Object (x: x, y: y, type: Gtk.WindowType.TOPLEVEL, type_hint: WindowTypeHint.DOCK);
+			GLib.Object (type: Gtk.WindowType.TOPLEVEL, type_hint: WindowTypeHint.DOCK);
 		}
 		
 		construct
@@ -71,18 +75,37 @@ namespace Plank.Widgets
 			}
 			
 			set_size_request (POOF_SIZE, POOF_SIZE);
-			move (x - (POOF_SIZE / 2), y - (POOF_SIZE / 2));
 		}
 		
-		public void run ()
+		~PoofWindow ()
 		{
-			if (animation_timer != 0) {
+			if (animation_timer > 0) {
 				GLib.Source.remove (animation_timer);
-				hide ();
+				animation_timer = 0;
 			}
+		}
+		
+		/**
+		 * Show the animated poof-window at the given coordinates
+		 *
+		 * @param x the x position of the poof window
+		 * @param y the y position of the poof window
+		 */
+		public void show_at (int x, int y)
+		{
+			if (animation_timer > 0)
+				GLib.Source.remove (animation_timer);
 			
+			start_time = new DateTime.now_utc ();
+			frame_time = new DateTime.now_utc ();
+			
+			show ();
+			move (x - (POOF_SIZE / 2), y - (POOF_SIZE / 2));
+
 			animation_timer = Gdk.threads_add_timeout (30, () => {
-				if (get_animation_state () < 0) {
+				frame_time = new DateTime.now_utc ();
+				
+				if (frame_time.difference (start_time) <= RUN_LENGTH) {
 					queue_draw ();
 					return true;
 				}
@@ -91,32 +114,12 @@ namespace Plank.Widgets
 				hide ();
 				return false;
 			});
-			
-			start_time = new DateTime.now_utc ();
-			show_all ();
-		}
-		
-		~PoofWindow ()
-		{
-			if (animation_timer != 0) {
-				GLib.Source.remove (animation_timer);
-				animation_timer = 0;
-			}
-		}
-		
-		double get_animation_state ()
-		{
-			return double.max (0, double.min (1, (double) new DateTime.now_utc ().difference (start_time) / RUN_LENGTH));
 		}
 		
 		public override bool draw (Cairo.Context cr)
 		{
 			cr.set_operator (Operator.SOURCE);
-			cr.set_source_rgba (0, 0, 0, 0);
-			cr.paint ();
-			
-			cr.set_operator (Operator.OVER);
-			cairo_set_source_pixbuf (cr, poof_image, 0, -POOF_SIZE * (int) (POOF_FRAMES * get_animation_state ()));
+			cairo_set_source_pixbuf (cr, poof_image, 0, -POOF_SIZE * (int) (POOF_FRAMES * frame_time.difference (start_time) / RUN_LENGTH));
 			cr.paint ();
 			
 			return true;

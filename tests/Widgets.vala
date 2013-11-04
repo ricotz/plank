@@ -68,12 +68,12 @@ namespace Plank.Tests
 	{
 		PoofWindow window;
 		
-		window = new PoofWindow (100, 100);
-		window.run ();
+		window = new PoofWindow ();
+		window.show_at (100, 100);
 		
 		wait (X_WAIT_MS);
 		
-		window.run ();
+		window.show_at (200, 200);
 		
 		wait (X_WAIT_MS);
 	}
