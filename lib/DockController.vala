@@ -110,9 +110,9 @@ namespace Plank
 				add_default_provider ();
 			
 			position_manager.initialize ();
-			renderer.initialize ();
 			drag_manager.initialize ();
 			hide_manager.initialize ();
+			renderer.initialize ();
 			
 			window.show_all ();
 		}
