@@ -64,6 +64,7 @@ valadoc_flags_plank = \
 	--package-name $(PACKAGE_NAME) \
 	--package-version $(PACKAGE_VERSION) \
 	$(PLANK_DOCS_VALAFLAGS) \
+	--driver "`$(VALAC) --version`" \
 	--pkg plank-internal \
 	--pkg compat \
 	--vapidir=$(top_builddir)/lib \
