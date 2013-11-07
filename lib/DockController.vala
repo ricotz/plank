@@ -28,6 +28,8 @@ namespace Plank
 	
 	/**
 	 * A controller class for managing a single dock.
+	 *
+	 * All needed controlling parts will be created and initialized.
 	 */
 	public class DockController : GLib.Object
 	{
@@ -126,6 +128,10 @@ namespace Plank
 				provider.reset_item_buffers ();
 		}
 		
+		/**
+		 * Add the default provider which is an instance of
+		 * {@link Plank.Items.DefaultApplicationDockItemProvider} 
+		 */
 		public void add_default_provider ()
 		{
 			if (default_provider == null) {
@@ -134,6 +140,11 @@ namespace Plank
 			}
 		}
 		
+		/**
+		 * Add the given provider to this dock.
+		 *
+		 * @param provider the dock-provider to add
+		 */
 		public void add_provider (DockItemProvider provider)
 		{
 			if (item_providers.contains (provider)) {
@@ -147,6 +158,11 @@ namespace Plank
 			connect_provider (provider);
 		}
 		
+		/**
+		 * Remove the given provider from this dock.
+		 *
+		 * @param provider the dock-provider to remove
+		 */
 		public void remove_provider (DockItemProvider provider)
 		{
 			if (!item_providers.contains (provider)) {

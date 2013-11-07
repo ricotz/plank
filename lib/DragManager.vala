@@ -84,11 +84,20 @@ namespace Plank
 			}
 		}
 		
+		/**
+		 * Creates a new instance of a DragManager, which handles
+		 * drag'n'drop interactions of a dock.
+		 *
+		 * @param controller the {@link DockController} to manage drag'n'drop for
+		 */
 		public DragManager (DockController controller)
 		{
 			GLib.Object (controller : controller);
 		}
 		
+		/**
+		 * Initializes the drag-manager.  Call after the DockWindow is constructed.
+		 */
 		public void initialize ()
 			requires (controller.window != null)
 		{
@@ -162,6 +171,11 @@ namespace Plank
 			}
 		}
 		
+		/**
+		 * Whether the current dragged-data is accepted by the given dock-item
+		 *
+		 * @param item the dock-item
+		 */
 		public bool drop_is_accepted_by (DockItem item)
 		{
 			if (drag_data == null)

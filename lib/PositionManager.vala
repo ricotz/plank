@@ -177,9 +177,14 @@ namespace Plank
 		 */
 		public int win_y { get; protected set; }
 		
-		
+		/**
+		 * Theme-based line-width.
+		 */
 		public int LineWidth { get; private set; }
 		
+		/**
+		 * Cached current icon size for the dock.
+		 */
 		public int IconSize { get; private set; }
 		
 		/**
@@ -210,7 +215,9 @@ namespace Plank
 		 * Theme-based item padding, scaled by icon size.
 		 */
 		public int ItemPadding   { get; private set; }
-		
+		/**
+		 * Theme-based urgent-bounce height, scaled by icon size.
+		 */
 		public int UrgentBounceHeight { get; private set; }
 		
 		int items_width;

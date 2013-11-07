@@ -47,7 +47,7 @@ namespace Plank
 	}
 	
 	/**
-	 * Class to handle checking if a dock should hide or not.
+	 * Handles checking if a dock should hide or not.
 	 */
 	public class HideManager : GLib.Object
 	{
