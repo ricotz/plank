@@ -1,24 +1,16 @@
-EXTRA_DIST =
+NULL =
 
 defaultthemedir = $(pkgdatadir)/themes/Default
-defaulttheme_DATA = \
+dist_defaulttheme_DATA = \
 	Default/dock.theme \
 	$(NULL)
 
-EXTRA_DIST += $(defaulttheme_DATA)
-
-
 mattethemedir = $(pkgdatadir)/themes/Matte
-mattetheme_DATA = \
+dist_mattetheme_DATA = \
 	Matte/dock.theme \
 	$(NULL)
 
-EXTRA_DIST += $(mattetheme_DATA)
-
-
 transparentthemedir = $(pkgdatadir)/themes/Transparent
-transparenttheme_DATA = \
+dist_transparenttheme_DATA = \
 	Transparent/dock.theme \
 	$(NULL)
-
-EXTRA_DIST += $(transparenttheme_DATA)

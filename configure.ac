@@ -285,7 +285,6 @@ data/themes/Makefile
 lib/Makefile
 lib/plank.deps
 lib/plank.pc
-man/Makefile
 src/Makefile
 docs/Makefile
 po/Makefile.in

@@ -1,9 +1,5 @@
-EXTRA_DIST =
-
 hookdir = $(datadir)/apport/package-hooks
-hook_DATA = source_plank.py
-EXTRA_DIST += $(hook_DATA)
+dist_hook_DATA = source_plank.py
 
 crashdbdir = $(sysconfdir)/apport/crashdb.conf.d
-crashdb_DATA = plank-crashdb.conf
-EXTRA_DIST += $(crashdb_DATA)
+dist_crashdb_DATA = plank-crashdb.conf

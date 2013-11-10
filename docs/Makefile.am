@@ -1,3 +1,5 @@
+include $(top_srcdir)/Makefile.common
+
 BUILT_SOURCES = \
 	plank_c_doc.stamp \
 	plank_vala_doc.stamp \

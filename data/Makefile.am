@@ -1,9 +1,23 @@
-SUBDIRS = apport icons themes
+NULL =
 
-EXTRA_DIST = plank.desktop.in \
-	poof.png
+SUBDIRS = \
+	apport \
+	icons \
+	themes \
+	$(NULL)
 
-CLEANFILES = plank.desktop
+EXTRA_DIST = \
+	plank.desktop.in \
+	poof.png \
+	$(NULL)
+
+CLEANFILES = \
+	plank.desktop \
+	$(NULL)
+
+dist_man_MANS = \
+	plank.1 \
+	$(NULL)
 
 applicationsdir = $(datadir)/applications
 applications_DATA = plank.desktop
