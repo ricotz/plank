@@ -301,14 +301,21 @@ namespace Plank.Widgets
 		public bool update_hovered (int x, int y)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
+			unowned DockItem? drag_item = controller.drag_manager.DragItem;
 			Gdk.Rectangle rect;
 			
 			// check if there already was a hovered-item and if it is still hovered to speed up things
 			if (HoveredItem != null) {
 				rect = position_manager.item_hover_region (HoveredItem);
 				if (y >= rect.y && y < rect.y + rect.height && x >= rect.x && x < rect.x + rect.width)
-					// nothing changed
-					return true;
+					// Do not allow the hovered-item to be the drag-item
+					if (drag_item == HoveredItem) {
+						set_hovered (null);
+						return false;
+					} else {
+						// nothing changed
+						return true;
+					}
 			}
 			
 			var cursor_rect = position_manager.get_cursor_region ();
@@ -327,6 +334,10 @@ namespace Plank.Widgets
 					rect = position_manager.item_hover_region (item);
 					if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width)
 						continue;
+					
+					// Do not allow the hovered-item to be the drag-item
+					if (drag_item == item)
+						break;
 				
 					set_hovered (item);
 					return true;
