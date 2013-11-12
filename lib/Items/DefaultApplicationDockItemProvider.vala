@@ -250,7 +250,7 @@ namespace Plank.Items
 			}
 		}
 		
-		void pin_item (DockItem item)
+		public void pin_item (DockItem item)
 		{
 			Logger.verbose ("DefaultDockItemProvider.pin_item ('%s[%s]')", item.Text, item.DockItemFilename);
 
@@ -270,6 +270,7 @@ namespace Plank.Items
 				item.copy_values_to (new_item);
 				
 				replace_item (new_item, item);
+				serialize_item_positions ();
 			} else {
 				item.delete ();
 			}

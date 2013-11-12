@@ -304,8 +304,17 @@ namespace Plank
 						context.get_device ().get_position (null, out x, out y);
 						PoofWindow.get_default ().show_at (x, y);
 					}
-				} else {
+				} else if (controller.window.HoveredItem == null) {
 					// Dropped somewhere on dock
+					// Pin this item if possible/needed, so we assume the user cares
+					// about this application when changing its position
+					if (DragItem is TransientDockItem) {
+						unowned DefaultApplicationDockItemProvider? provider = (DragItem.Provider as DefaultApplicationDockItemProvider);
+						if (provider != null)
+							provider.pin_item (DragItem);
+					}
+				} else {
+					// Dropped onto another dockitem
 					/* TODO
 					DockItem item = controller.window.HoveredItem;
 					if (item != null && item.CanAcceptDrop (DragItem))
