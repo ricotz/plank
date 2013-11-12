@@ -48,7 +48,7 @@ namespace Plank.Widgets
 		/**
 		 * The item which "received" the button-pressed signal (if any).
 		 */
-		unowned DockItem? ClickedItem { get; set; }
+		unowned DockItem? ClickedItem { get; protected set; }
 		
 		/**
 		 * The popup menu for this dock.
