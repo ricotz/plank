@@ -16,7 +16,6 @@
 //
 
 using Gtk;
-using Posix;
 
 using Plank.Items;
 
@@ -164,7 +163,7 @@ namespace Plank.Factories
 		protected virtual void initialize_program ()
 		{
 			// set program name
-			Linux.prctl (15, exec_name);
+			prctl (15, exec_name);
 			Environment.set_prgname (exec_name);
 			
 			Posix.signal(Posix.SIGINT, sig_handler);

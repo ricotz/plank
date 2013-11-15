@@ -25,6 +25,8 @@ namespace Plank
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_widget_shape_combine_region")]
 	public void gtk_widget_shape_combine_region (Gtk.Widget widget, Cairo.Region? region);
 #endif
+	[CCode (cheader_filename = "sys/prctl.h", cname = "prctl", sentinel = "")]
+	public int prctl (int option, ...);
 }
 
 [CCode (cheader_filename = "glib.h")]
@@ -41,11 +43,4 @@ namespace GLib
 		public const uint micro;
 	}
 #endif
-}
-
-[CCode (cprefix = "", lower_case_cprefix = "")]
-namespace Linux
-{
-	[CCode (cheader_filename = "sys/prctl.h", sentinel = "")]
-	public int prctl (int option, ...);
 }
