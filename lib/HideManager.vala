@@ -102,40 +102,46 @@ namespace Plank
 		public void initialize ()
 			requires (controller.window != null)
 		{
-			controller.window.enter_notify_event.connect (enter_notify_event);
-			controller.window.leave_notify_event.connect (leave_notify_event);
-			controller.window.motion_notify_event.connect (motion_notify_event);
+			unowned DockWindow window = controller.window;
+			unowned DragManager drag_manager = controller.drag_manager;
+			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
 			
-			controller.drag_manager.notify["ExternalDragActive"].connect (update_dock_hovered);
-			controller.drag_manager.notify["InternalDragActive"].connect (update_dock_hovered);
+			window.enter_notify_event.connect (enter_notify_event);
+			window.leave_notify_event.connect (leave_notify_event);
+			window.motion_notify_event.connect (motion_notify_event);
 			
-			Matcher.get_default ().window_opened.connect (schedule_update);
-			Matcher.get_default ().window_closed.connect (schedule_update);
+			drag_manager.notify["ExternalDragActive"].connect (update_dock_hovered);
+			drag_manager.notify["InternalDragActive"].connect (update_dock_hovered);
 			
-			Wnck.Screen.get_default ().active_window_changed.connect (handle_window_changed);
-			Wnck.Screen.get_default ().active_workspace_changed.connect (handle_workspace_changed);
+			wnck_screen.window_opened.connect (schedule_update);
+			wnck_screen.window_closed.connect (schedule_update);
+			wnck_screen.active_window_changed.connect (handle_window_changed);
+			wnck_screen.active_workspace_changed.connect (handle_workspace_changed);
 			
 			setup_active_window ();
 		}
 		
 		~HideManager ()
 		{
+			unowned DockWindow window = controller.window;
+			unowned DragManager drag_manager = controller.drag_manager;
+			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
+			
 			notify["Disabled"].disconnect (update_hidden);
 			notify["DockHovered"].disconnect (update_hidden);
 			controller.prefs.notify["HideMode"].disconnect (prefs_changed);
 			
-			controller.window.enter_notify_event.disconnect (enter_notify_event);
-			controller.window.leave_notify_event.disconnect (leave_notify_event);
-			controller.window.motion_notify_event.disconnect (motion_notify_event);
+			window.enter_notify_event.disconnect (enter_notify_event);
+			window.leave_notify_event.disconnect (leave_notify_event);
+			window.motion_notify_event.disconnect (motion_notify_event);
 			
-			controller.drag_manager.notify["ExternalDragActive"].disconnect (update_dock_hovered);
-			controller.drag_manager.notify["InternalDragActive"].disconnect (update_dock_hovered);
+			drag_manager.notify["ExternalDragActive"].disconnect (update_dock_hovered);
+			drag_manager.notify["InternalDragActive"].disconnect (update_dock_hovered);
 			
-			Matcher.get_default ().window_opened.disconnect (schedule_update);
-			Matcher.get_default ().window_closed.disconnect (schedule_update);
-			
-			Wnck.Screen.get_default ().active_window_changed.disconnect (handle_window_changed);
-			Wnck.Screen.get_default ().active_workspace_changed.disconnect (handle_workspace_changed);
+			wnck_screen.window_opened.disconnect (schedule_update);
+			wnck_screen.window_closed.disconnect (schedule_update);
+			wnck_screen.active_window_changed.disconnect (handle_window_changed);
+			wnck_screen.active_workspace_changed.disconnect (handle_workspace_changed);
 			
 			stop_timers ();
 		}
