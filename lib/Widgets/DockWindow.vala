@@ -261,8 +261,10 @@ namespace Plank.Widgets
 			HoveredItem = item;
 			
 			// if HoveredItem changed always stop scheduled popup and hide the tooltip
-			if (hover_reposition_timer > 0)
+			if (hover_reposition_timer > 0) {
 				Source.remove (hover_reposition_timer);
+				hover_reposition_timer = 0;
+			}
 			controller.hover.hide ();
 			
 			if (HoveredItem == null || controller.drag_manager.InternalDragActive) {
