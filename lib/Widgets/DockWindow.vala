@@ -87,7 +87,6 @@ namespace Plank.Widgets
 						EventMask.POINTER_MOTION_MASK |
 						EventMask.SCROLL_MASK);
 			
-			controller.drag_manager.notify["DragItem"].connect (drag_item_changed);
 			controller.prefs.notify["HideMode"].connect (set_struts);
 		}
 		
@@ -98,7 +97,6 @@ namespace Plank.Widgets
 				menu.hide.disconnect (on_menu_hide);
 			}
 			
-			controller.drag_manager.notify["DragItem"].disconnect (drag_item_changed);
 			controller.prefs.notify["HideMode"].disconnect (set_struts);
 			
 			if (hover_reposition_timer > 0) {
@@ -348,15 +346,6 @@ namespace Plank.Widgets
 			
 			set_hovered (null);
 			return false;
-		}
-		
-		/**
-		 * Called when a dragged item changes.
-		 */
-		protected void drag_item_changed ()
-		{
-			if (controller.drag_manager.DragItem != null)
-				set_hovered (null);
 		}
 		
 		/**
