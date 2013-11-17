@@ -2,6 +2,17 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.5.0 "Jimmy" (2013-11-17)
+===============================================================================
+ * Pin applications which were dragged on the dock (LP: #1227636)
+ * Intialize DockRenderer as last (LP: #1168414)
+ * Fix showing and handling of PoofWindow (LP: #1185557)
+ * Use correct hide-duration to adjust last-hide moment (LP: #1244451)
+ * Reset drawing buffers on theme changes
+ * Fix intersection-checking of point with rectangle (LP: #1242176)
+ * Fix item-move-animation for right/top docks
+ * Further minor clean ups and fixes
+
 0.4.0 "Jonny 2x4" (2013-10-18)
 ===============================================================================
  * Add developer documentation to HACKING and some information to README

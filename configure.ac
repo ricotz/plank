@@ -1,8 +1,8 @@
 # If not 1, append revision to the version number and enable other development stuff
-m4_define([plank_released], [0])
+m4_define([plank_released], [1])
 
 m4_define([plank_major_version], [0])
-m4_define([plank_minor_version], [4])
+m4_define([plank_minor_version], [5])
 m4_define([plank_micro_version], [0])
 m4_define([plank_nano_version], [0])
 
