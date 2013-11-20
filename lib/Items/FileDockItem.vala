@@ -184,7 +184,9 @@ namespace Plank.Items
 					break;
 				
 				var pbuf = DrawingService.load_icon (icons.get (s), icon_width, icon_height);
-				cairo_set_source_pixbuf (cr, pbuf, x * (icon_width + offset) + offset, y * (icon_height + offset) + offset);
+				cairo_set_source_pixbuf (cr, pbuf,
+					x * (icon_width + offset) + offset + (icon_width - pbuf.width) / 2,
+					y * (icon_height + offset) + offset + (icon_height - pbuf.height) / 2);
 				cr.paint ();
 			}
 		}
