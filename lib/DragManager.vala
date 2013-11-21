@@ -184,6 +184,24 @@ namespace Plank
 			return item.can_accept_drop (drag_data);
 		}
 		
+		void set_drag_icon (DragContext context, DockItem? item, double opacity = 1.0)
+		{
+			var drag_icon_size = (int) (1.2 * controller.position_manager.IconSize);
+			var drag_surface = new DockSurface (drag_icon_size, drag_icon_size);
+			
+			if (item != null) {
+				// FIXME
+				var item_surface = item.get_surface_copy (drag_icon_size, drag_icon_size, drag_surface);
+				unowned Cairo.Context cr = drag_surface.Context;
+				cr.set_operator (Cairo.Operator.OVER);
+				cr.set_source_surface (item_surface.Internal, 0, 0);
+				cr.paint_with_alpha (opacity);
+			}
+			
+			drag_surface.Internal.set_device_offset (-drag_icon_size / 2.0, -drag_icon_size / 2.0);
+			drag_set_icon_surface (context, drag_surface.Internal);
+		}
+		
 		void drag_begin (Widget w, DragContext context)
 		{
 			unowned DockWindow window = controller.window;
@@ -202,7 +220,6 @@ namespace Plank
 				proxy_window = null;
 			}
 			
-			Pixbuf pbuf;
 			DragItem = window.HoveredItem;
 			
 			if (RepositionMode)
@@ -212,17 +229,9 @@ namespace Plank
 				unowned ApplicationDockItemProvider app_provider = (DragItem.Provider as ApplicationDockItemProvider);
 				if (app_provider != null)
 					app_provider.save_item_positions ();
-				
-				// FIXME
-				var drag_icon_size = (int) (1.2 * controller.position_manager.IconSize);
-				var icon_surface = new DockSurface (drag_icon_size, drag_icon_size);
-				pbuf = DragItem.get_surface_copy (drag_icon_size, drag_icon_size, icon_surface).to_pixbuf ();
-				controller.renderer.animated_draw ();
-			} else {
-				pbuf = new Pixbuf (Colorspace.RGB, true, 8, 1, 1);
 			}
 			
-			drag_set_icon_pixbuf (context, pbuf, pbuf.width / 2, pbuf.height / 2);
+			set_drag_icon (context, DragItem, 0.8);
 		}
 
 		void drag_data_received (Widget w, DragContext context, int x, int y, SelectionData selection_data, uint info, uint time_)
