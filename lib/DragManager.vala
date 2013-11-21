@@ -382,6 +382,9 @@ namespace Plank
 				unowned ApplicationDockItemProvider app_provider = (DragItem.Provider as ApplicationDockItemProvider);
 				if (app_provider != null)
 					app_provider.restore_item_positions ();
+				
+				controller.window.update_hovered (-1, -1);
+				controller.renderer.animated_draw ();
 			}
 		}
 		
