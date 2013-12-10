@@ -783,11 +783,11 @@ namespace Plank
 				y = win_y + rect.height + offset;
 				break;
 			case PositionType.LEFT:
-				y = win_y + rect.y + rect.width / 2;
+				y = win_y + rect.y + (rect.height - requisition.height) / 2;
 				x = win_x + rect.x + rect.width + offset;
 				break;
 			case PositionType.RIGHT:
-				y = win_y + rect.y + rect.width / 2;
+				y = win_y + rect.y + (rect.height - requisition.height) / 2;
 				x = win_x + rect.x - requisition.width - offset;
 				break;
 			}
