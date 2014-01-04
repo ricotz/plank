@@ -196,6 +196,10 @@ namespace Plank.Widgets
 			if (controller.drag_manager.InternalDragActive)
 				return true;
 			
+			// Ignore events for ScrollDirection.SMOOTH (since Gtk+ 3.4)
+			if (event.direction >= 4)
+				return true;
+			
 			if ((event.state & ModifierType.CONTROL_MASK) != 0) {
 				if (event.direction == ScrollDirection.UP)
 					controller.prefs.increase_icon_size ();
