@@ -348,6 +348,7 @@ namespace Plank.Services.Windows
 					urgent = true;
 			}
 			
+			// Focus off-viewport window if it needs attention
 			if (not_in_viewport || urgent) {
 				foreach (unowned Wnck.Window window in windows) {
 					if (urgent && !window.needs_attention ())
@@ -360,6 +361,7 @@ namespace Plank.Services.Windows
 				}
 			}
 			
+			// Unminimize minimized windows if there is one or more
 			foreach (unowned Wnck.Window window in windows)
 				if (window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
 					foreach (var w in windows)
@@ -370,21 +372,31 @@ namespace Plank.Services.Windows
 					return;
 				}
 			
+			// Minimize all windows if this application owns the active window
 			foreach (unowned Wnck.Window window in windows)
 				if ((window.is_active () && window.is_in_viewport (window.get_screen ().get_active_workspace ()))
 					|| window == Screen.get_default ().get_active_window ()) {
-					foreach (var w in windows)
+					foreach (unowned Wnck.Window w in windows)
 						if (!w.is_minimized () && w.is_in_viewport (w.get_screen ().get_active_workspace ())) {
 							w.minimize ();
 							Thread.usleep (WINDOW_GROUP_DELAY);
 						}
 					return;
 				}
+
+			// Get all windows on the current workspace in the foreground
+			foreach (unowned Wnck.Window window in windows)
+				if (window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
+					foreach (unowned Wnck.Window w in windows)
+						if (w.is_in_viewport (w.get_screen ().get_active_workspace ())) {
+							center_and_focus_window (w);
+							Thread.usleep (WINDOW_GROUP_DELAY);
+						}
+					return;
+				}
 			
-			foreach (unowned Wnck.Window window in windows) {
-				center_and_focus_window (window);
-				Thread.usleep (WINDOW_GROUP_DELAY);
-			}
+			// Focus most-top window and all others on its workspace
+			intelligent_focus_off_viewport_window (windows.nth_data (0), windows);
 		}
 		
 		static void intelligent_focus_off_viewport_window (Wnck.Window targetWindow, GLib.List<unowned Wnck.Window> additional_windows)
