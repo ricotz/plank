@@ -207,7 +207,7 @@ namespace Plank.Services.Windows
 			center_and_focus_window (w);
 		}
 		
-		public static void focus_window_by_xid (uint32 xid)
+		static void focus_window_by_xid (uint32 xid)
 		{
 			Screen.get_default ();
 			unowned Wnck.Window w = Wnck.Window.@get (xid);
@@ -218,14 +218,6 @@ namespace Plank.Services.Windows
 				return;
 			
 			center_and_focus_window (w);
-		}
-		
-		public static void focus (Bamf.Application app)
-		{
-			foreach (unowned Wnck.Window window in get_ordered_window_stack (app)) {
-				center_and_focus_window (window);
-				Thread.usleep (WINDOW_GROUP_DELAY);
-			}
 		}
 		
 		static int find_active_xid_index (Array<uint32>? xids)
