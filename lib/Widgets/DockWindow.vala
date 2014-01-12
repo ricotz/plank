@@ -493,10 +493,12 @@ namespace Plank.Widgets
 			}
 			
 			ArrayList<Gtk.MenuItem> items;
-			if (show_plank_menu)
+			if (show_plank_menu) {
 				items = PlankDockItem.get_plank_menu_items ();
-			else
+				set_hovered (null);
+			} else {
 				items = HoveredItem.get_menu_items ();
+			}
 			
 			if (items.size == 0)
 				return;
