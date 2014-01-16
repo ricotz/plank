@@ -39,7 +39,7 @@ namespace PlankMain
 			program_name = "Plank";
 			exec_name = "plank";
 			
-			app_copyright = "2011-2013";
+			app_copyright = "2011-2014";
 			app_dbus = "net.launchpad.plank";
 			app_icon = "plank";
 			app_launcher = "plank.desktop";
