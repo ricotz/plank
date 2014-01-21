@@ -520,13 +520,42 @@ namespace Plank.Items
 			if (launcher == null || launcher == "")
 				return;
 			
+			KeyFile file;
+			
 			try {
-				var file = new KeyFile ();
+				file = new KeyFile ();
 				file.load_from_file (Filename.from_uri (launcher), 0);
-				
-				icon = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
+			} catch (Error e) {
+				critical ("%s: %s", launcher, e.message);
+				return;
+			}
+			
+			try {
 				text = file.get_locale_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_NAME);
 				
+				if (file.has_key (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON))
+					icon = file.get_locale_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_ICON);
+				
+				var type = file.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_TYPE);
+				switch (type) {
+				default:
+				case KeyFileDesktop.TYPE_APPLICATION:
+					break;
+				case KeyFileDesktop.TYPE_DIRECTORY:
+					if (icon == "")
+						icon = "inode-directory";
+					return;
+				case KeyFileDesktop.TYPE_LINK:
+					if (icon == "")
+						icon = "document";
+					return;	
+				}
+			} catch (KeyFileError e) {
+				critical ("%s: %s", launcher, e.message);
+				return;
+			}
+			
+			try {
 				if (mimes != null && file.has_key (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_MIME_TYPE)) {
 					var mimestrings = file.get_string_list (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_MIME_TYPE);
 					foreach (var mime in mimestrings)
@@ -597,13 +626,15 @@ namespace Plank.Items
 									continue;
 							}
 							
-							// check for Icon
+							var action_name = file.get_locale_string (group, KeyFileDesktop.KEY_NAME);
+							
 							var action_icon = "";
 							if (file.has_key (group, KeyFileDesktop.KEY_ICON))
-								action_icon = file.get_string (group, KeyFileDesktop.KEY_ICON);
+								action_icon = file.get_locale_string (group, KeyFileDesktop.KEY_ICON);
 							
-							var action_name = file.get_locale_string (group, KeyFileDesktop.KEY_NAME);
-							var action_exec = file.get_string (group, KeyFileDesktop.KEY_EXEC);
+							var action_exec = "";
+							if (file.has_key (group, KeyFileDesktop.KEY_EXEC))
+								action_exec = file.get_string (group, KeyFileDesktop.KEY_EXEC);
 							
 							// apply given gettext-domain if available
 							if (textdomain != null)
@@ -614,7 +645,10 @@ namespace Plank.Items
 						}
 					}
 				}
-			} catch { }
+			} catch (KeyFileError e) {
+				critical ("%s: %s", launcher, e.message);
+				return;
+			}
 		}
 		
 		FileMonitor? monitor = null;

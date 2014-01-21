@@ -115,14 +115,49 @@ namespace Plank.Services
 				return;
 			
 			AppInfo info;
-			if (app != null)
-				info = new DesktopAppInfo.from_filename (app.get_path () ?? "");
-			else
+			
+			if (app != null) {
+				KeyFile keyfile;
+				var launcher = app.get_path ();
+				
 				try {
-					info = files.first ().data.query_default_handler ();
-				} catch {
+					keyfile = new KeyFile ();
+					keyfile.load_from_file (launcher, KeyFileFlags.NONE);
+				} catch (Error e) {
+					critical ("%s: %s", launcher, e.message);
 					return;
 				}
+				
+				try {
+					var type = keyfile.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_TYPE);
+					switch (type) {
+					default:
+					case KeyFileDesktop.TYPE_APPLICATION:
+					case KeyFileDesktop.TYPE_DIRECTORY:
+						break;
+					case KeyFileDesktop.TYPE_LINK:
+						try {
+							var url = keyfile.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_URL);
+							AppInfo.launch_default_for_uri (url, null);
+						} catch (Error e) {
+							critical ("%s: %s", launcher, e.message);
+						}
+						return;
+					}
+				} catch (KeyFileError e) {
+					critical ("%s: %s", launcher, e.message);
+					return;
+				}
+				
+				info = new DesktopAppInfo.from_keyfile (keyfile);
+			} else {
+				try {
+					info = files.first ().data.query_default_handler ();
+				} catch (Error e) {
+					critical (e.message);
+					return;
+				}
+			}
 			
 			try {
 				if (files.length () == 0) {
@@ -139,7 +174,7 @@ namespace Plank.Services
 					var uris = new GLib.List<string> ();
 					foreach (var f in files)
 						uris.append (f.get_uri ());
-					info.launch_uris (uris, new AppLaunchContext ());
+					info.launch_uris (uris, null);
 					return;
 				}
 				
