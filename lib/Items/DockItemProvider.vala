@@ -26,6 +26,13 @@ namespace Plank.Items
 	 */
 	public class DockItemProvider : GLib.Object
 	{
+		static PlaceholderDockItem placeholder_item;
+		
+		static construct
+		{
+			placeholder_item = new PlaceholderDockItem ();
+		}
+		
 		/**
 		 * Triggered when the items collection has changed.
 		 *
@@ -87,10 +94,14 @@ namespace Plank.Items
 			visible_items = new ArrayList<DockItem> ();
 			internal_items = new ArrayList<DockItem> ();
 			saved_item_positions = new HashMap<DockItem, int> ();
+			
+			item_signals_connect (placeholder_item);
 		}
 		
 		~DockItemProvider ()
 		{
+			item_signals_disconnect (placeholder_item);
+			
 			saved_item_positions.clear ();
 			visible_items.clear ();
 			
@@ -155,14 +166,17 @@ namespace Plank.Items
 				if (item.IsVisible)
 					visible_items.add (item);
 			
-			set_item_positions ();
-			
 			var added_items = new ArrayList<DockItem> ();
 			added_items.add_all (visible_items);
 			added_items.remove_all (old_items);
 			
 			var removed_items = old_items;
 			removed_items.remove_all (visible_items);
+			
+			if (visible_items.size <= 0)
+				visible_items.add (placeholder_item);
+			
+			set_item_positions ();
 			
 			if (added_items.size > 0 || removed_items.size > 0)
 				items_changed (added_items, removed_items);

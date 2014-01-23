@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-13 11:09+0200\n"
+"POT-Creation-Date: 2014-01-23 08:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,33 +21,37 @@ msgstr ""
 msgid "Plank. Stupidly simple."
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:326
-#: ../lib/Items/FileDockItem.vala:251 ../lib/Items/FileDockItem.vala:269
+#: ../lib/Items/ApplicationDockItem.vala:368
+#: ../lib/Items/FileDockItem.vala:292 ../lib/Items/FileDockItem.vala:310
 msgid "_Keep in Dock"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:336
+#: ../lib/Items/ApplicationDockItem.vala:378
 msgid "Unma_ximize"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:340
+#: ../lib/Items/ApplicationDockItem.vala:382
 msgid "Ma_ximize"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:345
+#: ../lib/Items/ApplicationDockItem.vala:387
 msgid "_Close All"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:256
+#: ../lib/Items/FileDockItem.vala:297
 msgid "_Open in File Browser"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:274
+#: ../lib/Items/FileDockItem.vala:315
 msgid "_Open"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:278
+#: ../lib/Items/FileDockItem.vala:319
 msgid "Open Containing _Folder"
+msgstr ""
+
+#: ../lib/Items/PlaceholderDockItem.vala:37
+msgid "Drop applications or files here"
 msgstr ""
 
 #: ../lib/Items/PlankDockItem.vala:79
