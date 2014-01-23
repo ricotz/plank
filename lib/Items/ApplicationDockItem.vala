@@ -432,7 +432,12 @@ namespace Plank.Items
 						window_item = create_menu_item_with_pixbuf (window.get_name (), pbuf, true);
 					else 
 						window_item = create_menu_item (window.get_name (), Icon, true);
-					window_item.activate.connect (() => WindowControl.focus_window (window));
+					
+					if (window.is_active ())
+						window_item.set_sensitive (false);
+					else
+						window_item.activate.connect (() => WindowControl.focus_window (window));
+					
 					items.add (window_item);
 				}
 			}
