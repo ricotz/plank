@@ -33,6 +33,8 @@ namespace Plank.Widgets
 	 */
 	public class DockWindow : CompositedWindow
 	{
+		const uint LONG_PRESS_TIME = 750;
+		
 		/**
 		 * The controller for this dock.
 		 */
@@ -59,6 +61,10 @@ namespace Plank.Widgets
 		uint reposition_timer = 0;
 		uint hover_reposition_timer = 0;
 		
+		uint long_press_timer = 0;
+		bool long_press_active = false;
+		uint long_press_button = 0;
+
 		bool dock_is_starting = true;
 		
 		Cairo.RectangleInt input_rect;
@@ -133,6 +139,17 @@ namespace Plank.Widgets
 				show_menu (event.button, true);
 			else if (HoveredItem != null && (HoveredItem.Button & button) == button)
 				show_menu (event.button, false);
+			else {
+				long_press_active = false;
+				long_press_button = event.button;
+				if (long_press_timer > 0)
+					Source.remove (long_press_timer);
+				long_press_timer = Gdk.threads_add_timeout (LONG_PRESS_TIME, () => {
+					long_press_active = true;
+					long_press_timer = 0;
+					return false;
+				});
+			}
 			
 			return true;
 		}
@@ -142,6 +159,17 @@ namespace Plank.Widgets
 		 */
 		public override bool button_release_event (EventButton event)
 		{
+			if (long_press_timer > 0) {
+				Source.remove (long_press_timer);
+				long_press_timer = 0;
+			}
+			
+			if (long_press_active && long_press_button == event.button) {
+				long_press_active = false;
+				long_press_button = 0;
+				return true;
+			}
+			
 			if (controller.drag_manager.InternalDragActive)
 				return true;
 
@@ -188,6 +216,18 @@ namespace Plank.Widgets
 			return true;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
+		public override void drag_begin (DragContext context)
+		{
+			long_press_active = false;
+			if (long_press_timer > 0) {
+				Source.remove (long_press_timer);
+				long_press_timer = 0;
+			}
+		}
+
 		/**
 		 * {@inheritDoc}
 		 */
