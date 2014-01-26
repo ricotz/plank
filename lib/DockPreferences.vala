@@ -142,8 +142,8 @@ namespace Plank
 		 */
 		public void increase_icon_size ()
 		{
-			if (IconSize < MAX_ICON_SIZE)
-				IconSize++;
+			if (IconSize < MAX_ICON_SIZE - 1)
+				IconSize += 2;
 		}
 		
 		/**
@@ -151,8 +151,8 @@ namespace Plank
 		 */
 		public void decrease_icon_size ()
 		{
-			if (IconSize > MIN_ICON_SIZE)
-				IconSize--;
+			if (IconSize > MIN_ICON_SIZE + 1)
+				IconSize -= 2;
 		}
 		
 		/**
@@ -179,6 +179,8 @@ namespace Plank
 					IconSize = MIN_ICON_SIZE;
 				else if (IconSize > MAX_ICON_SIZE)
 					IconSize = MAX_ICON_SIZE;
+				else if (IconSize % 2 == 1)
+					IconSize -= 1;
 				break;
 			
 			case "HideMode":

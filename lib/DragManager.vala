@@ -187,6 +187,8 @@ namespace Plank
 		void set_drag_icon (DragContext context, DockItem? item, double opacity = 1.0)
 		{
 			var drag_icon_size = (int) (1.2 * controller.position_manager.IconSize);
+			if (drag_icon_size % 2 == 1)
+				drag_icon_size++;
 			var drag_surface = new DockSurface (drag_icon_size, drag_icon_size);
 			
 			if (item != null) {
