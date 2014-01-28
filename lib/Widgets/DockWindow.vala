@@ -381,9 +381,8 @@ namespace Plank.Widgets
 					}
 			}
 			
-			var cursor_rect = position_manager.get_cursor_region ();
-			if (y < cursor_rect.y && y >= cursor_rect.y + cursor_rect.height
-				&& x < cursor_rect.x && x >= cursor_rect.x + cursor_rect.width) {
+			rect = position_manager.get_cursor_region ();
+			if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width) {
 				set_hovered_provider (null);
 				set_hovered (null);
 				return false;
