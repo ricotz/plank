@@ -46,6 +46,11 @@ namespace Plank.Widgets
 		 */
 		public DockItem? HoveredItem { get; protected set; }
 		
+		/**
+		 * The currently hovered item-provider (if any).
+		 */
+		public DockItemProvider? HoveredItemProvider { get; protected set; }
+		
 		
 		/**
 		 * The item which "received" the button-pressed signal (if any).
@@ -291,6 +296,19 @@ namespace Plank.Widgets
 		}
 		
 		/**
+		 * Sets the currently hovered item-provider for this dock.
+		 *
+		 * @param provider the hovered item-provider (if any) for this dock
+		 */
+		protected void set_hovered_provider (DockItemProvider? provider)
+		{
+			if (HoveredItemProvider == provider)
+				return;
+			
+			HoveredItemProvider = provider;
+		}
+			
+		/**
 		 * Sets the currently hovered item for this dock.
 		 *
 		 * @param item the hovered item (if any) for this dock
@@ -354,6 +372,7 @@ namespace Plank.Widgets
 				if (y >= rect.y && y < rect.y + rect.height && x >= rect.x && x < rect.x + rect.width)
 					// Do not allow the hovered-item to be the drag-item
 					if (drag_item == HoveredItem) {
+						set_hovered_provider (HoveredItem.Provider);
 						set_hovered (null);
 						return false;
 					} else {
@@ -365,14 +384,20 @@ namespace Plank.Widgets
 			var cursor_rect = position_manager.get_cursor_region ();
 			if (y < cursor_rect.y && y >= cursor_rect.y + cursor_rect.height
 				&& x < cursor_rect.x && x >= cursor_rect.x + cursor_rect.width) {
+				set_hovered_provider (null);
 				set_hovered (null);
 				return false;
 			}
+			
+			bool found_hovered_provider = false;
 			
 			foreach (var provider in controller.Providers) {
 				rect = position_manager.provider_hover_region (provider);
 				if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width)
 					continue;
+				
+				set_hovered_provider (provider);
+				found_hovered_provider = true;
 				
 				foreach (var item in provider.Items) {
 					rect = position_manager.item_hover_region (item);
@@ -388,6 +413,8 @@ namespace Plank.Widgets
 				}
 			}
 			
+			if (!found_hovered_provider)
+				set_hovered_provider (null);
 			set_hovered (null);
 			return false;
 		}
