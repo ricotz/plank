@@ -459,6 +459,8 @@ namespace Plank
 					unowned DockItem item = controller.window.HoveredItem;
 					if (item != null)
 						item.scrolled (ScrollDirection.DOWN, 0);
+					else
+						drag_hover_timer = 0;
 					return item != null;
 				});
 		}
