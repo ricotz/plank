@@ -1,10 +1,13 @@
 NULL =
 
 SUBDIRS = \
-	apport \
 	icons \
 	themes \
 	$(NULL)
+
+if ENABLE_APPORT
+SUBDIRS += apport
+endif
 
 EXTRA_DIST = \
 	plank.desktop.in \

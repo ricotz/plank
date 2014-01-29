@@ -203,6 +203,12 @@ if test "x$enable_debug" = "xyes" ; then
     VALAFLAGS_CORE="$VALAFLAGS_CORE -g"
 fi
 
+# Enable installation of Apport support files
+AC_ARG_ENABLE([apport],
+              AS_HELP_STRING([--enable-apport],[Enable installation of Apport support files]),
+              [enable_apport=$enableval], [enable_apport=yes])
+AM_CONDITIONAL([ENABLE_APPORT], [test "x$enable_apport" = "xyes"])
+
 # Enable output of benchmarking data
 AC_ARG_ENABLE([benchmark],
               AS_HELP_STRING([--enable-benchmark],
@@ -304,6 +310,8 @@ ${PACKAGE} ${VERSION}
 
     Use gee-0.8.................:  ${enable_gee_0_8}
     Dbusmenu support............:  ${enable_dbusmenu}
+
+    Apport support..............:  ${enable_apport}
 
     Headless Tests..............:  ${enable_headless_tests}
     Documentation...............:  ${have_valadoc}
