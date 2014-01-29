@@ -502,7 +502,7 @@ namespace Plank.Items
 				pbuf = DrawingService.ar_scale (pbuf, surface.Width, surface.Height);
 			
 			unowned Cairo.Context cr = surface.Context;
-			cairo_set_source_pixbuf (cr, pbuf, 0, 0);
+			cairo_set_source_pixbuf (cr, pbuf, (surface.Width - pbuf.width) / 2, (surface.Height - pbuf.height) / 2);
 			cr.paint ();
 		}
 		
