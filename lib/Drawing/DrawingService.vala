@@ -163,16 +163,20 @@ namespace Plank.Drawing
 		static Pixbuf? load_pixbuf_from_file (string name, int width, int height)
 		{
 			Pixbuf? pbuf = null;
+			string filename;
 			
-			var filename = name;
 			if (name.has_prefix ("~/"))
 				filename = name.replace ("~/", Paths.HomeFolder.get_path () ?? "");
+			else
+				filename = name;
+			
+			if (filename.has_prefix ("file://"))
+				filename = File.new_for_uri (filename).get_path ();
+			else
+				filename = File.new_for_path (filename).get_path ();
 			
 			try {
-				if (filename.has_prefix ("file://"))
-					pbuf = new Pixbuf.from_file (File.new_for_uri (filename).get_path ());
-				else
-					pbuf = new Pixbuf.from_file (File.new_for_path (filename).get_path ());
+				pbuf = new Pixbuf.from_file_at_size (filename, width, height);
 			} catch { }
 			
 			return pbuf;
