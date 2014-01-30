@@ -45,13 +45,14 @@ namespace Plank.Items
 		 * Triggered when the state of an item changes.
 		 */
 		public signal void item_state_changed ();
-		/**
-		 * Triggered anytime an item's Position was changed.
-		 */
-		public signal void item_position_changed (DockItem item);
 		
 		/**
-		 * A list of the dock items.
+		 * Triggered anytime item-positions were changed.
+		 */
+		public signal void item_positions_changed (Gee.List<unowned DockItem> items);
+		
+		/**
+		 * The ordered list of the visible dock items.
 		 */
 		public ArrayList<DockItem> Items {
 			get {
@@ -59,27 +60,8 @@ namespace Plank.Items
 			}
 		}
 		
-		int first_item_position = 0;
-		/**
-		 * The absolute position of the first item of this provider on the dock.
-		 */
-		public int FirstItemPosition { 
-			get {
-				return first_item_position;
-			}
-			set {
-				if (first_item_position == value)
-					return;
-				
-				first_item_position = value;
-				set_item_positions ();
-			}
-		}
-		
 		protected ArrayList<DockItem> visible_items;
 		protected ArrayList<DockItem> internal_items;
-		
-		protected Gee.Map<DockItem, int> saved_item_positions;
 		
 		/**
 		 * Creates a new container for dock items.
@@ -93,7 +75,6 @@ namespace Plank.Items
 		{
 			visible_items = new ArrayList<DockItem> ();
 			internal_items = new ArrayList<DockItem> ();
-			saved_item_positions = new HashMap<DockItem, int> ();
 			
 			item_signals_connect (placeholder_item);
 		}
@@ -102,7 +83,6 @@ namespace Plank.Items
 		{
 			item_signals_disconnect (placeholder_item);
 			
-			saved_item_positions.clear ();
 			visible_items.clear ();
 			
 			var items = new HashSet<DockItem> ();
@@ -176,59 +156,13 @@ namespace Plank.Items
 			if (visible_items.size <= 0)
 				visible_items.add (placeholder_item);
 			
-			set_item_positions ();
-			
 			if (added_items.size > 0 || removed_items.size > 0)
 				items_changed (added_items, removed_items);
-		}
-		
-		protected void set_item_positions ()
-		{
-			int pos = FirstItemPosition;
-			foreach (var item in visible_items) {
-				if (item.Position != pos) {
-					item.Position = pos;
-					item_position_changed (item);
-				}
-				pos++;
-			}
 		}
 		
 		protected void handle_setting_changed ()
 		{
 			update_visible_items ();
-		}
-		
-		/**
-		 * Save current item positions
-		 */
-		public void save_item_positions ()
-		{
-			saved_item_positions.clear ();
-			
-			foreach (var item in visible_items)
-				saved_item_positions[item] = item.Position;
-		}
-		
-		/**
-		 * Restore previously saved item positions
-		 */
-		public void restore_item_positions ()
-		{
-			if (saved_item_positions.size == 0)
-				return;
-			
-			foreach (var entry in saved_item_positions.entries)
-				entry.key.Position = entry.value;
-#if HAVE_GEE_0_8
-			visible_items.sort ((CompareDataFunc) compare_items);
-#else
-			visible_items.sort ((CompareFunc) compare_items);
-#endif
-			
-			saved_item_positions.clear ();
-			
-			set_item_positions ();
 		}
 		
 		/**
@@ -250,7 +184,11 @@ namespace Plank.Items
 			if (visible_items.contains (move) && (index_target = visible_items.index_of (target)) >= 0) {
 				visible_items.remove (move);
 				visible_items.insert (index_target, move);
-				set_item_positions ();
+				
+				var moved_items = new ArrayList<unowned DockItem> ();
+				moved_items.add (move);
+				moved_items.add (target);
+				item_positions_changed (moved_items);
 			} else {
 				update_visible_items ();
 			}
@@ -379,15 +317,6 @@ namespace Plank.Items
 		public virtual bool accept_drop (ArrayList<string> uris)
 		{
 			return false;
-		}
-		
-		protected static int compare_items (DockItem left, DockItem right)
-		{
-			if (left.Position == right.Position)
-				return 0;
-			if (left.Position < right.Position)
-				return -1;
-			return 1;
 		}
 	}
 }

@@ -63,7 +63,7 @@ namespace Plank.Items
 			wnck_screen.active_workspace_changed.connect (handle_workspace_changed);
 			wnck_screen.viewports_changed.connect (handle_viewports_changed);
 			
-			item_position_changed.connect (serialize_item_positions);
+			item_positions_changed.connect (serialize_item_positions);
 			items_changed.connect (serialize_item_positions);
 		}
 		
@@ -76,7 +76,7 @@ namespace Plank.Items
 			wnck_screen.active_workspace_changed.disconnect (handle_workspace_changed);
 			wnck_screen.viewports_changed.disconnect (handle_viewports_changed);
 			
-			item_position_changed.disconnect (serialize_item_positions);
+			item_positions_changed.disconnect (serialize_item_positions);
 			items_changed.disconnect (serialize_item_positions);
 		}
 		
@@ -139,11 +139,9 @@ namespace Plank.Items
 			
 			// add saved dockitems based on their serialized order
 			var dockitems = Prefs.DockItems.split (";;");
-			var pos = 0;
 			foreach (var dockitem in dockitems)
 				foreach (var item in existing_items)
 					if (dockitem == item.DockItemFilename) {
-						item.Position = pos++;
 						result.add (item);
 						break;
 					}

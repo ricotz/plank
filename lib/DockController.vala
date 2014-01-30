@@ -47,22 +47,24 @@ namespace Plank
 		
 		DefaultApplicationDockItemProvider? default_provider;
 		ArrayList<DockItemProvider> item_providers;
+		ArrayList<unowned DockItem> items;
 		
+		/**
+		 * Ordered list of all providers on this dock
+		 */
 		public ArrayList<DockItemProvider> Providers {
 			get {
 				return item_providers;
 			}
 		}
 		
-		public ArrayList<DockItem> Items {
-			owned get {
-				var all_items = new ArrayList<DockItem> ();
-				foreach (var provider in item_providers) {
-					var items = provider.Items;
-					all_items.add_all (items);
-				}
-				return all_items;
-			}
+		/**
+		 * Ordered list of all visible items on this dock
+		 */
+		public ArrayList<unowned DockItem> Items {
+			get {
+				return items;
+ 			}
 		}
 		
 		/**
@@ -84,6 +86,7 @@ namespace Plank
 			Factory.item_factory.launchers_dir = launchers_folder;
 			
 			item_providers = new ArrayList<DockItemProvider> ();
+			items = new ArrayList<unowned DockItem> ();
 			
 			position_manager = new PositionManager (this);
 			renderer = new DockRenderer (this);
@@ -99,6 +102,7 @@ namespace Plank
 				disconnect_provider (provider);
 			
 			item_providers.clear ();
+			items.clear ();
 		}
 		
 		/**
@@ -153,9 +157,10 @@ namespace Plank
 			}
 			
 			item_providers.add (provider);
-			update_first_item_positions ();
 			
 			connect_provider (provider);
+			
+			update_items ();
 		}
 		
 		/**
@@ -173,12 +178,13 @@ namespace Plank
 			disconnect_provider (provider);
 			
 			item_providers.remove (provider);
-			update_first_item_positions ();
+			
+			update_items ();
 		}
 		
 		void connect_provider (DockItemProvider provider)
 		{
-			provider.item_position_changed.connect (item_position_changed);
+			provider.item_positions_changed.connect (item_positions_changed);
 			provider.item_state_changed.connect (item_state_changed);
 			provider.items_changed.connect (items_changed);
 			
@@ -189,7 +195,7 @@ namespace Plank
 		
 		void disconnect_provider (DockItemProvider provider)
 		{
-			provider.item_position_changed.disconnect (item_position_changed);
+			provider.item_positions_changed.disconnect (item_positions_changed);
 			provider.item_state_changed.disconnect (item_state_changed);
 			provider.items_changed.disconnect (items_changed);
 			
@@ -198,26 +204,38 @@ namespace Plank
 				app_provider.item_window_added.disconnect (window.update_icon_region);
 		}
 		
-		void update_first_item_positions ()
+		void update_items ()
 		{
+			Logger.verbose ("DockController.update_items ()");
+			
+			items.clear ();
+			
 			var current_pos = 0;
 			foreach (var provider in item_providers) {
-				provider.FirstItemPosition = current_pos;
-				current_pos += provider.Items.size;
+				foreach (var item in provider.Items) {
+					if (item.Position != current_pos)
+						item.Position = current_pos;
+					items.add (item);
+					current_pos++;
+				}
 			}
 		}
 		
 		void items_changed (DockItemProvider provider, Gee.List<DockItem> added, Gee.List<DockItem> removed)
 		{
+			update_items ();
+			
 			if (prefs.Alignment != Gtk.Align.FILL)
 				position_manager.reset_caches (renderer.theme);
 			position_manager.update_regions ();
-			update_first_item_positions ();
 		}
 		
-		void item_position_changed (DockItemProvider provider, DockItem item)
+		void item_positions_changed (DockItemProvider provider, Gee.List<unowned DockItem> moved_items)
 		{
-			position_manager.reset_item_caches (item);
+			update_items ();
+			
+			foreach (unowned DockItem item in moved_items)
+				position_manager.reset_item_caches (item);
 			renderer.animated_draw ();
 		}
 		

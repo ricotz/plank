@@ -227,12 +227,6 @@ namespace Plank
 			if (RepositionMode)
 				DragItem = null;
 			
-			if (DragItem != null) {
-				unowned ApplicationDockItemProvider app_provider = (DragItem.Provider as ApplicationDockItemProvider);
-				if (app_provider != null)
-					app_provider.save_item_positions ();
-			}
-			
 			set_drag_icon (context, DragItem, 0.8);
 		}
 
@@ -382,10 +376,6 @@ namespace Plank
 				return;
 			
 			if (!controller.hide_manager.DockHovered) {
-				unowned ApplicationDockItemProvider app_provider = (DragItem.Provider as ApplicationDockItemProvider);
-				if (app_provider != null)
-					app_provider.restore_item_positions ();
-				
 				controller.window.update_hovered (-1, -1);
 				controller.renderer.animated_draw ();
 			}
@@ -394,12 +384,6 @@ namespace Plank
 		bool drag_failed (Widget w, DragContext context, DragResult result)
 		{
 			drag_canceled = result == DragResult.USER_CANCELLED;
-			
-			if (drag_canceled) {
-				unowned ApplicationDockItemProvider app_provider = (DragItem.Provider as ApplicationDockItemProvider);
-				if (app_provider != null)
-					app_provider.restore_item_positions ();
-			}
 			
 			return !drag_canceled;
 		}
