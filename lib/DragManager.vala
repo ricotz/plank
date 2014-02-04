@@ -113,8 +113,6 @@ namespace Plank
 			window.drag_leave.connect (drag_leave);
 			window.drag_failed.connect (drag_failed);
 			
-			window.motion_notify_event.connect (window_motion_notify_event);
-
 			prefs.notify["LockItems"].connect (lock_items_changed);
 			
 			if (!prefs.LockItems) {
@@ -136,18 +134,10 @@ namespace Plank
 			window.drag_leave.disconnect (drag_leave);
 			window.drag_failed.disconnect (drag_failed);
 			
-			window.motion_notify_event.disconnect (window_motion_notify_event);
-			
 			controller.prefs.notify["LockItems"].disconnect (lock_items_changed);
 			
 			disable_drag_to (window);
 			disable_drag_from (window);
-		}
-		
-		bool window_motion_notify_event (Widget w, EventMotion event)
-		{
-			ExternalDragActive = false;
-			return false;
 		}
 		
 		void lock_items_changed ()
@@ -393,7 +383,8 @@ namespace Plank
 			if (RepositionMode)
 				return true;
 
-			ExternalDragActive = !InternalDragActive;
+			if (ExternalDragActive == InternalDragActive)
+				ExternalDragActive = !InternalDragActive;
 			
 			if (marker != direct_hash (context)) {
 				marker = direct_hash (context);
@@ -401,6 +392,7 @@ namespace Plank
 			}
 			
 			unowned DockWindow window = controller.window;
+			unowned HideManager hide_manager = controller.hide_manager;
 			
 			// we own the drag if InternalDragActive is true, lets not be silly
 			if (ExternalDragActive && !drag_known) {
@@ -419,6 +411,7 @@ namespace Plank
 				drag_status (context, DragAction.COPY, time_);
 			}
 			
+			hide_manager.update_dock_hovered ();
 			window.update_hovered (x, y);
 			
 			return true;

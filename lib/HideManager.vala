@@ -103,15 +103,11 @@ namespace Plank
 			requires (controller.window != null)
 		{
 			unowned DockWindow window = controller.window;
-			unowned DragManager drag_manager = controller.drag_manager;
 			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
 			
 			window.enter_notify_event.connect (enter_notify_event);
 			window.leave_notify_event.connect (leave_notify_event);
 			window.motion_notify_event.connect (motion_notify_event);
-			
-			drag_manager.notify["ExternalDragActive"].connect (update_dock_hovered);
-			drag_manager.notify["InternalDragActive"].connect (update_dock_hovered);
 			
 			wnck_screen.window_opened.connect (schedule_update);
 			wnck_screen.window_closed.connect (schedule_update);
@@ -134,9 +130,6 @@ namespace Plank
 			window.enter_notify_event.disconnect (enter_notify_event);
 			window.leave_notify_event.disconnect (leave_notify_event);
 			window.motion_notify_event.disconnect (motion_notify_event);
-			
-			drag_manager.notify["ExternalDragActive"].disconnect (update_dock_hovered);
-			drag_manager.notify["InternalDragActive"].disconnect (update_dock_hovered);
 			
 			wnck_screen.window_opened.disconnect (schedule_update);
 			wnck_screen.window_closed.disconnect (schedule_update);
