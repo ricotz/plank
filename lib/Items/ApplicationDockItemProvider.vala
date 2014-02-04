@@ -217,10 +217,18 @@ namespace Plank.Items
 			return null;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
 		public override void add_item_with_uri (string uri, DockItem? target = null)
 		{
 			if (uri == null || uri == "")
 				return;
+			
+			if (item_exists_for_uri (uri)) {
+				warning ("Item for '%s' already exists in this item-provider.", uri);
+				return;
+			}
 			
 			// delay automatic add of new dockitems while creating this new one
 			delay_items_monitor ();
@@ -230,10 +238,7 @@ namespace Plank.Items
 				return;
 			
 			var item = Factory.item_factory.make_item (dockitem_file);
-			add_item (item);
-			
-			if (target != null)
-				move_item_to (item, target);
+			add_item (item, target);
 			
 			resume_items_monitor ();
 		}

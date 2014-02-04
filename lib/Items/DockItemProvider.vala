@@ -98,8 +98,9 @@ namespace Plank.Items
 		 * Adds a dock item to the collection.
 		 *
 		 * @param item the dock item to add
+		 * @param target an existing item where to put this new one at
 		 */
-		public void add_item (DockItem item)
+		public void add_item (DockItem item, DockItem? target = null)
 		{
 			if (internal_items.contains (item)) {
 				critical ("Item '%s' already exists in this item-provider.", item.Text);
@@ -108,7 +109,10 @@ namespace Plank.Items
 			
 			add_item_without_signaling (item);
 			
-			update_visible_items ();
+			if (target != null)
+				move_item_to (item, target);
+			else
+				update_visible_items ();
 		}
 		
 		/**
@@ -212,6 +216,12 @@ namespace Plank.Items
 			return false;
 		}
 		
+		/**
+		 * Adds a dock item with the given URI to the collection.
+		 *
+		 * @param uri the URI to add a dock item for
+		 * @param target an existing item where to put this new one at
+		 */
 		public virtual void add_item_with_uri (string uri, DockItem? target = null)
 		{
 			warning ("Not implemented by default");
