@@ -229,11 +229,7 @@ namespace Plank.Items
 		
 		protected virtual void add_item_without_signaling (DockItem item)
 		{
-			if (item.Position > -1 && item.Position <= internal_items.size) {
-				internal_items.insert (item.Position, item);
-			} else {
-				internal_items.add (item);
-			}
+			internal_items.add (item);
 			
 			item.Provider = this;
 			item.AddTime = new DateTime.now_utc ();
