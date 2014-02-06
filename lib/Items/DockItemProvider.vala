@@ -280,7 +280,6 @@ namespace Plank.Items
 		
 		protected virtual void item_signals_connect (DockItem item)
 		{
-			item.notify["Icon"].connect (handle_item_state_changed);
 			item.notify["Indicator"].connect (handle_item_state_changed);
 			item.notify["State"].connect (handle_item_state_changed);
 			item.notify["LastClicked"].connect (handle_item_state_changed);
@@ -290,7 +289,6 @@ namespace Plank.Items
 		
 		protected virtual void item_signals_disconnect (DockItem item)
 		{
-			item.notify["Icon"].disconnect (handle_item_state_changed);
 			item.notify["Indicator"].disconnect (handle_item_state_changed);
 			item.notify["State"].disconnect (handle_item_state_changed);
 			item.notify["LastClicked"].disconnect (handle_item_state_changed);
