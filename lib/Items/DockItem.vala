@@ -80,78 +80,9 @@ namespace Plank.Items
 	}
 	
 	/**
-	 * What type of animation to perform when an item is clicked.
-	 */
-	public enum ClickAnimation
-	{
-		/**
-		 * No animation.
-		 */
-		NONE,
-		/**
-		 * Bounce the icon.
-		 */
-		BOUNCE,
-		/**
-		 * Darken the icon, then restore it.
-		 */
-		DARKEN,
-		/**
-		 * Brighten the icon, then restore it.
-		 */
-		LIGHTEN
-	}
-	
-	/**
-	 * What mouse button pops up the context menu on an item.
-	 * Can be multiple buttons.
-	 */
-	[Flags]
-	public enum PopupButton
-	{
-		/**
-		 * No button pops up the context.
-		 */
-		NONE = 1 << 0,
-		/**
-		 * Left button pops up the context.
-		 */
-		LEFT = 1 << 1,
-		/**
-		 * Middle button pops up the context.
-		 */
-		MIDDLE = 1 << 2,
-		/**
-		 * Right button pops up the context.
-		 */
-		RIGHT = 1 << 3;
-		
-		/**
-		 * Convenience method to map {@link Gdk.EventButton} to this enum.
-		 *
-		 * @param event the event to map
-		 * @return the PopupButton representation of the event
-		 */
-		public static PopupButton from_event_button (EventButton event)
-		{
-			switch (event.button) {
-			default:
-			case 1:
-				return PopupButton.LEFT;
-			
-			case 2:
-				return PopupButton.MIDDLE;
-			
-			case 3:
-				return PopupButton.RIGHT;
-			}
-		}
-	}
-	
-	/**
 	 * The base class for all dock items.
 	 */
-	public class DockItem : GLib.Object
+	public class DockItem : DockElement
 	{
 		/**
 		 * Signal fired when the .dockitem for this item was deleted.
@@ -164,11 +95,6 @@ namespace Plank.Items
 		public signal void launcher_changed ();
 		
 		/**
-		 * Signal fired when the dock item needs redrawn.
-		 */
-		public signal void needs_redraw ();
-		
-		/**
 		 * The dock item's provider which it is added too (if any).
 		 */
 		public DockItemProvider? Provider { get; set; }
@@ -179,11 +105,6 @@ namespace Plank.Items
 		public string Icon { get; set; default = ""; }
 		
 		protected Pixbuf? ForcePixbuf { get; set; default = null; }
-		
-		/**
-		 * The dock item's text.
-		 */
-		public string Text { get; set; default = ""; }
 		
 		/**
 		 * The count for the dock item.
@@ -236,16 +157,6 @@ namespace Plank.Items
 		public int LastPosition { get; protected set; default = -1; }
 		
 		/**
-		 * Whether the item is currently visible on the dock.
-		 */
-		public bool IsVisible { get; set; default = true; }
-		
-		/**
-		 * The buttons this item shows popup menus for.
-		 */
-		public PopupButton Button { get; protected set; default = PopupButton.RIGHT; }
-		
-		/**
 		 * The item's current state.
 		 */
 		public ItemState State { get; protected set; default = ItemState.NORMAL; }
@@ -254,46 +165,6 @@ namespace Plank.Items
 		 * The indicator shown for the item.
 		 */
 		public IndicatorState Indicator { get; protected set; default = IndicatorState.NONE; }
-		
-		/**
-		 * The animation to show for the item's last click event.
-		 */
-		public ClickAnimation ClickedAnimation { get; protected set; default = ClickAnimation.NONE; }
-		
-		/**
-		 * The time the item was added to the dock.
-		 */
-		public DateTime AddTime { get; set; default = new DateTime.from_unix_utc (0); }
-		
-		/**
-		 * The time the item was removed from the dock.
-		 */
-		public DateTime RemoveTime { get; set; default = new DateTime.from_unix_utc (0); }
-		
-		/**
-		 * The last time the item was clicked.
-		 */
-		public DateTime LastClicked { get; protected set; default = new DateTime.from_unix_utc (0); }
-		
-		/**
-		 * The last time the item was scrolled.
-		 */
-		public DateTime LastScrolled { get; protected set; default = new DateTime.from_unix_utc (0); }
-		
-		/**
-		 * The last time the item changed its urgent status.
-		 */
-		public DateTime LastUrgent { get; protected set; default = new DateTime.from_unix_utc (0); }
-		
-		/**
-		 * The last time the item changed its active status.
-		 */
-		public DateTime LastActive { get; protected set; default = new DateTime.from_unix_utc (0); }
-		
-		/**
-		 * The last time the item changed its position.
-		 */
-		public DateTime LastMove { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
 		/**
 		 * The average color of this item's icon.
@@ -507,92 +378,6 @@ namespace Plank.Items
 		}
 		
 		/**
-		 * Called when an item is clicked on.
-		 *
-		 * @param button the button clicked
-		 * @param mod the modifiers
-		 */
-		public void clicked (PopupButton button, ModifierType mod)
-		{
-			ClickedAnimation = on_clicked (button, mod);
-			LastClicked = new DateTime.now_utc ();
-		}
-		
-		/**
-		 * Called when an item is clicked on.
-		 *
-		 * @param button the button clicked
-		 * @param mod the modifiers
-		 */
-		protected virtual ClickAnimation on_clicked (PopupButton button, ModifierType mod)
-		{
-			return ClickAnimation.NONE;
-		}
-		
-		/**
-		 * Called when an item is scrolled over.
-		 *
-		 * @param direction the scroll direction
-		 * @param mod the modifiers
-		 */
-		public void scrolled (ScrollDirection direction, ModifierType mod)
-		{
-			on_scrolled (direction, mod);
-		}
-		
-		/**
-		 * Called when an item is scrolled over.
-		 *
-		 * @param direction the scroll direction
-		 * @param mod the modifiers
-		 */
-		protected virtual void on_scrolled (ScrollDirection direction, ModifierType mod)
-		{
-		}
-		
-		/**
-		 * Returns a list of the item's menu items.
-		 *
-		 * @return the item's menu items
-		 */
-		public virtual ArrayList<Gtk.MenuItem> get_menu_items ()
-		{
-			return new ArrayList<Gtk.MenuItem> ();
-		}
-		
-		/**
-		 * Returns if this item can be removed from the dock.
-		 *
-		 * @return if this item can be removed from the dock
-		 */
-		public virtual bool can_be_removed ()
-		{
-			return true;
-		}
-		
-		/**
-		 * Returns if the item accepts a drop of the given URIs.
-		 *
-		 * @param uris the URIs to check
-		 * @return if the item accepts a drop of the given URIs
-		 */
-		public virtual bool can_accept_drop (ArrayList<string> uris)
-		{
-			return false;
-		}
-		
-		/**
-		 * Accepts a drop of the given URIs.
-		 *
-		 * @param uris the URIs to accept
-		 * @return if the item accepted a drop of the given URIs
-		 */
-		public virtual bool accept_drop (ArrayList<string> uris)
-		{
-			return false;
-		}
-		
-		/**
 		 * Check the validity of this item.
 		 *
 		 * @return Whether or not this item is valid for the .dockitem given
@@ -600,76 +385,6 @@ namespace Plank.Items
 		public virtual bool is_valid ()
 		{
 			return File.new_for_uri (Prefs.Launcher).query_exists ();
-		}
-		
-		/**
-		 * Returns a unique ID for this dock item.
-		 *
-		 * @return a unique ID for this dock item
-		 */
-		public virtual string unique_id ()
-		{
-			// TODO this is a unique ID, but it is not stable!
-			// do we still need stable IDs?
-			return "dockitem%d".printf ((int) this);
-		}
-		
-		/**
-		 * Returns a unique URI for this dock item.
-		 *
-		 * @return a unique URI for this dock item
-		 */
-		public string as_uri ()
-		{
-			return "plank://" + unique_id ();
-		}
-		
-		/**
-		 * Creates a new menu item.
-		 *
-		 * @param title the title of the menu item
-		 * @param icon the icon of the menu item
-		 * @param force_show_icon whether to force showing the icon
-		 * @return the new menu item
-		 */
-		protected static Gtk.MenuItem create_menu_item (string title, string? icon = null, bool force_show_icon = false)
-		{
-			if (icon == null || icon == "")
-				return new Gtk.MenuItem.with_mnemonic (title);
-			
-			int width, height;
-			icon_size_lookup (IconSize.MENU, out width, out height);
-			
-			var item = new ImageMenuItem.with_mnemonic (title);
-			item.set_image (new Gtk.Image.from_pixbuf (DrawingService.load_icon (icon, width, height)));
-			if (force_show_icon)
-				item.always_show_image = true;
-			
-			return item;
-		}
-		
-		/**
-		 * Creates a new menu item.
-		 *
-		 * @param title the title of the menu item
-		 * @param pixbuf the icon of the menu item
-		 * @param force_show_icon whether to force showing the icon
-		 * @return the new menu item
-		 */
-		protected static Gtk.MenuItem create_menu_item_with_pixbuf (string title, owned Gdk.Pixbuf pixbuf, bool force_show_icon = false)
-		{
-			int width, height;
-			icon_size_lookup (IconSize.MENU, out width, out height);
-			
-			if (width != pixbuf.width || height != pixbuf.height)
-				pixbuf = DrawingService.ar_scale (pixbuf, width, height);
-			
-			var item = new ImageMenuItem.with_mnemonic (title);
-			item.set_image (new Gtk.Image.from_pixbuf (pixbuf));
-			if (force_show_icon)
-				item.always_show_image = true;
-			
-			return item;
 		}
 		
 		/**

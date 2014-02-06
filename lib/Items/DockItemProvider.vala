@@ -24,7 +24,7 @@ namespace Plank.Items
 	/**
 	 * A container and controller class for managing dock items on a dock.
 	 */
-	public class DockItemProvider : GLib.Object
+	public class DockItemProvider : DockElement
 	{
 		static PlaceholderDockItem placeholder_item;
 		
@@ -301,28 +301,6 @@ namespace Plank.Items
 		protected virtual void handle_item_deleted (DockItem item)
 		{
 			remove_item (item);
-		}
-		
-		/**
-		 * Returns if the provider accepts a drop of the given URIs.
-		 *
-		 * @param uris the URIs to check
-		 * @return if the provider accepts a drop of the given URIs
-		 */
-		public virtual bool can_accept_drop (ArrayList<string> uris)
-		{
-			return false;
-		}
-		
-		/**
-		 * Accepts a drop of the given URIs.
-		 *
-		 * @param uris the URIs to accept
-		 * @return if the item accepted a drop of the given URIs
-		 */
-		public virtual bool accept_drop (ArrayList<string> uris)
-		{
-			return false;
 		}
 	}
 }
