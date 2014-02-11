@@ -91,8 +91,6 @@ namespace Plank
 		{
 			windows_intersect = false;
 			
-			notify["Disabled"].connect (update_hidden);
-			notify["DockHovered"].connect (update_hidden);
 			controller.prefs.notify["HideMode"].connect (prefs_changed);
 		}
 		
@@ -122,8 +120,6 @@ namespace Plank
 			unowned DragManager drag_manager = controller.drag_manager;
 			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
 			
-			notify["Disabled"].disconnect (update_hidden);
-			notify["DockHovered"].disconnect (update_hidden);
 			controller.prefs.notify["HideMode"].disconnect (prefs_changed);
 			
 			window.enter_notify_event.disconnect (enter_notify_event);
@@ -146,6 +142,10 @@ namespace Plank
 			unowned DockWindow window = controller.window;
 			unowned DragManager drag_manager = controller.drag_manager;
 			
+			freeze_notify ();
+			
+			bool update_needed = false;
+			
 			// get current mouse pointer location
 			int x, y;
 			
@@ -165,13 +165,22 @@ namespace Plank
 			var hovered = (x >= dock_rect.x && x < dock_rect.x + dock_rect.width
 				&& y >= dock_rect.y && y < dock_rect.y + dock_rect.height);
 			
-			if (DockHovered != hovered)
+			if (DockHovered != hovered) {
 				DockHovered = hovered;
+				update_needed = true;
+			}
 			
 			// disable hiding if drags are active
 			var disabled = (drag_manager.InternalDragActive || drag_manager.ExternalDragActive);
-			if (Disabled != disabled)
+			if (Disabled != disabled) {
 				Disabled = disabled;
+				update_needed = true;
+			}
+			
+			if (update_needed)
+				update_hidden ();
+			
+			thaw_notify ();
 		}
 		
 		uint timer_prefs_changed = 0;
@@ -263,10 +272,16 @@ namespace Plank
 			if (event.detail == NotifyType.INFERIOR)
 				return Hidden;
 			
-			if ((bool) event.send_event)
-				DockHovered = true;
-			else
+			if ((bool) event.send_event) {
+				if (!DockHovered) {
+					freeze_notify ();
+					DockHovered = true;
+					update_hidden ();
+					thaw_notify ();
+				}
+			} else {
 				update_dock_hovered ();
+			}
 			
 			return Hidden;
 		}
