@@ -107,7 +107,6 @@ namespace Plank
 			
 			window.enter_notify_event.connect (enter_notify_event);
 			window.leave_notify_event.connect (leave_notify_event);
-			window.motion_notify_event.connect (motion_notify_event);
 			
 			wnck_screen.window_opened.connect (schedule_update);
 			wnck_screen.window_closed.connect (schedule_update);
@@ -129,7 +128,6 @@ namespace Plank
 			
 			window.enter_notify_event.disconnect (enter_notify_event);
 			window.leave_notify_event.disconnect (leave_notify_event);
-			window.motion_notify_event.disconnect (motion_notify_event);
 			
 			wnck_screen.window_opened.disconnect (schedule_update);
 			wnck_screen.window_closed.disconnect (schedule_update);
@@ -286,13 +284,6 @@ namespace Plank
 				update_dock_hovered ();
 			
 			return false;
-		}
-		
-		bool motion_notify_event (EventMotion event)
-		{
-			update_dock_hovered ();
-			
-			return Hidden;
 		}
 		
 		//
