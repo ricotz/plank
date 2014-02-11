@@ -271,7 +271,7 @@ namespace Plank.Widgets
 				
 				// slide the dock in, if it shouldnt start hidden
 				Gdk.threads_add_timeout (400, () => {
-					controller.hide_manager.update_dock_hovered ();
+					controller.hide_manager.update_hovered ();
 					return false;
 				});
 				
@@ -592,8 +592,8 @@ namespace Plank.Widgets
 		{
 			update_icon_regions ();
 			unowned HideManager hide_manager = controller.hide_manager;
-			hide_manager.update_dock_hovered ();
-			if (!hide_manager.DockHovered)
+			hide_manager.update_hovered ();
+			if (!hide_manager.Hovered)
 				set_hovered (null);
 		}
 		

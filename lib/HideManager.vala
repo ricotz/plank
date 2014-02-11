@@ -71,7 +71,7 @@ namespace Plank
 		/**
 		 * If the dock is currently hovered by the mouse cursor.
 		 */
-		public bool DockHovered { get; private set; default = false; }
+		public bool Hovered { get; private set; default = false; }
 		
 		uint timer_unhide = 0;
 		bool pointer_update = true;
@@ -136,7 +136,7 @@ namespace Plank
 		/**
 		 * Checks to see if the dock is being hovered by the mouse cursor.
 		 */
-		public void update_dock_hovered ()
+		public void update_hovered ()
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockWindow window = controller.window;
@@ -165,8 +165,8 @@ namespace Plank
 			var hovered = (x >= dock_rect.x && x < dock_rect.x + dock_rect.width
 				&& y >= dock_rect.y && y < dock_rect.y + dock_rect.height);
 			
-			if (DockHovered != hovered) {
-				DockHovered = hovered;
+			if (Hovered != hovered) {
+				Hovered = hovered;
 				update_needed = true;
 			}
 			
@@ -214,21 +214,21 @@ namespace Plank
 				break;
 			
 			case HideType.INTELLIGENT:
-				if (DockHovered || !windows_intersect)
+				if (Hovered || !windows_intersect)
 					show ();
 				else
 					hide ();
 				break;
 			
 			case HideType.AUTO:
-				if (DockHovered)
+				if (Hovered)
 					show ();
 				else
 					hide ();
 				break;
 			
 			case HideType.DODGE_MAXIMIZED:
-				if (DockHovered || !(active_maximized_window_intersect || dialog_windows_intersect))
+				if (Hovered || !(active_maximized_window_intersect || dialog_windows_intersect))
 					show ();
 				else
 					hide ();
@@ -273,14 +273,14 @@ namespace Plank
 				return Hidden;
 			
 			if ((bool) event.send_event) {
-				if (!DockHovered) {
+				if (!Hovered) {
 					freeze_notify ();
-					DockHovered = true;
+					Hovered = true;
 					update_hidden ();
 					thaw_notify ();
 				}
 			} else {
-				update_dock_hovered ();
+				update_hovered ();
 			}
 			
 			return Hidden;
@@ -295,8 +295,8 @@ namespace Plank
 			if ((bool) event.send_event)
 				return false;
 			
-			if (DockHovered && !controller.window.menu_is_visible ())
-				update_dock_hovered ();
+			if (Hovered && !controller.window.menu_is_visible ())
+				update_hovered ();
 			
 			return false;
 		}

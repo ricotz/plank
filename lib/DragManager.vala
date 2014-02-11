@@ -287,8 +287,8 @@ namespace Plank
 		{
 			if (!drag_canceled && DragItem != null) {
 				unowned HideManager hide_manager = controller.hide_manager;
-				hide_manager.update_dock_hovered ();
-				if (!hide_manager.DockHovered) {
+				hide_manager.update_hovered ();
+				if (!hide_manager.Hovered) {
 					if (DragItem.can_be_removed ()) {
 						// Remove from dock
 						unowned ApplicationDockItem? app_item = (DragItem as ApplicationDockItem);
@@ -339,7 +339,7 @@ namespace Plank
 				drag_hover_timer = 0;
 			}
 			
-			controller.hide_manager.update_dock_hovered ();
+			controller.hide_manager.update_hovered ();
 			drag_known = false;
 			
 			if (ExternalDragActive) {
@@ -365,7 +365,7 @@ namespace Plank
 			if (DragItem == null)
 				return;
 			
-			if (!controller.hide_manager.DockHovered) {
+			if (!controller.hide_manager.Hovered) {
 				controller.window.update_hovered (-1, -1);
 				controller.renderer.animated_draw ();
 			}
@@ -411,7 +411,7 @@ namespace Plank
 				drag_status (context, DragAction.COPY, time_);
 			}
 			
-			hide_manager.update_dock_hovered ();
+			hide_manager.update_hovered ();
 			window.update_hovered (x, y);
 			
 			return true;
@@ -470,7 +470,7 @@ namespace Plank
 			if (InternalDragActive)
 				return;
 			
-			if (controller.hide_manager.DockHovered) {
+			if (controller.hide_manager.Hovered) {
 				if (proxy_window == null)
 					return;
 				proxy_window = null;
