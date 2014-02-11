@@ -29,14 +29,12 @@ namespace Plank.Widgets
 	{
 		const int PADDING = 10;
 		
-		public DockController controller { private get; construct; }
-		
 		Gtk.Box box;
 		Gtk.Label label;
 		
-		public HoverWindow (DockController controller)
+		public HoverWindow ()
 		{
-			GLib.Object (controller: controller, type: Gtk.WindowType.POPUP, type_hint: WindowTypeHint.TOOLTIP);
+			GLib.Object (type: Gtk.WindowType.POPUP, type_hint: WindowTypeHint.TOOLTIP);
 		}
 		
 		construct
@@ -68,8 +66,9 @@ namespace Plank.Widgets
 		 *
 		 * @param x the x location
 		 * @param y the y location
+		 * @param position the dock's position
 		 */
-		public void show_at (int x, int y)
+		public void show_at (int x, int y, PositionType position)
 		{
 			unowned Screen screen = get_screen ();
 			Gdk.Rectangle monitor;
@@ -83,7 +82,7 @@ namespace Plank.Widgets
 			var width = get_allocated_width ();
 			var height = get_allocated_height ();
 			
-			switch (controller.prefs.Position) {
+			switch (position) {
 			case PositionType.BOTTOM:
 				x = x - width / 2;
 				y = y - height - PADDING;

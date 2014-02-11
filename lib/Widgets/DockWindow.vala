@@ -62,6 +62,10 @@ namespace Plank.Widgets
 		 */
 		protected Gtk.Menu? menu;
 		
+		/**
+		 * The tooltip window for this dock.
+		 */
+		protected HoverWindow hover;
 		
 		uint reposition_timer = 0;
 		uint hover_reposition_timer = 0;
@@ -97,6 +101,8 @@ namespace Plank.Widgets
 						EventMask.LEAVE_NOTIFY_MASK |
 						EventMask.POINTER_MOTION_MASK |
 						EventMask.SCROLL_MASK);
+			
+			hover = new HoverWindow ();
 			
 			controller.prefs.notify["HideMode"].connect (set_struts);
 		}
@@ -207,7 +213,7 @@ namespace Plank.Widgets
 			if (!menu_is_visible ())
 				set_hovered (null);
 			else
-				controller.hover.hide ();
+				hover.hide ();
 			
 			return true;
 		}
@@ -325,7 +331,8 @@ namespace Plank.Widgets
 				Source.remove (hover_reposition_timer);
 				hover_reposition_timer = 0;
 			}
-			controller.hover.hide ();
+			
+			hover.hide ();
 			
 			if (HoveredItem == null || controller.drag_manager.InternalDragActive) {
 				ClickedItem = null;
@@ -339,12 +346,10 @@ namespace Plank.Widgets
 				if (HoveredItem == null)
 					return false;
 				
-				unowned HoverWindow hover = controller.hover;
-				
 				int x, y;
 				hover.set_text (HoveredItem.Text);
 				controller.position_manager.get_hover_position (HoveredItem, out x, out y);
-				hover.show_at (x, y);
+				hover.show_at (x, y, controller.prefs.Position);
 				
 				if (menu_is_visible ())
 					hover.hide ();
@@ -603,7 +608,7 @@ namespace Plank.Widgets
 		protected void on_menu_show ()
 		{
 			update_icon_regions ();
-			controller.hover.hide ();
+			hover.hide ();
 			controller.renderer.animated_draw ();
 		}
 		

@@ -40,7 +40,6 @@ namespace Plank
 		
 		public DragManager drag_manager { get; protected set; }
 		public HideManager hide_manager { get; protected set; }
-		public HoverWindow hover { get; protected set; }
 		public PositionManager position_manager { get; protected set; }
 		public DockRenderer renderer { get; protected set; }
 		public DockWindow window { get; protected set; }
@@ -92,7 +91,6 @@ namespace Plank
 			renderer = new DockRenderer (this);
 			drag_manager = new DragManager (this);
 			hide_manager = new HideManager (this);
-			hover = new HoverWindow (this);
 			window = new DockWindow (this);
 		}
 		
