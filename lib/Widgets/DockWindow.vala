@@ -645,8 +645,12 @@ namespace Plank.Widgets
 			if (!get_realized ())
 				return;
 			
-			unowned Gdk.Display gdk_display = get_display ();
-			if (!(gdk_display is Gdk.X11Display))
+			unowned Gdk.X11.Display gdk_display = (get_display () as Gdk.X11.Display);
+			if (gdk_display == null)
+				return;
+
+			unowned Gdk.X11.Window gdk_window = (get_window () as Gdk.X11.Window);
+			if (gdk_window == null)
 				return;
 			
 			var struts = new ulong [Struts.N_VALUES];
@@ -658,15 +662,15 @@ namespace Plank.Widgets
 			for (var i = 0; i < first_struts.length; i++)
 				first_struts [i] = struts [i];
 			
-			unowned X.Display display = X11Display.get_xdisplay (gdk_display);
-			var xid = X11Window.get_xid (get_window ());
+			unowned X.Display display = gdk_display.get_xdisplay ();
+			var xid = gdk_window.get_xid ();
 			
-			Gdk.error_trap_push ();
+			gdk_display.error_trap_push ();
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL,
 			                      32, X.PropMode.Replace, (uchar[]) struts, struts.length);
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL,
 			                      32, X.PropMode.Replace, (uchar[]) first_struts, first_struts.length);
-			Gdk.error_trap_pop ();
+			gdk_display.error_trap_pop ();
 		}
 	}
 }
