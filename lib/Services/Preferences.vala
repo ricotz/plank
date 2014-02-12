@@ -427,11 +427,9 @@ namespace Plank.Services
 			thaw_notify ();
 			notify.connect (handle_notify);
 			
-			if (missing_keys)
-				save_prefs ();
-			
 			is_delayed_internal = false;
-			if (!is_delayed && is_changed && backing_file != null)
+			if (missing_keys
+				|| (!is_delayed && is_changed && backing_file != null))
 				save_prefs ();
 		}
 		
