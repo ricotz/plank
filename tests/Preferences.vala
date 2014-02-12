@@ -122,6 +122,7 @@ namespace Plank.Tests
 		var prefs2 = new TestPreferences ("test_preferences_delay");
 		
 		triggered = false;
+		triggered_count = 0;
 		prefs2.notify.connect (preferences_triggered_cb);
 		
 		prefs.delay ();
@@ -132,6 +133,7 @@ namespace Plank.Tests
 		
 		wait (IO_WAIT_MS);
 		assert (triggered == false);
+		assert (triggered_count == 0);
 		assert (prefs2.BoolSetting == true);
 		assert (prefs2.DoubleSetting == 0.42);
 		assert (prefs2.IntSetting == 42);
@@ -141,6 +143,7 @@ namespace Plank.Tests
 		
 		wait (IO_WAIT_MS);
 		assert (triggered == true);
+		assert (triggered_count == 4);
 		assert (prefs2.BoolSetting == false);
 		assert (prefs2.DoubleSetting == 0.4711);
 		assert (prefs2.IntSetting == 4711);
