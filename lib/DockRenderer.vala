@@ -39,11 +39,13 @@ namespace Plank
 		/**
 		 * The current progress [0.0..1.0] of the hide-animation of the dock.
 		 */
+		[CCode (notify = false)]
 		public double hide_progress { get; private set; }
 		
 		/**
 		 * The current opacity of the dock.
 		 */
+		[CCode (notify = false)]
 		double opacity { get; private set; }
 
 		DockSurface? background_buffer;
