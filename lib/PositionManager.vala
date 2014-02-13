@@ -311,6 +311,13 @@ namespace Plank
 			UrgentBounceHeight = (int) (theme.UrgentBounceHeight * IconSize);
 			LineWidth     = theme.LineWidth;
 			
+			if (!screen_is_composited) {
+				if (HorizPadding < 0)
+					HorizPadding = (int) scaled_icon_size;
+				if (TopPadding < 0)
+					TopPadding = (int) scaled_icon_size;
+			}
+			
 			items_offset  = (int) (2 * LineWidth + (HorizPadding > 0 ? HorizPadding : 0));
 			
 			top_offset = theme.get_top_offset ();
@@ -323,11 +330,6 @@ namespace Plank
 				extra_hide_offset = (IconShadowSize - top_padding);
 			else
 				extra_hide_offset = 0;
-			
-			if (!screen_is_composited) {
-				HorizPadding = int.max (0, HorizPadding);
-				TopPadding = int.max (0, TopPadding);
-			}
 			
 			draw_values.clear ();
 		}
