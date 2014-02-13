@@ -96,6 +96,7 @@ namespace Plank
 			
 			controller.position_manager.reset_caches (theme);
 			controller.position_manager.update_regions ();
+			
 			controller.window.notify["HoveredItem"].connect (animated_draw);
 			controller.prefs.notify["Position"].connect (dock_position_changed);
 			controller.prefs.notify["Theme"].connect (load_theme);
@@ -169,10 +170,10 @@ namespace Plank
 			theme.load ("dock");
 			theme.notify.connect (theme_changed);
 			
-			controller.position_manager.reset_caches (theme);
-			
-			if (is_reload)
+			if (is_reload) {
+				controller.position_manager.reset_caches (theme);
 				controller.position_manager.update_regions ();
+			}
 		}
 		
 		/**
