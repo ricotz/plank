@@ -15,8 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gtk;
-
 namespace Plank.Drawing
 {
 	/**
@@ -30,15 +28,16 @@ namespace Plank.Drawing
 		 */
 		const uint FPS = 60;
 		
-		Widget widget;
+		public Gtk.Widget widget { get; construct; }
 		
 		uint animation_timer = 0;
 		
 		/**
-		 * Creates a new animation renderer. Must call set_widget() later.
+		 * Creates a new animation renderer.
 		 */
-		public AnimatedRenderer ()
+		public AnimatedRenderer (Gtk.Widget widget)
 		{
+			Object (widget : widget);
 		}
 		
 		~AnimatedRenderer ()
@@ -47,26 +46,6 @@ namespace Plank.Drawing
 				GLib.Source.remove (animation_timer);
 				animation_timer = 0;
 			}
-		}
-		
-		/**
-		 * Creates a new animation renderer for a widget.
-		 *
-		 * @param widget the widget to handle animations for
-		 */
-		public AnimatedRenderer.with_widget (Widget widget)
-		{
-			set_widget (widget);
-		}
-		
-		/**
-		 * Sets the widget to handle animations for.
-		 *
-		 * @param widget the widget to handle animations for
-		 */
-		public void set_widget (Widget widget)
-		{
-			this.widget = widget;
 		}
 		
 		/**

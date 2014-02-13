@@ -67,10 +67,11 @@ namespace Plank
 		 * Create a new dock renderer for a dock.
 		 *
 		 * @param controller the dock controller to manage drawing for
+		 * @param window the dock window to be animated
 		 */
-		public DockRenderer (DockController controller)
+		public DockRenderer (DockController controller, Gtk.Window window)
 		{
-			GLib.Object (controller : controller);
+			GLib.Object (controller : controller, widget : window);
 		}
 		
 		construct
@@ -86,8 +87,6 @@ namespace Plank
 		public void initialize ()
 			requires (controller.window != null)
 		{
-			set_widget (controller.window);
-			
 			unowned Screen screen = controller.window.get_screen ();
 			screen_is_composited = screen.is_composited ();
 			screen.composited_changed.connect (composited_changed);

@@ -88,10 +88,10 @@ namespace Plank
 			items = new ArrayList<unowned DockItem> ();
 			
 			position_manager = new PositionManager (this);
-			renderer = new DockRenderer (this);
 			drag_manager = new DragManager (this);
 			hide_manager = new HideManager (this);
 			window = new DockWindow (this);
+			renderer = new DockRenderer (this, window);
 		}
 		
 		~DockController ()
