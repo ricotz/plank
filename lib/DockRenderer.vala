@@ -116,8 +116,7 @@ namespace Plank
 		{
 			screen_is_composited = screen.is_composited ();
 			
-			controller.position_manager.reset_caches (theme);
-			controller.position_manager.update_regions ();
+			reset_position_manager ();
 		}
 		
 		void prefs_changed (Object prefs, ParamSpec prop)
@@ -179,8 +178,7 @@ namespace Plank
 			theme.notify.connect (theme_changed);
 			
 			if (is_reload) {
-				controller.position_manager.reset_caches (theme);
-				controller.position_manager.update_regions ();
+				reset_position_manager ();
 			}
 		}
 		
