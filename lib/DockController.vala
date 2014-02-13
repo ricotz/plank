@@ -223,7 +223,8 @@ namespace Plank
 		{
 			update_items ();
 			
-			if (prefs.Alignment != Gtk.Align.FILL)
+			if (prefs.Alignment != Gtk.Align.FILL
+				&& added.size != removed.size)
 				position_manager.reset_caches (renderer.theme);
 			position_manager.update_regions ();
 		}
