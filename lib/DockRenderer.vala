@@ -98,8 +98,6 @@ namespace Plank
 			controller.position_manager.update_regions ();
 			
 			controller.window.notify["HoveredItem"].connect (animated_draw);
-			controller.prefs.notify["Position"].connect (dock_position_changed);
-			controller.prefs.notify["Theme"].connect (load_theme);
 			controller.hide_manager.notify["Hidden"].connect (hidden_changed);
 		}
 		
@@ -111,8 +109,6 @@ namespace Plank
 			controller.window.get_screen ().composited_changed.disconnect (composited_changed);
 
 			controller.hide_manager.notify["Hidden"].disconnect (hidden_changed);
-			controller.prefs.notify["Position"].disconnect (dock_position_changed);
-			controller.prefs.notify["Theme"].disconnect (load_theme);
 			controller.window.notify["HoveredItem"].disconnect (animated_draw);
 		}
 		
@@ -124,15 +120,27 @@ namespace Plank
 			controller.position_manager.update_regions ();
 		}
 		
-		void dock_position_changed ()
+		void prefs_changed (Object prefs, ParamSpec prop)
 		{
-			reset_buffers ();
-			reset_item_buffers ();
-		}
-		
-		void prefs_changed ()
-		{
-			reset_position_manager ();
+			switch (prop.name) {
+			case "Alignment":
+			case "IconSize":
+			case "ItemsAlignment":
+			case "Offset":
+				reset_position_manager ();
+				break;
+			case "Position":
+				reset_buffers ();
+				reset_item_buffers ();
+				reset_position_manager ();
+				break;
+			case "Theme":
+				load_theme ();
+				break;
+			default:
+				// Nothing important for us changed
+				break;
+			}
 		}
 		
 		void theme_changed ()
