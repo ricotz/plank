@@ -18,11 +18,16 @@
 using Cairo;
 using Gdk;
 
+using Plank.Drawing;
+using Plank.Factories;
 using Plank.Services;
+
+using Plank.Services.Windows;
 
 namespace Plank.Tests
 {
 	public const string TEST_ICON = Config.DATA_DIR + "/test-icon.svg";
+	public const string TEST_DOCK_NAME = "dock1";
 	public const uint IO_WAIT_MS = 1500;
 	public const uint EVENT_WAIT_MS = 100;
 	public const uint X_WAIT_MS = 200;
@@ -37,10 +42,21 @@ namespace Plank.Tests
 		
 		Paths.initialize ("test", Config.DATA_DIR);
 		
+		// static tests
 		register_drawing_tests ();
 		register_items_tests ();
 		register_preferences_tests ();
 		register_widgets_tests ();
+
+		// further preparations needed for runtime tests
+		Factory.init (new TestMain (), new ItemFactory ());
+		Logger.initialize ("test");
+		Paths.ensure_directory_exists (Paths.AppConfigFolder.get_child (TEST_DOCK_NAME));
+		WindowControl.initialize ();
+		Logger.DisplayLevel = LogLevel.VERBOSE;
+		
+		// runtime tests
+		register_controller_tests ();
 		
 		return Test.run ();
 	}
@@ -56,5 +72,43 @@ namespace Plank.Tests
 		
 		main_loop.run ();
 	}
-
+	
+	public class TestMain : AbstractMain
+	{
+		public TestMain ()
+		{
+			build_data_dir = Config.DATA_DIR;
+			build_pkg_data_dir = Config.DATA_DIR + "/test";
+			build_release_name = "testname";
+			build_version = "0.0.0";
+			build_version_info = "testing";
+			
+			program_name = "Test";
+			exec_name = "test";
+			
+			app_copyright = "2014";
+			app_dbus = "net.launchpad.planktest";
+			app_icon = "test";
+			app_launcher = "test.desktop";
+			
+			main_url = "https://launchpad.net/plank";
+			help_url = "https://answers.launchpad.net/plank";
+			translate_url = "https://translations.launchpad.net/plank";
+			
+			about_authors = {
+				"Robert Dyer <robert@go-docky.com>",
+				"Rico Tzschichholz <rtz@go-docky.com>",
+				"Michal Hruby <michal.mhr@gmail.com>"
+			};
+			about_documenters = {
+				"Robert Dyer <robert@go-docky.com>",
+				"Rico Tzschichholz <rtz@go-docky.com>"
+			};
+			about_artists = {
+				"Daniel Foré <bunny@go-docky.com>"
+			};
+			about_translators = "";
+			about_license_type = Gtk.License.GPL_3_0;
+		}
+	}
 }

@@ -31,6 +31,7 @@ tests_LDADD = \
 	$(NULL)
 
 tests_VALASOURCES = \
+	Controller.vala \
 	Drawing.vala \
 	Items.vala \
 	Preferences.vala \
