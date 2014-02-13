@@ -76,6 +76,8 @@ namespace Plank
 		construct
 		{
 			controller.prefs.notify.connect (prefs_changed);
+			
+			load_theme ();
 		}
 		
 		/**
@@ -90,8 +92,6 @@ namespace Plank
 			screen_is_composited = screen.is_composited ();
 			screen.composited_changed.connect (composited_changed);
 
-			load_theme ();
-			
 			init_current_frame ();
 			
 			controller.position_manager.reset_caches (theme);
