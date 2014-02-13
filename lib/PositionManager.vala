@@ -275,10 +275,14 @@ namespace Plank
 			
 			screen_is_composited = controller.window.get_screen ().is_composited ();
 			
+			freeze_notify ();
+			
 			update_caches (theme);
 			update_max_icon_size (theme);
 			update_dimensions ();
 			update_dock_position ();
+			
+			thaw_notify ();
 		}
 		
 		/**
