@@ -50,7 +50,7 @@ namespace Gdk
 #if !VALA_0_24
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	namespace X11 {
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_display_get_type ()")]
+		[CCode (cheader_filename = "gdk/gdkx.h", type_check_function = "GDK_IS_X11_DISPLAY", type_id = "gdk_x11_display_get_type ()")]
 		public class Display : Gdk.Display {
 			[CCode (has_construct_function = false)]
 			protected Display ();
@@ -72,7 +72,7 @@ namespace Gdk
 			public void ungrab ();
 			public bool utf8_to_compound_text (string str, out Gdk.Atom encoding, out int format, [CCode (array_length_cname = "length", array_length_pos = 4.1)] out uint8[] ctext);
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_screen_get_type ()")]
+		[CCode (cheader_filename = "gdk/gdkx.h", type_check_function = "GDK_IS_X11_SCREEN", type_id = "gdk_x11_screen_get_type ()")]
 		public class Screen : Gdk.Screen {
 			[CCode (has_construct_function = false)]
 			protected Screen ();
@@ -85,7 +85,7 @@ namespace Gdk
 			public bool supports_net_wm_hint (Gdk.Atom property);
 			public signal void window_manager_changed ();
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_window_get_type ()")]
+		[CCode (cheader_filename = "gdk/gdkx.h", type_check_function = "GDK_IS_X11_WINDOW", type_id = "gdk_x11_window_get_type ()")]
 		public class Window : Gdk.Window {
 			[CCode (has_construct_function = false)]
 			protected Window ();
