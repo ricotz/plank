@@ -250,6 +250,9 @@ namespace Plank
 
 		void show ()
 		{
+			if (!Hidden)
+				return;
+			
 			if (!pointer_update || controller.prefs.UnhideDelay == 0) {
 				if (Hidden)
 					Hidden = false;
