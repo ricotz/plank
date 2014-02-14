@@ -341,10 +341,17 @@ namespace Plank.Widgets
 			
 			// don't be that demanding this delay is still fast enough
 			hover_reposition_timer = Gdk.threads_add_timeout (33, () => {
-				hover_reposition_timer = 0;
-				
-				if (HoveredItem == null)
+				if (HoveredItem == null) {
+					hover_reposition_timer = 0;
 					return false;
+				}
+				
+				// wait for the dock to be completely unhidden if it was
+				if (!controller.hide_manager.Hidden
+					&& controller.renderer.hide_progress > 0.0)
+					return true;
+				
+				hover_reposition_timer = 0;
 				
 				int x, y;
 				hover.set_text (HoveredItem.Text);
