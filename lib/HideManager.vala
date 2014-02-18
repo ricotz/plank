@@ -76,6 +76,16 @@ namespace Plank
 		uint timer_unhide = 0;
 		bool pointer_update = true;
 		
+		uint timer_prefs_changed = 0;
+		
+		bool windows_intersect = false;
+		bool active_maximized_window_intersect = false;
+		bool dialog_windows_intersect = false;
+		Gdk.Rectangle last_window_rect;
+		
+		uint timer_geo = 0;
+		uint timer_window_changed = 0;
+		
 		/**
 		 * Creates a new instance of a HideManager, which handles
 		 * checking if a dock should hide or not.
@@ -89,8 +99,6 @@ namespace Plank
 		
 		construct
 		{
-			windows_intersect = false;
-			
 			controller.prefs.notify["HideMode"].connect (prefs_changed);
 		}
 		
@@ -182,8 +190,6 @@ namespace Plank
 			
 			thaw_notify ();
 		}
-		
-		uint timer_prefs_changed = 0;
 		
 		void prefs_changed ()
 		{
@@ -307,14 +313,6 @@ namespace Plank
 		//
 		// intelligent hiding code
 		//
-		
-		bool windows_intersect;
-		bool active_maximized_window_intersect;
-		bool dialog_windows_intersect;
-		Gdk.Rectangle last_window_rect;
-		
-		uint timer_geo;
-		uint timer_window_changed;
 		
 		void update_window_intersect ()
 		{
