@@ -48,19 +48,19 @@ namespace Plank
 		[CCode (notify = false)]
 		double opacity { get; private set; }
 
-		DockSurface? background_buffer;
+		DockSurface? background_buffer = null;
 		Gdk.Rectangle background_rect;
-		DockSurface? main_buffer;
-		DockSurface? indicator_buffer;
-		DockSurface? shadow_buffer;
-		DockSurface? urgent_indicator_buffer;
-		DockSurface? urgent_glow_buffer;
+		DockSurface? main_buffer = null;
+		DockSurface? indicator_buffer = null;
+		DockSurface? shadow_buffer = null;
+		DockSurface? urgent_indicator_buffer = null;
+		DockSurface? urgent_glow_buffer = null;
 		
 		DateTime last_hide = new DateTime.from_unix_utc (0);
 		
 		DateTime frame_time = new DateTime.from_unix_utc (0);
 		
-		bool screen_is_composited;
+		bool screen_is_composited = false;
 		uint reset_position_manager_timer = 0;
 		
 		/**
