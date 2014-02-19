@@ -73,7 +73,6 @@ namespace Plank
 		public DockPreferences ()
 		{
 			base ();
-			Screen.get_default ().monitors_changed.connect (monitors_changed);
 		}
 		
 		/**
@@ -82,7 +81,6 @@ namespace Plank
 		public DockPreferences.with_file (File file)
 		{
 			base.with_file (file);
-			Screen.get_default ().monitors_changed.connect (monitors_changed);
 		}
 		
 		/**
@@ -91,12 +89,10 @@ namespace Plank
 		public DockPreferences.with_filename (string filename)
 		{
 			base.with_filename (filename);
-			Screen.get_default ().monitors_changed.connect (monitors_changed);
 		}
 		
 		~DockPreferences ()
 		{
-			Screen.get_default ().monitors_changed.disconnect (monitors_changed);
 		}
 		
 		/**
@@ -120,11 +116,6 @@ namespace Plank
 			LockItems = false;
 		}
 		
-		void monitors_changed ()
-		{
-			verify ("Monitor");
-		}
-		
 		/**
 		 * Get the actual monitor to place the dock on
 		 *
@@ -132,8 +123,9 @@ namespace Plank
 		 */
 		public int get_monitor ()
 		{
-			if (Monitor <= -1)
-				return Screen.get_default ().get_primary_monitor ();
+			unowned Screen screen = Screen.get_default ();
+			if (Monitor <= -1 || Monitor >= screen.get_n_monitors ())
+				return screen.get_primary_monitor ();
 			return Monitor;
 		}
 		
