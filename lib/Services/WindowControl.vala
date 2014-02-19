@@ -411,7 +411,8 @@ namespace Plank.Services.Windows
 			// sometimes compiz plays badly.  This hacks around it
 			var time = Gtk.get_current_event_time () + VIEWPORT_CHANGE_DELAY;
 			Gdk.threads_add_timeout (VIEWPORT_CHANGE_DELAY, () => {
-				targetWindow.activate (time);
+				if (targetWindow is Wnck.Window)
+					targetWindow.activate (time);
 				return false;
 			});
 		}
