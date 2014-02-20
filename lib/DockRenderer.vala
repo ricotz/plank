@@ -407,7 +407,7 @@ namespace Plank
 			// lighten or darken the icon
 			var lighten = 0.0, darken = 0.0;
 			
-			var max_click_time = item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
+			var max_click_time = item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
 			max_click_time *= 1000;
 			var click_time = frame_time.difference (item.LastClicked);
 			if (click_time < max_click_time) {
@@ -415,18 +415,18 @@ namespace Plank
 				
 				switch (item.ClickedAnimation) {
 				default:
-				case ClickAnimation.NONE:
+				case Animation.NONE:
 					break;
-				case ClickAnimation.BOUNCE:
+				case Animation.BOUNCE:
 					if (!screen_is_composited)
 						break;
 					var change = Math.fabs (Math.sin (2 * Math.PI * click_animation_progress) * icon_size * theme.LaunchBounceHeight * double.min (1.0, 1.3333 * (1.0 - click_animation_progress)));
 					draw_value = draw_value.move_in (controller.prefs.Position, change);
 					break;
-				case ClickAnimation.DARKEN:
+				case Animation.DARKEN:
 					darken = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
 					break;
-				case ClickAnimation.LIGHTEN:
+				case Animation.LIGHTEN:
 					lighten = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
 					break;
 				}
@@ -699,7 +699,7 @@ namespace Plank
 			}
 			
 			foreach (var item in controller.Items) {
-				if (render_time.difference (item.LastClicked) <= (item.ClickedAnimation == ClickAnimation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
+				if (render_time.difference (item.LastClicked) <= (item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
 					return true;
 				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)
 					return true;

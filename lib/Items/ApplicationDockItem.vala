@@ -318,22 +318,22 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
+		protected override Animation on_clicked (PopupButton button, ModifierType mod)
 		{
 			if (!is_window ())
 				if (button == PopupButton.MIDDLE
 					|| (button == PopupButton.LEFT && (App == null || WindowControl.get_num_windows (App) == 0
 					|| (mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))) {
 					launch ();
-					return ClickAnimation.BOUNCE;
+					return Animation.BOUNCE;
 				}
 			
 			if (button == PopupButton.LEFT && App != null && WindowControl.get_num_windows (App) > 0) {
 				WindowControl.smart_focus (App);
-				return ClickAnimation.DARKEN;
+				return Animation.DARKEN;
 			}
 			
-			return ClickAnimation.NONE;
+			return Animation.NONE;
 		}
 		
 		/**

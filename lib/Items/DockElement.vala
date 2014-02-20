@@ -24,9 +24,9 @@ using Plank.Drawing;
 namespace Plank.Items
 {
 	/**
-	 * What type of animation to perform when an item is clicked.
+	 * What type of animation to perform when an item is or was interacted with.
 	 */
-	public enum ClickAnimation
+	public enum Animation
 	{
 		/**
 		 * No animation.
@@ -120,7 +120,7 @@ namespace Plank.Items
 		/**
 		 * The animation to show for the item's last click event.
 		 */
-		public ClickAnimation ClickedAnimation { get; protected set; default = ClickAnimation.NONE; }
+		public Animation ClickedAnimation { get; protected set; default = Animation.NONE; }
 		
 		/**
 		 * The time the item was added to the dock.
@@ -175,9 +175,9 @@ namespace Plank.Items
 		 * @param button the button clicked
 		 * @param mod the modifiers
 		 */
-		protected virtual ClickAnimation on_clicked (PopupButton button, ModifierType mod)
+		protected virtual Animation on_clicked (PopupButton button, ModifierType mod)
 		{
-			return ClickAnimation.NONE;
+			return Animation.NONE;
 		}
 		
 		/**

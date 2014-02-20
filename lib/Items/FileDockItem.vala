@@ -206,27 +206,27 @@ namespace Plank.Items
 		public void launch ()
 		{
 			Services.System.open (OwnedFile);
-			ClickedAnimation = ClickAnimation.BOUNCE;
+			ClickedAnimation = Animation.BOUNCE;
 			LastClicked = new DateTime.now_utc ();
 		}
 		
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
+		protected override Animation on_clicked (PopupButton button, ModifierType mod)
 		{
 			if (button == PopupButton.MIDDLE) {
 				launch ();
-				return ClickAnimation.BOUNCE;
+				return Animation.BOUNCE;
 			}
 			
 			// this actually only happens if its a file, not a directory
 			if (button == PopupButton.LEFT) {
 				launch ();
-				return ClickAnimation.BOUNCE;
+				return Animation.BOUNCE;
 			}
 			
-			return ClickAnimation.NONE;
+			return Animation.NONE;
 		}
 		
 		/**
@@ -260,7 +260,7 @@ namespace Plank.Items
 					item = create_menu_item (text, icon, true);
 					item.activate.connect (() => {
 						Services.System.launch (file);
-						ClickedAnimation = ClickAnimation.BOUNCE;
+						ClickedAnimation = Animation.BOUNCE;
 						LastClicked = new DateTime.now_utc ();
 					});
 				} else {
@@ -269,7 +269,7 @@ namespace Plank.Items
 					item = create_menu_item (text, icon, true);
 					item.activate.connect (() => {
 						Services.System.open (file);
-						ClickedAnimation = ClickAnimation.BOUNCE;
+						ClickedAnimation = Animation.BOUNCE;
 						LastClicked = new DateTime.now_utc ();
 					});
 				}
@@ -319,7 +319,7 @@ namespace Plank.Items
 			item = create_menu_item (_("Open Containing _Folder"), "folder");
 			item.activate.connect (() => {
 				Services.System.open (OwnedFile.get_parent ());
-				ClickedAnimation = ClickAnimation.BOUNCE;
+				ClickedAnimation = Animation.BOUNCE;
 				LastClicked = new DateTime.now_utc ();
 			});
 			items.add (item);

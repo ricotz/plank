@@ -53,10 +53,10 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
+		protected override Animation on_clicked (PopupButton button, ModifierType mod)
 		{
 			Factory.main.on_item_clicked ();
-			return ClickAnimation.DARKEN;
+			return Animation.DARKEN;
 		}
 		
 		/**

@@ -41,9 +41,9 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override ClickAnimation on_clicked (PopupButton button, ModifierType mod)
+		protected override Animation on_clicked (PopupButton button, ModifierType mod)
 		{
-			return ClickAnimation.NONE;
+			return Animation.NONE;
 		}
 		
 		/**
