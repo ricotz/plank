@@ -368,7 +368,10 @@ namespace Plank.Items
 			if (App != null)
 				windows = App.get_windows ();
 			
-			if (!is_window ()) {
+			unowned DefaultApplicationDockItemProvider? default_provider = (Provider as DefaultApplicationDockItemProvider);
+			if (default_provider != null
+				&& !default_provider.Prefs.LockItems
+				&& !is_window ()) {
 				var item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
 				item.active = !(this is TransientDockItem);
 				item.activate.connect (() => pin_launcher ());
