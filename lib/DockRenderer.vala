@@ -719,9 +719,11 @@ namespace Plank
 			}
 			
 			foreach (var item in controller.Items) {
-				if (render_time.difference (item.LastClicked) <= (item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
+				if (item.ClickedAnimation != Animation.NONE
+					&& render_time.difference (item.LastClicked) <= (item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
 					return true;
-				if (render_time.difference (item.LastScrolled) <= 300 * 1000)
+				if (item.ScrolledAnimation != Animation.NONE
+					&& render_time.difference (item.LastScrolled) <= 300 * 1000)
 					return true;
 				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)
 					return true;
