@@ -339,11 +339,13 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override void on_scrolled (ScrollDirection direction, ModifierType mod)
+		protected override Animation on_scrolled (ScrollDirection direction, ModifierType mod)
 		{
-			if (App == null || WindowControl.get_num_windows (App) == 0
-				|| (new DateTime.now_utc ().difference (LastScrolled) < WindowControl.VIEWPORT_CHANGE_DELAY * 1000))
-				return;
+			if (App == null || WindowControl.get_num_windows (App) == 0)
+				return Animation.NONE;
+			
+			if (new DateTime.now_utc ().difference (LastScrolled) < 300 * 1000)
+				return Animation.DARKEN;
 			
 			LastScrolled = new DateTime.now_utc ();
 			
@@ -351,6 +353,8 @@ namespace Plank.Items
 				WindowControl.focus_previous (App);
 			else
 				WindowControl.focus_next (App);
+			
+			return Animation.DARKEN;
 		}
 		
 		/**

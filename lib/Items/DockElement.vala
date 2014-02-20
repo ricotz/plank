@@ -123,6 +123,11 @@ namespace Plank.Items
 		public Animation ClickedAnimation { get; protected set; default = Animation.NONE; }
 		
 		/**
+		 * The animation to show for the item's last scroll event.
+		 */
+		public Animation ScrolledAnimation { get; protected set; default = Animation.NONE; }
+		
+		/**
 		 * The time the item was added to the dock.
 		 */
 		public DateTime AddTime { get; set; default = new DateTime.from_unix_utc (0); }
@@ -174,6 +179,7 @@ namespace Plank.Items
 		 *
 		 * @param button the button clicked
 		 * @param mod the modifiers
+		 * @return which type of animation to trigger
 		 */
 		protected virtual Animation on_clicked (PopupButton button, ModifierType mod)
 		{
@@ -188,7 +194,7 @@ namespace Plank.Items
 		 */
 		public void scrolled (ScrollDirection direction, ModifierType mod)
 		{
-			on_scrolled (direction, mod);
+			ScrolledAnimation = on_scrolled (direction, mod);
 		}
 		
 		/**
@@ -196,9 +202,12 @@ namespace Plank.Items
 		 *
 		 * @param direction the scroll direction
 		 * @param mod the modifiers
+		 * @return which type of animation to trigger
 		 */
-		protected virtual void on_scrolled (ScrollDirection direction, ModifierType mod)
+		protected virtual Animation on_scrolled (ScrollDirection direction, ModifierType mod)
 		{
+			LastScrolled = new DateTime.now_utc ();
+			return Animation.NONE;
 		}
 		
 		/**

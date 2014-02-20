@@ -407,6 +407,7 @@ namespace Plank
 			// lighten or darken the icon
 			var lighten = 0.0, darken = 0.0;
 			
+			// check for and calulate click-animatation
 			var max_click_time = item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
 			max_click_time *= 1000;
 			var click_time = frame_time.difference (item.LastClicked);
@@ -428,6 +429,25 @@ namespace Plank
 					break;
 				case Animation.LIGHTEN:
 					lighten = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
+					break;
+				}
+			}
+			
+			// check for and calulate scroll-animatation
+			var max_scroll_time = 300 * 1000;
+			var scroll_time = frame_time.difference (item.LastScrolled);
+			if (scroll_time < max_scroll_time) {
+				var scroll_animation_progress = scroll_time / (double) max_scroll_time;
+				
+				switch (item.ScrolledAnimation) {
+				default:
+				case Animation.NONE:
+					break;
+				case Animation.DARKEN:
+					darken = double.max (0, Math.sin (Math.PI * scroll_animation_progress)) * 0.5;
+					break;
+				case Animation.LIGHTEN:
+					lighten = double.max (0, Math.sin (Math.PI * scroll_animation_progress)) * 0.5;
 					break;
 				}
 			}
@@ -700,6 +720,8 @@ namespace Plank
 			
 			foreach (var item in controller.Items) {
 				if (render_time.difference (item.LastClicked) <= (item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
+					return true;
+				if (render_time.difference (item.LastScrolled) <= 300 * 1000)
 					return true;
 				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)
 					return true;

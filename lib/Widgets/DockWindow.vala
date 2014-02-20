@@ -260,8 +260,10 @@ namespace Plank.Widgets
 				return true;
 			}
 			
-			if (HoveredItem != null)
+			if (HoveredItem != null) {
 				HoveredItem.scrolled (event.direction, event.state);
+				controller.renderer.animated_draw ();
+			}
 			
 			return true;
 		}
