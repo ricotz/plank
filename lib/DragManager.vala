@@ -34,31 +34,19 @@ namespace Plank
 	{
 		public DockController controller { private get; construct; }
 		
-		Gdk.Window proxy_window;
-		
-		bool drag_canceled;
-		bool drag_known;
-		bool drag_data_requested;
-		uint marker = 0;
-		uint drag_hover_timer = 0;
-		
-		ArrayList<string>? drag_data;
-		
-		public bool InternalDragActive { get; private set; }
+		public bool InternalDragActive { get; private set; default = false; }
 
-		public bool HoveredAcceptsDrop { get; private set; }
+		public DockItem? DragItem { get; private set; default = null; }
 		
-		public DockItem? DragItem { get; private set; }
+		public bool DragIsDesktopFile { get; private set; default = false; }
 		
-		public bool DragIsDesktopFile { get; private set; }
-		
-		bool externalDragActive;
+		bool external_drag_active = false;
 		public bool ExternalDragActive {
-			get { return externalDragActive; }
+			get { return external_drag_active; }
 			private set {
-				if (externalDragActive == value)
+				if (external_drag_active == value)
 					return;
-				externalDragActive = value;
+				external_drag_active = value;
 				
 				if (!value) {
 					drag_known = false;
@@ -69,20 +57,30 @@ namespace Plank
 			}
 		}
 		
-		bool repositionMode = false;
+		bool reposition_mode = false;
 		public bool RepositionMode {
-			get { return repositionMode; }
+			get { return reposition_mode; }
 			private set {
-				if (repositionMode == value)
+				if (reposition_mode == value)
 					return;
-				repositionMode = value;
+				reposition_mode = value;
 				
-				if (repositionMode)
+				if (reposition_mode)
 					disable_drag_to (controller.window);
 				else
 					enable_drag_to (controller.window);
 			}
 		}
+		
+		Gdk.Window? proxy_window = null;
+		
+		bool drag_canceled = false;
+		bool drag_known = false;
+		bool drag_data_requested = false;
+		uint marker = 0;
+		uint drag_hover_timer = 0;
+		
+		ArrayList<string>? drag_data = null;
 		
 		/**
 		 * Creates a new instance of a DragManager, which handles
