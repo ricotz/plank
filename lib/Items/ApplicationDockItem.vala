@@ -398,7 +398,8 @@ namespace Plank.Items
 			
 #if HAVE_DBUSMENU
 			if (Quicklist != null) {
-				items.add (new SeparatorMenuItem ());
+				if (items.size > 0)
+					items.add (new SeparatorMenuItem ());
 				
 				var dm_root = Quicklist.get_root ();
 				if (dm_root != null) {
@@ -410,7 +411,8 @@ namespace Plank.Items
 #endif
 			
 			if (!is_window () && actions.size > 0) {
-				items.add (new SeparatorMenuItem ());
+				if (items.size > 0)
+					items.add (new SeparatorMenuItem ());
 				
 				foreach (var s in actions) {
 					var values = actions_map.get (s).split (";;");
@@ -426,7 +428,8 @@ namespace Plank.Items
 			}
 			
 			if (is_running () && windows != null && windows.length () > 0) {
-				items.add (new SeparatorMenuItem ());
+				if (items.size > 0)
+					items.add (new SeparatorMenuItem ());
 				
 				foreach (var view in windows) {
 					unowned Bamf.Window? window = (view as Bamf.Window);
