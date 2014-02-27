@@ -326,6 +326,12 @@ namespace Plank.Widgets
 			if (HoveredItem == item)
 				return;
 			
+			if (HoveredItem != null)
+				HoveredItem.hovered ();
+			
+			if (item != null)
+				item.hovered ();
+			
 			HoveredItem = item;
 			
 			// if HoveredItem changed always stop scheduled popup and hide the tooltip

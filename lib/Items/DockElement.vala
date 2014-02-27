@@ -123,6 +123,11 @@ namespace Plank.Items
 		public Animation ClickedAnimation { get; protected set; default = Animation.NONE; }
 		
 		/**
+		 * The animation to show for the item's last hover event.
+		 */
+		public Animation HoveredAnimation { get; protected set; default = Animation.NONE; }
+		
+		/**
 		 * The animation to show for the item's last scroll event.
 		 */
 		public Animation ScrolledAnimation { get; protected set; default = Animation.NONE; }
@@ -141,6 +146,11 @@ namespace Plank.Items
 		 * The last time the item was clicked.
 		 */
 		public DateTime LastClicked { get; protected set; default = new DateTime.from_unix_utc (0); }
+		
+		/**
+		 * The last time the item was hovered.
+		 */
+		public DateTime LastHovered { get; protected set; default = new DateTime.from_unix_utc (0); }
 		
 		/**
 		 * The last time the item was scrolled.
@@ -185,6 +195,23 @@ namespace Plank.Items
 		{
 			return Animation.NONE;
 		}
+		
+		/**
+		 * Called when an item gets hovered.
+		 */
+		public void hovered ()
+		{
+			HoveredAnimation = on_hovered ();
+			LastHovered = new DateTime.now_utc ();
+		}
+		
+		/**
+		 * Called when an item gets hovered.
+		 */
+		protected virtual Animation on_hovered ()
+		{
+			return Animation.LIGHTEN;
+ 		}
 		
 		/**
 		 * Called when an item is scrolled over.

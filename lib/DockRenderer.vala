@@ -452,8 +452,28 @@ namespace Plank
 				}
 			}
 			
-			if (hovered_item == item)
+			// check for and calulate hover-animatation
+			var max_hover_time = 150 * 1000;
+			var hover_time = frame_time.difference (item.LastHovered);
+			if (hover_time < max_hover_time) {
+				var hover_animation_progress = 0.0;
+				if (hovered_item == item) {
+					hover_animation_progress = double.min (1.0, hover_time / (double) max_hover_time);
+				} else {
+					hover_animation_progress = double.max (0.0, 1.0 - hover_time / (double) max_hover_time);
+				}
+				
+				switch (item.HoveredAnimation) {
+				default:
+				case Animation.NONE:
+					break;
+				case Animation.LIGHTEN:
+					lighten = hover_animation_progress * 0.2;
+					break;
+				}
+			} else if (hovered_item == item) {
 				lighten = 0.2;
+			}
 			
 			if (hovered_item == item && controller.window.menu_is_visible ())
 				darken += 0.4;
@@ -721,6 +741,9 @@ namespace Plank
 			foreach (var item in controller.Items) {
 				if (item.ClickedAnimation != Animation.NONE
 					&& render_time.difference (item.LastClicked) <= (item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
+					return true;
+				if (item.HoveredAnimation != Animation.NONE
+					&& render_time.difference (item.LastHovered) <= 150 * 1000)
 					return true;
 				if (item.ScrolledAnimation != Animation.NONE
 					&& render_time.difference (item.LastScrolled) <= 300 * 1000)
