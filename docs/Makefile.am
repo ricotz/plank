@@ -1,13 +1,11 @@
 include $(top_srcdir)/Makefile.common
 
 BUILT_SOURCES = \
-	plank_c_doc.stamp \
 	plank_vala_doc.stamp \
 	$(NULL)
 
 EXTRA_DIST = \
 	$(BUILT_SOURCES) \
-	c-doc/* \
 	vala-doc/* \
 	$(NULL)
 
@@ -19,7 +17,6 @@ common_doc_files = \
 	$(NULL)
 
 doc_DATA = \
-	$(addprefix c-doc/html/,$(common_doc_files) *.sgml) \
 	$(addprefix vala-doc/plank/,$(common_doc_files) index.htm *.js) \
 	vala-doc/plank/img/*.png \
 	$(NULL)
@@ -75,6 +72,7 @@ valadoc_flags_plank = \
 	--vapidir=$(top_srcdir)/vapi \
 	$(NULL)
 
+cdocs: plank_c_doc.stamp
 plank_c_doc.stamp: $(plank_doc_files) $(top_builddir)/lib/plank-internal.vapi Makefile
 	$(AM_V_GEN)$(VALADOC) \
 		-X -l -X $(top_builddir)/lib/.libs/libplank.so \
@@ -94,7 +92,7 @@ plank_vala_doc.stamp: $(plank_doc_files) $(top_builddir)/lib/plank-internal.vapi
 	$(AM_V_at)touch $@
 
 html: plank_web_doc.stamp
-plank_web_doc.stamp: $(plank_doc_files) Makefile
+plank_web_doc.stamp: $(plank_doc_files) $(top_builddir)/lib/plank-internal.vapi Makefile
 	$(AM_V_GEN)$(VALADOC) \
 		-o web-doc/ \
 		--doclet=html \
