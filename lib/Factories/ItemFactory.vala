@@ -127,7 +127,7 @@ namespace Plank.Factories
 			
 			// add browser
 			if (make_dock_item ("file:///usr/share/applications/chromium-browser.desktop") == null)
-				if (make_dock_item ("file:///usr/local/share/applications/google-chrome.desktop") == null)
+				if (make_dock_item ("file:///usr/share/applications/google-chrome.desktop") == null)
 					if (make_dock_item ("file:///usr/share/applications/firefox.desktop") == null)
 						if (make_dock_item ("file:///usr/share/applications/epiphany.desktop") == null)
 							make_dock_item ("file:///usr/share/applications/kde4/konqbrowser.desktop");
