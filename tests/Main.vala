@@ -53,7 +53,6 @@ namespace Plank.Tests
 		Logger.initialize ("test");
 		Paths.ensure_directory_exists (Paths.AppConfigFolder.get_child (TEST_DOCK_NAME));
 		WindowControl.initialize ();
-		Logger.DisplayLevel = LogLevel.VERBOSE;
 		
 		// runtime tests
 		register_controller_tests ();
