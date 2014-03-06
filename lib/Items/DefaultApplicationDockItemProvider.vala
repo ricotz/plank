@@ -52,8 +52,6 @@ namespace Plank.Items
 		
 		construct
 		{
-			add_running_apps ();
-			update_visible_items ();
 			serialize_item_positions ();
 			
 			Prefs.notify["CurrentWorkspaceOnly"].connect (handle_setting_changed);
