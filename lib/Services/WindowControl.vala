@@ -44,6 +44,9 @@ namespace Plank.Services.Windows
 		// when changing a viewport, wait this time (for viewport change animations) before continuing
 		public const uint VIEWPORT_CHANGE_DELAY = 200;
 		
+		static uint delayed_focus_timer = 0;
+		static Wnck.Window? delayed_focus_window = null;
+		
 		WindowControl ()
 		{
 		}
@@ -56,6 +59,7 @@ namespace Plank.Services.Windows
 			
 			screen.force_update ();
 			screen.window_manager_changed.connect (window_manager_changed);
+			screen.window_closed.connect (handle_window_closed);
 			
 			message ("Window-manager: %s", screen.get_window_manager_name ());
 		}
@@ -63,6 +67,15 @@ namespace Plank.Services.Windows
 		static void window_manager_changed (Wnck.Screen screen)
 		{
 			warning ("Window-manager changed: %s", screen.get_window_manager_name ());
+		}
+		
+		static void handle_window_closed (Wnck.Window window)
+		{
+			if (delayed_focus_timer > 0 && delayed_focus_window == window) {
+				GLib.Source.remove (delayed_focus_timer);
+				delayed_focus_timer = 0;
+				delayed_focus_window = null;
+			}
 		}
 		
 		public static unowned Gdk.Pixbuf? get_app_icon (Bamf.Application app)
@@ -409,10 +422,13 @@ namespace Plank.Services.Windows
 			
 			// we do this to make sure our active window is also at the front... Its a tricky thing to do.
 			// sometimes compiz plays badly.  This hacks around it
-			var time = Gtk.get_current_event_time () + VIEWPORT_CHANGE_DELAY;
-			Gdk.threads_add_timeout (VIEWPORT_CHANGE_DELAY, () => {
-				if (targetWindow is Wnck.Window)
-					targetWindow.activate (time);
+			if (delayed_focus_timer > 0)
+				GLib.Source.remove (delayed_focus_timer);
+			delayed_focus_window = targetWindow;
+			delayed_focus_timer = Gdk.threads_add_timeout (VIEWPORT_CHANGE_DELAY, () => {
+				delayed_focus_timer = 0;
+				delayed_focus_window.activate (Gtk.get_current_event_time ());
+				delayed_focus_window = null;
 				return false;
 			});
 		}
