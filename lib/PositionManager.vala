@@ -106,6 +106,7 @@ namespace Plank
 		Gdk.Rectangle monitor_geo;
 		
 		bool screen_is_composited;
+		int window_scale_factor = 1;
 		
 		/**
 		 * Creates a new position manager.
@@ -436,24 +437,31 @@ namespace Plank
 		{
 			var cursor_region = static_dock_region;
 			var progress = 1.0 - controller.renderer.hide_progress;
+#if HAVE_GTK_3_10
+#if VALA_0_22
+			window_scale_factor = controller.window.get_window ().get_scale_factor ();
+#else
+			window_scale_factor = gdk_window_get_scale_factor (controller.window.get_window ());
+#endif
+#endif
 			
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				cursor_region.height = int.max (1, (int) (progress * cursor_region.height));
-				cursor_region.y = DockHeight - cursor_region.height;
+				cursor_region.height = int.max (1 * window_scale_factor, (int) (progress * cursor_region.height));
+				cursor_region.y = DockHeight - cursor_region.height + (window_scale_factor - 1);
 				break;
 			case PositionType.TOP:
-				cursor_region.height = int.max (1, (int) (progress * cursor_region.height));
+				cursor_region.height = int.max (1 * window_scale_factor, (int) (progress * cursor_region.height));
 				cursor_region.y = 0;
 				break;
 			case PositionType.LEFT:
-				cursor_region.width = int.max (1, (int) (progress * cursor_region.width));
+				cursor_region.width = int.max (1 * window_scale_factor, (int) (progress * cursor_region.width));
 				cursor_region.x = 0;
 				break;
 			case PositionType.RIGHT:
-				cursor_region.width = int.max (1, (int) (progress * cursor_region.width));
-				cursor_region.x = DockWidth - cursor_region.width;
+				cursor_region.width = int.max (1 * window_scale_factor, (int) (progress * cursor_region.width));
+				cursor_region.x = DockWidth - cursor_region.width + (window_scale_factor - 1);
 				break;
 			}
 			
@@ -1065,27 +1073,34 @@ namespace Plank
 		 */
 		public void get_struts (ref ulong[] struts)
 		{
+#if HAVE_GTK_3_10
+#if VALA_0_22
+			window_scale_factor = controller.window.get_window ().get_scale_factor ();
+#else
+			window_scale_factor = gdk_window_get_scale_factor (controller.window.get_window ());
+#endif
+#endif
 			switch (controller.prefs.Position) {
 			default:
 			case PositionType.BOTTOM:
-				struts [Struts.BOTTOM] = VisibleDockHeight + controller.window.get_screen ().get_height () - monitor_geo.y - monitor_geo.height;
-				struts [Struts.BOTTOM_START] = monitor_geo.x;
-				struts [Struts.BOTTOM_END] = monitor_geo.x + monitor_geo.width - 1;
+				struts [Struts.BOTTOM] = (VisibleDockHeight + controller.window.get_screen ().get_height () - monitor_geo.y - monitor_geo.height) * window_scale_factor;
+				struts [Struts.BOTTOM_START] = monitor_geo.x * window_scale_factor;
+				struts [Struts.BOTTOM_END] = (monitor_geo.x + monitor_geo.width) * window_scale_factor - 1;
 				break;
 			case PositionType.TOP:
-				struts [Struts.TOP] = monitor_geo.y + VisibleDockHeight;
-				struts [Struts.TOP_START] = monitor_geo.x;
-				struts [Struts.TOP_END] = monitor_geo.x + monitor_geo.width - 1;
+				struts [Struts.TOP] = (monitor_geo.y + VisibleDockHeight) * window_scale_factor;
+				struts [Struts.TOP_START] = monitor_geo.x * window_scale_factor;
+				struts [Struts.TOP_END] = (monitor_geo.x + monitor_geo.width) * window_scale_factor - 1;
 				break;
 			case PositionType.LEFT:
-				struts [Struts.LEFT] = monitor_geo.x + VisibleDockWidth;
-				struts [Struts.LEFT_START] = monitor_geo.y;
-				struts [Struts.LEFT_END] = monitor_geo.y + monitor_geo.height - 1;
+				struts [Struts.LEFT] = (monitor_geo.x + VisibleDockWidth) * window_scale_factor;
+				struts [Struts.LEFT_START] = monitor_geo.y * window_scale_factor;
+				struts [Struts.LEFT_END] = (monitor_geo.y + monitor_geo.height) * window_scale_factor - 1;
 				break;
 			case PositionType.RIGHT:
-				struts [Struts.RIGHT] = VisibleDockWidth + controller.window.get_screen ().get_width () - monitor_geo.x - monitor_geo.width;
-				struts [Struts.RIGHT_START] = monitor_geo.y;
-				struts [Struts.RIGHT_END] = monitor_geo.y + monitor_geo.height - 1;
+				struts [Struts.RIGHT] = (VisibleDockWidth + controller.window.get_screen ().get_width () - monitor_geo.x - monitor_geo.width) * window_scale_factor;
+				struts [Struts.RIGHT_START] = monitor_geo.y * window_scale_factor;
+				struts [Struts.RIGHT_END] = (monitor_geo.y + monitor_geo.height) * window_scale_factor - 1;
 				break;
 			}
 		}

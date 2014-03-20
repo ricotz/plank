@@ -141,6 +141,15 @@ fi
 # Optional Dependencies
 # -----------------------------------------------------------
 
+# Check for HiDPI support of Gtk+
+GTK_MIN_VERSION=3.10.0
+GTK_PKGS="gtk+-3.0 >= $GTK_MIN_VERSION"
+PKG_CHECK_MODULES(GTK, $GTK_PKGS, [enable_hidpi=yes], [enable_hidpi=no])
+if test "x$enable_hidpi" = "xyes" ; then
+    VALAFLAGS="$VALAFLAGS --define HAVE_GTK_3_10"
+fi
+AM_CONDITIONAL([HAVE_hidpi], [test "x$enable_hidpi" = "xyes"])
+
 # Check for newer BAMF
 BAMF_MIN_VERSION=0.4.0
 BAMF_PKGS="libbamf3 >= $BAMF_MIN_VERSION"
@@ -310,6 +319,7 @@ ${PACKAGE} ${VERSION}
 
     Use gee-0.8.................:  ${enable_gee_0_8}
     Dbusmenu support............:  ${enable_dbusmenu}
+    HiDPI support...............:  ${enable_hidpi}
 
     Apport support..............:  ${enable_apport}
 

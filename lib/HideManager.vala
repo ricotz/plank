@@ -317,6 +317,19 @@ namespace Plank
 		void update_window_intersect ()
 		{
 			var dock_rect = controller.position_manager.get_static_dock_region ();
+#if HAVE_GTK_3_10
+#if VALA_0_22
+			var window_scale_factor = controller.window.get_window ().get_scale_factor ();
+#else
+			var window_scale_factor = gdk_window_get_scale_factor (controller.window.get_window ());
+#endif
+			if (window_scale_factor > 1) {
+				dock_rect.x *= window_scale_factor;
+				dock_rect.y *= window_scale_factor;
+				dock_rect.width *= window_scale_factor;
+				dock_rect.height *= window_scale_factor;
+			}
+#endif
 			
 			var intersect = false;
 			var dialog_intersect = false;

@@ -62,6 +62,7 @@ namespace Plank
 		
 		bool screen_is_composited = false;
 		uint reset_position_manager_timer = 0;
+		int window_scale_factor = 1;
 		
 		/**
 		 * Create a new dock renderer for a dock.
@@ -242,6 +243,13 @@ namespace Plank
 		 */
 		public void draw_dock (Context cr)
 		{
+#if HAVE_GTK_3_10
+#if VALA_0_22
+			window_scale_factor = controller.window.get_window ().get_scale_factor ();
+#else
+			window_scale_factor = gdk_window_get_scale_factor (controller.window.get_window ());
+#endif
+#endif
 			// take the previous frame values into account to decide if we
 			// can bail a full draw to not miss a finishing animation-frame
 			var no_full_draw_needed = (hide_progress == 1.0 && opacity == 1.0);
@@ -380,7 +388,7 @@ namespace Plank
 #if BENCHMARK
 			var start = new DateTime.now_local ();
 #endif
-			var icon_surface = item.get_surface_copy (icon_size, icon_size, main_buffer);
+			var icon_surface = item.get_surface_copy (icon_size * window_scale_factor, icon_size * window_scale_factor, main_buffer);
 			unowned Context icon_cr = icon_surface.Context;
 			
 			DockSurface? icon_shadow_surface = null;
@@ -532,14 +540,26 @@ namespace Plank
 			
 			// draw the icon shadow
 			if (icon_shadow_surface != null) {
+				if (window_scale_factor > 1) {
+					shadow_cr.save ();
+					shadow_cr.scale (1.0 / window_scale_factor, 1.0 / window_scale_factor);
+				}
 				shadow_cr.set_operator (Cairo.Operator.OVER);
-				shadow_cr.set_source_surface (icon_shadow_surface.Internal, draw_value.draw_region.x - shadow_size, draw_value.draw_region.y - shadow_size);
+				shadow_cr.set_source_surface (icon_shadow_surface.Internal, (draw_value.draw_region.x - shadow_size) * window_scale_factor, (draw_value.draw_region.y - shadow_size) * window_scale_factor);
 				shadow_cr.paint ();
+				if (window_scale_factor > 1)
+					shadow_cr.restore ();
 			}
 
 			// draw the icon
-			main_cr.set_source_surface (icon_surface.Internal, draw_value.draw_region.x, draw_value.draw_region.y);
+			if (window_scale_factor > 1) {
+				main_cr.save ();
+				main_cr.scale (1.0 / window_scale_factor, 1.0 / window_scale_factor);
+			}
+			main_cr.set_source_surface (icon_surface.Internal, draw_value.draw_region.x * window_scale_factor, draw_value.draw_region.y * window_scale_factor);
 			main_cr.paint ();
+			if (window_scale_factor > 1)
+				main_cr.restore ();
 			
 			// draw indicators
 			if (item.Indicator != IndicatorState.NONE)
@@ -559,7 +579,7 @@ namespace Plank
 			Logger.verbose ("DockItem.draw_item_overlay (width = %i, height = %i)", width, height);
 			var surface = new DockSurface.with_dock_surface (width, height, icon_surface);
 			
-			var icon_size = position_manager.IconSize;
+			var icon_size = position_manager.IconSize * window_scale_factor;
 			var urgent_color = get_styled_color ();
 			urgent_color.add_hue (theme.UrgentHueShift);
 			
@@ -576,7 +596,7 @@ namespace Plank
 		
 		DockSurface draw_item_shadow (DockItem item, DockSurface icon_surface, DockSurface? current_surface)
 		{
-			var shadow_size = controller.position_manager.IconShadowSize;
+			var shadow_size = controller.position_manager.IconShadowSize * window_scale_factor;
 			
 			// Inflate size to fit shadow
 			var width = icon_surface.Width + 2 * shadow_size;
