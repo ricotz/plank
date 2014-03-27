@@ -2,6 +2,7 @@
 [PlankDrawingTheme]
 TopRoundness=0
 BottomRoundness=0
+LineWidth=0
 
 [PlankDrawingDockTheme]
 TopPadding=-12
