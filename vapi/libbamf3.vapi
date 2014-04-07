@@ -6,6 +6,7 @@ namespace Bamf {
 	public class Application : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Application ();
+		[Deprecated (since = "0.5.0")]
 		public bool get_application_menu (out string name, out string object_path);
 		public unowned string get_application_type ();
 		public unowned string get_desktop_file ();
@@ -63,7 +64,7 @@ namespace Bamf {
 		public virtual unowned string get_location ();
 		public virtual uint64 get_xid ();
 		public bool raise ();
-		public void request_preview (Bamf.TabPreviewReadyCallback callback);
+		public void request_preview ([CCode (scope = "async")] owned Bamf.TabPreviewReadyCallback callback);
 		[NoAccessorMethod]
 		public string desktop_id { owned get; }
 		public bool is_foreground_tab { get; }
