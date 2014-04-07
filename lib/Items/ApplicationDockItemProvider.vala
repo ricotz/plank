@@ -129,7 +129,7 @@ namespace Plank.Items
 			
 			if (unity_bus_id == 0) {
 				// Acquire Unity bus-name to activate libunity clients since normally there shouldn't be a running Unity
-				unity_bus_id = Bus.own_name (BusType.SESSION, "com.canonical.Unity", BusNameOwnerFlags.NONE,
+				unity_bus_id = Bus.own_name (BusType.SESSION, "com.canonical.Unity", BusNameOwnerFlags.ALLOW_REPLACEMENT,
 					handle_bus_acquired, handle_name_acquired, handle_name_lost);
 			}
 		}
@@ -158,17 +158,20 @@ namespace Plank.Items
 		
 		static void handle_bus_acquired (DBusConnection conn, string name)
 		{
-			Logger.verbose ("Unity: %s acquired", name);
+			// Nothing here since we just want to provide this bus without any functionality
 		}
 
 		static void handle_name_acquired (DBusConnection conn, string name)
 		{
-			Logger.verbose ("Unity: %s acquired", name);
+			debug ("Unity: %s acquired", name);
 		}
 
 		static void handle_name_lost (DBusConnection conn, string name)
 		{
-			debug ("Unity: %s lost", name);
+			if (conn == null)
+				warning ("Unity: %s failed", name);
+			else
+				debug ("Unity: %s lost", name);
 		}
 		
 		protected ApplicationDockItem? item_for_application (Bamf.Application app)
