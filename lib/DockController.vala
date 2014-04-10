@@ -227,14 +227,19 @@ namespace Plank
 				&& added.size != removed.size)
 				position_manager.reset_caches (renderer.theme);
 			position_manager.update_regions ();
+			window.update_icon_regions ();
 		}
 		
 		void item_positions_changed (DockItemProvider provider, Gee.List<unowned DockItem> moved_items)
 		{
 			update_items ();
 			
-			foreach (unowned DockItem item in moved_items)
+			foreach (unowned DockItem item in moved_items) {
 				position_manager.reset_item_caches (item);
+				unowned ApplicationDockItem? app_item = (item as ApplicationDockItem);
+				if (app_item != null)
+					window.update_icon_region (app_item);
+			}
 			renderer.animated_draw ();
 		}
 		

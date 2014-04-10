@@ -97,6 +97,8 @@ namespace Plank.Items
 				if (app != null) {
 					app_signals_connect (app);
 					initialize_states ();
+					if (app.is_running () && app.is_user_visible ())
+						app_window_added ();
 				} else {
 					reset_application_status ();
 				}
@@ -211,8 +213,10 @@ namespace Plank.Items
 		
 		void handle_user_visible_changed (bool user_visible)
 		{
-			if (user_visible)
+			if (user_visible) {
+				app_window_added ();
 				return;
+			}
 			
 			if (this is TransientDockItem)
 				App = null;
@@ -252,8 +256,10 @@ namespace Plank.Items
 		
 		void handle_running_changed (bool is_running)
 		{
-			if (is_running)
+			if (is_running) {
+				app_window_added ();
 				return;
+			}
 			
 			reset_application_status ();
 		}
