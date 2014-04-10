@@ -238,6 +238,10 @@ namespace Plank
 				// Force initial redraw for ExternalDrag to pick up new
 				// drag_data for can_accept_drop check
 				controller.renderer.animated_draw ();
+				
+				// Trigger this manually since we will miss to receive the very first emmit
+				// after entering the dock-window
+				hovered_item_changed ();
 			}
 			
 			drag_status (context, DragAction.COPY, time_);
