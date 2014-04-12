@@ -287,8 +287,9 @@ namespace Plank
 		
 		void drag_end (Widget w, DragContext context)
 		{
+			unowned HideManager hide_manager = controller.hide_manager;
+			
 			if (!drag_canceled && DragItem != null) {
-				unowned HideManager hide_manager = controller.hide_manager;
 				hide_manager.update_hovered ();
 				if (!hide_manager.Hovered) {
 					if (DragItem.can_be_removed ()) {
@@ -332,6 +333,9 @@ namespace Plank
 			
 			// Force last redraw for InternalDrag
 			controller.renderer.animated_draw ();
+			
+			// Make sure to hide the dock again if needed
+			hide_manager.update_hovered ();
 		}
 
 		void drag_leave (Widget w, DragContext context, uint time_)
@@ -359,6 +363,9 @@ namespace Plank
 					
 					// Force last redraw for ExternalDrag
 					controller.renderer.animated_draw ();
+					
+					// Make sure to hide the dock again if needed
+					controller.hide_manager.update_hovered ();
 					
 					return false;
 				});
