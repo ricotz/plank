@@ -131,6 +131,10 @@ namespace Plank.Widgets
 		 */
 		public override bool button_press_event (EventButton event)
 		{
+			// If the dock is hidden we should ignore it.
+			if (controller.hide_manager.Hidden)
+				return true;
+			
 			// This event gets fired before the drag end event,
 			// in this case we ignore it.
 			if (controller.drag_manager.InternalDragActive)
@@ -170,6 +174,10 @@ namespace Plank.Widgets
 		 */
 		public override bool button_release_event (EventButton event)
 		{
+			// If the dock is hidden we should ignore it.
+			if (controller.hide_manager.Hidden)
+				return true;
+			
 			if (long_press_timer > 0) {
 				Source.remove (long_press_timer);
 				long_press_timer = 0;
@@ -210,9 +218,10 @@ namespace Plank.Widgets
 			if ((bool) event.send_event)
 				return false;
 			
-			if (!menu_is_visible ())
+			if (!menu_is_visible ()) {
+				set_hovered_provider (null);
 				set_hovered (null);
-			else
+			} else
 				hover.hide ();
 			
 			return true;
@@ -244,6 +253,10 @@ namespace Plank.Widgets
 		 */
 		public override bool scroll_event (EventScroll event)
 		{
+			// If the dock is hidden we should ignore it.
+			if (controller.hide_manager.Hidden)
+				return true;
+			
 			if (controller.drag_manager.InternalDragActive)
 				return true;
 			
@@ -382,6 +395,13 @@ namespace Plank.Widgets
 		 */
 		public bool update_hovered (int x, int y)
 		{
+			// If the dock is hidden there is nothing to set.
+			if (controller.hide_manager.Hidden) {
+				set_hovered_provider (null);
+				set_hovered (null);
+				return false;
+			}
+			
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockItem? drag_item = controller.drag_manager.DragItem;
 			Gdk.Rectangle rect;
@@ -471,6 +491,7 @@ namespace Plank.Widgets
 				if (!needs_reposition) {
 					update_icon_regions ();
 					set_struts ();
+					set_hovered_provider (null);
 					set_hovered (null);
 				}
 			}
@@ -513,6 +534,7 @@ namespace Plank.Widgets
 			
 			update_icon_regions ();
 			set_struts ();
+			set_hovered_provider (null);
 			set_hovered (null);
 		}
 		
@@ -581,6 +603,7 @@ namespace Plank.Widgets
 			ArrayList<Gtk.MenuItem> items;
 			if (show_plank_menu) {
 				items = PlankDockItem.get_plank_menu_items ();
+				set_hovered_provider (null);
 				set_hovered (null);
 			} else {
 				items = HoveredItem.get_menu_items ();
@@ -613,8 +636,10 @@ namespace Plank.Widgets
 			update_icon_regions ();
 			unowned HideManager hide_manager = controller.hide_manager;
 			hide_manager.update_hovered ();
-			if (!hide_manager.Hovered)
+			if (!hide_manager.Hovered) {
+				set_hovered_provider (null);
 				set_hovered (null);
+			}
 		}
 		
 		/**
