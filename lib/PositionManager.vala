@@ -1096,5 +1096,42 @@ namespace Plank
 				break;
 			}
 		}
+		
+		public Gdk.Rectangle get_barrier ()
+		{
+			Gdk.Rectangle barrier = {0};
+			
+			switch (controller.prefs.Position) {
+			default:
+			case PositionType.BOTTOM:
+				barrier.x = monitor_geo.x + (monitor_geo.width - VisibleDockWidth) / 2;
+				barrier.y = monitor_geo.y + monitor_geo.height;
+				barrier.width = VisibleDockWidth;
+				barrier.height = 0;
+				break;
+			case PositionType.TOP:
+				barrier.x = monitor_geo.x + (monitor_geo.width - VisibleDockWidth) / 2;
+				barrier.y = monitor_geo.y;
+				barrier.width = VisibleDockWidth;
+				barrier.height = 0;
+				break;
+			case PositionType.LEFT:
+				barrier.x = monitor_geo.x;
+				barrier.y = monitor_geo.y + (monitor_geo.height - VisibleDockHeight) / 2;
+				barrier.width = 0;
+				barrier.height = VisibleDockHeight;
+				break;
+			case PositionType.RIGHT:
+				barrier.x = monitor_geo.x + monitor_geo.width;
+				barrier.y = monitor_geo.y + (monitor_geo.height - VisibleDockHeight) / 2;
+				barrier.width = 0;
+				barrier.height = VisibleDockHeight;
+				break;
+			}
+			
+			warn_if_fail (barrier.width > 0 || barrier.height > 0);
+			
+			return barrier;
+		}
 	}
 }

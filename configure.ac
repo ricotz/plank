@@ -190,6 +190,25 @@ fi
 AM_CONDITIONAL([HAVE_GEE_0_8], [test "x$enable_gee_0_8" = "xyes"])
 AC_SUBST(GEE_DEPEND)
 
+# Support barrier-supported unhiding using Xinput 2.3
+XFIXES_MIN_VERSION=5.0
+XINPUT_MIN_VERSION=1.6.99.1
+XINPUT_PKGS="xi >= $XINPUT_MIN_VERSION xfixes >= $XFIXES_MIN_VERSION"
+AC_ARG_ENABLE([barriers],
+              AS_HELP_STRING([--enable-barriers],
+                             [Enable use of barriers]),
+              [enable_barriers=$enableval],
+              [enable_barriers=yes])
+AC_CHECK_LIB([Xi], [XIBarrierReleasePointer], [enable_xinput23=yes], [enable_xinput23=no])
+if test "x$enable_barriers" = "xyes" -a "x$enable_xinput23" = "xyes" ; then
+    PLANK_CORE_OPTIONAL_PKGS="$PLANK_CORE_OPTIONAL_PKGS $XINPUT_PKGS"
+    PLANK_CORE_VALA_PKGS="$PLANK_CORE_VALA_PKGS --pkg xi --pkg xfixes"
+    VALAFLAGS="$VALAFLAGS --define HAVE_BARRIERS"
+else
+	enable_barriers=no
+fi
+AM_CONDITIONAL([HAVE_BARRIERS], [test "x$enable_barriers" = "xyes" -a "x$enable_xinput23" = "xyes"])
+
 # Support dynamic quicklists provided with dbusmenu
 DBUSMENU_MIN_VERSION=0.4
 DBUSMENU_PKGS="dbusmenu-glib-0.4 >= $DBUSMENU_MIN_VERSION dbusmenu-gtk3-0.4 >= $DBUSMENU_MIN_VERSION"
@@ -333,6 +352,7 @@ ${PACKAGE} ${VERSION}
     Use gee-0.8.................:  ${enable_gee_0_8}
     Dbusmenu support............:  ${enable_dbusmenu}
     HiDPI support...............:  ${enable_hidpi}
+    XInput Barriers support.....:  ${enable_barriers}
 
     Apport support..............:  ${enable_apport}
 

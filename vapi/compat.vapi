@@ -17,6 +17,11 @@
 
 namespace Plank
 {
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "gdk_window_add_filter", instance_pos = 1.9)]
+	public void gdk_window_add_filter (Gdk.Window? window, Gdk.FilterFunc function);
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "gdk_window_add_filter", instance_pos = 1.9)]
+	public void gdk_window_remove_filter (Gdk.Window? window, Gdk.FilterFunc function);
+
 #if !VALA_0_24
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_widget_shape_combine_region")]
 	public void gtk_widget_shape_combine_region (Gtk.Widget widget, Cairo.Region? region);
@@ -105,3 +110,13 @@ namespace Gdk
 	}
 #endif
 }
+
+[CCode (cheader_filename = "X11/Xlib.h")]
+namespace X
+{
+	[CCode (cname = "XGetEventData")]
+	public static bool get_event_data (X.Display display, X.GenericEventCookie* event_cookie);
+	[CCode (cname = "XFreeEventData")]
+	public static bool free_event_data (X.Display display, X.GenericEventCookie* event_cookie);
+}	
+
