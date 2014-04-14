@@ -2,6 +2,24 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.6.0 "Marie" (2014-04-14)
+===============================================================================
+ * Allow other applications to steal and provide com.canonical.Unity
+ * Add animations on hovering and scrolling items
+ * Fix menu positioning with gtk+ 3.10.6 and later
+ * Desktop entries with Type=Link are not opened correctly (LP: #1042439)
+ * Plank switches workspace when it shouldn't (LP: #1090976)
+ * Recognize long-press mouse clicks (LP: #1179087)
+ * Fix crash using an invalid Wnck.Window object (LP: #1219929)
+ * Dock returns to primary monitor when wake up from suspend (LP: #1264194)
+ * Showing Plank menu should not darken dock items (LP: #1268376)
+ * New windows minimize to center instead of Plank (LP: #1214728)
+ * Support for GTK's HiDPI (LP: #1288845)
+ * Dragging file over dockitem doesn't raise window (LP: #1303975)
+ * Show placeholder if the dock is empty (LP: #1228397)
+ * Properly center non-square thumbails
+ * Further minor clean ups and fixes, see Changelog further information
+
 0.5.0 "Jimmy" (2013-11-17)
 ===============================================================================
  * Pin applications which were dragged on the dock (LP: #1227636)
