@@ -248,6 +248,11 @@ namespace Plank.Items
 		
 		public void pin_item (DockItem item)
 		{
+			if (!internal_items.contains (item)) {
+				critical ("Item '%s' does not exist in this DockItemProvider.", item.Text);
+				return;
+			}
+			
 			Logger.verbose ("DefaultDockItemProvider.pin_item ('%s[%s]')", item.Text, item.DockItemFilename);
 
 			unowned ApplicationDockItem? app_item = (item as ApplicationDockItem);

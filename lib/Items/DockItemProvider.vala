@@ -103,7 +103,12 @@ namespace Plank.Items
 		public void add_item (DockItem item, DockItem? target = null)
 		{
 			if (internal_items.contains (item)) {
-				critical ("Item '%s' already exists in this item-provider.", item.Text);
+				critical ("Item '%s' already exists in this DockItemProvider.", item.Text);
+				return;
+			}
+			
+			if (item.Provider != null) {
+				critical ("Item '%s' should be removed from its old DockItemProvider first.", item.Text);
 				return;
 			}
 			
@@ -123,7 +128,7 @@ namespace Plank.Items
 		public void remove_item (DockItem item)
 		{
 			if (!internal_items.contains (item)) {
-				critical ("Item '%s' does not exist in this item-provider.", item.Text);
+				critical ("Item '%s' does not exist in this DockItemProvider.", item.Text);
 				return;
 			}
 			
@@ -178,8 +183,18 @@ namespace Plank.Items
 		 */
 		public virtual void move_item_to (DockItem move, DockItem target)
 		{
-			if (move == target || !internal_items.contains (target))
+			if (move == target)
 				return;
+			
+			if (!internal_items.contains (move)) {
+				critical ("Item '%s' does not exist in this DockItemProvider.", move.Text);
+				return;
+			}
+			
+			if (!internal_items.contains (target)) {
+				critical ("Item '%s' does not exist in this DockItemProvider.", target.Text);
+				return;
+			}
 			
 			var index_target = internal_items.index_of (target);
 			internal_items.remove (move);
@@ -244,8 +259,18 @@ namespace Plank.Items
 		 */
 		public virtual void replace_item (DockItem new_item, DockItem old_item)
 		{
-			if (new_item == old_item || !internal_items.contains (old_item))
+			if (new_item == old_item)
 				return;
+			
+			if (!internal_items.contains (old_item)) {
+				critical ("Item '%s' does not exist in this DockItemProvider.", old_item.Text);
+				return;
+			}
+			
+			if (new_item.Provider != null) {
+				critical ("Item '%s' should be removed from its old DockItemProvider first.", new_item.Text);
+				return;
+			}
 			
 			Logger.verbose ("DockItemProvider.replace_item (%s[%s, %i] > %s[%s, %i])", old_item.Text, old_item.DockItemFilename, (int)old_item, new_item.Text, new_item.DockItemFilename, (int)new_item);
 			

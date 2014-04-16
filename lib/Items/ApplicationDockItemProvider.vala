@@ -228,8 +228,13 @@ namespace Plank.Items
 			if (uri == null || uri == "")
 				return;
 			
+			if (target != null && !internal_items.contains (target)) {
+				critical ("Item '%s' does not exist in this DockItemProvider.", target.Text);
+				return;
+			}
+			
 			if (item_exists_for_uri (uri)) {
-				warning ("Item for '%s' already exists in this item-provider.", uri);
+				warning ("Item for '%s' already exists in this DockItemProvider.", uri);
 				return;
 			}
 			
