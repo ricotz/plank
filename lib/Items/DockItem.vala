@@ -401,6 +401,11 @@ namespace Plank.Items
 					continue;
 				
 				var name = prop.get_name ();
+				
+				// Do not copy these
+				if (name == "Provider")
+				    continue;
+				
 				var type = prop.value_type;
 				var val = Value (type);
 				get_property (name, ref val);
