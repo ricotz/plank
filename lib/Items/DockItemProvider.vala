@@ -186,27 +186,24 @@ namespace Plank.Items
 			if (move == target)
 				return;
 			
-			if (!internal_items.contains (move)) {
+			int index_move, index_target;
+			
+			if ((index_move = internal_items.index_of (move)) < 0) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", move.Text);
 				return;
 			}
 			
-			if (!internal_items.contains (target)) {
+			if ((index_target = internal_items.index_of (target)) < 0) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", target.Text);
 				return;
 			}
 			
-			var index_target = internal_items.index_of (target);
-			internal_items.remove (move);
-			internal_items.insert (index_target, move);
+			move_item (internal_items, index_move, index_target);
 			
-			if (visible_items.contains (move) && (index_target = visible_items.index_of (target)) >= 0) {
-				visible_items.remove (move);
-				visible_items.insert (index_target, move);
-				
+			if ((index_move = visible_items.index_of (move)) >= 0
+				&& (index_target = visible_items.index_of (target)) >= 0) {
 				var moved_items = new ArrayList<unowned DockItem> ();
-				moved_items.add (move);
-				moved_items.add (target);
+				move_item (visible_items, index_move, index_target, moved_items);
 				item_positions_changed (moved_items);
 			} else {
 				update_visible_items ();
@@ -277,9 +274,8 @@ namespace Plank.Items
 			item_signals_disconnect (old_item);
 			
 			var index = internal_items.index_of (old_item);
-			internal_items.remove (old_item);
+			internal_items[index] = new_item;
 			old_item.Provider = null;
-			internal_items.insert (index, new_item);
 			new_item.Provider = this;
 			
 			new_item.AddTime = old_item.AddTime;
@@ -287,8 +283,7 @@ namespace Plank.Items
 			item_signals_connect (new_item);
 			
 			if ((index = visible_items.index_of (old_item)) >= 0) {
-				visible_items.remove (old_item);
-				visible_items.insert (index, new_item);
+				visible_items[index] = new_item;
 			} else {
 				update_visible_items ();
 			}
@@ -324,6 +319,36 @@ namespace Plank.Items
 		protected virtual void handle_item_deleted (DockItem item)
 		{
 			remove_item (item);
+		}
+		
+		static void move_item (Gee.List<DockItem> items, int from, int to, Gee.List<unowned DockItem>? moved = null)
+		{
+			assert (from >= 0);
+			assert (to >= 0);
+			assert (from != to);
+			int size = items.size;
+			assert (from < size);
+			assert (to < size);
+
+			var item = items[from];
+			if (from < to) {
+				for (int i = from; i < to; i++) {
+					items[i] = items[i + 1];
+					if (moved != null)
+						moved.add (items[i]);
+				}
+				if (moved != null)
+					moved.add (item);
+			} else {
+				if (moved != null)
+					moved.add (item);
+				for (int i = from; i > to; i--) {
+					items[i] = items[i - 1];
+					if (moved != null)
+						moved.add (items[i]);
+				}
+			}
+			items[to] = item;
 		}
 	}
 }
