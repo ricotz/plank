@@ -1,3 +1,4 @@
+data/plank.appdata.xml.in
 data/plank.desktop.in
 lib/Items/ApplicationDockItem.vala
 lib/Items/FileDockItem.vala

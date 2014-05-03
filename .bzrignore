@@ -53,4 +53,5 @@ tests/*.c
 tests/*.stamp
 tests/home
 tests/tests
+data/plank.appdata.xml
 data/plank.desktop

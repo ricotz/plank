@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Rico Tzschichholz <ricotz@ubuntu.com> -->
+<application>
+	<id type="desktop">plank.desktop</id>
+	<license>GPL-3.0+</license>
+	<name>Plank</name>
+	<summary>Stupidly simple.</summary>
+	<description>
+		<_p>
+			Plank is meant to be the simplest dock on the planet. The goal is to provide just what a dock needs and absolutely nothing more.
+		</_p>
+		<_p>
+			It is, however, a library which can be extended to create other dock programs with more advanced features. Thus, Plank is the underlying technology for Docky (starting in version 3.0.0) and aims to provide all the core features while Docky extends it to add fancier things like Docklets, painters, settings dialogs, etc.
+		</_p>
+	</description>
+	<url type="homepage">https://launchpad.net/plank</url>
+	<screenshots>
+		<screenshot type="default">http://people.ubuntu.com/~ricotz/appdata/plank.png</screenshot>
+	</screenshots>
+	<updatecontact>ricotz@ubuntu.com</updatecontact>
+</application>
