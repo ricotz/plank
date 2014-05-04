@@ -282,11 +282,8 @@ namespace Plank.Items
 			new_item.Position = old_item.Position;
 			item_signals_connect (new_item);
 			
-			if ((index = visible_items.index_of (old_item)) >= 0) {
-				visible_items[index] = new_item;
-			} else {
+			if (visible_items.index_of (old_item) >= 0)
 				update_visible_items ();
-			}
 		}
 		
 		protected virtual void remove_item_without_signaling (DockItem item)
