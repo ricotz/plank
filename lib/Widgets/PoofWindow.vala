@@ -64,11 +64,7 @@ namespace Plank.Widgets
 			set_keep_above (true);
 			
 			try {
-#if !VALA_0_18
-				poof_image = gdk_pixbuf_new_from_resource ("%s/img/poof.png".printf (Plank.G_RESOURCE_PATH));
-#else
 				poof_image = new Pixbuf.from_resource ("%s/img/poof.png".printf (Plank.G_RESOURCE_PATH));
-#endif
 			} catch {
 				poof_image = new Pixbuf (Colorspace.RGB, true, 8, 128, 640);
 				warning ("Unable to load poof animation image");

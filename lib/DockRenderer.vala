@@ -244,11 +244,7 @@ namespace Plank
 		public void draw_dock (Context cr)
 		{
 #if HAVE_GTK_3_10
-#if VALA_0_22
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
-#else
-			window_scale_factor = gdk_window_get_scale_factor (controller.window.get_window ());
-#endif
 #endif
 			// take the previous frame values into account to decide if we
 			// can bail a full draw to not miss a finishing animation-frame

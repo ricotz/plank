@@ -17,36 +17,12 @@
 
 namespace Plank
 {
-#if !VALA_0_18
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cname = "gdk_pixbuf_new_from_resource")]
-	public Gdk.Pixbuf gdk_pixbuf_new_from_resource (string resource_path) throws GLib.Error;
-#endif
-#if !VALA_0_22 && HAVE_GTK_3_10
-	[CCode (cheader_filename = "gdk/gdk.h", cname = "gdk_window_get_scale_factor")]
-	public int gdk_window_get_scale_factor (Gdk.Window window);
-#endif
 #if !VALA_0_24
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_widget_shape_combine_region")]
 	public void gtk_widget_shape_combine_region (Gtk.Widget widget, Cairo.Region? region);
 #endif
 	[CCode (cheader_filename = "sys/prctl.h", cname = "prctl", sentinel = "")]
 	public int prctl (int option, ...);
-}
-
-[CCode (cheader_filename = "glib.h")]
-namespace GLib
-{
-#if !VALA_0_22
-	[CCode (lower_case_cprefix = "glib_version_")]
-	namespace Version {
-		[CCode (cname = "glib_major_version")]
-		public const uint major;
-		[CCode (cname = "glib_minor_version")]
-		public const uint minor;
-		[CCode (cname = "glib_micro_version")]
-		public const uint micro;
-	}
-#endif
 }
 
 namespace Gdk

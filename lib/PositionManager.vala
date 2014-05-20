@@ -438,11 +438,7 @@ namespace Plank
 			var cursor_region = static_dock_region;
 			var progress = 1.0 - controller.renderer.hide_progress;
 #if HAVE_GTK_3_10
-#if VALA_0_22
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
-#else
-			window_scale_factor = gdk_window_get_scale_factor (controller.window.get_window ());
-#endif
 #endif
 			
 			switch (controller.prefs.Position) {
@@ -1074,11 +1070,7 @@ namespace Plank
 		public void get_struts (ref ulong[] struts)
 		{
 #if HAVE_GTK_3_10
-#if VALA_0_22
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
-#else
-			window_scale_factor = gdk_window_get_scale_factor (controller.window.get_window ());
-#endif
 #endif
 			switch (controller.prefs.Position) {
 			default:
