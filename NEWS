@@ -2,6 +2,12 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.6.1 "Marie" (2014-05-20)
+===============================================================================
+ * Actually pass all moved items on item_positions_changed (LP: #1042439)
+ * Make controller aware of changed items on replace_item
+ * Provide and install plank.appdata.xml file
+
 0.6.0 "Marie" (2014-04-14)
 ===============================================================================
  * Allow other applications to steal and provide com.canonical.Unity
