@@ -28,6 +28,7 @@ plank_doc_files = \
 	$(top_srcdir)/lib/DragManager.vala \
 	$(top_srcdir)/lib/HideManager.vala \
 	$(top_srcdir)/lib/PositionManager.vala \
+	$(top_builddir)/lib/Version.vala \
 	$(top_srcdir)/lib/Drawing/AnimatedRenderer.vala \
 	$(top_srcdir)/lib/Drawing/Color.vala \
 	$(top_srcdir)/lib/Drawing/DrawingService.vala \
@@ -68,6 +69,7 @@ valadoc_flags_plank = \
 	--driver "`$(VALAC) --version`" \
 	--pkg plank-internal \
 	--pkg compat \
+	--pkg config \
 	--vapidir=$(top_builddir)/lib \
 	--vapidir=$(top_srcdir)/vapi \
 	$(NULL)

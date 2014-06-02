@@ -46,6 +46,7 @@ lib/Factories/*.c
 lib/Services/*.c
 lib/Items/*.c
 lib/Widgets/*.c
+lib/Version.vala
 src/plank
 src/*.c
 src/*.stamp

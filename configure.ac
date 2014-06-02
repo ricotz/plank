@@ -33,6 +33,10 @@ AC_INIT([plank], plank_version,
         [https://launchpad.net/plank])
 AC_DEFINE(RELEASE_NAME, "Stupidly simple.", Codename of this release)
 AC_DEFINE(VERSION_INFO, m4_if(plank_released, [1], "Release", "Development"), Version info for package)
+AC_DEFINE(VERSION_MAJOR, [plank_major_version], Major version of this package)
+AC_DEFINE(VERSION_MINOR, [plank_minor_version], Minor version of this package)
+AC_DEFINE(VERSION_MICRO, [plank_micro_version], Micro version of this package)
+AC_DEFINE(VERSION_NANO, [plank_nano_version], Nano version of this package)
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
@@ -68,6 +72,14 @@ AC_SUBST([LT_AGE])
 
 PLANK_MAJOR_MINOR_VERSION=plank_major_minor_version
 AC_SUBST([PLANK_MAJOR_MINOR_VERSION])
+PLANK_MAJOR_VERSION=plank_major_version
+AC_SUBST([PLANK_MAJOR_VERSION])
+PLANK_MINOR_VERSION=plank_minor_version
+AC_SUBST([PLANK_MINOR_VERSION])
+PLANK_MICRO_VERSION=plank_micro_version
+AC_SUBST([PLANK_MICRO_VERSION])
+PLANK_NANO_VERSION=plank_nano_version
+AC_SUBST([PLANK_NANO_VERSION])
 
 API_VERSION=0.3
 AC_SUBST([API_VERSION])
@@ -300,6 +312,7 @@ data/themes/Makefile
 lib/Makefile
 lib/plank.deps
 lib/plank.pc
+lib/Version.vala
 src/Makefile
 docs/Makefile
 po/Makefile.in

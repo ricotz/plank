@@ -2,6 +2,7 @@ include $(top_srcdir)/Makefile.common
 
 AM_CFLAGS = \
 	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
+	-include config.h \
 	$(PLANK_CORE_CFLAGS) \
 	-w \
 	$(NULL)
@@ -14,6 +15,7 @@ AM_VALAFLAGS = \
 	$(PLANK_CORE_VALAFLAGS) \
 	--vapidir $(top_srcdir)/vapi \
 	$(top_srcdir)/vapi/compat.vapi \
+	$(top_srcdir)/vapi/config.vapi \
 	--basedir $(srcdir) \
 	--directory $(builddir) \
 	-C \
@@ -96,8 +98,13 @@ libplank_la_VALASOURCES = \
 	Widgets/TitledSeparatorMenuItem.vala \
 	$(NULL)
 
+libplank_la_BUILT_VALASOURCES = \
+	Version.vala \
+	$(NULL)
+
 nodist_libplank_la_SOURCES = \
 	$(BUILT_SOURCES) \
+	$(libplank_la_BUILT_VALASOURCES:.vala=.c) \
 	$(libplank_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
@@ -106,7 +113,7 @@ plank-resources.c: plank.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES
 
 plank.h plank.vapi: libplank_la_vala.stamp
 
-libplank_la_vala.stamp build-abi: libplank_internal_la_vala.stamp $(libplank_la_VALASOURCES) Makefile
+libplank_la_vala.stamp build-abi: libplank_internal_la_vala.stamp $(libplank_la_VALASOURCES) $(libplank_la_BUILT_VALASOURCES) Makefile
 	$(AM_V_VALA)$(VALAC) \
 		$(AM_VALAFLAGS) $(libplank_la_VALAFLAGS) \
 		-H plank.h \
@@ -170,6 +177,7 @@ CLEANFILES = \
 	plank.h \
 	plank-internal.vapi \
 	plank-internal.h \
+	Version.vala \
 	$(NULL)
 
 EXTRA_DIST = \
@@ -180,5 +188,6 @@ EXTRA_DIST = \
 	plank.deps.in \
 	plank.gresource.xml \
 	plank.pc.in \
+	Version.vala.in \
 	$(NULL)
 

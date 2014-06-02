@@ -22,5 +22,9 @@ namespace Build
 	public const string PKGDATADIR;
 	public const string RELEASE_NAME;
 	public const string VERSION;
+	public const uint VERSION_MAJOR;
+	public const uint VERSION_MINOR;
+	public const uint VERSION_MICRO;
+	public const uint VERSION_NANO;
 	public const string VERSION_INFO;
 }
