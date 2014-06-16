@@ -363,6 +363,81 @@ namespace Plank.Items
 			return Animation.DARKEN;
 		}
 		
+		static void combine_strings (ref string[] result, string delimiter, int n, int i)
+		{
+			if (i <= 1)
+				return;
+			
+			int pos = n;
+			for (int j = 0; j < i - 1; j++) {
+				pos += (i - j);
+				result[n + j + 1] = "%s%s%s".printf (result[n + j], delimiter, result[pos]);
+			}
+			
+			combine_strings (ref result, delimiter, n + i, i - 1);
+		}
+		
+		/**
+		 * Generates an array containing all combinations of a splitted string parts
+		 * while preserving the given order of them.
+		 */
+		static string[] split_combine_string (string s, string delimiter = " ")
+		{
+			var parts = s.split (delimiter);
+			var count = parts.length;
+			var result = new string[count * (count + 1) / 2];
+			
+			// Initialize array with the elementary parts
+			int pos = 0;
+			for (int i = 0; i < count; i++) {
+				result[pos] = parts[i];
+				pos += (count - i);
+			}
+			
+			// Recursively filling up the result array
+			combine_strings (ref result, delimiter, 0, count);
+			
+			return result;
+		}
+		
+		string shorten_window_name (string window_name)
+		{
+			print ("s: %s\n", window_name);
+			print ("a: %s\n", app.get_name ());
+			
+			const string[] WINDOW_NAME_PATTERN = { "%s - (.+)", "(.+) - %s", "%s – (.+)", "(.+) – %s", "%s: (.+)" };
+			const string[] APP_NAME_DELIMITER = { " ", "-", "–" };
+			
+			string[] app_strings = null;
+			foreach (unowned string d in APP_NAME_DELIMITER) {
+				app_strings = split_combine_string (Text, d);
+				if (app_strings.length > 1)
+					break;
+			}
+			
+			MatchInfo? m;
+			foreach (unowned string p in WINDOW_NAME_PATTERN) {
+				foreach (unowned string s in app_strings) {
+					if (s.char_count () < 3)
+						continue;
+					
+					var r = new Regex ("^%s$".printf (p.printf (s)),
+						RegexCompileFlags.CASELESS | RegexCompileFlags.ANCHORED | RegexCompileFlags.DOLLAR_ENDONLY,
+						RegexMatchFlags.ANCHORED | RegexMatchFlags.NOTEMPTY);
+					print ("r: '%s'\n", r.get_pattern ());
+					r.match (window_name, RegexMatchFlags.ANCHORED | RegexMatchFlags.NOTEMPTY, out m);
+					if (m.matches ()) {
+						print ("m: '%s'\n", m.fetch (1));
+						return m.fetch (1);
+					}
+				}
+			}
+			
+			print ("no shorter one :(\n");
+			
+			return window_name;
+		}
+		
 		/**
 		 * {@inheritDoc}
 		 */
@@ -432,10 +507,13 @@ namespace Plank.Items
 					
 					Gtk.MenuItem window_item;
 					var pbuf = WindowControl.get_window_icon (window);
+					var window_name = window.get_name ();
+					window_name = shorten_window_name (window_name);
+					
 					if (pbuf == null)
-						window_item = create_menu_item_with_pixbuf (window.get_name (), pbuf, true);
+						window_item = create_menu_item_with_pixbuf (window_name, pbuf, true);
 					else 
-						window_item = create_menu_item (window.get_name (), Icon, true);
+						window_item = create_menu_item (window_name, Icon, true);
 					
 					if (window.is_active ())
 						window_item.set_sensitive (false);
