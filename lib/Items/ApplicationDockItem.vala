@@ -402,9 +402,6 @@ namespace Plank.Items
 		
 		string shorten_window_name (string window_name)
 		{
-			print ("s: %s\n", window_name);
-			print ("a: %s\n", app.get_name ());
-			
 			const string[] WINDOW_NAME_PATTERN = { "%s - (.+)", "(.+) - %s", "%s – (.+)", "(.+) – %s", "%s: (.+)" };
 			const string[] APP_NAME_DELIMITER = { " ", "-", "–" };
 			
@@ -424,16 +421,11 @@ namespace Plank.Items
 					var r = new Regex ("^%s$".printf (p.printf (s)),
 						RegexCompileFlags.CASELESS | RegexCompileFlags.ANCHORED | RegexCompileFlags.DOLLAR_ENDONLY,
 						RegexMatchFlags.ANCHORED | RegexMatchFlags.NOTEMPTY);
-					print ("r: '%s'\n", r.get_pattern ());
 					r.match (window_name, RegexMatchFlags.ANCHORED | RegexMatchFlags.NOTEMPTY, out m);
-					if (m.matches ()) {
-						print ("m: '%s'\n", m.fetch (1));
+					if (m.matches ())
 						return m.fetch (1);
-					}
 				}
 			}
-			
-			print ("no shorter one :(\n");
 			
 			return window_name;
 		}
