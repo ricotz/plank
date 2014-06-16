@@ -95,6 +95,16 @@ namespace Plank.Items
 		}
 		
 		/**
+		 * Do some special implementation specific preparation
+		 *
+		 * This is meant to called after the initial batch of items was added
+		 * and the provider is about to be added to the dock.
+		 */
+		public virtual void prepare ()
+		{
+		}
+		
+		/**
 		 * Adds a dock item to the collection.
 		 *
 		 * @param item the dock item to add
@@ -118,6 +128,30 @@ namespace Plank.Items
 				move_item_to (item, target);
 			else
 				update_visible_items ();
+		}
+		
+		/**
+		 * Adds a ordered list of dock items to the collection.
+		 *
+		 * @param items the dock items to add
+		 */
+		public void add_items (ArrayList<DockItem> items)
+		{
+			foreach (var item in items) {
+				if (internal_items.contains (item)) {
+					critical ("Item '%s' already exists in this DockItemProvider.", item.Text);
+					continue;
+				}
+				
+				if (item.Provider != null) {
+					critical ("Item '%s' should be removed from its old DockItemProvider first.", item.Text);
+					continue;
+				}
+				
+				add_item_without_signaling (item);
+			}
+			
+			update_visible_items ();
 		}
 		
 		/**

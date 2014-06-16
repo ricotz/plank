@@ -61,11 +61,6 @@ namespace Plank.Items
 			// Make sure our launchers-directory exists
 			Paths.ensure_directory_exists (LaunchersDir);
 			
-			foreach (var item in load_items ())
-				add_item_without_signaling (item);
-			add_running_apps ();
-			update_visible_items ();
-			
 			Matcher.get_default ().application_opened.connect (app_opened);
 			
 			try {
@@ -242,52 +237,49 @@ namespace Plank.Items
 			delay_items_monitor ();
 			
 			var dockitem_file = Factory.item_factory.make_dock_item (uri, LaunchersDir);
-			if (dockitem_file == null)
+			if (dockitem_file == null) {
+				resume_items_monitor ();
 				return;
+			}
 			
-			var item = Factory.item_factory.make_item (dockitem_file);
-			add_item (item, target);
+			var element = Factory.item_factory.make_element (dockitem_file);
+			var item = (element as DockItem);
+			if (item != null)
+				add_item (item, target);
 			
 			resume_items_monitor ();
 		}
 		
-		protected virtual ArrayList<DockItem> load_items ()
+		/**
+		 * {@inheritDoc}
+		 */
+		public override void prepare ()
 		{
-			Paths.ensure_directory_exists (LaunchersDir);
-			
-			debug ("Loading dock items from '%s'", LaunchersDir.get_path ());
-			
-			var result = new ArrayList<DockItem> ();
-			
-			try {
-				var enumerator = LaunchersDir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0);
-				FileInfo info;
-				while ((info = enumerator.next_file ()) != null)
-					if (file_is_dockitem (info)) {
-						var file = LaunchersDir.get_child (info.get_name ());
-						var item = Factory.item_factory.make_item (file);
-						
-						if (!item.is_valid ()) {
-							warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());
-							continue;
-						}
-						
-						result.add (item);
-					}
-			} catch (Error e) {
-				critical ("Error loading dock items from '%s'. (%s)", LaunchersDir.get_path () ?? "", e.message);
-			}
-			
-			return result;
-		}
-		
-		protected virtual void add_running_apps ()
-		{
+			// Match running applications to their available dock-items
 			foreach (var app in Matcher.get_default ().active_launchers ()) {
 				var found = item_for_application (app);
 				if (found != null)
 					found.App = app;
 			}
+		}
+		
+		/**
+		 * Serializes the dockitem-filenames
+		 *
+		 * @return string containing all filesnames separated by ';;'
+		 */
+		public string get_item_list_string ()
+		{
+			var item_list = "";
+			foreach (var item in internal_items) {
+				if (!(item is TransientDockItem) && item.DockItemFilename.length > 0) {
+					if (item_list.length > 0)
+						item_list += ";;";
+					item_list += item.DockItemFilename;
+				}
+			}
+			
+			return item_list;
 		}
 		
 		protected virtual void app_opened (Bamf.Application app)
@@ -329,7 +321,11 @@ namespace Plank.Items
 					continue;
 				
 				Logger.verbose ("ApplicationDockItemProvider.process_queued_files ('%s')", basename);
-				var item = Factory.item_factory.make_item (file);
+				var element = Factory.item_factory.make_element (file);
+				var item = (element as DockItem);
+				if (item == null)
+					continue;
+				
 				if (item.is_valid ())
 					add_item (item);
 				else

@@ -136,8 +136,17 @@ namespace Plank
 		 */
 		public void add_default_provider ()
 		{
+			// If we made the default-launcher-directory,
+			// assume a first run and pre-populate with launchers
+			if (Paths.ensure_directory_exists (launchers_folder)) {
+				debug ("Adding default dock items...");
+				Factory.item_factory.make_default_items ();
+				debug ("done.");
+			}
+			
 			if (default_provider == null) {
 				default_provider = new DefaultApplicationDockItemProvider (prefs, launchers_folder);
+				default_provider.add_items (Factory.item_factory.load_items (launchers_folder, prefs.DockItems));
 				add_provider (default_provider);
 			}
 		}
@@ -154,6 +163,7 @@ namespace Plank
 				return;
 			}
 			
+			provider.prepare ();
 			item_providers.add (provider);
 			
 			connect_provider (provider);
@@ -221,6 +231,9 @@ namespace Plank
 		
 		void items_changed (DockItemProvider provider, Gee.List<DockItem> added, Gee.List<DockItem> removed)
 		{
+			if (provider == default_provider)
+				serialize_item_positions ();
+			
 			update_items ();
 			
 			if (prefs.Alignment != Gtk.Align.FILL
@@ -232,6 +245,9 @@ namespace Plank
 		
 		void item_positions_changed (DockItemProvider provider, Gee.List<unowned DockItem> moved_items)
 		{
+			if (provider == default_provider)
+				serialize_item_positions ();
+			
 			update_items ();
 			
 			foreach (unowned DockItem item in moved_items) {
@@ -246,6 +262,14 @@ namespace Plank
 		void item_state_changed (DockItemProvider provider)
 		{
 			renderer.animated_draw ();
+		}
+		
+		void serialize_item_positions ()
+		{
+			var item_list = default_provider.get_item_list_string ();
+			
+			if (prefs.DockItems != item_list)
+				prefs.DockItems = item_list;
 		}
 	}
 }

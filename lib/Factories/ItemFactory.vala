@@ -31,24 +31,24 @@ namespace Plank.Factories
 		public File launchers_dir;
 		
 		/**
-		 * Creates a new {@link Items.DockItem} from a .dockitem.
+		 * Creates a new {@link Items.DockElement} from a .dockitem.
 		 *
 		 * @param file the {@link GLib.File} of .dockitem file to parse
-		 * @return the new {@link Items.DockItem} created
+		 * @return the new {@link Items.DockElement} created
 		 */
-		public virtual DockItem make_item (GLib.File file)
+		public virtual DockElement make_element (GLib.File file)
 		{
-			return default_make_item (file, get_launcher_from_dockitem (file));
+			return default_make_element (file, get_launcher_from_dockitem (file));
 		}
 		
 		/**
-		 * Creates a new {@link Items.DockItem} for a launcher parsed from a .dockitem.
+		 * Creates a new {@link Items.DockElement} for a launcher parsed from a .dockitem.
 		 *
 		 * @param file the {@link GLib.File} of .dockitem file that was parsed
 		 * @param launcher the launcher name from the .dockitem
-		 * @return the new {@link Items.DockItem} created
+		 * @return the new {@link Items.DockElement} created
 		 */
-		protected DockItem default_make_item (GLib.File file, string launcher)
+		protected DockElement default_make_element (GLib.File file, string launcher)
 		{
 			if (Factory.main.is_launcher_for_dock (launcher))
 				return new PlankDockItem.with_dockitem_file (file);
@@ -73,6 +73,79 @@ namespace Plank.Factories
 			} catch {
 				return "";
 			}
+		}
+			
+		/**
+		 * Creates a list of Dockitems based on .dockitem files found in the given source_dir.
+		 *
+		 * @param source_dir the folder where to load .dockitem from
+		 * @param ordering a ";;"-separated string to be used to order the loaded DockItems
+		 * @return the new List of DockItems
+		 */
+		public Gee.ArrayList<DockItem> load_items (GLib.File source_dir, string? ordering = null)
+		{
+			var result = new Gee.ArrayList<DockItem> ();
+			
+			if (!source_dir.query_exists ()) {
+				critical ("Given folder '%s' does not exist.", source_dir.get_path ());
+				return result;
+			}
+
+			debug ("Loading dock items from '%s'", source_dir.get_path ());
+			
+			try {
+				var enumerator = source_dir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0);
+				FileInfo info;
+				while ((info = enumerator.next_file ()) != null) {
+					if (info.get_is_hidden () || !info.get_name ().has_suffix (".dockitem"))
+						continue;
+					
+					var file = source_dir.get_child (info.get_name ());
+					var element = make_element (file);
+					var item = (element as DockItem);
+					if (item == null)
+						continue;
+					
+					if (!item.is_valid ()) {
+						warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());
+						continue;
+					}
+					
+					result.add (item);
+				}
+			} catch (Error e) {
+				critical ("Error loading dock items from '%s'. (%s)", source_dir.get_path () ?? "", e.message);
+			}
+			
+			if (ordering == null)
+				return result;
+			
+			var existing_items = new Gee.ArrayList<DockItem> ();
+			var new_items = new Gee.ArrayList<DockItem> ();
+			
+			foreach (var item in result) {
+				if (ordering.contains (item.DockItemFilename))
+					existing_items.add (item);
+				else
+					new_items.add (item);
+			}
+			
+			result.clear ();
+			
+			// add saved dockitems based on their serialized order
+			var dockitems = ordering.split (";;");
+			foreach (unowned string dockitem in dockitems)
+				foreach (var item in existing_items)
+					if (dockitem == item.DockItemFilename) {
+						result.add (item);
+						break;
+					}
+			
+			// add new dockitems
+			foreach (var item in new_items)
+				result.add (item);
+			
+			return result;
 		}
 		
 		bool make_default_gnome_items ()

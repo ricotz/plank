@@ -17,6 +17,7 @@
 
 using Cairo;
 using Gdk;
+using Gee;
 
 using Plank.Drawing;
 using Plank.Items;
@@ -50,7 +51,7 @@ namespace Plank.Tests
 	{
 		DockController controller;
 		ApplicationDockItemProvider provider;
-		DockItem item;
+		DockItem item, item2, item3;
 		
 		File config_folder = Paths.AppConfigFolder.get_child (TEST_DOCK_NAME);
 		File launchers_folder = config_folder.get_child ("launchers-custom");
@@ -70,6 +71,18 @@ namespace Plank.Tests
 		assert (item.ref_count == 1);
 		
 		wait (1000);
+
+		item2 = create_controller_testitem ();
+		provider.add_item (item2);
+		wait (500);
+		
+		controller_items_match (controller);
+		
+		item3 = create_controller_testitem ();
+		provider.replace_item (item3, item2);
+		wait (500);
+		
+		controller_items_match (controller);
 	}
 	
 	void controller_construct_default ()
@@ -79,5 +92,18 @@ namespace Plank.Tests
 		File config_folder = Paths.AppConfigFolder.get_child (TEST_DOCK_NAME);
 		controller = new DockController (config_folder);
 		controller.initialize ();
+	}
+	
+	void controller_items_match (DockController controller)
+	{
+		var controller_items = controller.Items;
+		var items = new ArrayList<unowned DockItem> ();
+		
+		foreach (var provider in controller.Providers)
+			items.add_all (provider.Items);
+		
+		assert (items.size == controller_items.size);
+		for (var i = 0; i < items.size; i++)
+			assert (items[i] == controller_items[i]);
 	}
 }
