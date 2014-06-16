@@ -385,19 +385,7 @@ namespace Plank.Items
 			}
 			
 			if (is_running () && windows != null && windows.length () > 0) {
-				Gtk.MenuItem item;
-				
-				if (WindowControl.has_maximized_window (App)) {
-					item = create_menu_item (_("Unma_ximize"), "view-fullscreen");
-					item.activate.connect (() => WindowControl.unmaximize (App));
-					items.add (item);
-				} else {
-					item = create_menu_item (_("Ma_ximize"), "view-fullscreen");
-					item.activate.connect (() => WindowControl.maximize (App));
-					items.add (item);
-				}
-				
-				item = create_menu_item (_("_Close All"), "window-close-symbolic;;window-close");
+				var item = create_menu_item (_("_Close All"), "window-close-symbolic;;window-close");
 				item.activate.connect (() => WindowControl.close_all (App));
 				items.add (item);
 			}

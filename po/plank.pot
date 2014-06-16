@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-03 13:14+0200\n"
+"POT-Creation-Date: 2014-06-16 07:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,15 +41,7 @@ msgstr ""
 msgid "_Keep in Dock"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:391
-msgid "Unma_ximize"
-msgstr ""
-
-#: ../lib/Items/ApplicationDockItem.vala:395
-msgid "Ma_ximize"
-msgstr ""
-
-#: ../lib/Items/ApplicationDockItem.vala:400
+#: ../lib/Items/ApplicationDockItem.vala:388
 msgid "_Close All"
 msgstr ""
 
