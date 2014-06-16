@@ -113,10 +113,7 @@ namespace Plank
 		
 		construct
 		{
-			controller.prefs.notify["HideMode"].connect (prefs_changed);
-#if HAVE_BARRIERS
-			controller.prefs.notify["Position"].connect (prefs_changed);
-#endif
+			controller.prefs.notify.connect (prefs_changed);
 		}
 		
 		/**
@@ -129,27 +126,10 @@ namespace Plank
 			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
 			
 #if HAVE_BARRIERS
-			unowned Gdk.X11.Display gdk_display = (controller.window.get_display () as Gdk.X11.Display);
-			unowned X.Display display = gdk_display.get_xdisplay ();
-			int error_base, first_event_return;
-			
-			if (!display.query_extension ("XInputExtension", out opcode, out first_event_return, out error_base)) {
-				debug ("Barriers disabled (XInput needed)");
+			if (controller.prefs.PressureReveal)
+				initialize_barriers_support ();
+			else
 				window.enter_notify_event.connect (enter_notify_event);
-			} else {
-				int major = 2, minor = 3;
-				if (XInput.query_version (display, ref major, ref minor) == X.Success) {
-					message ("Barriers enabled (XInput %i.%i support)\n", major, minor);
-					gdk_window_add_filter (null, (Gdk.FilterFunc)xevent_filter);
-					Idle.add (() => {
-						set_barrier ();
-						return false;
-					});
-				} else {
-					debug ("Barriers disabled (XInput %i.%i not sufficient)", major, minor);
-					window.enter_notify_event.connect (enter_notify_event);
-				}
-			}
 #else
 			window.enter_notify_event.connect (enter_notify_event);
 #endif
@@ -169,10 +149,7 @@ namespace Plank
 			unowned DragManager drag_manager = controller.drag_manager;
 			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
 			
-			controller.prefs.notify["HideMode"].disconnect (prefs_changed);
-#if HAVE_BARRIERS
-			controller.prefs.notify["Position"].disconnect (prefs_changed);
-#endif
+			controller.prefs.notify.disconnect (prefs_changed);
 			
 			window.enter_notify_event.disconnect (enter_notify_event);
 			window.leave_notify_event.disconnect (leave_notify_event);
@@ -246,21 +223,38 @@ namespace Plank
 			thaw_notify ();
 		}
 		
-		void prefs_changed ()
+		void prefs_changed (Object prefs, ParamSpec prop)
 		{
-			if (timer_prefs_changed > 0) {
-				GLib.Source.remove (timer_prefs_changed);
-				timer_prefs_changed = 0;
-			}
-			
-			timer_prefs_changed = Gdk.threads_add_timeout (UPDATE_TIMEOUT, () => {
-				update_window_intersect ();
+			switch (prop.name) {
+			case "HideMode":
+			case "Position":
+				if (timer_prefs_changed > 0) {
+					GLib.Source.remove (timer_prefs_changed);
+					timer_prefs_changed = 0;
+				}
+				
+				timer_prefs_changed = Gdk.threads_add_timeout (UPDATE_TIMEOUT, () => {
+					update_window_intersect ();
 #if HAVE_BARRIERS
-				set_barrier ();
+					set_barrier ();
 #endif
-				timer_prefs_changed = 0;
-				return false;
-			});
+					timer_prefs_changed = 0;
+					return false;
+				});
+				break;
+			case "PressureReveal":
+				unowned DockWindow window = controller.window;
+				if (controller.prefs.PressureReveal) {
+					window.enter_notify_event.disconnect (enter_notify_event);
+					initialize_barriers_support ();
+				} else {
+					window.enter_notify_event.connect (enter_notify_event);
+				}
+				break;
+			default:
+				// Nothing important for us changed
+				break;
+			}
 		}
 		
 		void update_hidden ()
@@ -525,6 +519,32 @@ namespace Plank
 		}
 		
 #if HAVE_BARRIERS
+		void initialize_barriers_support ()
+		{
+			unowned DockWindow window = controller.window;
+			unowned Gdk.X11.Display gdk_display = (controller.window.get_display () as Gdk.X11.Display);
+			unowned X.Display display = gdk_display.get_xdisplay ();
+			int error_base, first_event_return;
+			
+			if (!display.query_extension ("XInputExtension", out opcode, out first_event_return, out error_base)) {
+				debug ("Barriers disabled (XInput needed)");
+				window.enter_notify_event.connect (enter_notify_event);
+			} else {
+				int major = 2, minor = 3;
+				if (XInput.query_version (display, ref major, ref minor) == X.Success) {
+					message ("Barriers enabled (XInput %i.%i support)\n", major, minor);
+					gdk_window_add_filter (null, (Gdk.FilterFunc)xevent_filter);
+					Idle.add (() => {
+						set_barrier ();
+						return false;
+					});
+				} else {
+					debug ("Barriers disabled (XInput %i.%i not sufficient)", major, minor);
+					window.enter_notify_event.connect (enter_notify_event);
+				}
+			}
+		}
+
 		/**
 		 * Event filter method needed to fetch X.Events
 		 */
@@ -623,6 +643,9 @@ namespace Plank
 				XFixes.destroy_pointer_barrier (display, barrier);
 				barrier = 0;
 			}
+			
+			if (!controller.prefs.PressureReveal)
+				return;
 			
 			if (controller.prefs.HideMode == HideType.NONE)
 				return;

@@ -67,6 +67,9 @@ namespace Plank
 		[Description(nick = "lock-items", blurb = "Whether to prevent drag'n'drop actions and lock items on the dock.")]
 		public bool LockItems { get; set; }
 		
+		[Description(nick = "pressure-reveal", blurb = "Whether to use pressure-based revealing of the dock if the support is available.")]
+		public bool PressureReveal { get; set; }
+		
 		/**
 		 * {@inheritDoc}
 		 */
@@ -114,6 +117,7 @@ namespace Plank
 			Alignment = Gtk.Align.CENTER;
 			ItemsAlignment = Gtk.Align.CENTER;
 			LockItems = false;
+			PressureReveal = false;
 		}
 		
 		/**
@@ -215,6 +219,9 @@ namespace Plank
 				break;
 			
 			case "LockItems":
+				break;
+			
+			case "PressureReveal":
 				break;
 			}
 		}
