@@ -321,14 +321,13 @@ namespace Plank
 			
 			items_offset  = (int) (2 * LineWidth + (HorizPadding > 0 ? HorizPadding : 0));
 			
-			top_offset = theme.get_top_offset ();
-			bottom_offset = theme.get_bottom_offset ();
+			top_offset = theme.get_top_offset () + TopPadding;
+			bottom_offset = theme.get_bottom_offset () + BottomPadding;
 			
-			var top_padding = top_offset + TopPadding;
-			if (top_padding < 0)
+			if (top_offset < 0)
 				extra_hide_offset = IconShadowSize;
-			else if (top_padding < IconShadowSize)
-				extra_hide_offset = (IconShadowSize - top_padding);
+			else if (top_offset < IconShadowSize)
+				extra_hide_offset = (IconShadowSize - top_offset);
 			else
 				extra_hide_offset = 0;
 			
@@ -372,13 +371,13 @@ namespace Plank
 			Logger.verbose ("PositionManager.update_dimensions ()");
 			
 			// height of the visible (cursor) rect of the dock
-			var height = IconSize + top_offset + TopPadding + bottom_offset + BottomPadding;
+			var height = IconSize + top_offset + bottom_offset;
 			
 			// height of the dock background image, as drawn
 			var background_height = height;
 			
-			if (top_offset + TopPadding < 0)
-				height -= top_offset + TopPadding;
+			if (top_offset < 0)
+				height -= top_offset;
 			
 			// height of the dock window
 			var dock_height = height + (screen_is_composited ? UrgentBounceHeight : 0);
@@ -608,11 +607,8 @@ namespace Plank
 		Gdk.Rectangle item_draw_region (Gdk.Rectangle hover_rect)
 		{
 			var item_padding = ItemPadding;
-			var top_padding = top_offset + TopPadding;
-			var bottom_padding = BottomPadding;
-			
-			top_padding = (top_padding < 0 ? 0 : top_padding);
-			bottom_padding = bottom_offset + bottom_padding;
+			var top_padding = (top_offset < 0 ? 0 : top_offset);
+			var bottom_padding = bottom_offset;
 			
 			switch (controller.prefs.Position) {
 			default:
@@ -653,8 +649,7 @@ namespace Plank
 		 */
 		Gdk.Rectangle item_background_region (Gdk.Rectangle rect)
 		{
-			var top_padding = top_offset + TopPadding;
-			top_padding = (top_padding > 0 ? 0 : top_padding);
+			var top_padding = (top_offset > 0 ? 0 : top_offset);
 			
 			switch (controller.prefs.Position) {
 			default:
