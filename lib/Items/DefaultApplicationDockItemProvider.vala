@@ -102,6 +102,8 @@ namespace Plank.Items
 				add_item_without_signaling (new_item);
 			}
 			
+			update_visible_items ();
+			
 			var favs = new ArrayList<string> ();
 			
 			foreach (var item in internal_items)
