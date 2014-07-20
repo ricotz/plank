@@ -237,7 +237,7 @@ namespace Plank
 				timer_prefs_changed = Gdk.threads_add_timeout (UPDATE_TIMEOUT, () => {
 					update_window_intersect ();
 #if HAVE_BARRIERS
-					set_barrier ();
+					update_barrier ();
 #endif
 					timer_prefs_changed = 0;
 					return false;
@@ -536,7 +536,7 @@ namespace Plank
 					message ("Barriers enabled (XInput %i.%i support)\n", major, minor);
 					gdk_window_add_filter (null, (Gdk.FilterFunc)xevent_filter);
 					Idle.add (() => {
-						set_barrier ();
+						update_barrier ();
 						return false;
 					});
 				} else {
@@ -635,7 +635,7 @@ namespace Plank
 			return Gdk.FilterReturn.REMOVE;
 		}
 		
-		void set_barrier ()
+		public void update_barrier ()
 		{
 			unowned Gdk.X11.Display gdk_display = (controller.window.get_display () as Gdk.X11.Display);
 			unowned X.Display display = gdk_display.get_xdisplay ();

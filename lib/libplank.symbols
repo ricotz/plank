@@ -245,6 +245,7 @@ plank_hide_manager_get_Hovered
 plank_hide_manager_get_type
 plank_hide_manager_initialize
 plank_hide_manager_new
+plank_hide_manager_update_barrier
 plank_hide_manager_update_hovered
 plank_hide_type_get_type
 plank_items_animation_get_type
