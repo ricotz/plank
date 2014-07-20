@@ -207,7 +207,7 @@ namespace Plank.Items
 		{
 			Services.System.open (OwnedFile);
 			ClickedAnimation = Animation.BOUNCE;
-			LastClicked = new DateTime.now_utc ();
+			LastClicked = GLib.get_monotonic_time ();
 		}
 		
 		/**
@@ -261,7 +261,7 @@ namespace Plank.Items
 					item.activate.connect (() => {
 						Services.System.launch (file);
 						ClickedAnimation = Animation.BOUNCE;
-						LastClicked = new DateTime.now_utc ();
+						LastClicked = GLib.get_monotonic_time ();
 					});
 				} else {
 					icon = DrawingService.get_icon_from_file (file) ?? "";
@@ -270,7 +270,7 @@ namespace Plank.Items
 					item.activate.connect (() => {
 						Services.System.open (file);
 						ClickedAnimation = Animation.BOUNCE;
-						LastClicked = new DateTime.now_utc ();
+						LastClicked = GLib.get_monotonic_time ();
 					});
 				}
 				
@@ -320,7 +320,7 @@ namespace Plank.Items
 			item.activate.connect (() => {
 				Services.System.open (OwnedFile.get_parent ());
 				ClickedAnimation = Animation.BOUNCE;
-				LastClicked = new DateTime.now_utc ();
+				LastClicked = GLib.get_monotonic_time ();
 			});
 			items.add (item);
 			

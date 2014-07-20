@@ -173,7 +173,7 @@ namespace Plank.Tests
 	void items_dockitemprovider_signals ()
 	{
 		DockItemProvider provider;
-		DateTime now;
+		int64 now;
 		
 		provider = new DockItemProvider ();
 		var item = create_testitem ();
@@ -182,13 +182,13 @@ namespace Plank.Tests
 		provider.items_changed.connect (itemprovider_added_cb);
 		provider.add_item (item);
 		wait (EVENT_WAIT_MS);
-		now = new DateTime.now_utc ();
+		now = GLib.get_monotonic_time ();
 		provider.items_changed.disconnect (itemprovider_added_cb);
 		
 		assert (item == added_item);
 		added_item = null;
 		assert (item.ref_count > 1);
-		assert (item.AddTime.difference (now) < 100);
+		assert (item.AddTime - now < 100);
 		
 		// change item state
 		items_triggered = false;
@@ -203,13 +203,13 @@ namespace Plank.Tests
 		provider.items_changed.connect (itemprovider_removed_cb);
 		provider.remove_item (item);
 		wait (EVENT_WAIT_MS);
-		now = new DateTime.now_utc ();
+		now = GLib.get_monotonic_time ();
 		provider.items_changed.disconnect (itemprovider_removed_cb);
 		
 		assert (item == removed_item);
 		removed_item = null;
 		assert (item.ref_count == 1);
-		assert (item.RemoveTime.difference (now) < 100);
+		assert (item.RemoveTime - now < 100);
 	}
 	
 	void itemprovider_added_cb (Gee.List<DockItem> added, Gee.List<DockItem> removed)

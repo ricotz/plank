@@ -54,7 +54,7 @@ namespace Plank.Drawing
 		 * @param render_time the current time for this frame's render
 		 * @return if another animation frame is needed
 		 */
-		protected abstract bool animation_needed (DateTime render_time);
+		protected abstract bool animation_needed (int64 render_time);
 		
 		/**
 		 * Request re-drawing.
@@ -66,7 +66,7 @@ namespace Plank.Drawing
 			
 			widget.queue_draw ();
 			
-			if (animation_needed (new DateTime.now_utc ()))
+			if (animation_needed (GLib.get_monotonic_time ()))
 				animation_timer = Gdk.threads_add_timeout (1000 / FPS, draw_timeout);
 		}
 		
@@ -74,7 +74,7 @@ namespace Plank.Drawing
 		{
 			widget.queue_draw ();
 			
-			if (animation_needed (new DateTime.now_utc ()))
+			if (animation_needed (GLib.get_monotonic_time ()))
 				return true;
 			
 			if (animation_timer > 0) {

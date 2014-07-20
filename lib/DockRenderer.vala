@@ -56,9 +56,8 @@ namespace Plank
 		DockSurface? urgent_indicator_buffer = null;
 		DockSurface? urgent_glow_buffer = null;
 		
-		DateTime last_hide = new DateTime.from_unix_utc (0);
-		
-		DateTime frame_time = new DateTime.from_unix_utc (0);
+		int64 last_hide = 0;
+		int64 frame_time = 0;
 		
 		bool screen_is_composited = false;
 		uint reset_position_manager_timer = 0;
@@ -214,13 +213,13 @@ namespace Plank
 		void init_current_frame ()
 			requires (theme != null)
 		{
-			frame_time = new DateTime.now_utc ();
+			frame_time = GLib.get_monotonic_time ();
 			
 			var fade_opacity = theme.FadeOpacity;
 			
 			if (screen_is_composited) {
 				var time = (fade_opacity == 1.0 ? theme.HideTime : theme.FadeTime);
-				var diff = double.min (1, frame_time.difference (last_hide) / (double) (time * 1000));
+				var diff = double.min (1, (frame_time - last_hide) / (double) (time * 1000));
 				hide_progress = (controller.hide_manager.Hidden ? diff : 1.0 - diff);
 			} else {
 				hide_progress = 0.0;
@@ -414,7 +413,7 @@ namespace Plank
 			// check for and calulate click-animatation
 			var max_click_time = item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
 			max_click_time *= 1000;
-			var click_time = frame_time.difference (item.LastClicked);
+			var click_time = frame_time - item.LastClicked;
 			if (click_time < max_click_time) {
 				var click_animation_progress = click_time / (double) max_click_time;
 				
@@ -439,7 +438,7 @@ namespace Plank
 			
 			// check for and calulate scroll-animatation
 			var max_scroll_time = 300 * 1000;
-			var scroll_time = frame_time.difference (item.LastScrolled);
+			var scroll_time = frame_time - item.LastScrolled;
 			if (scroll_time < max_scroll_time) {
 				var scroll_animation_progress = scroll_time / (double) max_scroll_time;
 				
@@ -458,7 +457,7 @@ namespace Plank
 			
 			// check for and calulate hover-animatation
 			var max_hover_time = 150 * 1000;
-			var hover_time = frame_time.difference (item.LastHovered);
+			var hover_time = frame_time - item.LastHovered;
 			if (hover_time < max_hover_time) {
 				var hover_animation_progress = 0.0;
 				if (hovered_item == item) {
@@ -505,7 +504,7 @@ namespace Plank
 			
 			// bounce icon on urgent state
 			if (screen_is_composited && (item.State & ItemState.URGENT) != 0) {
-				var urgent_time = frame_time.difference (item.LastUrgent);
+				var urgent_time = frame_time - item.LastUrgent;
 				var bounce_animation_progress = urgent_time / (double) (theme.UrgentBounceTime * 1000);
 				if (bounce_animation_progress < 1.0) {
 					var change = Math.fabs (Math.sin (Math.PI * bounce_animation_progress) * icon_size * theme.UrgentBounceHeight * double.min (1.0, 2.0 * (1.0 - bounce_animation_progress)));
@@ -515,7 +514,7 @@ namespace Plank
 			
 			// animate icon movement on move state
 			if ((item.State & ItemState.MOVE) != 0) {
-				var move_time = frame_time.difference (item.LastMove);
+				var move_time = frame_time - item.LastMove;
 				var move_animation_progress = move_time / (double) (theme.ItemMoveTime * 1000);
 				if (move_animation_progress < 1.0) {
 					var change = (1.0 - move_animation_progress) * (icon_size + position_manager.ItemPadding);
@@ -526,7 +525,7 @@ namespace Plank
 			}
 
 			// draw active glow
-			var active_time = frame_time.difference (item.LastActive);
+			var active_time = frame_time - item.LastActive;
 			var opacity = double.min (1, active_time / (double) (theme.ActiveTime * 1000));
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
@@ -691,7 +690,7 @@ namespace Plank
 			if ((item.State & ItemState.URGENT) == 0)
 				return;
 			
-			var diff = frame_time.difference (item.LastUrgent);
+			var diff = frame_time - item.LastUrgent;
 			if (diff >= theme.GlowTime * 1000)
 				return;
 			
@@ -722,12 +721,12 @@ namespace Plank
 		
 		void hidden_changed ()
 		{
-			var now = new DateTime.now_utc ();
-			var diff = now.difference (last_hide);
+			var now = GLib.get_monotonic_time ();
+			var diff = now - last_hide;
 			var time = (theme.FadeOpacity == 1.0 ? theme.HideTime : theme.FadeTime) * 1000;
 			
 			if (diff < time)
-				last_hide = now.add_seconds ((diff - time) / 1000000.0);
+				last_hide = now + (diff - time);
 			else
 				last_hide = now;
 			
@@ -744,31 +743,31 @@ namespace Plank
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override bool animation_needed (DateTime render_time)
+		protected override bool animation_needed (int64 render_time)
 		{
 			if (theme.FadeOpacity == 1.0) {
-				if (render_time.difference (last_hide) <= theme.HideTime * 1000)
+				if (render_time - last_hide <= theme.HideTime * 1000)
 					return true;
 			} else {
-				if (render_time.difference (last_hide) <= theme.FadeTime * 1000)
+				if (render_time - last_hide <= theme.FadeTime * 1000)
 					return true;
 			}
 			
 			foreach (var item in controller.Items) {
 				if (item.ClickedAnimation != Animation.NONE
-					&& render_time.difference (item.LastClicked) <= (item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
+					&& render_time - item.LastClicked <= (item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
 					return true;
 				if (item.HoveredAnimation != Animation.NONE
-					&& render_time.difference (item.LastHovered) <= 150 * 1000)
+					&& render_time - item.LastHovered <= 150 * 1000)
 					return true;
 				if (item.ScrolledAnimation != Animation.NONE
-					&& render_time.difference (item.LastScrolled) <= 300 * 1000)
+					&& render_time - item.LastScrolled <= 300 * 1000)
 					return true;
-				if (render_time.difference (item.LastActive) <= theme.ActiveTime * 1000)
+				if (render_time - item.LastActive <= theme.ActiveTime * 1000)
 					return true;
-				if (render_time.difference (item.LastUrgent) <= (hide_progress == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
+				if (render_time - item.LastUrgent <= (hide_progress == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
 					return true;
-				if (render_time.difference (item.LastMove) <= theme.ItemMoveTime * 1000)
+				if (render_time - item.LastMove <= theme.ItemMoveTime * 1000)
 					return true;
 			}
 				

@@ -145,7 +145,7 @@ namespace Plank.Items
 				
 				// Only trigger animation if this isn't the initial position set
 				if (LastPosition > -1) {
-					LastMove = new DateTime.now_utc ();
+					LastMove = GLib.get_monotonic_time ();
 					State |= ItemState.MOVE;
 				}
 			}

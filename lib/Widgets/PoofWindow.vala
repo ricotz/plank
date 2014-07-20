@@ -44,8 +44,8 @@ namespace Plank.Widgets
 		
 		Gdk.Pixbuf poof_image;
 		
-		DateTime start_time = new DateTime.from_unix_utc (0);
-		DateTime frame_time = new DateTime.from_unix_utc (0);
+		int64 start_time = 0;
+		int64 frame_time = 0;
 		
 		uint animation_timer = 0;
 		
@@ -92,16 +92,16 @@ namespace Plank.Widgets
 			if (animation_timer > 0)
 				GLib.Source.remove (animation_timer);
 			
-			start_time = new DateTime.now_utc ();
-			frame_time = new DateTime.now_utc ();
+			start_time = GLib.get_monotonic_time ();
+			frame_time = start_time;
 			
 			show ();
 			move (x - (POOF_SIZE / 2), y - (POOF_SIZE / 2));
 
 			animation_timer = Gdk.threads_add_timeout (30, () => {
-				frame_time = new DateTime.now_utc ();
+				frame_time = GLib.get_monotonic_time ();
 				
-				if (frame_time.difference (start_time) <= RUN_LENGTH) {
+				if (frame_time - start_time <= RUN_LENGTH) {
 					queue_draw ();
 					return true;
 				}
@@ -115,7 +115,7 @@ namespace Plank.Widgets
 		public override bool draw (Cairo.Context cr)
 		{
 			cr.set_operator (Operator.SOURCE);
-			cairo_set_source_pixbuf (cr, poof_image, 0, -POOF_SIZE * (int) (POOF_FRAMES * frame_time.difference (start_time) / RUN_LENGTH));
+			cairo_set_source_pixbuf (cr, poof_image, 0, -POOF_SIZE * (int) (POOF_FRAMES * (frame_time - start_time) / RUN_LENGTH));
 			cr.paint ();
 			
 			return true;

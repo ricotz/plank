@@ -135,42 +135,42 @@ namespace Plank.Items
 		/**
 		 * The time the item was added to the dock.
 		 */
-		public DateTime AddTime { get; set; default = new DateTime.from_unix_utc (0); }
+		public int64 AddTime { get; set; }
 		
 		/**
 		 * The time the item was removed from the dock.
 		 */
-		public DateTime RemoveTime { get; set; default = new DateTime.from_unix_utc (0); }
+		public int64 RemoveTime { get; set; }
 		
 		/**
 		 * The last time the item was clicked.
 		 */
-		public DateTime LastClicked { get; protected set; default = new DateTime.from_unix_utc (0); }
+		public int64 LastClicked { get; protected set; }
 		
 		/**
 		 * The last time the item was hovered.
 		 */
-		public DateTime LastHovered { get; protected set; default = new DateTime.from_unix_utc (0); }
+		public int64 LastHovered { get; protected set; }
 		
 		/**
 		 * The last time the item was scrolled.
 		 */
-		public DateTime LastScrolled { get; protected set; default = new DateTime.from_unix_utc (0); }
+		public int64 LastScrolled { get; protected set; }
 		
 		/**
 		 * The last time the item changed its urgent status.
 		 */
-		public DateTime LastUrgent { get; protected set; default = new DateTime.from_unix_utc (0); }
+		public int64 LastUrgent { get; protected set; }
 		
 		/**
 		 * The last time the item changed its active status.
 		 */
-		public DateTime LastActive { get; protected set; default = new DateTime.from_unix_utc (0); }
+		public int64 LastActive { get; protected set; }
 		
 		/**
 		 * The last time the item changed its position.
 		 */
-		public DateTime LastMove { get; protected set; default = new DateTime.from_unix_utc (0); }
+		public int64 LastMove { get; protected set; }
 		
 		/**
 		 * Called when an item is clicked on.
@@ -181,7 +181,7 @@ namespace Plank.Items
 		public void clicked (PopupButton button, ModifierType mod)
 		{
 			ClickedAnimation = on_clicked (button, mod);
-			LastClicked = new DateTime.now_utc ();
+			LastClicked = GLib.get_monotonic_time ();
 		}
 		
 		/**
@@ -202,7 +202,7 @@ namespace Plank.Items
 		public void hovered ()
 		{
 			HoveredAnimation = on_hovered ();
-			LastHovered = new DateTime.now_utc ();
+			LastHovered = GLib.get_monotonic_time ();
 		}
 		
 		/**
@@ -233,7 +233,7 @@ namespace Plank.Items
 		 */
 		protected virtual Animation on_scrolled (ScrollDirection direction, ModifierType mod)
 		{
-			LastScrolled = new DateTime.now_utc ();
+			LastScrolled = GLib.get_monotonic_time ();
 			return Animation.NONE;
 		}
 		

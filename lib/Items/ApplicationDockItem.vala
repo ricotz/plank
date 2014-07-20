@@ -239,10 +239,10 @@ namespace Plank.Items
 			var was_active = (State & ItemState.ACTIVE) == ItemState.ACTIVE;
 			
 			if (is_active && !was_active) {
-				LastActive = new DateTime.now_utc ();
+				LastActive = GLib.get_monotonic_time ();
 				State |= ItemState.ACTIVE;
 			} else if (!is_active && was_active) {
-				LastActive = new DateTime.now_utc ();
+				LastActive = GLib.get_monotonic_time ();
 				State &= ~ItemState.ACTIVE;
 			}
 		}
@@ -274,7 +274,7 @@ namespace Plank.Items
 			var was_urgent = (State & ItemState.URGENT) == ItemState.URGENT;
 			
 			if (is_urgent && !was_urgent) {
-				LastUrgent = new DateTime.now_utc ();
+				LastUrgent = GLib.get_monotonic_time ();
 				State |= ItemState.URGENT;
 			} else if (!is_urgent && was_urgent) {
 				State &= ~ItemState.URGENT;
@@ -350,10 +350,10 @@ namespace Plank.Items
 			if (App == null || WindowControl.get_num_windows (App) == 0)
 				return Animation.NONE;
 			
-			if (new DateTime.now_utc ().difference (LastScrolled) < 300 * 1000)
+			if (GLib.get_monotonic_time () - LastScrolled < 300 * 1000)
 				return Animation.DARKEN;
 			
-			LastScrolled = new DateTime.now_utc ();
+			LastScrolled = GLib.get_monotonic_time ();
 			
 			if (direction == ScrollDirection.UP || direction == ScrollDirection.LEFT)
 				WindowControl.focus_previous (App);

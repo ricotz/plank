@@ -278,7 +278,7 @@ namespace Plank.Items
 			internal_items.add (item);
 			
 			item.Provider = this;
-			item.AddTime = new DateTime.now_utc ();
+			item.AddTime = GLib.get_monotonic_time ();
 			item_signals_connect (item);
 		}
 		
@@ -322,7 +322,7 @@ namespace Plank.Items
 		
 		protected virtual void remove_item_without_signaling (DockItem item)
 		{
-			item.RemoveTime = new DateTime.now_utc ();
+			item.RemoveTime = GLib.get_monotonic_time ();
 			item_signals_disconnect (item);
 			
 			internal_items.remove (item);
