@@ -33,7 +33,7 @@ namespace Plank.Items
 	 */
 	public class FileDockItem : DockItem
 	{
-		const string DEFAULT_ICON = "inode-directory";
+		const string DEFAULT_ICONS = "inode-directory;;folder";
 		
 		File OwnedFile { get; set; }
 		FileMonitor? dir_monitor;
@@ -77,7 +77,7 @@ namespace Plank.Items
 		{
 			stop_monitor ();
 			
-			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? DEFAULT_ICON;
+			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? DEFAULT_ICONS;
 			
 			if (!OwnedFile.is_native ()) {
 				Text = OwnedFile.get_uri ();
@@ -118,7 +118,8 @@ namespace Plank.Items
 		 */
 		protected override void draw_icon (DockSurface surface)
 		{
-			if (!Icon.has_prefix (DEFAULT_ICON)) {
+			if (!(Icon == DEFAULT_ICONS
+				|| Icon in DEFAULT_ICONS.split (";;"))) {
 				base.draw_icon (surface);
 				return;
 			}
