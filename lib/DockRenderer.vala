@@ -62,6 +62,7 @@ namespace Plank
 		bool screen_is_composited = false;
 		uint reset_position_manager_timer = 0;
 		int window_scale_factor = 1;
+		bool is_first_frame = true;
 		
 		/**
 		 * Create a new dock renderer for a dock.
@@ -247,7 +248,7 @@ namespace Plank
 #endif
 			// take the previous frame values into account to decide if we
 			// can bail a full draw to not miss a finishing animation-frame
-			var no_full_draw_needed = (hide_progress == 1.0 && opacity == 1.0);
+			var no_full_draw_needed = (!is_first_frame && hide_progress == 1.0 && opacity == 1.0);
 			
 			init_current_frame ();
 			
@@ -352,6 +353,8 @@ namespace Plank
 					message ("	" + s);
 			message ("render time - %f ms", diff);
 #endif
+			
+			is_first_frame = false;
 		}
 		
 		void draw_dock_background ()
