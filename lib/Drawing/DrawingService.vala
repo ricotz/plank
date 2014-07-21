@@ -188,12 +188,10 @@ namespace Plank.Drawing
 			unowned IconTheme icon_theme = IconTheme.get_default ();
 			
 			try {
-				if (icon_theme.has_icon (icon))
-					pbuf = icon_theme.load_icon (icon, size, 0);
-				else if (icon.contains (".")) {
+				pbuf = icon_theme.load_icon (icon, size, 0);
+				if (pbuf == null && icon.contains (".")) {
 					var parts = icon.split (".");
-					if (icon_theme.has_icon (parts [0]))
-						pbuf = icon_theme.load_icon (parts [0], size, 0);
+					pbuf = icon_theme.load_icon (parts [0], size, 0);
 				}
 			} catch { }
 			
