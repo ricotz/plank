@@ -494,7 +494,7 @@ namespace Plank.Items
 				
 				foreach (var view in windows) {
 					unowned Bamf.Window? window = (view as Bamf.Window);
-					if (window == null)
+					if (window == null || window.get_transient () != null)
 						continue;
 					
 					Gtk.MenuItem window_item;

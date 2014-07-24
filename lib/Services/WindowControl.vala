@@ -115,10 +115,15 @@ namespace Plank.Services.Windows
 			
 			warn_if_fail (xids != null);
 			
-			if (xids == null)
-				return 0;
+			uint count = 0;
 			
-			return xids.length;
+			for (var i = 0; xids != null && i < xids.length; i++) {
+				unowned Wnck.Window window = Wnck.Window.@get (xids.index (i));
+				if (window != null && window.get_transient () == null)
+					count++;
+			}
+			
+			return count;
 		}
 		
 		public static bool has_maximized_window (Bamf.Application app)
