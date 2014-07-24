@@ -7,53 +7,71 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-16 15:15+0000\n"
-"PO-Revision-Date: 2012-08-08 08:03+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2014-07-21 12:39+0000\n"
+"PO-Revision-Date: 2014-07-05 14:24+0000\n"
+"Last-Translator: Tobias Bannert <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-17 07:12+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2014-07-24 05:32+0000\n"
+"X-Generator: Launchpad (build 17114)\n"
+
+#: ../data/plank.appdata.xml.in.h:1
+msgid ""
+"Plank is meant to be the simplest dock on the planet. The goal is to provide "
+"just what a dock needs and absolutely nothing more."
+msgstr ""
+"Plank soll das einfachste Dock auf dem Planeten sein. Das Ziel ist es, genau "
+"das, was ein Dock benötigt bereitzustellen und absolut nichts mehr."
+
+#: ../data/plank.appdata.xml.in.h:2
+msgid ""
+"It is, however, a library which can be extended to create other dock "
+"programs with more advanced features. Thus, Plank is the underlying "
+"technology for Docky (starting in version 3.0.0) and aims to provide all the "
+"core features while Docky extends it to add fancier things like Docklets, "
+"painters, settings dialogs, etc."
+msgstr ""
+"Es ist jedoch, eine Bibliothek, die erweitert werden kann, um andere "
+"Dockprogramme mit erweiterten Funktionen zu erstellen. So ist Plank die "
+"zugrunde liegende Technologie für Docky (ab Version 3.0.0) und zielt darauf "
+"ab, alle Kernfunktionen anzubieten, während Docky es erweitert, um schicke "
+"Dinge wie Docklets, Painters, Einstellungsdialoge usw. hinzuzufügen"
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
 msgstr "Plank. Lächerlich einfach."
 
-#: ../lib/Items/ApplicationDockItem.vala:356
-#: ../lib/Items/FileDockItem.vala:290 ../lib/Items/FileDockItem.vala:308
+#: ../lib/Items/ApplicationDockItem.vala:448
+#: ../lib/Items/FileDockItem.vala:293 ../lib/Items/FileDockItem.vala:311
 msgid "_Keep in Dock"
 msgstr "Im Dock _behalten"
 
-#: ../lib/Items/ApplicationDockItem.vala:366
-msgid "Unma_ximize"
-msgstr "Ma_ximierung aufheben"
-
-#: ../lib/Items/ApplicationDockItem.vala:370
-msgid "Ma_ximize"
-msgstr "Ma_ximieren"
-
-#: ../lib/Items/ApplicationDockItem.vala:375
+#: ../lib/Items/ApplicationDockItem.vala:455
 msgid "_Close All"
 msgstr "_Alle schließen"
 
-#: ../lib/Items/FileDockItem.vala:295
+#: ../lib/Items/FileDockItem.vala:298
 msgid "_Open in File Browser"
-msgstr "Im _Dateimanager öffnen"
+msgstr "In der _Dateiverwaltung öffnen"
 
-#: ../lib/Items/FileDockItem.vala:313
+#: ../lib/Items/FileDockItem.vala:316
 msgid "_Open"
 msgstr "Ö_ffnen"
 
-#: ../lib/Items/FileDockItem.vala:317
+#: ../lib/Items/FileDockItem.vala:320
 msgid "Open Containing _Folder"
-msgstr "Beinhaltenden _Ordner öffnen"
+msgstr "Übergeordneten _Ordner öffnen"
+
+#: ../lib/Items/PlaceholderDockItem.vala:37
+msgid "Drop applications or files here"
+msgstr "Anwendungen oder Dateien hier ablegen"
 
 #: ../lib/Items/PlankDockItem.vala:79
 msgid "Get _Help Online..."
-msgstr "_Hilfe Online bekommen..."
+msgstr "Im Netz _Hilfe erhalten …"
 
 #: ../lib/Items/PlankDockItem.vala:83
 msgid "_Translate This Application..."
-msgstr "Diese Anwendung überse_tzen..."
+msgstr "_Diese Anwendung übersetzen …"

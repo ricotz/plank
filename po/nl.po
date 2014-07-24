@@ -7,46 +7,61 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-02-20 21:27+0000\n"
-"PO-Revision-Date: 2014-01-28 11:25+0000\n"
+"POT-Creation-Date: 2014-07-21 12:39+0000\n"
+"PO-Revision-Date: 2014-05-08 19:20+0000\n"
 "Last-Translator: rob <linuxned@gmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 21:32+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-07-24 05:32+0000\n"
+"X-Generator: Launchpad (build 17114)\n"
+
+#: ../data/plank.appdata.xml.in.h:1
+msgid ""
+"Plank is meant to be the simplest dock on the planet. The goal is to provide "
+"just what a dock needs and absolutely nothing more."
+msgstr ""
+"Plank is bedoeld om het simpelste dock op de planeet te zijn. Het doel was "
+"om alleen een dock met eenvoudige functionaliteit te zijn en absoluut niets "
+"meer."
+
+#: ../data/plank.appdata.xml.in.h:2
+msgid ""
+"It is, however, a library which can be extended to create other dock "
+"programs with more advanced features. Thus, Plank is the underlying "
+"technology for Docky (starting in version 3.0.0) and aims to provide all the "
+"core features while Docky extends it to add fancier things like Docklets, "
+"painters, settings dialogs, etc."
+msgstr ""
+"Het is echter ook een bibliotheek die uitgebreid kan worden met andere dock-"
+"toepassingen met meer geavanceerde opties. Plank is dus de onderliggende "
+"technologie voor Docky (zal starten in versie 3.0.0) en zal voor al de "
+"kernfuncties zorgen terwijl Docky extra dingen toe kan voegen zoals "
+"docklets, kleuropties, instellingendialoog, enz."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "Plank. Belachelijk simpel"
+msgstr "Plank. Belachelijk eenvoudig."
 
-#: ../lib/Items/ApplicationDockItem.vala:375
-#: ../lib/Items/FileDockItem.vala:292 ../lib/Items/FileDockItem.vala:310
+#: ../lib/Items/ApplicationDockItem.vala:448
+#: ../lib/Items/FileDockItem.vala:293 ../lib/Items/FileDockItem.vala:311
 msgid "_Keep in Dock"
 msgstr "_Vastzetten in dock"
 
-#: ../lib/Items/ApplicationDockItem.vala:385
-msgid "Unma_ximize"
-msgstr "Ma_ximaliseren ongedaan maken"
-
-#: ../lib/Items/ApplicationDockItem.vala:389
-msgid "Ma_ximize"
-msgstr "Ma_ximaliseren"
-
-#: ../lib/Items/ApplicationDockItem.vala:394
+#: ../lib/Items/ApplicationDockItem.vala:455
 msgid "_Close All"
 msgstr "Alles sl_uiten"
 
-#: ../lib/Items/FileDockItem.vala:297
+#: ../lib/Items/FileDockItem.vala:298
 msgid "_Open in File Browser"
 msgstr "In bestandsbeheer _openen"
 
-#: ../lib/Items/FileDockItem.vala:315
+#: ../lib/Items/FileDockItem.vala:316
 msgid "_Open"
 msgstr "_Openen"
 
-#: ../lib/Items/FileDockItem.vala:319
+#: ../lib/Items/FileDockItem.vala:320
 msgid "Open Containing _Folder"
 msgstr "Bovenliggende _map openen"
 
