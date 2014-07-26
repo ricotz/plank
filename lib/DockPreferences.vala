@@ -70,6 +70,9 @@ namespace Plank
 		[Description(nick = "pressure-reveal", blurb = "Whether to use pressure-based revealing of the dock if the support is available.")]
 		public bool PressureReveal { get; set; }
 		
+		[Description(nick = "pinned-only", blurb = "Whether to show only pinned applications. Useful for running more then one dock.")]
+		public bool PinnedOnly { get; set; }
+		
 		/**
 		 * {@inheritDoc}
 		 */
@@ -118,6 +121,7 @@ namespace Plank
 			ItemsAlignment = Gtk.Align.CENTER;
 			LockItems = false;
 			PressureReveal = false;
+			PinnedOnly = false;
 		}
 		
 		/**
@@ -222,6 +226,9 @@ namespace Plank
 				break;
 			
 			case "PressureReveal":
+				break;
+			
+			case "PinnedOnly":
 				break;
 			}
 		}

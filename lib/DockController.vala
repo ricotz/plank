@@ -44,7 +44,7 @@ namespace Plank
 		public DockRenderer renderer { get; protected set; }
 		public DockWindow window { get; protected set; }
 		
-		DefaultApplicationDockItemProvider? default_provider;
+		ApplicationDockItemProvider? default_provider;
 		ArrayList<DockItemProvider> item_providers;
 		ArrayList<unowned DockItem> items;
 		
@@ -87,6 +87,8 @@ namespace Plank
 			item_providers = new ArrayList<DockItemProvider> ();
 			items = new ArrayList<unowned DockItem> ();
 			
+			prefs.notify["PinnedOnly"].connect (update_default_provider);
+			
 			position_manager = new PositionManager (this);
 			drag_manager = new DragManager (this);
 			hide_manager = new HideManager (this);
@@ -96,6 +98,8 @@ namespace Plank
 		
 		~DockController ()
 		{
+			prefs.notify["PinnedOnly"].disconnect (update_default_provider);
+			
 			foreach (var provider in item_providers)
 				disconnect_provider (provider);
 			
@@ -136,6 +140,18 @@ namespace Plank
 		 */
 		public void add_default_provider ()
 		{
+			if (default_provider != null)
+				return;
+			
+			default_provider = get_default_provider ();
+			
+			add_provider (default_provider);
+		}
+		
+		ApplicationDockItemProvider get_default_provider ()
+		{
+			ApplicationDockItemProvider provider;
+			
 			// If we made the default-launcher-directory,
 			// assume a first run and pre-populate with launchers
 			if (Paths.ensure_directory_exists (launchers_folder)) {
@@ -144,11 +160,45 @@ namespace Plank
 				debug ("done.");
 			}
 			
-			if (default_provider == null) {
-				default_provider = new DefaultApplicationDockItemProvider (prefs, launchers_folder);
-				default_provider.add_items (Factory.item_factory.load_items (launchers_folder, prefs.DockItems));
-				add_provider (default_provider);
+			if (prefs.PinnedOnly)
+				provider = new ApplicationDockItemProvider (launchers_folder);
+			else
+				provider = new DefaultApplicationDockItemProvider (prefs, launchers_folder);
+			
+			provider.add_items (Factory.item_factory.load_items (launchers_folder, prefs.DockItems));
+			
+			return provider;
+		}
+		
+		void update_default_provider ()
+		{
+			// If there is no default-provider we must not try to update it
+			if (default_provider == null)
+				return;
+			
+			// Make sure we know where to put the replacement at
+			var pos = item_providers.index_of (default_provider);
+			if (pos < 0) {
+				critical ("default-provider is set but not included on this dock!");
+				return;
 			}
+			
+			remove_provider (default_provider);
+			
+			default_provider = get_default_provider ();
+			
+			default_provider.prepare ();
+			item_providers.insert (pos, default_provider);
+			
+			connect_provider (default_provider);
+			
+			update_items ();
+			
+			// Do a thorough update since we actually dropped all previous items
+			// of the default-provider
+			position_manager.reset_caches (renderer.theme);
+			position_manager.update_regions ();
+			window.update_icon_regions ();
 		}
 		
 		/**
