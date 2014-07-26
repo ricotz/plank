@@ -184,11 +184,13 @@ namespace Plank
 			}
 			
 			remove_provider (default_provider);
+			default_provider.RemoveTime = GLib.get_monotonic_time ();
 			
 			default_provider = get_default_provider ();
 			
 			default_provider.prepare ();
 			item_providers.insert (pos, default_provider);
+			default_provider.AddTime = GLib.get_monotonic_time ();
 			
 			connect_provider (default_provider);
 			
@@ -215,6 +217,7 @@ namespace Plank
 			
 			provider.prepare ();
 			item_providers.add (provider);
+			provider.AddTime = GLib.get_monotonic_time ();
 			
 			connect_provider (provider);
 			
@@ -236,6 +239,7 @@ namespace Plank
 			disconnect_provider (provider);
 			
 			item_providers.remove (provider);
+			provider.RemoveTime = GLib.get_monotonic_time ();
 			
 			update_items ();
 		}
