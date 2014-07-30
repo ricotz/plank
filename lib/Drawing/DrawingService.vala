@@ -189,6 +189,9 @@ namespace Plank.Drawing
 			
 			try {
 				pbuf = icon_theme.load_icon (icon, size, 0);
+			} catch { }
+			
+			try {
 				if (pbuf == null && icon.contains (".")) {
 					var parts = icon.split (".");
 					pbuf = icon_theme.load_icon (parts [0], size, 0);
