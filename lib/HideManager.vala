@@ -19,6 +19,7 @@ using Gdk;
 using Gtk;
 using Wnck;
 
+using Plank.Services;
 using Plank.Services.Windows;
 using Plank.Widgets;
 
@@ -590,7 +591,7 @@ namespace Plank
 				if (slide < distance) {
 					distance = Math.fmin (15.0, distance);
 					pressure += distance;
-					print ("pressure = %f\n", pressure);
+					Logger.verbose ("HideManager (pressure = %f)", pressure);
 				}
 				
 				if (pressure >= PRESSURE_THRESHOLD) {
@@ -601,7 +602,7 @@ namespace Plank
 						pressure_timer = 0;
 					}
 					
-					print ("pressure-threshold reached (%f)\n", PRESSURE_THRESHOLD);
+					Logger.verbose ("HideManager (pressure-threshold reached > unhide (%f))", PRESSURE_THRESHOLD);
 					
 					freeze_notify ();
 					
