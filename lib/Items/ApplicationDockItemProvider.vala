@@ -223,7 +223,7 @@ namespace Plank.Items
 			if (uri == null || uri == "")
 				return;
 			
-			if (target != null && !internal_items.contains (target)) {
+			if (target != null && target != placeholder_item && !internal_items.contains (target)) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", target.Text);
 				return;
 			}

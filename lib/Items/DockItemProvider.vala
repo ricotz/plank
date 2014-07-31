@@ -26,7 +26,7 @@ namespace Plank.Items
 	 */
 	public class DockItemProvider : DockElement
 	{
-		static PlaceholderDockItem placeholder_item;
+		protected static PlaceholderDockItem placeholder_item;
 		
 		static construct
 		{
@@ -124,7 +124,7 @@ namespace Plank.Items
 			
 			add_item_without_signaling (item);
 			
-			if (target != null)
+			if (target != null && target != placeholder_item)
 				move_item_to (item, target);
 			else
 				update_visible_items ();
