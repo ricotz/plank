@@ -338,7 +338,9 @@ namespace Plank.Factories
 				
 				try {
 					// find a unique file name, based on the name of the launcher
-					var launcher_base = (launcher_file.get_basename () ?? "unknown").split (".") [0];
+					var basename = (launcher_file.get_basename () ?? "unknown");
+					var index_of_last_dot = basename.last_index_of (".");
+					var launcher_base = (index_of_last_dot >= 0 ? basename.slice (0, index_of_last_dot) : basename);
 					var dockitem = launcher_base + ".dockitem";
 					var dockitem_file = target_dir.get_child (dockitem);
 					var counter = 1;
