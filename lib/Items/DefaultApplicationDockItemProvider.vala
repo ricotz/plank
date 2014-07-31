@@ -188,6 +188,23 @@ namespace Plank.Items
 			}
 		}
 		
+		protected override void handle_item_deleted (DockItem item)
+		{
+			unowned Bamf.Application? app = null;
+			if (item is ApplicationDockItem)
+				app = (item as ApplicationDockItem).App;
+			
+			if (app == null || !app.is_running ()) {
+				remove_item (item);
+				return;
+			}
+			
+			var new_item = new TransientDockItem.with_application (app);
+			item.copy_values_to (new_item);
+			
+			replace_item (new_item, item);
+		}
+		
 		public void pin_item (DockItem item)
 		{
 			if (!internal_items.contains (item)) {
