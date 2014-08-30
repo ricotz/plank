@@ -194,6 +194,8 @@ namespace Plank.Items
 		DockSurface? background_surface = null;
 		DockSurface? foreground_surface = null;
 		
+		FileMonitor? icon_file_monitor = null;
+		
 		/**
 		 * Creates a new dock item.
 		 */
@@ -206,8 +208,8 @@ namespace Plank.Items
 		{
 			Prefs.deleted.connect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.connect (icon_theme_changed);
-			notify["Icon"].connect (reset_icon_buffer);
-			notify["ForcePixbuf"].connect (reset_icon_buffer);
+			notify["Icon"].connect (icon_changed);
+			notify["ForcePixbuf"].connect (icon_changed);
 			
 			notify["Count"].connect (reset_foreground_buffer);
 			notify["CountVisible"].connect (reset_foreground_buffer);
@@ -219,13 +221,15 @@ namespace Plank.Items
 		{
 			Prefs.deleted.disconnect (handle_deleted);
 			Gtk.IconTheme.get_default ().changed.disconnect (icon_theme_changed);
-			notify["Icon"].disconnect (reset_icon_buffer);
-			notify["ForcePixbuf"].disconnect (reset_icon_buffer);
+			notify["Icon"].disconnect (icon_changed);
+			notify["ForcePixbuf"].disconnect (icon_changed);
 			
 			notify["Count"].disconnect (reset_foreground_buffer);
 			notify["CountVisible"].disconnect (reset_foreground_buffer);
 			notify["Progress"].disconnect (reset_foreground_buffer);
 			notify["ProgressVisible"].disconnect (reset_foreground_buffer);
+			
+			icon_file_monitor_stop ();
 		}
 		
 		/**
@@ -283,6 +287,41 @@ namespace Plank.Items
 				reset_icon_buffer ();
 				return false;
 			});
+		}
+		
+		void icon_changed ()
+		{
+			icon_file_monitor_stop ();
+			
+			if (ForcePixbuf == null)
+				icon_file_monitor_start ();
+			
+			reset_icon_buffer ();
+		}
+		
+		void icon_file_monitor_start ()
+		{
+			var icon_file = DrawingService.try_get_icon_file (Icon);
+			if (icon_file == null)
+				return;
+			
+			try {
+				icon_file_monitor = icon_file.monitor (0);
+				icon_file_monitor.changed.connect (reset_icon_buffer);
+			} catch (Error e) {
+				critical ("Unable to watch the icon file '%s'", icon_file.get_path () ?? "");
+				debug (e.message);
+			}
+		}
+		
+		void icon_file_monitor_stop ()
+		{
+			if (icon_file_monitor == null)
+				return;
+			
+			icon_file_monitor.changed.disconnect (reset_icon_buffer);
+			icon_file_monitor.cancel ();
+			icon_file_monitor = null;
 		}
 		
 		unowned DockSurface get_surface (int width, int height, DockSurface model)
