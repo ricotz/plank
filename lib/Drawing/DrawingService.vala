@@ -123,8 +123,9 @@ namespace Plank.Drawing
 			Pixbuf? pbuf = null;
 			
 			foreach (var name in all_names) {
-				if (icon_is_file (name)) {
-					pbuf = load_pixbuf_from_file (name, width, height);
+				var file = try_get_icon_file (name);
+				if (file != null) {
+					pbuf = load_pixbuf_from_file (file, width, height);
 					if (pbuf != null)
 						break;
 				}
@@ -155,28 +156,35 @@ namespace Plank.Drawing
 			return pbuf;
 		}
 		
-		static bool icon_is_file (string name)
+		/**
+		 * Try to get a {@link GLib.File} for the given icon name
+		 *
+		 * @param name a string which might represent an existing file
+		 * @return a {@link GLib.File}, or null if it failed
+		 */
+		public static File? try_get_icon_file (string name)
 		{
-			return (name.has_prefix ("/") || name.has_prefix ("~/") || name.down ().has_prefix ("file://"));
+			File? file = null;
+			
+			if (name.down ().has_prefix ("file://"))
+				file = File.new_for_uri (name);
+			else if (name.has_prefix ("~/"))
+				file = File.new_for_path (name.replace ("~/", Paths.HomeFolder.get_path () ?? ""));
+			else if (name.has_prefix ("/"))
+				file = File.new_for_path (name);
+			
+			if (file != null && file.query_exists ())
+				return file;
+			
+			return null;
 		}
 		
-		static Pixbuf? load_pixbuf_from_file (string name, int width, int height)
+		static Pixbuf? load_pixbuf_from_file (File file, int width, int height)
 		{
 			Pixbuf? pbuf = null;
-			string filename;
-			
-			if (name.has_prefix ("~/"))
-				filename = name.replace ("~/", Paths.HomeFolder.get_path () ?? "");
-			else
-				filename = name;
-			
-			if (filename.has_prefix ("file://"))
-				filename = File.new_for_uri (filename).get_path ();
-			else
-				filename = File.new_for_path (filename).get_path ();
 			
 			try {
-				pbuf = new Pixbuf.from_file_at_size (filename, width, height);
+				pbuf = new Pixbuf.from_file_at_size (file.get_path (), width, height);
 			} catch { }
 			
 			return pbuf;
