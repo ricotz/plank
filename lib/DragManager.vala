@@ -307,7 +307,7 @@ namespace Plank
 					// Dropped somewhere on dock
 					// Pin this item if possible/needed, so we assume the user cares
 					// about this application when changing its position
-					if (DragItem is TransientDockItem) {
+					if (controller.prefs.AutoPinning && DragItem is TransientDockItem) {
 						unowned DefaultApplicationDockItemProvider? provider = (DragItem.Provider as DefaultApplicationDockItemProvider);
 						if (provider != null)
 							provider.pin_item (DragItem);

@@ -73,6 +73,9 @@ namespace Plank
 		[Description(nick = "pinned-only", blurb = "Whether to show only pinned applications. Useful for running more then one dock.")]
 		public bool PinnedOnly { get; set; }
 		
+		[Description(nick = "auto-pinning", blurb = "Whether to automatically pin an application if it seems useful to do.")]
+		public bool AutoPinning { get; set; }
+		
 		/**
 		 * {@inheritDoc}
 		 */
@@ -122,6 +125,7 @@ namespace Plank
 			LockItems = false;
 			PressureReveal = false;
 			PinnedOnly = false;
+			AutoPinning = true;
 		}
 		
 		/**
@@ -229,6 +233,9 @@ namespace Plank
 				break;
 			
 			case "PinnedOnly":
+				break;
+			
+			case "AutoPinning":
 				break;
 			}
 		}
