@@ -420,7 +420,6 @@ namespace Plank.Items
 				return;
 			
 			// Reset item since there is no new NameOwner
-			unowned TransientDockItem? transient_item = null;
 			foreach (var item in internal_items) {
 				unowned ApplicationDockItem? app_item = item as ApplicationDockItem;
 				if (app_item == null)
@@ -430,16 +429,15 @@ namespace Plank.Items
 					continue;
 				
 				app_item.unity_reset ();
-				transient_item = item as TransientDockItem;
 				
-				item_state_changed ();
-				break;
+				// Remove item which only exists because of the presence of
+				// this removed LauncherEntry interface
+				unowned TransientDockItem? transient_item = item as TransientDockItem;
+				if (transient_item != null && transient_item.App == null)
+					remove_item (transient_item);
+				else
+					item_state_changed ();
 			}
-			
-			// Remove item which only exists because of the presence of
-			// this removed LauncherEntry interface
-			if (transient_item != null && transient_item.App == null)
-				remove_item (transient_item);
 		}
 		
 		void handle_update_request (string sender_name, Variant parameters)
