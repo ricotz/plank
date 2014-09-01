@@ -440,11 +440,8 @@ namespace Plank.Items
 			}
 		}
 		
-		void handle_update_request (string sender_name, Variant parameters)
+		void handle_update_request (string sender_name, Variant parameters, bool is_retry = false)
 		{
-			if (parameters == null)
-				return;
-			
 			if (!parameters.is_of_type (new VariantType ("(sa{sv})"))) {
 				warning ("Unity.handle_update_request (illegal payload signature '%s' from %s. expected '(sa{sv})')", parameters.get_type_string (), sender_name);
 				return;
@@ -456,18 +453,25 @@ namespace Plank.Items
 			
 			Logger.verbose ("Unity.handle_update_request (processing update for %s)", app_uri);
 			
-			ApplicationDockItem? current_item = null;
+			ApplicationDockItem? current_item = null, alternate_item = null;
 			foreach (var item in internal_items) {
 				unowned ApplicationDockItem? app_item = item as ApplicationDockItem;
 				if (app_item == null)
 					continue;
 				
-				if (app_item.get_unity_dbusname () == sender_name
-					|| app_item.get_unity_application_uri () == app_uri) {
+				// Prefer matching application-uri of available items
+				if (app_item.get_unity_application_uri () == app_uri) {
 					current_item = app_item;
 					break;
 				}
+				
+				if (app_item.get_unity_dbusname () == sender_name)
+					alternate_item = app_item;
 			}
+			
+			// Fallback to matching dbus-sender-name
+			if (current_item == null)
+				current_item = alternate_item;
 			
 			// Update our entry and trigger a redraw
 			if (current_item != null) {
@@ -481,7 +485,22 @@ namespace Plank.Items
 					remove_item (transient_item);
 				else
 					item_state_changed ();
-			} else if (HandlesTransients) {
+				
+				return;
+			}
+			
+			if (!is_retry) {
+				// Wait to let further update requests come in to catch the case where one application
+				// sends out multiple LauncherEntry-updates with different application-uris, e.g. Nautilus
+				Idle.add (() => {
+					handle_update_request (sender_name, parameters, true);
+					return false;
+				});
+				
+				return;
+			}
+			
+			if (!HandlesTransients) {
 				// Find a matching desktop-file and create new TransientDockItem for this LauncherEntry
 				var desktop_file = desktop_file_for_application_uri (app_uri);
 				if (desktop_file != null) {
