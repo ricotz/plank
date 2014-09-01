@@ -53,19 +53,23 @@ namespace Plank.Services.Windows
 		
 		public static void initialize ()
 		{
-			var screen = Screen.get_default ();
+			unowned Wnck.Screen screen = Screen.get_default ();
 			
 			set_client_type (ClientType.PAGER);
 			
+			// Make sure internal window-list of Wnck is most up to date
 			screen.force_update ();
-			screen.window_manager_changed.connect (window_manager_changed);
-			screen.window_closed.connect (handle_window_closed);
+			screen.window_manager_changed.connect_after (window_manager_changed);
+			screen.window_closed.connect_after (handle_window_closed);
 			
 			message ("Window-manager: %s", screen.get_window_manager_name ());
 		}
 		
 		static void window_manager_changed (Wnck.Screen screen)
 		{
+			// Make sure internal window-list of Wnck is most up to date
+			screen.force_update ();
+			
 			warning ("Window-manager changed: %s", screen.get_window_manager_name ());
 		}
 		

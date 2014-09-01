@@ -136,10 +136,10 @@ namespace Plank
 #endif
 			window.leave_notify_event.connect (leave_notify_event);
 			
-			wnck_screen.window_opened.connect (schedule_update);
-			wnck_screen.window_closed.connect (schedule_update);
-			wnck_screen.active_window_changed.connect (handle_window_changed);
-			wnck_screen.active_workspace_changed.connect (handle_workspace_changed);
+			wnck_screen.window_opened.connect_after (schedule_update);
+			wnck_screen.window_closed.connect_after (schedule_update);
+			wnck_screen.active_window_changed.connect_after (handle_window_changed);
+			wnck_screen.active_workspace_changed.connect_after (handle_workspace_changed);
 			
 			setup_active_window ();
 		}
@@ -454,8 +454,8 @@ namespace Plank
 			
 			if (active_window != null) {
 				last_window_rect = window_geometry (active_window);
-				active_window.geometry_changed.connect (handle_geometry_changed);
-				active_window.state_changed.connect (handle_state_changed);
+				active_window.geometry_changed.connect_after (handle_geometry_changed);
+				active_window.state_changed.connect_after (handle_state_changed);
 			}
 			
 			schedule_update ();

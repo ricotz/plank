@@ -47,10 +47,10 @@ namespace Plank.Services.Windows
 		private Matcher ()
 		{
 			bamf_matcher = Bamf.Matcher.get_default ();
-			bamf_matcher.active_application_changed.connect (handle_active_application_changed);
-			bamf_matcher.active_window_changed.connect (handle_active_window_changed);
-			bamf_matcher.view_opened.connect (handle_view_opened);
-			bamf_matcher.view_closed.connect (handle_view_closed);
+			bamf_matcher.active_application_changed.connect_after (handle_active_application_changed);
+			bamf_matcher.active_window_changed.connect_after (handle_active_window_changed);
+			bamf_matcher.view_opened.connect_after (handle_view_opened);
+			bamf_matcher.view_closed.connect_after (handle_view_closed);
 		}
 		
 		~Matcher ()
@@ -87,7 +87,7 @@ namespace Plank.Services.Windows
 		{
 			if (arg1 is Bamf.Application && !arg1.is_user_visible ()) {
 				pending_views.add (arg1);
-				arg1.user_visible_changed.connect (handle_view_user_visible_changed);
+				arg1.user_visible_changed.connect_after (handle_view_user_visible_changed);
 				return;
 			}
 			

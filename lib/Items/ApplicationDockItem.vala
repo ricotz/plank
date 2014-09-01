@@ -158,14 +158,14 @@ namespace Plank.Items
 		
 		void app_signals_connect (Bamf.Application app)
 		{
-			app.active_changed.connect (handle_active_changed);
-			app.name_changed.connect (handle_name_changed);
-			app.running_changed.connect (handle_running_changed);
-			app.urgent_changed.connect (handle_urgent_changed);
-			app.user_visible_changed.connect (handle_user_visible_changed);
-			app.window_added.connect (handle_window_added);
-			app.window_removed.connect (handle_window_removed);
-			app.closed.connect (handle_closed);
+			app.active_changed.connect_after (handle_active_changed);
+			app.name_changed.connect_after (handle_name_changed);
+			app.running_changed.connect_after (handle_running_changed);
+			app.urgent_changed.connect_after (handle_urgent_changed);
+			app.user_visible_changed.connect_after (handle_user_visible_changed);
+			app.window_added.connect_after (handle_window_added);
+			app.window_removed.connect_after (handle_window_removed);
+			app.closed.connect_after (handle_closed);
 		}
 		
 		void app_signals_disconnect (Bamf.Application app)

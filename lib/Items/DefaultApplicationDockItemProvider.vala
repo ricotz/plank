@@ -47,9 +47,9 @@ namespace Plank.Items
 			Prefs.notify["CurrentWorkspaceOnly"].connect (handle_setting_changed);
 			
 			var wnck_screen = Wnck.Screen.get_default ();
-			wnck_screen.active_window_changed.connect (handle_window_changed);
-			wnck_screen.active_workspace_changed.connect (handle_workspace_changed);
-			wnck_screen.viewports_changed.connect (handle_viewports_changed);
+			wnck_screen.active_window_changed.connect_after (handle_window_changed);
+			wnck_screen.active_workspace_changed.connect_after (handle_workspace_changed);
+			wnck_screen.viewports_changed.connect_after (handle_viewports_changed);
 		}
 		
 		~DefaultApplicationDockItemProvider ()
@@ -86,6 +86,9 @@ namespace Plank.Items
 		 */
 		public override void prepare ()
 		{
+			// Make sure internal window-list of Wnck is most up to date
+			Wnck.Screen.get_default ().force_update ();
+			
 			// Match running applications to their available dock-items
 			foreach (var app in Matcher.get_default ().active_launchers ()) {
 				var found = item_for_application (app);
@@ -115,6 +118,9 @@ namespace Plank.Items
 		
 		protected override void app_opened (Bamf.Application app)
 		{
+			// Make sure internal window-list of Wnck is most up to date
+			Wnck.Screen.get_default ().force_update ();
+			
 			var found = item_for_application (app);
 			if (found != null) {
 				found.App = app;
