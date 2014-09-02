@@ -94,8 +94,7 @@ namespace Plank
 
 			init_current_frame ();
 			
-			controller.position_manager.reset_caches (theme);
-			controller.position_manager.update_regions ();
+			controller.position_manager.update (theme);
 			
 			controller.window.notify["HoveredItem"].connect (animated_draw);
 			controller.hide_manager.notify["Hidden"].connect (hidden_changed);
@@ -159,8 +158,7 @@ namespace Plank
 			
 			reset_position_manager_timer = Gdk.threads_add_timeout (50, () => {
 				reset_position_manager_timer = 0;
-				controller.position_manager.reset_caches (theme);
-				controller.position_manager.update_regions ();
+				controller.position_manager.update (theme);
 				
 				return false;
 			});

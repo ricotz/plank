@@ -156,12 +156,14 @@ namespace Plank
 		
 		void update_monitor_geo ()
 		{
+			freeze_notify ();
+			
 			controller.window.get_screen ().get_monitor_geometry (controller.prefs.get_monitor (), out monitor_geo);
 			update_dimensions ();
 			update_dock_position ();
 			update_regions ();
 			
-			controller.window.update_size_and_position ();
+			thaw_notify ();
 		}
 		
 		//
@@ -266,13 +268,13 @@ namespace Plank
 		int MaxIconSize { get; private set; default = DockPreferences.MAX_ICON_SIZE; }
 		
 		/**
-		 * Resets all internal caches.
+		 * Updates all internal caches.
 		 *
 		 * @param theme the current dock theme
 		 */
-		public void reset_caches (DockTheme theme)
+		public void update (DockTheme theme)
 		{
-			Logger.verbose ("PositionManager.reset_caches ()");
+			Logger.verbose ("PositionManager.update ()");
 			
 			screen_is_composited = controller.window.get_screen ().is_composited ();
 			
@@ -282,6 +284,7 @@ namespace Plank
 			update_max_icon_size (theme);
 			update_dimensions ();
 			update_dock_position ();
+			update_regions ();
 			
 			thaw_notify ();
 		}
@@ -291,9 +294,17 @@ namespace Plank
 		 *
 		 * @param item the dock item
 		 */
-		public void reset_item_caches (DockItem item)
+		public void reset_item_cache (DockItem item)
 		{
 			draw_values.unset (item);
+		}
+		
+		/**
+		 * Resets all internal item caches.
+		 */
+		public void reset_item_caches ()
+		{
+			draw_values.clear ();
 		}
 		
 		void update_caches (DockTheme theme)
@@ -500,7 +511,7 @@ namespace Plank
 		/**
 		 * Call when any cached region needs updating.
 		 */
-		public void update_regions ()
+		void update_regions ()
 		{
 			unowned DockPreferences prefs = controller.prefs;
 			
@@ -866,7 +877,7 @@ namespace Plank
 		/**
 		 * Caches the x and y position of the dock window.
 		 */
-		public void update_dock_position ()
+		void update_dock_position ()
 		{
 			unowned DockPreferences prefs = controller.prefs;
 			

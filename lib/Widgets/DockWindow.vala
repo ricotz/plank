@@ -464,7 +464,6 @@ namespace Plank.Widgets
 		public void update_size_and_position ()
 		{
 			unowned PositionManager position_manager = controller.position_manager;
-			position_manager.update_dock_position ();
 			
 			var x = position_manager.win_x;
 			var y = position_manager.win_y;
@@ -516,7 +515,6 @@ namespace Plank.Widgets
 				reposition_timer = 0;
 				
 				unowned PositionManager position_manager = controller.position_manager;
-				position_manager.update_dock_position ();
 				
 				var x = position_manager.win_x;
 				var y = position_manager.win_y;

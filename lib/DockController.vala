@@ -198,8 +198,7 @@ namespace Plank
 			
 			// Do a thorough update since we actually dropped all previous items
 			// of the default-provider
-			position_manager.reset_caches (renderer.theme);
-			position_manager.update_regions ();
+			position_manager.update (renderer.theme);
 			window.update_icon_regions ();
 		}
 		
@@ -292,8 +291,9 @@ namespace Plank
 			
 			if (prefs.Alignment != Gtk.Align.FILL
 				&& added.size != removed.size)
-				position_manager.reset_caches (renderer.theme);
-			position_manager.update_regions ();
+				position_manager.update (renderer.theme);
+			else
+				position_manager.reset_item_caches ();
 			window.update_icon_regions ();
 		}
 		
@@ -305,7 +305,7 @@ namespace Plank
 			update_items ();
 			
 			foreach (unowned DockItem item in moved_items) {
-				position_manager.reset_item_caches (item);
+				position_manager.reset_item_cache (item);
 				unowned ApplicationDockItem? app_item = (item as ApplicationDockItem);
 				if (app_item != null)
 					window.update_icon_region (app_item);
