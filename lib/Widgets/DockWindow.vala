@@ -408,7 +408,7 @@ namespace Plank.Widgets
 			
 			// check if there already was a hovered-item and if it is still hovered to speed up things
 			if (HoveredItem != null) {
-				rect = position_manager.item_hover_region (HoveredItem);
+				rect = position_manager.get_item_hover_region (HoveredItem);
 				if (y >= rect.y && y < rect.y + rect.height && x >= rect.x && x < rect.x + rect.width)
 					// Do not allow the hovered-item to be the drag-item
 					if (drag_item == HoveredItem) {
@@ -431,7 +431,7 @@ namespace Plank.Widgets
 			bool found_hovered_provider = false;
 			
 			foreach (var provider in controller.Providers) {
-				rect = position_manager.provider_hover_region (provider);
+				rect = position_manager.get_provider_hover_region (provider);
 				if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width)
 					continue;
 				
@@ -439,7 +439,7 @@ namespace Plank.Widgets
 				found_hovered_provider = true;
 				
 				foreach (var item in provider.Items) {
-					rect = position_manager.item_hover_region (item);
+					rect = position_manager.get_item_hover_region (item);
 					if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width)
 						continue;
 					

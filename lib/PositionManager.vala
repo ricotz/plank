@@ -613,9 +613,9 @@ namespace Plank
 			DockItemDrawValue? draw_value;
 			
 			if ((draw_value = draw_values.get (item)) == null) {
-				var hover_rect = internal_item_hover_region (item);
-				var draw_rect = item_draw_region (hover_rect);
-				var background_rect = item_background_region (hover_rect);
+				var hover_rect = internal_get_item_hover_region (item);
+				var draw_rect = get_item_draw_region (hover_rect);
+				var background_rect = get_item_background_region (hover_rect);
 			
 				draw_value = { hover_rect, draw_rect, background_rect };
 				draw_values.set (item, draw_value);
@@ -630,7 +630,7 @@ namespace Plank
 		 * @param hover_rect the item's hover region
 		 * @return the region for the dock item
 		 */
-		Gdk.Rectangle item_draw_region (Gdk.Rectangle hover_rect)
+		Gdk.Rectangle get_item_draw_region (Gdk.Rectangle hover_rect)
 		{
 			var item_padding = ItemPadding;
 			var top_padding = (top_offset < 0 ? 0 : top_offset);
@@ -673,7 +673,7 @@ namespace Plank
 		 * @param rect the item's hover region
 		 * @return the region for the dock item
 		 */
-		Gdk.Rectangle item_background_region (Gdk.Rectangle rect)
+		Gdk.Rectangle get_item_background_region (Gdk.Rectangle rect)
 		{
 			var top_padding = (top_offset > 0 ? 0 : top_offset);
 			
@@ -704,18 +704,18 @@ namespace Plank
 		 * @param provider the dock provider to find a region for
 		 * @return the region for the dock provider
 		 */
-		public Gdk.Rectangle provider_hover_region (DockItemProvider provider)
+		public Gdk.Rectangle get_provider_hover_region (DockItemProvider provider)
 		{
 			unowned ArrayList<DockItem> items = provider.Items;
 			
 			if (items.size == 0)
 				return { 0 };
 			
-			var first_rect = item_hover_region (items.first ());
+			var first_rect = get_item_hover_region (items.first ());
 			if (items.size == 1)
 				return first_rect;
 			
-			var last_rect = item_hover_region (items.last ());
+			var last_rect = get_item_hover_region (items.last ());
 			
 			return { first_rect.x, first_rect.y, last_rect.x + last_rect.width, last_rect.y + last_rect.height };
 		}
@@ -726,12 +726,12 @@ namespace Plank
 		 * @param item the dock item to find a region for
 		 * @return the region for the dock item
 		 */
-		public Gdk.Rectangle item_hover_region (DockItem item)
+		public Gdk.Rectangle get_item_hover_region (DockItem item)
 		{
 			return get_draw_value_for_item (item).hover_region;
 		}
 			
-		Gdk.Rectangle internal_item_hover_region (DockItem item)
+		Gdk.Rectangle internal_get_item_hover_region (DockItem item)
 		{
 			unowned DockPreferences prefs = controller.prefs;
 			
@@ -800,7 +800,7 @@ namespace Plank
 		 */
 		public void get_menu_position (DockItem hovered, Requisition requisition, out int x, out int y)
 		{
-			var rect = item_hover_region (hovered);
+			var rect = get_item_hover_region (hovered);
 			
 			var offset = 10;
 			switch (controller.prefs.Position) {
@@ -833,7 +833,7 @@ namespace Plank
 		 */
 		public void get_hover_position (DockItem hovered, out int x, out int y)
 		{
-			var rect = item_hover_region (hovered);
+			var rect = get_item_hover_region (hovered);
 			
 			switch (controller.prefs.Position) {
 			default:
@@ -865,7 +865,7 @@ namespace Plank
 		 */
 		public void get_urgent_glow_position (DockItem item, out int x, out int y)
 		{
-			var rect = item_hover_region (item);
+			var rect = get_item_hover_region (item);
 			var glow_size = GlowSize;
 			
 			switch (controller.prefs.Position) {
@@ -1049,7 +1049,7 @@ namespace Plank
 		 */
 		public Gdk.Rectangle get_icon_geometry (ApplicationDockItem item, bool for_hidden)
 		{
-			var region = item_hover_region (item);
+			var region = get_item_hover_region (item);
 			
 			if (!for_hidden) {
 				region.x += win_x;
