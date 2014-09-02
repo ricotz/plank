@@ -380,7 +380,8 @@ namespace Plank
 			unowned Context main_cr = main_buffer.Context;
 			unowned Context shadow_cr = shadow_buffer.Context;
 			var icon_size = position_manager.IconSize;
-			var shadow_size = controller.position_manager.IconShadowSize;
+			var shadow_size = position_manager.IconShadowSize;
+			var position = controller.prefs.Position;
 			
 			// load the icon
 #if BENCHMARK
@@ -428,7 +429,7 @@ namespace Plank
 					if (!screen_is_composited)
 						break;
 					var change = Math.fabs (Math.sin (2 * Math.PI * click_animation_progress) * icon_size * theme.LaunchBounceHeight * double.min (1.0, 1.3333 * (1.0 - click_animation_progress)));
-					draw_value = draw_value.move_in (controller.prefs.Position, change);
+					draw_value = draw_value.move_in (position, change);
 					break;
 				case Animation.DARKEN:
 					darken = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
@@ -511,7 +512,7 @@ namespace Plank
 				var bounce_animation_progress = urgent_time / (double) (theme.UrgentBounceTime * 1000);
 				if (bounce_animation_progress < 1.0) {
 					var change = Math.fabs (Math.sin (Math.PI * bounce_animation_progress) * icon_size * theme.UrgentBounceHeight * double.min (1.0, 2.0 * (1.0 - bounce_animation_progress)));
-					draw_value = draw_value.move_in (controller.prefs.Position, change);
+					draw_value = draw_value.move_in (position, change);
 				}
 			}
 			
@@ -521,7 +522,7 @@ namespace Plank
 				var move_animation_progress = move_time / (double) (theme.ItemMoveTime * 1000);
 				if (move_animation_progress < 1.0) {
 					var change = (1.0 - move_animation_progress) * (icon_size + position_manager.ItemPadding);
-					draw_value = draw_value.move_right (controller.prefs.Position, (item.Position < item.LastPosition ? change : -change));
+					draw_value = draw_value.move_right (position, (item.Position < item.LastPosition ? change : -change));
 				} else {
 					item.unset_move_state ();
 				}
@@ -533,7 +534,7 @@ namespace Plank
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
 			if (opacity > 0) {
-				theme.draw_active_glow (main_buffer, background_rect, draw_value.background_region, item.AverageIconColor, opacity, controller.prefs.Position);
+				theme.draw_active_glow (main_buffer, background_rect, draw_value.background_region, item.AverageIconColor, opacity, position);
 			}
 			
 			// draw the icon shadow
