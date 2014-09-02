@@ -88,10 +88,6 @@ namespace Plank
 		public void initialize ()
 			requires (controller.window != null)
 		{
-			unowned Screen screen = controller.window.get_screen ();
-			screen_is_composited = screen.is_composited ();
-			screen.composited_changed.connect (composited_changed);
-
 			init_current_frame ();
 			
 			controller.position_manager.update (theme);
@@ -105,17 +101,8 @@ namespace Plank
 			controller.prefs.notify.disconnect (prefs_changed);
 			theme.notify.disconnect (theme_changed);
 			
-			controller.window.get_screen ().composited_changed.disconnect (composited_changed);
-
 			controller.hide_manager.notify["Hidden"].disconnect (hidden_changed);
 			controller.window.notify["HoveredItem"].disconnect (animated_draw);
-		}
-		
-		void composited_changed (Gdk.Screen screen)
-		{
-			screen_is_composited = screen.is_composited ();
-			
-			reset_position_manager ();
 		}
 		
 		void prefs_changed (Object prefs, ParamSpec prop)
@@ -213,6 +200,7 @@ namespace Plank
 			requires (theme != null)
 		{
 			frame_time = GLib.get_monotonic_time ();
+			screen_is_composited = controller.position_manager.screen_is_composited;
 			
 			var fade_opacity = theme.FadeOpacity;
 			

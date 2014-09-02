@@ -100,12 +100,13 @@ namespace Plank
 		
 		public DockController controller { private get; construct; }
 		
+		public bool screen_is_composited { get; private set; }
+		
 		Gdk.Rectangle static_dock_region;
 		HashMap<DockItem, DockItemDrawValue?> draw_values;
 		
 		Gdk.Rectangle monitor_geo;
 		
-		bool screen_is_composited;
 		int window_scale_factor = 1;
 		
 		/**
@@ -136,6 +137,7 @@ namespace Plank
 			
 			screen.monitors_changed.connect (update_monitor_geo);
 			screen.size_changed.connect (update_monitor_geo);
+			screen.composited_changed.connect (composited_changed);
 			
 			// NOTE don't call update_monitor_geo to avoid a double-call of dockwindow.set_size on startup
 			screen.get_monitor_geometry (controller.prefs.get_monitor (), out monitor_geo);
@@ -149,6 +151,7 @@ namespace Plank
 			
 			screen.monitors_changed.disconnect (update_monitor_geo);
 			screen.size_changed.disconnect (update_monitor_geo);
+			screen.composited_changed.disconnect (composited_changed);
 			controller.prefs.notify["Monitor"].disconnect (update_monitor_geo);
 			
 			draw_values.clear ();
@@ -166,6 +169,18 @@ namespace Plank
 			thaw_notify ();
 		}
 		
+		void composited_changed (Gdk.Screen screen)
+		{
+			freeze_notify ();
+			
+			screen_is_composited = screen.is_composited ();
+			
+			update (controller.renderer.theme);
+			update_regions ();
+ 			
+			thaw_notify ();
+		}
+ 		
 		//
 		// used to cache various sizes calculated from the theme and preferences
 		//
