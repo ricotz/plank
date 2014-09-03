@@ -44,33 +44,6 @@ namespace Plank.Drawing
 		public double A;
 		
 		/**
-		 * Creates a new color from a {@link Gdk.Color}.
-		 *
-		 * @param color the color to use
-		 * @return new {@link Color} based on the given one
-		 */
-		public static Color from_gdk_color (Gdk.Color color)
-		{
-			return { (double) color.red / uint16.MAX,
-				(double) color.green / uint16.MAX,
-				(double) color.blue / uint16.MAX,
-				1.0 };
-		}
-		
-		/**
-		 * Creates a new {@link Gdk.Color}.from this color
-		 *
-		 * @return new {@link Gdk.Color}
-		 */
-		public Gdk.Color to_gdk_color ()
-		{
-			return { 0,
-				(uint16) (R * uint16.MAX),
-				(uint16) (G * uint16.MAX),
-				(uint16) (B * uint16.MAX) };
-		}
-		
-		/**
 		 * Creates a new color from a {@link Gdk.RGBA}.
 		 *
 		 * @param color the color to use

@@ -43,7 +43,6 @@ namespace Plank.Tests
 	{
 		Drawing.Color color, color2, color3;
 		Gdk.RGBA gdkrgba;
-		Gdk.Color gdkcolor;
 		double h, s, v;
 		
 		color = { 0.5, 0.5, 0.5, 0.5 };
@@ -91,10 +90,6 @@ namespace Plank.Tests
 		gdkrgba = { 0.5, 0.5, 0.5, 0.5 };
 		color = Drawing.Color.from_gdk_rgba (gdkrgba);
 		assert (color.to_gdk_rgba () == gdkrgba);
-		
-		gdkcolor = Gdk.Color () { red = 32768, green = 32768, blue = 32768 };
-		color = Drawing.Color.from_gdk_color (gdkcolor);
-		assert (color.to_gdk_color () == gdkcolor);
 	}
 	
 	void drawing_drawingservice ()
