@@ -535,7 +535,7 @@ namespace Plank.Items
 			try {
 				foreach (var uri in uris) {
 					var info = File.new_for_uri (uri).query_info (FileAttribute.STANDARD_CONTENT_TYPE, FileQueryInfoFlags.NONE);
-					var uri_content_type = info.get_content_type ();
+					unowned string uri_content_type = info.get_content_type ();
 					foreach (var content_type in supported_mime_types)
 						if (ContentType.is_a (uri_content_type, content_type) || ContentType.equals (uri_content_type, content_type))
 							return true;
@@ -566,7 +566,7 @@ namespace Plank.Items
 		{
 			unity_update_application_uri ();
 			
-			var launcher = Prefs.Launcher;
+			unowned string? launcher = Prefs.Launcher;
 			if (launcher == null || launcher == "")
 				return;
 			
@@ -637,12 +637,12 @@ namespace Plank.Items
 			try {
 				if (mimes != null && file.has_key (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_MIME_TYPE)) {
 					var mimestrings = file.get_string_list (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_MIME_TYPE);
-					foreach (var mime in mimestrings)
+					foreach (unowned string mime in mimestrings)
 						mimes.add (ContentType.from_mime_type (mime));
 				}
 				
 				string? textdomain = null;
-				foreach (var domain_key in SUPPORTED_GETTEXT_DOMAINS_KEYS)
+				foreach (unowned string domain_key in SUPPORTED_GETTEXT_DOMAINS_KEYS)
 					if (file.has_key (KeyFileDesktop.GROUP, domain_key)) {
 						textdomain = file.get_string (KeyFileDesktop.GROUP, domain_key);
 						break;
@@ -658,11 +658,11 @@ namespace Plank.Items
 					
 					string[] keys = {DESKTOP_ACTION_KEY, UNITY_QUICKLISTS_KEY};
 					
-					foreach (var key in keys) {
+					foreach (unowned string key in keys) {
 						if (!file.has_key (KeyFileDesktop.GROUP, key))
 							continue;
 						
-						foreach (var action in file.get_string_list (KeyFileDesktop.GROUP, key)) {
+						foreach (unowned string action in file.get_string_list (KeyFileDesktop.GROUP, key)) {
 							var group = DESKTOP_ACTION_GROUP_NAME.printf (action);
 							if (!file.has_group (group)) {
 								group = UNITY_QUICKLISTS_SHORTCUT_GROUP_NAME.printf (action);
@@ -681,7 +681,7 @@ namespace Plank.Items
 							if (file.has_key (group, KeyFileDesktop.KEY_NOT_SHOW_IN)) {
 								var found = false;
 								
-								foreach (var s in file.get_string_list (group, KeyFileDesktop.KEY_NOT_SHOW_IN))
+								foreach (unowned string s in file.get_string_list (group, KeyFileDesktop.KEY_NOT_SHOW_IN))
 									if (s == "Plank") {
 										found = true;
 										break;
@@ -695,7 +695,7 @@ namespace Plank.Items
 							if (file.has_key (group, KeyFileDesktop.KEY_ONLY_SHOW_IN)) {
 								var found = false;
 								
-								foreach (var s in file.get_string_list (group, KeyFileDesktop.KEY_ONLY_SHOW_IN))
+								foreach (unowned string s in file.get_string_list (group, KeyFileDesktop.KEY_ONLY_SHOW_IN))
 									if (s == UNITY_QUICKLISTS_TARGET_VALUE || s == "Plank") {
 										found = true;
 										break;
@@ -777,7 +777,7 @@ namespace Plank.Items
 		{
 			unity_application_uri = null;
 			
-			var desktop_file = (App != null ? App.get_desktop_file () : Launcher);
+			unowned string? desktop_file = (App != null ? App.get_desktop_file () : Launcher);
 			if (desktop_file == null || desktop_file == "")
 				return;
 			
@@ -793,7 +793,7 @@ namespace Plank.Items
 		 *
 		 * @return the libunity application uri of this item, or NULL
 		 */
-		public string? get_unity_application_uri ()
+		public unowned string? get_unity_application_uri ()
 		{
 			return unity_application_uri;
 		}
@@ -803,7 +803,7 @@ namespace Plank.Items
 		 *
 		 * @return the dbusname which provides the LauncherEntry interface, or NULL
 		 */
-		public string? get_unity_dbusname ()
+		public unowned string? get_unity_dbusname ()
 		{
 			return unity_dbusname;
 		}

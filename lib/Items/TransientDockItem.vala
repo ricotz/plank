@@ -44,7 +44,7 @@ namespace Plank.Items
 		construct
 		{
 			if (App != null) {
-				var launcher = App.get_desktop_file ();
+				unowned string? launcher = App.get_desktop_file ();
 				if (launcher == null || launcher == "") {
 					Text = App.get_name ();
 					ForcePixbuf = WindowControl.get_app_icon (App);

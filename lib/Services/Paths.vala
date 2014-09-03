@@ -112,7 +112,7 @@ namespace Plank.Services
 			CacheHomeFolder = File.new_for_path (Environment.get_user_cache_dir ());
 			
 			var dirs = new ArrayList<File> ();
-			foreach (var path in Environment.get_system_data_dirs ())
+			foreach (unowned string path in Environment.get_system_data_dirs ())
 				dirs.add (File.new_for_path (path));
 			DataDirFolders = dirs;
 			

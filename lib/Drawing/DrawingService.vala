@@ -57,12 +57,12 @@ namespace Plank.Drawing
 					+ FileAttribute.THUMBNAIL_PATH, 0);
 				
 				// look for a custom icon-name
-				var custom_icon_name = info.get_attribute_string (FILE_ATTRIBUTE_CUSTOM_ICON_NAME);
+				unowned string custom_icon_name = info.get_attribute_string (FILE_ATTRIBUTE_CUSTOM_ICON_NAME);
 				if (custom_icon_name != null && custom_icon_name != "")
 					return custom_icon_name;
 				
 				// look for a custom icon
-				var custom_icon = info.get_attribute_string (FILE_ATTRIBUTE_CUSTOM_ICON);
+				unowned string custom_icon = info.get_attribute_string (FILE_ATTRIBUTE_CUSTOM_ICON);
 				if (custom_icon != null && custom_icon != "") {
 					if (custom_icon.has_prefix ("file://"))
 						return custom_icon;
@@ -70,7 +70,7 @@ namespace Plank.Drawing
 				}
 				
 				// look for a thumbnail
-				var thumb_icon = info.get_attribute_byte_string (FileAttribute.THUMBNAIL_PATH);
+				unowned string thumb_icon = info.get_attribute_byte_string (FileAttribute.THUMBNAIL_PATH);
 				if (thumb_icon != null && thumb_icon != "")
 					return thumb_icon;
 				
@@ -115,9 +115,9 @@ namespace Plank.Drawing
 		{
 			var all_names = new ArrayList<string> ();
 			
-			foreach (var s in names.split (";;"))
+			foreach (unowned string s in names.split (";;"))
 				all_names.add (s);
-			foreach (var s in MISSING_ICONS.split (";;"))
+			foreach (unowned string s in MISSING_ICONS.split (";;"))
 				all_names.add (s);
 			
 			Pixbuf? pbuf = null;

@@ -221,7 +221,7 @@ namespace Plank
 		void drag_data_received (Widget w, DragContext context, int x, int y, SelectionData selection_data, uint info, uint time_)
 		{
 			if (drag_data_requested) {
-				string uris = (string) selection_data.get_data ();
+				unowned string uris = (string) selection_data.get_data ();
 				
 				drag_data = new ArrayList<string> ();
 				foreach (string s in uris.split ("\r\n"))

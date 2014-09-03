@@ -188,7 +188,7 @@ namespace Plank.Items
 				if (item_app != null && item_app == app)
 					return appitem;
 				
-				var launcher = appitem.Launcher;
+				unowned string launcher = appitem.Launcher;
 				if (launcher != "" && app_desktop_file != null && launcher == app_desktop_file)
 					return appitem;
 			}

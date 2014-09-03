@@ -439,7 +439,7 @@ namespace Plank.Items
 					|| (prop.flags & ParamFlags.CONSTRUCT_ONLY) != 0)
 					continue;
 				
-				var name = prop.get_name ();
+				unowned string name = prop.get_name ();
 				
 				// Do not copy these
 				if (name == "Provider")

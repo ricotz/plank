@@ -340,7 +340,7 @@ namespace Plank.Services
 				file.load_from_file (backing_file.get_path () ?? "", 0);
 				
 				foreach (var prop in get_class ().list_properties ()) {
-					var group_name = prop.owner_type.name ();
+					unowned string group_name = prop.owner_type.name ();
 					
 					if (!file.has_group (group_name) || !file.has_key (group_name, prop.name)) {
 						warning ("Missing key '%s' for group '%s' in preferences file '%s' - using default value", prop.name, group_name, backing_file.get_path () ?? "");
@@ -461,7 +461,7 @@ namespace Plank.Services
 			} catch { }
 			
 			foreach (var prop in get_class ().list_properties ()) {
-				var group_name = prop.owner_type.name ();
+				unowned string group_name = prop.owner_type.name ();
 				var type = prop.value_type;
 				
 				if (type == typeof (int)) {
