@@ -230,11 +230,11 @@ namespace Plank.Drawing
 			
 			var rg = new Pattern.radial (x, y, 0, x, y, size / 2);
 			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
-			rg.add_color_stop_rgba (0.1, color.R, color.G, color.B, 1);
-			rg.add_color_stop_rgba (0.2, color.R, color.G, color.B, 0.6);
-			rg.add_color_stop_rgba (0.25, color.R, color.G, color.B, 0.25);
-			rg.add_color_stop_rgba (0.5, color.R, color.G, color.B, 0.15);
-			rg.add_color_stop_rgba (1.0, color.R, color.G, color.B, 0.0);
+			rg.add_color_stop_rgba (0.1, color.red, color.green, color.blue, 1);
+			rg.add_color_stop_rgba (0.2, color.red, color.green, color.blue, 0.6);
+			rg.add_color_stop_rgba (0.25, color.red, color.green, color.blue, 0.25);
+			rg.add_color_stop_rgba (0.5, color.red, color.green, color.blue, 0.15);
+			rg.add_color_stop_rgba (1.0, color.red, color.green, color.blue, 0.0);
 			
 			cr.set_source (rg);
 			cr.fill ();
@@ -269,9 +269,9 @@ namespace Plank.Drawing
 			
 			var rg = new Pattern.radial (x, x, 0, x, x, size / 2);
 			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
-			rg.add_color_stop_rgba (0.33, color.R, color.G, color.B, 0.66);
-			rg.add_color_stop_rgba (0.66, color.R, color.G, color.B, 0.33);
-			rg.add_color_stop_rgba (1.0, color.R, color.G, color.B, 0.0);
+			rg.add_color_stop_rgba (0.33, color.red, color.green, color.blue, 0.66);
+			rg.add_color_stop_rgba (0.66, color.red, color.green, color.blue, 0.33);
+			rg.add_color_stop_rgba (1.0, color.red, color.green, color.blue, 0.0);
 			
 			cr.set_source (rg);
 			cr.fill ();
@@ -344,8 +344,8 @@ namespace Plank.Drawing
 			cr.set_line_width (LineWidth);
 			cr.clip ();
 
-			gradient.add_color_stop_rgba (0, color.R, color.G, color.B, 0);
-			gradient.add_color_stop_rgba (1, color.R, color.G, color.B, 0.6 * opacity);
+			gradient.add_color_stop_rgba (0, color.red, color.green, color.blue, 0);
+			gradient.add_color_stop_rgba (1, color.red, color.green, color.blue, 0.6 * opacity);
 			
 			cr.rectangle (rect.x, rect.y, rect.width, rect.height);
 			cr.set_source (gradient);
@@ -409,12 +409,12 @@ namespace Plank.Drawing
 				
 				// draw filled gradient with outline
 				stroke = new Pattern.linear (0, y, 0, y + height);
-				stroke.add_color_stop_rgba (0.2, stroke_color_start.R, stroke_color_start.G, stroke_color_start.B, 0.8);
-				stroke.add_color_stop_rgba (0.8, stroke_color_end.R, stroke_color_end.G, stroke_color_end.B, 0.8);
+				stroke.add_color_stop_rgba (0.2, stroke_color_start.red, stroke_color_start.green, stroke_color_start.blue, 0.8);
+				stroke.add_color_stop_rgba (0.8, stroke_color_end.red, stroke_color_end.green, stroke_color_end.blue, 0.8);
 				fill = new Pattern.linear (0, y, 0, y + height);
-				fill.add_color_stop_rgba (0.1, badge_color_start.R, badge_color_start.G, badge_color_start.B, 1.0);
-				fill.add_color_stop_rgba (0.5, badge_color_middle.R, badge_color_middle.G, badge_color_middle.B, 1.0);
-				fill.add_color_stop_rgba (0.9, badge_color_end.R, badge_color_end.G, badge_color_end.B, 1.0);
+				fill.add_color_stop_rgba (0.1, badge_color_start.red, badge_color_start.green, badge_color_start.blue, 1.0);
+				fill.add_color_stop_rgba (0.5, badge_color_middle.red, badge_color_middle.green, badge_color_middle.blue, 1.0);
+				fill.add_color_stop_rgba (0.9, badge_color_end.red, badge_color_end.green, badge_color_end.blue, 1.0);
 				draw_rounded_line (cr, x, y, width, height, true, true, stroke, fill);
 				
 				// draw inline highlight

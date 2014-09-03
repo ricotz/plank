@@ -90,7 +90,7 @@ namespace Plank.Tests
 		assert (prefs.DoubleSetting == 0.42);
 		assert (prefs.IntSetting == 42);
 		assert (prefs.StringSetting == "test");
-		assert (prefs.ColorSetting == color);
+		assert (prefs.ColorSetting.equal (color));
 		
 		prefs.BoolSetting = false;
 		prefs.IntSetting = 4711;
@@ -102,15 +102,14 @@ namespace Plank.Tests
 		assert (prefs.DoubleSetting == 0.4711);
 		assert (prefs.IntSetting == 4711);
 		assert (prefs.StringSetting == "test_changed");
-		assert (prefs.ColorSetting == color2);
+		assert (prefs.ColorSetting.equal (color2));
 		
 		var prefs2 = new TestPreferences ("test_preferences_basics");
 		assert (prefs2.BoolSetting == false);
 		assert (prefs2.DoubleSetting == 0.4711);
 		assert (prefs2.IntSetting == 4711);
 		assert (prefs2.StringSetting == "test_changed");
-		// Compare string representations since the double values are likely to differ
-		assert (prefs2.ColorSetting.to_string () == color2.to_string ());
+		assert (prefs2.ColorSetting.to_prefs_string () == color2.to_prefs_string ());
 	}
 	
 	bool triggered;

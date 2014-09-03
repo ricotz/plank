@@ -704,7 +704,7 @@ namespace Plank
 		Drawing.Color get_styled_color ()
 		{
 			var background_selected_color = controller.window.get_style_context ().get_background_color (StateFlags.SELECTED);
-			var selected_color = Drawing.Color.from_gdk_rgba (background_selected_color);
+			var selected_color = (Drawing.Color) background_selected_color;
 			selected_color.set_min_value (90 / (double) uint16.MAX);
 			return selected_color;
 		}

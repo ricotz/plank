@@ -15,6 +15,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Gdk;
+
 using Plank.Drawing;
 
 namespace Plank.Services
@@ -391,15 +393,15 @@ namespace Plank.Services
 							if (old_val == new_val)
 								continue;
 							@set (prop.name, new_val);
-						} else if (type.is_a (typeof (Drawing.Color))) {
+						} else if (type.is_a (typeof (Drawing.Color)) || type.is_a (typeof (Gdk.RGBA))) {
 							var val = Value (type);
 							get_property (prop.name, ref val);
 							Drawing.Color* old_val = val.get_boxed ();
-							var old_val_string = old_val.to_string ();
+							var old_val_string = old_val.to_prefs_string ();
 							var new_val_string = file.get_string (group_name, prop.name);
 							if (old_val_string == new_val_string)
 								continue;
-							var new_val = Drawing.Color.from_string (new_val_string);
+							var new_val = Drawing.Color.from_prefs_string (new_val_string);
 							val.set_boxed (&new_val);
 							set_property (prop.name, val);
 						} else if (type.is_a (typeof (PrefsSerializable))) {
@@ -486,11 +488,11 @@ namespace Plank.Services
 					int new_val;
 					@get (prop.name, out new_val);
 					file.set_integer (group_name, prop.name, new_val);
-				} else if (type.is_a (typeof (Drawing.Color))) {
+				} else if (type.is_a (typeof (Drawing.Color)) || type.is_a (typeof (Gdk.RGBA))) {
 					var val = Value (type);
 					get_property (prop.name, ref val);
 					Drawing.Color* color = val.get_boxed ();
-					file.set_string (group_name, prop.name, (color.to_string ()));
+					file.set_string (group_name, prop.name, (color.to_prefs_string ()));
 				} else if (type.is_a (typeof (PrefsSerializable))) {
 					var val = Value (type);
 					get_property (prop.name, ref val);

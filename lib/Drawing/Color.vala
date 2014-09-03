@@ -24,62 +24,14 @@ namespace Plank.Drawing
 	/**
 	 * Represents a RGBA color and has methods for manipulating the color.
 	 */
-	public struct Color
+	public struct Color : Gdk.RGBA
 	{
-		/**
-		 * The red value for the color.
-		 */
-		public double R;
-		/**
-		 * The green value for the color.
-		 */
-		public double G;
-		/**
-		 * The blue value for the color.
-		 */
-		public double B;
-		/**
-		 * The alpha value for the color.
-		 */
-		public double A;
-		
-		/**
-		 * Creates a new color from a {@link Gdk.RGBA}.
-		 *
-		 * @param color the color to use
-		 * @return new {@link Color} based on the given one
-		 */
-		public static Color from_gdk_rgba (Gdk.RGBA color)
-		{
-			return { color.red, color.green, color.blue, color.alpha };
-		}
-		
-		/**
-		 * Creates a new {@link Gdk.RGBA}.from this color
-		 *
-		 * @return new {@link Gdk.RGBA}
-		 */
-		public Gdk.RGBA to_gdk_rgba ()
-		{
-			return { R, G, B, A };
-		}
-		
-		/**
-		 * Check equality with the give color
-		 *
-		 * @return whether the give color equals this color.
-		 */
-		public bool equal (Color color)
-		{
-			return (R == color.R && G == color.G && B == color.B && A == color.A);
-		}
-		
 		/**
 		 * Set HSV color values of this color.
 		 */
 		public void set_hsv (double h, double s, double v)
 		{
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
 		/**
@@ -91,9 +43,9 @@ namespace Plank.Drawing
 			requires (hue >= 0 && hue <= 360)
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			h = hue;
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
 		/**
@@ -105,9 +57,9 @@ namespace Plank.Drawing
 			requires (sat >= 0 && sat <= 1)
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			s = sat;
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
 		/**
@@ -119,9 +71,9 @@ namespace Plank.Drawing
 			requires (val >= 0 && val <= 1)
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			v = val;
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
 		/**
@@ -132,7 +84,7 @@ namespace Plank.Drawing
 		public void set_alpha (double alpha)
 			requires (alpha >= 0 && alpha <= 1)
 		{
-			A = alpha;
+			this.alpha = alpha;
 		}
 		
 		/**
@@ -140,7 +92,7 @@ namespace Plank.Drawing
 		 */
 		public void get_hsv (out double h, out double s, out double v)
 		{
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 		}
 		
 		/**
@@ -151,7 +103,7 @@ namespace Plank.Drawing
 		public double get_hue ()
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			return h;
 		}
 		
@@ -163,7 +115,7 @@ namespace Plank.Drawing
 		public double get_sat ()
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			return s;
 		}
 		
@@ -175,7 +127,7 @@ namespace Plank.Drawing
 		public double get_val ()
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			return v;
 		}
 		
@@ -187,9 +139,9 @@ namespace Plank.Drawing
 		public void add_hue (double val)
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			h = (((h + val) % 360) + 360) % 360;
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
 		/**
@@ -201,9 +153,9 @@ namespace Plank.Drawing
 			requires (sat >= 0 && sat <= 1)
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			s = double.max (s, sat);
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
 		/**
@@ -215,9 +167,9 @@ namespace Plank.Drawing
 			requires (val >= 0 && val <= 1)
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			v = double.max (v, val);
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
 		/**
@@ -229,9 +181,9 @@ namespace Plank.Drawing
 			requires (sat >= 0 && sat <= 1)
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			s = double.min (s, sat);
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 
 		/**
@@ -243,9 +195,9 @@ namespace Plank.Drawing
 			requires (val >= 0 && val <= 1)
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			v = double.min (v, val);
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
 		/**
@@ -257,9 +209,9 @@ namespace Plank.Drawing
 			requires (amount >= 0)
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			s = double.min (1, s * amount);
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
 		/**
@@ -271,9 +223,9 @@ namespace Plank.Drawing
 			requires (amount >= 0 && amount <= 1)
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			v = double.min (1, v + (1 - v) * amount);
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
 		/**
@@ -285,9 +237,9 @@ namespace Plank.Drawing
 			requires (amount >= 0 && amount <= 1)
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			v = double.max (0, v - (1 - v) * amount);
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
 		/**
@@ -299,9 +251,9 @@ namespace Plank.Drawing
 			requires (amount >= 0 && amount <= 1)
 		{
 			double h, s, v;
-			rgb_to_hsv (R, G, B, out h, out s, out v);
+			rgb_to_hsv (red, green, blue, out h, out s, out v);
 			v = double.max (0, v - amount * s);
-			hsv_to_rgb (h, s, v, out R, out G, out B);
+			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
 		static void rgb_to_hsv (double r, double g, double b, out double h, out double s, out double v)
@@ -409,12 +361,12 @@ namespace Plank.Drawing
 		 *
 		 * @return the string representation of this color
 		 */
-		public string to_string ()
+		public string to_prefs_string ()
 		{
-			return "%d;;%d;;%d;;%d".printf ((int) (R * uint8.MAX),
-				(int) (G * uint8.MAX),
-				(int) (B * uint8.MAX),
-				(int) (A * uint8.MAX));
+			return "%d;;%d;;%d;;%d".printf ((int) (red * uint8.MAX),
+				(int) (green * uint8.MAX),
+				(int) (blue * uint8.MAX),
+				(int) (alpha * uint8.MAX));
 		}
 		
 		/**
@@ -423,7 +375,7 @@ namespace Plank.Drawing
 		 *
 		 * @return new {@link Color} based on the given string
 		 */
-		public static Color from_string (string s)
+		public static Color from_prefs_string (string s)
 		{
 			var parts = s.split (";;");
 			

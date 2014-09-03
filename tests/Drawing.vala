@@ -42,23 +42,22 @@ namespace Plank.Tests
 	void drawing_color ()
 	{
 		Drawing.Color color, color2, color3;
-		Gdk.RGBA gdkrgba;
 		double h, s, v;
 		
 		color = { 0.5, 0.5, 0.5, 0.5 };
 		color2 = { 0.5, 0.5, 0.5, 0.5 };
-		assert (color == color2);
+		assert (color.equal (color2));
 		
 		color3 = color;
-		color3.R = 0.75;
-		color3.G = 0.37;
-		color3.B = 0.66;
-		color3.A = 0.97;
-		assert (color != color3);
+		color3.red = 0.75;
+		color3.green = 0.37;
+		color3.blue = 0.66;
+		color3.alpha = 0.97;
+		assert (!color.equal (color3));
 		
 		color.get_hsv (out h, out s, out v);
 		color2.set_hsv (h, s, v);
-		assert (color == color2);
+		assert (color.equal (color2));
 		
 		assert (color.get_hue () == 0.0);
 
@@ -84,12 +83,8 @@ namespace Plank.Tests
 		color.multiply_sat (2.0);
 		assert (color.get_sat () == 0.7);
 		
-		color = Drawing.Color.from_string ("123;;234;;123;;234");
-		assert (color.to_string () == "123;;234;;123;;234");
-		
-		gdkrgba = { 0.5, 0.5, 0.5, 0.5 };
-		color = Drawing.Color.from_gdk_rgba (gdkrgba);
-		assert (color.to_gdk_rgba () == gdkrgba);
+		color = Drawing.Color.from_prefs_string ("123;;234;;123;;234");
+		assert (color.to_prefs_string () == "123;;234;;123;;234");
 	}
 	
 	void drawing_drawingservice ()
@@ -113,7 +108,7 @@ namespace Plank.Tests
 		var icon_copy = icon.copy ();
 		var color = DrawingService.average_color (icon);
 		var color_copy = DrawingService.average_color (icon_copy);
-		assert (color == color_copy);
+		assert (color.equal (color_copy));
 	}
 	
 	void drawing_drawingservice_average_color ()
@@ -138,13 +133,13 @@ namespace Plank.Tests
 		surface = new DockSurface (256, 256);
 		unowned Context cr = surface.Context;
 		
-		cr.set_source_rgba (color.R, color.G, color.B, color.A);
+		cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
 		cr.set_operator (Operator.SOURCE);
 		cr.paint ();
 		average = surface.average_color ();
 		
-		assert ((Math.fabs (average.R - color.R) <= delta) && (Math.fabs (average.G - color.G) <= delta)
-			&& (Math.fabs (average.B - color.B) <= delta) && (Math.fabs (average.A - color.A) <= delta));
+		assert ((Math.fabs (average.red - color.red) <= delta) && (Math.fabs (average.green - color.green) <= delta)
+			&& (Math.fabs (average.blue - color.blue) <= delta) && (Math.fabs (average.alpha - color.alpha) <= delta));
 	}
 
 	void drawing_docksurface ()
@@ -197,7 +192,7 @@ namespace Plank.Tests
 		
 		color = surface.average_color ();
 		color2 = surface2.average_color ();
-		assert (color == color2);
+		assert (color.equal (color2));
 	}
 	
 	void drawing_docksurface_exponential_blur ()
@@ -227,7 +222,7 @@ namespace Plank.Tests
 		
 		color = surface.average_color ();
 		color2 = surface2.average_color ();
-		assert (color == color2);
+		assert (color.equal (color2));
 	}
 	
 	void drawing_docksurface_gaussian_blur ()
@@ -257,7 +252,7 @@ namespace Plank.Tests
 		
 		color = surface.average_color ();
 		color2 = surface2.average_color ();
-		assert (color == color2);
+		assert (color.equal (color2));
 	}
 	
 	void drawing_docksurface_to_pixbuf ()
@@ -283,7 +278,7 @@ namespace Plank.Tests
 		
 		color = DrawingService.average_color (pixbuf);
 		color2 = DrawingService.average_color (pixbuf2);
-		assert (color == color2);
+		assert (color.equal (color2));
 	}
 	
 	void drawing_theme ()
@@ -308,6 +303,6 @@ namespace Plank.Tests
 		
 		surface2 = docktheme.create_background (1024, 256, Gtk.PositionType.RIGHT, surface);
 		surface3 = docktheme.create_background (256, 1024, Gtk.PositionType.BOTTOM, surface);
-		assert (DrawingService.average_color (surface2.to_pixbuf ()) == DrawingService.average_color (surface3.to_pixbuf ()));
+		assert (DrawingService.average_color (surface2.to_pixbuf ()).equal (DrawingService.average_color (surface3.to_pixbuf ())));
 	}
 }
