@@ -58,10 +58,10 @@ namespace Plank
 		[Description(nick = "theme", blurb = "The name of the dock's theme to use.")]
 		public string Theme { get; set; }
 		
-		[Description(nick = "alignment", blurb = "The alignment for the dock on the monitor's edge.  If 0, panel-mode.  If 1, right-aligned.  If 2, left-aligned.  If 3, centered.")]
+		[Description(nick = "alignment", blurb = "The alignment for the dock on the monitor's edge.  If 0, panel-mode.  If 1, left-aligned.  If 2, right-aligned.  If 3, centered.")]
 		public Gtk.Align Alignment { get; set; }
 		
-		[Description(nick = "items-alignment", blurb = "The alignment of the items in this dock if panel-mode is used.  If 1, right-aligned.  If 2, left-aligned.  If 3, centered.")]
+		[Description(nick = "items-alignment", blurb = "The alignment of the items in this dock if panel-mode is used.  If 1, left-aligned.  If 2, right-aligned.  If 3, centered.")]
 		public Gtk.Align ItemsAlignment { get; set; }
 		
 		[Description(nick = "lock-items", blurb = "Whether to prevent drag'n'drop actions and lock items on the dock.")]
