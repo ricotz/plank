@@ -41,6 +41,7 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Items/ApplicationDockItem.vala \
 	$(top_srcdir)/lib/Items/ApplicationDockItemProvider.vala \
 	$(top_srcdir)/lib/Items/DefaultApplicationDockItemProvider.vala \
+	$(top_srcdir)/lib/Items/DockContainer.vala \
 	$(top_srcdir)/lib/Items/DockElement.vala \
 	$(top_srcdir)/lib/Items/DockItem.vala \
 	$(top_srcdir)/lib/Items/DockItemProvider.vala \
