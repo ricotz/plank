@@ -62,7 +62,7 @@ namespace Plank.Tests
 		assert (item.ref_count > 1);
 
 		controller = new DockController (config_folder);
-		controller.add_provider (provider);
+		controller.add_item (provider);
 		controller.initialize ();
 		
 		wait (1000);
@@ -99,8 +99,11 @@ namespace Plank.Tests
 		var controller_items = controller.Items;
 		var items = new ArrayList<unowned DockItem> ();
 		
-		foreach (var provider in controller.Providers)
-			items.add_all (provider.Items);
+		foreach (var element in controller.Elements) {
+			unowned DockContainer? container = (element as DockContainer);
+			if (container != null)
+				items.add_all (container.Elements);
+		}
 		
 		assert (items.size == controller_items.size);
 		for (var i = 0; i < items.size; i++)

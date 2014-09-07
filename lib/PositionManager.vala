@@ -103,7 +103,7 @@ namespace Plank
 		public bool screen_is_composited { get; private set; }
 		
 		Gdk.Rectangle static_dock_region;
-		HashMap<DockItem, DockItemDrawValue?> draw_values;
+		HashMap<DockElement, DockItemDrawValue?> draw_values;
 		
 		Gdk.Rectangle monitor_geo;
 		
@@ -122,7 +122,7 @@ namespace Plank
 		construct
 		{
 			static_dock_region = Gdk.Rectangle ();
-			draw_values = new HashMap<DockItem, DockItemDrawValue?> ();			
+			draw_values = new HashMap<DockElement, DockItemDrawValue?> ();			
 			
 			controller.prefs.notify["Monitor"].connect (update_monitor_geo);
 		}
@@ -309,7 +309,7 @@ namespace Plank
 		 *
 		 * @param item the dock item
 		 */
-		public void reset_item_cache (DockItem item)
+		public void reset_item_cache (DockElement item)
 		{
 			draw_values.unset (item);
 		}
@@ -699,14 +699,21 @@ namespace Plank
 		}
 		
 		/**
-		 * The cursor region for interacting with a dock provider.
+		 * The cursor region for interacting with a dock element.
 		 *
-		 * @param provider the dock provider to find a region for
-		 * @return the region for the dock provider
+		 * @param item the dock item to find a region for
+		 * @return the region for the dock item
 		 */
-		public Gdk.Rectangle get_provider_hover_region (DockItemProvider provider)
+		public Gdk.Rectangle get_item_hover_region (DockElement element)
 		{
-			unowned ArrayList<DockItem> items = provider.Items;
+			unowned DockItem? item = (element as DockItem);
+			if (item != null)
+				return get_draw_value_for_item (item).hover_region;
+			
+			unowned DockContainer? container = (element as DockContainer);
+			return_val_if_fail (container != null, Gdk.Rectangle ());
+			
+			unowned ArrayList<DockElement> items = container.Elements;
 			
 			if (items.size == 0)
 				return { 0 };
@@ -718,17 +725,6 @@ namespace Plank
 			var last_rect = get_item_hover_region (items.last ());
 			
 			return { first_rect.x, first_rect.y, last_rect.x + last_rect.width, last_rect.y + last_rect.height };
-		}
-		
-		/**
-		 * The cursor region for interacting with a dock item.
-		 *
-		 * @param item the dock item to find a region for
-		 * @return the region for the dock item
-		 */
-		public Gdk.Rectangle get_item_hover_region (DockItem item)
-		{
-			return get_draw_value_for_item (item).hover_region;
 		}
 			
 		Gdk.Rectangle internal_get_item_hover_region (DockItem item)

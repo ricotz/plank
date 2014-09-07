@@ -103,6 +103,11 @@ namespace Plank.Items
 		public signal void needs_redraw ();
 		
 		/**
+		 * The dock element's container which it is added too (if any).
+		 */
+		public DockContainer? Container { get; set; default = null; }
+		
+		/**
 		 * The dock item's text.
 		 */
 		public string Text { get; set; default = ""; }
@@ -300,6 +305,11 @@ namespace Plank.Items
 		{
 			return "plank://" + unique_id ();
 		}
+		
+		/**
+		 * Resets the buffers for this element.
+		 */
+		public abstract void reset_buffers ();
 		
 		/**
 		 * Creates a new menu item.

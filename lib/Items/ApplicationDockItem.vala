@@ -441,7 +441,7 @@ namespace Plank.Items
 			if (App != null)
 				windows = App.get_windows ();
 			
-			unowned DefaultApplicationDockItemProvider? default_provider = (Provider as DefaultApplicationDockItemProvider);
+			unowned DefaultApplicationDockItemProvider? default_provider = (Container as DefaultApplicationDockItemProvider);
 			if (default_provider != null
 				&& !default_provider.Prefs.LockItems
 				&& !is_window ()) {

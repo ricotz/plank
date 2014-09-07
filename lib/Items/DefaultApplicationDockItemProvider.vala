@@ -109,9 +109,11 @@ namespace Plank.Items
 			
 			var favs = new ArrayList<string> ();
 			
-			foreach (var item in internal_items)
-				if ((item is ApplicationDockItem) && !(item is TransientDockItem))
+			foreach (var element in internal_items) {
+				unowned ApplicationDockItem? item = (element as ApplicationDockItem);
+				if (item != null && !(item is TransientDockItem))
 					favs.add (item.Launcher);
+			}
 			
 			Matcher.get_default ().set_favorites (favs);
 		}
@@ -172,22 +174,27 @@ namespace Plank.Items
 			update_visible_items ();
 		}
 		
-		protected override void item_signals_connect (DockItem item)
+		void handle_setting_changed ()
 		{
-			base.item_signals_connect (item);
+			update_visible_items ();
+		}
+		
+		protected override void connect_element (DockElement element)
+		{
+			base.connect_element (element);
 			
-			unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
+			unowned ApplicationDockItem? appitem = (element as ApplicationDockItem);
 			if (appitem != null) {
 				appitem.app_closed.connect (app_closed);
 				appitem.pin_launcher.connect (pin_item);
 			}
 		}
 		
-		protected override void item_signals_disconnect (DockItem item)
+		protected override void disconnect_element (DockElement element)
 		{
-			base.item_signals_disconnect (item);
+			base.disconnect_element (element);
 			
-			unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
+			unowned ApplicationDockItem? appitem = (element as ApplicationDockItem);
 			if (appitem != null) {
 				appitem.app_closed.disconnect (app_closed);
 				appitem.pin_launcher.disconnect (pin_item);

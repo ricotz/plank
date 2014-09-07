@@ -271,8 +271,9 @@ namespace Plank.Items
 		public string get_item_list_string ()
 		{
 			var item_list = "";
-			foreach (var item in internal_items) {
-				if (!(item is TransientDockItem) && item.DockItemFilename.length > 0) {
+			foreach (var element in internal_items) {
+				unowned DockItem? item = (element as DockItem);
+				if (item != null && !(item is TransientDockItem) && item.DockItemFilename.length > 0) {
 					if (item_list.length > 0)
 						item_list += ";;";
 					item_list += item.DockItemFilename;
@@ -313,8 +314,9 @@ namespace Plank.Items
 			foreach (var file in queued_files) {
 				var basename = file.get_basename ();
 				bool skip = false;
-				foreach (var item in internal_items) {
-					if (basename == item.DockItemFilename) {
+				foreach (var element in internal_items) {
+					unowned DockItem? item = (element as DockItem);
+					if (item != null && basename == item.DockItemFilename) {
 						skip = true;
 						break;
 					}
@@ -353,9 +355,11 @@ namespace Plank.Items
 				return;
 			
 			// bail if an item already manages this dockitem-file
-			foreach (var item in internal_items)
-				if (f.get_basename () == item.DockItemFilename)
+			foreach (var element in internal_items) {
+				unowned DockItem? item = (element as DockItem);
+				if (item != null && f.get_basename () == item.DockItemFilename)
 					return;
+			}
 			
 			Logger.verbose ("ApplicationDockItemProvider.handle_items_dir_changed (processing '%s')", f.get_path ());
 			
@@ -365,21 +369,21 @@ namespace Plank.Items
 				process_queued_files ();
 		}
 		
-		protected override void item_signals_connect (DockItem item)
+		protected override void connect_element (DockElement element)
 		{
-			base.item_signals_connect (item);
+			base.connect_element (element);
 			
-			unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
+			unowned ApplicationDockItem? appitem = (element as ApplicationDockItem);
 			if (appitem != null) {
 				appitem.app_window_added.connect (handle_item_app_window_added);
 			}
 		}
 		
-		protected override void item_signals_disconnect (DockItem item)
+		protected override void disconnect_element (DockElement element)
 		{
-			base.item_signals_disconnect (item);
+			base.disconnect_element (element);
 			
-			unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
+			unowned ApplicationDockItem? appitem = (element as ApplicationDockItem);
 			if (appitem != null) {
 				appitem.app_window_added.disconnect (handle_item_app_window_added);
 			}

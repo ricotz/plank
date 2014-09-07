@@ -31,7 +31,7 @@ namespace Plank
 	 *
 	 * All needed controlling parts will be created and initialized.
 	 */
-	public class DockController : GLib.Object
+	public class DockController : DockContainer
 	{
 		public File config_folder { get; construct; }
 		public File launchers_folder { get; construct; }
@@ -45,17 +45,7 @@ namespace Plank
 		public DockWindow window { get; protected set; }
 		
 		ApplicationDockItemProvider? default_provider;
-		ArrayList<DockItemProvider> item_providers;
 		ArrayList<unowned DockItem> items;
-		
-		/**
-		 * Ordered list of all providers on this dock
-		 */
-		public ArrayList<DockItemProvider> Providers {
-			get {
-				return item_providers;
-			}
-		}
 		
 		/**
 		 * Ordered list of all visible items on this dock
@@ -84,7 +74,6 @@ namespace Plank
 			launchers_folder = config_folder.get_child ("launchers");
 			Factory.item_factory.launchers_dir = launchers_folder;
 			
-			item_providers = new ArrayList<DockItemProvider> ();
 			items = new ArrayList<unowned DockItem> ();
 			
 			prefs.notify["PinnedOnly"].connect (update_default_provider);
@@ -100,10 +89,6 @@ namespace Plank
 		{
 			prefs.notify["PinnedOnly"].disconnect (update_default_provider);
 			
-			foreach (var provider in item_providers)
-				disconnect_provider (provider);
-			
-			item_providers.clear ();
 			items.clear ();
 		}
 		
@@ -114,7 +99,7 @@ namespace Plank
 		 */
 		public void initialize ()
 		{
-			if (item_providers.size <= 0)
+			if (internal_items.size <= 0)
 				add_default_provider ();
 			
 			position_manager.initialize ();
@@ -126,15 +111,6 @@ namespace Plank
 		}
 		
 		/**
-		 * Reset internal buffers of all providers.
-		 */
-		public void reset_provider_buffers ()
-		{
-			foreach (var provider in item_providers)
-				provider.reset_item_buffers ();
-		}
-		
-		/**
 		 * Add the default provider which is an instance of
 		 * {@link Plank.Items.DefaultApplicationDockItemProvider} 
 		 */
@@ -143,9 +119,10 @@ namespace Plank
 			if (default_provider != null)
 				return;
 			
+			Logger.verbose ("DockController.add_default_provider ()");
 			default_provider = get_default_provider ();
 			
-			add_provider (default_provider);
+			add_item (default_provider);
 		}
 		
 		ApplicationDockItemProvider get_default_provider ()
@@ -176,25 +153,9 @@ namespace Plank
 			if (default_provider == null)
 				return;
 			
-			// Make sure we know where to put the replacement at
-			var pos = item_providers.index_of (default_provider);
-			if (pos < 0) {
-				critical ("default-provider is set but not included on this dock!");
-				return;
-			}
-			
-			remove_provider (default_provider);
-			default_provider.RemoveTime = GLib.get_monotonic_time ();
-			
+			var old_default_provider = default_provider;
 			default_provider = get_default_provider ();
-			
-			default_provider.prepare ();
-			item_providers.insert (pos, default_provider);
-			default_provider.AddTime = GLib.get_monotonic_time ();
-			
-			connect_provider (default_provider);
-			
-			update_items ();
+			replace_item (default_provider, old_default_provider);
 			
 			// Do a thorough update since we actually dropped all previous items
 			// of the default-provider
@@ -202,78 +163,53 @@ namespace Plank
 			window.update_icon_regions ();
 		}
 		
-		/**
-		 * Add the given provider to this dock.
-		 *
-		 * @param provider the dock-provider to add
-		 */
-		public void add_provider (DockItemProvider provider)
+		protected override void connect_element (DockElement element)
 		{
-			if (item_providers.contains (provider)) {
-				critical ("Provider already exists in this dock-controller.");
+			unowned DockItemProvider? provider = (element as DockItemProvider);
+			if (provider == null)
 				return;
-			}
 			
-			provider.prepare ();
-			item_providers.add (provider);
-			provider.AddTime = GLib.get_monotonic_time ();
-			
-			connect_provider (provider);
-			
-			update_items ();
-		}
-		
-		/**
-		 * Remove the given provider from this dock.
-		 *
-		 * @param provider the dock-provider to remove
-		 */
-		public void remove_provider (DockItemProvider provider)
-		{
-			if (!item_providers.contains (provider)) {
-				critical ("Provider does not exist in this dock-controller.");
-				return;
-			}
-			
-			disconnect_provider (provider);
-			
-			item_providers.remove (provider);
-			provider.RemoveTime = GLib.get_monotonic_time ();
-			
-			update_items ();
-		}
-		
-		void connect_provider (DockItemProvider provider)
-		{
-			provider.item_positions_changed.connect (item_positions_changed);
-			provider.item_state_changed.connect (item_state_changed);
-			provider.items_changed.connect (items_changed);
+			provider.item_positions_changed.connect (handle_item_positions_changed);
+			provider.item_state_changed.connect (handle_item_state_changed);
+			provider.items_changed.connect (handle_items_changed);
 			
 			unowned ApplicationDockItemProvider? app_provider = (provider as ApplicationDockItemProvider);
 			if (app_provider != null)
 				app_provider.item_window_added.connect (window.update_icon_region);
 		}
 		
-		void disconnect_provider (DockItemProvider provider)
+		protected override void disconnect_element (DockElement element)
 		{
-			provider.item_positions_changed.disconnect (item_positions_changed);
-			provider.item_state_changed.disconnect (item_state_changed);
-			provider.items_changed.disconnect (items_changed);
+			unowned DockItemProvider? provider = (element as DockItemProvider);
+			if (provider == null)
+				return;
+			
+			provider.item_positions_changed.disconnect (handle_item_positions_changed);
+			provider.item_state_changed.disconnect (handle_item_state_changed);
+			provider.items_changed.disconnect (handle_items_changed);
 			
 			unowned ApplicationDockItemProvider? app_provider = (provider as ApplicationDockItemProvider);
 			if (app_provider != null)
 				app_provider.item_window_added.disconnect (window.update_icon_region);
 		}
 		
-		void update_items ()
+		protected override void update_visible_items ()
 		{
-			Logger.verbose ("DockController.update_items ()");
+			base.update_visible_items ();
+			
+			Logger.verbose ("DockController.update_visible_items ()");
 			
 			items.clear ();
 			
 			var current_pos = 0;
-			foreach (var provider in item_providers) {
-				foreach (var item in provider.Items) {
+			foreach (var element in visible_items) {
+				unowned DockContainer? container = (element as DockContainer);
+				if (container == null)
+					continue;
+				foreach (var element2 in container.Elements) {
+					unowned DockItem? item = (element2 as DockItem);
+					if (item == null)
+						continue;
 					if (item.Position != current_pos)
 						item.Position = current_pos;
 					items.add (item);
@@ -282,12 +218,12 @@ namespace Plank
 			}
 		}
 		
-		void items_changed (DockItemProvider provider, Gee.List<DockItem> added, Gee.List<DockItem> removed)
+		void handle_items_changed (DockContainer provider, Gee.List<DockElement> added, Gee.List<DockElement> removed)
 		{
 			if (provider == default_provider)
 				serialize_item_positions ();
 			
-			update_items ();
+			update_visible_items ();
 			
 			if (prefs.Alignment != Gtk.Align.FILL
 				&& added.size != removed.size)
@@ -297,14 +233,14 @@ namespace Plank
 			window.update_icon_regions ();
 		}
 		
-		void item_positions_changed (DockItemProvider provider, Gee.List<unowned DockItem> moved_items)
+		void handle_item_positions_changed (DockContainer provider, Gee.List<unowned DockElement> moved_items)
 		{
 			if (provider == default_provider)
 				serialize_item_positions ();
 			
-			update_items ();
+			update_visible_items ();
 			
-			foreach (unowned DockItem item in moved_items) {
+			foreach (unowned DockElement item in moved_items) {
 				position_manager.reset_item_cache (item);
 				unowned ApplicationDockItem? app_item = (item as ApplicationDockItem);
 				if (app_item != null)
@@ -313,13 +249,16 @@ namespace Plank
 			renderer.animated_draw ();
 		}
 		
-		void item_state_changed (DockItemProvider provider)
+		void handle_item_state_changed (DockContainer provider)
 		{
 			renderer.animated_draw ();
 		}
 		
 		void serialize_item_positions ()
 		{
+			if (default_provider == null)
+				return;
+			
 			var item_list = default_provider.get_item_list_string ();
 			
 			if (prefs.DockItems != item_list)

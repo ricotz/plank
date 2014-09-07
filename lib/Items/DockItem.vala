@@ -95,11 +95,6 @@ namespace Plank.Items
 		public signal void launcher_changed ();
 		
 		/**
-		 * The dock item's provider which it is added too (if any).
-		 */
-		public DockItemProvider? Provider { get; set; }
-		
-		/**
 		 * The dock item's icon.
 		 */
 		public string Icon { get; set; default = ""; }
@@ -263,7 +258,7 @@ namespace Plank.Items
 		/**
 		 * Resets the buffers for this item's icon.
 		 */
-		public void reset_buffers ()
+		public override void reset_buffers ()
 		{
 			background_surface = null;
 			foreground_surface = null;
@@ -442,7 +437,7 @@ namespace Plank.Items
 				unowned string name = prop.get_name ();
 				
 				// Do not copy these
-				if (name == "Provider")
+				if (name == "Container")
 				    continue;
 				
 				var type = prop.value_type;

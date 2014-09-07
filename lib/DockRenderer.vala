@@ -191,7 +191,7 @@ namespace Plank
 		{
 			Logger.verbose ("DockRenderer.reset_item_buffers ()");
 			
-			controller.reset_provider_buffers ();
+			controller.reset_buffers ();
 			
 			animated_draw ();
 		}
