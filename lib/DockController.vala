@@ -155,6 +155,7 @@ namespace Plank
 			
 			var old_default_provider = default_provider;
 			default_provider = get_default_provider ();
+			default_provider.prepare ();
 			replace_item (default_provider, old_default_provider);
 			
 			// Do a thorough update since we actually dropped all previous items
