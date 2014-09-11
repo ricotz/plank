@@ -701,7 +701,7 @@ namespace Plank
 		/**
 		 * The cursor region for interacting with a dock element.
 		 *
-		 * @param item the dock item to find a region for
+		 * @param element the dock element to find a region for
 		 * @return the region for the dock item
 		 */
 		public Gdk.Rectangle get_item_hover_region (DockElement element)
