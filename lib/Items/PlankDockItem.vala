@@ -20,6 +20,7 @@ using Gee;
 using Gtk;
 
 using Plank.Factories;
+using Plank.Services;
 
 namespace Plank.Items
 {
@@ -90,11 +91,14 @@ namespace Plank.Items
 			item.activate.connect (() => Factory.main.show_about ());
 			items.add (item);
 			
-			items.add (new SeparatorMenuItem ());
+			// No explicit quit-item on elementary OS
+			if (!System.is_desktop_session ("pantheon")) {
+				items.add (new SeparatorMenuItem ());
 			
-			item = new ImageMenuItem.from_stock (Gtk.Stock.QUIT, null);
-			item.activate.connect (() => Factory.main.quit ());
-			items.add (item);
+				item = new ImageMenuItem.from_stock (Gtk.Stock.QUIT, null);
+				item.activate.connect (() => Factory.main.quit ());
+				items.add (item);
+			}
 			
 			return items;
 		}

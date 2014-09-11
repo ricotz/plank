@@ -183,5 +183,25 @@ namespace Plank.Services
 				critical (e.message);
 			}
 		}
+		
+		public static bool is_desktop_session (string session)
+		{
+			unowned string? current_session = get_current_desktop_session ();
+			if (current_session == null)
+				return false;
+			
+			return (current_session.down () == session.down ());
+		}
+		
+		static unowned string? get_current_desktop_session ()
+		{
+			unowned string? current_session;
+			
+			current_session = Environment.get_variable ("XDG_CURRENT_DESKTOP");
+			if (current_session == null)
+				current_session = Environment.get_variable ("DESKTOP_SESSION");
+			
+			return current_session;
+		}
 	}
 }
