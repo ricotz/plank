@@ -17,6 +17,7 @@
 -->
 <gresources>
 	<gresource prefix="/net/launchpad/plank">
-		<file  alias="img/poof.png" compressed="true">poof.png</file>
+		<file alias="img/poof.png" compressed="true">poof.png</file>
+		<file compressed="true" preprocess="xml-stripblanks">ui/preferences.ui</file>
 	</gresource>
 </gresources>

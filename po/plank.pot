@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-16 07:57+0200\n"
+"POT-Creation-Date: 2014-09-14 19:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,24 +36,136 @@ msgstr ""
 msgid "Plank. Stupidly simple."
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:381
-#: ../lib/Items/FileDockItem.vala:292 ../lib/Items/FileDockItem.vala:310
+#: ../data/ui/preferences.ui.h:1
+msgid "Theme:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:2
+msgid "Position:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:3
+msgid "Left"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:4
+msgid "Right"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:5
+msgid "Top"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:6
+msgid "Bottom"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:7
+msgid "Alignment:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:8
+msgid "Fill"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:9
+msgid "Start"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:10
+msgid "End"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:11
+msgid "Center"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:12
+msgid "On Primary Display:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:13
+msgid "Offset in percent from the center of the screen-edge"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:14
+msgid "Icon Alignment:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:15
+msgid "Icon Size:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:16
+msgid "Appearance"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:17
+msgid "Show Unpinned:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:18
+msgid "Restrict to Workspace:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:19
+msgid "Lock Icons:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:20
+msgid "Automatic Pinning:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:21
+msgid "Intellihide"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:22
+msgid "Autohide"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:23
+msgid "Dodge maximized window"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:24
+msgid "Delay in ms before showing the dock"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:25
+msgid "Pressure Reveal:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:26
+msgid "Item Management"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:27
+msgid "Hide Dock"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:28
+msgid "Behaviour"
+msgstr ""
+
+#: ../lib/Items/ApplicationDockItem.vala:448
+#: ../lib/Items/FileDockItem.vala:293 ../lib/Items/FileDockItem.vala:311
 msgid "_Keep in Dock"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:388
+#: ../lib/Items/ApplicationDockItem.vala:455
 msgid "_Close All"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:297
+#: ../lib/Items/FileDockItem.vala:298
 msgid "_Open in File Browser"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:315
+#: ../lib/Items/FileDockItem.vala:316
 msgid "_Open"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:319
+#: ../lib/Items/FileDockItem.vala:320
 msgid "Open Containing _Folder"
 msgstr ""
 
@@ -61,10 +173,10 @@ msgstr ""
 msgid "Drop applications or files here"
 msgstr ""
 
-#: ../lib/Items/PlankDockItem.vala:79
+#: ../lib/Items/PlankDockItem.vala:83
 msgid "Get _Help Online..."
 msgstr ""
 
-#: ../lib/Items/PlankDockItem.vala:83
+#: ../lib/Items/PlankDockItem.vala:87
 msgid "_Translate This Application..."
 msgstr ""

@@ -96,6 +96,7 @@ libplank_la_VALASOURCES = \
 	Widgets/DockWindow.vala \
 	Widgets/HoverWindow.vala \
 	Widgets/PoofWindow.vala \
+	Widgets/PreferencesWindow.vala \
 	Widgets/TitledSeparatorMenuItem.vala \
 	$(NULL)
 

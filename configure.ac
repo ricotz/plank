@@ -102,7 +102,7 @@ fi
 # -----------------------------------------------------------
 # Dependencies
 # -----------------------------------------------------------
-GTK_MIN_VERSION=3.0.0
+GTK_MIN_VERSION=3.4.0
 GLIB_MIN_VERSION=2.32.0
 GDK_PIXBUF_MIN_VERSION=2.26.0
 BAMF_MIN_VERSION=0.2.92

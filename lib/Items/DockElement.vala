@@ -239,6 +239,25 @@ namespace Plank.Items
 		}
 		
 		/**
+		 * Get the dock which this element is part of
+		 *
+		 * @return the dock-controller of this element, or null
+		 */
+		public unowned DockController? get_dock ()
+		{
+			unowned DockContainer? container = Container;
+			
+			while (container != null) {
+				if (container is DockController)
+					return (DockController) container;
+				
+				container = container.Container;
+			}
+			
+			return null;
+		}
+		
+		/**
 		 * Returns a list of the item's menu items.
 		 *
 		 * @return the item's menu items

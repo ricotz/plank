@@ -17,6 +17,7 @@
 
 using Plank.Factories;
 using Plank.Services;
+using Plank.Widgets;
 
 namespace Plank.Items
 {
@@ -61,7 +62,9 @@ namespace Plank.Items
 		 */
 		public override Gee.ArrayList<Gtk.MenuItem> get_menu_items ()
 		{
-			return get_plank_menu_items ();
+			unowned DockController? controller = get_dock ();
+
+			return get_plank_menu_items (controller);
 		}
 		
 		/**
@@ -69,7 +72,7 @@ namespace Plank.Items
 		 *
 		 * @return the {@link Gtk.MenuItem}s to display
 		 */
-		public static Gee.ArrayList<Gtk.MenuItem> get_plank_menu_items ()
+		public static Gee.ArrayList<Gtk.MenuItem> get_plank_menu_items (DockController? controller = null)
 		{
 			var items = new Gee.ArrayList<Gtk.MenuItem> ();
 			
@@ -82,6 +85,13 @@ namespace Plank.Items
 			items.add (item);
 			
 			items.add (new Gtk.SeparatorMenuItem ());
+			
+			// No explicit settings-item on elementary OS
+			if (!System.is_desktop_session ("pantheon") && controller != null) {
+				item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.PREFERENCES, null);
+				item.activate.connect (() => controller.show_preferences ());
+				items.add (item);
+			}
 			
 			item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.ABOUT, null);
 			item.activate.connect (() => Factory.main.show_about ());

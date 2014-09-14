@@ -55,7 +55,7 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override void reset_properties ()
+		public override void reset_properties ()
 		{
 			Launcher = "";
 		}

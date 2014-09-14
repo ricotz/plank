@@ -45,6 +45,8 @@ namespace Plank
 		ApplicationDockItemProvider? default_provider;
 		Gee.ArrayList<unowned DockItem> items;
 		
+		PreferencesWindow? prefs_window;
+		
 		/**
 		 * Ordered list of all visible items on this dock
 		 */
@@ -262,6 +264,23 @@ namespace Plank
 			
 			if (prefs.DockItems != item_list)
 				prefs.DockItems = item_list;
+		}
+		
+		public void show_preferences ()
+		{
+			if (prefs_window != null)
+				prefs_window.close ();
+			
+			prefs_window = new PreferencesWindow (prefs);
+			//FIXME prefs_window.window.set_transient_for (window);
+			prefs_window.destroy.connect (() => {
+				prefs_window = null;
+			});
+			prefs_window.hide.connect ((widget) => {
+				widget.destroy ();
+			});
+			
+			prefs_window.show ();
 		}
 	}
 }

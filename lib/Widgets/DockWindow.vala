@@ -597,7 +597,7 @@ namespace Plank.Widgets
 			
 			Gee.ArrayList<Gtk.MenuItem> items;
 			if (show_plank_menu) {
-				items = PlankDockItem.get_plank_menu_items ();
+				items = PlankDockItem.get_plank_menu_items (controller);
 				set_hovered_provider (null);
 				set_hovered (null);
 			} else {

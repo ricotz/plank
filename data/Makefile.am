@@ -13,6 +13,7 @@ EXTRA_DIST = \
 	plank.appdata.xml.in \
 	plank.desktop.in \
 	poof.png \
+	ui/preferences.ui \
 	$(NULL)
 
 CLEANFILES = \
