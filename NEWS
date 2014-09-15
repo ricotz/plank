@@ -2,6 +2,39 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.7.0 "Lee" (2014-09-15)
+===============================================================================
+ * Update the barrier for pressure-reveal if needed (LP: #1339846)
+ * Hide "Quit" while running on Pantheon (LP: #1355497)
+ * Introduce abstract DockContainer and let DockController implement it
+ * Let Drawing.Color inherit from Gdk.RGBA
+ * Clean up API of PositionManager
+ * Remove all LauncherEntry-items which match a dbus-sender-name and try to
+   avoid adding superfluous LauncherEntry-items (LP: #1295750)
+ * Force internal Wnck update when needed and try to redruce races with
+   Bamf (LP: #1355633)
+ * Add auto-pinning setting and enable by default (LP: #1336594)
+ * Monitor icon changes if it points to an existing local file (LP: #1354875)
+ * Add DrawingService.try_get_icon_file() to handle possible icon-files
+ * Creating transient-items on dockitem-deletion belongs in default-provider
+ * ItemFactory: Only strip the extension from the launcher-filename
+ * Provider: Handle item-target is placeholder-item correctly
+ * load_pixbuf: Properly try icon-name with stripped extension (LP: #1350347)
+ * ItemFactory: Update creation of default applications-items
+ * Add ability to show pinned applications only (LP: #1098018)
+ * Don't count or provide menu-entries for windows which have a transient
+   (LP: #1347882)
+ * Don't optimize drawing of the first frame
+ * Use GLib.get_monotonic_time() for timestamps used to calculate animations
+   (LP: #1341839)
+ * Add pressure-reveal support to unhide the dockwindow and disable by default
+   (LP: #1079907)
+ * AppDockItem: Shorten window-title shown in menu using application-name
+ * Refactor dockitem-loading and serialization of pinned items
+ * Drop maximize/unmaximize menu-entries (LP: #1329551)
+ * Add compile time and runtime retrievable version information
+ * Require valac >= 0.22.0
+
 0.6.1 "Marie" (2014-05-20)
 ===============================================================================
  * Actually pass all moved items on item_positions_changed (LP: #1042439)
