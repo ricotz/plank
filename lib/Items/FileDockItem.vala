@@ -113,13 +113,25 @@ namespace Plank.Items
 			reset_icon_buffer ();
 		}
 		
+		bool has_default_icon_match ()
+		{
+			if (Icon == DEFAULT_ICONS)
+				return true;
+			
+			var default_icons = DEFAULT_ICONS.split (";;");
+			foreach (string icon in Icon.split (";;"))
+				if (icon in default_icons)
+					return true;
+			
+			return false;
+		}
+		
 		/**
 		 * {@inheritDoc}
 		 */
 		protected override void draw_icon (DockSurface surface)
 		{
-			if (!(Icon == DEFAULT_ICONS
-				|| Icon in DEFAULT_ICONS.split (";;"))) {
+			if (!has_default_icon_match ()) {
 				base.draw_icon (surface);
 				return;
 			}
