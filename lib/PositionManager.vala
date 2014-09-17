@@ -396,7 +396,7 @@ namespace Plank
 			var height = IconSize + top_offset + bottom_offset;
 			
 			// height of the dock background image, as drawn
-			var background_height = height;
+			var background_height = int.max (0, height);
 			
 			if (top_offset < 0)
 				height -= top_offset;
@@ -421,7 +421,7 @@ namespace Plank
 			}
 			
 			// width of the dock background image, as drawn
-			var background_width = width;
+			var background_width = int.max (0, width);
 			
 			// width of the visible (cursor) rect of the dock
 			if (HorizPadding < 0)
