@@ -15,10 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gdk;
-using Gee;
-using Gtk;
-
 using Plank.Items;
 using Plank.Drawing;
 using Plank.Services;
@@ -37,26 +33,26 @@ namespace Plank
 			public Gdk.Rectangle draw_region;
 			public Gdk.Rectangle background_region;
 			
-			public DockItemDrawValue move_in (PositionType position, double damount)
+			public DockItemDrawValue move_in (Gtk.PositionType position, double damount)
 			{
 				var result = this;
 				var amount = (int) damount;
 				
 				switch (position) {
 				default:
-				case PositionType.BOTTOM:
+				case Gtk.PositionType.BOTTOM:
 					result.hover_region.y -= amount;
 					result.draw_region.y -= amount;
 					break;
-				case PositionType.TOP:
+				case Gtk.PositionType.TOP:
 					result.hover_region.y += amount;
 					result.draw_region.y += amount;
 					break;
-				case PositionType.LEFT:
+				case Gtk.PositionType.LEFT:
 					result.hover_region.x += amount;
 					result.draw_region.x += amount;
 					break;
-				case PositionType.RIGHT:
+				case Gtk.PositionType.RIGHT:
 					result.hover_region.x -= amount;
 					result.draw_region.x -= amount;
 					break;
@@ -65,29 +61,29 @@ namespace Plank
 				return result;
 			}
 			
-			public DockItemDrawValue move_right (PositionType position, double damount)
+			public DockItemDrawValue move_right (Gtk.PositionType position, double damount)
 			{
 				var result = this;
 				var amount = (int) damount;
 				
 				switch (position) {
 				default:
-				case PositionType.BOTTOM:
+				case Gtk.PositionType.BOTTOM:
 					result.hover_region.x += amount;
 					result.draw_region.x += amount;
 					result.background_region.x += amount;
 					break;
-				case PositionType.TOP:
+				case Gtk.PositionType.TOP:
 					result.hover_region.x += amount;
 					result.draw_region.x += amount;
 					result.background_region.x += amount;
 					break;
-				case PositionType.LEFT:
+				case Gtk.PositionType.LEFT:
 					result.hover_region.y += amount;
 					result.draw_region.y += amount;
 					result.background_region.y += amount;
 					break;
-				case PositionType.RIGHT:
+				case Gtk.PositionType.RIGHT:
 					result.hover_region.y += amount;
 					result.draw_region.y += amount;
 					result.background_region.y += amount;
@@ -103,7 +99,7 @@ namespace Plank
 		public bool screen_is_composited { get; private set; }
 		
 		Gdk.Rectangle static_dock_region;
-		HashMap<DockElement, DockItemDrawValue?> draw_values;
+		Gee.HashMap<DockElement, DockItemDrawValue?> draw_values;
 		
 		Gdk.Rectangle monitor_geo;
 		
@@ -122,7 +118,7 @@ namespace Plank
 		construct
 		{
 			static_dock_region = Gdk.Rectangle ();
-			draw_values = new HashMap<DockElement, DockItemDrawValue?> ();			
+			draw_values = new Gee.HashMap<DockElement, DockItemDrawValue?> ();			
 			
 			controller.prefs.notify["Monitor"].connect (update_monitor_geo);
 		}
@@ -133,7 +129,7 @@ namespace Plank
 		public void initialize ()
 			requires (controller.window != null)
 		{
-			unowned Screen screen = controller.window.get_screen ();
+			unowned Gdk.Screen screen = controller.window.get_screen ();
 			
 			screen.monitors_changed.connect (update_monitor_geo);
 			screen.size_changed.connect (update_monitor_geo);
@@ -147,7 +143,7 @@ namespace Plank
 		
 		~PositionManager ()
 		{
-			unowned Screen screen = controller.window.get_screen ();
+			unowned Gdk.Screen screen = controller.window.get_screen ();
 			
 			screen.monitors_changed.disconnect (update_monitor_geo);
 			screen.size_changed.disconnect (update_monitor_geo);
@@ -411,12 +407,12 @@ namespace Plank
 			var width = 0;
 			switch (prefs.Alignment) {
 			default:
-			case Align.START:
-			case Align.END:
-			case Align.CENTER:
+			case Gtk.Align.START:
+			case Gtk.Align.END:
+			case Gtk.Align.CENTER:
 				width = controller.Items.size * (ItemPadding + IconSize) + 2 * HorizPadding + 4 * LineWidth;
 				break;
-			case Align.FILL:
+			case Gtk.Align.FILL:
 				if (prefs.is_horizontal_dock ())
 					width = monitor_geo.width;
 				else
@@ -468,19 +464,19 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				cursor_region.height = int.max (1 * window_scale_factor, (int) (progress * cursor_region.height));
 				cursor_region.y = DockHeight - cursor_region.height + (window_scale_factor - 1);
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				cursor_region.height = int.max (1 * window_scale_factor, (int) (progress * cursor_region.height));
 				cursor_region.y = 0;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				cursor_region.width = int.max (1 * window_scale_factor, (int) (progress * cursor_region.width));
 				cursor_region.x = 0;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				cursor_region.width = int.max (1 * window_scale_factor, (int) (progress * cursor_region.width));
 				cursor_region.x = DockWidth - cursor_region.width + (window_scale_factor - 1);
 				break;
@@ -505,16 +501,16 @@ namespace Plank
 			if (!screen_is_composited && controller.hide_manager.Hidden) {
 				switch (controller.prefs.Position) {
 				default:
-				case PositionType.BOTTOM:
+				case Gtk.PositionType.BOTTOM:
 					dock_region.y -= DockHeight - 1;
 					break;
-				case PositionType.TOP:
+				case Gtk.PositionType.TOP:
 					dock_region.y += DockHeight - 1;
 					break;
-				case PositionType.LEFT:
+				case Gtk.PositionType.LEFT:
 					dock_region.x += DockWidth - 1;
 					break;
-				case PositionType.RIGHT:
+				case Gtk.PositionType.RIGHT:
 					dock_region.x -= DockWidth - 1;
 					break;
 				}
@@ -550,14 +546,14 @@ namespace Plank
 				
 				switch (prefs.Alignment) {
 				default:
-				case Align.CENTER:
-				case Align.FILL:
+				case Gtk.Align.CENTER:
+				case Gtk.Align.FILL:
 					break;
-				case Align.START:
+				case Gtk.Align.START:
 					xoffset = 0;
 					yoffset = (monitor_geo.height - static_dock_region.height);
 					break;
-				case Align.END:
+				case Gtk.Align.END:
 					xoffset = (monitor_geo.width - static_dock_region.width);
 					yoffset = 0;
 					break;
@@ -566,19 +562,19 @@ namespace Plank
 			
 			switch (prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				static_dock_region.x = xoffset;
 				static_dock_region.y = DockHeight - static_dock_region.height;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				static_dock_region.x = xoffset;
 				static_dock_region.y = 0;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				static_dock_region.y = yoffset;
 				static_dock_region.x = 0;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				static_dock_region.y = yoffset;
 				static_dock_region.x = DockWidth - static_dock_region.width;
 				break;
@@ -641,25 +637,25 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				hover_rect.x += item_padding / 2;
 				hover_rect.y += top_padding;
 				hover_rect.width -= item_padding;
 				hover_rect.height -= bottom_padding + top_padding;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				hover_rect.x += item_padding / 2;
 				hover_rect.y += bottom_padding;
 				hover_rect.width -= item_padding;
 				hover_rect.height -= bottom_padding + top_padding;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				hover_rect.x += bottom_padding;
 				hover_rect.y += item_padding / 2;
 				hover_rect.width -= bottom_padding + top_padding;
 				hover_rect.height -= item_padding;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				hover_rect.x += top_padding;
 				hover_rect.y += item_padding / 2;
 				hover_rect.width -= bottom_padding + top_padding;
@@ -682,17 +678,17 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				rect.y -= top_padding;
 				rect.height += top_padding;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				rect.height += top_padding;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				rect.width += top_padding;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				rect.x -= top_padding;
 				rect.width += top_padding;
 				break;
@@ -716,7 +712,7 @@ namespace Plank
 			unowned DockContainer? container = (element as DockContainer);
 			return_val_if_fail (container != null, Gdk.Rectangle ());
 			
-			unowned ArrayList<DockElement> items = container.Elements;
+			unowned Gee.ArrayList<DockElement> items = container.Elements;
 			
 			if (items.size == 0)
 				return { 0 };
@@ -738,25 +734,25 @@ namespace Plank
 			
 			switch (prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				rect.width = IconSize + ItemPadding;
 				rect.height = VisibleDockHeight;
 				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + IconSize);
 				rect.y = DockHeight - rect.height;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				rect.width = IconSize + ItemPadding;
 				rect.height = VisibleDockHeight;
 				rect.x = static_dock_region.x + items_offset + item.Position * (ItemPadding + IconSize);
 				rect.y = 0;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				rect.height = IconSize + ItemPadding;
 				rect.width = VisibleDockWidth;
 				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + IconSize);
 				rect.x = 0;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				rect.height = IconSize + ItemPadding;
 				rect.width = VisibleDockWidth;
 				rect.y = static_dock_region.y + items_offset + item.Position * (ItemPadding + IconSize);
@@ -769,16 +765,16 @@ namespace Plank
 			
 			switch (prefs.ItemsAlignment) {
 			default:
-			case Align.FILL:
-			case Align.CENTER:
+			case Gtk.Align.FILL:
+			case Gtk.Align.CENTER:
 				if (prefs.is_horizontal_dock ())
 					rect.x += (static_dock_region.width - 2 * items_offset - items_width) / 2;
 				else
 					rect.y += (static_dock_region.height - 2 * items_offset - items_width) / 2;
 				break;
-			case Align.START:
+			case Gtk.Align.START:
 				break;
-			case Align.END:
+			case Gtk.Align.END:
 				if (prefs.is_horizontal_dock ())
 					rect.x += (static_dock_region.width - 2 * items_offset - items_width);
 				else
@@ -797,26 +793,26 @@ namespace Plank
 		 * @param x the resulting x position
 		 * @param y the resulting y position
 		 */
-		public void get_menu_position (DockItem hovered, Requisition requisition, out int x, out int y)
+		public void get_menu_position (DockItem hovered, Gtk.Requisition requisition, out int x, out int y)
 		{
 			var rect = get_item_hover_region (hovered);
 			
 			var offset = 10;
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				x = win_x + rect.x + (rect.width - requisition.width) / 2;
 				y = win_y + rect.y - requisition.height - offset;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				x = win_x + rect.x + (rect.width - requisition.width) / 2;
 				y = win_y + rect.height + offset;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				y = win_y + rect.y + (rect.height - requisition.height) / 2;
 				x = win_x + rect.x + rect.width + offset;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				y = win_y + rect.y + (rect.height - requisition.height) / 2;
 				x = win_x + rect.x - requisition.width - offset;
 				break;
@@ -836,19 +832,19 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				x = rect.x + win_x + rect.width / 2;
 				y = rect.y + win_y;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				x = rect.x + win_x + rect.width / 2;
 				y = rect.y + win_y + rect.height;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				y = rect.y + win_y + rect.height / 2;
 				x = rect.x + win_x + rect.width;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				y = rect.y + win_y + rect.height / 2;
 				x = rect.x + win_x;
 				break;
@@ -869,19 +865,19 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				x = rect.x + (rect.width - glow_size) / 2;
 				y = DockHeight - glow_size / 2;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				x = rect.x + (rect.width - glow_size) / 2;
 				y = - glow_size / 2;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				y = rect.y + (rect.height - glow_size) / 2;
 				x = - glow_size / 2;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				y = rect.y + (rect.height - glow_size) / 2;
 				x = DockWidth - glow_size / 2;
 				break;
@@ -905,14 +901,14 @@ namespace Plank
 				
 				switch (prefs.Alignment) {
 				default:
-				case Align.CENTER:
-				case Align.FILL:
+				case Gtk.Align.CENTER:
+				case Gtk.Align.FILL:
 					break;
-				case Align.START:
+				case Gtk.Align.START:
 					xoffset = 0;
 					yoffset = (monitor_geo.height - static_dock_region.height);
 					break;
-				case Align.END:
+				case Gtk.Align.END:
 					xoffset = (monitor_geo.width - static_dock_region.width);
 					yoffset = 0;
 					break;
@@ -921,19 +917,19 @@ namespace Plank
 			
 			switch (prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				win_x = monitor_geo.x + xoffset;
 				win_y = monitor_geo.y + monitor_geo.height - DockHeight;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				win_x = monitor_geo.x + xoffset;
 				win_y = monitor_geo.y;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				win_y = monitor_geo.y + yoffset;
 				win_x = monitor_geo.x;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				win_y = monitor_geo.y + yoffset;
 				win_x = monitor_geo.x + monitor_geo.width - DockWidth;
 				break;
@@ -943,16 +939,16 @@ namespace Plank
 			if (!screen_is_composited && controller.hide_manager.Hidden) {
 				switch (prefs.Position) {
 				default:
-				case PositionType.BOTTOM:
+				case Gtk.PositionType.BOTTOM:
 					win_y += DockHeight - 1;
 					break;
-				case PositionType.TOP:
+				case Gtk.PositionType.TOP:
 					win_y -= DockHeight - 1;
 					break;
-				case PositionType.LEFT:
+				case Gtk.PositionType.LEFT:
 					win_x -= DockWidth - 1;
 					break;
-				case PositionType.RIGHT:
+				case Gtk.PositionType.RIGHT:
 					win_x += DockWidth - 1;
 					break;
 				}
@@ -977,19 +973,19 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				x = 0;
 				y = (int) ((VisibleDockHeight + extra_hide_offset) * progress);
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				x = 0;
 				y = (int) (- (VisibleDockHeight + extra_hide_offset) * progress);
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				x = (int) (- (VisibleDockWidth + extra_hide_offset) * progress);
 				y = 0;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				x = (int) ((VisibleDockWidth + extra_hide_offset) * progress);
 				y = 0;
 				break;
@@ -1018,19 +1014,19 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				x += (width - DockBackgroundWidth) / 2;
 				y += height - DockBackgroundHeight;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				x += (width - DockBackgroundWidth) / 2;
 				y = 0;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				x = 0;
 				y += (height - DockBackgroundHeight) / 2;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				x += width - DockBackgroundWidth;
 				y += (height - DockBackgroundHeight) / 2;
 				break;
@@ -1061,19 +1057,19 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				x += region.x + region.width / 2;
 				y += DockHeight;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				x += region.x + region.width / 2;
 				y += 0;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				x += 0;
 				y += region.y + region.height / 2;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				x += DockWidth;
 				y += region.y + region.height / 2;
 				break;
@@ -1094,22 +1090,22 @@ namespace Plank
 #endif
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				struts [Struts.BOTTOM] = (VisibleDockHeight + controller.window.get_screen ().get_height () - monitor_geo.y - monitor_geo.height) * window_scale_factor;
 				struts [Struts.BOTTOM_START] = monitor_geo.x * window_scale_factor;
 				struts [Struts.BOTTOM_END] = (monitor_geo.x + monitor_geo.width) * window_scale_factor - 1;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				struts [Struts.TOP] = (monitor_geo.y + VisibleDockHeight) * window_scale_factor;
 				struts [Struts.TOP_START] = monitor_geo.x * window_scale_factor;
 				struts [Struts.TOP_END] = (monitor_geo.x + monitor_geo.width) * window_scale_factor - 1;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				struts [Struts.LEFT] = (monitor_geo.x + VisibleDockWidth) * window_scale_factor;
 				struts [Struts.LEFT_START] = monitor_geo.y * window_scale_factor;
 				struts [Struts.LEFT_END] = (monitor_geo.y + monitor_geo.height) * window_scale_factor - 1;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				struts [Struts.RIGHT] = (VisibleDockWidth + controller.window.get_screen ().get_width () - monitor_geo.x - monitor_geo.width) * window_scale_factor;
 				struts [Struts.RIGHT_START] = monitor_geo.y * window_scale_factor;
 				struts [Struts.RIGHT_END] = (monitor_geo.y + monitor_geo.height) * window_scale_factor - 1;
@@ -1124,25 +1120,25 @@ namespace Plank
 			
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				barrier.x = monitor_geo.x + (monitor_geo.width - VisibleDockWidth) / 2;
 				barrier.y = monitor_geo.y + monitor_geo.height;
 				barrier.width = VisibleDockWidth;
 				barrier.height = 0;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				barrier.x = monitor_geo.x + (monitor_geo.width - VisibleDockWidth) / 2;
 				barrier.y = monitor_geo.y;
 				barrier.width = VisibleDockWidth;
 				barrier.height = 0;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				barrier.x = monitor_geo.x;
 				barrier.y = monitor_geo.y + (monitor_geo.height - VisibleDockHeight) / 2;
 				barrier.width = 0;
 				barrier.height = VisibleDockHeight;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				barrier.x = monitor_geo.x + monitor_geo.width;
 				barrier.y = monitor_geo.y + (monitor_geo.height - VisibleDockHeight) / 2;
 				barrier.width = 0;

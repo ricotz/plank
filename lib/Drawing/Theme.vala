@@ -15,11 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Cairo;
-using Gdk;
-using Gee;
-using Gtk;
-
 using Plank.Services;
 
 namespace Plank.Drawing
@@ -123,11 +118,11 @@ namespace Plank.Drawing
 		 */
 		public void draw_background (DockSurface surface)
 		{
-			unowned Context cr = surface.Context;
+			unowned Cairo.Context cr = surface.Context;
 			
 			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			
-			var gradient = new Pattern.linear (0, 0, 0, surface.Height);
+			var gradient = new Cairo.Pattern.linear (0, 0, 0, surface.Height);
 			
 			gradient.add_color_stop_rgba (0, FillStartColor.red, FillStartColor.green, FillStartColor.blue, FillStartColor.alpha);
 			gradient.add_color_stop_rgba (1, FillEndColor.red, FillEndColor.green, FillEndColor.blue, FillEndColor.alpha);
@@ -150,7 +145,7 @@ namespace Plank.Drawing
 			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			
-			gradient = new Pattern.linear (0, 2 * LineWidth, 0, surface.Height - 2 * LineWidth - bottom_offset);
+			gradient = new Cairo.Pattern.linear (0, 2 * LineWidth, 0, surface.Height - 2 * LineWidth - bottom_offset);
 			
 			gradient.add_color_stop_rgba (0, InnerStrokeColor.red, InnerStrokeColor.green, InnerStrokeColor.blue, 0.5);
 			gradient.add_color_stop_rgba ((TopRoundness > 0 ? TopRoundness : LineWidth) / (double) surface.Height, InnerStrokeColor.red, InnerStrokeColor.green, InnerStrokeColor.blue, 0.12);
@@ -172,7 +167,7 @@ namespace Plank.Drawing
 		 * @param width the width of the rect
 		 * @param height the height of the rect
 		 */
-		protected void draw_inner_rect (Context cr, int width, int height)
+		protected void draw_inner_rect (Cairo.Context cr, int width, int height)
 		{
 			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			
@@ -198,7 +193,7 @@ namespace Plank.Drawing
 		 * @param bottom_radius the roundedness of the bottom edge
 		 * @param line_width the line-width of the rect
 		 */
-		public static void draw_rounded_rect (Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0, double line_width = 1.0)
+		public static void draw_rounded_rect (Cairo.Context cr, double x, double y, double width, double height, double top_radius = 6.0, double bottom_radius = 6.0, double line_width = 1.0)
 		{
 			var min_size  = double.min (width, height);
 			
@@ -233,7 +228,7 @@ namespace Plank.Drawing
 		 * @param stroke filling style of the outline
 		 * @param fill filling style of the inner area
 		 */
-		public static void draw_rounded_line (Context cr, double x, double y, double width, double height, bool is_round_left, bool is_round_right, Pattern? stroke = null, Pattern? fill = null)
+		public static void draw_rounded_line (Cairo.Context cr, double x, double y, double width, double height, bool is_round_left, bool is_round_right, Cairo.Pattern? stroke = null, Cairo.Pattern? fill = null)
 		{
 			if (height > width) {
 				y += Math.floor ((height - width) / 2.0);
@@ -309,12 +304,12 @@ namespace Plank.Drawing
 		 *
 		 * @return {@link Gee.ArrayList} the list of theme-names
 		 */
-		public static ArrayList<string> get_theme_list ()
+		public static Gee.ArrayList<string> get_theme_list ()
 		{
 #if HAVE_GEE_0_8
-			var list = new HashSet<string> ();
+			var list = new Gee.HashSet<string> ();
 #else
-			var list = new HashSet<string> (str_hash, str_equal);
+			var list = new Gee.HashSet<string> (str_hash, str_equal);
 #endif
 			
 			list.add (DEFAULT_NAME);
@@ -347,7 +342,7 @@ namespace Plank.Drawing
 				}
 			} catch {}
 			
-			var result = new ArrayList<string> ();
+			var result = new Gee.ArrayList<string> ();
 			result.add_all (list);
 #if HAVE_GEE_0_8
 			result.sort ();

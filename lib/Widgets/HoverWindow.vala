@@ -15,10 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Cairo;
-using Gdk;
-using Gtk;
-
 namespace Plank.Widgets
 {
 	/**
@@ -34,7 +30,7 @@ namespace Plank.Widgets
 		
 		public HoverWindow ()
 		{
-			GLib.Object (type: Gtk.WindowType.POPUP, type_hint: WindowTypeHint.TOOLTIP);
+			GLib.Object (type: Gtk.WindowType.POPUP, type_hint: Gdk.WindowTypeHint.TOOLTIP);
 		}
 		
 		construct
@@ -42,7 +38,7 @@ namespace Plank.Widgets
 			app_paintable = true;
 			resizable = false;
 			
-			unowned Screen screen = get_screen ();
+			unowned Gdk.Screen screen = get_screen ();
 			set_visual (screen.get_rgba_visual () ?? screen.get_system_visual ());
 			
 			get_style_context ().add_class (Gtk.STYLE_CLASS_TOOLTIP);
@@ -68,9 +64,9 @@ namespace Plank.Widgets
 		 * @param y the y location
 		 * @param position the dock's position
 		 */
-		public void show_at (int x, int y, PositionType position)
+		public void show_at (int x, int y, Gtk.PositionType position)
 		{
-			unowned Screen screen = get_screen ();
+			unowned Gdk.Screen screen = get_screen ();
 			Gdk.Rectangle monitor;
 			screen.get_monitor_geometry (screen.get_monitor_at_point (x, y), out monitor);
 			
@@ -83,19 +79,19 @@ namespace Plank.Widgets
 			var height = get_allocated_height ();
 			
 			switch (position) {
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				x = x - width / 2;
 				y = y - height - PADDING;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				x = x - width / 2;
 				y = y + PADDING;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				x = x + PADDING;
 				y = y - height / 2;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				x = x - width - PADDING;
 				y = y - height / 2;
 				break;

@@ -15,9 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Cairo;
-using Gdk;
-
 using Plank.Services;
 
 namespace Plank.Widgets
@@ -54,7 +51,7 @@ namespace Plank.Widgets
 		 */
 		public PoofWindow ()
 		{
-			GLib.Object (type: Gtk.WindowType.TOPLEVEL, type_hint: WindowTypeHint.DOCK);
+			GLib.Object (type: Gtk.WindowType.TOPLEVEL, type_hint: Gdk.WindowTypeHint.DOCK);
 		}
 		
 		construct
@@ -64,9 +61,9 @@ namespace Plank.Widgets
 			set_keep_above (true);
 			
 			try {
-				poof_image = new Pixbuf.from_resource ("%s/img/poof.png".printf (Plank.G_RESOURCE_PATH));
+				poof_image = new Gdk.Pixbuf.from_resource ("%s/img/poof.png".printf (Plank.G_RESOURCE_PATH));
 			} catch {
-				poof_image = new Pixbuf (Colorspace.RGB, true, 8, 128, 640);
+				poof_image = new Gdk.Pixbuf (Gdk.Colorspace.RGB, true, 8, 128, 640);
 				warning ("Unable to load poof animation image");
 			}
 			
@@ -114,8 +111,8 @@ namespace Plank.Widgets
 		
 		public override bool draw (Cairo.Context cr)
 		{
-			cr.set_operator (Operator.SOURCE);
-			cairo_set_source_pixbuf (cr, poof_image, 0, -POOF_SIZE * (int) (POOF_FRAMES * (frame_time - start_time) / RUN_LENGTH));
+			cr.set_operator (Cairo.Operator.SOURCE);
+			Gdk.cairo_set_source_pixbuf (cr, poof_image, 0, -POOF_SIZE * (int) (POOF_FRAMES * (frame_time - start_time) / RUN_LENGTH));
 			cr.paint ();
 			
 			return true;

@@ -15,11 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Cairo;
-using Gdk;
-using Gee;
-using Gtk;
-
 using Plank.Services;
 
 namespace Plank.Drawing
@@ -111,16 +106,16 @@ namespace Plank.Drawing
 		 * @param height the requested height of the icon
 		 * @return the pixbuf representing the requested icon
 		 */
-		public static Pixbuf load_icon (string names, int width, int height)
+		public static Gdk.Pixbuf load_icon (string names, int width, int height)
 		{
-			var all_names = new ArrayList<string> ();
+			var all_names = new Gee.ArrayList<string> ();
 			
 			foreach (unowned string s in names.split (";;"))
 				all_names.add (s);
 			foreach (unowned string s in MISSING_ICONS.split (";;"))
 				all_names.add (s);
 			
-			Pixbuf? pbuf = null;
+			Gdk.Pixbuf? pbuf = null;
 			
 			foreach (var name in all_names) {
 				var file = try_get_icon_file (name);
@@ -149,9 +144,9 @@ namespace Plank.Drawing
 			return get_empty_pixbuf (int.max (1, width), int.max (1, height));
 		}
 		
-		static Pixbuf get_empty_pixbuf (int width, int height)
+		static Gdk.Pixbuf get_empty_pixbuf (int width, int height)
 		{
-			var pbuf = new Pixbuf (Colorspace.RGB, true, 8, width, height);
+			var pbuf = new Gdk.Pixbuf (Gdk.Colorspace.RGB, true, 8, width, height);
 			pbuf.fill (0x00000000);
 			return pbuf;
 		}
@@ -179,21 +174,21 @@ namespace Plank.Drawing
 			return null;
 		}
 		
-		static Pixbuf? load_pixbuf_from_file (File file, int width, int height)
+		static Gdk.Pixbuf? load_pixbuf_from_file (File file, int width, int height)
 		{
-			Pixbuf? pbuf = null;
+			Gdk.Pixbuf? pbuf = null;
 			
 			try {
-				pbuf = new Pixbuf.from_file_at_size (file.get_path (), width, height);
+				pbuf = new Gdk.Pixbuf.from_file_at_size (file.get_path (), width, height);
 			} catch { }
 			
 			return pbuf;
 		}
 		
-		static Pixbuf? load_pixbuf (string icon, int size)
+		static Gdk.Pixbuf? load_pixbuf (string icon, int size)
 		{
-			Pixbuf? pbuf = null;
-			unowned IconTheme icon_theme = IconTheme.get_default ();
+			Gdk.Pixbuf? pbuf = null;
+			unowned Gtk.IconTheme icon_theme = Gtk.IconTheme.get_default ();
 			
 			try {
 				pbuf = icon_theme.load_icon (icon, size, 0);
@@ -217,7 +212,7 @@ namespace Plank.Drawing
 		 * @param height the height of the scaled pixbuf
 		 * @return the scaled pixbuf
 		 */
-		public static Pixbuf ar_scale (Pixbuf source, int width, int height)
+		public static Gdk.Pixbuf ar_scale (Gdk.Pixbuf source, int width, int height)
 		{
 			var xScale = (double) width / (double) source.width;
 			var yScale = (double) height / (double) source.height;
@@ -229,7 +224,7 @@ namespace Plank.Drawing
 			var scaled_width = int.max (1, (int) (source.width * scale));
 			var scaled_height = int.max (1, (int) (source.height * scale));
 			
-			return source.scale_simple (scaled_width, scaled_height, InterpType.HYPER);
+			return source.scale_simple (scaled_width, scaled_height, Gdk.InterpType.HYPER);
 		}
 		
 		/**
@@ -241,7 +236,7 @@ namespace Plank.Drawing
 		 * @param source the pixbuf to use
 		 * @return the average color of the pixbuf
 		 */
-		public static Drawing.Color average_color (Pixbuf source)
+		public static Drawing.Color average_color (Gdk.Pixbuf source)
 		{
 			uint8 r, g, b, a, min, max;
 			double delta;

@@ -15,10 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gdk;
-using Gee;
-using Gtk;
-
 using Plank.Drawing;
 using Plank.Services;
 using Plank.Services.Windows;
@@ -99,7 +95,7 @@ namespace Plank.Items
 		 */
 		public string Icon { get; set; default = ""; }
 		
-		protected Pixbuf? ForcePixbuf { get; set; default = null; }
+		protected Gdk.Pixbuf? ForcePixbuf { get; set; default = null; }
 		
 		/**
 		 * The count for the dock item.
@@ -400,14 +396,14 @@ namespace Plank.Items
 		 */
 		protected virtual void draw_icon (DockSurface surface)
 		{
-			Pixbuf? pbuf = ForcePixbuf;
+			Gdk.Pixbuf? pbuf = ForcePixbuf;
 			if (pbuf == null)
 				pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
 			else
 				pbuf = DrawingService.ar_scale (pbuf, surface.Width, surface.Height);
 			
 			unowned Cairo.Context cr = surface.Context;
-			cairo_set_source_pixbuf (cr, pbuf, (surface.Width - pbuf.width) / 2, (surface.Height - pbuf.height) / 2);
+			Gdk.cairo_set_source_pixbuf (cr, pbuf, (surface.Width - pbuf.width) / 2, (surface.Height - pbuf.height) / 2);
 			cr.paint ();
 		}
 		

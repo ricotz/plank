@@ -15,11 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Cairo;
-using Gdk;
-using Gtk;
-using Gee;
-
 using Plank.Items;
 using Plank.Drawing;
 using Plank.Services;
@@ -227,7 +222,7 @@ namespace Plank
 		 *
 		 * @param cr the context to use for drawing
 		 */
-		public void draw_dock (Context cr)
+		public void draw_dock (Cairo.Context cr)
 		{
 #if HAVE_GTK_3_10
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
@@ -309,19 +304,19 @@ namespace Plank
 			
 			// composite dock layers and make sure to draw onto the window's context with one operation
 			unowned Cairo.Context composite_cr = shadow_buffer.Context;
-			composite_cr.set_operator (Operator.OVER);
+			composite_cr.set_operator (Cairo.Operator.OVER);
 			composite_cr.set_source_surface (main_buffer.Internal, 0, 0);
 			composite_cr.paint ();
 			
 			// fade the dock if need be
 			if (opacity < 1.0) {
-				composite_cr.set_operator (Operator.SOURCE);
+				composite_cr.set_operator (Cairo.Operator.SOURCE);
 				composite_cr.set_source_rgba (0, 0, 0, 0);
 				composite_cr.paint_with_alpha (1 - opacity);
 			}
 			
 			// draw the dock on the window
-			cr.set_operator (Operator.SOURCE);
+			cr.set_operator (Cairo.Operator.SOURCE);
 			cr.set_source_surface (shadow_buffer.Internal, x_offset, y_offset);
 			cr.paint ();
 			
@@ -352,7 +347,7 @@ namespace Plank
 				background_buffer = theme.create_background (background_rect.width, background_rect.height,
 					controller.prefs.Position, main_buffer);
 			
-			unowned Context cr = main_buffer.Context;
+			unowned Cairo.Context cr = main_buffer.Context;
 			cr.set_source_surface (background_buffer.Internal, background_rect.x, background_rect.y);
 			cr.paint ();
 		}
@@ -363,8 +358,8 @@ namespace Plank
 			unowned DockItem hovered_item = controller.window.HoveredItem;
 			unowned DragManager drag_manager = controller.drag_manager;
 			
-			unowned Context main_cr = main_buffer.Context;
-			unowned Context shadow_cr = shadow_buffer.Context;
+			unowned Cairo.Context main_cr = main_buffer.Context;
+			unowned Cairo.Context shadow_cr = shadow_buffer.Context;
 			var icon_size = position_manager.IconSize;
 			var shadow_size = position_manager.IconShadowSize;
 			var position = controller.prefs.Position;
@@ -374,7 +369,7 @@ namespace Plank
 			var start = new DateTime.now_local ();
 #endif
 			var icon_surface = item.get_surface_copy (icon_size * window_scale_factor, icon_size * window_scale_factor, main_buffer);
-			unowned Context icon_cr = icon_surface.Context;
+			unowned Cairo.Context icon_cr = icon_surface.Context;
 			
 			DockSurface? icon_shadow_surface = null;
 			if (shadow_size > 0)
@@ -599,16 +594,16 @@ namespace Plank
 			var xoffset = 0, yoffset = 0;
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				yoffset = -shadow_size / 4;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				yoffset = shadow_size / 4;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				xoffset = shadow_size / 4;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				xoffset = -shadow_size / 4;
 				break;
 			}
@@ -635,24 +630,24 @@ namespace Plank
 			}
 			
 			unowned DockSurface indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
-			unowned Context main_cr = main_buffer.Context;
+			unowned Cairo.Context main_cr = main_buffer.Context;
 			
 			var x = 0.0, y = 0.0;
 			switch (controller.prefs.Position) {
 			default:
-			case PositionType.BOTTOM:
+			case Gtk.PositionType.BOTTOM:
 				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
 				y = main_buffer.Height - indicator_surface.Height / 2.0 - 2.0 * theme.get_bottom_offset () - indicator_surface.Height / 24.0;
 				break;
-			case PositionType.TOP:
+			case Gtk.PositionType.TOP:
 				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
 				y = - indicator_surface.Height / 2.0 + 2.0 * theme.get_bottom_offset () + indicator_surface.Height / 24.0;
 				break;
-			case PositionType.LEFT:
+			case Gtk.PositionType.LEFT:
 				x = - indicator_surface.Width / 2.0 + 2.0 * theme.get_bottom_offset () + indicator_surface.Width / 24.0;
 				y = item_rect.y + item_rect.height / 2.0 - indicator_surface.Height / 2.0;
 				break;
-			case PositionType.RIGHT:
+			case Gtk.PositionType.RIGHT:
 				x = main_buffer.Width - indicator_surface.Width / 2.0 - 2.0 * theme.get_bottom_offset () - indicator_surface.Width / 24.0;
 				y = item_rect.y + item_rect.height / 2.0 - indicator_surface.Height / 2.0;
 				break;
@@ -675,7 +670,7 @@ namespace Plank
 			}
 		}
 		
-		void draw_urgent_glow (DockItem item, Context cr)
+		void draw_urgent_glow (DockItem item, Cairo.Context cr)
 		{
 			if ((item.State & ItemState.URGENT) == 0)
 				return;
@@ -703,7 +698,7 @@ namespace Plank
 		
 		Drawing.Color get_styled_color ()
 		{
-			var background_selected_color = controller.window.get_style_context ().get_background_color (StateFlags.SELECTED);
+			var background_selected_color = controller.window.get_style_context ().get_background_color (Gtk.StateFlags.SELECTED);
 			var selected_color = (Drawing.Color) background_selected_color;
 			selected_color.set_min_value (90 / (double) uint16.MAX);
 			return selected_color;

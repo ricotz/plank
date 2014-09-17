@@ -15,10 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gtk;
-
 using Plank.Items;
-
 using Plank.Services;
 using Plank.Services.Windows;
 using Plank.Widgets;
@@ -349,7 +346,7 @@ namespace Plank.Factories
 		/**
 		 * The about dialog for the program.
 		 */
-		protected static AboutDialog? about_dlg;
+		protected static Gtk.AboutDialog? about_dlg;
 		
 		/**
 		 * Displays the about dialog.
@@ -361,7 +358,7 @@ namespace Plank.Factories
 				return;
 			}
 			
-			about_dlg = new AboutDialog ();
+			about_dlg = new Gtk.AboutDialog ();
 			
 			about_dlg.set_program_name (exec_name);
 			about_dlg.set_version (build_version + "\n" + build_version_info);

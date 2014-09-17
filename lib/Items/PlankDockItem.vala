@@ -15,10 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gdk;
-using Gee;
-using Gtk;
-
 using Plank.Factories;
 using Plank.Services;
 
@@ -54,7 +50,7 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override Animation on_clicked (PopupButton button, ModifierType mod)
+		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod)
 		{
 			Factory.main.on_item_clicked ();
 			return Animation.DARKEN;
@@ -63,7 +59,7 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		public override ArrayList<Gtk.MenuItem> get_menu_items ()
+		public override Gee.ArrayList<Gtk.MenuItem> get_menu_items ()
 		{
 			return get_plank_menu_items ();
 		}
@@ -73,9 +69,9 @@ namespace Plank.Items
 		 *
 		 * @return the {@link Gtk.MenuItem}s to display
 		 */
-		public static ArrayList<Gtk.MenuItem> get_plank_menu_items ()
+		public static Gee.ArrayList<Gtk.MenuItem> get_plank_menu_items ()
 		{
-			var items = new ArrayList<Gtk.MenuItem> ();
+			var items = new Gee.ArrayList<Gtk.MenuItem> ();
 			
 			var item = create_menu_item (_("Get _Help Online..."), "help");
 			item.activate.connect (() => Factory.main.help ());
@@ -85,17 +81,17 @@ namespace Plank.Items
 			item.activate.connect (() => Factory.main.translate ());
 			items.add (item);
 			
-			items.add (new SeparatorMenuItem ());
+			items.add (new Gtk.SeparatorMenuItem ());
 			
-			item = new ImageMenuItem.from_stock (Gtk.Stock.ABOUT, null);
+			item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.ABOUT, null);
 			item.activate.connect (() => Factory.main.show_about ());
 			items.add (item);
 			
 			// No explicit quit-item on elementary OS
 			if (!System.is_desktop_session ("pantheon")) {
-				items.add (new SeparatorMenuItem ());
+				items.add (new Gtk.SeparatorMenuItem ());
 			
-				item = new ImageMenuItem.from_stock (Gtk.Stock.QUIT, null);
+				item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.QUIT, null);
 				item.activate.connect (() => Factory.main.quit ());
 				items.add (item);
 			}

@@ -15,10 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Cairo;
-using Gdk;
-using Gee;
-
 using Plank.Drawing;
 using Plank.Items;
 using Plank.Services;
@@ -97,7 +93,7 @@ namespace Plank.Tests
 	void controller_items_match (DockController controller)
 	{
 		var controller_items = controller.Items;
-		var items = new ArrayList<unowned DockItem> ();
+		var items = new Gee.ArrayList<unowned DockItem> ();
 		
 		foreach (var element in controller.Elements) {
 			unowned DockContainer? container = (element as DockContainer);

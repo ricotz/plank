@@ -16,8 +16,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gee;
-
 using Plank.Services;
 
 namespace Plank.Items
@@ -55,14 +53,14 @@ namespace Plank.Items
 		/**
 		 * The ordered list of the visible dock elements.
 		 */
-		public ArrayList<DockElement> Elements {
+		public Gee.ArrayList<DockElement> Elements {
 			get {
 				return visible_items;
 			}
 		}
 		
-		protected ArrayList<DockElement> visible_items;
-		protected ArrayList<DockElement> internal_items;
+		protected Gee.ArrayList<DockElement> visible_items;
+		protected Gee.ArrayList<DockElement> internal_items;
 		
 		/**
 		 * Creates a new container for dock elements.
@@ -74,8 +72,8 @@ namespace Plank.Items
 		
 		construct
 		{
-			visible_items = new ArrayList<DockElement> ();
-			internal_items = new ArrayList<DockElement> ();
+			visible_items = new Gee.ArrayList<DockElement> ();
+			internal_items = new Gee.ArrayList<DockElement> ();
 			
 			connect_element (placeholder_item);
 		}
@@ -86,7 +84,7 @@ namespace Plank.Items
 			
 			visible_items.clear ();
 			
-			var items = new HashSet<DockElement> ();
+			var items = new Gee.HashSet<DockElement> ();
 			items.add_all (internal_items);
 			foreach (var item in items) {
 				remove_item_without_signaling (item);
@@ -139,7 +137,7 @@ namespace Plank.Items
 		 *
 		 * @param items the dock items to add
 		 */
-		public void add_items (ArrayList<DockElement> items)
+		public void add_items (Gee.ArrayList<DockElement> items)
 		{
 			foreach (var item in items) {
 				if (internal_items.contains (item)) {
@@ -182,7 +180,7 @@ namespace Plank.Items
 		{
 			Logger.verbose ("DockItemProvider.update_visible_items ()");
 			
-			var old_items = new ArrayList<DockElement> ();
+			var old_items = new Gee.ArrayList<DockElement> ();
 			old_items.add_all (visible_items);
 			
 			visible_items.clear ();
@@ -191,7 +189,7 @@ namespace Plank.Items
 				if (item.IsVisible)
 					visible_items.add (item);
 			
-			var added_items = new ArrayList<DockElement> ();
+			var added_items = new Gee.ArrayList<DockElement> ();
 			added_items.add_all (visible_items);
 			added_items.remove_all (old_items);
 			
@@ -233,7 +231,7 @@ namespace Plank.Items
 			
 			if ((index_move = visible_items.index_of (move)) >= 0
 				&& (index_target = visible_items.index_of (target)) >= 0) {
-				var moved_items = new ArrayList<unowned DockElement> ();
+				var moved_items = new Gee.ArrayList<unowned DockElement> ();
 				move_item (visible_items, index_move, index_target, moved_items);
 				item_positions_changed (moved_items);
 			} else {

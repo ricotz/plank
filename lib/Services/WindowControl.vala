@@ -15,9 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Bamf;
-using Wnck;
-
 namespace Plank.Services.Windows
 {
 	public enum Struts
@@ -53,9 +50,9 @@ namespace Plank.Services.Windows
 		
 		public static void initialize ()
 		{
-			unowned Wnck.Screen screen = Screen.get_default ();
+			unowned Wnck.Screen screen = Wnck.Screen.get_default ();
 			
-			set_client_type (ClientType.PAGER);
+			Wnck.set_client_type (Wnck.ClientType.PAGER);
 			
 			// Make sure internal window-list of Wnck is most up to date
 			screen.force_update ();
@@ -86,7 +83,7 @@ namespace Plank.Services.Windows
 		{
 			unowned Gdk.Pixbuf? pbuf = null;
 			
-			Screen.get_default ();
+			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
 			warn_if_fail (xids != null);
@@ -114,7 +111,7 @@ namespace Plank.Services.Windows
 		
 		public static uint get_num_windows (Bamf.Application app)
 		{
-			Screen.get_default ();
+			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
 			warn_if_fail (xids != null);
@@ -132,7 +129,7 @@ namespace Plank.Services.Windows
 		
 		public static bool has_maximized_window (Bamf.Application app)
 		{
-			Screen.get_default ();
+			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
 			warn_if_fail (xids != null);
@@ -148,7 +145,7 @@ namespace Plank.Services.Windows
 		
 		public static bool has_minimized_window (Bamf.Application app)
 		{
-			Screen.get_default ();
+			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
 			warn_if_fail (xids != null);
@@ -164,7 +161,7 @@ namespace Plank.Services.Windows
 		
 		public static bool has_window_on_workspace (Bamf.Application app, Wnck.Workspace workspace)
 		{
-			Screen.get_default ();
+			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
 			warn_if_fail (xids != null);
@@ -190,7 +187,7 @@ namespace Plank.Services.Windows
 		
 		public static void update_icon_regions (Bamf.Application app, Gdk.Rectangle rect)
 		{
-			Screen.get_default ();
+			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
 			warn_if_fail (xids != null);
@@ -204,7 +201,7 @@ namespace Plank.Services.Windows
 		
 		public static void close_all (Bamf.Application app)
 		{
-			Screen.get_default ();
+			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
 			warn_if_fail (xids != null);
@@ -218,7 +215,7 @@ namespace Plank.Services.Windows
 		
 		public static void focus_window (Bamf.Window window)
 		{
-			Screen.get_default ();
+			Wnck.Screen.get_default ();
 			unowned Wnck.Window w = Wnck.Window.@get (window.get_xid ());
 			
 			warn_if_fail (w != null);
@@ -231,7 +228,7 @@ namespace Plank.Services.Windows
 		
 		static void focus_window_by_xid (uint32 xid)
 		{
-			Screen.get_default ();
+			Wnck.Screen.get_default ();
 			unowned Wnck.Window w = Wnck.Window.@get (xid);
 			
 			warn_if_fail (w != null);
@@ -255,7 +252,7 @@ namespace Plank.Services.Windows
 		
 		public static void focus_previous (Bamf.Application app)
 		{
-			Screen.get_default ();
+			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
 			warn_if_fail (xids != null);
@@ -274,7 +271,7 @@ namespace Plank.Services.Windows
 		
 		public static void focus_next (Bamf.Application app)
 		{
-			Screen.get_default ();
+			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
 			warn_if_fail (xids != null);
@@ -330,7 +327,7 @@ namespace Plank.Services.Windows
 		{
 			var windows = new GLib.List<unowned Wnck.Window> ();
 			
-			Screen.get_default ();
+			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
 			
 			warn_if_fail (xids != null);
@@ -338,7 +335,7 @@ namespace Plank.Services.Windows
 			if (xids == null)
 				return windows;
 			
-			unowned GLib.List<Wnck.Window> stack = Screen.get_default ().get_windows_stacked ();
+			unowned GLib.List<Wnck.Window> stack = Wnck.Screen.get_default ().get_windows_stacked ();
 			
 			foreach (unowned Wnck.Window window in stack)
 				for (var j = 0; j < xids.length; j++)
@@ -389,7 +386,7 @@ namespace Plank.Services.Windows
 			// Minimize all windows if this application owns the active window
 			foreach (unowned Wnck.Window window in windows)
 				if ((window.is_active () && window.is_in_viewport (window.get_screen ().get_active_workspace ()))
-					|| window == Screen.get_default ().get_active_window ()) {
+					|| window == Wnck.Screen.get_default ().get_active_window ()) {
 					foreach (unowned Wnck.Window w in windows)
 						if (!w.is_minimized () && w.is_in_viewport (w.get_screen ().get_active_workspace ())) {
 							w.minimize ();

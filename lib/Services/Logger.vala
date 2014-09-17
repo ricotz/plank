@@ -15,8 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gee;
-
 namespace Plank.Services
 {
 	/**
@@ -91,7 +89,7 @@ namespace Plank.Services
 		
 		static Object? queue_lock = null;
 		
-		static ArrayList<LogMessage> log_queue;
+		static Gee.ArrayList<LogMessage> log_queue;
 		static bool is_writing;
 		
 		static Regex? re = null;
@@ -109,7 +107,7 @@ namespace Plank.Services
 		{
 			AppName = app_name;
 			is_writing = false;
-			log_queue = new ArrayList<LogMessage> ();
+			log_queue = new Gee.ArrayList<LogMessage> ();
 			try {
 				re = new Regex ("""[(]?.*?([^/]*?)(\.2)?\.vala(:\d+)[)]?:\s*(.*)""");
 			} catch { }
@@ -170,7 +168,7 @@ namespace Plank.Services
 				if (log_queue.size > 0) {
 					var logs = log_queue;
 					lock (queue_lock)
-						log_queue = new ArrayList<LogMessage> ();
+						log_queue = new Gee.ArrayList<LogMessage> ();
 					
 					foreach (var log in logs)
 						print_log (log);

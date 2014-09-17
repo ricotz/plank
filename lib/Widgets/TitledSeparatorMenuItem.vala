@@ -20,18 +20,13 @@
 //  Modified by Robert Dyer, Rico Tzschichholz
 //
 
-using Cairo;
-using Gdk;
-using Gtk;
-using Pango;
-
 namespace Plank.Widgets
 {
 	/**
 	 * A {@link Gtk.SeparatorMenuItem} with a title on it.
 	 * The separator can be drawn with or without a line.
 	 */
-	public class TitledSeparatorMenuItem : SeparatorMenuItem
+	public class TitledSeparatorMenuItem : Gtk.SeparatorMenuItem
 	{
 		bool draw_line = true;
 		
@@ -50,7 +45,7 @@ namespace Plank.Widgets
 		
 		protected override bool draw (Cairo.Context cr)
 		{
-			unowned StyleContext context = get_style_context ();
+			unowned Gtk.StyleContext context = get_style_context ();
 			var state = get_state_flags ();
 			
 			int x, y, w, h;
@@ -83,9 +78,9 @@ namespace Plank.Widgets
 			
 			var font_desc = style.font_desc;
 			font_desc.set_absolute_size ((int) (h * Pango.SCALE * Pango.Scale.LARGE));
-			font_desc.set_weight (Weight.BOLD);
+			font_desc.set_weight (Pango.Weight.BOLD);
 			
-			var layout = new Pango.Layout (pango_context_get ());
+			var layout = new Pango.Layout (Gdk.pango_context_get ());
 			layout.set_font_description (font_desc);
 			layout.set_width ((int) ((w - padding.left - padding.right) * Pango.SCALE));
 			layout.set_text (text, -1);

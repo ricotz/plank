@@ -15,9 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Cairo;
-using Posix;
-
 namespace Plank.Drawing
 {
 	/**
@@ -54,7 +51,7 @@ namespace Plank.Drawing
 		 */
 		public DockSurface (int width, int height)
 		{
-			Object (Width: width, Height: height, Internal: new ImageSurface (Format.ARGB32, width, height));
+			Object (Width: width, Height: height, Internal: new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height));
 		}
 		
 		/**
@@ -64,9 +61,9 @@ namespace Plank.Drawing
 		 * @param height height of the new surface
 		 * @param model existing {@link Cairo.Surface} to be similar to
 		 */
-		public DockSurface.with_surface (int width, int height, Surface model)
+		public DockSurface.with_surface (int width, int height, Cairo.Surface model)
 		{
-			Object (Width: width, Height: height, Internal: new Surface.similar (model, Content.COLOR_ALPHA, width, height));
+			Object (Width: width, Height: height, Internal: new Cairo.Surface.similar (model, Cairo.Content.COLOR_ALPHA, width, height));
 		}
 
 		/**
@@ -78,7 +75,7 @@ namespace Plank.Drawing
 		 */
 		public DockSurface.with_dock_surface (int width, int height, DockSurface model)
 		{
-			Object (Width: width, Height: height, Internal: new Surface.similar (model.Internal, Content.COLOR_ALPHA, width, height));
+			Object (Width: width, Height: height, Internal: new Cairo.Surface.similar (model.Internal, Cairo.Content.COLOR_ALPHA, width, height));
 		}
 		
 		/**
@@ -86,7 +83,7 @@ namespace Plank.Drawing
 		 *
 		 * @param image existing {@link Cairo.ImageSurface} as Internal
 		 */
-		public DockSurface.with_internal (ImageSurface image)
+		public DockSurface.with_internal (Cairo.ImageSurface image)
 		{
 			Object (Width: image.get_width (), Height: image.get_height (), Internal: image);
 		}
@@ -103,7 +100,7 @@ namespace Plank.Drawing
 		{
 			Context.save ();
 			Context.set_source_rgba (0, 0, 0, 0);
-			Context.set_operator (Operator.SOURCE);
+			Context.set_operator (Cairo.Operator.SOURCE);
 			Context.paint ();
 			Context.restore ();
 		}
@@ -144,10 +141,10 @@ namespace Plank.Drawing
 		public DockSurface create_mask (double threshold, out Gdk.Rectangle extent)
 			requires (threshold >= 0.0 && threshold <= 1.0)
 		{
-			var surface = new ImageSurface (Format.ARGB32, Width, Height);
+			var surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, Width, Height);
 			var cr = new Cairo.Context (surface);
 			
-			cr.set_operator (Operator.SOURCE);
+			cr.set_operator (Cairo.Operator.SOURCE);
 			cr.set_source_surface (Internal, 0, 0);
 			cr.paint ();
 			
@@ -221,10 +218,10 @@ namespace Plank.Drawing
 			if (radius > w - 1 || radius > h - 1)
 				return;
 			
-			var original = new ImageSurface (Format.ARGB32, w, h);
+			var original = new Cairo.ImageSurface (Cairo.Format.ARGB32, w, h);
 			var cr = new Cairo.Context (original);
 			
-			cr.set_operator (Operator.SOURCE);
+			cr.set_operator (Cairo.Operator.SOURCE);
 			cr.set_source_surface (Internal, 0, 0);
 			cr.paint ();
 			
@@ -332,7 +329,7 @@ namespace Plank.Drawing
 			original.mark_dirty ();
 			
 			Context.save ();
-			Context.set_operator (Operator.SOURCE);
+			Context.set_operator (Cairo.Operator.SOURCE);
 			Context.set_source_surface (original, 0, 0);
 			Context.paint ();
 			Context.restore ();
@@ -355,10 +352,10 @@ namespace Plank.Drawing
 			var height = Height;
 			var width = Width;
 			
-			var original = new ImageSurface (Format.ARGB32, width, height);
+			var original = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
 			var cr = new Cairo.Context (original);
 			
-			cr.set_operator (Operator.SOURCE);
+			cr.set_operator (Cairo.Operator.SOURCE);
 			cr.set_source_surface (Internal, 0, 0);
 			cr.paint ();
 			
@@ -384,7 +381,7 @@ namespace Plank.Drawing
 			original.mark_dirty ();
 			
 			Context.save ();
-			Context.set_operator (Operator.SOURCE);
+			Context.set_operator (Cairo.Operator.SOURCE);
 			Context.set_source_surface (original, 0, 0);
 			Context.paint ();
 			Context.restore ();
@@ -459,10 +456,10 @@ namespace Plank.Drawing
 			var width = Width;
 			var height = Height;
 			
-			var original = new ImageSurface (Format.ARGB32, width, height);
+			var original = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
 			var cr = new Cairo.Context (original);
 			
-			cr.set_operator (Operator.SOURCE);
+			cr.set_operator (Cairo.Operator.SOURCE);
 			cr.set_source_surface (Internal, 0, 0);
 			cr.paint ();
 			
@@ -497,7 +494,7 @@ namespace Plank.Drawing
 			th.join ();
 			
 			// Clear buffer
-			memset (abuffer, 0, sizeof(double) * size);
+			Posix.memset (abuffer, 0, sizeof(double) * size);
 			
 			// Precompute vertical shifts
 			shiftar = new int[int.max (width, height), gaussWidth];
@@ -526,7 +523,7 @@ namespace Plank.Drawing
 			original.mark_dirty ();
 			
 			Context.save ();
-			Context.set_operator (Operator.SOURCE);
+			Context.set_operator (Cairo.Operator.SOURCE);
 			Context.set_source_surface (original, 0, 0);
 			Context.paint ();
 			Context.restore ();

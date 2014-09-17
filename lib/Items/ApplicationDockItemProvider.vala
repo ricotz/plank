@@ -15,13 +15,10 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gee;
-
 using Plank.Factories;
-using Plank.Widgets;
-
 using Plank.Services;
 using Plank.Services.Windows;
+using Plank.Widgets;
 
 namespace Plank.Items
 {
@@ -41,7 +38,7 @@ namespace Plank.Items
 		
 		FileMonitor? items_monitor = null;
 		bool delay_items_monitor_handle = false;
-		ArrayList<GLib.File> queued_files = new ArrayList<GLib.File> ();
+		Gee.ArrayList<GLib.File> queued_files = new Gee.ArrayList<GLib.File> ();
 		
 		uint launcher_entry_dbus_signal_id = 0;
 		uint dbus_name_owner_changed_signal_id = 0;
@@ -394,12 +391,12 @@ namespace Plank.Items
 			item_window_added (item);
 		}
 		
-		public override bool can_accept_drop (ArrayList<string> uris)
+		public override bool can_accept_drop (Gee.ArrayList<string> uris)
 		{
 			return false;
 		}
 		
-		public override bool accept_drop (ArrayList<string> uris)
+		public override bool accept_drop (Gee.ArrayList<string> uris)
 		{
 			return false;
 		}

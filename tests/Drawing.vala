@@ -15,9 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Cairo;
-using Gdk;
-
 using Plank.Drawing;
 using Plank.Items;
 
@@ -131,10 +128,10 @@ namespace Plank.Tests
 		Drawing.Color average;
 		Drawing.DockSurface surface;
 		surface = new DockSurface (256, 256);
-		unowned Context cr = surface.Context;
+		unowned Cairo.Context cr = surface.Context;
 		
 		cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
-		cr.set_operator (Operator.SOURCE);
+		cr.set_operator (Cairo.Operator.SOURCE);
 		cr.paint ();
 		average = surface.average_color ();
 		
@@ -175,12 +172,12 @@ namespace Plank.Tests
 		surface = new DockSurface (256, 256);
 		surface2 = new DockSurface (256, 256);
 		
-		unowned Context cr = surface.Context;
-		cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
+		unowned Cairo.Context cr = surface.Context;
+		Gdk.cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
 		cr.paint ();
 		
-		unowned Context cr2 = surface2.Context;
-		cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
+		unowned Cairo.Context cr2 = surface2.Context;
+		Gdk.cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
 		cr2.paint ();
 		
 		surface.fast_blur (7, 3);
@@ -205,12 +202,12 @@ namespace Plank.Tests
 		surface = new DockSurface (256, 256);
 		surface2 = new DockSurface (256, 256);
 		
-		unowned Context cr = surface.Context;
-		cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
+		unowned Cairo.Context cr = surface.Context;
+		Gdk.cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
 		cr.paint ();
 		
-		unowned Context cr2 = surface2.Context;
-		cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
+		unowned Cairo.Context cr2 = surface2.Context;
+		Gdk.cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
 		cr2.paint ();
 		
 		surface.exponential_blur (7);
@@ -235,12 +232,12 @@ namespace Plank.Tests
 		surface = new DockSurface (256, 256);
 		surface2 = new DockSurface (256, 256);
 		
-		unowned Context cr = surface.Context;
-		cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
+		unowned Cairo.Context cr = surface.Context;
+		Gdk.cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
 		cr.paint ();
 		
-		unowned Context cr2 = surface2.Context;
-		cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
+		unowned Cairo.Context cr2 = surface2.Context;
+		Gdk.cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
 		cr2.paint ();
 		
 		surface.gaussian_blur (7);
@@ -265,12 +262,12 @@ namespace Plank.Tests
 		surface = new DockSurface (256, 256);
 		surface2 = new DockSurface (256, 256);
 		
-		unowned Context cr = surface.Context;
-		cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
+		unowned Cairo.Context cr = surface.Context;
+		Gdk.cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
 		cr.paint ();
 		
-		unowned Context cr2 = surface2.Context;
-		cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
+		unowned Cairo.Context cr2 = surface2.Context;
+		Gdk.cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
 		cr2.paint ();
 		
 		pixbuf = surface.to_pixbuf ();

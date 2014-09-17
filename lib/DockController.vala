@@ -15,8 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gee;
-
 using Plank.Factories;
 using Plank.Items;
 using Plank.Widgets;
@@ -45,12 +43,12 @@ namespace Plank
 		public DockWindow window { get; protected set; }
 		
 		ApplicationDockItemProvider? default_provider;
-		ArrayList<unowned DockItem> items;
+		Gee.ArrayList<unowned DockItem> items;
 		
 		/**
 		 * Ordered list of all visible items on this dock
 		 */
-		public ArrayList<unowned DockItem> Items {
+		public Gee.ArrayList<unowned DockItem> Items {
 			get {
 				return items;
  			}
@@ -74,7 +72,7 @@ namespace Plank
 			launchers_folder = config_folder.get_child ("launchers");
 			Factory.item_factory.launchers_dir = launchers_folder;
 			
-			items = new ArrayList<unowned DockItem> ();
+			items = new Gee.ArrayList<unowned DockItem> ();
 			
 			prefs.notify["PinnedOnly"].connect (update_default_provider);
 			

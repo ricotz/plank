@@ -15,13 +15,11 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gee;
 
 using Plank.Factories;
-using Plank.Widgets;
-
 using Plank.Services;
 using Plank.Services.Windows;
+using Plank.Widgets;
 
 namespace Plank.Items
 {
@@ -107,7 +105,7 @@ namespace Plank.Items
 			
 			update_visible_items ();
 			
-			var favs = new ArrayList<string> ();
+			var favs = new Gee.ArrayList<string> ();
 			
 			foreach (var element in internal_items) {
 				unowned ApplicationDockItem? item = (element as ApplicationDockItem);

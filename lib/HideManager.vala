@@ -15,10 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gdk;
-using Gtk;
-using Wnck;
-
 using Plank.Services;
 using Plank.Services.Windows;
 using Plank.Widgets;
@@ -329,9 +325,9 @@ namespace Plank
 			});
 		}
 		
-		bool enter_notify_event (EventCrossing event)
+		bool enter_notify_event (Gdk.EventCrossing event)
 		{
-			if (event.detail == NotifyType.INFERIOR)
+			if (event.detail == Gdk.NotifyType.INFERIOR)
 				return Hidden;
 			
 			if ((bool) event.send_event) {
@@ -348,9 +344,9 @@ namespace Plank
 			return Hidden;
 		}
 		
-		bool leave_notify_event (EventCrossing event)
+		bool leave_notify_event (Gdk.EventCrossing event)
 		{
-			if (event.detail == NotifyType.INFERIOR)
+			if (event.detail == Gdk.NotifyType.INFERIOR)
 				return false;
 			
 			// ignore this event if it was sent explicitly
@@ -576,13 +572,13 @@ namespace Plank
 				double slide = 0.0, distance = 0.0;
 				switch (controller.prefs.Position) {
 				default:
-				case PositionType.BOTTOM:
-				case PositionType.TOP:
+				case Gtk.PositionType.BOTTOM:
+				case Gtk.PositionType.TOP:
 					distance = Math.fabs (barrier_event.dy);
 					slide = Math.fabs (barrier_event.dx);
 					break;
-				case PositionType.LEFT:
-				case PositionType.RIGHT:
+				case Gtk.PositionType.LEFT:
+				case Gtk.PositionType.RIGHT:
 					distance = Math.fabs (barrier_event.dx);
 					slide = Math.fabs (barrier_event.dy);
 					break;

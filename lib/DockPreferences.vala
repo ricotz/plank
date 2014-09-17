@@ -15,9 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gdk;
-using Gtk;
-
 using Plank.Services;
 using Plank.Widgets;
 
@@ -50,7 +47,7 @@ namespace Plank
 		public string DockItems { get; set; }
 		
 		[Description(nick = "position", blurb = "The position for the dock on the monitor.  If 0, left.  If 1, right.  If 2, top.  If 3, bottom.")]
-		public PositionType Position { get; set; }
+		public Gtk.PositionType Position { get; set; }
 		
 		[Description(nick = "offset", blurb = "The dock's position offset from center (in percent).")]
 		public int Offset { get; set; }
@@ -117,7 +114,7 @@ namespace Plank
 			UnhideDelay = 0;
 			Monitor = -1;
 			DockItems = "";
-			Position = PositionType.BOTTOM;
+			Position = Gtk.PositionType.BOTTOM;
 			Offset = 0;
 			Theme = Plank.Drawing.Theme.DEFAULT_NAME;
 			Alignment = Gtk.Align.CENTER;
@@ -135,7 +132,7 @@ namespace Plank
 		 */
 		public int get_monitor ()
 		{
-			unowned Screen screen = Screen.get_default ();
+			unowned Gdk.Screen screen = Gdk.Screen.get_default ();
 			if (Monitor <= -1 || Monitor >= screen.get_n_monitors ())
 				return screen.get_primary_monitor ();
 			return Monitor;
@@ -166,7 +163,7 @@ namespace Plank
 		 */
 		public bool is_horizontal_dock ()
 		{
-			return (Position == PositionType.TOP || Position == PositionType.BOTTOM);
+			return (Position == Gtk.PositionType.TOP || Position == Gtk.PositionType.BOTTOM);
 		}
 		
 		/**
@@ -196,8 +193,8 @@ namespace Plank
 			case "Monitor":
 				if (Monitor < -1)
 					Monitor = -1;
-				else if (Monitor != -1 && Monitor >= Screen.get_default ().get_n_monitors ())
-					Monitor = Screen.get_default ().get_primary_monitor ();
+				else if (Monitor != -1 && Monitor >= Gdk.Screen.get_default ().get_n_monitors ())
+					Monitor = Gdk.Screen.get_default ().get_primary_monitor ();
 				break;
 			
 			case "DockItems":

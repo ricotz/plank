@@ -15,8 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gee;
-
 namespace Plank.Services.Windows
 {
 	/**
@@ -41,7 +39,7 @@ namespace Plank.Services.Windows
 			return matcher;
 		}
 		
-		HashSet<Bamf.View> pending_views = new HashSet<Bamf.View> ();
+		Gee.HashSet<Bamf.View> pending_views = new Gee.HashSet<Bamf.View> ();
 		Bamf.Matcher? bamf_matcher;
 		
 		private Matcher ()
@@ -110,10 +108,10 @@ namespace Plank.Services.Windows
 				application_closed ((Bamf.Application) arg1);
 		}
 		
-		public ArrayList<Bamf.Application> active_launchers ()
+		public Gee.ArrayList<Bamf.Application> active_launchers ()
 		{
 			var apps = bamf_matcher.get_running_applications ();
-			var list = new ArrayList<Bamf.Application> ();
+			var list = new Gee.ArrayList<Bamf.Application> ();
 			
 			warn_if_fail (apps != null);
 			if (apps == null)
@@ -142,7 +140,7 @@ namespace Plank.Services.Windows
 			return app;
 		}
 		
-		public void set_favorites (ArrayList<string> favs)
+		public void set_favorites (Gee.ArrayList<string> favs)
 		{
 			var paths = new string[favs.size];
 			

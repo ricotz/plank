@@ -15,8 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gee;
-
 namespace Plank.Services
 {
 	/**
@@ -63,7 +61,7 @@ namespace Plank.Services
 		/**
 		 * /usr/local/share/:/usr/share/
 		 */
-		public static ArrayList<File> DataDirFolders { get; protected set; }
+		public static Gee.ArrayList<File> DataDirFolders { get; protected set; }
 		
 		
 		/**
@@ -111,7 +109,7 @@ namespace Plank.Services
 			DataHomeFolder = File.new_for_path (Environment.get_user_data_dir ());
 			CacheHomeFolder = File.new_for_path (Environment.get_user_cache_dir ());
 			
-			var dirs = new ArrayList<File> ();
+			var dirs = new Gee.ArrayList<File> ();
 			foreach (unowned string path in Environment.get_system_data_dirs ())
 				dirs.add (File.new_for_path (path));
 			DataDirFolders = dirs;

@@ -15,10 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Cairo;
-using Gdk;
-using Gtk;
-
 using Plank.Services;
 
 namespace Plank.Drawing
@@ -95,12 +91,12 @@ namespace Plank.Drawing
 		[Description(nick = "item-move-time", blurb = "The time (in ms) to move an item to its new position.")]
 		public int ItemMoveTime { get; set; }
 		
-		static StyleContext style_context;
+		static Gtk.StyleContext style_context;
 		
 		static construct
 		{
 			style_context = new Gtk.StyleContext ();
-			style_context.set_path (new WidgetPath ());
+			style_context.set_path (new Gtk.WidgetPath ());
 			style_context.set_screen (Gdk.Screen.get_default ());
 		}
 		
@@ -169,7 +165,7 @@ namespace Plank.Drawing
 			
 			draw_background (temp);
 			
-			unowned Context cr = surface.Context;
+			unowned Cairo.Context cr = surface.Context;
 			
 			var rotate = 0.0;
 			var x_offset = 0.0, y_offset = 0.0;
@@ -220,7 +216,7 @@ namespace Plank.Drawing
 			if (size <= 0)
 				return surface;
 			
-			unowned Context cr = surface.Context;
+			unowned Cairo.Context cr = surface.Context;
 			
 			var x = size / 2;
 			var y = x;
@@ -228,7 +224,7 @@ namespace Plank.Drawing
 			cr.move_to (x, y);
 			cr.arc (x, y, size / 2, 0, Math.PI * 2);
 			
-			var rg = new Pattern.radial (x, y, 0, x, y, size / 2);
+			var rg = new Cairo.Pattern.radial (x, y, 0, x, y, size / 2);
 			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
 			rg.add_color_stop_rgba (0.1, color.red, color.green, color.blue, 1);
 			rg.add_color_stop_rgba (0.2, color.red, color.green, color.blue, 0.6);
@@ -260,14 +256,14 @@ namespace Plank.Drawing
 			if (size <= 0)
 				return surface;
 			
-			unowned Context cr = surface.Context;
+			unowned Cairo.Context cr = surface.Context;
 			
 			var x = size / 2.0;
 			
 			cr.move_to (x, x);
 			cr.arc (x, x, size / 2, 0, Math.PI * 2);
 			
-			var rg = new Pattern.radial (x, x, 0, x, x, size / 2);
+			var rg = new Cairo.Pattern.radial (x, x, 0, x, x, size / 2);
 			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
 			rg.add_color_stop_rgba (0.33, color.red, color.green, color.blue, 0.66);
 			rg.add_color_stop_rgba (0.66, color.red, color.green, color.blue, 0.33);
@@ -294,12 +290,12 @@ namespace Plank.Drawing
 			if (opacity <= 0.0)
 				return;
 			
-			unowned Context cr = surface.Context;
+			unowned Cairo.Context cr = surface.Context;
 			
 			var rotate = 0.0;
 			var xoffset = 0.0, yoffset = 0.0;
 			
-			Pattern gradient = null;
+			Cairo.Pattern gradient = null;
 			
 			switch (pos) {
 			default:
@@ -307,28 +303,28 @@ namespace Plank.Drawing
 				xoffset = clip_rect.x;
 				yoffset = clip_rect.y;
 				
-				gradient = new Pattern.linear (0, rect.y, 0, rect.y + rect.height);
+				gradient = new Cairo.Pattern.linear (0, rect.y, 0, rect.y + rect.height);
 				break;
 			case Gtk.PositionType.TOP:
 				rotate = Math.PI;
 				xoffset = -clip_rect.x - clip_rect.width;
 				yoffset = -clip_rect.height;
 				
-				gradient = new Pattern.linear (0, rect.y + rect.height, 0, rect.y);
+				gradient = new Cairo.Pattern.linear (0, rect.y + rect.height, 0, rect.y);
 				break;
 			case Gtk.PositionType.LEFT:
 				rotate = Math.PI_2;
 				xoffset = clip_rect.y;
 				yoffset = -clip_rect.width;
 				
-				gradient = new Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
+				gradient = new Cairo.Pattern.linear (rect.x + rect.width, 0, rect.x, 0);
 				break;
 			case Gtk.PositionType.RIGHT:
 				rotate = -Math.PI_2;
 				xoffset = -clip_rect.y - clip_rect.height;
 				yoffset = clip_rect.x;
 				
-				gradient = new Pattern.linear (rect.x, 0, rect.x + rect.width, 0);
+				gradient = new Cairo.Pattern.linear (rect.x, 0, rect.x + rect.width, 0);
 				break;
 			}
 			
@@ -364,7 +360,7 @@ namespace Plank.Drawing
 		 */
 		public void draw_item_count (DockSurface surface, int icon_size, Color color, int64 count)
 		{
-			unowned Context cr = surface.Context;
+			unowned Cairo.Context cr = surface.Context;
 			
 			// Expect the icon to be in the center of the given surface
 			// and adjust the offset accordingly
@@ -400,29 +396,29 @@ namespace Plank.Drawing
 			
 			cr.set_line_width (line_width);
 			
-			Pattern stroke, fill;
+			Cairo.Pattern stroke, fill;
 			
 			if (!is_small) {
 				// draw outline shadow
-				stroke = new Pattern.rgba (0.2, 0.2, 0.2, 0.3);
+				stroke = new Cairo.Pattern.rgba (0.2, 0.2, 0.2, 0.3);
 				draw_rounded_line (cr, x, y, width + line_width, height, true, true, stroke, null);
 				
 				// draw filled gradient with outline
-				stroke = new Pattern.linear (0, y, 0, y + height);
+				stroke = new Cairo.Pattern.linear (0, y, 0, y + height);
 				stroke.add_color_stop_rgba (0.2, stroke_color_start.red, stroke_color_start.green, stroke_color_start.blue, 0.8);
 				stroke.add_color_stop_rgba (0.8, stroke_color_end.red, stroke_color_end.green, stroke_color_end.blue, 0.8);
-				fill = new Pattern.linear (0, y, 0, y + height);
+				fill = new Cairo.Pattern.linear (0, y, 0, y + height);
 				fill.add_color_stop_rgba (0.1, badge_color_start.red, badge_color_start.green, badge_color_start.blue, 1.0);
 				fill.add_color_stop_rgba (0.5, badge_color_middle.red, badge_color_middle.green, badge_color_middle.blue, 1.0);
 				fill.add_color_stop_rgba (0.9, badge_color_end.red, badge_color_end.green, badge_color_end.blue, 1.0);
 				draw_rounded_line (cr, x, y, width, height, true, true, stroke, fill);
 				
 				// draw inline highlight
-				stroke = new Pattern.rgba (0.9, 0.9, 0.9, 0.1);
+				stroke = new Cairo.Pattern.rgba (0.9, 0.9, 0.9, 0.1);
 				draw_rounded_line (cr, x + line_width, y + line_width, width - 2 * line_width, height - 2 * line_width, true, true, stroke, null);
 			}
 			
-			var layout = new Pango.Layout (pango_context_get ());
+			var layout = new Pango.Layout (Gdk.pango_context_get ());
 			layout.set_width ((int) (width * Pango.SCALE));
 			layout.set_ellipsize (Pango.EllipsizeMode.NONE);
 			
@@ -430,7 +426,7 @@ namespace Plank.Drawing
 			// So just to make sure we follow the current theme settings.
 			style_context.invalidate ();
 			
-			var font_description = style_context.get_font (StateFlags.NORMAL);
+			var font_description = style_context.get_font (Gtk.StateFlags.NORMAL);
 			font_description.set_absolute_size ((int) (height * Pango.SCALE));
 			font_description.set_weight (Pango.Weight.BOLD);
 			layout.set_font_description (font_description);
@@ -475,7 +471,7 @@ namespace Plank.Drawing
 			if (progress < 0)
 				return;
 			
-			unowned Context cr = surface.Context;
+			unowned Cairo.Context cr = surface.Context;
 			
 			// Expect the icon to be in the center of the given surface
 			// and adjust the offset accordingly
@@ -492,10 +488,10 @@ namespace Plank.Drawing
 			
 			cr.set_line_width (line_width);
 			
-			Pattern stroke, fill;
+			Cairo.Pattern stroke, fill;
 			
 			// draw the outer stroke
-			stroke = new Pattern.linear (0, y, 0, y + height);
+			stroke = new Cairo.Pattern.linear (0, y, 0, y + height);
 			stroke.add_color_stop_rgba (0.5, 0.5, 0.5, 0.5, 0.1);
 			stroke.add_color_stop_rgba (0.9, 0.8, 0.8, 0.8, 0.4);
 			draw_rounded_line (cr, x + line_width / 2.0, y + line_width / 2.0, width, height, true, true, stroke, null);
@@ -506,8 +502,8 @@ namespace Plank.Drawing
 			width -= 2.0 * line_width;
 			height -= 2.0 * line_width;
 			
-			stroke = new Pattern.rgba (0.20, 0.20, 0.20, 0.9);
-			fill = new Pattern.linear (0, y, 0, y + height);
+			stroke = new Cairo.Pattern.rgba (0.20, 0.20, 0.20, 0.9);
+			fill = new Cairo.Pattern.linear (0, y, 0, y + height);
 			fill.add_color_stop_rgba (0.4, 0.25, 0.25, 0.25, 1.0);
 			fill.add_color_stop_rgba (0.9, 0.35, 0.35, 0.35, 1.0);
 			draw_rounded_line (cr, x + line_width / 2.0, y + line_width / 2.0, width, height, true, true, stroke, fill);
@@ -519,8 +515,8 @@ namespace Plank.Drawing
 			height -= 2.0 * line_width;
 			
 			var finished_width = Math.ceil (progress * width);
-			stroke = new Pattern.rgba (0.8, 0.8, 0.8, 1.0);
-			fill = new Pattern.rgba (0.9, 0.9, 0.9, 1.0);
+			stroke = new Cairo.Pattern.rgba (0.8, 0.8, 0.8, 1.0);
+			fill = new Cairo.Pattern.rgba (0.9, 0.9, 0.9, 1.0);
 			draw_rounded_line (cr, x + line_width / 2.0, y + line_width / 2.0, finished_width, height, true, true, stroke, fill);
 		}
 		

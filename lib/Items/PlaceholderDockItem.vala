@@ -15,8 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gdk;
-
 namespace Plank.Items
 {
 	/**
@@ -41,7 +39,7 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override Animation on_clicked (PopupButton button, ModifierType mod)
+		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod)
 		{
 			return Animation.NONE;
 		}

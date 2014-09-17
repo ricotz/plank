@@ -15,8 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gdk;
-
 namespace Plank.Widgets
 {
 	/**
@@ -42,7 +40,7 @@ namespace Plank.Widgets
 			resizable = false;
 			double_buffered = false;
 			
-			unowned Screen screen = get_screen ();
+			unowned Gdk.Screen screen = get_screen ();
 			set_visual (screen.get_rgba_visual () ?? screen.get_system_visual ());
 		}
 		

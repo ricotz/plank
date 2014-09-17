@@ -15,10 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Gdk;
-using Gee;
-using Gtk;
-
 using Plank.Drawing;
 using Plank.Services;
 using Plank.Services.Windows;
@@ -107,13 +103,13 @@ namespace Plank.Items
 			}
 		}
 		
-		ArrayList<string> supported_mime_types = new ArrayList<string> ();
+		Gee.ArrayList<string> supported_mime_types = new Gee.ArrayList<string> ();
 		
-		ArrayList<string> actions = new ArrayList<string> ();
+		Gee.ArrayList<string> actions = new Gee.ArrayList<string> ();
 #if HAVE_GEE_0_8
-		HashMap<string, string> actions_map = new HashMap<string, string> ();
+		Gee.HashMap<string, string> actions_map = new Gee.HashMap<string, string> ();
 #else
-		HashMap<string, string> actions_map = new HashMap<string, string> (str_hash, str_equal);
+		Gee.HashMap<string, string> actions_map = new Gee.HashMap<string, string> (str_hash, str_equal);
 #endif
 		
 		string? unity_application_uri = null;
@@ -324,12 +320,12 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override Animation on_clicked (PopupButton button, ModifierType mod)
+		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod)
 		{
 			if (!is_window ())
 				if (button == PopupButton.MIDDLE
 					|| (button == PopupButton.LEFT && (App == null || WindowControl.get_num_windows (App) == 0
-					|| (mod & ModifierType.CONTROL_MASK) == ModifierType.CONTROL_MASK))) {
+					|| (mod & Gdk.ModifierType.CONTROL_MASK) == Gdk.ModifierType.CONTROL_MASK))) {
 					launch ();
 					return Animation.BOUNCE;
 				}
@@ -345,7 +341,7 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override Animation on_scrolled (ScrollDirection direction, ModifierType mod)
+		protected override Animation on_scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod)
 		{
 			if (App == null || WindowControl.get_num_windows (App) == 0)
 				return Animation.NONE;
@@ -355,7 +351,7 @@ namespace Plank.Items
 			
 			LastScrolled = GLib.get_monotonic_time ();
 			
-			if (direction == ScrollDirection.UP || direction == ScrollDirection.LEFT)
+			if (direction == Gdk.ScrollDirection.UP || direction == Gdk.ScrollDirection.LEFT)
 				WindowControl.focus_previous (App);
 			else
 				WindowControl.focus_next (App);
@@ -433,9 +429,9 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		public override ArrayList<Gtk.MenuItem> get_menu_items ()
+		public override Gee.ArrayList<Gtk.MenuItem> get_menu_items ()
 		{
-			var items = new ArrayList<Gtk.MenuItem> ();
+			var items = new Gee.ArrayList<Gtk.MenuItem> ();
 			
 			GLib.List<unowned Bamf.View>? windows = null;
 			if (App != null)
@@ -445,7 +441,7 @@ namespace Plank.Items
 			if (default_provider != null
 				&& !default_provider.Prefs.LockItems
 				&& !is_window ()) {
-				var item = new CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
+				var item = new Gtk.CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
 				item.active = !(this is TransientDockItem);
 				item.activate.connect (() => pin_launcher ());
 				items.add (item);
@@ -460,7 +456,7 @@ namespace Plank.Items
 #if HAVE_DBUSMENU
 			if (Quicklist != null) {
 				if (items.size > 0)
-					items.add (new SeparatorMenuItem ());
+					items.add (new Gtk.SeparatorMenuItem ());
 				
 				var dm_root = Quicklist.get_root ();
 				if (dm_root != null) {
@@ -473,7 +469,7 @@ namespace Plank.Items
 			
 			if (!is_window () && actions.size > 0) {
 				if (items.size > 0)
-					items.add (new SeparatorMenuItem ());
+					items.add (new Gtk.SeparatorMenuItem ());
 				
 				foreach (var s in actions) {
 					var values = actions_map.get (s).split (";;");
@@ -490,7 +486,7 @@ namespace Plank.Items
 			
 			if (is_running () && windows != null && windows.length () > 0) {
 				if (items.size > 0)
-					items.add (new SeparatorMenuItem ());
+					items.add (new Gtk.SeparatorMenuItem ());
 				
 				foreach (var view in windows) {
 					unowned Bamf.Window? window = (view as Bamf.Window);
@@ -522,7 +518,7 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		public override bool can_accept_drop (ArrayList<string> uris)
+		public override bool can_accept_drop (Gee.ArrayList<string> uris)
 		{
 			if (uris == null || is_window ())
 				return false;
@@ -548,9 +544,9 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		public override bool accept_drop (ArrayList<string> uris)
+		public override bool accept_drop (Gee.ArrayList<string> uris)
 		{
-			var files = new ArrayList<File> ();
+			var files = new Gee.ArrayList<File> ();
 			foreach (var uri in uris)
 				files.add (File.new_for_uri (uri));
 			
@@ -591,7 +587,7 @@ namespace Plank.Items
 		 * @param actions_map a map of actions from name to exec;;icon
 		 * @param mimes a list of all supported mime types
 		 */
-		public static void parse_launcher (string launcher, out string icon, out string text, ArrayList<string>? actions = null, Map<string, string>? actions_map = null, ArrayList<string>? mimes = null)
+		public static void parse_launcher (string launcher, out string icon, out string text, Gee.ArrayList<string>? actions = null, Gee.Map<string, string>? actions_map = null, Gee.ArrayList<string>? mimes = null)
 		{
 			icon = "";
 			text = "";
