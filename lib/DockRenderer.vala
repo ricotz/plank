@@ -342,6 +342,11 @@ namespace Plank
 		{
 			background_rect = controller.position_manager.get_background_region ();
 			
+			if (background_rect.width <= 0 || background_rect.height <= 0) {
+				background_buffer = null;
+				return;
+			}
+			
 			if (background_buffer == null || background_buffer.Width != background_rect.width
 				|| background_buffer.Height != background_rect.height)
 				background_buffer = theme.create_background (background_rect.width, background_rect.height,
@@ -620,13 +625,13 @@ namespace Plank
 			if (indicator_buffer == null) {
 				var indicator_color = get_styled_color ();
 				indicator_color.set_min_sat (0.4);
-				indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, indicator_color, background_buffer);
+				indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, indicator_color, main_buffer);
 			}
 			if (urgent_indicator_buffer == null) {
 				var urgent_indicator_color = get_styled_color ();
 				urgent_indicator_color.add_hue (theme.UrgentHueShift);
 				urgent_indicator_color.set_sat (1.0);
-				urgent_indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, urgent_indicator_color, background_buffer);
+				urgent_indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, urgent_indicator_color, main_buffer);
 			}
 			
 			unowned DockSurface indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
