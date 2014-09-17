@@ -152,6 +152,9 @@ namespace Plank.Drawing
 			var surface = new DockSurface.with_dock_surface (width, height, model);
 			surface.clear ();
 			
+			if (width <= 0 || height <= 0)
+				return surface;
+			
 			if (position == Gtk.PositionType.BOTTOM) {
 				draw_background (surface);
 				return surface;
@@ -287,7 +290,7 @@ namespace Plank.Drawing
 		 */
 		public void draw_active_glow (DockSurface surface, Gdk.Rectangle clip_rect, Gdk.Rectangle rect, Color color, double opacity, Gtk.PositionType pos)
 		{
-			if (opacity <= 0.0)
+			if (opacity <= 0.0 || rect.width <= 0 || rect.height <= 0)
 				return;
 			
 			unowned Cairo.Context cr = surface.Context;
