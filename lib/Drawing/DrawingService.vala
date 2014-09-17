@@ -15,8 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Services;
-
 namespace Plank.Drawing
 {
 	/**
@@ -164,7 +162,7 @@ namespace Plank.Drawing
 			if (name.down ().has_prefix ("file://"))
 				file = File.new_for_uri (name);
 			else if (name.has_prefix ("~/"))
-				file = File.new_for_path (name.replace ("~/", Paths.HomeFolder.get_path () ?? ""));
+				file = File.new_for_path (name.replace ("~", Environment.get_home_dir ()));
 			else if (name.has_prefix ("/"))
 				file = File.new_for_path (name);
 			

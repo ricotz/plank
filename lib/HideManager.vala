@@ -16,7 +16,6 @@
 //
 
 using Plank.Services;
-using Plank.Services.Windows;
 using Plank.Widgets;
 
 namespace Plank

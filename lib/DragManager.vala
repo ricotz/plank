@@ -16,9 +16,7 @@
 //
 
 using Plank.Drawing;
-using Plank.Factories;
 using Plank.Items;
-using Plank.Services.Windows;
 using Plank.Widgets;
 
 namespace Plank

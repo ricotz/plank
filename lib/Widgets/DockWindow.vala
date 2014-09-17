@@ -16,8 +16,6 @@
 //
 
 using Plank.Items;
-using Plank.Drawing;
-using Plank.Factories;
 using Plank.Services;
 using Plank.Services.Windows;
 
