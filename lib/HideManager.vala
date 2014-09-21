@@ -94,6 +94,7 @@ namespace Plank
 		int opcode = 0;
 		double pressure = 0.0;
 		uint pressure_timer = 0;
+		bool barriers_supported = false;
 #endif
 		
 		/**
@@ -526,18 +527,18 @@ namespace Plank
 			
 			if (!display.query_extension ("XInputExtension", out opcode, out first_event_return, out error_base)) {
 				debug ("Barriers disabled (XInput needed)");
+				barriers_supported = false;
 				window.enter_notify_event.connect (enter_notify_event);
 			} else {
 				int major = 2, minor = 3;
-				if (XInput.query_version (display, ref major, ref minor) == X.Success) {
+				var has_xinput = (XInput.query_version (display, ref major, ref minor) == X.Success);
+				if (has_xinput && major >= 2 && minor >= 3) {
 					message ("Barriers enabled (XInput %i.%i support)\n", major, minor);
+					barriers_supported = true;
 					gdk_window_add_filter (null, (Gdk.FilterFunc)xevent_filter);
-					Idle.add (() => {
-						update_barrier ();
-						return false;
-					});
 				} else {
 					debug ("Barriers disabled (XInput %i.%i not sufficient)", major, minor);
+					barriers_supported = false;
 					window.enter_notify_event.connect (enter_notify_event);
 				}
 			}
@@ -634,6 +635,9 @@ namespace Plank
 		
 		public void update_barrier ()
 		{
+			if (!barriers_supported)
+				return;
+			
 			unowned Gdk.X11.Display gdk_display = (controller.window.get_display () as Gdk.X11.Display);
 			unowned X.Display display = gdk_display.get_xdisplay ();
 			

@@ -199,14 +199,15 @@ AC_ARG_ENABLE([barriers],
               [enable_barriers=$enableval],
               [enable_barriers=yes])
 AC_CHECK_LIB([Xi], [XIBarrierReleasePointer], [enable_xinput23=yes], [enable_xinput23=no])
-if test "x$enable_barriers" = "xyes" -a "x$enable_xinput23" = "xyes" ; then
+AC_CHECK_LIB([Xfixes], [XFixesDestroyPointerBarrier], [enable_xfixes50=yes], [enable_xfixes50=no])
+if test "x$enable_barriers" = "xyes" -a "x$enable_xinput23" = "xyes" -a "x$enable_xfixes50" = "xyes" ; then
     PLANK_CORE_OPTIONAL_PKGS="$PLANK_CORE_OPTIONAL_PKGS $XINPUT_PKGS"
     PLANK_CORE_VALA_PKGS="$PLANK_CORE_VALA_PKGS --pkg xi --pkg xfixes"
     VALAFLAGS="$VALAFLAGS --define HAVE_BARRIERS"
 else
 	enable_barriers=no
 fi
-AM_CONDITIONAL([HAVE_BARRIERS], [test "x$enable_barriers" = "xyes" -a "x$enable_xinput23" = "xyes"])
+AM_CONDITIONAL([HAVE_BARRIERS], [test "x$enable_barriers" = "xyes" -a "x$enable_xinput23" = "xyes" -a "x$enable_xfixes50" = "xyes"])
 
 # Support dynamic quicklists provided with dbusmenu
 DBUSMENU_MIN_VERSION=0.4
