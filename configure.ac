@@ -90,10 +90,9 @@ AC_SUBST([API_VERSION])
 # -----------------------------------------------------------
 VALA_MIN_VERSION=0.22.0
 
-AM_PROG_VALAC([$VALA_MIN_VERSION])
-if test "x$VALAC" = "x"; then
-    AC_MSG_ERROR([Vala requested but valac >= $VALA_MIN_VERSION is not installed])
-fi
+AM_PROG_VALAC([$VALA_MIN_VERSION],
+    [],
+    [AC_MSG_ERROR([valac >= $VALA_MIN_VERSION is required])])
 
 AC_PATH_PROG([VAPIGEN], [vapigen], [])
 if test "x$VAPIGEN" = "x"; then
