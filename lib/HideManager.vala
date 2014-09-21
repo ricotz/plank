@@ -239,6 +239,7 @@ namespace Plank
 				});
 				break;
 			case "PressureReveal":
+#if HAVE_BARRIERS
 				unowned DockWindow window = controller.window;
 				if (controller.prefs.PressureReveal) {
 					window.enter_notify_event.disconnect (enter_notify_event);
@@ -246,6 +247,7 @@ namespace Plank
 				} else {
 					window.enter_notify_event.connect (enter_notify_event);
 				}
+#endif
 				break;
 			default:
 				// Nothing important for us changed
