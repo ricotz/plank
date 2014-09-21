@@ -721,6 +721,7 @@ namespace Plank
 				last_hide = now;
 			
 			if (!screen_is_composited) {
+				controller.position_manager.update_dock_position ();
 				controller.window.update_size_and_position ();
 				return;
 			}

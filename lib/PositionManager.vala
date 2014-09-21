@@ -887,7 +887,7 @@ namespace Plank
 		/**
 		 * Caches the x and y position of the dock window.
 		 */
-		void update_dock_position ()
+		public void update_dock_position ()
 		{
 			unowned DockPreferences prefs = controller.prefs;
 			
