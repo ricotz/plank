@@ -78,7 +78,7 @@ namespace Plank.Items
 			connect_element (placeholder_item);
 		}
 		
-		~DockItemProvider ()
+		~DockContainer ()
 		{
 			disconnect_element (placeholder_item);
 			
