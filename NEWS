@@ -2,6 +2,14 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.7.1 "Lee" (2014-09-23)
+===============================================================================
+ * hidemanager: Improve build- and runtime-checks for barrier-support
+ * renderer: Fix hide/unhide in non-compositing mode
+ * build: Missing the required valac version must be fatal
+ * hidemanager: Add missing HAVE_BARRIERS conditional
+ * positionmanager: Do not allow negative dimensions for the background
+
 0.7.0 "Lee" (2014-09-15)
 ===============================================================================
  * Update the barrier for pressure-reveal if needed (LP: #1339846)
