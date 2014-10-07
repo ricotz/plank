@@ -171,7 +171,7 @@ namespace Plank.Factories
 			message ("Kernel version: %s", Posix.utsname ().release);
 			message ("GLib version: %u.%u.%u", GLib.Version.major, GLib.Version.minor, GLib.Version.micro);
 			message ("GTK+ version: %u.%u.%u", Gtk.get_major_version (), Gtk.get_minor_version () , Gtk.get_micro_version ());
-#if HAVE_GTK_3_10
+#if HAVE_HIDPI
 			message ("+ HiDPI support enabled");
 #endif
 			message ("Wnck version: %d.%d.%d", Wnck.Version.MAJOR_VERSION, Wnck.Version.MINOR_VERSION, Wnck.Version.MICRO_VERSION);

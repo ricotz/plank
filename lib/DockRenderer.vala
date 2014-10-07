@@ -224,7 +224,7 @@ namespace Plank
 		 */
 		public void draw_dock (Cairo.Context cr)
 		{
-#if HAVE_GTK_3_10
+#if HAVE_HIDPI
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
 #endif
 			// take the previous frame values into account to decide if we
@@ -241,10 +241,16 @@ namespace Plank
 			
 			if (main_buffer == null) {
 				main_buffer = new DockSurface.with_surface (width, height, cr.get_target ());
+#if HAVE_HIDPI
+				cairo_surface_set_device_scale (main_buffer.Internal, window_scale_factor, window_scale_factor);
+#endif
 			}
 			
 			if (shadow_buffer == null) {
 				shadow_buffer = new DockSurface.with_surface (width, height, cr.get_target ());
+#if HAVE_HIDPI
+				cairo_surface_set_device_scale (shadow_buffer.Internal, window_scale_factor, window_scale_factor);
+#endif
 			}
 			
 			// if the dock is completely hidden and not transparently drawn

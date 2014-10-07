@@ -152,14 +152,15 @@ fi
 # Optional Dependencies
 # -----------------------------------------------------------
 
-# Check for HiDPI support of Gtk+
+# Check for HiDPI support of Gtk+ and Cairo
 GTK_MIN_VERSION=3.10.0
-GTK_PKGS="gtk+-3.0 >= $GTK_MIN_VERSION"
+CAIRO_MIN_VERSION=1.13
+GTK_PKGS="gtk+-3.0 >= $GTK_MIN_VERSION cairo >= $CAIRO_MIN_VERSION"
 PKG_CHECK_MODULES(GTK, $GTK_PKGS, [enable_hidpi=yes], [enable_hidpi=no])
 if test "x$enable_hidpi" = "xyes" ; then
-    VALAFLAGS="$VALAFLAGS --define HAVE_GTK_3_10"
+    VALAFLAGS="$VALAFLAGS --define HAVE_HIDPI"
 fi
-AM_CONDITIONAL([HAVE_hidpi], [test "x$enable_hidpi" = "xyes"])
+AM_CONDITIONAL([HAVE_HIDPI], [test "x$enable_hidpi" = "xyes"])
 
 # Check for newer BAMF
 BAMF_MIN_VERSION=0.4.0

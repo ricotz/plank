@@ -396,15 +396,34 @@ namespace Plank.Items
 		 */
 		protected virtual void draw_icon (DockSurface surface)
 		{
+			double x_scale = 1.0, y_scale = 1.0;
+#if HAVE_HIDPI
+			cairo_surface_get_device_scale (surface.Internal, out x_scale, out y_scale);
+#endif
+			Cairo.Surface? icon = null;
 			Gdk.Pixbuf? pbuf = ForcePixbuf;
-			if (pbuf == null)
+			if (pbuf == null) {
+#if HAVE_HIDPI
+				icon = DrawingService.load_icon_for_scale (Icon, surface.Width, surface.Height, (int) double.max (x_scale, y_scale));
+				cairo_surface_set_device_scale (icon, 1.0, 1.0);
+#else
 				pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
-			else
+#endif
+			} else {
 				pbuf = DrawingService.ar_scale (pbuf, surface.Width, surface.Height);
+			}
 			
 			unowned Cairo.Context cr = surface.Context;
-			Gdk.cairo_set_source_pixbuf (cr, pbuf, (surface.Width - pbuf.width) / 2, (surface.Height - pbuf.height) / 2);
-			cr.paint ();
+			
+			if (pbuf != null) {
+				Gdk.cairo_set_source_pixbuf (cr, pbuf, (surface.Width - pbuf.width) / 2, (surface.Height - pbuf.height) / 2);
+				cr.paint ();
+			} else if (icon != null) {
+				cr.set_source_surface (icon, 0, 0);
+				cr.paint ();
+			} else {
+				warn_if_reached ();
+			}
 		}
 		
 		/**

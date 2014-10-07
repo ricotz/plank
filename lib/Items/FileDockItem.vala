@@ -131,19 +131,26 @@ namespace Plank.Items
 				return;
 			}
 			
+			double x_scale = 1.0, y_scale = 1.0;
+#if HAVE_HIDPI
+			cairo_surface_get_device_scale (surface.Internal, out x_scale, out y_scale);
+#endif
+			
 			unowned Cairo.Context cr = surface.Context;
 			var width = surface.Width;
 			var height = surface.Height;
 			var radius = 3 + 6 * height / (128 - 48);
 			
-			cr.move_to (radius, 0.5);
-			cr.arc (width - radius - 0.5, radius + 0.5, radius, -Math.PI_2, 0);
-			cr.arc (width - radius - 0.5, height - radius - 0.5, radius, 0, Math.PI_2);
-			cr.arc (radius + 0.5, height - radius - 0.5, radius, Math.PI_2, Math.PI);
-			cr.arc (radius + 0.5, radius + 0.5, radius, Math.PI, -Math.PI_2);
+			var line_width_half = 0.5 * (int) double.max (x_scale, y_scale);
+			
+			cr.move_to (radius, line_width_half);
+			cr.arc (width - radius - line_width_half, radius + line_width_half, radius, -Math.PI_2, 0);
+			cr.arc (width - radius - line_width_half, height - radius - line_width_half, radius, 0, Math.PI_2);
+			cr.arc (radius + line_width_half, height - radius - line_width_half, radius, Math.PI_2, Math.PI);
+			cr.arc (radius + line_width_half, radius + line_width_half, radius, Math.PI, -Math.PI_2);
 			
 			cr.set_source_rgba (1, 1, 1, 0.6);
-			cr.set_line_width (1);
+			cr.set_line_width (2 * line_width_half);
 			cr.stroke_preserve ();
 			
 			var rg = new Cairo.Pattern.radial (width / 2, height, height / 8, width / 2, height, height);

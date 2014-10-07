@@ -17,6 +17,13 @@
 
 namespace Plank
 {
+#if HAVE_HIDPI
+	[CCode (cheader_filename = "cairo.h", cname = "cairo_surface_get_device_scale")]
+	public void cairo_surface_get_device_scale (Cairo.Surface surface, out double x_scale, out double y_scale);
+	[CCode (cheader_filename = "cairo.h", cname = "cairo_surface_set_device_scale")]
+	public void cairo_surface_set_device_scale (Cairo.Surface surface, double x_scale, double y_scale);
+#endif
+
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "gdk_window_add_filter", instance_pos = 1.9)]
 	public void gdk_window_add_filter (Gdk.Window? window, Gdk.FilterFunc function);
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "gdk_window_add_filter", instance_pos = 1.9)]

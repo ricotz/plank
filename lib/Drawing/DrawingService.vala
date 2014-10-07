@@ -202,6 +202,78 @@ namespace Plank.Drawing
 			return pbuf;
 		}
 		
+#if HAVE_HIDPI
+		/**
+		 * Loads an icon based on names and the given width/height
+		 *
+		 * @param names a delimited (with ";;") list of icon names, first one found is used
+		 * @param width the requested width of the icon
+		 * @param height the requested height of the icon
+		 * @param scale the implicit requested scale of the icon
+		 * @return the {link Cairo.Surface} containing the requested icon, do not alter this surface
+		 */
+		public static Cairo.Surface? load_icon_for_scale (string names, int width, int height, int scale)
+		{
+			var all_names = new Gee.ArrayList<string> ();
+			
+			foreach (unowned string s in names.split (";;"))
+				all_names.add (s);
+			foreach (unowned string s in MISSING_ICONS.split (";;"))
+				all_names.add (s);
+			
+			Cairo.Surface? surface = null;
+			
+			foreach (var name in all_names) {
+				var file = try_get_icon_file (name);
+				if (file != null) {
+					var pbuf = load_pixbuf_from_file (file, width, height);
+					if (pbuf != null) {
+						surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
+						var cr = new Cairo.Context (surface);
+						Gdk.cairo_set_source_pixbuf (cr, pbuf, (width - pbuf.width) / 2, (height - pbuf.height) / 2);
+						cr.paint ();
+						cairo_surface_set_device_scale (surface, scale, scale);
+						break;
+					}
+				}
+				
+				surface = load_surface (name, int.max (width, height) / scale, scale);
+				if (surface != null)
+					break;
+				
+				if (name != all_names.last ())
+					message ("Could not find icon '%s'", name);
+			}
+			
+			if (surface == null)
+				warning ("No icon found of '%s'", names);
+			
+			return surface;
+		}
+		
+		static Cairo.Surface? load_surface (string icon, int size, int scale)
+		{
+			Cairo.Surface? surface = null;
+			Gtk.IconInfo? info = null;
+			unowned Gtk.IconTheme icon_theme = Gtk.IconTheme.get_default ();
+			
+			try {
+				info = icon_theme.lookup_icon_for_scale (icon, size, scale, Gtk.IconLookupFlags.FORCE_SIZE);
+				surface = info.load_surface (null);
+			} catch { }
+			
+			try {
+				if (surface == null && icon.contains (".")) {
+					var parts = icon.split (".");
+					info = icon_theme.lookup_icon_for_scale (parts [0], size, scale, Gtk.IconLookupFlags.FORCE_SIZE);
+					surface = info.load_surface (null);
+				}
+			} catch { }
+			
+			return surface;
+		}
+#endif
+		
 		/**
 		 * Scales a {@link Gdk.Pixbuf}, maintaining the original aspect ratio.
 		 *

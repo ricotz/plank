@@ -368,7 +368,7 @@ namespace Plank
 		void update_window_intersect ()
 		{
 			var dock_rect = controller.position_manager.get_static_dock_region ();
-#if HAVE_GTK_3_10
+#if HAVE_HIDPI
 			var window_scale_factor = controller.window.get_window ().get_scale_factor ();
 			if (window_scale_factor > 1) {
 				dock_rect.x *= window_scale_factor;

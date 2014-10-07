@@ -458,7 +458,7 @@ namespace Plank
 		{
 			var cursor_region = static_dock_region;
 			var progress = 1.0 - controller.renderer.hide_progress;
-#if HAVE_GTK_3_10
+#if HAVE_HIDPI
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
 #endif
 			
@@ -1085,7 +1085,7 @@ namespace Plank
 		 */
 		public void get_struts (ref ulong[] struts)
 		{
-#if HAVE_GTK_3_10
+#if HAVE_HIDPI
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
 #endif
 			switch (controller.prefs.Position) {
