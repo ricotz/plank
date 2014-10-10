@@ -54,6 +54,34 @@ namespace Plank.Items
 			warning ("Not implemented by default");
 		}
 		
+		public override bool can_accept_drop (Gee.ArrayList<string> uris)
+		{
+			foreach (var uri in uris)
+				if (!item_exists_for_uri (uri))
+					return true;
+			
+			return false;
+		}
+		
+		public override bool accept_drop (Gee.ArrayList<string> uris)
+		{
+			bool result = false;
+			
+			unowned DockItem? hovered_item = null;
+			unowned DockController? controller = get_dock ();
+			if (controller != null && controller.window.HoveredItemProvider == this)
+				hovered_item = controller.window.HoveredItem;
+			
+			foreach (var uri in uris) {
+				if (!item_exists_for_uri (uri)) {
+					add_item_with_uri (uri, hovered_item);
+					result = true;
+				}
+			}
+			
+			return result;
+		}
+		
 		protected override void connect_element (DockElement element)
 		{
 			unowned DockItem? item = (element as DockItem);

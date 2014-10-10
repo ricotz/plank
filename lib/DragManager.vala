@@ -273,23 +273,10 @@ namespace Plank
 			unowned DockItem? item = window.HoveredItem;
 			unowned DockItemProvider? provider = window.HoveredItemProvider;
 			
-			if (DragIsDesktopFile) {
-				var uri = drag_data[0];
-				if (provider != null && !provider.item_exists_for_uri (uri))
-					provider.add_item_with_uri (uri, item);
-				
-				ExternalDragActive = false;
-				return true;
-			}
-			
-			if (item != null && item.can_accept_drop (drag_data)) {
+			if (!DragIsDesktopFile && item != null && item.can_accept_drop (drag_data))
 				item.accept_drop (drag_data);
-			} else if (provider != null) {
-				foreach (var uri in drag_data) {
-					if (!provider.item_exists_for_uri (uri))
-						provider.add_item_with_uri (uri, item);
-				}
-			}
+			else if (provider != null && provider.can_accept_drop (drag_data))
+				provider.accept_drop (drag_data);
 			
 			ExternalDragActive = false;
 			return true;

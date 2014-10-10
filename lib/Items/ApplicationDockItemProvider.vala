@@ -390,16 +390,6 @@ namespace Plank.Items
 			item_window_added (item);
 		}
 		
-		public override bool can_accept_drop (Gee.ArrayList<string> uris)
-		{
-			return false;
-		}
-		
-		public override bool accept_drop (Gee.ArrayList<string> uris)
-		{
-			return false;
-		}
-		
 		void handle_entry_signal (DBusConnection connection, string sender_name, string object_path,
 			string interface_name, string signal_name, Variant parameters)
 		{
