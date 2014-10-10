@@ -58,6 +58,7 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Widgets/DockWindow.vala \
 	$(top_srcdir)/lib/Widgets/HoverWindow.vala \
 	$(top_srcdir)/lib/Widgets/PoofWindow.vala \
+	$(top_srcdir)/lib/Widgets/PreferencesWindow.vala \
 	$(top_srcdir)/lib/Widgets/TitledSeparatorMenuItem.vala \
 	$(NULL)
 
