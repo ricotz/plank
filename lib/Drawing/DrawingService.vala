@@ -259,14 +259,16 @@ namespace Plank.Drawing
 			
 			try {
 				info = icon_theme.lookup_icon_for_scale (icon, size, scale, Gtk.IconLookupFlags.FORCE_SIZE);
-				surface = info.load_surface (null);
+				if (info != null)
+					surface = info.load_surface (null);
 			} catch { }
 			
 			try {
 				if (surface == null && icon.contains (".")) {
 					var parts = icon.split (".");
 					info = icon_theme.lookup_icon_for_scale (parts [0], size, scale, Gtk.IconLookupFlags.FORCE_SIZE);
-					surface = info.load_surface (null);
+					if (info != null)
+						surface = info.load_surface (null);
 				}
 			} catch { }
 			

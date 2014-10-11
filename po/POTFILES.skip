@@ -2,3 +2,4 @@ lib/Items/ApplicationDockItem.c
 lib/Items/FileDockItem.c
 lib/Items/PlaceholderDockItem.c
 lib/Items/PlankDockItem.c
+lib/Widgets/PreferencesWindow.c
