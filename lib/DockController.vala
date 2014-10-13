@@ -63,6 +63,9 @@ namespace Plank
 		 */
 		public DockController (File config_folder)
 		{
+			// Make sure our config-directory exists
+			Paths.ensure_directory_exists (config_folder);
+			
 			Logger.verbose ("DockController (config_folder = %s)", config_folder.get_path ());
 			
 			Object (config_folder : config_folder,

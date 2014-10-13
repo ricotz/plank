@@ -53,7 +53,8 @@ namespace Plank.Items
 		 */
 		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod)
 		{
-			Factory.main.on_item_clicked ();
+			Factory.main.show_about ();
+			
 			return Animation.DARKEN;
 		}
 		
@@ -77,11 +78,11 @@ namespace Plank.Items
 			var items = new Gee.ArrayList<Gtk.MenuItem> ();
 			
 			var item = create_menu_item (_("Get _Help Online..."), "help");
-			item.activate.connect (() => Factory.main.help ());
+			item.activate.connect (() => Factory.main.show_help ());
 			items.add (item);
 			
 			item = create_menu_item (_("_Translate This Application..."), "locale");
-			item.activate.connect (() => Factory.main.translate ());
+			item.activate.connect (() => Factory.main.show_translate ());
 			items.add (item);
 			
 			items.add (new Gtk.SeparatorMenuItem ());

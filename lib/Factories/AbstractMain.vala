@@ -15,7 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Items;
 using Plank.Services;
 using Plank.Services.Windows;
 
@@ -25,270 +24,230 @@ namespace Plank.Factories
 	 * The main class for all dock applications.  All docks should extend this class.
 	 * In the constructor, the string fields should be initialized to customize the dock.
 	 */
-	public abstract class AbstractMain : GLib.Object
+	public abstract class AbstractMain : Gtk.Application
 	{
 		/**
-		 * Signal fired when the program is fully initialized, before creating and showing the dock.
+		 * The default command-line options for the dock.
 		 */
-		protected signal void initialized ();
+		const OptionEntry[] options = {
+			{ "debug", 'd', 0, OptionArg.NONE, ref DEBUG, "Enable debug logging", null },
+			{ "verbose", 'v', 0, OptionArg.NONE, ref VERBOSE, "Enable verbose logging", null },
+			{ "name", 'n', 0, OptionArg.STRING, ref NAME, "The name of this dock", null },
+			{ "version", 'V', 0, OptionArg.NONE, ref VERSION, "Show the application's version", null },
+			{ null }
+		};
+
+		static bool DEBUG = false;
+		static bool VERBOSE = false;
+		static bool VERSION = false;
+		static string NAME = "dock1";
+		
+		static void sig_handler (int sig)
+		{
+			warning ("Caught signal (%d), exiting", sig);
+			GLib.Application.get_default ().quit ();
+		}
+		
+		static construct
+		{
+			Posix.signal(Posix.SIGINT, sig_handler);
+			Posix.signal(Posix.SIGTERM, sig_handler);
+		}
 		
 		/**
 		 * Should be Build.DATADIR
 		 */
-		protected string build_data_dir = "";
+		public string build_data_dir { get; construct; }
 		/**
 		 * Should be Build.PKGDATADIR
 		 */
-		protected string build_pkg_data_dir = "";
+		public string build_pkg_data_dir { get; construct; }
 		/**
 		 * Should be Build.RELEASE_NAME
 		 */
-		protected string build_release_name = "";
+		public string build_release_name { get; construct; }
 		/**
 		 * Should be Build.VERSION
 		 */
-		protected string build_version = "";
+		public string build_version { get; construct; }
 		/**
 		 * Should be Build.VERSION_INFO
 		 */
-		protected string build_version_info = "";
+		public string build_version_info { get; construct; }
 		
 		/**
 		 * The displayed name of the program.
 		 */
-		protected string program_name = "";
+		public string program_name { get; construct; }
 		/**
 		 * The executable name of the program.
 		 */
-		protected string exec_name = "";
+		public string exec_name { get; construct; }
 		
 		/**
 		 * The copyright year(s).
 		 */
-		protected string app_copyright = "";
+		public string app_copyright { get; construct; }
 		/**
 		 * The (unique) dbus path for this program.
 		 */
-		protected string app_dbus = "";
+		public string app_dbus { get; construct; }
 		/**
 		 * The name of the path containing the dock's preferences.
 		 */
-		protected string dock_name = "dock1";
+		public string dock_name { get; protected set; }
 		/**
 		 * The name of this program's icon.
 		 */
-		protected string app_icon = "";
+		public string app_icon { get; construct; }
 		/**
 		 * The name of the launcher (.desktop file) for this program.
 		 */
-		public string app_launcher = "";
+		public string app_launcher { get; construct; }
 
 		/**
 		 * The URL for this program's website.
 		 */
-		protected string main_url = "";
+		public string main_url { get; construct set; }
 		/**
 		 * The URL for this program's help.
 		 */
-		protected string help_url = "";
+		public string help_url { get; construct set; }
 		/**
 		 * The URL for translating this program.
 		 */
-		protected string translate_url = "";
+		public string translate_url { get; construct set; }
 		
 		/**
 		 * The list of authors (to show in about dialog).
 		 */
-		protected string[] about_authors = {};
+		public string[] about_authors { get; construct set; }
 		/**
 		 * The list of documenters (to show in about dialog).
 		 */
-		protected string[] about_documenters = {};
+		public string[] about_documenters { get; construct set; }
 		/**
 		 * The list of artists (to show in about dialog).
 		 */
-		protected string[] about_artists = {};
+		public string[] about_artists { get; construct set; }
 		/**
 		 * The list of translators (to show in about dialog).
 		 */
-		protected string about_translators = "";
+		public string about_translators { get; construct set; }
 		/**
 		 * The license of this program (to show in about dialog).
 		 */
-		protected Gtk.License about_license_type = Gtk.License.UNKNOWN;
+		public Gtk.License about_license_type { get; construct set; default = Gtk.License.UNKNOWN; }
 		
-		/**
-		 * The Application for preserving uniqueness
-		 */
-		protected Gtk.Application application;
+		Gtk.AboutDialog? about_dlg;
 		
-		/**
-		 * Initializes the program, makes the dock and runs it.
-		 *
-		 * @param args the command-line arguments
-		 * @return the exit status value
-		 */
-		public virtual int run (ref unowned string[] args)
+		construct
 		{
-			initialize_program ();
-			
-			if (!parse_commandline (ref args))
-				return Posix.EXIT_FAILURE;
-			
-			if (!initialize_libraries (ref args))
-				return Posix.EXIT_FAILURE;
-			
-			set_options ();
-			
-			initialize_services ();
-			
-			initialized ();
-			
-			create_controller ();
-			
-			Gdk.threads_enter ();
-			Gtk.main ();
-			Gdk.threads_leave ();
-			
-			return Posix.EXIT_SUCCESS;
+			flags = ApplicationFlags.FLAGS_NONE;
 		}
 		
 		/**
-		 * Sets the program executable's name, traps signals and intializes logging.
+		 * {@inheritDoc}
 		 */
-		protected virtual void initialize_program ()
+		public override void activate ()
 		{
+			//TODO Maybe let the dock hide/show for a visible feedback
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public override bool local_command_line (ref unowned string[] args, out int exit_status)
+		{
+			bool result = false;
+			exit_status = 0;
+			
 			// set program name
 			prctl (15, exec_name);
 			Environment.set_prgname (exec_name);
 			
-			Posix.signal(Posix.SIGINT, sig_handler);
-			Posix.signal(Posix.SIGTERM, sig_handler);
+			Intl.bindtextdomain (exec_name, build_data_dir + "/locale");
+			
+			var context = new OptionContext (null);
+			context.add_main_entries (options, exec_name);
+			context.add_group (Gtk.get_option_group (false));
+			
+			try {
+				unowned string[] args2 = args;
+				context.parse (ref args2);
+			} catch (OptionError e) {
+				printerr ("%s\n", e.message);
+				exit_status = 1;
+				result = true;
+			}
+			
+			if (VERSION) {
+				print ("%s\n", build_version);
+				result = true;
+			}
+			
+			if (VERBOSE)
+				Logger.DisplayLevel = LogLevel.VERBOSE;
+			else if (DEBUG)
+				Logger.DisplayLevel = LogLevel.DEBUG;
+			else
+				Logger.DisplayLevel = LogLevel.WARN;
+			
+			dock_name = NAME;
+			
+			application_id = app_dbus + "." + dock_name;
+			
+			return (result ? result : base.local_command_line (ref args, out exit_status));
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public override void startup ()
+		{
+			// Make sure important properties are set
+			assert (build_data_dir != null);
+			assert (build_pkg_data_dir != null);
+			assert (build_release_name != null);
+			assert (build_version != null);
+			assert (build_version_info != null);
+			assert (program_name != null);
+			assert (exec_name != null);
+			assert (app_dbus != null);
+			assert (dock_name != null);
+			
+			base.startup ();
+			
+			if (!Thread.supported ())
+				critical ("Problem initializing thread support.");
 			
 			Logger.initialize (program_name);
-			Logger.DisplayLevel = LogLevel.INFO;
 			message ("%s version: %s", program_name, build_version);
 			message ("Kernel version: %s", Posix.utsname ().release);
 			message ("GLib version: %u.%u.%u", GLib.Version.major, GLib.Version.minor, GLib.Version.micro);
 			message ("GTK+ version: %u.%u.%u", Gtk.get_major_version (), Gtk.get_minor_version () , Gtk.get_micro_version ());
+#if HAVE_GTK_3_10
+			message ("+ CSD support enabled");
+#endif
 #if HAVE_HIDPI
 			message ("+ HiDPI support enabled");
 #endif
 			message ("Wnck version: %d.%d.%d", Wnck.Version.MAJOR_VERSION, Wnck.Version.MINOR_VERSION, Wnck.Version.MICRO_VERSION);
 			message ("Cairo version: %s", Cairo.version_string ());
 			message ("Pango version: %s", Pango.version_string ());
-			Logger.DisplayLevel = LogLevel.WARN;
-		}
-		
-		static void sig_handler (int sig)
-		{
-			warning ("Caught signal (%d), exiting", sig);
-			Factory.main.quit ();
-		}
-		
-		/**
-		 * If debug mode is enabled.
-		 */
-		protected static bool DEBUG = false;
-		
-		/**
-		 * If verbose mode is enabled.
-		 */
-		protected static bool VERBOSE = false;
-		
-		/**
-		 * The given dock_name
-		 */
-		protected static string DOCK_NAME = "dock1";
-		
-		/**
-		 * The default command-line options for the dock.
-		 */
-		protected const OptionEntry[] options = {
-			{ "debug", 'd', 0, OptionArg.NONE, out DEBUG, "Enable debug logging", null },
-			{ "verbose", 'v', 0, OptionArg.NONE, out VERBOSE, "Enable verbose logging", null },
-			{ "name", 'n', 0, OptionArg.STRING, out DOCK_NAME, "The name of this dock", null },
-			{ null }
-		};
-		
-		/**
-		 * Parses the command-line for options, but does not set them.
-		 *
-		 * @param args the command-line arguments
-		 * @return whether the arguments were parsed successfully
-		 */
-		protected virtual bool parse_commandline (ref unowned string[] args)
-		{
-			// parse commandline options
-			var context = new OptionContext ("");
 			
-			context.add_main_entries (options, null);
-			context.add_group (Gtk.get_option_group (false));
-			
-			try {
-				context.parse (ref args);
-			} catch {
-				return false;
-			}
-			
-			dock_name = DOCK_NAME;
-			
-			return true;
-		}
-		
-		/**
-		 * Sets options based on the parsed command-line.
-		 */
-		protected virtual void set_options ()
-		{
-			if (DEBUG)
-				Logger.DisplayLevel = LogLevel.DEBUG;
-			if (VERBOSE)
-				Logger.DisplayLevel = LogLevel.VERBOSE;
-		}
-		
-		/**
-		 * Initializes most libraries used (GTK, GDK, etc).
-		 *
-		 * @param args the command-line arguments
-		 * @return whether the libraries were intialized successfully
-		 */
-		protected virtual bool initialize_libraries (ref unowned string[] args)
-		{
-			Intl.bindtextdomain (exec_name, build_data_dir + "/locale");
-			
-			if (!Thread.supported ()) {
-				critical ("Problem initializing thread support.");
-				return false;
-			}
-			
-			Gdk.threads_init ();
-			Gtk.init (ref args);
-			
-			// ensure only one instance per dock_name
-			var path = app_dbus + "." + dock_name;
-			
-			application = new Gtk.Application (path, ApplicationFlags.FLAGS_NONE);
-			try {
-				if (application.register () && !application.get_is_remote ())
-					return true;
-			} catch (Error e) {
-				critical ("Registering application as '%s' failed. (%s)", dock_name, e.message);
-				return false;
-			}
-			
-			warning ("Exiting because another instance of this application is already running with the name '%s'.", dock_name);
-			return false;
-		}
-		
-		/**
-		 * Initializes the Plank services.
-		 */
-		protected virtual void initialize_services ()
-		{
 			Paths.initialize (exec_name, build_pkg_data_dir);
-			Paths.ensure_directory_exists (Paths.AppConfigFolder.get_child (dock_name));
 			WindowControl.initialize ();
+			
+			initialize ();
+			create_controller ();
+		}
+		
+		/**
+		 * Additional initializations before the dock is created.
+		 */
+		protected virtual void initialize ()
+		{
 		}
 		
 		/**
@@ -298,6 +257,8 @@ namespace Plank.Factories
 		{
 			var controller = new DockController (Paths.AppConfigFolder.get_child (dock_name));
 			controller.initialize ();
+			
+			add_window (controller.window);
 		}
 		
 		/**
@@ -313,7 +274,7 @@ namespace Plank.Factories
 		/**
 		 * Displays the help page.
 		 */
-		public virtual void help ()
+		public virtual void show_help ()
 		{
 			Services.System.open_uri (help_url);
 		}
@@ -321,31 +282,10 @@ namespace Plank.Factories
 		/**
 		 * Displays the translate page.
 		 */
-		public virtual void translate ()
+		public virtual void show_translate ()
 		{
 			Services.System.open_uri (translate_url);
 		}
-		
-		/**
-		 * Quits the program.
-		 */
-		public virtual void quit ()
-		{
-			Gtk.main_quit ();
-		}
-		
-		/**
-		 * Called when a {@link Items.PlankDockItem} is clicked.
-		 */
-		public virtual void on_item_clicked ()
-		{
-			show_about ();
-		}
-		
-		/**
-		 * The about dialog for the program.
-		 */
-		protected static Gtk.AboutDialog? about_dlg;
 		
 		/**
 		 * Displays the about dialog.
@@ -377,6 +317,7 @@ namespace Plank.Factories
 			about_dlg.response.connect (() => {
 				about_dlg.hide ();
 			});
+			
 			about_dlg.hide.connect (() => {
 				about_dlg.destroy ();
 				about_dlg = null;
