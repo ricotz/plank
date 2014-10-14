@@ -271,20 +271,21 @@ namespace Plank
 		
 		public void show_preferences ()
 		{
-			if (prefs_window != null)
-#if HAVE_GTK_3_10
-				prefs_window.close ();
-#else
-				prefs_window.destroy ();
-#endif
+			if (prefs_window != null) {
+				prefs_window.show ();
+				return;
+			}
 			
 			prefs_window = new PreferencesWindow (prefs);
-			//FIXME prefs_window.window.set_transient_for (window);
+			prefs_window.set_transient_for (window);
+			
 			prefs_window.destroy.connect (() => {
 				prefs_window = null;
 			});
-			prefs_window.hide.connect ((widget) => {
-				widget.destroy ();
+			
+			prefs_window.hide.connect (() => {
+				prefs_window.destroy ();
+				prefs_window = null;
 			});
 			
 			prefs_window.show ();
