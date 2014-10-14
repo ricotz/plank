@@ -298,6 +298,9 @@ namespace Plank.Factories
 			}
 			
 			about_dlg = new Gtk.AboutDialog ();
+			about_dlg.window_position = Gtk.WindowPosition.CENTER;
+			about_dlg.gravity = Gdk.Gravity.CENTER;
+			about_dlg.set_transient_for (get_active_window ());
 			
 			about_dlg.set_program_name (exec_name);
 			about_dlg.set_version (build_version + "\n" + build_version_info);
