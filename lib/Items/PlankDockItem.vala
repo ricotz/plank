@@ -63,9 +63,7 @@ namespace Plank.Items
 		 */
 		public override Gee.ArrayList<Gtk.MenuItem> get_menu_items ()
 		{
-			unowned DockController? controller = get_dock ();
-
-			return get_plank_menu_items (controller);
+			return get_plank_menu_items ();
 		}
 		
 		/**
@@ -73,7 +71,7 @@ namespace Plank.Items
 		 *
 		 * @return the {@link Gtk.MenuItem}s to display
 		 */
-		public static Gee.ArrayList<Gtk.MenuItem> get_plank_menu_items (DockController? controller = null)
+		public static Gee.ArrayList<Gtk.MenuItem> get_plank_menu_items ()
 		{
 			var items = new Gee.ArrayList<Gtk.MenuItem> ();
 			
@@ -88,7 +86,7 @@ namespace Plank.Items
 			items.add (new Gtk.SeparatorMenuItem ());
 			
 			// No explicit settings-item on elementary OS
-			if (!System.is_desktop_session ("pantheon") && controller != null) {
+			if (!System.is_desktop_session ("pantheon")) {
 				item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.PREFERENCES, null);
 				item.activate.connect (() => Application.get_default ().activate_action ("preferences", null));
 				items.add (item);
