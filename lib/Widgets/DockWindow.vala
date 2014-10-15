@@ -27,6 +27,7 @@ namespace Plank.Widgets
 	public class DockWindow : CompositedWindow
 	{
 		const uint LONG_PRESS_TIME = 750;
+		const uint HOVER_DELAY_TIME = 200;
 		
 		/**
 		 * The controller for this dock.
@@ -354,7 +355,7 @@ namespace Plank.Widgets
 			}
 			
 			// don't be that demanding this delay is still fast enough
-			hover_reposition_timer = Gdk.threads_add_timeout (33, () => {
+			hover_reposition_timer = Gdk.threads_add_timeout (HOVER_DELAY_TIME, () => {
 				if (HoveredItem == null) {
 					hover_reposition_timer = 0;
 					return false;
