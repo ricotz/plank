@@ -53,7 +53,7 @@ namespace Plank.Items
 		 */
 		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod)
 		{
-			Factory.main.show_about ();
+			Application.get_default ().activate_action ("about", null);
 			
 			return Animation.DARKEN;
 		}
@@ -78,11 +78,11 @@ namespace Plank.Items
 			var items = new Gee.ArrayList<Gtk.MenuItem> ();
 			
 			var item = create_menu_item (_("Get _Help Online..."), "help");
-			item.activate.connect (() => Factory.main.show_help ());
+			item.activate.connect (() => Application.get_default ().activate_action ("help", null));
 			items.add (item);
 			
 			item = create_menu_item (_("_Translate This Application..."), "locale");
-			item.activate.connect (() => Factory.main.show_translate ());
+			item.activate.connect (() => Application.get_default ().activate_action ("translate", null));
 			items.add (item);
 			
 			items.add (new Gtk.SeparatorMenuItem ());
@@ -90,12 +90,12 @@ namespace Plank.Items
 			// No explicit settings-item on elementary OS
 			if (!System.is_desktop_session ("pantheon") && controller != null) {
 				item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.PREFERENCES, null);
-				item.activate.connect (() => controller.show_preferences ());
+				item.activate.connect (() => Application.get_default ().activate_action ("preferences", null));
 				items.add (item);
 			}
 			
 			item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.ABOUT, null);
-			item.activate.connect (() => Factory.main.show_about ());
+			item.activate.connect (() => Application.get_default ().activate_action ("about", null));
 			items.add (item);
 			
 			// No explicit quit-item on elementary OS
@@ -103,7 +103,7 @@ namespace Plank.Items
 				items.add (new Gtk.SeparatorMenuItem ());
 			
 				item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.QUIT, null);
-				item.activate.connect (() => Factory.main.quit ());
+				item.activate.connect (() => Application.get_default ().activate_action ("quit", null));
 				items.add (item);
 			}
 			

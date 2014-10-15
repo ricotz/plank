@@ -15,6 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Plank.Widgets;
 using Plank.Services;
 using Plank.Services.Windows;
 
@@ -140,6 +141,8 @@ namespace Plank.Factories
 		public Gtk.License about_license_type { get; construct set; default = Gtk.License.UNKNOWN; }
 		
 		Gtk.AboutDialog? about_dlg;
+		PreferencesWindow? preferences_dlg;
+		DockController? controller;
 		
 		construct
 		{
@@ -241,6 +244,7 @@ namespace Plank.Factories
 			
 			initialize ();
 			create_controller ();
+			create_actions ();
 		}
 		
 		/**
@@ -255,10 +259,48 @@ namespace Plank.Factories
 		 */
 		protected virtual void create_controller ()
 		{
-			var controller = new DockController (Paths.AppConfigFolder.get_child (dock_name));
+			controller = new DockController (Paths.AppConfigFolder.get_child (dock_name));
 			controller.initialize ();
 			
 			add_window (controller.window);
+		}
+		
+		/**
+		 * Creates the actions and adds them to this {@link GLib.Application}.
+		 */
+		protected virtual void create_actions ()
+		{
+			SimpleAction action;
+			
+			action = new SimpleAction ("help", null);
+			action.activate.connect (() => {
+				Services.System.open_uri (help_url);
+			});
+			add_action (action);
+			
+			action = new SimpleAction ("translate", null);
+			action.activate.connect (() => {
+				Services.System.open_uri (translate_url);
+			});
+			add_action (action);
+			
+			action = new SimpleAction ("preferences", null);
+			action.activate.connect (() => {
+				show_preferences ();
+			});
+			add_action (action);
+			
+			action = new SimpleAction ("about", null);
+			action.activate.connect (() => {
+				show_about ();
+			});
+			add_action (action);
+			
+			action = new SimpleAction ("quit", null);
+			action.activate.connect (() => {
+				quit ();
+			});
+			add_action (action);
 		}
 		
 		/**
@@ -272,25 +314,9 @@ namespace Plank.Factories
 		}
 		
 		/**
-		 * Displays the help page.
-		 */
-		public virtual void show_help ()
-		{
-			Services.System.open_uri (help_url);
-		}
-		
-		/**
-		 * Displays the translate page.
-		 */
-		public virtual void show_translate ()
-		{
-			Services.System.open_uri (translate_url);
-		}
-		
-		/**
 		 * Displays the about dialog.
 		 */
-		public virtual void show_about ()
+		void show_about ()
 		{
 			if (about_dlg != null) {
 				about_dlg.show_all ();
@@ -300,13 +326,7 @@ namespace Plank.Factories
 			about_dlg = new Gtk.AboutDialog ();
 			about_dlg.window_position = Gtk.WindowPosition.CENTER;
 			about_dlg.gravity = Gdk.Gravity.CENTER;
-#if HAVE_GTK_3_10
-			about_dlg.set_transient_for (get_active_window ());
-#else
-			unowned List<Gtk.Window> element = get_windows ().first ();
-			if (element != null)
-				about_dlg.set_transient_for (element.data);
-#endif
+			about_dlg.set_transient_for (controller.window);
 			
 			about_dlg.set_program_name (exec_name);
 			about_dlg.set_version (build_version + "\n" + build_version_info);
@@ -333,6 +353,32 @@ namespace Plank.Factories
 			});
 			
 			about_dlg.show_all ();
+		}
+		
+		/**
+		 * Displays the preferences dialog.
+		 */
+		void show_preferences ()
+			requires (controller != null)
+		{
+			if (preferences_dlg != null) {
+				preferences_dlg.show ();
+				return;
+			}
+			
+			preferences_dlg = new PreferencesWindow (controller.prefs);
+			preferences_dlg.set_transient_for (controller.window);
+			
+			preferences_dlg.destroy.connect (() => {
+				preferences_dlg = null;
+			});
+			
+			preferences_dlg.hide.connect (() => {
+				preferences_dlg.destroy ();
+				preferences_dlg = null;
+			});
+			
+			preferences_dlg.show ();
 		}
 	}
 }
