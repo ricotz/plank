@@ -235,19 +235,18 @@ namespace Plank
 			
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockItem dragged_item = controller.drag_manager.DragItem;
-			var width = position_manager.DockWidth;
-			var height = position_manager.DockHeight;
+			var win_rect = position_manager.get_dock_window_region ();
 			var items = controller.Items;
 			
 			if (main_buffer == null) {
-				main_buffer = new DockSurface.with_surface (width, height, cr.get_target ());
+				main_buffer = new DockSurface.with_surface (win_rect.width, win_rect.height, cr.get_target ());
 #if HAVE_HIDPI
 				cairo_surface_set_device_scale (main_buffer.Internal, window_scale_factor, window_scale_factor);
 #endif
 			}
 			
 			if (shadow_buffer == null) {
-				shadow_buffer = new DockSurface.with_surface (width, height, cr.get_target ());
+				shadow_buffer = new DockSurface.with_surface (win_rect.width, win_rect.height, cr.get_target ());
 #if HAVE_HIDPI
 				cairo_surface_set_device_scale (shadow_buffer.Internal, window_scale_factor, window_scale_factor);
 #endif
@@ -420,7 +419,7 @@ namespace Plank
 				case Animation.BOUNCE:
 					if (!screen_is_composited)
 						break;
-					var change = Math.fabs (Math.sin (2 * Math.PI * click_animation_progress) * icon_size * theme.LaunchBounceHeight * double.min (1.0, 1.3333 * (1.0 - click_animation_progress)));
+					var change = Math.fabs (Math.sin (2 * Math.PI * click_animation_progress) * position_manager.LaunchBounceHeight * double.min (1.0, 1.3333 * (1.0 - click_animation_progress)));
 					draw_value = draw_value.move_in (position, change);
 					break;
 				case Animation.DARKEN:
@@ -503,7 +502,7 @@ namespace Plank
 				var urgent_time = frame_time - item.LastUrgent;
 				var bounce_animation_progress = urgent_time / (double) (theme.UrgentBounceTime * 1000);
 				if (bounce_animation_progress < 1.0) {
-					var change = Math.fabs (Math.sin (Math.PI * bounce_animation_progress) * icon_size * theme.UrgentBounceHeight * double.min (1.0, 2.0 * (1.0 - bounce_animation_progress)));
+					var change = Math.fabs (Math.sin (Math.PI * bounce_animation_progress) * position_manager.UrgentBounceHeight * double.min (1.0, 2.0 * (1.0 - bounce_animation_progress)));
 					draw_value = draw_value.move_in (position, change);
 				}
 			}

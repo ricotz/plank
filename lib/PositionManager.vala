@@ -182,16 +182,6 @@ namespace Plank
 		//
 		
 		/**
-		 * Cached x position of the dock window.
-		 */
-		public int win_x { get; protected set; }
-		
-		/**
-		 * Cached y position of the dock window.
-		 */
-		public int win_y { get; protected set; }
-		
-		/**
 		 * Theme-based line-width.
 		 */
 		public int LineWidth { get; private set; }
@@ -233,6 +223,10 @@ namespace Plank
 		 * Theme-based urgent-bounce height, scaled by icon size.
 		 */
 		public int UrgentBounceHeight { get; private set; }
+		/**
+		 * Theme-based launch-bounce height, scaled by icon size.
+		 */
+		public int LaunchBounceHeight { get; private set; }
 		
 		int items_width;
 		int items_offset;
@@ -241,30 +235,39 @@ namespace Plank
 		int extra_hide_offset;
 		
 		/**
+		 * x position of the dock window.
+		 */
+		int win_x;
+		/**
+		 * y position of the dock window.
+		 */
+		int win_y;
+
+		/**
 		 * The currently visible height of the dock.
 		 */
-		public int VisibleDockHeight { get; private set; }
+		int VisibleDockHeight;
 		/**
 		 * The static height of the dock.
 		 */
-		public int DockHeight { get; private set; }
+		int DockHeight;
 		/**
 		 * The height of the dock's background image.
 		 */
-		public int DockBackgroundHeight { get; private set; }
+		int DockBackgroundHeight;
 		
 		/**
 		 * The currently visible width of the dock.
 		 */
-		public int VisibleDockWidth { get; private set; }
+		int VisibleDockWidth;
 		/**
 		 * The static width of the dock.
 		 */
-		public int DockWidth { get; private set; }
+		int DockWidth;
 		/**
 		 * The width of the dock's background image.
 		 */
-		public int DockBackgroundWidth { get; private set; }
+		int DockBackgroundWidth;
 		
 		/**
 		 * The maximum item count which fit the dock in its maximum
@@ -332,6 +335,7 @@ namespace Plank
 			BottomPadding = (int) (theme.BottomPadding * scaled_icon_size);
 			ItemPadding   = (int) (theme.ItemPadding   * scaled_icon_size);
 			UrgentBounceHeight = (int) (theme.UrgentBounceHeight * IconSize);
+			LaunchBounceHeight = (int) (theme.LaunchBounceHeight * IconSize);
 			LineWidth     = theme.LineWidth;
 			
 			if (!screen_is_composited) {
@@ -990,6 +994,16 @@ namespace Plank
 				y = 0;
 				break;
 			}
+		}
+		
+		/**
+		 * Get's the region to display the dock window at.
+		 *
+		 * @return the region for the dock window
+		 */
+		public Gdk.Rectangle get_dock_window_region ()
+		{
+			return { win_x, win_y, DockWidth, DockHeight };
 		}
 		
 		/**

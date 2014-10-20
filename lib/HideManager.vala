@@ -190,13 +190,12 @@ namespace Plank
 				get_device_manager ().get_client_pointer ().get_position (null, out x, out y);
 			
 			// get window location
-			var win_x = position_manager.win_x;
-			var win_y = position_manager.win_y;
+			var win_rect = position_manager.get_dock_window_region ();
 			
 			// compute rect of the window
 			var dock_rect = position_manager.get_cursor_region ();
-			dock_rect.x += win_x;
-			dock_rect.y += win_y;
+			dock_rect.x += win_rect.x;
+			dock_rect.y += win_rect.y;
 			
 			// use the dock rect and cursor location to determine if dock is hovered
 			var hovered = (x >= dock_rect.x && x < dock_rect.x + dock_rect.width

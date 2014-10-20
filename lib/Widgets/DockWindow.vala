@@ -463,26 +463,22 @@ namespace Plank.Widgets
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			
-			var x = position_manager.win_x;
-			var y = position_manager.win_y;
-			
-			var width = position_manager.DockWidth;
-			var height = position_manager.DockHeight;
+			var win_rect = position_manager.get_dock_window_region ();
 			
 			int width_current, height_current;
 			get_size_request (out width_current, out height_current);
-			var needs_resize = (width != width_current || height != height_current);
+			var needs_resize = (win_rect.width != width_current || win_rect.height != height_current);
 			
 			var needs_reposition = true;
 			if (get_realized ()) {
 				int x_current, y_current;
 				get_position (out x_current, out y_current);
-				needs_reposition = (x != x_current || y != y_current);
+				needs_reposition = (win_rect.x != x_current || win_rect.y != y_current);
 			}
 			
 			if (needs_resize) {
-				Logger.verbose ("DockWindow.set_size_request (width = %i, height = %i)", width, height);
-				set_size_request (width, height);
+				Logger.verbose ("DockWindow.set_size_request (width = %i, height = %i)", win_rect.width, win_rect.height);
+				set_size_request (win_rect.width, win_rect.height);
 				controller.renderer.reset_buffers ();
 				
 				if (!needs_reposition) {
@@ -495,7 +491,7 @@ namespace Plank.Widgets
 			
 			if (needs_reposition) {
 				if (dock_is_starting) {
-					position (x, y);
+					position (win_rect.x, win_rect.y);
 				} else {
 					schedule_position ();
 				}
@@ -513,11 +509,9 @@ namespace Plank.Widgets
 				reposition_timer = 0;
 				
 				unowned PositionManager position_manager = controller.position_manager;
+				var win_rect = position_manager.get_dock_window_region ();
 				
-				var x = position_manager.win_x;
-				var y = position_manager.win_y;
-				
-				position (x, y);
+				position (win_rect.x, win_rect.y);
 				
 				return false;
 			});
