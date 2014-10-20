@@ -70,7 +70,7 @@ namespace Plank.Widgets
 
 		bool dock_is_starting = true;
 		
-		Cairo.RectangleInt input_rect;
+		Gdk.Rectangle input_rect;
 		
 		/**
 		 * Creates a new dock window.
@@ -663,15 +663,14 @@ namespace Plank.Widgets
 			if (!get_realized ())
 				return;
 			
-			var cursor = controller.position_manager.get_cursor_region ();
+			var cursor_rect = controller.position_manager.get_cursor_region ();
 			// FIXME bug 768722 - this fixes the crash, but not WHY this happens
-			return_if_fail (cursor.width > 0);
-			return_if_fail (cursor.height > 0);
+			return_if_fail (cursor_rect.width > 0);
+			return_if_fail (cursor_rect.height > 0);
 			
-			Cairo.RectangleInt rect = {cursor.x, cursor.y, cursor.width, cursor.height};
-			if (rect != input_rect) {
-				input_rect = rect;
-				get_window ().input_shape_combine_region (new Cairo.Region.rectangle (rect), 0, 0);
+			if (cursor_rect != input_rect) {
+				input_rect = cursor_rect;
+				get_window ().input_shape_combine_region (new Cairo.Region.rectangle ((Cairo.RectangleInt) cursor_rect), 0, 0);
 			}
 		}
 		
