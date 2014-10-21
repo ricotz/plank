@@ -371,7 +371,7 @@ namespace Plank.Widgets
 				int x, y;
 				hover.set_text (HoveredItem.Text);
 				controller.position_manager.get_hover_position (HoveredItem, out x, out y);
-				hover.show_at (x, y, controller.prefs.Position);
+				hover.show_at (x, y, controller.position_manager.Position);
 				
 				if (menu_is_visible ())
 					hover.hide ();

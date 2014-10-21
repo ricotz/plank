@@ -345,7 +345,9 @@ namespace Plank
 		
 		void draw_dock_background ()
 		{
-			background_rect = controller.position_manager.get_background_region ();
+			unowned PositionManager position_manager = controller.position_manager;
+			
+			background_rect = position_manager.get_background_region ();
 			
 			if (background_rect.width <= 0 || background_rect.height <= 0) {
 				background_buffer = null;
@@ -355,7 +357,7 @@ namespace Plank
 			if (background_buffer == null || background_buffer.Width != background_rect.width
 				|| background_buffer.Height != background_rect.height)
 				background_buffer = theme.create_background (background_rect.width, background_rect.height,
-					controller.prefs.Position, main_buffer);
+					position_manager.Position, main_buffer);
 			
 			unowned Cairo.Context cr = main_buffer.Context;
 			cr.set_source_surface (background_buffer.Internal, background_rect.x, background_rect.y);
@@ -372,7 +374,7 @@ namespace Plank
 			unowned Cairo.Context shadow_cr = shadow_buffer.Context;
 			var icon_size = position_manager.IconSize;
 			var shadow_size = position_manager.IconShadowSize;
-			var position = controller.prefs.Position;
+			var position = position_manager.Position;
 			
 			// load the icon
 #if BENCHMARK
@@ -586,7 +588,8 @@ namespace Plank
 		
 		DockSurface draw_item_shadow (DockItem item, DockSurface icon_surface, DockSurface? current_surface)
 		{
-			var shadow_size = controller.position_manager.IconShadowSize * window_scale_factor;
+			unowned PositionManager position_manager = controller.position_manager;
+			var shadow_size = position_manager.IconShadowSize * window_scale_factor;
 			
 			// Inflate size to fit shadow
 			var width = icon_surface.Width + 2 * shadow_size;
@@ -602,7 +605,7 @@ namespace Plank
 			var shadow_surface = icon_surface.create_mask (0.4, null);
 			
 			var xoffset = 0, yoffset = 0;
-			switch (controller.prefs.Position) {
+			switch (position_manager.Position) {
 			default:
 			case Gtk.PositionType.BOTTOM:
 				yoffset = -shadow_size / 4;
@@ -627,23 +630,25 @@ namespace Plank
 		
 		void draw_indicator_state (Gdk.Rectangle item_rect, IndicatorState indicator, ItemState item_state)
 		{
+			unowned PositionManager position_manager = controller.position_manager;
+			
 			if (indicator_buffer == null) {
 				var indicator_color = get_styled_color ();
 				indicator_color.set_min_sat (0.4);
-				indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, indicator_color, main_buffer);
+				indicator_buffer = theme.create_indicator (position_manager.IndicatorSize, indicator_color, main_buffer);
 			}
 			if (urgent_indicator_buffer == null) {
 				var urgent_indicator_color = get_styled_color ();
 				urgent_indicator_color.add_hue (theme.UrgentHueShift);
 				urgent_indicator_color.set_sat (1.0);
-				urgent_indicator_buffer = theme.create_indicator (controller.position_manager.IndicatorSize, urgent_indicator_color, main_buffer);
+				urgent_indicator_buffer = theme.create_indicator (position_manager.IndicatorSize, urgent_indicator_color, main_buffer);
 			}
 			
 			unowned DockSurface indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 			unowned Cairo.Context main_cr = main_buffer.Context;
 			
 			var x = 0.0, y = 0.0;
-			switch (controller.prefs.Position) {
+			switch (position_manager.Position) {
 			default:
 			case Gtk.PositionType.BOTTOM:
 				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
@@ -668,10 +673,10 @@ namespace Plank
 				main_cr.paint ();
 			} else {
 				var x_offset = 0.0, y_offset = 0.0;
-				if (controller.prefs.is_horizontal_dock ())
-					x_offset = controller.position_manager.IconSize / 16.0;
+				if (position_manager.is_horizontal_dock ())
+					x_offset = position_manager.IconSize / 16.0;
 				else
-					y_offset = controller.position_manager.IconSize / 16.0;
+					y_offset = position_manager.IconSize / 16.0;
 				
 				main_cr.set_source_surface (indicator_surface.Internal, x - x_offset, y - y_offset);
 				main_cr.paint ();

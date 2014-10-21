@@ -571,7 +571,7 @@ namespace Plank
 			switch (xcookie.evtype) {
 			case XInput.EventType.BARRIER_HIT:
 				double slide = 0.0, distance = 0.0;
-				switch (controller.prefs.Position) {
+				switch (controller.position_manager.Position) {
 				default:
 				case Gtk.PositionType.BOTTOM:
 				case Gtk.PositionType.TOP:
