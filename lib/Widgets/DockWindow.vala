@@ -190,6 +190,8 @@ namespace Plank.Widgets
 			if (ClickedItem != null && HoveredItem == ClickedItem && !menu_is_visible ())
 				HoveredItem.clicked (PopupButton.from_event_button (event), event.state);
 			
+			ClickedItem = null;
+			
 			return true;
 		}
 		
