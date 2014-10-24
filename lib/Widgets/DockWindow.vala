@@ -125,6 +125,10 @@ namespace Plank.Widgets
 		 */
 		public override bool button_press_event (Gdk.EventButton event)
 		{
+			// Needed for gtk+ 3.14+
+			if (menu_is_visible ())
+				return true;
+			
 			// If the dock is hidden we should ignore it.
 			if (controller.hide_manager.Hidden)
 				return true;
@@ -186,6 +190,10 @@ namespace Plank.Widgets
 			if (controller.drag_manager.InternalDragActive)
 				return true;
 
+			// Needed for gtk+ 3.14+
+			if (ClickedItem == null && menu_is_visible ())
+				menu.hide ();
+			
 			// Make sure the HoveredItem is still the same since button-pressed
 			if (ClickedItem != null && HoveredItem == ClickedItem && !menu_is_visible ())
 				HoveredItem.clicked (PopupButton.from_event_button (event), event.state);
@@ -228,6 +236,10 @@ namespace Plank.Widgets
 		 */
 		public override bool motion_notify_event (Gdk.EventMotion event)
 		{
+			// Needed for gtk+ 3.14+
+			if (menu_is_visible ())
+				return true;
+			
 			update_hovered ((int) event.x, (int) event.y);
 			return true;
 		}
@@ -351,10 +363,8 @@ namespace Plank.Widgets
 			
 			hover.hide ();
 			
-			if (HoveredItem == null || controller.drag_manager.InternalDragActive) {
-				ClickedItem = null;
+			if (HoveredItem == null || controller.drag_manager.InternalDragActive)
 				return;
-			}
 			
 			// don't be that demanding this delay is still fast enough
 			hover_reposition_timer = Gdk.threads_add_timeout (HOVER_DELAY_TIME, () => {
