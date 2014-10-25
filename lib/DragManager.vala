@@ -109,10 +109,9 @@ namespace Plank
 			
 			prefs.notify["LockItems"].connect (lock_items_changed);
 			
-			if (!prefs.LockItems) {
-				enable_drag_to (window);
+			enable_drag_to (window);
+			if (!prefs.LockItems)
 				enable_drag_from (window);
-			}
 		}
 		
 		~DragManager ()
@@ -138,13 +137,10 @@ namespace Plank
 		{
 			unowned DockWindow window = controller.window;
 			
-			if (controller.prefs.LockItems) {
+			if (controller.prefs.LockItems)
 				disable_drag_from (window);
-				disable_drag_to (window);
-			} else {
+			else
 				enable_drag_from (window);
-				enable_drag_to (window);
-			}
 		}
 		
 		void drag_data_get (Gtk.Widget w, Gdk.DragContext context, Gtk.SelectionData selection_data, uint info, uint time_)
@@ -275,7 +271,7 @@ namespace Plank
 			
 			if (!DragIsDesktopFile && item != null && item.can_accept_drop (drag_data))
 				item.accept_drop (drag_data);
-			else if (provider != null && provider.can_accept_drop (drag_data))
+			else if (!controller.prefs.LockItems && provider != null && provider.can_accept_drop (drag_data))
 				provider.accept_drop (drag_data);
 			
 			ExternalDragActive = false;
