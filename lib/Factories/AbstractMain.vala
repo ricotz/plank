@@ -337,10 +337,14 @@ namespace Plank.Factories
 			about_dlg.set_website (main_url);
 			about_dlg.set_website_label ("Website");
 			
-			about_dlg.set_authors (about_authors);
-			about_dlg.set_documenters (about_documenters);
-			about_dlg.set_artists (about_artists);
-			about_dlg.set_translator_credits (about_translators);
+			if (about_authors != null && about_authors.length > 0)
+				about_dlg.set_authors (about_authors);
+			if (about_documenters != null && about_documenters.length > 0)
+				about_dlg.set_documenters (about_documenters);
+			if (about_artists != null && about_artists.length > 0)
+				about_dlg.set_artists (about_artists);
+			if (about_translators != null && about_translators != "")
+				about_dlg.set_translator_credits (about_translators);
 			about_dlg.set_license_type (about_license_type);
 			
 			about_dlg.response.connect (() => {
