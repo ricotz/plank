@@ -30,6 +30,21 @@ namespace Plank
 		
 		public PlankMain ()
 		{
+			var authors = new string[] {
+					"Robert Dyer <robert@go-docky.com>",
+					"Rico Tzschichholz <rtz@go-docky.com>",
+					"Michal Hruby <michal.mhr@gmail.com>"
+				};
+			
+			var documenters = new string[] {
+					"Robert Dyer <robert@go-docky.com>",
+					"Rico Tzschichholz <rtz@go-docky.com>"
+				};
+			
+			var artists = new string[] {
+					"Daniel Foré <bunny@go-docky.com>"
+				};
+			
 			Object (
 				build_data_dir : Build.DATADIR,
 				build_pkg_data_dir : Build.PKGDATADIR,
@@ -49,18 +64,9 @@ namespace Plank
 				help_url : "https://answers.launchpad.net/plank",
 				translate_url : "https://translations.launchpad.net/plank",
 			
-				about_authors : new string[] {
-					"Robert Dyer <robert@go-docky.com>",
-					"Rico Tzschichholz <rtz@go-docky.com>",
-					"Michal Hruby <michal.mhr@gmail.com>"
-				},
-				about_documenters : new string[] {
-					"Robert Dyer <robert@go-docky.com>",
-					"Rico Tzschichholz <rtz@go-docky.com>"
-				},
-				about_artists : new string[] {
-					"Daniel Foré <bunny@go-docky.com>"
-				},
+				about_authors : authors,
+				about_documenters : documenters,
+				about_artists : artists,
 				about_translators : "",
 				about_license_type : Gtk.License.GPL_3_0
 			);
