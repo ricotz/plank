@@ -7,21 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-07-21 12:39+0000\n"
-"PO-Revision-Date: 2014-07-16 20:55+0000\n"
+"POT-Creation-Date: 2014-10-26 10:11+0000\n"
+"PO-Revision-Date: 2014-10-17 08:47+0000\n"
 "Last-Translator: Jiri Grönroos <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-07-24 05:32+0000\n"
-"X-Generator: Launchpad (build 17114)\n"
+"X-Launchpad-Export-Date: 2014-10-27 13:40+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"Plankin on tarkoitus olla maailman yksinkertaisin telakka. Sen tavoite on "
+"tarjota vain telakan tarvitsemat asiat, ei mitään muuta."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -31,40 +33,156 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"Se on kuitenkin samalla kirjasto, jota voi laajentaa samalla luoden muita "
+"telakkasovelluksia lisäominaisuuksilla. Plank toimii myös Docky-telakan "
+"pohjana versiosta 3.0.0 alkaen. Tavoite on tarjota telakan ydintoiminnot, "
+"jolloin Docky voi laajentaa ominaisuuksia omin lisäosin."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
 msgstr "Plank. Todella yksinkertainen."
 
-#: ../lib/Items/ApplicationDockItem.vala:448
-#: ../lib/Items/FileDockItem.vala:293 ../lib/Items/FileDockItem.vala:311
+#: ../data/ui/preferences.ui.h:1
+msgid "Theme:"
+msgstr "Teema:"
+
+#: ../data/ui/preferences.ui.h:2
+msgid "Position:"
+msgstr "Sijainti:"
+
+#: ../data/ui/preferences.ui.h:3
+msgid "Left"
+msgstr "Vasemmalla"
+
+#: ../data/ui/preferences.ui.h:4
+msgid "Right"
+msgstr "Oikealla"
+
+#: ../data/ui/preferences.ui.h:5
+msgid "Top"
+msgstr "Ylhäällä"
+
+#: ../data/ui/preferences.ui.h:6
+msgid "Bottom"
+msgstr "Alhaalla"
+
+#: ../data/ui/preferences.ui.h:7
+msgid "Alignment:"
+msgstr "Tasaus:"
+
+#: ../data/ui/preferences.ui.h:8
+msgid "Fill"
+msgstr "Täyttö"
+
+#: ../data/ui/preferences.ui.h:9
+msgid "Start"
+msgstr "Alku"
+
+#: ../data/ui/preferences.ui.h:10
+msgid "End"
+msgstr "Loppu"
+
+#: ../data/ui/preferences.ui.h:11
+msgid "Center"
+msgstr "Keskellä"
+
+#: ../data/ui/preferences.ui.h:12
+msgid "On Primary Display:"
+msgstr "Ensisijaisella näytöllä:"
+
+#: ../data/ui/preferences.ui.h:13
+msgid "Offset in percent from the center of the screen-edge"
+msgstr "Siirtymä prosenteissa näytön näytön reunan keskiosasta"
+
+#: ../data/ui/preferences.ui.h:14
+msgid "Icon Alignment:"
+msgstr "Kuvakkeiden kohdistus:"
+
+#: ../data/ui/preferences.ui.h:15
+msgid "Icon Size:"
+msgstr "Kuvakekoko:"
+
+#: ../data/ui/preferences.ui.h:16
+msgid "Appearance"
+msgstr "Ulkoasu"
+
+#: ../data/ui/preferences.ui.h:17
+msgid "Show Unpinned:"
+msgstr "Näytä kiinnittämättömät:"
+
+#: ../data/ui/preferences.ui.h:18
+msgid "Restrict to Workspace:"
+msgstr "Rajoita työtilaan:"
+
+#: ../data/ui/preferences.ui.h:19
+msgid "Lock Icons:"
+msgstr "Lukitse kuvakkeet:"
+
+#: ../data/ui/preferences.ui.h:20
+msgid "Automatic Pinning:"
+msgstr "Automaattinen kiinnittäminen:"
+
+#: ../data/ui/preferences.ui.h:21
+msgid "Intellihide"
+msgstr "Piilota aktiivisen ikkunan edestä"
+
+#: ../data/ui/preferences.ui.h:22
+msgid "Autohide"
+msgstr "Piilota automaattisesti"
+
+#: ../data/ui/preferences.ui.h:23
+msgid "Dodge maximized window"
+msgstr "Väistä suurennettuja ikkunoita"
+
+#: ../data/ui/preferences.ui.h:24
+msgid "Delay in ms before showing the dock"
+msgstr "Viive millisekunneissa ennen telakan näyttämistä"
+
+#: ../data/ui/preferences.ui.h:25
+msgid "Pressure Reveal:"
+msgstr "Paljastusherkkyys:"
+
+#: ../data/ui/preferences.ui.h:26
+msgid "Item Management"
+msgstr "Kohteiden hallinta"
+
+#: ../data/ui/preferences.ui.h:27
+msgid "Hide Dock"
+msgstr "Piilota telakka"
+
+#: ../data/ui/preferences.ui.h:28
+msgid "Behaviour"
+msgstr "Toiminta"
+
+#: ../lib/Items/ApplicationDockItem.vala:444
+#: ../lib/Items/FileDockItem.vala:307 ../lib/Items/FileDockItem.vala:325
 msgid "_Keep in Dock"
 msgstr "Pi_dä käynnistimessä"
 
-#: ../lib/Items/ApplicationDockItem.vala:455
+#: ../lib/Items/ApplicationDockItem.vala:451
 msgid "_Close All"
 msgstr "Sulje kai_kki"
 
-#: ../lib/Items/FileDockItem.vala:298
+#: ../lib/Items/FileDockItem.vala:312
 msgid "_Open in File Browser"
 msgstr "A_vaa tiedostonhallinnassa"
 
-#: ../lib/Items/FileDockItem.vala:316
+#: ../lib/Items/FileDockItem.vala:330
 msgid "_Open"
 msgstr "_Avaa"
 
-#: ../lib/Items/FileDockItem.vala:320
+#: ../lib/Items/FileDockItem.vala:334
 msgid "Open Containing _Folder"
 msgstr "Näy_tä kansiossa"
 
-#: ../lib/Items/PlaceholderDockItem.vala:37
+#: ../lib/Items/PlaceholderDockItem.vala:35
 msgid "Drop applications or files here"
 msgstr "Pudota sovellukset tai tiedostot tähän"
 
-#: ../lib/Items/PlankDockItem.vala:79
+#: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
 msgstr "_Hae apua verkosta..."
 
-#: ../lib/Items/PlankDockItem.vala:83
+#: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
 msgstr "Kää_nnä tämä ohjelma..."
