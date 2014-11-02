@@ -544,7 +544,7 @@ namespace Plank
 		/**
 		 * Call when any cached region needs updating.
 		 */
-		void update_regions ()
+		public void update_regions ()
 		{
 			unowned DockPreferences prefs = controller.prefs;
 			
