@@ -275,6 +275,13 @@ AC_SUBST(PLANK_DOCS_VALAFLAGS)
 
 
 # -----------------------------------------------------------
+# Additional build flags
+# -----------------------------------------------------------
+
+# Use RUNPATH instead of RPATH if needed
+CFLAGS="$CFLAGS -Wl,--enable-new-dtags"
+
+# -----------------------------------------------------------
 # Documentation
 # -----------------------------------------------------------
 VALADOC_MIN_VERSION=0.3.1
