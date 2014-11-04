@@ -227,12 +227,14 @@ namespace Plank
 		void drag_data_received (Gtk.Widget w, Gdk.DragContext context, int x, int y, Gtk.SelectionData selection_data, uint info, uint time_)
 		{
 			if (drag_data_requested) {
-				unowned string uris = (string) selection_data.get_data ();
+				var uris = Uri.list_extract_uris ((string) selection_data.get_data ());
 				
 				drag_data = new Gee.ArrayList<string> ();
-				foreach (string s in uris.split ("\r\n"))
-					if (s.has_prefix ("file://"))
-						drag_data.add (s);
+				foreach (string s in uris) {
+					var uri = File.new_for_uri (s).get_uri ();
+					if (uri != null)
+						drag_data.add (uri);
+				}
 				
 				drag_data_requested = false;
 				
