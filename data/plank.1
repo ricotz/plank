@@ -1,13 +1,34 @@
-.TH PLANK "1"
+.TH "plank" 1
 .SH NAME
 Plank \- Stupidly simple.
 .SH SYNOPSIS
-plank [\fIoptions\fR]
+.B plank [\fIoptions\fR]
+.SH DESCRIPTION
+Plank is meant to be the simplest dock on the planet. The goal is to provide
+just what a dock needs and absolutely nothing more. It is, however, a library
+which can be extended to create other dock programs with more advanced features.
+Thus, Plank is the underlying technology for Docky (starting in version 3.0.0)
+and aims to provide all the core features while Docky extends it to add fancier
+things like Docklets, painters, settings dialogs, etc.
 .SH OPTIONS
 .TP
-\fB\-d\fR \fB\-\-debug\fR
+.B \--help
+Show help options
+.TP
+.B \-n \--name
+The name of for dock. Defaults to "dock1".
+.TP
+.B \-d \--debug
 Enable debug level logging
-.SH HOMEPAGE
+.TP
+.B \-v \--verbose
+Enable verbose level logging
+.TP
+.B \-V \--version
+Show the version
+.SH BUGS
+Report bugs at http://bugs.launchpad.net/plank
+.SH HOMEPAGE and CONTACT
 For more information, please visit http://launchpad.net/plank/
 .SH AUTHORS
-Robert Dyer <psybers@gmail.com>, Daniel Foré <daniel.p.fore@gmail.com>, Rico Tzschichholz <ricotz@t-online.de>
+Rico Tzschichholz, Robert Dyer, Daniel Foré
