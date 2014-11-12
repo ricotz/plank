@@ -34,12 +34,14 @@ namespace Plank.Factories
 			{ "debug", 'd', 0, OptionArg.NONE, ref DEBUG, "Enable debug logging", null },
 			{ "verbose", 'v', 0, OptionArg.NONE, ref VERBOSE, "Enable verbose logging", null },
 			{ "name", 'n', 0, OptionArg.STRING, ref NAME, "The name of this dock", null },
+			{ "preferences", 0, 0, OptionArg.NONE, ref PREFERENCES, "Show the application's preferences dialog", null },
 			{ "version", 'V', 0, OptionArg.NONE, ref VERSION, "Show the application's version", null },
 			{ null }
 		};
 
 		static bool DEBUG = false;
 		static bool VERBOSE = false;
+		static bool PREFERENCES = false;
 		static bool VERSION = false;
 		static string NAME = "dock1";
 		
@@ -162,7 +164,6 @@ namespace Plank.Factories
 		 */
 		public override bool local_command_line (ref unowned string[] args, out int exit_status)
 		{
-			bool result = false;
 			exit_status = 0;
 			
 			// set program name
@@ -181,12 +182,12 @@ namespace Plank.Factories
 			} catch (OptionError e) {
 				printerr ("%s\n", e.message);
 				exit_status = 1;
-				result = true;
+				return true;
 			}
 			
 			if (VERSION) {
 				print ("%s\n", build_version);
-				result = true;
+				return true;
 			}
 			
 			if (VERBOSE)
@@ -200,7 +201,17 @@ namespace Plank.Factories
 			
 			application_id = app_dbus + "." + dock_name;
 			
-			return (result ? result : base.local_command_line (ref args, out exit_status));
+			try {
+				register ();
+			} catch {
+				exit_status = 1;
+				return true;
+			}
+			
+			if (get_is_registered () && PREFERENCES)
+				activate_action ("preferences", null);
+			
+			return base.local_command_line (ref args, out exit_status);
 		}
 		
 		/**
