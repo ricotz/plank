@@ -124,7 +124,7 @@ namespace Plank.Widgets
 		{
 			var width = get_allocated_width ();
 			var height = get_allocated_height ();
-			var context = get_style_context ();
+			unowned Gtk.StyleContext context = get_style_context ();
 			
 			if (is_composited ()) {
 				cr.save ();

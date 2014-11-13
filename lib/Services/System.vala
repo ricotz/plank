@@ -83,7 +83,8 @@ namespace Plank.Services
 			
 			// make sure all files are mounted
 			foreach (var f in files) {
-				if (f.get_path () != null && f.get_path () != "" && (f.is_native () || path_is_mounted (f.get_path ()))) {
+				var path = f.get_path ();
+				if (path != null && path != "" && (f.is_native () || path_is_mounted (path))) {
 					mounted_files.append (f);
 					continue;
 				}
@@ -102,9 +103,15 @@ namespace Plank.Services
 		
 		static bool path_is_mounted (string path)
 		{
-			foreach (var m in VolumeMonitor.get ().get_mounts ())
-				if (m.get_root () != null && m.get_root ().get_path () != null && path.contains (m.get_root ().get_path ()))
+			foreach (var m in VolumeMonitor.get ().get_mounts ()) {
+				var m_root = m.get_root ();
+				if (m_root == null)
+					continue;
+				
+				var m_path = m_root.get_path ();
+				if (m_path != null && path.contains (m_path))
 					return true;
+			}
 			
 			return false;
 		}

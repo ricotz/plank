@@ -192,7 +192,11 @@ namespace Plank.Items
 		
 		public bool is_window ()
 		{
-			return (App != null && (App.get_desktop_file () == null || App.get_desktop_file () == ""));
+			if (App == null)
+				return false;
+			
+			unowned string? desktop_file = App.get_desktop_file ();
+			return (desktop_file == null || desktop_file == "");
 		}
 		
 		void handle_launcher_changed ()
@@ -839,7 +843,7 @@ namespace Plank.Items
 #if HAVE_DBUSMENU
 				else if (prop_key == "quicklist") {
 					/* The value is the object path of the dbusmenu */
-					var dbus_path = prop_value.get_string ();
+					unowned string dbus_path = prop_value.get_string ();
 					// Make sure we don't update our Quicklist instance if isn't necessary
 					if (Quicklist == null || Quicklist.dbus_object != dbus_path)
 						if (dbus_path != "") {
