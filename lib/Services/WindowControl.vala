@@ -290,11 +290,13 @@ namespace Plank.Services.Windows
 		
 		public static void minimize (Bamf.Application app)
 		{
-			foreach (unowned Wnck.Window window in get_ordered_window_stack (app))
-				if (!window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
+			foreach (unowned Wnck.Window window in get_ordered_window_stack (app)) {
+				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
+				if (!window.is_minimized () && active_workspace != null && window.is_in_viewport (active_workspace)) {
 					window.minimize ();
 					Thread.usleep (WINDOW_GROUP_DELAY);
 				}
+			}
 		}
 		
 		public static void restore (Bamf.Application app)
@@ -302,7 +304,8 @@ namespace Plank.Services.Windows
 			var stack = get_ordered_window_stack (app);
 			stack.reverse ();
 			foreach (unowned Wnck.Window window in stack) {
-				if (window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
+				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
+				if (window.is_minimized () && active_workspace != null && window.is_in_viewport (active_workspace)) {
 					window.unminimize (Gtk.get_current_event_time ());
 					Thread.usleep (WINDOW_GROUP_DELAY);
 				}
@@ -353,7 +356,8 @@ namespace Plank.Services.Windows
 			var urgent = false;
 			
 			foreach (unowned Wnck.Window window in windows) {
-				if (!window.is_skip_tasklist () && window.is_in_viewport (window.get_screen ().get_active_workspace ()))
+				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
+				if (!window.is_skip_tasklist () && active_workspace != null && window.is_in_viewport (active_workspace))
 					not_in_viewport = false;
 				if (window.needs_attention ())
 					urgent = true;
@@ -373,38 +377,44 @@ namespace Plank.Services.Windows
 			}
 			
 			// Unminimize minimized windows if there is one or more
-			foreach (unowned Wnck.Window window in windows)
-				if (window.is_minimized () && window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
-					foreach (var w in windows)
-						if (w.is_minimized () && w.is_in_viewport (w.get_screen ().get_active_workspace ())) {
+			foreach (unowned Wnck.Window window in windows) {
+				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
+				if (window.is_minimized () && active_workspace != null && window.is_in_viewport (active_workspace)) {
+					foreach (unowned Wnck.Window w in windows)
+						if (w.is_minimized () && w.is_in_viewport (active_workspace)) {
 							w.unminimize (Gtk.get_current_event_time ());
 							Thread.usleep (WINDOW_GROUP_DELAY);
 						}
 					return;
 				}
+			}
 			
 			// Minimize all windows if this application owns the active window
-			foreach (unowned Wnck.Window window in windows)
-				if ((window.is_active () && window.is_in_viewport (window.get_screen ().get_active_workspace ()))
-					|| window == Wnck.Screen.get_default ().get_active_window ()) {
+			foreach (unowned Wnck.Window window in windows) {
+				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
+				if ((window.is_active () && active_workspace != null && window.is_in_viewport (active_workspace))
+					|| window == window.get_screen ().get_active_window ()) {
 					foreach (unowned Wnck.Window w in windows)
-						if (!w.is_minimized () && w.is_in_viewport (w.get_screen ().get_active_workspace ())) {
+						if (!w.is_minimized () && w.is_in_viewport (active_workspace)) {
 							w.minimize ();
 							Thread.usleep (WINDOW_GROUP_DELAY);
 						}
 					return;
 				}
+			}
 
 			// Get all windows on the current workspace in the foreground
-			foreach (unowned Wnck.Window window in windows)
-				if (window.is_in_viewport (window.get_screen ().get_active_workspace ())) {
+			foreach (unowned Wnck.Window window in windows) {
+				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
+				if (active_workspace != null && window.is_in_viewport (active_workspace)) {
 					foreach (unowned Wnck.Window w in windows)
-						if (w.is_in_viewport (w.get_screen ().get_active_workspace ())) {
+						if (w.is_in_viewport (active_workspace)) {
 							center_and_focus_window (w);
 							Thread.usleep (WINDOW_GROUP_DELAY);
 						}
 					return;
 				}
+			}
 			
 			// Focus most-top window and all others on its workspace
 			intelligent_focus_off_viewport_window (windows.nth_data (0), windows);
@@ -481,7 +491,7 @@ namespace Plank.Services.Windows
 		static void center_and_focus_window (Wnck.Window w)
 		{
 			var time = Gtk.get_current_event_time ();
-			unowned Wnck.Workspace workspace = w.get_workspace ();
+			unowned Wnck.Workspace? workspace = w.get_workspace ();
 			
 			if (workspace != null && workspace != w.get_screen ().get_active_workspace ())
 				workspace.activate (time);

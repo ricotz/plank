@@ -380,9 +380,9 @@ namespace Plank
 			var intersect = false;
 			var dialog_intersect = false;
 			var active_maximized_intersect = false;
-			var screen = Wnck.Screen.get_default ();
-			var active_window = screen.get_active_window ();
-			var active_workspace = screen.get_active_workspace ();
+			unowned Wnck.Screen screen = Wnck.Screen.get_default ();
+			unowned Wnck.Window? active_window = screen.get_active_window ();
+			unowned Wnck.Workspace? active_workspace = screen.get_active_workspace ();
 			
 			if (active_window != null && active_workspace != null)
 				foreach (var w in screen.get_windows ()) {

@@ -43,7 +43,7 @@ namespace Plank.Items
 		{
 			Prefs.notify["CurrentWorkspaceOnly"].connect (handle_setting_changed);
 			
-			var wnck_screen = Wnck.Screen.get_default ();
+			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
 			wnck_screen.active_window_changed.connect_after (handle_window_changed);
 			wnck_screen.active_workspace_changed.connect_after (handle_workspace_changed);
 			wnck_screen.viewports_changed.connect_after (handle_viewports_changed);
@@ -53,7 +53,7 @@ namespace Plank.Items
 		{
 			Prefs.notify["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
 			
-			var wnck_screen = Wnck.Screen.get_default ();
+			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
 			wnck_screen.active_window_changed.disconnect (handle_window_changed);
 			wnck_screen.active_workspace_changed.disconnect (handle_workspace_changed);
 			wnck_screen.viewports_changed.disconnect (handle_viewports_changed);
@@ -64,10 +64,10 @@ namespace Plank.Items
 			Logger.verbose ("DefaultDockItemProvider.update_visible_items ()");
 			
 			if (Prefs.CurrentWorkspaceOnly) {
-				var active_workspace = Wnck.Screen.get_default ().get_active_workspace ();
+				unowned Wnck.Workspace? active_workspace = Wnck.Screen.get_default ().get_active_workspace ();
 				foreach (var item in internal_items) {
 					unowned TransientDockItem? transient = (item as TransientDockItem);
-					item.IsVisible = (transient == null || transient.App == null
+					item.IsVisible = (transient == null || transient.App == null || active_workspace == null
 						|| WindowControl.has_window_on_workspace (transient.App, active_workspace));
 				}
 			} else {
@@ -141,22 +141,26 @@ namespace Plank.Items
 				remove_item (remove);
 		}
 		
-		void handle_window_changed (Wnck.Window? previous)
+		void handle_window_changed (Wnck.Screen screen, Wnck.Window? previous)
 		{
 			if (!Prefs.CurrentWorkspaceOnly)
 				return;
 			
-			if (previous == null
-				|| previous.get_workspace () == previous.get_screen ().get_active_workspace ())
+			unowned Wnck.Workspace? active_workspace = screen.get_active_workspace ();
+			if (previous == null || active_workspace == null
+				|| previous.get_workspace () == active_workspace)
 				return;
 			
 			update_visible_items ();
 		}
 		
-		void handle_workspace_changed (Wnck.Screen screen, Wnck.Workspace previously_active_space)
+		void handle_workspace_changed (Wnck.Screen screen, Wnck.Workspace? previous)
 		{
-			if (!Prefs.CurrentWorkspaceOnly
-				|| screen.get_active_workspace ().is_virtual ())
+			if (!Prefs.CurrentWorkspaceOnly)
+				return;
+			
+			unowned Wnck.Workspace? active_workspace = screen.get_active_workspace ();
+			if (active_workspace != null && active_workspace.is_virtual ())
 				return;
 			
 			update_visible_items ();
@@ -164,8 +168,11 @@ namespace Plank.Items
 		
 		void handle_viewports_changed (Wnck.Screen screen)
 		{
-			if (!Prefs.CurrentWorkspaceOnly
-				|| !screen.get_active_workspace ().is_virtual ())
+			if (!Prefs.CurrentWorkspaceOnly)
+				return;
+			
+			unowned Wnck.Workspace? active_workspace = screen.get_active_workspace ();
+			if (active_workspace != null && !active_workspace.is_virtual ())
 				return;
 			
 			update_visible_items ();
