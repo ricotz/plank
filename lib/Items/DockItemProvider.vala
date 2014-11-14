@@ -32,15 +32,30 @@ namespace Plank.Items
 			Object ();
 		}
 		
+		/**
+		 * Whether a dock item with the given URI exists in this provider.
+		 *
+		 * @param uri the URI to look for
+		 */
 		public virtual bool item_exists_for_uri (string uri)
+		{
+			return (item_for_uri (uri) != null);
+		}
+		
+		/**
+		 * Get the dock item for the given URI if it exists or null.
+		 *
+		 * @param uri the URI to look for
+		 */
+		public virtual unowned DockItem? item_for_uri (string uri)
 		{
 			foreach (var element in internal_items) {
 				unowned DockItem? item = (element as DockItem);
 				if (item != null && item.Launcher == uri)
-					return true;
+					return item;
 			}
 			
-			return false;
+			return null;
 		}
 		
 		/**
