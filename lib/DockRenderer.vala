@@ -59,6 +59,10 @@ namespace Plank
 		int window_scale_factor = 1;
 		bool is_first_frame = true;
 		
+#if BENCHMARK
+		ArrayList<string> benchmark;
+#endif
+		
 		/**
 		 * Create a new dock renderer for a dock.
 		 *
@@ -72,6 +76,9 @@ namespace Plank
 		
 		construct
 		{
+#if BENCHMARK
+			benchmark = new ArrayList<string> ();
+#endif
 			controller.prefs.notify.connect (prefs_changed);
 			
 			load_theme ();
@@ -212,10 +219,6 @@ namespace Plank
 			else
 				opacity = 1.0;
 		}
-		
-#if BENCHMARK
-		ArrayList<string> benchmark = new ArrayList<string> ();
-#endif
 		
 		/**
 		 * Draws the dock onto a context.

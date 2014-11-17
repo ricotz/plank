@@ -37,7 +37,7 @@ namespace Plank.Items
 		
 		FileMonitor? items_monitor = null;
 		bool delay_items_monitor_handle = false;
-		Gee.ArrayList<GLib.File> queued_files = new Gee.ArrayList<GLib.File> ();
+		Gee.ArrayList<GLib.File> queued_files;
 		
 		uint launcher_entry_dbus_signal_id = 0;
 		uint dbus_name_owner_changed_signal_id = 0;
@@ -54,6 +54,8 @@ namespace Plank.Items
 		
 		construct
 		{
+			queued_files = new Gee.ArrayList<GLib.File> ();
+			
 			// Make sure our launchers-directory exists
 			Paths.ensure_directory_exists (LaunchersDir);
 			
@@ -80,6 +82,8 @@ namespace Plank.Items
 		
 		~ApplicationDockItemProvider ()
 		{
+			queued_files = null;
+			
 			Matcher.get_default ().application_opened.disconnect (app_opened);
 			
 			if (items_monitor != null) {

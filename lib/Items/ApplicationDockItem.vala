@@ -103,14 +103,9 @@ namespace Plank.Items
 			}
 		}
 		
-		Gee.ArrayList<string> supported_mime_types = new Gee.ArrayList<string> ();
-		
-		Gee.ArrayList<string> actions = new Gee.ArrayList<string> ();
-#if HAVE_GEE_0_8
-		Gee.HashMap<string, string> actions_map = new Gee.HashMap<string, string> ();
-#else
-		Gee.HashMap<string, string> actions_map = new Gee.HashMap<string, string> (str_hash, str_equal);
-#endif
+		Gee.ArrayList<string> supported_mime_types;
+		Gee.ArrayList<string> actions;
+		Gee.HashMap<string, string> actions_map;
 		
 		string? unity_application_uri = null;
 		string? unity_dbusname = null;
@@ -133,6 +128,14 @@ namespace Plank.Items
 		
 		construct
 		{
+			supported_mime_types = new Gee.ArrayList<string> ();
+			actions = new Gee.ArrayList<string> ();
+#if HAVE_GEE_0_8
+			actions_map = new Gee.HashMap<string, string> ();
+#else
+			actions_map = new Gee.HashMap<string, string> (str_hash, str_equal);
+#endif
+			
 			Prefs.notify["Launcher"].connect (handle_launcher_changed);
 			
 			if (!is_valid ())
@@ -143,6 +146,10 @@ namespace Plank.Items
 		
 		~ApplicationDockItem ()
 		{
+			supported_mime_types = null;
+			actions = null;
+			actions_map = null;
+			
 			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
 			
 			App = null;

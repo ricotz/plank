@@ -39,16 +39,22 @@ namespace Plank.Services.Windows
 			return matcher;
 		}
 		
-		Gee.HashSet<Bamf.View> pending_views = new Gee.HashSet<Bamf.View> ();
+		Gee.HashSet<Bamf.View> pending_views;
 		Bamf.Matcher? bamf_matcher;
 		
 		private Matcher ()
+		{
+		}
+		
+		construct
 		{
 			bamf_matcher = Bamf.Matcher.get_default ();
 			bamf_matcher.active_application_changed.connect_after (handle_active_application_changed);
 			bamf_matcher.active_window_changed.connect_after (handle_active_window_changed);
 			bamf_matcher.view_opened.connect_after (handle_view_opened);
 			bamf_matcher.view_closed.connect_after (handle_view_closed);
+			
+			pending_views = new Gee.HashSet<Bamf.View> ();
 		}
 		
 		~Matcher ()
