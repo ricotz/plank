@@ -431,6 +431,8 @@ namespace Plank.Items
 					remove_item (transient_item);
 				else
 					item_state_changed ();
+				
+				break;
 			}
 		}
 		
