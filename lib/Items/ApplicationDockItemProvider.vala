@@ -333,10 +333,14 @@ namespace Plank.Items
 				if (item == null)
 					continue;
 				
-				if (item.is_valid ())
-					add_item (item);
-				else
+				unowned DockItem? dupe;
+				if ((dupe = item_for_uri (item.Launcher)) != null)
+					warning ("The launcher '%s' in dock item '%s' is already managed by dock item '%s'",
+						item.Launcher, file.get_path (), dupe.DockItemFilename);
+				else if (!item.is_valid ())
 					warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());
+				else
+					add_item (item);
 			}
 			
 			queued_files.clear ();
