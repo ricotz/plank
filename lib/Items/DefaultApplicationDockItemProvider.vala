@@ -36,7 +36,7 @@ namespace Plank.Items
 		 */
 		public DefaultApplicationDockItemProvider (DockPreferences prefs, File launchers_dir)
 		{
-			Object (Prefs : prefs, LaunchersDir : launchers_dir, HandlesTransients : true);
+			Object (Prefs : prefs, LaunchersDir : launchers_dir);
 		}
 		
 		construct
