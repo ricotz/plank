@@ -268,8 +268,15 @@ namespace Plank.Items
 			if (new_item == old_item)
 				return;
 			
-			if (!internal_items.contains (old_item)) {
+			int index;
+			
+			if ((index = internal_items.index_of (old_item)) < 0) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", old_item.Text);
+				return;
+			}
+			
+			if (internal_items.contains (new_item)) {
+				critical ("Item '%s' already exists in this DockItemProvider.", new_item.Text);
 				return;
 			}
 			
@@ -282,7 +289,6 @@ namespace Plank.Items
 			
 			disconnect_element (old_item);
 			
-			var index = internal_items.index_of (old_item);
 			internal_items[index] = new_item;
 			old_item.Container = null;
 			new_item.Container = this;
@@ -291,7 +297,7 @@ namespace Plank.Items
 			//FIXME new_item.Position = old_item.Position;
 			connect_element (new_item);
 			
-			if (visible_items.index_of (old_item) >= 0)
+			if (visible_items.contains (old_item))
 				update_visible_items ();
 		}
 		
