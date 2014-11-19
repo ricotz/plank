@@ -405,7 +405,8 @@ namespace Plank.Items
 			if (pbuf == null) {
 #if HAVE_HIDPI
 				icon = DrawingService.load_icon_for_scale (Icon, surface.Width, surface.Height, (int) double.max (x_scale, y_scale));
-				cairo_surface_set_device_scale (icon, 1.0, 1.0);
+				if (icon != null)
+					cairo_surface_set_device_scale (icon, 1.0, 1.0);
 #else
 				pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
 #endif
