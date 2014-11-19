@@ -10,6 +10,7 @@ SUBDIRS += apport
 endif
 
 EXTRA_DIST = \
+	application-default-icon.svg \
 	plank.appdata.xml.in \
 	plank.desktop.in \
 	poof.png \

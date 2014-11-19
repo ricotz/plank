@@ -22,7 +22,7 @@ namespace Plank.Drawing
 	 */
 	public class DrawingService : GLib.Object
 	{
-		const string MISSING_ICONS = "application-default-icon;;application-x-executable";
+		const string DEFAULT_ICON = "application-default-icon";
 		
 		const string FILE_ATTRIBUTE_CUSTOM_ICON = "metadata::custom-icon";
 		const string FILE_ATTRIBUTE_CUSTOM_ICON_NAME = "metadata::custom-icon-name";
@@ -110,8 +110,7 @@ namespace Plank.Drawing
 			
 			foreach (unowned string s in names.split (";;"))
 				all_names.add (s);
-			foreach (unowned string s in MISSING_ICONS.split (";;"))
-				all_names.add (s);
+			all_names.add (DEFAULT_ICON);
 			
 			Gdk.Pixbuf? pbuf = null;
 			
@@ -130,6 +129,15 @@ namespace Plank.Drawing
 				if (name != all_names.last ())
 					message ("Could not find icon '%s'", name);
 			}
+			
+			// Load internal default icon as last resort
+			if (pbuf == null)
+				try {
+					pbuf = new Gdk.Pixbuf.from_resource_at_scale ("%s/img/application-default-icon.svg".printf (Plank.G_RESOURCE_PATH),
+						width, height, true);
+				} catch (Error e) {
+					critical (e.message);
+				}
 			
 			if (pbuf != null) {
 				if (width != -1 && height != -1 && (width != pbuf.width || height != pbuf.height))
@@ -218,8 +226,7 @@ namespace Plank.Drawing
 			
 			foreach (unowned string s in names.split (";;"))
 				all_names.add (s);
-			foreach (unowned string s in MISSING_ICONS.split (";;"))
-				all_names.add (s);
+			all_names.add (DEFAULT_ICON);
 			
 			Cairo.Surface? surface = null;
 			
@@ -245,8 +252,20 @@ namespace Plank.Drawing
 					message ("Could not find icon '%s'", name);
 			}
 			
-			if (surface == null)
-				warning ("No icon found of '%s'", names);
+			// Load internal default icon as last resort
+			if (surface == null) {
+				try {
+					var pbuf = new Gdk.Pixbuf.from_resource_at_scale ("%s/img/application-default-icon.svg".printf (Plank.G_RESOURCE_PATH),
+						width, height, true);
+					surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
+					var cr = new Cairo.Context (surface);
+					Gdk.cairo_set_source_pixbuf (cr, pbuf, (width - pbuf.width) / 2, (height - pbuf.height) / 2);
+					cr.paint ();
+					cairo_surface_set_device_scale (surface, scale, scale);
+				} catch (Error e) {
+					critical (e.message);
+				}
+			}
 			
 			return surface;
 		}

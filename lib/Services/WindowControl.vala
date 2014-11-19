@@ -90,8 +90,14 @@ namespace Plank.Services.Windows
 			
 			for (var i = 0; xids != null && i < xids.length && pbuf == null; i++) {
 				unowned Wnck.Window window = Wnck.Window.@get (xids.index (i));
-				if (window != null)
-					pbuf = window.get_icon ();
+				if (window == null)
+					continue;
+				
+				pbuf = window.get_icon ();
+				if (window.get_icon_is_fallback ())
+					pbuf = null;
+				
+				break;
 			}
 			
 			return pbuf;
@@ -100,13 +106,18 @@ namespace Plank.Services.Windows
 		public static unowned Gdk.Pixbuf? get_window_icon (Bamf.Window window)
 		{
 			unowned Wnck.Window w = Wnck.Window.@get (window.get_xid ());
+			unowned Gdk.Pixbuf? pbuf = null;
 			
 			warn_if_fail (w != null);
 			
 			if (w == null)
 				return null;
 			
-			return w.get_icon ();
+			pbuf = w.get_icon ();
+			if (w.get_icon_is_fallback ())
+				pbuf = null;
+			
+			return pbuf;
 		}
 		
 		public static uint get_num_windows (Bamf.Application app)
