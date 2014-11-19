@@ -509,7 +509,7 @@ namespace Plank.Items
 					var window_name = window.get_name ();
 					window_name = shorten_window_name (window_name);
 					
-					if (pbuf == null)
+					if (pbuf != null)
 						window_item = create_menu_item_with_pixbuf (window_name, pbuf, true);
 					else 
 						window_item = create_menu_item (window_name, Icon, true);
