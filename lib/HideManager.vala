@@ -59,6 +59,18 @@ namespace Plank
 		const int PRESSURE_TIMEOUT = 1000;
 #endif
 		
+		static int plank_pid;
+		
+		static construct
+		{
+			try {
+				var credentials = new Credentials ();
+				plank_pid = credentials.get_unix_pid ();
+			} catch {
+				plank_pid = -1;
+			}
+		}
+		
 		public DockController controller { private get; construct; }
 		
 		/**
@@ -394,7 +406,8 @@ namespace Plank
 						continue;
 					if (!w.is_visible_on_workspace (active_workspace))
 						continue;
-					if (w.get_pid () != active_window.get_pid ())
+					var pid = w.get_pid ();
+					if (pid == plank_pid || pid != active_window.get_pid ())
 						continue;
 					
 					if (window_geometry (w).intersect (dock_rect, null)) {
