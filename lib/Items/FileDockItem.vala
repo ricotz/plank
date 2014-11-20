@@ -148,6 +148,7 @@ namespace Plank.Items
 			cr.arc (width - radius - line_width_half, height - radius - line_width_half, radius, 0, Math.PI_2);
 			cr.arc (radius + line_width_half, height - radius - line_width_half, radius, Math.PI_2, Math.PI);
 			cr.arc (radius + line_width_half, radius + line_width_half, radius, Math.PI, -Math.PI_2);
+			cr.close_path ();
 			
 			cr.set_source_rgba (1, 1, 1, 0.6);
 			cr.set_line_width (2 * line_width_half);

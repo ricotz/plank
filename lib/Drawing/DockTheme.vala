@@ -226,6 +226,7 @@ namespace Plank.Drawing
 			
 			cr.move_to (x, y);
 			cr.arc (x, y, size / 2, 0, Math.PI * 2);
+			cr.close_path ();
 			
 			var rg = new Cairo.Pattern.radial (x, y, 0, x, y, size / 2);
 			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
@@ -265,6 +266,7 @@ namespace Plank.Drawing
 			
 			cr.move_to (x, x);
 			cr.arc (x, x, size / 2, 0, Math.PI * 2);
+			cr.close_path ();
 			
 			var rg = new Cairo.Pattern.radial (x, x, 0, x, x, size / 2);
 			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
