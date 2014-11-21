@@ -63,12 +63,7 @@ namespace Plank
 		
 		static construct
 		{
-			try {
-				var credentials = new Credentials ();
-				plank_pid = credentials.get_unix_pid ();
-			} catch {
-				plank_pid = -1;
-			}
+			plank_pid = getpid ();
 		}
 		
 		public DockController controller { private get; construct; }

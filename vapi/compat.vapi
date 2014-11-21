@@ -35,6 +35,9 @@ namespace Plank
 #endif
 	[CCode (cheader_filename = "sys/prctl.h", cname = "prctl", sentinel = "")]
 	public int prctl (int option, ...);
+
+	[CCode (cheader_filename = "unistd.h", cname = "getpid")]
+	public int getpid ();
 }
 
 namespace Gdk
