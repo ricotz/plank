@@ -167,12 +167,14 @@ namespace Plank.Factories
 					if (item == null)
 						continue;
 					
-					if (!item.is_valid ()) {
+					unowned DockItem? dupe;
+					if ((dupe = find_item_for_uri (result, item.Launcher)) != null)
+						warning ("The launcher '%s' in dock item '%s' is already managed by dock item '%s'",
+							item.Launcher, file.get_path (), dupe.DockItemFilename);
+					else if (!item.is_valid ())
 						warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());
-						continue;
-					}
-					
-					result.add (item);
+					else
+						result.add (item);
 				}
 			} catch (Error e) {
 				critical ("Error loading dock items from '%s'. (%s)", source_dir.get_path () ?? "", e.message);
@@ -209,6 +211,17 @@ namespace Plank.Factories
 			return result;
 		}
 		
+		unowned DockItem? find_item_for_uri (Gee.ArrayList<DockItem> items, string uri)
+		{
+			foreach (var element in items) {
+				unowned DockItem? item = (element as DockItem);
+				if (item != null && item.Launcher == uri)
+					return item;
+			}
+			
+			return null;
+		}
+
 		bool make_default_gnome_items ()
 		{
 			var browser = AppInfo.get_default_for_type ("x-scheme-handler/http", false);
