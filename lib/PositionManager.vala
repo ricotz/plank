@@ -33,64 +33,58 @@ namespace Plank
 			public Gdk.Rectangle draw_region;
 			public Gdk.Rectangle background_region;
 			
-			public DockItemDrawValue move_in (Gtk.PositionType position, double damount)
+			public void move_in (Gtk.PositionType position, double damount)
 			{
-				var result = this;
 				var amount = (int) damount;
 				
 				switch (position) {
 				default:
 				case Gtk.PositionType.BOTTOM:
-					result.hover_region.y -= amount;
-					result.draw_region.y -= amount;
+					hover_region.y -= amount;
+					draw_region.y -= amount;
 					break;
 				case Gtk.PositionType.TOP:
-					result.hover_region.y += amount;
-					result.draw_region.y += amount;
+					hover_region.y += amount;
+					draw_region.y += amount;
 					break;
 				case Gtk.PositionType.LEFT:
-					result.hover_region.x += amount;
-					result.draw_region.x += amount;
+					hover_region.x += amount;
+					draw_region.x += amount;
 					break;
 				case Gtk.PositionType.RIGHT:
-					result.hover_region.x -= amount;
-					result.draw_region.x -= amount;
+					hover_region.x -= amount;
+					draw_region.x -= amount;
 					break;
 				}
-				
-				return result;
 			}
 			
-			public DockItemDrawValue move_right (Gtk.PositionType position, double damount)
+			public void move_right (Gtk.PositionType position, double damount)
 			{
-				var result = this;
 				var amount = (int) damount;
 				
 				switch (position) {
 				default:
 				case Gtk.PositionType.BOTTOM:
-					result.hover_region.x += amount;
-					result.draw_region.x += amount;
-					result.background_region.x += amount;
+					hover_region.x += amount;
+					draw_region.x += amount;
+					background_region.x += amount;
 					break;
 				case Gtk.PositionType.TOP:
-					result.hover_region.x += amount;
-					result.draw_region.x += amount;
-					result.background_region.x += amount;
+					hover_region.x += amount;
+					draw_region.x += amount;
+					background_region.x += amount;
 					break;
 				case Gtk.PositionType.LEFT:
-					result.hover_region.y += amount;
-					result.draw_region.y += amount;
-					result.background_region.y += amount;
+					hover_region.y += amount;
+					draw_region.y += amount;
+					background_region.y += amount;
 					break;
 				case Gtk.PositionType.RIGHT:
-					result.hover_region.y += amount;
-					result.draw_region.y += amount;
-					result.background_region.y += amount;
+					hover_region.y += amount;
+					draw_region.y += amount;
+					background_region.y += amount;
 					break;
 				}
-				
-				return result;
 			}
 		}
 		

@@ -425,7 +425,7 @@ namespace Plank
 					if (!screen_is_composited)
 						break;
 					var change = Math.fabs (Math.sin (2 * Math.PI * click_animation_progress) * position_manager.LaunchBounceHeight * double.min (1.0, 1.3333 * (1.0 - click_animation_progress)));
-					draw_value = draw_value.move_in (position, change);
+					draw_value.move_in (position, change);
 					break;
 				case Animation.DARKEN:
 					darken = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
@@ -508,7 +508,7 @@ namespace Plank
 				var bounce_animation_progress = urgent_time / (double) (theme.UrgentBounceTime * 1000);
 				if (bounce_animation_progress < 1.0) {
 					var change = Math.fabs (Math.sin (Math.PI * bounce_animation_progress) * position_manager.UrgentBounceHeight * double.min (1.0, 2.0 * (1.0 - bounce_animation_progress)));
-					draw_value = draw_value.move_in (position, change);
+					draw_value.move_in (position, change);
 				}
 			}
 			
@@ -518,7 +518,7 @@ namespace Plank
 				var move_animation_progress = move_time / (double) (theme.ItemMoveTime * 1000);
 				if (move_animation_progress < 1.0) {
 					var change = (1.0 - move_animation_progress) * (icon_size + position_manager.ItemPadding);
-					draw_value = draw_value.move_right (position, (item.Position < item.LastPosition ? change : -change));
+					draw_value.move_right (position, (item.Position < item.LastPosition ? change : -change));
 				} else {
 					item.unset_move_state ();
 				}
