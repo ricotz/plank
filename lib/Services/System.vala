@@ -121,7 +121,7 @@ namespace Plank.Services
 			if (app == null && files.length () == 0)
 				return;
 			
-			AppInfo info;
+			AppInfo? info = null;
 			
 			if (app != null) {
 				KeyFile keyfile;
@@ -162,8 +162,13 @@ namespace Plank.Services
 					info = files.first ().data.query_default_handler ();
 				} catch (Error e) {
 					critical (e.message);
-					return;
 				}
+			}
+			
+			if (info == null) {
+				critical ("Unable to use application/file '%s' for execution.",
+					(app != null ? app.get_path () : files.first ().data.get_path ()));
+				return;
 			}
 			
 			try {
