@@ -448,6 +448,10 @@ namespace Plank.Items
 			if (App != null)
 				windows = App.get_windows ();
 			
+			var window_count = 0U;
+			if (windows != null)
+				window_count = windows.length ();
+			
 			unowned DefaultApplicationDockItemProvider? default_provider = (Container as DefaultApplicationDockItemProvider);
 			if (default_provider != null
 				&& !default_provider.Prefs.LockItems
@@ -458,8 +462,8 @@ namespace Plank.Items
 				items.add (item);
 			}
 			
-			if (is_running () && windows != null && windows.length () > 0) {
-				var item = create_menu_item (_("_Close All"), "window-close-symbolic;;window-close");
+			if (is_running () && window_count > 0) {
+				var item = create_menu_item ((window_count > 1 ? _("_Close All") : _("_Close")), "window-close-symbolic;;window-close");
 				item.activate.connect (() => WindowControl.close_all (App));
 				items.add (item);
 			}
@@ -495,7 +499,7 @@ namespace Plank.Items
 				}
 			}
 			
-			if (is_running () && windows != null && windows.length () > 0) {
+			if (is_running () && window_count > 1) {
 				if (items.size > 0)
 					items.add (new Gtk.SeparatorMenuItem ());
 				
