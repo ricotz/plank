@@ -25,6 +25,7 @@ namespace Plank.Drawing
 	public abstract class Theme : Preferences
 	{
 		public const string DEFAULT_NAME = "Default";
+		public const string GTK_THEME_NAME = "Gtk+";
 		
 		File? theme_folder;
 		
@@ -314,6 +315,7 @@ namespace Plank.Drawing
 #endif
 			
 			list.add (DEFAULT_NAME);
+			list.add (GTK_THEME_NAME);
 			
 			// Look in user's themes-folder
 			try {
@@ -368,6 +370,9 @@ namespace Plank.Drawing
 			if (name == DEFAULT_NAME)
 				return get_default_theme_folder ();
 			
+			if (name == GTK_THEME_NAME)
+				return get_gtk_theme_folder ();
+			
 			File folder;
 			
 			// Look in user's themes-folder
@@ -399,6 +404,48 @@ namespace Plank.Drawing
 			
 			warning ("%s is not a folder fallback to the built-in defaults!", folder.get_path ());
 			
+			return null;
+		}
+		
+		static File? get_gtk_theme_folder ()
+		{
+			File folder;
+			unowned string exec_name = Factories.Factory.main.exec_name;
+			var name = Gtk.Settings.get_default ().gtk_theme_name;
+					
+			// Look in user's xdg-themes-folder
+			folder = Paths.DataHomeFolder.get_child ("themes/%s".printf (name));
+			if (folder.query_exists ()) {
+				folder = folder.get_child (exec_name);
+				if (folder.query_exists ()
+					&& folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY)
+					return folder;
+				
+				warning ("Currently selected gtk+ theme '%s' does not provide a dock theme, fallback to the built-in defaults!", name);
+				return null;
+			}
+			
+			// Look in user's legacy xdg-themes-folder
+			folder = Paths.HomeFolder.get_child (".themes/%s".printf (name));
+			if (folder.query_exists ()) {
+				folder = folder.get_child (exec_name);
+				if (folder.query_exists ()
+					&& folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY)
+					return folder;
+				
+				warning ("Currently selected gtk+ theme '%s' does not provide a dock theme, fallback to the built-in defaults!", name);
+				return null;
+			}
+			
+			// Look in system's xdg-themes-folders
+			foreach (var datafolder in Paths.DataDirFolders) {
+				folder = datafolder.get_child ("themes/%s/%s".printf (name, exec_name));
+				if (folder.query_exists ()
+					&& folder.query_file_type (FileQueryInfoFlags.NONE, null) == FileType.DIRECTORY)
+					return folder;
+			}
+			
+			warning ("Currently selected gtk+ theme '%s' does not provide a dock theme, fallback to the built-in defaults!", name);
 			return null;
 		}
 	}

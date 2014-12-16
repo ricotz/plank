@@ -59,6 +59,8 @@ namespace Plank
 		int window_scale_factor = 1;
 		bool is_first_frame = true;
 		
+		ulong gtk_theme_name_changed_id = 0;
+		
 #if BENCHMARK
 		ArrayList<string> benchmark;
 #endif
@@ -160,13 +162,21 @@ namespace Plank
 			if (is_reload)
 				theme.notify.disconnect (theme_changed);
 			
-			theme = new DockTheme (controller.prefs.Theme);
+			unowned string name = controller.prefs.Theme;
+			if (name == Drawing.Theme.GTK_THEME_NAME) {
+				if (gtk_theme_name_changed_id <= 0)
+					gtk_theme_name_changed_id = Gtk.Settings.get_default ().notify["gtk-theme-name"].connect (load_theme);
+			} else if (gtk_theme_name_changed_id > 0) {
+				SignalHandler.disconnect (Gtk.Settings.get_default (), gtk_theme_name_changed_id);
+				gtk_theme_name_changed_id = 0;
+			}
+			
+			theme = new DockTheme (name);
 			theme.load ("dock");
 			theme.notify.connect (theme_changed);
 			
-			if (is_reload) {
-				reset_position_manager ();
-			}
+			if (is_reload)
+				theme_changed ();
 		}
 		
 		/**
