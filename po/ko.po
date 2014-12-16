@@ -7,53 +7,183 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-16 15:15+0000\n"
-"PO-Revision-Date: 2013-06-17 06:21+0000\n"
-"Last-Translator: cafeinoz <Unknown>\n"
+"POT-Creation-Date: 2014-12-13 19:32+0100\n"
+"PO-Revision-Date: 2014-12-10 23:32+0000\n"
+"Last-Translator: Kim Seung kyu <Unknown>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-17 07:12+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2014-12-16 11:48+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
+
+#: ../data/plank.appdata.xml.in.h:1
+msgid ""
+"Plank is meant to be the simplest dock on the planet. The goal is to provide "
+"just what a dock needs and absolutely nothing more."
+msgstr ""
+"플랭크는 가장 단순한 닥 프로그램입니다. 이 프로그램의 목적은 닥의 가장 기본적인 기능을 제공하는 것 이상도 이하도 아닙니다."
+
+#: ../data/plank.appdata.xml.in.h:2
+msgid ""
+"It is, however, a library which can be extended to create other dock "
+"programs with more advanced features. Thus, Plank is the underlying "
+"technology for Docky (starting in version 3.0.0) and aims to provide all the "
+"core features while Docky extends it to add fancier things like Docklets, "
+"painters, settings dialogs, etc."
+msgstr ""
+"다만, 라이브러리를 사용해서 다른 닥 프로그램을 만들고 더 상세한 기능을 개발할 수 있습니다. 플랭크는 버전 3부터 Docky의 기반으로 "
+"사용되고 있으며, 저희는 기초적인 기능을 제공하고 Docky가 더 상세한 기능들을 제공할 것입니다."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "플랜크. 어리석게 간단합니다."
+msgstr "플랭크, 어리석을만큼 간단함."
 
-#: ../lib/Items/ApplicationDockItem.vala:356
-#: ../lib/Items/FileDockItem.vala:290 ../lib/Items/FileDockItem.vala:308
+#: ../data/ui/preferences.ui.h:1
+msgid "Theme:"
+msgstr "테마:"
+
+#: ../data/ui/preferences.ui.h:2
+msgid "Position:"
+msgstr "위치:"
+
+#: ../data/ui/preferences.ui.h:3
+msgid "Left"
+msgstr "왼쪽"
+
+#: ../data/ui/preferences.ui.h:4
+msgid "Right"
+msgstr "오른쪽"
+
+#: ../data/ui/preferences.ui.h:5
+msgid "Top"
+msgstr "위쪽"
+
+#: ../data/ui/preferences.ui.h:6
+msgid "Bottom"
+msgstr "아래쪽"
+
+#: ../data/ui/preferences.ui.h:7
+msgid "Alignment:"
+msgstr "정렬:"
+
+#: ../data/ui/preferences.ui.h:8
+msgid "Fill"
+msgstr "채우기"
+
+#: ../data/ui/preferences.ui.h:9
+msgid "Start"
+msgstr "시작"
+
+#: ../data/ui/preferences.ui.h:10
+msgid "End"
+msgstr "종료"
+
+#: ../data/ui/preferences.ui.h:11
+msgid "Center"
+msgstr "가운데"
+
+#: ../data/ui/preferences.ui.h:12
+msgid "On Primary Display:"
+msgstr "첫번째 화면에:"
+
+#: ../data/ui/preferences.ui.h:13
+msgid "Offset in percent from the center of the screen-edge"
+msgstr "화면 끝에서의 여백"
+
+#: ../data/ui/preferences.ui.h:14
+msgid "Icon Alignment:"
+msgstr "아이콘 정렬:"
+
+#: ../data/ui/preferences.ui.h:15
+msgid "Icon Size:"
+msgstr "아이콘 크기:"
+
+#: ../data/ui/preferences.ui.h:16
+msgid "Appearance"
+msgstr "모양"
+
+#: ../data/ui/preferences.ui.h:17
+msgid "Show Unpinned:"
+msgstr "고정되지 않은 것을 보여주기:"
+
+#: ../data/ui/preferences.ui.h:18
+msgid "Restrict to Workspace:"
+msgstr "작업공간으로 제한하기:"
+
+#: ../data/ui/preferences.ui.h:19
+msgid "Lock Icons:"
+msgstr "잠금 아이콘:"
+
+#: ../data/ui/preferences.ui.h:20
+msgid "Automatic Pinning:"
+msgstr "자동으로 고정하기:"
+
+#: ../data/ui/preferences.ui.h:21
+msgid "Intellihide"
+msgstr "똑똑하게 숨기기"
+
+#: ../data/ui/preferences.ui.h:22
+msgid "Autohide"
+msgstr "자동으로 숨기기"
+
+#: ../data/ui/preferences.ui.h:23
+msgid "Dodge maximized window"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:24
+msgid "Delay in ms before showing the dock"
+msgstr "닥을 보여주는 것을 지연시키기 (ms)"
+
+#: ../data/ui/preferences.ui.h:25
+msgid "Pressure Reveal:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:26
+msgid "Item Management"
+msgstr "항목 관리"
+
+#: ../data/ui/preferences.ui.h:27
+msgid "Hide Dock"
+msgstr "닥 숨기기"
+
+#: ../data/ui/preferences.ui.h:28
+msgid "Behaviour"
+msgstr "동작"
+
+#: ../lib/Items/ApplicationDockItem.vala:459
+#: ../lib/Items/FileDockItem.vala:308 ../lib/Items/FileDockItem.vala:326
 msgid "_Keep in Dock"
 msgstr "도크 안에 보관(_K)"
 
-#: ../lib/Items/ApplicationDockItem.vala:366
-msgid "Unma_ximize"
-msgstr "최대화 취소 (_X)"
-
-#: ../lib/Items/ApplicationDockItem.vala:370
-msgid "Ma_ximize"
-msgstr "최대화 (_X)"
-
-#: ../lib/Items/ApplicationDockItem.vala:375
+#: ../lib/Items/ApplicationDockItem.vala:466
 msgid "_Close All"
 msgstr "모두 닫기 (_C)"
 
-#: ../lib/Items/FileDockItem.vala:295
+#: ../lib/Items/ApplicationDockItem.vala:466
+msgid "_Close"
+msgstr ""
+
+#: ../lib/Items/FileDockItem.vala:313
 msgid "_Open in File Browser"
 msgstr "파일 탐색기 안에서 열기 (_O)"
 
-#: ../lib/Items/FileDockItem.vala:313
+#: ../lib/Items/FileDockItem.vala:331
 msgid "_Open"
 msgstr "열기 (_O)"
 
-#: ../lib/Items/FileDockItem.vala:317
+#: ../lib/Items/FileDockItem.vala:335
 msgid "Open Containing _Folder"
 msgstr "들어 있는 폴더 열기 (_F)"
 
-#: ../lib/Items/PlankDockItem.vala:79
-msgid "Get _Help Online..."
-msgstr "온라인은 도움 가져... (_H)"
+#: ../lib/Items/PlaceholderDockItem.vala:35
+msgid "Drop applications or files here"
+msgstr "여기에 어플리케이션이나 파일을 놓으세요"
 
-#: ../lib/Items/PlankDockItem.vala:83
+#: ../lib/Items/PlankDockItem.vala:78
+msgid "Get _Help Online..."
+msgstr "온라인으로 도움받기... (_H)"
+
+#: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
-msgstr "이를 프로그램 번역... (_T)"
+msgstr "이 애플리케이션을 번역하기..(_T)"

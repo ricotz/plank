@@ -1,16 +1,16 @@
-# Basque translation for plank
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Japanese translation for plank
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the plank package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-12-13 19:32+0100\n"
-"PO-Revision-Date: 2012-07-23 18:29+0000\n"
-"Last-Translator: Ibai Oihanguren Sala <Unknown>\n"
-"Language-Team: Basque <eu@li.org>\n"
+"PO-Revision-Date: 2013-11-02 17:24+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -34,7 +34,7 @@ msgstr ""
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "Plank. Inozoentzako ere erabilerraza."
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
@@ -151,11 +151,11 @@ msgstr ""
 #: ../lib/Items/ApplicationDockItem.vala:459
 #: ../lib/Items/FileDockItem.vala:308 ../lib/Items/FileDockItem.vala:326
 msgid "_Keep in Dock"
-msgstr "_Mantendu atrakean"
+msgstr ""
 
 #: ../lib/Items/ApplicationDockItem.vala:466
 msgid "_Close All"
-msgstr "Itxi _dena"
+msgstr ""
 
 #: ../lib/Items/ApplicationDockItem.vala:466
 msgid "_Close"
@@ -163,15 +163,15 @@ msgstr ""
 
 #: ../lib/Items/FileDockItem.vala:313
 msgid "_Open in File Browser"
-msgstr "Ireki _fitxategi-arakatzailean"
+msgstr ""
 
 #: ../lib/Items/FileDockItem.vala:331
 msgid "_Open"
-msgstr "_Ireki"
+msgstr ""
 
 #: ../lib/Items/FileDockItem.vala:335
 msgid "Open Containing _Folder"
-msgstr "Ireki daukan _karpeta"
+msgstr ""
 
 #: ../lib/Items/PlaceholderDockItem.vala:35
 msgid "Drop applications or files here"
@@ -179,8 +179,8 @@ msgstr ""
 
 #: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
-msgstr "Lortu _laguntza online..."
+msgstr ""
 
 #: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
-msgstr "It_zuli aplikazio hau..."
+msgstr ""

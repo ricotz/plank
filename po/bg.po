@@ -7,57 +7,186 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-02-20 21:27+0000\n"
-"PO-Revision-Date: 2014-02-16 20:09+0000\n"
+"POT-Creation-Date: 2014-12-13 19:32+0100\n"
+"PO-Revision-Date: 2014-11-20 07:24+0000\n"
 "Last-Translator: spacy01 <Unknown>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-20 21:32+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-12-16 11:48+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
+
+#: ../data/plank.appdata.xml.in.h:1
+msgid ""
+"Plank is meant to be the simplest dock on the planet. The goal is to provide "
+"just what a dock needs and absolutely nothing more."
+msgstr ""
+"Plank е замислен като най-семплият док на планетата. Целта на Plank е да "
+"предостави само и единствено най-необходимото."
+
+#: ../data/plank.appdata.xml.in.h:2
+msgid ""
+"It is, however, a library which can be extended to create other dock "
+"programs with more advanced features. Thus, Plank is the underlying "
+"technology for Docky (starting in version 3.0.0) and aims to provide all the "
+"core features while Docky extends it to add fancier things like Docklets, "
+"painters, settings dialogs, etc."
+msgstr ""
+"Това е основната библиотека, която може да се разширява и да се създават и "
+"други докове с по-разширени възможности. Plank е технологията скрита в Docky "
+"(от версия 3.0.0 насам) и има за да даде всички основни функции, докато "
+"Docky прави всички красоти, като доклети, теми, диалози за настройка и т.н."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
 msgstr "Plank. Пределно прост."
 
-#: ../lib/Items/ApplicationDockItem.vala:375
-#: ../lib/Items/FileDockItem.vala:292 ../lib/Items/FileDockItem.vala:310
+#: ../data/ui/preferences.ui.h:1
+msgid "Theme:"
+msgstr "Тема:"
+
+#: ../data/ui/preferences.ui.h:2
+msgid "Position:"
+msgstr "Позиция:"
+
+#: ../data/ui/preferences.ui.h:3
+msgid "Left"
+msgstr "В ляво"
+
+#: ../data/ui/preferences.ui.h:4
+msgid "Right"
+msgstr "В дясно"
+
+#: ../data/ui/preferences.ui.h:5
+msgid "Top"
+msgstr "Горе"
+
+#: ../data/ui/preferences.ui.h:6
+msgid "Bottom"
+msgstr "Отдолу"
+
+#: ../data/ui/preferences.ui.h:7
+msgid "Alignment:"
+msgstr "Подравняване:"
+
+#: ../data/ui/preferences.ui.h:8
+msgid "Fill"
+msgstr "Запълване"
+
+#: ../data/ui/preferences.ui.h:9
+msgid "Start"
+msgstr "Начало"
+
+#: ../data/ui/preferences.ui.h:10
+msgid "End"
+msgstr "Край"
+
+#: ../data/ui/preferences.ui.h:11
+msgid "Center"
+msgstr "В центъра"
+
+#: ../data/ui/preferences.ui.h:12
+msgid "On Primary Display:"
+msgstr "На основния дисплей:"
+
+#: ../data/ui/preferences.ui.h:13
+msgid "Offset in percent from the center of the screen-edge"
+msgstr "Изместване в проценти от центъра до ръба на екрана"
+
+#: ../data/ui/preferences.ui.h:14
+msgid "Icon Alignment:"
+msgstr "Подравняване на иконите:"
+
+#: ../data/ui/preferences.ui.h:15
+msgid "Icon Size:"
+msgstr "Размер на иконите:"
+
+#: ../data/ui/preferences.ui.h:16
+msgid "Appearance"
+msgstr "Външен вид"
+
+#: ../data/ui/preferences.ui.h:17
+msgid "Show Unpinned:"
+msgstr "Покажи незакачените"
+
+#: ../data/ui/preferences.ui.h:18
+msgid "Restrict to Workspace:"
+msgstr "Ограничи до работния плот:"
+
+#: ../data/ui/preferences.ui.h:19
+msgid "Lock Icons:"
+msgstr "Заключи иконите:"
+
+#: ../data/ui/preferences.ui.h:20
+msgid "Automatic Pinning:"
+msgstr "Автоматично закачане:"
+
+#: ../data/ui/preferences.ui.h:21
+msgid "Intellihide"
+msgstr "Интелигентно скриване"
+
+#: ../data/ui/preferences.ui.h:22
+msgid "Autohide"
+msgstr "Автоматично скриване"
+
+#: ../data/ui/preferences.ui.h:23
+msgid "Dodge maximized window"
+msgstr "Да се избягват максимизирани прозорци"
+
+#: ../data/ui/preferences.ui.h:24
+msgid "Delay in ms before showing the dock"
+msgstr "Забавяне в милисекунди преди показване на дока"
+
+#: ../data/ui/preferences.ui.h:25
+msgid "Pressure Reveal:"
+msgstr "Натиск за показване:"
+
+#: ../data/ui/preferences.ui.h:26
+msgid "Item Management"
+msgstr "Управление на елементите"
+
+#: ../data/ui/preferences.ui.h:27
+msgid "Hide Dock"
+msgstr "Скрий дока"
+
+#: ../data/ui/preferences.ui.h:28
+msgid "Behaviour"
+msgstr "Поведение"
+
+#: ../lib/Items/ApplicationDockItem.vala:459
+#: ../lib/Items/FileDockItem.vala:308 ../lib/Items/FileDockItem.vala:326
 msgid "_Keep in Dock"
 msgstr "_Запазване в дока"
 
-#: ../lib/Items/ApplicationDockItem.vala:385
-msgid "Unma_ximize"
-msgstr "_Демаксимизиране"
-
-#: ../lib/Items/ApplicationDockItem.vala:389
-msgid "Ma_ximize"
-msgstr "_Максимизиране"
-
-#: ../lib/Items/ApplicationDockItem.vala:394
+#: ../lib/Items/ApplicationDockItem.vala:466
 msgid "_Close All"
 msgstr "_Затваряне на всички"
 
-#: ../lib/Items/FileDockItem.vala:297
+#: ../lib/Items/ApplicationDockItem.vala:466
+msgid "_Close"
+msgstr ""
+
+#: ../lib/Items/FileDockItem.vala:313
 msgid "_Open in File Browser"
 msgstr "Отваряне във _файловия браузър"
 
-#: ../lib/Items/FileDockItem.vala:315
+#: ../lib/Items/FileDockItem.vala:331
 msgid "_Open"
 msgstr "О_тваряне"
 
-#: ../lib/Items/FileDockItem.vala:319
+#: ../lib/Items/FileDockItem.vala:335
 msgid "Open Containing _Folder"
 msgstr "Отваряне на _съдържаща папка"
 
-#: ../lib/Items/PlaceholderDockItem.vala:37
+#: ../lib/Items/PlaceholderDockItem.vala:35
 msgid "Drop applications or files here"
 msgstr "Завлечете проложения или файлове тук"
 
-#: ../lib/Items/PlankDockItem.vala:79
+#: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
 msgstr "Получаване на помо_щ онлайн..."
 
-#: ../lib/Items/PlankDockItem.vala:83
+#: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
 msgstr "_Превеждане на това приложение..."

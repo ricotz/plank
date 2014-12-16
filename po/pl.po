@@ -7,54 +7,181 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-16 15:15+0000\n"
+"POT-Creation-Date: 2014-12-13 19:32+0100\n"
 "PO-Revision-Date: 2012-08-05 08:46+0000\n"
 "Last-Translator: Przemysław S <Unknown>\n"
 "Language-Team: Polish <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-17 07:12+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2014-12-16 11:48+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
 "Language: \n"
+
+#: ../data/plank.appdata.xml.in.h:1
+msgid ""
+"Plank is meant to be the simplest dock on the planet. The goal is to provide "
+"just what a dock needs and absolutely nothing more."
+msgstr ""
+
+#: ../data/plank.appdata.xml.in.h:2
+msgid ""
+"It is, however, a library which can be extended to create other dock "
+"programs with more advanced features. Thus, Plank is the underlying "
+"technology for Docky (starting in version 3.0.0) and aims to provide all the "
+"core features while Docky extends it to add fancier things like Docklets, "
+"painters, settings dialogs, etc."
+msgstr ""
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
 msgstr "Plank. Idiotycznie prosty."
 
-#: ../lib/Items/ApplicationDockItem.vala:356
-#: ../lib/Items/FileDockItem.vala:290 ../lib/Items/FileDockItem.vala:308
+#: ../data/ui/preferences.ui.h:1
+msgid "Theme:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:2
+msgid "Position:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:3
+msgid "Left"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:4
+msgid "Right"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:5
+msgid "Top"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:6
+msgid "Bottom"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:7
+msgid "Alignment:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:8
+msgid "Fill"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:9
+msgid "Start"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:10
+msgid "End"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:11
+msgid "Center"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:12
+msgid "On Primary Display:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:13
+msgid "Offset in percent from the center of the screen-edge"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:14
+msgid "Icon Alignment:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:15
+msgid "Icon Size:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:16
+msgid "Appearance"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:17
+msgid "Show Unpinned:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:18
+msgid "Restrict to Workspace:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:19
+msgid "Lock Icons:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:20
+msgid "Automatic Pinning:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:21
+msgid "Intellihide"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:22
+msgid "Autohide"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:23
+msgid "Dodge maximized window"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:24
+msgid "Delay in ms before showing the dock"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:25
+msgid "Pressure Reveal:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:26
+msgid "Item Management"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:27
+msgid "Hide Dock"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:28
+msgid "Behaviour"
+msgstr ""
+
+#: ../lib/Items/ApplicationDockItem.vala:459
+#: ../lib/Items/FileDockItem.vala:308 ../lib/Items/FileDockItem.vala:326
 msgid "_Keep in Dock"
 msgstr "_Przechowywanie aktywatora"
 
-#: ../lib/Items/ApplicationDockItem.vala:366
-msgid "Unma_ximize"
-msgstr "_Przywróć zwykły rozmiar"
-
-#: ../lib/Items/ApplicationDockItem.vala:370
-msgid "Ma_ximize"
-msgstr "Zm_aksymalizuj"
-
-#: ../lib/Items/ApplicationDockItem.vala:375
+#: ../lib/Items/ApplicationDockItem.vala:466
 msgid "_Close All"
 msgstr "Za_mknij wszystkie"
 
-#: ../lib/Items/FileDockItem.vala:295
+#: ../lib/Items/ApplicationDockItem.vala:466
+msgid "_Close"
+msgstr ""
+
+#: ../lib/Items/FileDockItem.vala:313
 msgid "_Open in File Browser"
 msgstr "_Otwórz w menedżerze plików"
 
-#: ../lib/Items/FileDockItem.vala:313
+#: ../lib/Items/FileDockItem.vala:331
 msgid "_Open"
 msgstr "_Uruchom"
 
-#: ../lib/Items/FileDockItem.vala:317
+#: ../lib/Items/FileDockItem.vala:335
 msgid "Open Containing _Folder"
 msgstr "Otwórz katalog _docelowy"
 
-#: ../lib/Items/PlankDockItem.vala:79
+#: ../lib/Items/PlaceholderDockItem.vala:35
+msgid "Drop applications or files here"
+msgstr ""
+
+#: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
 msgstr "Uzyskaj p_omoc online..."
 
-#: ../lib/Items/PlankDockItem.vala:83
+#: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
 msgstr "_Przetłumacz ten program..."

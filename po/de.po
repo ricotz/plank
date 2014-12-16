@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-07-21 12:39+0000\n"
-"PO-Revision-Date: 2014-07-05 14:24+0000\n"
-"Last-Translator: Tobias Bannert <Unknown>\n"
+"POT-Creation-Date: 2014-12-13 19:32+0100\n"
+"PO-Revision-Date: 2014-12-11 16:41+0000\n"
+"Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-07-24 05:32+0000\n"
-"X-Generator: Launchpad (build 17114)\n"
+"X-Launchpad-Export-Date: 2014-12-16 11:48+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -43,35 +43,151 @@ msgstr ""
 msgid "Plank. Stupidly simple."
 msgstr "Plank. Lächerlich einfach."
 
-#: ../lib/Items/ApplicationDockItem.vala:448
-#: ../lib/Items/FileDockItem.vala:293 ../lib/Items/FileDockItem.vala:311
+#: ../data/ui/preferences.ui.h:1
+msgid "Theme:"
+msgstr "Thema:"
+
+#: ../data/ui/preferences.ui.h:2
+msgid "Position:"
+msgstr "Position:"
+
+#: ../data/ui/preferences.ui.h:3
+msgid "Left"
+msgstr "Links"
+
+#: ../data/ui/preferences.ui.h:4
+msgid "Right"
+msgstr "Rechts"
+
+#: ../data/ui/preferences.ui.h:5
+msgid "Top"
+msgstr "Oben"
+
+#: ../data/ui/preferences.ui.h:6
+msgid "Bottom"
+msgstr "Unten"
+
+#: ../data/ui/preferences.ui.h:7
+msgid "Alignment:"
+msgstr "Ausrichtung:"
+
+#: ../data/ui/preferences.ui.h:8
+msgid "Fill"
+msgstr "Füllen"
+
+#: ../data/ui/preferences.ui.h:9
+msgid "Start"
+msgstr "Start"
+
+#: ../data/ui/preferences.ui.h:10
+msgid "End"
+msgstr "Ende"
+
+#: ../data/ui/preferences.ui.h:11
+msgid "Center"
+msgstr "Mitte"
+
+#: ../data/ui/preferences.ui.h:12
+msgid "On Primary Display:"
+msgstr "Auf dem primären Bildschirm:"
+
+#: ../data/ui/preferences.ui.h:13
+msgid "Offset in percent from the center of the screen-edge"
+msgstr "Versatz in Prozent von der Mitte des Bildschirmrands"
+
+#: ../data/ui/preferences.ui.h:14
+msgid "Icon Alignment:"
+msgstr "Symbolausrichtung:"
+
+#: ../data/ui/preferences.ui.h:15
+msgid "Icon Size:"
+msgstr "Symbolgröße:"
+
+#: ../data/ui/preferences.ui.h:16
+msgid "Appearance"
+msgstr "Erscheinungsbild"
+
+#: ../data/ui/preferences.ui.h:17
+msgid "Show Unpinned:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:18
+msgid "Restrict to Workspace:"
+msgstr "Auf Arbeitsfläche beschränken:"
+
+#: ../data/ui/preferences.ui.h:19
+msgid "Lock Icons:"
+msgstr "Symbole sperren:"
+
+#: ../data/ui/preferences.ui.h:20
+msgid "Automatic Pinning:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:21
+msgid "Intellihide"
+msgstr "Intelligent verbergen"
+
+#: ../data/ui/preferences.ui.h:22
+msgid "Autohide"
+msgstr "Automatisch verbergen"
+
+#: ../data/ui/preferences.ui.h:23
+msgid "Dodge maximized window"
+msgstr "Maximierten Fenstern ausweichen"
+
+#: ../data/ui/preferences.ui.h:24
+msgid "Delay in ms before showing the dock"
+msgstr "Verzögerung in ms, bevor das Dock angezeigt wird"
+
+#: ../data/ui/preferences.ui.h:25
+msgid "Pressure Reveal:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:26
+msgid "Item Management"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:27
+msgid "Hide Dock"
+msgstr "Dock verbergen"
+
+#: ../data/ui/preferences.ui.h:28
+msgid "Behaviour"
+msgstr "Verhalten"
+
+#: ../lib/Items/ApplicationDockItem.vala:459
+#: ../lib/Items/FileDockItem.vala:308 ../lib/Items/FileDockItem.vala:326
 msgid "_Keep in Dock"
 msgstr "Im Dock _behalten"
 
-#: ../lib/Items/ApplicationDockItem.vala:455
+#: ../lib/Items/ApplicationDockItem.vala:466
 msgid "_Close All"
 msgstr "_Alle schließen"
 
-#: ../lib/Items/FileDockItem.vala:298
+#: ../lib/Items/ApplicationDockItem.vala:466
+msgid "_Close"
+msgstr ""
+
+#: ../lib/Items/FileDockItem.vala:313
 msgid "_Open in File Browser"
 msgstr "In der _Dateiverwaltung öffnen"
 
-#: ../lib/Items/FileDockItem.vala:316
+#: ../lib/Items/FileDockItem.vala:331
 msgid "_Open"
 msgstr "Ö_ffnen"
 
-#: ../lib/Items/FileDockItem.vala:320
+#: ../lib/Items/FileDockItem.vala:335
 msgid "Open Containing _Folder"
 msgstr "Übergeordneten _Ordner öffnen"
 
-#: ../lib/Items/PlaceholderDockItem.vala:37
+#: ../lib/Items/PlaceholderDockItem.vala:35
 msgid "Drop applications or files here"
 msgstr "Anwendungen oder Dateien hier ablegen"
 
-#: ../lib/Items/PlankDockItem.vala:79
+#: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
 msgstr "Im Netz _Hilfe erhalten …"
 
-#: ../lib/Items/PlankDockItem.vala:83
+#: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
 msgstr "_Diese Anwendung übersetzen …"
