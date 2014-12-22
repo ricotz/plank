@@ -86,9 +86,7 @@ namespace Plank.Tests
 	{
 		FileDockItem item;
 		
-		File file = File.new_for_path (Config.DATA_DIR + "/test.desktop");
-		item = new FileDockItem ();
-		item.Prefs.Launcher = file.get_uri ();
+		item = new FileDockItem.with_file (File.new_for_path (Config.DATA_DIR + "/test.desktop"));
 		
 		var icon = item.get_surface_copy (64, 64, new DockSurface (1, 1));
 		assert (icon != null);

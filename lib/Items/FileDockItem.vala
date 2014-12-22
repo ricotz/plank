@@ -30,15 +30,27 @@ namespace Plank.Items
 	{
 		const string DEFAULT_ICONS = "inode-directory;;folder";
 		
-		File OwnedFile { get; set; }
+		public File OwnedFile { get; protected construct set; }
+		
 		FileMonitor? dir_monitor;
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public FileDockItem.with_file (GLib.File file)
+		{
+			var prefs = new DockItemPreferences ();
+			prefs.Launcher = file.get_uri ();
+			
+			GLib.Object (Prefs: prefs, OwnedFile: file);
+		}
 		
 		/**
 		 * {@inheritDoc}
 		 */
 		public FileDockItem.with_dockitem_file (GLib.File file)
 		{
-			GLib.Object (Prefs: new DockItemPreferences.with_file (file));
+			GLib.Object (Prefs: new DockItemPreferences.with_file (file), OwnedFile: File.new_for_uri (Prefs.Launcher));
 		}
 
 		/**
@@ -46,17 +58,12 @@ namespace Plank.Items
 		 */
 		public FileDockItem.with_dockitem_filename (string filename)
 		{
-			GLib.Object (Prefs: new DockItemPreferences.with_filename (filename));
+			GLib.Object (Prefs: new DockItemPreferences.with_filename (filename), OwnedFile: File.new_for_uri (Prefs.Launcher));
 		}
 		
 		construct
 		{
 			Prefs.notify["Launcher"].connect (handle_launcher_changed);
-			
-			if (!is_valid ())
-				return;
-			
-			OwnedFile = File.new_for_uri (Prefs.Launcher);
 			
 			load_from_launcher ();
 		}
@@ -224,6 +231,14 @@ namespace Plank.Items
 			Services.System.open (OwnedFile);
 			ClickedAnimation = Animation.BOUNCE;
 			LastClicked = GLib.get_monotonic_time ();
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public override bool is_valid ()
+		{
+			return OwnedFile.query_exists ();
 		}
 		
 		/**
