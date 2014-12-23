@@ -50,7 +50,9 @@ namespace Plank.Items
 		 */
 		public FileDockItem.with_dockitem_file (GLib.File file)
 		{
-			GLib.Object (Prefs: new DockItemPreferences.with_file (file), OwnedFile: File.new_for_uri (Prefs.Launcher));
+			var prefs = new DockItemPreferences.with_file (file);
+			
+			GLib.Object (Prefs: prefs, OwnedFile: File.new_for_uri (prefs.Launcher));
 		}
 
 		/**
@@ -58,7 +60,9 @@ namespace Plank.Items
 		 */
 		public FileDockItem.with_dockitem_filename (string filename)
 		{
-			GLib.Object (Prefs: new DockItemPreferences.with_filename (filename), OwnedFile: File.new_for_uri (Prefs.Launcher));
+			var prefs = new DockItemPreferences.with_filename (filename);
+			
+			GLib.Object (Prefs: prefs, OwnedFile: File.new_for_uri (prefs.Launcher));
 		}
 		
 		construct
