@@ -84,6 +84,10 @@ namespace Plank.Services
 		 */
 		public static File AppCacheFolder { get; protected set; }
 		
+		/**
+		 * application name which got passed to initialize
+		 */
+		public static string AppName { get; protected set; }
 		
 		Paths ()
 		{
@@ -98,6 +102,8 @@ namespace Plank.Services
 		 */
 		public static void initialize (string app_name, string data_folder)
 		{
+			AppName = app_name;
+			
 			// get environment-based settings
 			HomeFolder = File.new_for_path (Environment.get_home_dir ());
 			DataFolder = File.new_for_path (data_folder);

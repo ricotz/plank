@@ -410,7 +410,7 @@ namespace Plank.Drawing
 		static File? get_gtk_theme_folder ()
 		{
 			File folder;
-			unowned string exec_name = Factories.Factory.main.exec_name;
+			unowned string exec_name = Paths.AppName;
 			var name = Gtk.Settings.get_default ().gtk_theme_name;
 					
 			// Look in user's xdg-themes-folder
