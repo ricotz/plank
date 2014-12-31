@@ -233,10 +233,7 @@ namespace Plank.Items
 		
 		void handle_closed ()
 		{
-			if (this is TransientDockItem)
-				App = null;
-			
-			reset_application_status ();
+			App = null;
 			
 			app_closed ();
 		}
