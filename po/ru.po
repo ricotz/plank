@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-12-13 19:32+0100\n"
-"PO-Revision-Date: 2014-12-13 10:52+0000\n"
+"POT-Creation-Date: 2014-12-31 12:08+0000\n"
+"PO-Revision-Date: 2014-12-21 16:50+0000\n"
 "Last-Translator: Павел <SurPaul@yandex.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-12-16 11:48+0000\n"
+"X-Launchpad-Export-Date: 2015-01-02 13:56+0000\n"
 "X-Generator: Launchpad (build 17286)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
@@ -33,6 +33,11 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"Однако, это библиотека, которая может быть расширена для создания других док-"
+"баров с более продвинутыми функциями. Таким образом, Plunk является основной "
+"технологией Docky (начиная с версии 3.0.0) и призван обеспечить все основные "
+"функции, в то время как Docky расширяет его, чтобы добавить фантастические "
+"вещи."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
@@ -150,28 +155,28 @@ msgstr "Скрыть Dock"
 msgid "Behaviour"
 msgstr "Поведение"
 
-#: ../lib/Items/ApplicationDockItem.vala:459
-#: ../lib/Items/FileDockItem.vala:308 ../lib/Items/FileDockItem.vala:326
+#: ../lib/Items/ApplicationDockItem.vala:456
+#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
 msgid "_Keep in Dock"
 msgstr "_Прикрепить к панели"
 
-#: ../lib/Items/ApplicationDockItem.vala:466
+#: ../lib/Items/ApplicationDockItem.vala:463
 msgid "_Close All"
 msgstr "Закрыть все"
 
-#: ../lib/Items/ApplicationDockItem.vala:466
+#: ../lib/Items/ApplicationDockItem.vala:463
 msgid "_Close"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:313
+#: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
 msgstr "Открыть в _файловом менеджере"
 
-#: ../lib/Items/FileDockItem.vala:331
+#: ../lib/Items/FileDockItem.vala:350
 msgid "_Open"
 msgstr "_Открыть"
 
-#: ../lib/Items/FileDockItem.vala:335
+#: ../lib/Items/FileDockItem.vala:354
 msgid "Open Containing _Folder"
 msgstr "Открыть в папке"
 
