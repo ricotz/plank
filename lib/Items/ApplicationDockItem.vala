@@ -422,12 +422,16 @@ namespace Plank.Items
 					if (s.char_count () < 3)
 						continue;
 					
-					var r = new Regex ("^%s$".printf (p.printf (s)),
-						RegexCompileFlags.CASELESS | RegexCompileFlags.ANCHORED | RegexCompileFlags.DOLLAR_ENDONLY,
-						RegexMatchFlags.ANCHORED | RegexMatchFlags.NOTEMPTY);
-					r.match (window_name, RegexMatchFlags.ANCHORED | RegexMatchFlags.NOTEMPTY, out m);
-					if (m.matches ())
-						return m.fetch (1);
+					try {
+						var r = new Regex ("^%s$".printf (p.printf (s)),
+							RegexCompileFlags.CASELESS | RegexCompileFlags.ANCHORED | RegexCompileFlags.DOLLAR_ENDONLY,
+							RegexMatchFlags.ANCHORED | RegexMatchFlags.NOTEMPTY);
+						r.match (window_name, RegexMatchFlags.ANCHORED | RegexMatchFlags.NOTEMPTY, out m);
+						if (m.matches ())
+							return m.fetch (1);
+					} catch (RegexError e) {
+						warning (e.message);
+					}
 				}
 			}
 			
