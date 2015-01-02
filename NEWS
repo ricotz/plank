@@ -2,6 +2,35 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.8.0 "May" (2015-12-02)
+===============================================================================
+ * Use selected-focused background-color from current gtk-theme (LP: #1406462)
+ * Add FileDockItem.with_file() and expose OwnedFile
+ * plank.pc: Add pkgdatadir and missing dependency on libbamf3
+ * Add special theme "Gtk+" which looks in current gtk-theme (LP: #1402272)
+ * Only show window-list and use "Close All" for more than one window
+   (LP: #1398216) (LP: #1402139)
+ * lib: Handle DesktopAppInfo constructors returning NULL
+ * Don't hide while obstructed by one of our dialogs
+ * Fallback on "application-default-icon" only, otherwise use the internal
+   default icon (LP: #1352467)
+ * Do not allow multiple dockitems pointing to the same application/launcher
+ * Fix gee assert triggered in handle_name_owner_changed (LP: #1393054)
+ * Require --enable-new-dtags support
+ * Update manpage
+ * Fix updating item-positions in panel-mode (LP: #1381518)
+ * Accept all supported URIs (LP: #1112519)
+ * Allow opening dropped files while LockItems is true
+ * Handle additional mouse-events for gtk+ 3.14+ to restore old behaviour
+   while the dock-menu is shown
+ * Clean up and remove unused public API of position-manager
+ * Increase hover-window delay to 200ms
+ * Use ActionGroup/ActionMap capabilities to provide global-menu functions
+ * Port AbstractMain to inherit directly from Gtk.Application
+ * Add simple preferences dialog (hidden in Pantheon environments)
+ * Fix some HiDPI issues ()
+ * Fix DockContainer destructor name (Fix build with valac 0.27/git-master)
+
 0.7.1 "Lee" (2014-09-23)
 ===============================================================================
  * hidemanager: Improve build- and runtime-checks for barrier-support
