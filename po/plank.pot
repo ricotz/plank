@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-13 19:32+0100\n"
+"POT-Creation-Date: 2015-01-04 14:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -148,28 +148,28 @@ msgstr ""
 msgid "Behaviour"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:459
-#: ../lib/Items/FileDockItem.vala:308 ../lib/Items/FileDockItem.vala:326
+#: ../lib/Items/ApplicationDockItem.vala:460
+#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
 msgid "_Keep in Dock"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:466
+#: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close All"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:466
+#: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:313
+#: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:331
+#: ../lib/Items/FileDockItem.vala:350
 msgid "_Open"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:335
+#: ../lib/Items/FileDockItem.vala:354
 msgid "Open Containing _Folder"
 msgstr ""
 
@@ -183,4 +183,9 @@ msgstr ""
 
 #: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
+msgstr ""
+
+#: ../lib/Widgets/PreferencesWindow.vala:62
+#: ../lib/Widgets/PreferencesWindow.vala:72
+msgid "Preferences"
 msgstr ""
