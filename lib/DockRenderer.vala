@@ -62,7 +62,7 @@ namespace Plank
 		ulong gtk_theme_name_changed_id = 0;
 		
 #if BENCHMARK
-		ArrayList<string> benchmark;
+		Gee.ArrayList<string> benchmark;
 #endif
 		
 		/**
@@ -79,7 +79,7 @@ namespace Plank
 		construct
 		{
 #if BENCHMARK
-			benchmark = new ArrayList<string> ();
+			benchmark = new Gee.ArrayList<string> ();
 #endif
 			controller.prefs.notify.connect (prefs_changed);
 			
