@@ -201,11 +201,13 @@ namespace Plank.Widgets
 		void hide_toggled (GLib.Object widget, ParamSpec param)
 		{
 			if (((Gtk.Switch) widget).get_active ()) {
+				prefs.HideMode = HideType.INTELLIGENT;
 				cb_hidemode.sensitive = true;
-				sp_monitor.sensitive = false;
+				sp_unhide_delay.sensitive = true;
 			} else {
 				prefs.HideMode = HideType.NONE;
-				sp_monitor.sensitive = true;
+				cb_hidemode.sensitive = false;
+				sp_unhide_delay.sensitive = false;
 			}
 		}
 		
@@ -298,6 +300,7 @@ namespace Plank.Widgets
 			}
 
 			cb_hidemode.active_id = ((int) prefs.HideMode).to_string ();
+			cb_hidemode.sensitive = (prefs.HideMode != HideType.NONE);
 			cb_position.active_id = ((int) prefs.Position).to_string ();
 			adj_unhide_delay.value = prefs.UnhideDelay;
 
@@ -306,7 +309,8 @@ namespace Plank.Widgets
 			sp_monitor.adjustment = new Gtk.Adjustment (prefs.Monitor, -1, 9, 1, 1, 0);
 			sp_monitor.value = prefs.Monitor;
 			sp_monitor.sensitive = (prefs.Monitor > -1);
-
+			sp_unhide_delay.sensitive = (prefs.HideMode != HideType.NONE);
+			
 			adj_iconsize.value = prefs.IconSize;
 			adj_offset.value = prefs.Offset;
 			s_offset.sensitive = (prefs.Alignment == Gtk.Align.CENTER);
