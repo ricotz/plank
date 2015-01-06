@@ -13,6 +13,7 @@ EXTRA_DIST = \
 	application-default-icon.svg \
 	plank.appdata.xml.in \
 	plank.desktop.in \
+	plank.gresource.xml \
 	poof.png \
 	ui/preferences.ui \
 	$(NULL)

@@ -110,7 +110,7 @@ nodist_libplank_la_SOURCES = \
 	$(libplank_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-plank-resources.c: plank.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir $(top_srcdir)/data $(srcdir)/plank.gresource.xml)
+plank-resources.c: $(top_srcdir)/data/plank.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir $(top_srcdir)/data $(top_srcdir)/data/plank.gresource.xml)
 	$(AM_V_GEN) XMLLINT=$(XMLLINT) $(GLIB_COMPILE_RESOURCES) --target $@ --sourcedir $(top_srcdir)/data --generate --c-name plank $<
 
 plank.h plank.vapi: libplank_la_vala.stamp
@@ -188,7 +188,6 @@ EXTRA_DIST = \
 	abicheck.sh \
 	libplank.symbols \
 	plank.deps.in \
-	plank.gresource.xml \
 	plank.pc.in \
 	Version.vala.in \
 	$(NULL)
