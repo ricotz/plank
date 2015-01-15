@@ -7,21 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-12-13 19:32+0100\n"
-"PO-Revision-Date: 2014-12-11 18:13+0000\n"
-"Last-Translator: Mehmet Bozoklu <Unknown>\n"
+"POT-Creation-Date: 2015-01-13 19:32+0000\n"
+"PO-Revision-Date: 2015-01-15 13:43+0000\n"
+"Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-12-16 11:48+0000\n"
-"X-Generator: Launchpad (build 17286)\n"
+"X-Launchpad-Export-Date: 2015-01-15 15:24+0000\n"
+"X-Generator: Launchpad (build 17303)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"Plank, gezegendeki en basit dock demektir. Hedefi, bir docktan beklediğiniz "
+"tüm ihtiyaçları karşılamaktır, fazlası değil."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -31,6 +33,11 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"Ancak, daha gelişmiş özelliklerle başka dock programları oluşturabilecek "
+"genişletilebilir bir kütüphanedir de. Bu yüzden Plank, Docky'nin (sürüm "
+"3.0.0'dan itibaren) altında yatan teknolojidir ve Docky'nin Docklets, "
+"resimler, ayarlar, iletişim kutuları gibi süslü tüm temel özelliklerini "
+"karşılamayı amaçlar."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
@@ -106,7 +113,7 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Restrict to Workspace:"
-msgstr ""
+msgstr "Çalışma Alanını Sınırla:"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Lock Icons:"
@@ -126,11 +133,11 @@ msgstr "Otomatik Gizlenme"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Dodge maximized window"
-msgstr ""
+msgstr "Büyütülmüş pencerede yana çekil"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "Dock'un gösteriminden önceki milisaniye gecikmesi"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Pressure Reveal:"
@@ -148,28 +155,28 @@ msgstr "Dock'u Gizle"
 msgid "Behaviour"
 msgstr "Davranış"
 
-#: ../lib/Items/ApplicationDockItem.vala:459
-#: ../lib/Items/FileDockItem.vala:308 ../lib/Items/FileDockItem.vala:326
+#: ../lib/Items/ApplicationDockItem.vala:460
+#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
 msgid "_Keep in Dock"
 msgstr "_Başlatıcıda tut"
 
-#: ../lib/Items/ApplicationDockItem.vala:466
+#: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close All"
-msgstr "_Hepsini Kapat"
+msgstr "Hepsini _Kapat"
 
-#: ../lib/Items/ApplicationDockItem.vala:466
+#: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close"
-msgstr ""
+msgstr "_Kapat"
 
-#: ../lib/Items/FileDockItem.vala:313
+#: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
 msgstr "_Dosya yöneticisi içinde aç"
 
-#: ../lib/Items/FileDockItem.vala:331
+#: ../lib/Items/FileDockItem.vala:350
 msgid "_Open"
 msgstr "_Aç"
 
-#: ../lib/Items/FileDockItem.vala:335
+#: ../lib/Items/FileDockItem.vala:354
 msgid "Open Containing _Folder"
 msgstr "İçeren K_lasörü Aç"
 
@@ -184,3 +191,8 @@ msgstr "Çev_rimiçi Yardım Al..."
 #: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
 msgstr "Bu _Uygulamayı Çevir..."
+
+#: ../lib/Widgets/PreferencesWindow.vala:62
+#: ../lib/Widgets/PreferencesWindow.vala:72
+msgid "Preferences"
+msgstr "Tercihler"

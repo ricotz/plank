@@ -1,16 +1,16 @@
-# Dutch translation for plank
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Telugu translation for plank
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
 # This file is distributed under the same license as the plank package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-13 19:32+0000\n"
-"PO-Revision-Date: 2015-01-05 14:50+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-01-07 13:44+0000\n"
+"Last-Translator: Venkata Jaswanth <aj.jaswanth@gmail.com>\n"
+"Language-Team: Telugu <te@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,8 +22,7 @@ msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"Plank is bedoeld als het simpelste dock op aarde. Het doel is om slechts een "
-"dock te zijn, niet meer en niet minder."
+"ప్లాంక్ ప్రపంచంలోనే సరళమైన డాక్. ఇది అవసరమైన ఫీచర్లు మాత్రమే కలిగి ఉంది ."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -33,167 +32,163 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
-"Het is echter ook een bibliotheek die uitgebreid kan worden met andere dock-"
-"toepassingen met meer geavanceerde opties. Plank is dus de onderliggende "
-"technologie voor Docky (zal starten in versie 3.0.0) en zal voor al de "
-"kernfuncties zorgen terwijl Docky extra dingen toe kan voegen zoals "
-"docklets, kleuropties, instellingendialoog, enz."
+"ఇది ఒక సాఫ్ట్ వేర్ లిబ్రరీ. దీనిని ఉపయోగించి కొత్త ప్రొగ్రామ్ లను మరియు "
+"అత్యాధునిక ఫీచర్లను తయారు చేయవచ్చు. డాకీ ప్లాంక్ మీదే ఆధార పది పని చేస్తుంది."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "Plank. Belachelijk eenvoudig."
+msgstr "ప్లాంక్. చాలా సరళమైనది."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr "Thema:"
+msgstr "థీమ్:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr "Positie:"
+msgstr "స్థానం:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr "Links"
+msgstr "ఎడమ వైపు"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr "Rechts"
+msgstr "కుడి వైపు"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr "Bovenaan"
+msgstr "పైన"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr "Onderaan"
+msgstr "అడుగున"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr "Uitlijning:"
+msgstr "సర్దుబాటు:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr "Passend maken"
+msgstr "నింపుము"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr "Start"
+msgstr "ప్రారంభంలో"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr "Einde"
+msgstr "చివరిలో"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr "MIdden"
+msgstr "మధ్యలో"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "Op primair beeldscherm:"
+msgstr "ప్రధాన డిస్ప్లే"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr ""
-"Verschuiving in percentage vanaf het middelpunt van de rand van het scherm"
+msgstr "స్క్రీన్ ఎడ్జ్ నుంచి పెర్సెంట్ లో కొలువు"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Pictogramuitlijning:"
+msgstr "ఇకాన్ ల క్రమం"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr "Pictogramgrootte:"
+msgstr "ఇకాన్ పరిమాణం"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Appearance"
-msgstr "Weergave"
+msgstr "కనిపించు విధానం"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Show Unpinned:"
-msgstr "Niet vastgezette toepassingen tonen:"
+msgstr "పిన్ చేయని వాటిని చూపించు"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Restrict to Workspace:"
-msgstr "Beperken tot één werkblad:"
+msgstr "వర్క్ స్పేస్ లో మాత్రమే అనుమతించు"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Lock Icons:"
-msgstr "Pictogrammen vastzetten:"
+msgstr "ఇకాన్ లను బంధించు"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Automatic Pinning:"
-msgstr "Automatisch vastzetten op het dock:"
+msgstr "స్వయంగా పిన్ చేయి"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Intellihide"
-msgstr "Intelligent verbergen"
+msgstr "తెలివిగా దాచు"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Autohide"
-msgstr "Automatisch verbergen"
+msgstr "స్వయంగా దాచు"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Dodge maximized window"
-msgstr "Gemaximaliseerde vensters ontwijken"
+msgstr "మాగ్జిమైజ్ అయిన విండో నుంచి తప్పించుకో"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Delay in ms before showing the dock"
-msgstr "Aantal milliseconden waarna het dock tevoorschijn komt"
+msgstr "డాక్ ని చూపించడానికి ముందు మిల్లీసెకండ్స్ లో ఆలస్యం"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Pressure Reveal:"
-msgstr "Drukgevoeligheid:"
+msgstr "వత్తిడి వల్ల డాక్ ని చూపించు"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Item Management"
-msgstr "Itembeheer"
+msgstr "ఐటెంలను నిర్వహించు"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Hide Dock"
-msgstr "Dock verbergen"
+msgstr "డాక్ ను దాచిపెట్టు"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Behaviour"
-msgstr "Gedrag"
+msgstr "ప్రవర్తన"
 
 #: ../lib/Items/ApplicationDockItem.vala:460
 #: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
 msgid "_Keep in Dock"
-msgstr "_Vastzetten in dock"
+msgstr "డాక్ లోనే ఉంచు"
 
 #: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close All"
-msgstr "Alles sl_uiten"
+msgstr "అన్నీ మూసివేయి (_C)"
 
 #: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close"
-msgstr "Sl_uiten"
+msgstr "మూసివేయి (_C)"
 
 #: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
-msgstr "In bestandsbeheer _openen"
+msgstr "ఫైల్ బ్రౌజర్ లో తెరువు"
 
 #: ../lib/Items/FileDockItem.vala:350
 msgid "_Open"
-msgstr "_Openen"
+msgstr "తెరువు (_O)"
 
 #: ../lib/Items/FileDockItem.vala:354
 msgid "Open Containing _Folder"
-msgstr "Bovenliggende _map openen"
+msgstr "కలిగి ఉన్న ఫోల్డర్ ను తెరువు"
 
 #: ../lib/Items/PlaceholderDockItem.vala:35
 msgid "Drop applications or files here"
-msgstr "Sleep toepassingen of bestanden hiernaartoe"
+msgstr "అప్లికేషన్లు కానీ ఫైల్స్ కానీ వేయండి"
 
 #: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
-msgstr "Online _hulp vragen…"
+msgstr "అంతర్జాలంలో సహాయాన్ని పొందు"
 
 #: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
-msgstr "Deze toepassing ver_talen…"
+msgstr "ఈ అప్లికేషన్ ను తర్జూమా చేయి"
 
 #: ../lib/Widgets/PreferencesWindow.vala:62
 #: ../lib/Widgets/PreferencesWindow.vala:72
 msgid "Preferences"
-msgstr "Voorkeuren"
+msgstr "ప్రాధాన్యతలు"
