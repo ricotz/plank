@@ -523,7 +523,6 @@ namespace Plank
 #if HAVE_BARRIERS
 		void initialize_barriers_support ()
 		{
-			unowned DockWindow window = controller.window;
 			unowned Gdk.X11.Display gdk_display = (controller.window.get_display () as Gdk.X11.Display);
 			unowned X.Display display = gdk_display.get_xdisplay ();
 			int error_base, first_event_return;
