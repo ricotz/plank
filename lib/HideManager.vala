@@ -130,13 +130,10 @@ namespace Plank
 			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
 			
 #if HAVE_BARRIERS
-			if (controller.prefs.PressureReveal)
-				initialize_barriers_support ();
-			else
-				window.enter_notify_event.connect (enter_notify_event);
-#else
-			window.enter_notify_event.connect (enter_notify_event);
+			initialize_barriers_support ();
 #endif
+			
+			window.enter_notify_event.connect (enter_notify_event);
 			window.leave_notify_event.connect (leave_notify_event);
 			
 			wnck_screen.window_opened.connect_after (schedule_update);
@@ -247,13 +244,7 @@ namespace Plank
 				break;
 			case "PressureReveal":
 #if HAVE_BARRIERS
-				unowned DockWindow window = controller.window;
-				if (controller.prefs.PressureReveal) {
-					window.enter_notify_event.disconnect (enter_notify_event);
-					initialize_barriers_support ();
-				} else {
-					window.enter_notify_event.connect (enter_notify_event);
-				}
+				update_barrier ();
 #endif
 				break;
 			default:
@@ -337,6 +328,11 @@ namespace Plank
 		{
 			if (event.detail == Gdk.NotifyType.INFERIOR)
 				return Hidden;
+			
+#if HAVE_BARRIERS
+			if (Hidden && barriers_supported && controller.prefs.PressureReveal)
+				return Hidden;
+#endif
 			
 			if ((bool) event.send_event) {
 				if (!Hovered) {
@@ -532,10 +528,11 @@ namespace Plank
 			unowned X.Display display = gdk_display.get_xdisplay ();
 			int error_base, first_event_return;
 			
+			gdk_window_remove_filter (null, (Gdk.FilterFunc)xevent_filter);
+			
 			if (!display.query_extension ("XInputExtension", out opcode, out first_event_return, out error_base)) {
 				debug ("Barriers disabled (XInput needed)");
 				barriers_supported = false;
-				window.enter_notify_event.connect (enter_notify_event);
 			} else {
 				int major = 2, minor = 3;
 				var has_xinput = (XInput.query_version (display, ref major, ref minor) == X.Success);
@@ -546,7 +543,6 @@ namespace Plank
 				} else {
 					debug ("Barriers disabled (XInput %i.%i not sufficient)", major, minor);
 					barriers_supported = false;
-					window.enter_notify_event.connect (enter_notify_event);
 				}
 			}
 		}
