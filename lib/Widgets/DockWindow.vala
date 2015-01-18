@@ -125,7 +125,7 @@ namespace Plank.Widgets
 		 */
 		public override bool button_press_event (Gdk.EventButton event)
 		{
-			// Needed for gtk+ 3.14+
+			// FIXME Needed for gtk+ 3.14+
 			if (menu_is_visible ())
 				return true;
 			
@@ -190,7 +190,7 @@ namespace Plank.Widgets
 			if (controller.drag_manager.InternalDragActive)
 				return true;
 
-			// Needed for gtk+ 3.14+
+			// FIXME Needed for gtk+ 3.14+
 			if (ClickedItem == null && menu_is_visible ())
 				menu.hide ();
 			
@@ -236,7 +236,7 @@ namespace Plank.Widgets
 		 */
 		public override bool motion_notify_event (Gdk.EventMotion event)
 		{
-			// Needed for gtk+ 3.14+
+			// FIXME Needed for gtk+ 3.14+
 			if (menu_is_visible ())
 				return true;
 			
@@ -268,7 +268,7 @@ namespace Plank.Widgets
 			if (controller.drag_manager.InternalDragActive)
 				return true;
 			
-			// Ignore events for ScrollDirection.SMOOTH (since Gtk+ 3.4)
+			// FIXME Ignore events for ScrollDirection.SMOOTH (since gtk+ 3.4)
 			if (event.direction >= 4)
 				return true;
 			
