@@ -38,28 +38,28 @@ namespace Plank.Widgets
 		/**
 		 * The currently hovered item (if any).
 		 */
-		public DockItem? HoveredItem { get; protected set; }
+		public DockItem? HoveredItem { get; private set; }
 		
 		/**
 		 * The currently hovered item-provider (if any).
 		 */
-		public DockItemProvider? HoveredItemProvider { get; protected set; }
+		public DockItemProvider? HoveredItemProvider { get; private set; }
 		
 		
 		/**
 		 * The item which "received" the button-pressed signal (if any).
 		 */
-		unowned DockItem? ClickedItem { get; protected set; }
+		unowned DockItem? ClickedItem { get; private set; }
 		
 		/**
 		 * The popup menu for this dock.
 		 */
-		protected Gtk.Menu? menu;
+		Gtk.Menu? menu;
 		
 		/**
 		 * The tooltip window for this dock.
 		 */
-		protected HoverWindow hover;
+		HoverWindow hover;
 		
 		uint reposition_timer = 0;
 		uint hover_reposition_timer = 0;
@@ -329,7 +329,7 @@ namespace Plank.Widgets
 		 *
 		 * @param provider the hovered item-provider (if any) for this dock
 		 */
-		protected void set_hovered_provider (DockItemProvider? provider)
+		void set_hovered_provider (DockItemProvider? provider)
 		{
 			if (HoveredItemProvider == provider)
 				return;
@@ -342,7 +342,7 @@ namespace Plank.Widgets
 		 *
 		 * @param item the hovered item (if any) for this dock
 		 */
-		protected void set_hovered (DockItem? item)
+		void set_hovered (DockItem? item)
 		{
 			if (HoveredItem == item)
 				return;
@@ -590,7 +590,7 @@ namespace Plank.Widgets
 		 * @param button the button used to trigger the popup
 		 * @param show_plank_menu if the 'global' menu should be shown
 		 */
-		protected void show_menu (uint button, bool show_plank_menu)
+		void show_menu (uint button, bool show_plank_menu)
 		{
 			if (menu != null) {
 				foreach (var w in menu.get_children ())
@@ -627,7 +627,7 @@ namespace Plank.Widgets
 			if (show_plank_menu)
 				menu.popup (null, null, null, button, Gtk.get_current_event_time ());
 			else
-				menu.popup (null, null, position_menu, button, Gtk.get_current_event_time ());
+				menu.popup (null, null, (Gtk.MenuPositionFunc) position_menu, button, Gtk.get_current_event_time ());
 			
 			// FIXME Force a position-recalculation which fixes placement with gtk+ 3.15+
 			menu.reposition ();
@@ -636,7 +636,7 @@ namespace Plank.Widgets
 		/**
 		 * Called when the popup menu hides.
 		 */
-		protected void on_menu_hide ()
+		void on_menu_hide ()
 		{
 			update_icon_regions ();
 			unowned HideManager hide_manager = controller.hide_manager;
@@ -650,7 +650,7 @@ namespace Plank.Widgets
 		/**
 		 * Called when the popup menu shows.
 		 */
-		protected void on_menu_show ()
+		void on_menu_show ()
 		{
 			update_icon_regions ();
 			hover.hide ();
@@ -665,7 +665,8 @@ namespace Plank.Widgets
 		 * @param y the y location to show the menu
 		 * @param push_in if the menu should push into the screen
 		 */
-		protected void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in)
+		[CCode (instance_pos = 4.1)]
+		void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in)
 		{
 			Gtk.Requisition requisition;
 			menu.get_preferred_size (null, out requisition);
