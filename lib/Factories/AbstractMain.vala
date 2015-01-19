@@ -310,13 +310,13 @@ namespace Plank
 			
 			action = new SimpleAction ("help", null);
 			action.activate.connect (() => {
-				System.open_uri (help_url);
+				System.get_default ().open_uri (help_url);
 			});
 			add_action (action);
 			
 			action = new SimpleAction ("translate", null);
 			action.activate.connect (() => {
-				System.open_uri (translate_url);
+				System.get_default ().open_uri (translate_url);
 			});
 			add_action (action);
 			

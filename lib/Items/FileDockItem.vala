@@ -238,7 +238,7 @@ namespace Plank
 		 */
 		public void launch ()
 		{
-			System.open (OwnedFile);
+			System.get_default ().open (OwnedFile);
 			ClickedAnimation = AnimationType.BOUNCE;
 			LastClicked = GLib.get_monotonic_time ();
 		}
@@ -292,7 +292,7 @@ namespace Plank
 					ApplicationDockItem.parse_launcher (uri, out icon, out text);
 					item = create_menu_item (text, icon, true);
 					item.activate.connect (() => {
-						System.launch (file);
+						System.get_default ().launch (file);
 						ClickedAnimation = AnimationType.BOUNCE;
 						LastClicked = GLib.get_monotonic_time ();
 					});
@@ -302,7 +302,7 @@ namespace Plank
 					text = text.replace ("_", "__");
 					item = create_menu_item (text, icon, true);
 					item.activate.connect (() => {
-						System.open (file);
+						System.get_default ().open (file);
 						ClickedAnimation = AnimationType.BOUNCE;
 						LastClicked = GLib.get_monotonic_time ();
 					});
@@ -353,7 +353,7 @@ namespace Plank
 			
 			item = create_menu_item (_("Open Containing _Folder"), "folder");
 			item.activate.connect (() => {
-				System.open (OwnedFile.get_parent ());
+				System.get_default ().open (OwnedFile.get_parent ());
 				ClickedAnimation = AnimationType.BOUNCE;
 				LastClicked = GLib.get_monotonic_time ();
 			});

@@ -312,7 +312,7 @@ namespace Plank
 		
 		void launch ()
 		{
-			System.launch (File.new_for_uri (Prefs.Launcher));
+			System.get_default ().launch (File.new_for_uri (Prefs.Launcher));
 		}
 		
 		/**
@@ -557,7 +557,7 @@ namespace Plank
 			foreach (var uri in uris)
 				files.add (File.new_for_uri (uri));
 			
-			System.launch_with_files (File.new_for_uri (Prefs.Launcher), files.to_array ());
+			System.get_default ().launch_with_files (File.new_for_uri (Prefs.Launcher), files.to_array ());
 			
 			return true;
 		}

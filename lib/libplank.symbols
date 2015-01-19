@@ -605,10 +605,14 @@ plank_surface_new_with_internal
 plank_surface_new_with_surface
 plank_surface_scaled_copy
 plank_surface_to_pixbuf
+plank_system_construct
+plank_system_get_context
+plank_system_get_default
 plank_system_get_type
 plank_system_is_desktop_session
 plank_system_launch
 plank_system_launch_with_files
+plank_system_new
 plank_system_open
 plank_system_open_files
 plank_system_open_uri

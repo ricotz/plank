@@ -24,8 +24,43 @@ namespace Plank
 	 */
 	public class System : GLib.Object
 	{
-		System ()
+		static System? instance = null;
+		
+		public static unowned System get_default ()
 		{
+			if (instance == null)
+				instance = new System (Gdk.Display.get_default ().get_app_launch_context ());
+			
+			return instance;
+		}
+		
+		public AppLaunchContext context { get; construct; }
+		
+		public System (AppLaunchContext context)
+		{
+			Object (context: context);
+		}
+		
+		construct
+		{
+			context.launch_failed.connect (on_launch_failed);
+			context.launched.connect (on_launched);
+		}
+		
+		~System ()
+		{
+			context.launch_failed.disconnect (on_launch_failed);
+			context.launched.disconnect (on_launched);
+		}
+		
+		void on_launch_failed (string startup_notify_id) 
+		{
+			warning ("Failed to launch '%s'", startup_notify_id);
+		}
+		
+		void on_launched (AppInfo info, Variant platform_data)
+		{
+			Logger.verbose ("Launched '%s' ('%s')", info.get_name (), info.get_executable ());
 		}
 		
 		/**
@@ -33,7 +68,7 @@ namespace Plank
 		 *
 		 * @param uri the URI to open
 		 */
-		public static void open_uri (string uri)
+		public void open_uri (string uri)
 		{
 			open (File.new_for_uri (uri));
 		}
@@ -43,7 +78,7 @@ namespace Plank
 		 *
 		 * @param file the {@link GLib.File} to open
 		 */
-		public static void open (File file)
+		public void open (File file)
 		{
 			launch_with_files (null, { file });
 		}
@@ -53,7 +88,7 @@ namespace Plank
 		 *
 		 * @param files the {@link GLib.File}s to open
 		 */
-		public static void open_files (File[] files)
+		public void open_files (File[] files)
 		{
 			launch_with_files (null, files);
 		}
@@ -63,7 +98,7 @@ namespace Plank
 		 *
 		 * @param app the application to launch
 		 */
-		public static void launch (File app)
+		public void launch (File app)
 		{
 			launch_with_files (app, new File[] {});
 		}
@@ -74,7 +109,7 @@ namespace Plank
 		 * @param app the application to launch
 		 * @param files the files to open with the application
 		 */
-		public static void launch_with_files (File? app, File[] files)
+		public void launch_with_files (File? app, File[] files)
 		{
 			if (app != null && !app.query_exists ()) {
 				warning ("Application '%s' doesn't exist", app.get_path () ?? "");
@@ -92,7 +127,7 @@ namespace Plank
 				}
 				
 				try {
-					AppInfo.launch_default_for_uri (f.get_uri (), null);
+					AppInfo.launch_default_for_uri (f.get_uri (), context);
 				} catch {
 					f.mount_enclosing_volume.begin (0, null);
 					mounted_files.append (f);
@@ -118,7 +153,7 @@ namespace Plank
 			return false;
 		}
 		
-		static void internal_launch (File? app, GLib.List<File> files)
+		void internal_launch (File? app, GLib.List<File> files)
 		{
 			if (app == null && files.length () == 0)
 				return;
@@ -147,7 +182,7 @@ namespace Plank
 					case KeyFileDesktop.TYPE_LINK:
 						try {
 							var url = keyfile.get_string (KeyFileDesktop.GROUP, KeyFileDesktop.KEY_URL);
-							AppInfo.launch_default_for_uri (url, null);
+							AppInfo.launch_default_for_uri (url, context);
 						} catch (Error e) {
 							critical ("%s: %s", launcher, e.message);
 						}
@@ -174,13 +209,15 @@ namespace Plank
 			}
 			
 			try {
+				Logger.verbose ("Launch '%s' ('%s')", info.get_name (), info.get_executable ());
+				
 				if (files.length () == 0) {
-					info.launch (null, null);
+					info.launch (null, context);
 					return;
 				}
 				
 				if (info.supports_files ()) {
-					info.launch (files, null);
+					info.launch (files, context);
 					return;
 				}
 				
@@ -188,7 +225,7 @@ namespace Plank
 					var uris = new GLib.List<string> ();
 					foreach (var f in files)
 						uris.append (f.get_uri ());
-					info.launch_uris (uris, null);
+					info.launch_uris (uris, context);
 					return;
 				}
 				

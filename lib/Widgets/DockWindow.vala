@@ -636,13 +636,13 @@ namespace Plank
 			
 			menu_item = new Gtk.MenuItem.with_mnemonic ("Open config folder");
 			menu_item.activate.connect (() => {
-				System.open (controller.config_folder);
+				System.get_default ().open (controller.config_folder);
 			});
 			debug_items.add (menu_item);
 			
 			menu_item = new Gtk.MenuItem.with_mnemonic ("Open current theme file");
 			menu_item.activate.connect (() => {
-				System.open (controller.renderer.theme.get_backing_file ());
+				System.get_default ().open (controller.renderer.theme.get_backing_file ());
 			});
 			debug_items.add (menu_item);
 			
@@ -669,14 +669,14 @@ namespace Plank
 			
 			menu_item = new Gtk.MenuItem.with_mnemonic ("Open dockitem file");
 			menu_item.activate.connect (() => {
-				System.open (dock_item_file);
+				System.get_default ().open (dock_item_file);
 			});
 			menu_item.sensitive = (dock_item_file != null && dock_item_file.query_exists ());
 			debug_items.add (menu_item);
 			
 			menu_item = new Gtk.MenuItem.with_mnemonic ("Open launcher file");
 			menu_item.activate.connect (() => {
-				System.open (File.new_for_uri (item.Launcher));
+				System.get_default ().open (File.new_for_uri (item.Launcher));
 			});
 			menu_item.sensitive = (item.Launcher != "");
 			debug_items.add (menu_item);

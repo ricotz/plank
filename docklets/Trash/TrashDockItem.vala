@@ -236,7 +236,7 @@ namespace Docky
 		
 		void open_trash ()
 		{
-			System.open (owned_file);
+			System.get_default ().open (owned_file);
 		}
 		
 		void empty_trash ()
