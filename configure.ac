@@ -179,12 +179,12 @@ if test "x$enable_bamf_0_4" = "xyes" ; then
 fi
 AM_CONDITIONAL([HAVE_BAMF_0_4], [test "x$enable_bamf_0_4" = "xyes"])
 
-# Check for gee-0.8 and use it if available, fallback to gee-1.0 (0.6) by default
+# Check for gee-0.8 and prefer to use it, no automatic fallback to gee-1.0 (0.6)
 AC_ARG_ENABLE([gee-0.8],
               AS_HELP_STRING([--enable-gee-0.8],
                              [Enable use of gee-0.8 instead of gee-1.0]),
               [enable_gee_0_8=$enableval],
-              [PKG_CHECK_MODULES(GEE_0_8, gee-0.8, [enable_gee_0_8=yes], [enable_gee_0_8=no])])
+              [enable_gee_0_8=yes])
 if test "x$enable_gee_0_8" = "xyes" ; then
     GEE_DEPEND=gee-0.8
     PLANK_CORE_PKGS="$PLANK_CORE_PKGS gee-0.8"
