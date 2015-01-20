@@ -566,12 +566,22 @@ namespace Plank
 				case Gtk.Align.FILL:
 					break;
 				case Gtk.Align.START:
-					xoffset = 0;
-					yoffset = (monitor_geo.height - static_dock_region.height);
+					if (is_horizontal_dock ()) {
+						xoffset = 0;
+						yoffset = (monitor_geo.height - static_dock_region.height);
+					} else {
+						xoffset = (monitor_geo.width - static_dock_region.width);
+						yoffset = 0;
+					}
 					break;
 				case Gtk.Align.END:
-					xoffset = (monitor_geo.width - static_dock_region.width);
-					yoffset = 0;
+					if (is_horizontal_dock ()) {
+						xoffset = (monitor_geo.width - static_dock_region.width);
+						yoffset = 0;
+					} else {
+						xoffset = 0;
+						yoffset = (monitor_geo.height - static_dock_region.height);
+					}
 					break;
 				}
 			}
@@ -921,12 +931,22 @@ namespace Plank
 				case Gtk.Align.FILL:
 					break;
 				case Gtk.Align.START:
-					xoffset = 0;
-					yoffset = (monitor_geo.height - static_dock_region.height);
+					if (is_horizontal_dock ()) {
+						xoffset = 0;
+						yoffset = (monitor_geo.height - static_dock_region.height);
+					} else {
+						xoffset = (monitor_geo.width - static_dock_region.width);
+						yoffset = 0;
+					}
 					break;
 				case Gtk.Align.END:
-					xoffset = (monitor_geo.width - static_dock_region.width);
-					yoffset = 0;
+					if (is_horizontal_dock ()) {
+						xoffset = (monitor_geo.width - static_dock_region.width);
+						yoffset = 0;
+					} else {
+						xoffset = 0;
+						yoffset = (monitor_geo.height - static_dock_region.height);
+					}
 					break;
 				}
 			}
