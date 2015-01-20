@@ -502,7 +502,7 @@ namespace Plank.Items
 				return;
 			}
 			
-			if (!handles_transients) {
+			if (handles_transients) {
 				// Find a matching desktop-file and create new TransientDockItem for this LauncherEntry
 				var desktop_file = desktop_file_for_application_uri (app_uri);
 				if (desktop_file != null) {
