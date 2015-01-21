@@ -33,8 +33,14 @@ namespace Plank
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_widget_shape_combine_region")]
 	public void gtk_widget_shape_combine_region (Gtk.Widget widget, Cairo.Region? region);
 #endif
+
+#if HAVE_SYS_PRCTL_H
 	[CCode (cheader_filename = "sys/prctl.h", cname = "prctl", sentinel = "")]
 	public int prctl (int option, ...);
+#else
+	[CCode (cheader_filename = "unistd.h", cname = "setproctitle", sentinel = "")]
+	public void setproctitle (string fmt, ...);
+#endif
 
 	[CCode (cheader_filename = "unistd.h", cname = "getpid")]
 	public int getpid ();

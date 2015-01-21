@@ -268,6 +268,10 @@ if test "x$enable_benchmark" = "xyes" ; then
     VALAFLAGS="$VALAFLAGS --define BENCHMARK"
 fi
 
+# Run checks and add build-flags to e.g. differenciate between Linux and BSD
+AC_CHECK_HEADERS([sys/prctl.h], [VALAFLAGS="$VALAFLAGS --define HAVE_SYS_PRCTL_H"])
+
+
 PLANK_CORE_VALAFLAGS="$VALAFLAGS_CORE $VALAFLAGS $PLANK_CORE_VALA_PKGS"
 AC_SUBST(PLANK_CORE_VALAFLAGS)
 PLANK_DOCS_VALAFLAGS="$VALAFLAGS $PLANK_CORE_VALA_PKGS"

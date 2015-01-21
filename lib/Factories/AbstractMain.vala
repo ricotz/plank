@@ -167,7 +167,11 @@ namespace Plank.Factories
 			exit_status = 0;
 			
 			// set program name
+#if HAVE_SYS_PRCTL_H
 			prctl (15, exec_name);
+#else
+			setproctitle (exec_name);
+#endif
 			Environment.set_prgname (exec_name);
 			
 			Intl.bindtextdomain (exec_name, build_data_dir + "/locale");
