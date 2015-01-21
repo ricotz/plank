@@ -127,16 +127,16 @@ namespace Plank.Widgets
 		{
 			// FIXME Needed for gtk+ 3.14+
 			if (menu_is_visible ())
-				return true;
+				return Gdk.EVENT_STOP;
 			
 			// If the dock is hidden we should ignore it.
 			if (controller.hide_manager.Hidden)
-				return true;
+				return Gdk.EVENT_STOP;
 			
 			// This event gets fired before the drag end event,
 			// in this case we ignore it.
 			if (controller.drag_manager.InternalDragActive)
-				return true;
+				return Gdk.EVENT_STOP;
 			
 			// If the cursor got hidden due inactivity or the HoveredItem got
 			// set null for other reasons we need to make sure this click gets
@@ -164,7 +164,7 @@ namespace Plank.Widgets
 				});
 			}
 			
-			return true;
+			return Gdk.EVENT_STOP;
 		}
 		
 		/**
@@ -174,7 +174,7 @@ namespace Plank.Widgets
 		{
 			// If the dock is hidden we should ignore it.
 			if (controller.hide_manager.Hidden)
-				return true;
+				return Gdk.EVENT_STOP;
 			
 			if (long_press_timer > 0) {
 				Source.remove (long_press_timer);
@@ -184,11 +184,11 @@ namespace Plank.Widgets
 			if (long_press_active && long_press_button == event.button) {
 				long_press_active = false;
 				long_press_button = 0;
-				return true;
+				return Gdk.EVENT_STOP;
 			}
 			
 			if (controller.drag_manager.InternalDragActive)
-				return true;
+				return Gdk.EVENT_STOP;
 
 			// FIXME Needed for gtk+ 3.14+
 			if (ClickedItem == null && menu_is_visible ())
@@ -200,7 +200,7 @@ namespace Plank.Widgets
 			
 			ClickedItem = null;
 			
-			return true;
+			return Gdk.EVENT_STOP;
 		}
 		
 		/**
@@ -210,7 +210,7 @@ namespace Plank.Widgets
 		{
 			update_hovered ((int) event.x, (int) event.y);
 			
-			return true;
+			return Gdk.EVENT_STOP;
 		}
 		
 		/**
@@ -220,7 +220,7 @@ namespace Plank.Widgets
 		{
 			// ignore this event if it was sent explicitly
 			if ((bool) event.send_event)
-				return false;
+				return Gdk.EVENT_PROPAGATE;
 			
 			if (!menu_is_visible ()) {
 				set_hovered_provider (null);
@@ -228,7 +228,7 @@ namespace Plank.Widgets
 			} else
 				hover.hide ();
 			
-			return true;
+			return Gdk.EVENT_STOP;
 		}
 		
 		/**
@@ -238,10 +238,10 @@ namespace Plank.Widgets
 		{
 			// FIXME Needed for gtk+ 3.14+
 			if (menu_is_visible ())
-				return true;
+				return Gdk.EVENT_STOP;
 			
 			update_hovered ((int) event.x, (int) event.y);
-			return true;
+			return Gdk.EVENT_STOP;
 		}
 		
 		/**
@@ -263,14 +263,14 @@ namespace Plank.Widgets
 		{
 			// If the dock is hidden we should ignore it.
 			if (controller.hide_manager.Hidden)
-				return true;
+				return Gdk.EVENT_STOP;
 			
 			if (controller.drag_manager.InternalDragActive)
-				return true;
+				return Gdk.EVENT_STOP;
 			
 			// FIXME Ignore events for ScrollDirection.SMOOTH (since gtk+ 3.4)
 			if (event.direction >= 4)
-				return true;
+				return Gdk.EVENT_STOP;
 			
 			if ((event.state & Gdk.ModifierType.CONTROL_MASK) != 0) {
 				if (event.direction == Gdk.ScrollDirection.UP)
@@ -278,7 +278,7 @@ namespace Plank.Widgets
 				else if (event.direction == Gdk.ScrollDirection.DOWN)
 					controller.prefs.decrease_icon_size ();
 				
-				return true;
+				return Gdk.EVENT_STOP;
 			}
 			
 			if (HoveredItem != null) {
@@ -286,7 +286,7 @@ namespace Plank.Widgets
 				controller.renderer.animated_draw ();
 			}
 			
-			return true;
+			return Gdk.EVENT_STOP;
 		}
 		
 		/**
@@ -311,7 +311,7 @@ namespace Plank.Widgets
 			controller.renderer.draw_dock (cr);
 			set_input_mask ();
 			
-			return true;
+			return Gdk.EVENT_STOP;
 		}
 		
 		/**

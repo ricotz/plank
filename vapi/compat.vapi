@@ -49,6 +49,11 @@ namespace Plank
 namespace Gdk
 {
 #if !VALA_0_24
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_EVENT_PROPAGATE")]
+	public const bool EVENT_PROPAGATE;
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_EVENT_STOP")]
+	public const bool EVENT_STOP;
+
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	namespace X11 {
 		[CCode (cheader_filename = "gdk/gdkx.h", type_check_function = "GDK_IS_X11_DISPLAY", type_id = "gdk_x11_display_get_type ()")]

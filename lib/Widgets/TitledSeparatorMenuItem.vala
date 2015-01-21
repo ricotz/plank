@@ -96,7 +96,7 @@ namespace Plank.Widgets
 			cr.move_to (x + padding.left, y + (h - logical_rect.height) / 2);
 			Pango.cairo_show_layout (cr, layout);
 			
-			return true;
+			return Gdk.EVENT_STOP;
 		}
 	}
 }

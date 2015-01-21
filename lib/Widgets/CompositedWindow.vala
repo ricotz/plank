@@ -52,7 +52,7 @@ namespace Plank.Widgets
 			cr.paint ();
 			cr.restore ();
 			
-			return true;
+			return Gdk.EVENT_STOP;
 		}
 	}
 }

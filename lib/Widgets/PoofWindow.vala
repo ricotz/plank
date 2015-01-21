@@ -113,7 +113,7 @@ namespace Plank.Widgets
 			Gdk.cairo_set_source_pixbuf (cr, poof_image, 0, -POOF_SIZE * (int) (POOF_FRAMES * (frame_time - start_time) / RUN_LENGTH));
 			cr.paint ();
 			
-			return true;
+			return Gdk.EVENT_STOP;
 		}
 	}
 }

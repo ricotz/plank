@@ -351,16 +351,16 @@ namespace Plank
 		bool leave_notify_event (Gdk.EventCrossing event)
 		{
 			if (event.detail == Gdk.NotifyType.INFERIOR)
-				return false;
+				return Gdk.EVENT_PROPAGATE;
 			
 			// ignore this event if it was sent explicitly
 			if ((bool) event.send_event)
-				return false;
+				return Gdk.EVENT_PROPAGATE;
 			
 			if (Hovered && !controller.window.menu_is_visible ())
 				update_hovered ();
 			
-			return false;
+			return Gdk.EVENT_PROPAGATE;
 		}
 		
 		//
