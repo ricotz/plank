@@ -43,11 +43,14 @@ namespace Plank
 		[CCode (notify = false)]
 		double opacity { get; private set; }
 
+		DockSurface? main_buffer = null;
+		DockSurface? fade_buffer = null;
+		DockSurface? item_buffer = null;
+		DockSurface? shadow_buffer = null;
+		
 		DockSurface? background_buffer = null;
 		Gdk.Rectangle background_rect;
-		DockSurface? main_buffer = null;
 		DockSurface? indicator_buffer = null;
-		DockSurface? shadow_buffer = null;
 		DockSurface? urgent_indicator_buffer = null;
 		DockSurface? urgent_glow_buffer = null;
 		
@@ -187,9 +190,12 @@ namespace Plank
 			Logger.verbose ("DockRenderer.reset_buffers ()");
 			
 			main_buffer = null;
+			fade_buffer = null;
+			item_buffer = null;
+			shadow_buffer = null;
+			
 			background_buffer = null;
 			indicator_buffer = null;
-			shadow_buffer = null;
 			urgent_indicator_buffer = null;
 			urgent_glow_buffer = null;
 			
@@ -258,6 +264,13 @@ namespace Plank
 #endif
 			}
 			
+			if (item_buffer == null) {
+				item_buffer = new DockSurface.with_surface (win_rect.width, win_rect.height, cr.get_target ());
+#if HAVE_HIDPI
+				cairo_surface_set_device_scale (item_buffer.Internal, window_scale_factor, window_scale_factor);
+#endif
+			}
+			
 			if (shadow_buffer == null) {
 				shadow_buffer = new DockSurface.with_surface (win_rect.width, win_rect.height, cr.get_target ());
 #if HAVE_HIDPI
@@ -282,23 +295,22 @@ namespace Plank
 				return;
 			}
 
+			if (opacity < 1.0 && fade_buffer == null) {
+				fade_buffer = new DockSurface.with_surface (win_rect.width, win_rect.height, cr.get_target ());
+#if HAVE_HIDPI
+				cairo_surface_set_device_scale (fade_buffer.Internal, window_scale_factor, window_scale_factor);
+#endif
+			}
+			
 #if BENCHMARK
+			DateTime start, start2, end, end2;
 			benchmark.clear ();
-			var start = new DateTime.now_local ();
+			start = new DateTime.now_local ();
 #endif
 			
 			main_buffer.clear ();
+			item_buffer.clear ();
 			shadow_buffer.clear ();
-			
-#if BENCHMARK
-			var start2 = new DateTime.now_local ();
-#endif
-			draw_dock_background ();
-#if BENCHMARK
-			var end2 = new DateTime.now_local ();
-			benchmark.add ("background render time - %f ms".printf (end2.difference (start2) / 1000.0));
-#endif
-			
 			
 			// draw each item onto the dock buffer
 			foreach (var item in items)
@@ -321,21 +333,40 @@ namespace Plank
 				position_manager.get_dock_draw_position (out x_offset, out y_offset);
 			
 			// composite dock layers and make sure to draw onto the window's context with one operation
-			unowned Cairo.Context composite_cr = shadow_buffer.Context;
-			composite_cr.set_operator (Cairo.Operator.OVER);
-			composite_cr.set_source_surface (main_buffer.Internal, 0, 0);
-			composite_cr.paint ();
+			main_buffer.clear ();
+			unowned Cairo.Context main_cr = main_buffer.Context;
+			main_cr.set_operator (Cairo.Operator.OVER);
 			
-			// fade the dock if need be
-			if (opacity < 1.0) {
-				composite_cr.set_operator (Cairo.Operator.SOURCE);
-				composite_cr.set_source_rgba (0, 0, 0, 0);
-				composite_cr.paint_with_alpha (1 - opacity);
-			}
+			// draw items-shadow-layer
+			main_cr.set_source_surface (shadow_buffer.Internal, 0, 0);
+			main_cr.paint ();
 			
-			// draw the dock on the window
+#if BENCHMARK
+			start2 = new DateTime.now_local ();
+#endif
+			draw_dock_background ();
+#if BENCHMARK
+			end2 = new DateTime.now_local ();
+			benchmark.add ("background render time - %f ms".printf (end2.difference (start2) / 1000.0));
+#endif
+			
+			// draw items-layer
+			main_cr.set_source_surface (item_buffer.Internal, 0, 0);
+			main_cr.paint ();
+			
+			// draw the dock on the window and fade it if need be
 			cr.set_operator (Cairo.Operator.SOURCE);
-			cr.set_source_surface (shadow_buffer.Internal, x_offset, y_offset);
+			if (opacity < 1.0) {
+				fade_buffer.clear ();
+				unowned Cairo.Context fade_cr = fade_buffer.Context;
+				fade_cr.set_operator (Cairo.Operator.OVER);
+				fade_cr.set_source_surface (main_buffer.Internal, 0, 0);
+				fade_cr.paint_with_alpha (opacity);
+				
+				cr.set_source_surface (fade_buffer.Internal, x_offset, y_offset);
+			} else {
+				cr.set_source_surface (main_buffer.Internal, x_offset, y_offset);
+			}
 			cr.paint ();
 			
 			// draw urgent-glow if dock is completely hidden
@@ -345,7 +376,7 @@ namespace Plank
 			}
 			
 #if BENCHMARK
-			var end = new DateTime.now_local ();
+			end = new DateTime.now_local ();
 			var diff = end.difference (start) / 1000.0;
 			if (diff > 5.0)
 				foreach (var s in benchmark)
@@ -383,7 +414,7 @@ namespace Plank
 			unowned DockItem hovered_item = controller.window.HoveredItem;
 			unowned DragManager drag_manager = controller.drag_manager;
 			
-			unowned Cairo.Context main_cr = main_buffer.Context;
+			unowned Cairo.Context cr = item_buffer.Context;
 			unowned Cairo.Context shadow_cr = shadow_buffer.Context;
 			var icon_size = position_manager.IconSize;
 			var shadow_size = position_manager.IconShadowSize;
@@ -393,7 +424,7 @@ namespace Plank
 #if BENCHMARK
 			var start = new DateTime.now_local ();
 #endif
-			var icon_surface = item.get_surface_copy (icon_size * window_scale_factor, icon_size * window_scale_factor, main_buffer);
+			var icon_surface = item.get_surface_copy (icon_size * window_scale_factor, icon_size * window_scale_factor, item_buffer);
 			unowned Cairo.Context icon_cr = icon_surface.Context;
 			
 			DockSurface? icon_shadow_surface = null;
@@ -540,7 +571,7 @@ namespace Plank
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
 			if (opacity > 0) {
-				theme.draw_active_glow (main_buffer, background_rect, draw_value.background_region, item.AverageIconColor, opacity, position);
+				theme.draw_active_glow (item_buffer, background_rect, draw_value.background_region, item.AverageIconColor, opacity, position);
 			}
 			
 			// draw the icon shadow
@@ -558,13 +589,13 @@ namespace Plank
 
 			// draw the icon
 			if (window_scale_factor > 1) {
-				main_cr.save ();
-				main_cr.scale (1.0 / window_scale_factor, 1.0 / window_scale_factor);
+				cr.save ();
+				cr.scale (1.0 / window_scale_factor, 1.0 / window_scale_factor);
 			}
-			main_cr.set_source_surface (icon_surface.Internal, draw_value.draw_region.x * window_scale_factor, draw_value.draw_region.y * window_scale_factor);
-			main_cr.paint ();
+			cr.set_source_surface (icon_surface.Internal, draw_value.draw_region.x * window_scale_factor, draw_value.draw_region.y * window_scale_factor);
+			cr.paint ();
 			if (window_scale_factor > 1)
-				main_cr.restore ();
+				cr.restore ();
 			
 			// draw indicators
 			if (item.Indicator != IndicatorState.NONE)
@@ -648,24 +679,24 @@ namespace Plank
 			if (indicator_buffer == null) {
 				var indicator_color = get_styled_color ();
 				indicator_color.set_min_sat (0.4);
-				indicator_buffer = theme.create_indicator (position_manager.IndicatorSize, indicator_color, main_buffer);
+				indicator_buffer = theme.create_indicator (position_manager.IndicatorSize, indicator_color, item_buffer);
 			}
 			if (urgent_indicator_buffer == null) {
 				var urgent_indicator_color = get_styled_color ();
 				urgent_indicator_color.add_hue (theme.UrgentHueShift);
 				urgent_indicator_color.set_sat (1.0);
-				urgent_indicator_buffer = theme.create_indicator (position_manager.IndicatorSize, urgent_indicator_color, main_buffer);
+				urgent_indicator_buffer = theme.create_indicator (position_manager.IndicatorSize, urgent_indicator_color, item_buffer);
 			}
 			
 			unowned DockSurface indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
-			unowned Cairo.Context main_cr = main_buffer.Context;
+			unowned Cairo.Context cr = item_buffer.Context;
 			
 			var x = 0.0, y = 0.0;
 			switch (position_manager.Position) {
 			default:
 			case Gtk.PositionType.BOTTOM:
 				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
-				y = main_buffer.Height - indicator_surface.Height / 2.0 - 2.0 * theme.get_bottom_offset () - indicator_surface.Height / 24.0;
+				y = item_buffer.Height - indicator_surface.Height / 2.0 - 2.0 * theme.get_bottom_offset () - indicator_surface.Height / 24.0;
 				break;
 			case Gtk.PositionType.TOP:
 				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
@@ -676,14 +707,14 @@ namespace Plank
 				y = item_rect.y + item_rect.height / 2.0 - indicator_surface.Height / 2.0;
 				break;
 			case Gtk.PositionType.RIGHT:
-				x = main_buffer.Width - indicator_surface.Width / 2.0 - 2.0 * theme.get_bottom_offset () - indicator_surface.Width / 24.0;
+				x = item_buffer.Width - indicator_surface.Width / 2.0 - 2.0 * theme.get_bottom_offset () - indicator_surface.Width / 24.0;
 				y = item_rect.y + item_rect.height / 2.0 - indicator_surface.Height / 2.0;
 				break;
 			}
 			
 			if (indicator == IndicatorState.SINGLE) {
-				main_cr.set_source_surface (indicator_surface.Internal, x, y);
-				main_cr.paint ();
+				cr.set_source_surface (indicator_surface.Internal, x, y);
+				cr.paint ();
 			} else {
 				var x_offset = 0.0, y_offset = 0.0;
 				if (position_manager.is_horizontal_dock ())
@@ -691,10 +722,10 @@ namespace Plank
 				else
 					y_offset = position_manager.IconSize / 16.0;
 				
-				main_cr.set_source_surface (indicator_surface.Internal, x - x_offset, y - y_offset);
-				main_cr.paint ();
-				main_cr.set_source_surface (indicator_surface.Internal, x + x_offset, y + y_offset);
-				main_cr.paint ();
+				cr.set_source_surface (indicator_surface.Internal, x - x_offset, y - y_offset);
+				cr.paint ();
+				cr.set_source_surface (indicator_surface.Internal, x + x_offset, y + y_offset);
+				cr.paint ();
 			}
 		}
 		
