@@ -2,7 +2,22 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
-0.8.0 "May" (2015-12-02)
+0.8.1 "May" (2015-01-25)
+===============================================================================
+ * Make use of Gdk.EVENT_PROPAGATE and Gdk.EVENT_STOP
+ * Compatibility for BSD, use replacement for sys/prctl.h
+ * Request gee-0.8 without an automatic fallback to gee-1.0
+ * positionmanager: Alignment should have same meaning for dock and items
+   START and END were treated differently resulting in a contradicting
+   settings-behaviour of Aligment and ItemsAlignment
+ * Fix broken virtual LauncherEntry-items
+ * Fix menu-position with gtk+ 3.15+
+ * Fix enable/disable pressure-reveal on runtime
+ * Output information for more enabled features
+ * Fix some sensitivity assignments in preferences dialog
+ * Update translations
+
+0.8.0 "May" (2015-01-02)
 ===============================================================================
  * Use selected-focused background-color from current gtk-theme (LP: #1406462)
  * Add FileDockItem.with_file() and expose OwnedFile
