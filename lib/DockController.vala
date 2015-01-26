@@ -225,6 +225,10 @@ namespace Plank
 			if (provider == default_provider)
 				serialize_item_positions ();
 			
+			// Schedule added/removed items for special animations
+			renderer.animate_items (added);
+			renderer.animate_items (removed);
+			
 			update_visible_items ();
 			
 			if (prefs.Alignment != Gtk.Align.FILL
