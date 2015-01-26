@@ -133,7 +133,7 @@ namespace Plank.Drawing
 			GlowTime = 10000;
 			GlowPulseTime = 2000;
 			UrgentHueShift = 150;
-			ItemMoveTime = 150;
+			ItemMoveTime = 450;
 		}
 		
 		/**

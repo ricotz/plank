@@ -59,4 +59,4 @@ GlowPulseTime=2000
 #The hue-shift (-180 to 180) of the urgent indicator color.
 UrgentHueShift=150
 #The time (in ms) to move an item to its new position.
-ItemMoveTime=150
+ItemMoveTime=450
