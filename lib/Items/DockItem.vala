@@ -396,14 +396,12 @@ namespace Plank.Items
 		 */
 		protected virtual void draw_icon (DockSurface surface)
 		{
-			double x_scale = 1.0, y_scale = 1.0;
-#if HAVE_HIDPI
-			cairo_surface_get_device_scale (surface.Internal, out x_scale, out y_scale);
-#endif
 			Cairo.Surface? icon = null;
 			Gdk.Pixbuf? pbuf = ForcePixbuf;
 			if (pbuf == null) {
 #if HAVE_HIDPI
+				double x_scale = 1.0, y_scale = 1.0;
+				cairo_surface_get_device_scale (surface.Internal, out x_scale, out y_scale);
 				icon = DrawingService.load_icon_for_scale (Icon, surface.Width, surface.Height, (int) double.max (x_scale, y_scale));
 				if (icon != null)
 					cairo_surface_set_device_scale (icon, 1.0, 1.0);
