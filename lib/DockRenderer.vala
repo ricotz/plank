@@ -317,6 +317,7 @@ namespace Plank
 			item_buffer.clear ();
 			shadow_buffer.clear ();
 			unowned Cairo.Context item_cr = item_buffer.Context;
+			unowned Cairo.Context shadow_cr = shadow_buffer.Context;
 			
 			// draw transient items onto the dock buffer and calculate the resulting
 			// dynamic-animation-offset used to animate the background-resize
@@ -355,8 +356,11 @@ namespace Plank
 					start2 = new DateTime.now_local ();
 #endif
 					// Do not draw the currently dragged item or items which are suppose to be drawn later
-					if (move_time < move_duration && dragged_item != item && !items.contains (item))
-						draw_item (item_cr, item);
+					if (move_time < move_duration && dragged_item != item && !items.contains (item)) {
+						var draw_value = get_animated_draw_value_for_item (item);
+						draw_item (item_cr, item, ref draw_value);
+						draw_item_shadow (shadow_cr, item, ref draw_value);
+					}
 #if BENCHMARK
 					end2 = new DateTime.now_local ();
 					benchmark.add ("item render time - %f ms".printf (end2.difference (start2) / 1000.0));
@@ -444,8 +448,11 @@ namespace Plank
 				start2 = new DateTime.now_local ();
 #endif
 				// Do not draw the currently dragged item
-				if (dragged_item != item)
-					draw_item (item_cr, item);
+				if (dragged_item != item) {
+					var draw_value = get_animated_draw_value_for_item (item);
+					draw_item (item_cr, item, ref draw_value);
+					draw_item_shadow (shadow_cr, item, ref draw_value);
+				}
 #if BENCHMARK
 				end2 = new DateTime.now_local ();
 				benchmark.add ("item render time - %f ms".printf (end2.difference (start2) / 1000.0));
@@ -511,49 +518,17 @@ namespace Plank
 			cr.paint ();
 		}
 		
-		void draw_item (Cairo.Context cr, DockItem item)
+		PositionManager.DockItemDrawValue get_animated_draw_value_for_item (DockItem item)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockItem hovered_item = controller.window.HoveredItem;
 			unowned DragManager drag_manager = controller.drag_manager;
 			
-			unowned Cairo.Context shadow_cr = shadow_buffer.Context;
 			var icon_size = position_manager.IconSize;
-			var shadow_size = position_manager.IconShadowSize;
 			var position = position_manager.Position;
-			var show_indicator = true;
-			var item_opacity = 1.0;
-			
-			// load the icon
-#if BENCHMARK
-			var start = new DateTime.now_local ();
-#endif
-			var icon_surface = item.get_surface_copy (icon_size * window_scale_factor, icon_size * window_scale_factor, item_buffer);
-			unowned Cairo.Context icon_cr = icon_surface.Context;
-			
-			DockSurface? icon_shadow_surface = null;
-			if (shadow_size > 0)
-				icon_shadow_surface = item.get_background_surface (draw_item_shadow);
-			
-			DockSurface? icon_overlay_surface = null;
-			if (item.CountVisible || item.ProgressVisible)
-				icon_overlay_surface = item.get_foreground_surface (draw_item_overlay);
-			
-			if (icon_overlay_surface != null) {
-				icon_cr.set_source_surface (icon_overlay_surface.Internal, 0, 0);
-				icon_cr.paint ();
-			}
-			
-#if BENCHMARK
-			var end = new DateTime.now_local ();
-			benchmark.add ("	item.get_surface time - %f ms".printf (end.difference (start) / 1000.0));
-#endif
 			
 			// get item's draw-value
 			var draw_value = position_manager.get_draw_value_for_item (item);
-			
-			// lighten or darken the icon
-			var lighten = 0.0, darken = 0.0;
 			
 			// check for and calulate click-animatation
 			var max_click_time = item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
@@ -573,10 +548,10 @@ namespace Plank
 					draw_value.move_in (position, change);
 					break;
 				case Animation.DARKEN:
-					darken = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
+					draw_value.darken = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
 					break;
 				case Animation.LIGHTEN:
-					lighten = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
+					draw_value.lighten = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
 					break;
 				}
 			}
@@ -592,10 +567,10 @@ namespace Plank
 				case Animation.NONE:
 					break;
 				case Animation.DARKEN:
-					darken = double.max (0, Math.sin (Math.PI * scroll_animation_progress)) * 0.5;
+					draw_value.darken = double.max (0, Math.sin (Math.PI * scroll_animation_progress)) * 0.5;
 					break;
 				case Animation.LIGHTEN:
-					lighten = double.max (0, Math.sin (Math.PI * scroll_animation_progress)) * 0.5;
+					draw_value.lighten = double.max (0, Math.sin (Math.PI * scroll_animation_progress)) * 0.5;
 					break;
 				}
 			}
@@ -616,36 +591,19 @@ namespace Plank
 				case Animation.NONE:
 					break;
 				case Animation.LIGHTEN:
-					lighten = hover_animation_progress * 0.2;
+					draw_value.lighten = hover_animation_progress * 0.2;
 					break;
 				}
 			} else if (hovered_item == item) {
-				lighten = 0.2;
+				draw_value.lighten = 0.2;
 			}
 			
 			if (hovered_item == item && controller.window.menu_is_visible ())
-				darken += 0.4;
+				draw_value.darken += 0.4;
 			else if (drag_manager.ExternalDragActive
 				&& !drag_manager.DragIsDesktopFile
 				&& !drag_manager.drop_is_accepted_by (item))
-				darken += 0.6;
-			
-			// glow the icon
-			if (lighten > 0) {
-				icon_cr.set_operator (Cairo.Operator.ADD);
-				icon_cr.paint_with_alpha (lighten);
-				icon_cr.set_operator (Cairo.Operator.OVER);
-			}
-			
-			// darken the icon
-			if (darken > 0) {
-				icon_cr.rectangle (0, 0, icon_surface.Width, icon_surface.Height);
-				icon_cr.set_source_rgba (0, 0, 0, darken);
-				
-				icon_cr.set_operator (Cairo.Operator.ATOP);
-				icon_cr.fill ();
-				icon_cr.set_operator (Cairo.Operator.OVER);
-			}
+				draw_value.darken += 0.6;
 			
 			// bounce icon on urgent state
 			if (screen_is_composited && (item.State & ItemState.URGENT) != 0) {
@@ -684,21 +642,67 @@ namespace Plank
 				var move_time = frame_time - item.AddTime;
 				if (move_time < move_duration) {
 					var move_animation_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.LINEAR, move_time, move_duration);
-					item_opacity = Drawing.easing_for_mode (AnimationMode.EASE_IN_EXPO, move_time, move_duration);
+					draw_value.opacity = Drawing.easing_for_mode (AnimationMode.EASE_IN_EXPO, move_time, move_duration);
 					var change = move_animation_progress * (icon_size + position_manager.BottomPadding);
 					draw_value.move_in (position, -change);
-					show_indicator = false;
+					draw_value.show_indicator = false;
 				}
 			} else if (screen_is_composited && item.RemoveTime > 0) {
 				var move_duration = theme.ItemMoveTime * 1000;
 				var move_time = frame_time - item.RemoveTime;
 				if (move_time < move_duration) {
 					var move_animation_progress = Drawing.easing_for_mode (AnimationMode.LINEAR, move_time, move_duration);
-					item_opacity = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_OUT_EXPO, move_time, move_duration);
+					draw_value.opacity = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_OUT_EXPO, move_time, move_duration);
 					var change = move_animation_progress * (icon_size + position_manager.BottomPadding);
 					draw_value.move_in (position, -change);
-					show_indicator = false;
+					draw_value.show_indicator = false;
 				}
+			}
+			
+			return draw_value;
+		}
+			
+		void draw_item (Cairo.Context cr, DockItem item, ref PositionManager.DockItemDrawValue draw_value)
+		{
+			unowned PositionManager position_manager = controller.position_manager;
+			var icon_size = position_manager.IconSize;
+			var position = position_manager.Position;
+			
+			// load the icon
+#if BENCHMARK
+			var start = new DateTime.now_local ();
+#endif
+			var icon_surface = item.get_surface_copy (icon_size * window_scale_factor, icon_size * window_scale_factor, item_buffer);
+			unowned Cairo.Context icon_cr = icon_surface.Context;
+			
+			DockSurface? icon_overlay_surface = null;
+			if (item.CountVisible || item.ProgressVisible)
+				icon_overlay_surface = item.get_foreground_surface (draw_item_foreground);
+			
+			if (icon_overlay_surface != null) {
+				icon_cr.set_source_surface (icon_overlay_surface.Internal, 0, 0);
+				icon_cr.paint ();
+			}
+			
+#if BENCHMARK
+			var end = new DateTime.now_local ();
+			benchmark.add ("	item.get_surface time - %f ms".printf (end.difference (start) / 1000.0));
+#endif
+			
+			// lighten the icon
+			if (draw_value.lighten > 0) {
+				icon_cr.set_operator (Cairo.Operator.ADD);
+				icon_cr.paint_with_alpha (draw_value.lighten);
+				icon_cr.set_operator (Cairo.Operator.OVER);
+			}
+			
+			// darken the icon
+			if (draw_value.darken > 0) {
+				icon_cr.rectangle (0, 0, icon_surface.Width, icon_surface.Height);
+				icon_cr.set_source_rgba (0, 0, 0, draw_value.darken);
+				icon_cr.set_operator (Cairo.Operator.ATOP);
+				icon_cr.fill ();
+				icon_cr.set_operator (Cairo.Operator.OVER);
 			}
 			
 			// draw active glow
@@ -710,41 +714,53 @@ namespace Plank
 				theme.draw_active_glow (item_buffer, background_rect, draw_value.background_region, item.AverageIconColor, opacity, position);
 			}
 			
-			// draw the icon shadow
-			if (icon_shadow_surface != null) {
-				if (window_scale_factor > 1) {
-					shadow_cr.save ();
-					shadow_cr.scale (1.0 / window_scale_factor, 1.0 / window_scale_factor);
-				}
-				shadow_cr.set_operator (Cairo.Operator.OVER);
-				shadow_cr.set_source_surface (icon_shadow_surface.Internal, (draw_value.draw_region.x - shadow_size) * window_scale_factor, (draw_value.draw_region.y - shadow_size) * window_scale_factor);
-				if (item_opacity < 1.0)
-					shadow_cr.paint_with_alpha (item_opacity);
-				else
-					shadow_cr.paint ();
-				if (window_scale_factor > 1)
-					shadow_cr.restore ();
-			}
-
 			// draw the icon
 			if (window_scale_factor > 1) {
 				cr.save ();
 				cr.scale (1.0 / window_scale_factor, 1.0 / window_scale_factor);
 			}
-			cr.set_source_surface (icon_surface.Internal, draw_value.draw_region.x * window_scale_factor, draw_value.draw_region.y * window_scale_factor);
-			if (item_opacity < 1.0)
-				cr.paint_with_alpha (item_opacity);
+			var draw_region = draw_value.draw_region;
+			cr.set_source_surface (icon_surface.Internal, draw_region.x * window_scale_factor, draw_region.y * window_scale_factor);
+			if (draw_value.opacity < 1.0)
+				cr.paint_with_alpha (draw_value.opacity);
 			else
 				cr.paint ();
 			if (window_scale_factor > 1)
 				cr.restore ();
 			
 			// draw indicators
-			if (show_indicator && item.Indicator != IndicatorState.NONE)
-				draw_indicator_state (draw_value.hover_region, item.Indicator, item.State);
+			if (draw_value.show_indicator && item.Indicator != IndicatorState.NONE)
+				draw_indicator_state (cr, draw_value.hover_region, item.Indicator, item.State);
 		}
 		
-		DockSurface draw_item_overlay (DockItem item, DockSurface icon_surface, DockSurface? current_surface)
+		void draw_item_shadow (Cairo.Context cr, DockItem item, ref PositionManager.DockItemDrawValue draw_value)
+		{
+			unowned PositionManager position_manager = controller.position_manager;
+			var shadow_size = position_manager.IconShadowSize;
+
+			// load and draw the icon shadow
+			DockSurface? icon_shadow_surface = null;
+			if (shadow_size > 0)
+				icon_shadow_surface = item.get_background_surface (draw_item_background);
+			
+			if (icon_shadow_surface != null) {
+				if (window_scale_factor > 1) {
+					cr.save ();
+					cr.scale (1.0 / window_scale_factor, 1.0 / window_scale_factor);
+				}
+				var draw_region = draw_value.draw_region;
+				cr.set_operator (Cairo.Operator.OVER);
+				cr.set_source_surface (icon_shadow_surface.Internal, (draw_region.x - shadow_size) * window_scale_factor, (draw_region.y - shadow_size) * window_scale_factor);
+				if (draw_value.opacity < 1.0)
+					cr.paint_with_alpha (draw_value.opacity);
+				else
+					cr.paint ();
+				if (window_scale_factor > 1)
+					cr.restore ();
+			}
+		}
+		
+		DockSurface draw_item_foreground (DockItem item, DockSurface icon_surface, DockSurface? current_surface)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			var width = icon_surface.Width;
@@ -772,7 +788,7 @@ namespace Plank
 			return surface;
 		}
 		
-		DockSurface draw_item_shadow (DockItem item, DockSurface icon_surface, DockSurface? current_surface)
+		DockSurface draw_item_background (DockItem item, DockSurface icon_surface, DockSurface? current_surface)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			var shadow_size = position_manager.IconShadowSize * window_scale_factor;
@@ -814,7 +830,7 @@ namespace Plank
 			return surface;
 		}
 		
-		void draw_indicator_state (Gdk.Rectangle item_rect, IndicatorState indicator, ItemState item_state)
+		void draw_indicator_state (Cairo.Context cr, Gdk.Rectangle item_rect, IndicatorState indicator, ItemState item_state)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			
@@ -831,7 +847,6 @@ namespace Plank
 			}
 			
 			unowned DockSurface indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
-			unowned Cairo.Context cr = item_buffer.Context;
 			
 			var x = 0.0, y = 0.0;
 			switch (position_manager.Position) {

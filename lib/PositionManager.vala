@@ -33,6 +33,13 @@ namespace Plank
 			public Gdk.Rectangle draw_region;
 			public Gdk.Rectangle background_region;
 			
+			public double opacity;
+			
+			public double darken;
+			public double lighten;
+			
+			public bool show_indicator;
+			
 			public void move_in (Gtk.PositionType position, double damount)
 			{
 				var amount = (int) damount;
@@ -642,7 +649,7 @@ namespace Plank
 				var draw_rect = get_item_draw_region (hover_rect);
 				var background_rect = get_item_background_region (hover_rect);
 			
-				draw_value = { hover_rect, draw_rect, background_rect };
+				draw_value = { hover_rect, draw_rect, background_rect, 1.0, 0.0, 0.0, true };
 				draw_values.set (item, draw_value);
 			}
 			
