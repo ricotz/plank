@@ -428,10 +428,6 @@ namespace Plank
 			unowned Cairo.Context main_cr = main_buffer.Context;
 			main_cr.set_operator (Cairo.Operator.OVER);
 			
-			// draw items-shadow-layer
-			main_cr.set_source_surface (shadow_buffer.Internal, x_animation_offset, y_animation_offset);
-			main_cr.paint ();
-			
 #if BENCHMARK
 			start2 = new DateTime.now_local ();
 #endif
@@ -455,6 +451,10 @@ namespace Plank
 				benchmark.add ("item render time - %f ms".printf (end2.difference (start2) / 1000.0));
 #endif
 			}
+			
+			// draw items-shadow-layer
+			main_cr.set_source_surface (shadow_buffer.Internal, x_animation_offset, y_animation_offset);
+			main_cr.paint ();
 			
 			// draw items-layer
 			main_cr.set_source_surface (item_buffer.Internal, x_animation_offset, y_animation_offset);
