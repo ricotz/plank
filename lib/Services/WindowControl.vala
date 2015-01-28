@@ -55,7 +55,11 @@ namespace Plank.Services.Windows
 			Wnck.set_client_type (Wnck.ClientType.PAGER);
 			
 			// Make sure internal window-list of Wnck is most up to date
+			Gdk.error_trap_push ();
 			screen.force_update ();
+			if (Gdk.error_trap_pop () != 0)
+				critical ("Wnck.Screen.force_update() caused a XError");
+			
 			screen.window_manager_changed.connect_after (window_manager_changed);
 			screen.window_closed.connect_after (handle_window_closed);
 			
@@ -65,7 +69,10 @@ namespace Plank.Services.Windows
 		static void window_manager_changed (Wnck.Screen screen)
 		{
 			// Make sure internal window-list of Wnck is most up to date
+			Gdk.error_trap_push ();
 			screen.force_update ();
+			if (Gdk.error_trap_pop () != 0)
+				critical ("Wnck.Screen.force_update() caused a XError");
 			
 			warning ("Window-manager changed: %s", screen.get_window_manager_name ());
 		}
@@ -88,6 +95,8 @@ namespace Plank.Services.Windows
 			
 			warn_if_fail (xids != null);
 			
+			Gdk.error_trap_push ();
+			
 			for (var i = 0; xids != null && i < xids.length && pbuf == null; i++) {
 				unowned Wnck.Window window = Wnck.Window.@get (xids.index (i));
 				if (window == null)
@@ -99,6 +108,9 @@ namespace Plank.Services.Windows
 				
 				break;
 			}
+			
+			if (Gdk.error_trap_pop () != 0)
+				critical ("get_app_icon() for '%s' caused a XError", app.get_name ());
 			
 			return pbuf;
 		}
@@ -113,9 +125,14 @@ namespace Plank.Services.Windows
 			if (w == null)
 				return null;
 			
+			Gdk.error_trap_push ();
+			
 			pbuf = w.get_icon ();
 			if (w.get_icon_is_fallback ())
 				pbuf = null;
+			
+			if (Gdk.error_trap_pop () != 0)
+				critical ("get_window_icon() for '%s' caused a XError", window.get_name ());
 			
 			return pbuf;
 		}
