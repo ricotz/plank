@@ -665,8 +665,8 @@ namespace Plank.Widgets
 		 * @param y the y location to show the menu
 		 * @param push_in if the menu should push into the screen
 		 */
-		[CCode (instance_pos = 4.1)]
-		void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in)
+		[CCode (instance_pos = -1)]
+		void position_menu (Gtk.Menu menu, ref int x, ref int y, out bool push_in)
 		{
 			Gtk.Requisition requisition;
 			menu.get_preferred_size (null, out requisition);
