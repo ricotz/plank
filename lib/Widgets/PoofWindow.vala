@@ -59,7 +59,7 @@ namespace Plank.Widgets
 			set_keep_above (true);
 			
 			try {
-				poof_image = new Gdk.Pixbuf.from_resource ("%s/img/poof.png".printf (Plank.G_RESOURCE_PATH));
+				poof_image = new Gdk.Pixbuf.from_resource ("%s/img/poof.svg".printf (Plank.G_RESOURCE_PATH));
 			} catch {
 				poof_image = new Gdk.Pixbuf (Gdk.Colorspace.RGB, true, 8, 128, 640);
 				warning ("Unable to load poof animation image");

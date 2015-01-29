@@ -14,7 +14,7 @@ EXTRA_DIST = \
 	plank.appdata.xml.in \
 	plank.desktop.in \
 	plank.gresource.xml \
-	poof.png \
+	poof.svg \
 	ui/preferences.ui \
 	$(NULL)
 
