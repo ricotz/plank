@@ -39,6 +39,9 @@ namespace Plank
 		[Description(nick = "unhide-delay", blurb = "Time (in ms) to wait before unhiding the dock.")]
 		public uint UnhideDelay { get; set; }
 		
+		[Description(nick = "hide-delay", blurb = "Time (in ms) to wait before hiding the dock.")]
+		public uint HideDelay { get; set; }
+		
 		[Description(nick = "monitor", blurb = "The monitor number for the dock. Use -1 to keep on the primary monitor.")]
 		public int Monitor { get; set; }
 		
@@ -111,6 +114,7 @@ namespace Plank
 			IconSize = 48;
 			HideMode = HideType.INTELLIGENT;
 			UnhideDelay = 0;
+			HideDelay = 0;
 			Monitor = -1;
 			DockItems = "";
 			Position = Gtk.PositionType.BOTTOM;
@@ -187,6 +191,9 @@ namespace Plank
 				break;
 			
 			case "UnhideDelay":
+				break;
+			
+			case "HideDelay":
 				break;
 			
 			case "Monitor":

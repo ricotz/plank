@@ -83,6 +83,7 @@ namespace Plank
 		 */
 		public bool Hovered { get; private set; default = false; }
 		
+		uint timer_hide = 0;
 		uint timer_unhide = 0;
 		bool pointer_update = true;
 		
@@ -298,12 +299,33 @@ namespace Plank
 				timer_unhide = 0;
 			}
 			
-			if (!Hidden)
-				Hidden = true;
+			if (Hidden)
+				return;
+			
+			if (controller.prefs.HideDelay == 0) {
+				if (!Hidden)
+					Hidden = true;
+				return;
+			}
+			
+			if (timer_hide > 0)
+				return;
+			
+			timer_hide = Gdk.threads_add_timeout (controller.prefs.HideDelay, () => {
+				if (!Hidden)
+					Hidden = true;
+				timer_hide = 0;
+				return false;
+			});
 		}
 
 		void show ()
 		{
+			if (timer_hide > 0) {
+				GLib.Source.remove (timer_hide);
+				timer_hide = 0;
+			}
+			
 			if (!Hidden)
 				return;
 			
@@ -512,6 +534,11 @@ namespace Plank
 			if (timer_prefs_changed > 0) {
 				GLib.Source.remove (timer_prefs_changed);
 				timer_prefs_changed = 0;
+			}
+			
+			if (timer_hide > 0) {
+				GLib.Source.remove (timer_hide);
+				timer_hide = 0;
 			}
 			
 			if (timer_unhide > 0) {

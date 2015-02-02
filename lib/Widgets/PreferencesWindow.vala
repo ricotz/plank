@@ -35,9 +35,11 @@ namespace Plank.Widgets
 		Gtk.ComboBoxText cb_items_alignment;
 		
 		Gtk.SpinButton sp_monitor;
+		Gtk.SpinButton sp_hide_delay;
 		Gtk.SpinButton sp_unhide_delay;
 		Gtk.Scale s_offset;
 		
+		Gtk.Adjustment adj_hide_delay;
 		Gtk.Adjustment adj_unhide_delay;
 		Gtk.Adjustment adj_iconsize;
 		Gtk.Adjustment adj_offset;
@@ -85,7 +87,9 @@ namespace Plank.Widgets
 				cb_hidemode = builder.get_object ("cb_hidemode") as Gtk.ComboBoxText;
 				cb_position = builder.get_object ("cb_position") as Gtk.ComboBoxText;
 				sp_monitor = builder.get_object ("sp_monitor") as Gtk.SpinButton;
+				sp_hide_delay = builder.get_object ("sp_hide_delay") as Gtk.SpinButton;
 				sp_unhide_delay = builder.get_object ("sp_unhide_delay") as Gtk.SpinButton;
+				adj_hide_delay = builder.get_object ("adj_hide_delay") as Gtk.Adjustment;
 				adj_unhide_delay = builder.get_object ("adj_unhide_delay") as Gtk.Adjustment;
 				adj_iconsize = builder.get_object ("adj_iconsize") as Gtk.Adjustment;
 				adj_offset = builder.get_object ("adj_offset") as Gtk.Adjustment;
@@ -158,6 +162,9 @@ namespace Plank.Widgets
 					pos++;
 				}
 				break;
+			case "HideDelay":
+				adj_hide_delay.value = prefs.HideDelay;
+				break;
 			case "UnhideDelay":
 				adj_unhide_delay.value = prefs.UnhideDelay;
 				break;
@@ -203,11 +210,15 @@ namespace Plank.Widgets
 			if (((Gtk.Switch) widget).get_active ()) {
 				prefs.HideMode = HideType.INTELLIGENT;
 				cb_hidemode.sensitive = true;
+				sp_hide_delay.sensitive = true;
 				sp_unhide_delay.sensitive = true;
+				sw_pressure_reveal.sensitive = true;
 			} else {
 				prefs.HideMode = HideType.NONE;
 				cb_hidemode.sensitive = false;
+				sp_hide_delay.sensitive = false;
 				sp_unhide_delay.sensitive = false;
+				sw_pressure_reveal.sensitive = false;
 			}
 		}
 		
@@ -257,6 +268,11 @@ namespace Plank.Widgets
 			prefs.Offset = (int) adj.value;
 		}
 		
+		void hide_delay_changed (Gtk.Adjustment adj)
+		{
+			prefs.HideDelay = (int) adj.value;
+		}
+		
 		void unhide_delay_changed (Gtk.Adjustment adj)
 		{
 			prefs.UnhideDelay = (int) adj.value;
@@ -274,6 +290,7 @@ namespace Plank.Widgets
 			cb_theme.changed.connect (cb_theme_changed);
 			cb_hidemode.changed.connect (cb_hidemode_changed);
 			cb_position.changed.connect (cb_position_changed);
+			adj_hide_delay.value_changed.connect (hide_delay_changed);
 			adj_unhide_delay.value_changed.connect (unhide_delay_changed);
 			sp_monitor.value_changed.connect (monitor_changed);
 			adj_iconsize.value_changed.connect (iconsize_changed);
@@ -302,6 +319,7 @@ namespace Plank.Widgets
 			cb_hidemode.active_id = ((int) prefs.HideMode).to_string ();
 			cb_hidemode.sensitive = (prefs.HideMode != HideType.NONE);
 			cb_position.active_id = ((int) prefs.Position).to_string ();
+			adj_hide_delay.value = prefs.HideDelay;
 			adj_unhide_delay.value = prefs.UnhideDelay;
 
 			sp_monitor.set_range (-1, Gdk.Screen.get_default ().get_n_monitors () - 1);
@@ -309,6 +327,7 @@ namespace Plank.Widgets
 			sp_monitor.adjustment = new Gtk.Adjustment (prefs.Monitor, -1, 9, 1, 1, 0);
 			sp_monitor.value = prefs.Monitor;
 			sp_monitor.sensitive = (prefs.Monitor > -1);
+			sp_hide_delay.sensitive = (prefs.HideMode != HideType.NONE);
 			sp_unhide_delay.sensitive = (prefs.HideMode != HideType.NONE);
 			
 			adj_iconsize.value = prefs.IconSize;
