@@ -239,7 +239,19 @@ namespace Plank.Drawing
 		return animation_modes[mode].name;
 	}
 
+	/**
+	 * Calculate an interpolated value for selected animation-mode, and given
+	 * elapsed time and total duration.
+	 *
+	 * @param mode animation-mode to be used
+	 * @param t elapsed time
+	 * @param d total duration
+	 * @return the interpolated value, between -1.0 and 2.0
+	 */
 	public double easing_for_mode (AnimationMode mode, double t, double d)
+		requires (t >= 0.0 && d > 0.0)
+		requires (t <= d)
+		ensures (result >= -1.0 && result <= 2.0)
 	{
 		assert (animation_modes[mode].mode == mode);
 		assert (animation_modes[mode].func != null);
