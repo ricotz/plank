@@ -220,19 +220,19 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		public override void add_item_with_uri (string uri, DockItem? target = null)
+		public override bool add_item_with_uri (string uri, DockItem? target = null)
 		{
 			if (uri == null || uri == "")
-				return;
+				return false;
 			
 			if (target != null && target != placeholder_item && !internal_items.contains (target)) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", target.Text);
-				return;
+				return false;
 			}
 			
 			if (item_exists_for_uri (uri)) {
 				warning ("Item for '%s' already exists in this DockItemProvider.", uri);
-				return;
+				return false;
 			}
 			
 			// delay automatic add of new dockitems while creating this new one
@@ -241,15 +241,21 @@ namespace Plank.Items
 			var dockitem_file = Factory.item_factory.make_dock_item (uri, LaunchersDir);
 			if (dockitem_file == null) {
 				resume_items_monitor ();
-				return;
+				return false;
 			}
 			
 			var element = Factory.item_factory.make_element (dockitem_file);
 			var item = (element as DockItem);
-			if (item != null)
-				add_item (item, target);
+			if (item == null) {
+				resume_items_monitor ();
+				return false;
+			}
+			
+			add_item (item, target);
 			
 			resume_items_monitor ();
+			
+			return true;
 		}
 		
 		/**

@@ -108,17 +108,18 @@ namespace Plank.Items
 		 *
 		 * @param item the dock item to add
 		 * @param target an existing item where to put this new one at
+		 * @return whether adding the item was successful
 		 */
-		public void add_item (DockElement item, DockElement? target = null)
+		public bool add_item (DockElement item, DockElement? target = null)
 		{
 			if (internal_items.contains (item)) {
 				critical ("Item '%s' already exists in this DockItemProvider.", item.Text);
-				return;
+				return false;
 			}
 			
 			if (item.Container != null) {
 				critical ("Item '%s' should be removed from its old DockItemProvider first.", item.Text);
-				return;
+				return false;
 			}
 			
 			unowned DockContainer? container = (item as DockContainer);
@@ -130,23 +131,30 @@ namespace Plank.Items
 				move_item_to (item, target);
 			else
 				update_visible_items ();
+			
+			return true;
 		}
 		
 		/**
 		 * Adds a ordered list of dock items to the collection.
 		 *
 		 * @param items the dock items to add
+		 * @return whether all items were added successfully
 		 */
-		public void add_items (Gee.ArrayList<DockElement> items)
+		public bool add_items (Gee.ArrayList<DockElement> items)
 		{
+			bool result = true;
+			
 			foreach (var item in items) {
 				if (internal_items.contains (item)) {
 					critical ("Item '%s' already exists in this DockItemProvider.", item.Text);
+					result = false;
 					continue;
 				}
 				
 				if (item.Container != null) {
 					critical ("Item '%s' should be removed from its old DockItemProvider first.", item.Text);
+					result = false;
 					continue;
 				}
 				
@@ -157,23 +165,28 @@ namespace Plank.Items
 			}
 			
 			update_visible_items ();
+			
+			return result;
 		}
 		
 		/**
 		 * Removes a dock item from the collection.
 		 *
 		 * @param item the dock item to remove
+		 * @return whether removing the item was successful
 		 */
-		public void remove_item (DockElement item)
+		public bool remove_item (DockElement item)
 		{
 			if (!internal_items.contains (item)) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", item.Text);
-				return;
+				return false;
 			}
 			
 			remove_item_without_signaling (item);
 			
 			update_visible_items ();
+			
+			return true;
 		}
 		
 		protected virtual void update_visible_items ()
@@ -209,22 +222,23 @@ namespace Plank.Items
 		 *
 		 * @param move the item to move
 		 * @param target the item of the new position
+		 * @return whether moving the item was successful
 		 */
-		public virtual void move_item_to (DockElement move, DockElement target)
+		public virtual bool move_item_to (DockElement move, DockElement target)
 		{
 			if (move == target)
-				return;
+				return true;
 			
 			int index_move, index_target;
 			
 			if ((index_move = internal_items.index_of (move)) < 0) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", move.Text);
-				return;
+				return false;
 			}
 			
 			if ((index_target = internal_items.index_of (target)) < 0) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", target.Text);
-				return;
+				return false;
 			}
 			
 			move_item (internal_items, index_move, index_target);
@@ -237,6 +251,8 @@ namespace Plank.Items
 			} else {
 				update_visible_items ();
 			}
+			
+			return true;
 		}
 		
 		/**
@@ -262,27 +278,28 @@ namespace Plank.Items
 		 *
 		 * @param new_item the new item
 		 * @param old_item the item to be replaced
+		 * @return whether replacing the item was successful
 		 */
-		public virtual void replace_item (DockElement new_item, DockElement old_item)
+		public virtual bool replace_item (DockElement new_item, DockElement old_item)
 		{
 			if (new_item == old_item)
-				return;
+				return true;
 			
 			int index;
 			
 			if ((index = internal_items.index_of (old_item)) < 0) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", old_item.Text);
-				return;
+				return false;
 			}
 			
 			if (internal_items.contains (new_item)) {
 				critical ("Item '%s' already exists in this DockItemProvider.", new_item.Text);
-				return;
+				return false;
 			}
 			
 			if (new_item.Container != null) {
 				critical ("Item '%s' should be removed from its old DockItemProvider first.", new_item.Text);
-				return;
+				return false;
 			}
 			
 			//FIXME Logger.verbose ("DockItemProvider.replace_item (%s[%s, %i] > %s[%s, %i])", old_item.Text, old_item.DockItemFilename, (int)old_item, new_item.Text, new_item.DockItemFilename, (int)new_item);
@@ -299,6 +316,8 @@ namespace Plank.Items
 			
 			if (visible_items.contains (old_item))
 				update_visible_items ();
+			
+			return true;
 		}
 		
 		protected virtual void remove_item_without_signaling (DockElement item)
