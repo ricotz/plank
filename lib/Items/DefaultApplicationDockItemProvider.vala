@@ -248,6 +248,8 @@ namespace Plank.Items
 				
 				replace_item (new_item, item);
 			} else {
+				if (!(app_item.is_running () || app_item.has_unity_info ()))
+					remove_item (item);
 				item.delete ();
 			}
 			
