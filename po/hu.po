@@ -7,21 +7,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-01-21 12:36+0000\n"
-"PO-Revision-Date: 2011-08-28 19:46+0000\n"
-"Last-Translator: András Bognár <Unknown>\n"
+"POT-Creation-Date: 2015-02-22 16:23+0000\n"
+"PO-Revision-Date: 2015-02-13 06:58+0000\n"
+"Last-Translator: Robert Kuszinger <kuszinger@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 05:50+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-02-23 05:20+0000\n"
+"X-Generator: Launchpad (build 17355)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"A Plank szeretne lenni a legegyszerűbb dokk alkalmazás az egész világon. Az "
+"a cél, hogy csak annyit nyújtson amennyit egy dokknak feltétlenül kell és "
+"semmi többet."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -31,6 +34,11 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"Ez, ugyanakkor, egy programozói könyvtár ami kibővíthető más dokk programok "
+"létrehozására, fejlettebb funkciókkal. Ezért hát a Plank a Docky alatt rejlő "
+"technológia (a 3.0.0 verziótól kezdve) és az alapfunkciók biztosítását "
+"célozza, míg a Docky ezt kibővítve látványosabb dolgokat ad hozzá, mint "
+"például Dockleteket, festőket (painters), beállítóablakot, stb."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
@@ -38,115 +46,127 @@ msgstr "Plank. Nagyszerűen egyszerű."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "Téma:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "Elhelyezés:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "Bal"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "Jobb"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "Fent"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "Lent"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "Elrendezés:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "Kitöltés"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "Eleje"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "Vége"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "Közép"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "Elsődleges képernyőn:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr ""
+msgstr "Eltolás százalékban a képernyőszél közepétől"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr ""
+msgstr "Ikon elrendezés:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "Ikon méret:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Appearance"
-msgstr ""
+msgstr "Megjelenés"
 
 #: ../data/ui/preferences.ui.h:17
-msgid "Show Unpinned:"
-msgstr ""
+msgid "Intellihide"
+msgstr "Inteligens elrejtés"
 
 #: ../data/ui/preferences.ui.h:18
-msgid "Restrict to Workspace:"
-msgstr ""
+msgid "Autohide"
+msgstr "Automatikus elrejtés"
 
 #: ../data/ui/preferences.ui.h:19
-msgid "Lock Icons:"
-msgstr ""
+msgid "Dodge maximized window"
+msgstr "Eltüntetés maximalizált ablak elől"
 
 #: ../data/ui/preferences.ui.h:20
-msgid "Automatic Pinning:"
-msgstr ""
+msgid "Hide Dock"
+msgstr "Dokk elrejtése"
 
 #: ../data/ui/preferences.ui.h:21
-msgid "Intellihide"
+msgid "Hide Delay:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:22
-msgid "Autohide"
+msgid "Delay in ms before hiding the dock"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:23
-msgid "Dodge maximized window"
+msgid "Unhide Delay:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "Megjelenítés előtti várakozás ms-ban"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Pressure Reveal:"
-msgstr ""
+msgstr "Felfedés nyomásra:"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Item Management"
-msgstr ""
+msgstr "Elemek kezelése"
 
 #: ../data/ui/preferences.ui.h:27
-msgid "Hide Dock"
-msgstr ""
+msgid "Show Unpinned:"
+msgstr "Rögzítetlenek mutatása:"
 
 #: ../data/ui/preferences.ui.h:28
+msgid "Restrict to Workspace:"
+msgstr "Korlátozás munkaterületre:"
+
+#: ../data/ui/preferences.ui.h:29
+msgid "Lock Icons:"
+msgstr "Ikonok zárolása:"
+
+#: ../data/ui/preferences.ui.h:30
+msgid "Automatic Pinning:"
+msgstr "Automatikus rögzítés:"
+
+#: ../data/ui/preferences.ui.h:31
 msgid "Behaviour"
-msgstr ""
+msgstr "Viselkedés"
 
 #: ../lib/Items/ApplicationDockItem.vala:460
 #: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
@@ -159,7 +179,7 @@ msgstr "Összes _bezárása"
 
 #: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close"
-msgstr ""
+msgstr "_Bezárás"
 
 #: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
@@ -175,7 +195,7 @@ msgstr "_Tartalmazó mappa megnyitása"
 
 #: ../lib/Items/PlaceholderDockItem.vala:35
 msgid "Drop applications or files here"
-msgstr ""
+msgstr "Húzzon alkalmazásokat vagy fájlokat ide"
 
 #: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
@@ -185,7 +205,7 @@ msgstr "Online _segítség..."
 msgid "_Translate This Application..."
 msgstr "Ezen alkalmazás _fordítása..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:62
-#: ../lib/Widgets/PreferencesWindow.vala:72
+#: ../lib/Widgets/PreferencesWindow.vala:64
+#: ../lib/Widgets/PreferencesWindow.vala:74
 msgid "Preferences"
-msgstr ""
+msgstr "Beállítások"

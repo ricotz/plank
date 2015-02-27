@@ -1,20 +1,20 @@
-# Dutch translation for plank
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Albanian translation for plank
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
 # This file is distributed under the same license as the plank package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-02-22 16:23+0000\n"
-"PO-Revision-Date: 2015-02-22 07:07+0000\n"
-"Last-Translator: McVries <mcvries@mcvries.nl>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-02-23 20:14+0000\n"
+"Last-Translator: Indrit Bashkimi <indrit.bashkimi@gmail.com>\n"
+"Language-Team: Albanian <sq@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-23 05:20+0000\n"
+"X-Launchpad-Export-Date: 2015-02-24 05:33+0000\n"
 "X-Generator: Launchpad (build 17355)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
@@ -22,8 +22,6 @@ msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"Plank is bedoeld als het simpelste dock op aarde. Het doel is om slechts een "
-"dock te zijn, niet meer en niet minder."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -33,104 +31,98 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
-"Het is echter ook een bibliotheek die uitgebreid kan worden met andere dock-"
-"toepassingen met meer geavanceerde opties. Plank is dus de onderliggende "
-"technologie voor Docky (zal starten in versie 3.0.0) en zal voor al de "
-"kernfuncties zorgen terwijl Docky extra dingen toe kan voegen zoals "
-"docklets, kleuropties, instellingendialoog, enz."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "Plank. Belachelijk eenvoudig."
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr "Thema:"
+msgstr "Tema:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr "Positie:"
+msgstr "Vendndodhja:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr "Links"
+msgstr "Majtas"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr "Rechts"
+msgstr "Djathtas"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr "Bovenaan"
+msgstr "Lart"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr "Onderaan"
+msgstr "Poshtë"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr "Uitlijning:"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr "Passend maken"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr "Start"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr "Einde"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr "MIdden"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "Op primair beeldscherm:"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
 msgstr ""
-"Verschuiving in percentage vanaf het middelpunt van de rand van het scherm"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Pictogramuitlijning:"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr "Pictogramgrootte:"
+msgstr "Madhësia e ikonave:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Appearance"
-msgstr "Weergave"
+msgstr "Paraqitja"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Intellihide"
-msgstr "Intelligent verbergen"
+msgstr "Fshehje inteligjente"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Autohide"
-msgstr "Automatisch verbergen"
+msgstr "Fshehje e vetvetishme"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Dodge maximized window"
-msgstr "Gemaximaliseerde vensters ontwijken"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Hide Dock"
-msgstr "Dock verbergen"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Hide Delay:"
-msgstr ""
+msgstr "Vonesa e fshehjes:"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Delay in ms before hiding the dock"
-msgstr "Pauze in ms voor het dock verborgen wordt"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Unhide Delay:"
@@ -138,74 +130,74 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Delay in ms before showing the dock"
-msgstr "Aantal milliseconden waarna het dock tevoorschijn komt"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Pressure Reveal:"
-msgstr "Drukgevoeligheid:"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Item Management"
-msgstr "Itembeheer"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Show Unpinned:"
-msgstr "Niet vastgezette toepassingen tonen:"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Restrict to Workspace:"
-msgstr "Beperken tot één werkblad:"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Lock Icons:"
-msgstr "Pictogrammen vastzetten:"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Automatic Pinning:"
-msgstr "Automatisch vastzetten op het dock:"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Behaviour"
-msgstr "Gedrag"
+msgstr "Sjellja"
 
 #: ../lib/Items/ApplicationDockItem.vala:460
 #: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
 msgid "_Keep in Dock"
-msgstr "_Vastzetten in dock"
+msgstr ""
 
 #: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close All"
-msgstr "Alles sl_uiten"
+msgstr "_Mbylli të gjithë"
 
 #: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close"
-msgstr "Sl_uiten"
+msgstr "_Mbyll"
 
 #: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
-msgstr "In bestandsbeheer _openen"
+msgstr "_Hap në shfletuesin e skedarëve"
 
 #: ../lib/Items/FileDockItem.vala:350
 msgid "_Open"
-msgstr "_Openen"
+msgstr "_Hap"
 
 #: ../lib/Items/FileDockItem.vala:354
 msgid "Open Containing _Folder"
-msgstr "Bovenliggende _map openen"
+msgstr "Hape _dosjes përmbajtëse"
 
 #: ../lib/Items/PlaceholderDockItem.vala:35
 msgid "Drop applications or files here"
-msgstr "Sleep toepassingen of bestanden hiernaartoe"
+msgstr "Tërhiq programet ose skedarët këtu"
 
 #: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
-msgstr "Online _hulp vragen…"
+msgstr ""
 
 #: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
-msgstr "Deze toepassing ver_talen…"
+msgstr "_Përkthe këtë program..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:64
 #: ../lib/Widgets/PreferencesWindow.vala:74
 msgid "Preferences"
-msgstr "Voorkeuren"
+msgstr "Parapëlqimet"

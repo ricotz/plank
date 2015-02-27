@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-01-21 12:36+0000\n"
-"PO-Revision-Date: 2015-01-12 12:48+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2015-02-22 16:23+0000\n"
+"PO-Revision-Date: 2015-02-13 06:43+0000\n"
+"Last-Translator: B. W. Knight <kbd0651@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 05:50+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-02-23 05:20+0000\n"
+"X-Generator: Launchpad (build 17355)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -104,32 +104,32 @@ msgid "Appearance"
 msgstr "모양"
 
 #: ../data/ui/preferences.ui.h:17
-msgid "Show Unpinned:"
-msgstr "고정되지 않은 것을 보여주기:"
-
-#: ../data/ui/preferences.ui.h:18
-msgid "Restrict to Workspace:"
-msgstr "작업공간으로 제한하기:"
-
-#: ../data/ui/preferences.ui.h:19
-msgid "Lock Icons:"
-msgstr "잠금 아이콘:"
-
-#: ../data/ui/preferences.ui.h:20
-msgid "Automatic Pinning:"
-msgstr "자동으로 고정하기:"
-
-#: ../data/ui/preferences.ui.h:21
 msgid "Intellihide"
 msgstr "똑똑하게 숨기기"
 
-#: ../data/ui/preferences.ui.h:22
+#: ../data/ui/preferences.ui.h:18
 msgid "Autohide"
 msgstr "자동으로 숨기기"
 
-#: ../data/ui/preferences.ui.h:23
+#: ../data/ui/preferences.ui.h:19
 msgid "Dodge maximized window"
 msgstr "최대화된 창을 숨깁니다"
+
+#: ../data/ui/preferences.ui.h:20
+msgid "Hide Dock"
+msgstr "닥 숨기기"
+
+#: ../data/ui/preferences.ui.h:21
+msgid "Hide Delay:"
+msgstr "지연 숨김:"
+
+#: ../data/ui/preferences.ui.h:22
+msgid "Delay in ms before hiding the dock"
+msgstr "닥을 숨기는 것을 지연시키기 (ms)"
+
+#: ../data/ui/preferences.ui.h:23
+msgid "Unhide Delay:"
+msgstr "지연 숨김 해제:"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Delay in ms before showing the dock"
@@ -144,10 +144,22 @@ msgid "Item Management"
 msgstr "항목 관리"
 
 #: ../data/ui/preferences.ui.h:27
-msgid "Hide Dock"
-msgstr "닥 숨기기"
+msgid "Show Unpinned:"
+msgstr "고정되지 않은 것을 보여주기:"
 
 #: ../data/ui/preferences.ui.h:28
+msgid "Restrict to Workspace:"
+msgstr "작업공간으로 제한하기:"
+
+#: ../data/ui/preferences.ui.h:29
+msgid "Lock Icons:"
+msgstr "잠금 아이콘:"
+
+#: ../data/ui/preferences.ui.h:30
+msgid "Automatic Pinning:"
+msgstr "자동으로 고정하기:"
+
+#: ../data/ui/preferences.ui.h:31
 msgid "Behaviour"
 msgstr "동작"
 
@@ -188,7 +200,7 @@ msgstr "온라인으로 도움받기... (_H)"
 msgid "_Translate This Application..."
 msgstr "이 애플리케이션을 번역하기..(_T)"
 
-#: ../lib/Widgets/PreferencesWindow.vala:62
-#: ../lib/Widgets/PreferencesWindow.vala:72
+#: ../lib/Widgets/PreferencesWindow.vala:64
+#: ../lib/Widgets/PreferencesWindow.vala:74
 msgid "Preferences"
 msgstr "기본 설정"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-01-21 12:36+0000\n"
+"POT-Creation-Date: 2015-02-22 16:23+0000\n"
 "PO-Revision-Date: 2013-06-17 06:26+0000\n"
 "Last-Translator: Kārlis Lukstiņš <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 05:50+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-02-23 05:20+0000\n"
+"X-Generator: Launchpad (build 17355)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -101,31 +101,31 @@ msgid "Appearance"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:17
-msgid "Show Unpinned:"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:18
-msgid "Restrict to Workspace:"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:19
-msgid "Lock Icons:"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:20
-msgid "Automatic Pinning:"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:21
 msgid "Intellihide"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:22
+#: ../data/ui/preferences.ui.h:18
 msgid "Autohide"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:23
+#: ../data/ui/preferences.ui.h:19
 msgid "Dodge maximized window"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:20
+msgid "Hide Dock"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:21
+msgid "Hide Delay:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:22
+msgid "Delay in ms before hiding the dock"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:23
+msgid "Unhide Delay:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:24
@@ -141,10 +141,22 @@ msgid "Item Management"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:27
-msgid "Hide Dock"
+msgid "Show Unpinned:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:28
+msgid "Restrict to Workspace:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:29
+msgid "Lock Icons:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:30
+msgid "Automatic Pinning:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:31
 msgid "Behaviour"
 msgstr ""
 
@@ -185,7 +197,7 @@ msgstr "Meklēt _palīdzību tiešsaitē..."
 msgid "_Translate This Application..."
 msgstr "_Tulkot šo lietotni..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:62
-#: ../lib/Widgets/PreferencesWindow.vala:72
+#: ../lib/Widgets/PreferencesWindow.vala:64
+#: ../lib/Widgets/PreferencesWindow.vala:74
 msgid "Preferences"
 msgstr ""

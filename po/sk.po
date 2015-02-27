@@ -7,21 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-01-21 12:36+0000\n"
-"PO-Revision-Date: 2012-08-04 19:42+0000\n"
-"Last-Translator: Martin Maričák <Unknown>\n"
+"POT-Creation-Date: 2015-02-22 16:23+0000\n"
+"PO-Revision-Date: 2015-02-26 17:17+0000\n"
+"Last-Translator: DominikV <dominikvasko96@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 05:50+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-02-27 05:20+0000\n"
+"X-Generator: Launchpad (build 17361)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"Plank má byť najjednoduchším dokom na planéte. Jeho cieľom je poskytnúť iba "
+"to, čo jeden dok potrebuje a absolútne nič viac."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -31,6 +33,10 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"Je to avšak knižnica, ktorá môže byť rozšírená na vytváranie iných dokov s "
+"pokročilejšími funkciami. Plank je základom Docky (začínajúc verziou 3.0.0) "
+"a jeho cieľom je poskytnúť všetky základné funkcie, kým Docky ho rozšíri a "
+"pridá ozdobné veci ako Doklety, paintery, dialógy pre nastavenia a i."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
@@ -66,23 +72,23 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "Vyplňiť"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "Začiatok"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "Koniec"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "Stred"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "Na hlavnej obrazovky:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
@@ -90,47 +96,47 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr ""
+msgstr "Zarovnanie ikôn:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "Veľkosť ikôn:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Appearance"
-msgstr ""
+msgstr "Vzhľad"
 
 #: ../data/ui/preferences.ui.h:17
-msgid "Show Unpinned:"
-msgstr ""
+msgid "Intellihide"
+msgstr "Inteligentné skrývanie"
 
 #: ../data/ui/preferences.ui.h:18
-msgid "Restrict to Workspace:"
-msgstr ""
+msgid "Autohide"
+msgstr "Automatické skrývanie"
 
 #: ../data/ui/preferences.ui.h:19
-msgid "Lock Icons:"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:20
-msgid "Automatic Pinning:"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:21
-msgid "Intellihide"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:22
-msgid "Autohide"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:23
 msgid "Dodge maximized window"
 msgstr ""
 
+#: ../data/ui/preferences.ui.h:20
+msgid "Hide Dock"
+msgstr "Skryť Dok"
+
+#: ../data/ui/preferences.ui.h:21
+msgid "Hide Delay:"
+msgstr "Oneskorenie skrytia:"
+
+#: ../data/ui/preferences.ui.h:22
+msgid "Delay in ms before hiding the dock"
+msgstr "Oneskorenie v milisekundách pre skrytím doku"
+
+#: ../data/ui/preferences.ui.h:23
+msgid "Unhide Delay:"
+msgstr "Oneskorenie odkrytia:"
+
 #: ../data/ui/preferences.ui.h:24
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "Oneskorenie v milisekundách pred odkrytím doku"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Pressure Reveal:"
@@ -138,15 +144,27 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Item Management"
-msgstr ""
+msgstr "Správa položiek"
 
 #: ../data/ui/preferences.ui.h:27
-msgid "Hide Dock"
-msgstr ""
+msgid "Show Unpinned:"
+msgstr "Zobraziť odopnuté:"
 
 #: ../data/ui/preferences.ui.h:28
+msgid "Restrict to Workspace:"
+msgstr "Obmedziť na danú pracovnú plochu:"
+
+#: ../data/ui/preferences.ui.h:29
+msgid "Lock Icons:"
+msgstr "Uzamknúť ikony:"
+
+#: ../data/ui/preferences.ui.h:30
+msgid "Automatic Pinning:"
+msgstr "Automatické pripínanie:"
+
+#: ../data/ui/preferences.ui.h:31
 msgid "Behaviour"
-msgstr ""
+msgstr "Správanie"
 
 #: ../lib/Items/ApplicationDockItem.vala:460
 #: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
@@ -159,7 +177,7 @@ msgstr "_Zavrieť všetko"
 
 #: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close"
-msgstr ""
+msgstr "_Zavrieť"
 
 #: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
@@ -175,7 +193,7 @@ msgstr "Otvoriť _priečinok so súborom"
 
 #: ../lib/Items/PlaceholderDockItem.vala:35
 msgid "Drop applications or files here"
-msgstr ""
+msgstr "Pustiť aplikáciu alebo súbor sem"
 
 #: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
@@ -185,7 +203,7 @@ msgstr "Získať_pomoc online..."
 msgid "_Translate This Application..."
 msgstr "_Preložiť túto aplikáciu..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:62
-#: ../lib/Widgets/PreferencesWindow.vala:72
+#: ../lib/Widgets/PreferencesWindow.vala:64
+#: ../lib/Widgets/PreferencesWindow.vala:74
 msgid "Preferences"
-msgstr ""
+msgstr "Nastavenia"
