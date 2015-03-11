@@ -628,9 +628,6 @@ namespace Plank.Widgets
 				menu.popup (null, null, null, button, Gtk.get_current_event_time ());
 			else
 				menu.popup (null, null, (Gtk.MenuPositionFunc) position_menu, button, Gtk.get_current_event_time ());
-			
-			// FIXME Force a position-recalculation which fixes placement with gtk+ 3.15+
-			menu.reposition ();
 		}
 		
 		/**
