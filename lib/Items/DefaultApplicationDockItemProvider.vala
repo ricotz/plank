@@ -209,7 +209,7 @@ namespace Plank.Items
 		{
 			unowned Bamf.Application? app = null;
 			if (item is ApplicationDockItem)
-				app = (item as ApplicationDockItem).App;
+				app = ((ApplicationDockItem) item).App;
 			
 			if (app == null || !app.is_running ()) {
 				remove_item (item);
