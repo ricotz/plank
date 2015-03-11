@@ -16,7 +16,11 @@ SUBDIRS += docs
 endif
 
 DISTCHECK_CONFIGURE_FLAGS = \
+	--enable-barriers \
+	--enable-dbusmenu \
 	--enable-docs \
+	--enable-gee-0.8 \
+	--enable-headless-tests \
 	$(NULL)
 
 EXTRA_DIST = \

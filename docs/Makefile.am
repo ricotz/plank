@@ -4,11 +4,6 @@ BUILT_SOURCES = \
 	plank_vala_doc.stamp \
 	$(NULL)
 
-EXTRA_DIST = \
-	$(BUILT_SOURCES) \
-	vala-doc/* \
-	$(NULL)
-
 common_doc_files = \
 	*.css \
 	*.devhelp2 \
@@ -77,6 +72,8 @@ valadoc_flags_plank = \
 	--vapidir=$(top_srcdir)/vapi \
 	$(NULL)
 
+if HAVE_VALADOC
+
 cdocs: plank_c_doc.stamp
 plank_c_doc.stamp: $(plank_doc_files) $(top_builddir)/lib/plank-internal.vapi Makefile
 	$(AM_V_GEN)$(VALADOC) \
@@ -105,11 +102,18 @@ plank_web_doc.stamp: $(plank_doc_files) $(top_builddir)/lib/plank-internal.vapi 
 		$(filter %.vala,$^)
 	$(AM_V_at)touch $@
 
+EXTRA_DIST = \
+	$(BUILT_SOURCES) \
+	vala-doc/* \
+	$(NULL)
+
 DISTCLEANFILES = \
 	plank_c_doc.stamp \
 	plank_vala_doc.stamp \
 	plank_web_doc.stamp \
 	$(NULL)
+
+endif
 
 distclean-local: distclean-docs
 distclean-docs:
