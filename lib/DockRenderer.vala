@@ -386,15 +386,15 @@ namespace Plank
 					x_animation_offset -= (int) Math.round (dynamic_animation_offset / 2.0);
 				else
 					y_animation_offset -= (int) Math.round (dynamic_animation_offset / 2.0);
-				background_rect = { background_rect.x + x_animation_offset, background_rect.y + y_animation_offset,
+				background_rect = { background_rect.x + x_offset + x_animation_offset, background_rect.y + y_offset + y_animation_offset,
 					background_rect.width -2 * x_animation_offset, background_rect.height -2 * y_animation_offset };
 				break;
 			case Gtk.Align.START:
 				if (position_manager.is_horizontal_dock ())
-					background_rect = { background_rect.x, background_rect.y,
+					background_rect = { background_rect.x + x_offset, background_rect.y + y_offset,
 						background_rect.width + (int) Math.round (dynamic_animation_offset), background_rect.height };
 				else
-					background_rect = { background_rect.x, background_rect.y,
+					background_rect = { background_rect.x + x_offset, background_rect.y + y_offset,
 						background_rect.width, background_rect.height + (int) Math.round (dynamic_animation_offset) };
 				break;
 			case Gtk.Align.END:
@@ -402,7 +402,7 @@ namespace Plank
 					x_animation_offset -= (int) Math.round (dynamic_animation_offset);
 				else
 					y_animation_offset -= (int) Math.round (dynamic_animation_offset);
-				background_rect = { background_rect.x + x_animation_offset, background_rect.y + y_animation_offset,
+				background_rect = { background_rect.x + x_offset + x_animation_offset, background_rect.y + y_offset + y_animation_offset,
 					background_rect.width - x_animation_offset, background_rect.height - y_animation_offset };
 				break;
 			case Gtk.Align.FILL:
@@ -427,6 +427,9 @@ namespace Plank
 				break;
 			}
 			
+			x_offset += x_animation_offset;
+			y_offset += y_animation_offset;
+
 			// composite dock layers and make sure to draw onto the window's context with one operation
 			main_buffer.clear ();
 			unowned Cairo.Context main_cr = main_buffer.Context;
@@ -460,11 +463,11 @@ namespace Plank
 			}
 			
 			// draw items-shadow-layer
-			main_cr.set_source_surface (shadow_buffer.Internal, x_animation_offset, y_animation_offset);
+			main_cr.set_source_surface (shadow_buffer.Internal, x_offset, y_offset);
 			main_cr.paint ();
 			
 			// draw items-layer
-			main_cr.set_source_surface (item_buffer.Internal, x_animation_offset, y_animation_offset);
+			main_cr.set_source_surface (item_buffer.Internal, x_offset, y_offset);
 			main_cr.paint ();
 			
 			// draw the dock on the window and fade it if need be
@@ -476,9 +479,9 @@ namespace Plank
 				fade_cr.set_source_surface (main_buffer.Internal, 0, 0);
 				fade_cr.paint_with_alpha (opacity);
 				
-				cr.set_source_surface (fade_buffer.Internal, x_offset, y_offset);
+				cr.set_source_surface (fade_buffer.Internal, 0, 0);
 			} else {
-				cr.set_source_surface (main_buffer.Internal, x_offset, y_offset);
+				cr.set_source_surface (main_buffer.Internal, 0, 0);
 			}
 			cr.paint ();
 			
