@@ -313,6 +313,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
               <item id="1" translatable="yes">Intellihide</item>
               <item id="2" translatable="yes">Autohide</item>
               <item id="3" translatable="yes">Dodge maximized window</item>
+              <item id="4" translatable="yes">Window Dodge</item>
             </items>
           </object>
           <packing>

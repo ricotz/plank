@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-16 21:02+0100\n"
+"POT-Creation-Date: 2015-03-12 17:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -113,50 +113,54 @@ msgid "Dodge maximized window"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:20
-msgid "Hide Dock"
+msgid "Window Dodge"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:21
-msgid "Hide Delay:"
+msgid "Hide Dock"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:22
-msgid "Delay in ms before hiding the dock"
+msgid "Hide Delay:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:23
-msgid "Unhide Delay:"
+msgid "Delay in ms before hiding the dock"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:24
-msgid "Delay in ms before showing the dock"
+msgid "Unhide Delay:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:25
-msgid "Pressure Reveal:"
+msgid "Delay in ms before showing the dock"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:26
-msgid "Item Management"
+msgid "Pressure Reveal:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:27
-msgid "Show Unpinned:"
+msgid "Item Management"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:28
-msgid "Restrict to Workspace:"
+msgid "Show Unpinned:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:29
-msgid "Lock Icons:"
+msgid "Restrict to Workspace:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:30
-msgid "Automatic Pinning:"
+msgid "Lock Icons:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:31
+msgid "Automatic Pinning:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:32
 msgid "Behaviour"
 msgstr ""
 

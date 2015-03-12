@@ -40,7 +40,11 @@ namespace Plank
 		/**
 		 * The dock hides if there is an active maximized window.
 		 */
-		DODGE_MAXIMIZED
+		DODGE_MAXIMIZED,
+		/**
+		 * The dock hides if there is any window overlapping it.
+		 */
+		WINDOW_DODGE
 	}
 	
 	/**
@@ -89,7 +93,8 @@ namespace Plank
 		
 		uint timer_prefs_changed = 0;
 		
-		bool windows_intersect = false;
+		bool window_intersect = false;
+		bool active_application_intersect = false;
 		bool active_maximized_window_intersect = false;
 		bool dialog_windows_intersect = false;
 		Gdk.Rectangle last_window_rect;
@@ -269,7 +274,7 @@ namespace Plank
 				break;
 			
 			case HideType.INTELLIGENT:
-				if (Hovered || !windows_intersect)
+				if (Hovered || !active_application_intersect)
 					show ();
 				else
 					hide ();
@@ -284,6 +289,13 @@ namespace Plank
 			
 			case HideType.DODGE_MAXIMIZED:
 				if (Hovered || !(active_maximized_window_intersect || dialog_windows_intersect))
+					show ();
+				else
+					hide ();
+				break;
+			
+			case HideType.WINDOW_DODGE:
+				if (Hovered || !window_intersect)
 					show ();
 				else
 					hide ();
@@ -404,12 +416,14 @@ namespace Plank
 			
 			var intersect = false;
 			var dialog_intersect = false;
+			var active_intersect = false;
 			var active_maximized_intersect = false;
 			unowned Wnck.Screen screen = Wnck.Screen.get_default ();
 			unowned Wnck.Window? active_window = screen.get_active_window ();
 			unowned Wnck.Workspace? active_workspace = screen.get_active_workspace ();
 			
-			if (active_window != null && active_workspace != null)
+			if (active_window != null && active_workspace != null) {
+				var active_pid = active_window.get_pid ();
 				foreach (var w in screen.get_windows ()) {
 					if (w.is_minimized ())
 						continue;
@@ -420,11 +434,16 @@ namespace Plank
 					if (!w.is_visible_on_workspace (active_workspace))
 						continue;
 					var pid = w.get_pid ();
-					if (pid == plank_pid || pid != active_window.get_pid ())
+					if (pid == plank_pid)
 						continue;
 					
 					if (window_geometry (w).intersect (dock_rect, null)) {
 						intersect = true;
+						
+						if (pid != active_pid)
+							continue;
+						
+						active_intersect = true;
 						
 						active_maximized_intersect = active_maximized_intersect || (active_window == w
 							&& (w.is_maximized () || w.is_maximized_vertically () || w.is_maximized_horizontally ()));
@@ -435,9 +454,11 @@ namespace Plank
 							break;
 					}
 				}
+			}
 			
-			windows_intersect = intersect;
+			window_intersect = intersect;
 			dialog_windows_intersect = dialog_intersect;
+			active_application_intersect = active_intersect;
 			active_maximized_window_intersect = active_maximized_intersect;
 			
 			pointer_update = false;
