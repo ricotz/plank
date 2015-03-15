@@ -7,21 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-02-22 16:23+0000\n"
-"PO-Revision-Date: 2013-06-17 06:36+0000\n"
-"Last-Translator: Uri Damsker  אורי דמסקר <ud1955@gmail.com>\n"
+"POT-Creation-Date: 2015-03-12 17:57+0100\n"
+"PO-Revision-Date: 2015-03-13 06:55+0000\n"
+"Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Hebrew <he@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-23 05:20+0000\n"
-"X-Generator: Launchpad (build 17355)\n"
+"X-Launchpad-Export-Date: 2015-03-14 05:18+0000\n"
+"X-Generator: Launchpad (build 17389)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"Plank נועד להיות מעגן היישומים הפשוט בעולם. המטרה היא לספק בדיוק מה שהמעגן "
+"צריך ורק את זה."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -31,147 +33,155 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"עם זאת, זוהי ספרייה הניתנת להרחבה ליצירת תוכנות אחרות לעיגון יישומים עם "
+"מאפיינים מתקדמים יותר. כך, למשל, Plank הוא התשתית הטכנולוגית של Docky (החל "
+"מגרסה 3.0.0), במטרה לספק את כל מאפייני הליבה, בעוד ש-Docky מרחיב אותו ומאפשר "
+"לשנות את העיצוב או את אופן הפעולה, להוסיף לוחיות יישומים נוספות"
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr ""
+msgstr "Plank, טפשי עד כמה שזה פשוט"
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "ערכת נושא:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "מיקום:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "שמאל"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "ימין"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "מעלה"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "מטה"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "יישור:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "מילוי"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "התחלה"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "סיום"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "מרכוז"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "בצג הראשי:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr ""
+msgstr "הסטה (באחוזים) מהמרכז של צלע המסך"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr ""
+msgstr "יישור סמלים:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "גודל הסמלים:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Appearance"
-msgstr ""
+msgstr "מראה"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Intellihide"
-msgstr ""
+msgstr "הסתרה חכמה"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Autohide"
-msgstr ""
+msgstr "הסתרה אוטומטית"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Dodge maximized window"
-msgstr ""
+msgstr "התחמקות מחלונות מוגדלים"
 
 #: ../data/ui/preferences.ui.h:20
-msgid "Hide Dock"
-msgstr ""
+msgid "Window Dodge"
+msgstr "התחמקות מחלונות"
 
 #: ../data/ui/preferences.ui.h:21
-msgid "Hide Delay:"
-msgstr ""
+msgid "Hide Dock"
+msgstr "הסתר את המעגן"
 
 #: ../data/ui/preferences.ui.h:22
-msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgid "Hide Delay:"
+msgstr "השהיית ההסתרה:"
 
 #: ../data/ui/preferences.ui.h:23
-msgid "Unhide Delay:"
-msgstr ""
+msgid "Delay in ms before hiding the dock"
+msgstr "השהייה (ב ms) בטרם הסתרת המעגן"
 
 #: ../data/ui/preferences.ui.h:24
-msgid "Delay in ms before showing the dock"
-msgstr ""
+msgid "Unhide Delay:"
+msgstr "השהיית ההופעה:"
 
 #: ../data/ui/preferences.ui.h:25
-msgid "Pressure Reveal:"
-msgstr ""
+msgid "Delay in ms before showing the dock"
+msgstr "השהייה (ב ms) בטרם ההופעת המעגן"
 
 #: ../data/ui/preferences.ui.h:26
-msgid "Item Management"
-msgstr ""
+msgid "Pressure Reveal:"
+msgstr "הופעה מאולצת:"
 
 #: ../data/ui/preferences.ui.h:27
-msgid "Show Unpinned:"
-msgstr ""
+msgid "Item Management"
+msgstr "ניהול פריטים"
 
 #: ../data/ui/preferences.ui.h:28
-msgid "Restrict to Workspace:"
-msgstr ""
+msgid "Show Unpinned:"
+msgstr "הראה יישומים לא מוצמדים:"
 
 #: ../data/ui/preferences.ui.h:29
-msgid "Lock Icons:"
-msgstr ""
+msgid "Restrict to Workspace:"
+msgstr "הגבלה לחלון עבודה:"
 
 #: ../data/ui/preferences.ui.h:30
-msgid "Automatic Pinning:"
-msgstr ""
+msgid "Lock Icons:"
+msgstr "נעילת הסמלים:"
 
 #: ../data/ui/preferences.ui.h:31
+msgid "Automatic Pinning:"
+msgstr "הצמדת יישומים אוטומטית:"
+
+#: ../data/ui/preferences.ui.h:32
 msgid "Behaviour"
-msgstr ""
+msgstr "התנהגות"
 
 #: ../lib/Items/ApplicationDockItem.vala:460
 #: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
 msgid "_Keep in Dock"
-msgstr "_שמירה בסרגל"
+msgstr "_שמירה במעגן"
 
 #: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close All"
-msgstr "_סגור הכל"
+msgstr "_סגירת הכול"
 
 #: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close"
-msgstr ""
+msgstr "_סגירה"
 
 #: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
@@ -187,17 +197,17 @@ msgstr "פתיחת התיקייה המ_כילה"
 
 #: ../lib/Items/PlaceholderDockItem.vala:35
 msgid "Drop applications or files here"
-msgstr ""
+msgstr "ניתן לגרור יישומים או קבצים לכאן"
 
 #: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
-msgstr ""
+msgstr "_עזרה ברשת..."
 
 #: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
-msgstr ""
+msgstr "_תרגום יישום זה..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:64
 #: ../lib/Widgets/PreferencesWindow.vala:74
 msgid "Preferences"
-msgstr ""
+msgstr "העדפות"

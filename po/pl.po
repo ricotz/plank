@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-22 16:23+0000\n"
-"PO-Revision-Date: 2015-02-22 07:05+0000\n"
-"Last-Translator: Piotr Strębski <strebski@o2.pl>\n"
+"POT-Creation-Date: 2015-03-12 17:57+0100\n"
+"PO-Revision-Date: 2015-03-13 06:57+0000\n"
+"Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Polish <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-23 05:20+0000\n"
-"X-Generator: Launchpad (build 17355)\n"
+"X-Launchpad-Export-Date: 2015-03-14 05:18+0000\n"
+"X-Generator: Launchpad (build 17389)\n"
 "Language: \n"
 
 #: ../data/plank.appdata.xml.in.h:1
@@ -121,50 +121,54 @@ msgid "Dodge maximized window"
 msgstr "Unikaj zmaksymalizowanych okien"
 
 #: ../data/ui/preferences.ui.h:20
+msgid "Window Dodge"
+msgstr "Unikanie Okna"
+
+#: ../data/ui/preferences.ui.h:21
 msgid "Hide Dock"
 msgstr "Ukryj dok"
 
-#: ../data/ui/preferences.ui.h:21
+#: ../data/ui/preferences.ui.h:22
 msgid "Hide Delay:"
 msgstr "Opóźnienie ukrycia:"
 
-#: ../data/ui/preferences.ui.h:22
+#: ../data/ui/preferences.ui.h:23
 msgid "Delay in ms before hiding the dock"
 msgstr "Opóźnienie w milisekundach przed ukryciem doku"
 
-#: ../data/ui/preferences.ui.h:23
+#: ../data/ui/preferences.ui.h:24
 msgid "Unhide Delay:"
 msgstr "Opóźnienie wyświetlenia:"
 
-#: ../data/ui/preferences.ui.h:24
+#: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before showing the dock"
 msgstr "Opóźnienie w ms przed wyświetleniem doku"
 
-#: ../data/ui/preferences.ui.h:25
+#: ../data/ui/preferences.ui.h:26
 msgid "Pressure Reveal:"
 msgstr "Odsłonięcie pod naciskiem:"
 
-#: ../data/ui/preferences.ui.h:26
+#: ../data/ui/preferences.ui.h:27
 msgid "Item Management"
 msgstr "Zarządzanie elementami"
 
-#: ../data/ui/preferences.ui.h:27
+#: ../data/ui/preferences.ui.h:28
 msgid "Show Unpinned:"
 msgstr "Pokaż nieprzypięte:"
 
-#: ../data/ui/preferences.ui.h:28
+#: ../data/ui/preferences.ui.h:29
 msgid "Restrict to Workspace:"
 msgstr "Ogranicz do obszaru roboczego:"
 
-#: ../data/ui/preferences.ui.h:29
+#: ../data/ui/preferences.ui.h:30
 msgid "Lock Icons:"
 msgstr "Zablokuj ikony:"
 
-#: ../data/ui/preferences.ui.h:30
+#: ../data/ui/preferences.ui.h:31
 msgid "Automatic Pinning:"
 msgstr "Automatyczne przypinanie:"
 
-#: ../data/ui/preferences.ui.h:31
+#: ../data/ui/preferences.ui.h:32
 msgid "Behaviour"
 msgstr "Zachowanie"
 

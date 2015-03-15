@@ -7,23 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-02-22 16:23+0000\n"
-"PO-Revision-Date: 2015-01-07 00:18+0000\n"
-"Last-Translator: Artem Anufrij <Unknown>\n"
+"POT-Creation-Date: 2015-03-12 17:57+0100\n"
+"PO-Revision-Date: 2015-03-13 06:54+0000\n"
+"Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-23 05:20+0000\n"
-"X-Generator: Launchpad (build 17355)\n"
+"X-Launchpad-Export-Date: 2015-03-14 05:18+0000\n"
+"X-Generator: Launchpad (build 17389)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"Plank soll das einfachste Dock auf dem Planeten sein. Das Ziel ist es, genau "
-"das, was ein Dock benötigt bereitzustellen und absolut nichts mehr."
+"Plank soll das schlichteste Dock auf dem Planeten sein. Sein Ziel ist, genau "
+"die Funktionen bereitzustellen, die ein Dock haben muss, und sonst nichts."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -33,11 +33,11 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
-"Es ist jedoch, eine Bibliothek, die erweitert werden kann, um andere "
+"Es ist jedoch eine Bibliothek, die erweitert werden kann, um andere "
 "Dockprogramme mit erweiterten Funktionen zu erstellen. So ist Plank die "
-"zugrunde liegende Technologie für Docky (ab Version 3.0.0) und zielt darauf "
-"ab, alle Kernfunktionen anzubieten, während Docky es erweitert, um schicke "
-"Dinge wie Docklets, Painters, Einstellungsdialoge usw. hinzuzufügen"
+"zugrunde liegende Technik für Docky (ab Version 3.0.0) und zielt darauf ab, "
+"die nötigen Kernfunktionen zur Verfügung zu stellen, während Docky diese um "
+"schicke Dinge wie Docklets, Painters, Einstellungsdialoge usw. erweitert,"
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
@@ -109,61 +109,65 @@ msgstr "Erscheinungsbild"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Intellihide"
-msgstr "Intelligent verbergen"
+msgstr "Intelligent ausblenden"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Autohide"
-msgstr "Automatisch verbergen"
+msgstr "Automatisches ausblenden"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Dodge maximized window"
 msgstr "Maximierten Fenstern ausweichen"
 
 #: ../data/ui/preferences.ui.h:20
-msgid "Hide Dock"
-msgstr "Dock verbergen"
+msgid "Window Dodge"
+msgstr "Allen Fenstern ausweichen"
 
 #: ../data/ui/preferences.ui.h:21
-msgid "Hide Delay:"
-msgstr ""
+msgid "Hide Dock"
+msgstr "Dock ausblenden"
 
 #: ../data/ui/preferences.ui.h:22
-msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgid "Hide Delay:"
+msgstr "Verzögerung vor dem Ausblenden:"
 
 #: ../data/ui/preferences.ui.h:23
-msgid "Unhide Delay:"
-msgstr ""
+msgid "Delay in ms before hiding the dock"
+msgstr "Verzögerung in ms, bevor das Dock ausgeblendet wird"
 
 #: ../data/ui/preferences.ui.h:24
+msgid "Unhide Delay:"
+msgstr "Verzögerung beim Einblenden:"
+
+#: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before showing the dock"
 msgstr "Verzögerung in ms, bevor das Dock angezeigt wird"
 
-#: ../data/ui/preferences.ui.h:25
+#: ../data/ui/preferences.ui.h:26
 msgid "Pressure Reveal:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:26
-msgid "Item Management"
-msgstr ""
-
 #: ../data/ui/preferences.ui.h:27
+msgid "Item Management"
+msgstr "Objektverwaltung"
+
+#: ../data/ui/preferences.ui.h:28
 msgid "Show Unpinned:"
 msgstr "Gelöste anzeigen:"
 
-#: ../data/ui/preferences.ui.h:28
+#: ../data/ui/preferences.ui.h:29
 msgid "Restrict to Workspace:"
 msgstr "Auf Arbeitsfläche beschränken:"
 
-#: ../data/ui/preferences.ui.h:29
+#: ../data/ui/preferences.ui.h:30
 msgid "Lock Icons:"
 msgstr "Symbole sperren:"
 
-#: ../data/ui/preferences.ui.h:30
+#: ../data/ui/preferences.ui.h:31
 msgid "Automatic Pinning:"
 msgstr "Automatisch anheften:"
 
-#: ../data/ui/preferences.ui.h:31
+#: ../data/ui/preferences.ui.h:32
 msgid "Behaviour"
 msgstr "Verhalten"
 

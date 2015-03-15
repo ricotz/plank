@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-02-22 16:23+0000\n"
-"PO-Revision-Date: 2015-01-15 13:40+0000\n"
+"POT-Creation-Date: 2015-03-12 17:57+0100\n"
+"PO-Revision-Date: 2015-03-13 06:55+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-23 05:20+0000\n"
-"X-Generator: Launchpad (build 17355)\n"
+"X-Launchpad-Export-Date: 2015-03-14 05:18+0000\n"
+"X-Generator: Launchpad (build 17389)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -94,7 +94,7 @@ msgstr "Display Primário:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr ""
+msgstr "Porcetagem de deslocamento a partir do centro da borda da tela"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
@@ -118,53 +118,57 @@ msgstr "Ocultação automática"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Dodge maximized window"
-msgstr ""
+msgstr "Esquivar das janelas maximizadas"
 
 #: ../data/ui/preferences.ui.h:20
+msgid "Window Dodge"
+msgstr "Desviar das janelas"
+
+#: ../data/ui/preferences.ui.h:21
 msgid "Hide Dock"
 msgstr "Esconder Dock"
 
-#: ../data/ui/preferences.ui.h:21
-msgid "Hide Delay:"
-msgstr ""
-
 #: ../data/ui/preferences.ui.h:22
-msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgid "Hide Delay:"
+msgstr "Atraso ao ocultar:"
 
 #: ../data/ui/preferences.ui.h:23
-msgid "Unhide Delay:"
-msgstr ""
+msgid "Delay in ms before hiding the dock"
+msgstr "Atraso em ms antes de ocultar o dock"
 
 #: ../data/ui/preferences.ui.h:24
-msgid "Delay in ms before showing the dock"
-msgstr ""
+msgid "Unhide Delay:"
+msgstr "Atraso ao reaparecer:"
 
 #: ../data/ui/preferences.ui.h:25
+msgid "Delay in ms before showing the dock"
+msgstr "Atraso em ms antes de mostrar o dock"
+
+#: ../data/ui/preferences.ui.h:26
 msgid "Pressure Reveal:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:26
-msgid "Item Management"
-msgstr ""
-
 #: ../data/ui/preferences.ui.h:27
+msgid "Item Management"
+msgstr "Gerenciamento de itens"
+
+#: ../data/ui/preferences.ui.h:28
 msgid "Show Unpinned:"
 msgstr "Mostrar Destravados:"
 
-#: ../data/ui/preferences.ui.h:28
+#: ../data/ui/preferences.ui.h:29
 msgid "Restrict to Workspace:"
 msgstr "Restringir à Área de Trabalho:"
 
-#: ../data/ui/preferences.ui.h:29
+#: ../data/ui/preferences.ui.h:30
 msgid "Lock Icons:"
 msgstr "Travar Ícones:"
 
-#: ../data/ui/preferences.ui.h:30
-msgid "Automatic Pinning:"
-msgstr ""
-
 #: ../data/ui/preferences.ui.h:31
+msgid "Automatic Pinning:"
+msgstr "Fixação automática:"
+
+#: ../data/ui/preferences.ui.h:32
 msgid "Behaviour"
 msgstr "Comportamento"
 

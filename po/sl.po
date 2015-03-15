@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-02-22 16:23+0000\n"
+"POT-Creation-Date: 2015-03-12 17:57+0100\n"
 "PO-Revision-Date: 2012-09-09 19:57+0000\n"
 "Last-Translator: Valentin Hegediš <valentin.hegedis@gmail.com>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-23 05:20+0000\n"
-"X-Generator: Launchpad (build 17355)\n"
+"X-Launchpad-Export-Date: 2015-03-14 05:18+0000\n"
+"X-Generator: Launchpad (build 17389)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -113,50 +113,54 @@ msgid "Dodge maximized window"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:20
-msgid "Hide Dock"
+msgid "Window Dodge"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:21
-msgid "Hide Delay:"
+msgid "Hide Dock"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:22
-msgid "Delay in ms before hiding the dock"
+msgid "Hide Delay:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:23
-msgid "Unhide Delay:"
+msgid "Delay in ms before hiding the dock"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:24
-msgid "Delay in ms before showing the dock"
+msgid "Unhide Delay:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:25
-msgid "Pressure Reveal:"
+msgid "Delay in ms before showing the dock"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:26
-msgid "Item Management"
+msgid "Pressure Reveal:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:27
-msgid "Show Unpinned:"
+msgid "Item Management"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:28
-msgid "Restrict to Workspace:"
+msgid "Show Unpinned:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:29
-msgid "Lock Icons:"
+msgid "Restrict to Workspace:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:30
-msgid "Automatic Pinning:"
+msgid "Lock Icons:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:31
+msgid "Automatic Pinning:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:32
 msgid "Behaviour"
 msgstr ""
 

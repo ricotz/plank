@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-02-22 16:23+0000\n"
-"PO-Revision-Date: 2015-01-15 13:43+0000\n"
+"POT-Creation-Date: 2015-03-12 17:57+0100\n"
+"PO-Revision-Date: 2015-03-13 06:58+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-23 05:20+0000\n"
-"X-Generator: Launchpad (build 17355)\n"
+"X-Launchpad-Export-Date: 2015-03-14 05:18+0000\n"
+"X-Generator: Launchpad (build 17389)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -120,50 +120,54 @@ msgid "Dodge maximized window"
 msgstr "Büyütülmüş pencerede yana çekil"
 
 #: ../data/ui/preferences.ui.h:20
+msgid "Window Dodge"
+msgstr "Pencere Çekilmesi"
+
+#: ../data/ui/preferences.ui.h:21
 msgid "Hide Dock"
 msgstr "Dock'u Gizle"
 
-#: ../data/ui/preferences.ui.h:21
+#: ../data/ui/preferences.ui.h:22
 msgid "Hide Delay:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:22
+#: ../data/ui/preferences.ui.h:23
 msgid "Delay in ms before hiding the dock"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:23
+#: ../data/ui/preferences.ui.h:24
 msgid "Unhide Delay:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:24
+#: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before showing the dock"
 msgstr "Dock'un gösteriminden önceki milisaniye gecikmesi"
 
-#: ../data/ui/preferences.ui.h:25
+#: ../data/ui/preferences.ui.h:26
 msgid "Pressure Reveal:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:26
+#: ../data/ui/preferences.ui.h:27
 msgid "Item Management"
 msgstr "Nesne Yönetimi"
 
-#: ../data/ui/preferences.ui.h:27
+#: ../data/ui/preferences.ui.h:28
 msgid "Show Unpinned:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:28
+#: ../data/ui/preferences.ui.h:29
 msgid "Restrict to Workspace:"
 msgstr "Çalışma Alanını Sınırla:"
 
-#: ../data/ui/preferences.ui.h:29
+#: ../data/ui/preferences.ui.h:30
 msgid "Lock Icons:"
 msgstr "Simgeleri Kilitle:"
 
-#: ../data/ui/preferences.ui.h:30
+#: ../data/ui/preferences.ui.h:31
 msgid "Automatic Pinning:"
 msgstr "Otomatik İğneleme"
 
-#: ../data/ui/preferences.ui.h:31
+#: ../data/ui/preferences.ui.h:32
 msgid "Behaviour"
 msgstr "Davranış"
 
