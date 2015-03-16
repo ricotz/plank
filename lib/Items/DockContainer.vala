@@ -59,6 +59,15 @@ namespace Plank.Items
 			}
 		}
 		
+		/**
+		 * The list of the all containing dock elements.
+		 */
+		public Gee.ArrayList<DockElement> Elements {
+			get {
+				return internal_elements;
+			}
+		}
+		
 		protected Gee.ArrayList<DockElement> visible_elements;
 		protected Gee.ArrayList<DockElement> internal_elements;
 		

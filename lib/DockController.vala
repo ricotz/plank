@@ -44,6 +44,16 @@ namespace Plank
 		
 		ApplicationDockItemProvider? default_provider;
 		Gee.ArrayList<unowned DockItem> visible_items;
+		Gee.ArrayList<unowned DockItem> items;
+		
+		/**
+		 * List of all items on this dock
+		 */
+		public Gee.ArrayList<unowned DockItem> Items {
+			get {
+				return items;
+			}
+		}
 		
 		/**
 		 * Ordered list of all visible items on this dock
@@ -51,7 +61,7 @@ namespace Plank
 		public Gee.ArrayList<unowned DockItem> VisibleItems {
 			get {
 				return visible_items;
- 			}
+			}
 		}
 		
 		/**
@@ -75,6 +85,7 @@ namespace Plank
 			launchers_folder = config_folder.get_child ("launchers");
 			Factory.item_factory.launchers_dir = launchers_folder;
 			
+			items = new Gee.ArrayList<unowned DockItem> ();
 			visible_items = new Gee.ArrayList<unowned DockItem> ();
 			
 			prefs.notify["PinnedOnly"].connect (update_default_provider);
@@ -90,6 +101,7 @@ namespace Plank
 		{
 			prefs.notify["PinnedOnly"].disconnect (update_default_provider);
 			
+			items.clear ();
 			visible_items.clear ();
 		}
 		
@@ -102,6 +114,8 @@ namespace Plank
 		{
 			if (internal_elements.size <= 0)
 				add_default_provider ();
+			
+			update_items ();
 			
 			position_manager.initialize ();
 			drag_manager.initialize ();
@@ -220,6 +234,25 @@ namespace Plank
 			}
 		}
 		
+		void update_items ()
+		{
+			Logger.verbose ("DockController.update_items ()");
+			
+			items.clear ();
+			
+			foreach (var element in internal_elements) {
+				unowned DockContainer? container = (element as DockContainer);
+				if (container == null)
+					continue;
+				foreach (var element2 in container.Elements) {
+					unowned DockItem? item = (element2 as DockItem);
+					if (item == null)
+						continue;
+					items.add (item);
+				}
+			}
+		}
+		
 		void handle_items_changed (DockContainer provider, Gee.List<DockElement> added, Gee.List<DockElement> removed)
 		{
 			if (provider == default_provider)
@@ -230,6 +263,7 @@ namespace Plank
 			renderer.animate_items (removed);
 			
 			update_visible_items ();
+			update_items ();
 			
 			if (prefs.Alignment != Gtk.Align.FILL
 				&& added.size != removed.size) {
