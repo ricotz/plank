@@ -173,6 +173,8 @@ namespace Plank
 			default_provider.prepare ();
 			replace_item (default_provider, old_default_provider);
 			
+			update_items ();
+			
 			// Do a thorough update since we actually dropped all previous items
 			// of the default-provider
 			position_manager.update (renderer.theme);
