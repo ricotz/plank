@@ -49,7 +49,7 @@ namespace Plank.Items
 		 */
 		public virtual unowned DockItem? item_for_uri (string uri)
 		{
-			foreach (var element in internal_items) {
+			foreach (var element in internal_elements) {
 				unowned DockItem? item = (element as DockItem);
 				if (item != null && item.Launcher == uri)
 					return item;

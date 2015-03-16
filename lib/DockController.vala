@@ -100,7 +100,7 @@ namespace Plank
 		 */
 		public void initialize ()
 		{
-			if (internal_items.size <= 0)
+			if (internal_elements.size <= 0)
 				add_default_provider ();
 			
 			position_manager.initialize ();
@@ -204,7 +204,7 @@ namespace Plank
 			items.clear ();
 			
 			var current_pos = 0;
-			foreach (var element in visible_items) {
+			foreach (var element in visible_elements) {
 				unowned DockContainer? container = (element as DockContainer);
 				if (container == null)
 					continue;

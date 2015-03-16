@@ -65,13 +65,13 @@ namespace Plank.Items
 			
 			if (Prefs.CurrentWorkspaceOnly) {
 				unowned Wnck.Workspace? active_workspace = Wnck.Screen.get_default ().get_active_workspace ();
-				foreach (var item in internal_items) {
+				foreach (var item in internal_elements) {
 					unowned TransientDockItem? transient = (item as TransientDockItem);
 					item.IsVisible = (transient == null || transient.App == null || active_workspace == null
 						|| WindowControl.has_window_on_workspace (transient.App, active_workspace));
 				}
 			} else {
-				foreach (var item in internal_items)
+				foreach (var item in internal_elements)
 					item.IsVisible = true;
 			}
 			
@@ -106,7 +106,7 @@ namespace Plank.Items
 			
 			var favs = new Gee.ArrayList<string> ();
 			
-			foreach (var element in internal_items) {
+			foreach (var element in internal_elements) {
 				unowned ApplicationDockItem? item = (element as ApplicationDockItem);
 				if (item != null && !(item is TransientDockItem))
 					favs.add (item.Launcher);
@@ -224,7 +224,7 @@ namespace Plank.Items
 		
 		public void pin_item (DockItem item)
 		{
-			if (!internal_items.contains (item)) {
+			if (!internal_elements.contains (item)) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", item.Text);
 				return;
 			}

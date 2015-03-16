@@ -181,7 +181,7 @@ namespace Plank.Items
 					warning (e.message);
 				}
 			
-			foreach (var item in internal_items) {
+			foreach (var item in internal_elements) {
 				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 				if (appitem == null)
 					continue;
@@ -225,7 +225,7 @@ namespace Plank.Items
 			if (uri == null || uri == "")
 				return false;
 			
-			if (target != null && target != placeholder_item && !internal_items.contains (target)) {
+			if (target != null && target != placeholder_item && !internal_elements.contains (target)) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", target.Text);
 				return false;
 			}
@@ -279,7 +279,7 @@ namespace Plank.Items
 		public string get_item_list_string ()
 		{
 			var item_list = "";
-			foreach (var element in internal_items) {
+			foreach (var element in internal_elements) {
 				unowned DockItem? item = (element as DockItem);
 				if (item != null && !(item is TransientDockItem) && item.DockItemFilename.length > 0) {
 					if (item_list.length > 0)
@@ -322,7 +322,7 @@ namespace Plank.Items
 			foreach (var file in queued_files) {
 				var basename = file.get_basename ();
 				bool skip = false;
-				foreach (var element in internal_items) {
+				foreach (var element in internal_elements) {
 					unowned DockItem? item = (element as DockItem);
 					if (item != null && basename == item.DockItemFilename) {
 						skip = true;
@@ -367,7 +367,7 @@ namespace Plank.Items
 				return;
 			
 			// bail if an item already manages this dockitem-file
-			foreach (var element in internal_items) {
+			foreach (var element in internal_elements) {
 				unowned DockItem? item = (element as DockItem);
 				if (item != null && f.get_basename () == item.DockItemFilename)
 					return;
@@ -426,7 +426,7 @@ namespace Plank.Items
 				return;
 			
 			// Reset item since there is no new NameOwner
-			foreach (var item in internal_items) {
+			foreach (var item in internal_elements) {
 				unowned ApplicationDockItem? app_item = item as ApplicationDockItem;
 				if (app_item == null)
 					continue;
@@ -462,7 +462,7 @@ namespace Plank.Items
 			Logger.verbose ("Unity.handle_update_request (processing update for %s)", app_uri);
 			
 			ApplicationDockItem? current_item = null, alternate_item = null;
-			foreach (var item in internal_items) {
+			foreach (var item in internal_elements) {
 				unowned ApplicationDockItem? app_item = item as ApplicationDockItem;
 				if (app_item == null)
 					continue;

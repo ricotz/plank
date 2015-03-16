@@ -55,12 +55,12 @@ namespace Plank.Items
 		 */
 		public Gee.ArrayList<DockElement> Elements {
 			get {
-				return visible_items;
+				return visible_elements;
 			}
 		}
 		
-		protected Gee.ArrayList<DockElement> visible_items;
-		protected Gee.ArrayList<DockElement> internal_items;
+		protected Gee.ArrayList<DockElement> visible_elements;
+		protected Gee.ArrayList<DockElement> internal_elements;
 		
 		/**
 		 * Creates a new container for dock elements.
@@ -72,8 +72,8 @@ namespace Plank.Items
 		
 		construct
 		{
-			visible_items = new Gee.ArrayList<DockElement> ();
-			internal_items = new Gee.ArrayList<DockElement> ();
+			visible_elements = new Gee.ArrayList<DockElement> ();
+			internal_elements = new Gee.ArrayList<DockElement> ();
 			
 			connect_element (placeholder_item);
 		}
@@ -82,15 +82,15 @@ namespace Plank.Items
 		{
 			disconnect_element (placeholder_item);
 			
-			visible_items.clear ();
+			visible_elements.clear ();
 			
 			var items = new Gee.HashSet<DockElement> ();
-			items.add_all (internal_items);
+			items.add_all (internal_elements);
 			foreach (var item in items) {
 				remove_item_without_signaling (item);
 				item.Container = null;
 			}
-			internal_items.clear ();
+			internal_elements.clear ();
 		}
 		
 		/**
@@ -112,7 +112,7 @@ namespace Plank.Items
 		 */
 		public bool add_item (DockElement item, DockElement? target = null)
 		{
-			if (internal_items.contains (item)) {
+			if (internal_elements.contains (item)) {
 				critical ("Item '%s' already exists in this DockItemProvider.", item.Text);
 				return false;
 			}
@@ -146,7 +146,7 @@ namespace Plank.Items
 			bool result = true;
 			
 			foreach (var item in items) {
-				if (internal_items.contains (item)) {
+				if (internal_elements.contains (item)) {
 					critical ("Item '%s' already exists in this DockItemProvider.", item.Text);
 					result = false;
 					continue;
@@ -177,7 +177,7 @@ namespace Plank.Items
 		 */
 		public bool remove_item (DockElement item)
 		{
-			if (!internal_items.contains (item)) {
+			if (!internal_elements.contains (item)) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", item.Text);
 				return false;
 			}
@@ -194,23 +194,23 @@ namespace Plank.Items
 			Logger.verbose ("DockItemProvider.update_visible_items ()");
 			
 			var old_items = new Gee.ArrayList<DockElement> ();
-			old_items.add_all (visible_items);
+			old_items.add_all (visible_elements);
 			
-			visible_items.clear ();
+			visible_elements.clear ();
 			
-			foreach (var item in internal_items)
+			foreach (var item in internal_elements)
 				if (item.IsVisible)
-					visible_items.add (item);
+					visible_elements.add (item);
 			
 			var added_items = new Gee.ArrayList<DockElement> ();
-			added_items.add_all (visible_items);
+			added_items.add_all (visible_elements);
 			added_items.remove_all (old_items);
 			
 			var removed_items = old_items;
-			removed_items.remove_all (visible_items);
+			removed_items.remove_all (visible_elements);
 			
-			if (visible_items.size <= 0)
-				visible_items.add (placeholder_item);
+			if (visible_elements.size <= 0)
+				visible_elements.add (placeholder_item);
 			
 			if (added_items.size > 0 || removed_items.size > 0)
 				items_changed (added_items, removed_items);
@@ -231,22 +231,22 @@ namespace Plank.Items
 			
 			int index_move, index_target;
 			
-			if ((index_move = internal_items.index_of (move)) < 0) {
+			if ((index_move = internal_elements.index_of (move)) < 0) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", move.Text);
 				return false;
 			}
 			
-			if ((index_target = internal_items.index_of (target)) < 0) {
+			if ((index_target = internal_elements.index_of (target)) < 0) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", target.Text);
 				return false;
 			}
 			
-			move_item (internal_items, index_move, index_target);
+			move_item (internal_elements, index_move, index_target);
 			
-			if ((index_move = visible_items.index_of (move)) >= 0
-				&& (index_target = visible_items.index_of (target)) >= 0) {
+			if ((index_move = visible_elements.index_of (move)) >= 0
+				&& (index_target = visible_elements.index_of (target)) >= 0) {
 				var moved_items = new Gee.ArrayList<unowned DockElement> ();
-				move_item (visible_items, index_move, index_target, moved_items);
+				move_item (visible_elements, index_move, index_target, moved_items);
 				item_positions_changed (moved_items);
 			} else {
 				update_visible_items ();
@@ -260,13 +260,13 @@ namespace Plank.Items
 		 */
 		public override void reset_buffers ()
 		{
-			foreach (var item in internal_items)
+			foreach (var item in internal_elements)
 				item.reset_buffers ();
 		}
 		
 		protected virtual void add_item_without_signaling (DockElement item)
 		{
-			internal_items.add (item);
+			internal_elements.add (item);
 			
 			item.Container = this;
 			item.AddTime = GLib.get_monotonic_time ();
@@ -287,12 +287,12 @@ namespace Plank.Items
 			
 			int index;
 			
-			if ((index = internal_items.index_of (old_item)) < 0) {
+			if ((index = internal_elements.index_of (old_item)) < 0) {
 				critical ("Item '%s' does not exist in this DockItemProvider.", old_item.Text);
 				return false;
 			}
 			
-			if (internal_items.contains (new_item)) {
+			if (internal_elements.contains (new_item)) {
 				critical ("Item '%s' already exists in this DockItemProvider.", new_item.Text);
 				return false;
 			}
@@ -306,7 +306,7 @@ namespace Plank.Items
 			
 			disconnect_element (old_item);
 			
-			internal_items[index] = new_item;
+			internal_elements[index] = new_item;
 			old_item.Container = null;
 			new_item.Container = this;
 			
@@ -314,7 +314,7 @@ namespace Plank.Items
 			//FIXME new_item.Position = old_item.Position;
 			connect_element (new_item);
 			
-			if (visible_items.contains (old_item))
+			if (visible_elements.contains (old_item))
 				update_visible_items ();
 			
 			return true;
@@ -325,7 +325,7 @@ namespace Plank.Items
 			item.RemoveTime = GLib.get_monotonic_time ();
 			disconnect_element (item);
 			
-			internal_items.remove (item);
+			internal_elements.remove (item);
 			item.Container = null;
 		}
 		
