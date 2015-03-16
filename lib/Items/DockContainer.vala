@@ -53,7 +53,7 @@ namespace Plank.Items
 		/**
 		 * The ordered list of the visible dock elements.
 		 */
-		public Gee.ArrayList<DockElement> Elements {
+		public Gee.ArrayList<DockElement> VisibleElements {
 			get {
 				return visible_elements;
 			}

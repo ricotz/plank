@@ -745,7 +745,7 @@ namespace Plank
 			unowned DockContainer? container = (element as DockContainer);
 			return_val_if_fail (container != null, Gdk.Rectangle ());
 			
-			unowned Gee.ArrayList<DockElement> items = container.Elements;
+			unowned Gee.ArrayList<DockElement> items = container.VisibleElements;
 			
 			if (items.size == 0)
 				return { 0 };

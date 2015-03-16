@@ -436,7 +436,7 @@ namespace Plank.Widgets
 			
 			bool found_hovered_provider = false;
 			
-			foreach (var element in controller.Elements) {
+			foreach (var element in controller.VisibleElements) {
 				unowned DockItemProvider? provider = (element as DockItemProvider);
 				if (provider == null)
 					continue;
@@ -448,7 +448,7 @@ namespace Plank.Widgets
 				set_hovered_provider (provider);
 				found_hovered_provider = true;
 				
-				foreach (var item in provider.Elements) {
+				foreach (var item in provider.VisibleElements) {
 					rect = position_manager.get_item_hover_region (item);
 					if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width)
 						continue;

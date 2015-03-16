@@ -208,7 +208,7 @@ namespace Plank
 				unowned DockContainer? container = (element as DockContainer);
 				if (container == null)
 					continue;
-				foreach (var element2 in container.Elements) {
+				foreach (var element2 in container.VisibleElements) {
 					unowned DockItem? item = (element2 as DockItem);
 					if (item == null)
 						continue;
