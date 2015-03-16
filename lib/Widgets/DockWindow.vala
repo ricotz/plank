@@ -549,7 +549,7 @@ namespace Plank.Widgets
 			
 			var use_hidden_region = (menu_is_visible () || controller.hide_manager.Hidden);
 			
-			foreach (var item in controller.Items) {
+			foreach (var item in controller.VisibleItems) {
 				unowned ApplicationDockItem? appitem = (item as ApplicationDockItem);
 				if (appitem == null || !appitem.is_running ())
 					continue;

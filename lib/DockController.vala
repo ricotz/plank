@@ -43,14 +43,14 @@ namespace Plank
 		public DockWindow window { get; protected set; }
 		
 		ApplicationDockItemProvider? default_provider;
-		Gee.ArrayList<unowned DockItem> items;
+		Gee.ArrayList<unowned DockItem> visible_items;
 		
 		/**
 		 * Ordered list of all visible items on this dock
 		 */
-		public Gee.ArrayList<unowned DockItem> Items {
+		public Gee.ArrayList<unowned DockItem> VisibleItems {
 			get {
-				return items;
+				return visible_items;
  			}
 		}
 		
@@ -75,7 +75,7 @@ namespace Plank
 			launchers_folder = config_folder.get_child ("launchers");
 			Factory.item_factory.launchers_dir = launchers_folder;
 			
-			items = new Gee.ArrayList<unowned DockItem> ();
+			visible_items = new Gee.ArrayList<unowned DockItem> ();
 			
 			prefs.notify["PinnedOnly"].connect (update_default_provider);
 			
@@ -90,7 +90,7 @@ namespace Plank
 		{
 			prefs.notify["PinnedOnly"].disconnect (update_default_provider);
 			
-			items.clear ();
+			visible_items.clear ();
 		}
 		
 		/**
@@ -201,7 +201,7 @@ namespace Plank
 			
 			Logger.verbose ("DockController.update_visible_items ()");
 			
-			items.clear ();
+			visible_items.clear ();
 			
 			var current_pos = 0;
 			foreach (var element in visible_elements) {
@@ -214,7 +214,7 @@ namespace Plank
 						continue;
 					if (item.Position != current_pos)
 						item.Position = current_pos;
-					items.add (item);
+					visible_items.add (item);
 					current_pos++;
 				}
 			}

@@ -260,7 +260,7 @@ namespace Plank
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockItem dragged_item = controller.drag_manager.DragItem;
 			var win_rect = position_manager.get_dock_window_region ();
-			var items = controller.Items;
+			var items = controller.VisibleItems;
 			
 			if (main_buffer == null) {
 				main_buffer = new DockSurface.with_surface (win_rect.width, win_rect.height, cr.get_target ());
@@ -975,7 +975,7 @@ namespace Plank
 			if (transient_items.size > 0)
 				return true;
 			
-			foreach (var item in controller.Items) {
+			foreach (var item in controller.VisibleItems) {
 				if (item.ClickedAnimation != Animation.NONE
 					&& render_time - item.LastClicked <= (item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
 					return true;

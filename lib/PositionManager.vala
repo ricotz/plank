@@ -377,7 +377,7 @@ namespace Plank
 			unowned DockPreferences prefs = controller.prefs;
 			
 			// Check if the dock is oversized and doesn't fit the targeted screen-edge
-			var item_count = controller.Items.size;
+			var item_count = controller.VisibleItems.size;
 			var width = item_count * (ItemPadding + IconSize) + 2 * HorizPadding + 4 * LineWidth;
 			var max_width = (is_horizontal_dock () ? monitor_geo.width : monitor_geo.height);
 			var step_size = int.max (1, (int) (Math.fabs (width - max_width) / item_count));
@@ -423,7 +423,7 @@ namespace Plank
 			case Gtk.Align.START:
 			case Gtk.Align.END:
 			case Gtk.Align.CENTER:
-				width = controller.Items.size * (ItemPadding + IconSize) + 2 * HorizPadding + 4 * LineWidth;
+				width = controller.VisibleItems.size * (ItemPadding + IconSize) + 2 * HorizPadding + 4 * LineWidth;
 				break;
 			case Gtk.Align.FILL:
 				if (is_horizontal_dock ())
@@ -554,7 +554,7 @@ namespace Plank
 			var old_region = static_dock_region;
 			
 			// width of the items-area of the dock
-			items_width = controller.Items.size * (ItemPadding + IconSize);
+			items_width = controller.VisibleItems.size * (ItemPadding + IconSize);
 			
 			static_dock_region.width = VisibleDockWidth;
 			static_dock_region.height = VisibleDockHeight;
