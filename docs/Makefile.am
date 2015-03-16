@@ -17,6 +17,7 @@ doc_DATA = \
 	$(NULL)
 
 plank_doc_files = \
+	$(top_srcdir)/lib/DBusManager.vala \
 	$(top_srcdir)/lib/DockController.vala \
 	$(top_srcdir)/lib/DockPreferences.vala \
 	$(top_srcdir)/lib/DockRenderer.vala \
@@ -24,6 +25,8 @@ plank_doc_files = \
 	$(top_srcdir)/lib/HideManager.vala \
 	$(top_srcdir)/lib/PositionManager.vala \
 	$(top_builddir)/lib/Version.vala \
+	$(top_srcdir)/lib/DBus/Client.vala \
+	$(top_srcdir)/lib/DBus/Interfaces.vala \
 	$(top_srcdir)/lib/Drawing/AnimatedRenderer.vala \
 	$(top_srcdir)/lib/Drawing/Color.vala \
 	$(top_srcdir)/lib/Drawing/DrawingService.vala \

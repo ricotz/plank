@@ -33,6 +33,9 @@ docs/*.stamp
 docs/c-doc
 docs/vala-doc
 docs/web-doc
+examples/remote-client
+examples/*.c
+examples/*.stamp
 lib/abi*
 lib/*-abi
 lib/*.c
@@ -41,6 +44,7 @@ lib/*.deps
 lib/*.vapi
 lib/*.pc
 lib/*.stamp
+lib/DBus/*.c
 lib/Drawing/*.c
 lib/Factories/*.c
 lib/Services/*.c

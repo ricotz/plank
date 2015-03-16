@@ -9,6 +9,7 @@ SUBDIRS = \
 	vapi \
 	src \
 	tests \
+	examples \
 	$(NULL)
 
 if HAVE_VALADOC

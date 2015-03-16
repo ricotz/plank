@@ -356,6 +356,7 @@ src/Makefile
 docs/Makefile
 po/Makefile.in
 tests/Makefile
+examples/Makefile
 vapi/Makefile
 ])
 

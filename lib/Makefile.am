@@ -61,12 +61,15 @@ libplank_la_LIBADD = \
 	$(NULL)
 
 libplank_la_VALASOURCES = \
+	DBusManager.vala \
 	DockController.vala \
 	DockPreferences.vala \
 	DockRenderer.vala \
 	DragManager.vala \
 	HideManager.vala \
 	PositionManager.vala \
+	DBus/Client.vala \
+	DBus/Interfaces.vala \
 	Drawing/AnimatedRenderer.vala \
 	Drawing/Color.vala \
 	Drawing/DrawingService.vala \

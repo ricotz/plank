@@ -42,7 +42,9 @@ namespace Plank
 		public DockRenderer renderer { get; protected set; }
 		public DockWindow window { get; protected set; }
 		
-		ApplicationDockItemProvider? default_provider;
+		public ApplicationDockItemProvider? default_provider { get; private set; }
+		
+		DBusManager dbus_manager;
 		Gee.ArrayList<unowned DockItem> visible_items;
 		Gee.ArrayList<unowned DockItem> items;
 		
@@ -90,6 +92,8 @@ namespace Plank
 			
 			prefs.notify["PinnedOnly"].connect (update_default_provider);
 			
+			dbus_manager = new DBusManager (this);
+			
 			position_manager = new PositionManager (this);
 			drag_manager = new DragManager (this);
 			hide_manager = new HideManager (this);
@@ -135,12 +139,12 @@ namespace Plank
 				return;
 			
 			Logger.verbose ("DockController.add_default_provider ()");
-			default_provider = get_default_provider ();
+			default_provider = create_default_provider ();
 			
 			add_item (default_provider);
 		}
 		
-		ApplicationDockItemProvider get_default_provider ()
+		ApplicationDockItemProvider create_default_provider ()
 		{
 			ApplicationDockItemProvider provider;
 			
@@ -169,7 +173,7 @@ namespace Plank
 				return;
 			
 			var old_default_provider = default_provider;
-			default_provider = get_default_provider ();
+			default_provider = create_default_provider ();
 			default_provider.prepare ();
 			replace_item (default_provider, old_default_provider);
 			
@@ -275,6 +279,8 @@ namespace Plank
 				position_manager.update_regions ();
 			}
 			window.update_icon_regions ();
+			
+			items_changed (added, removed);
 		}
 		
 		void handle_item_positions_changed (DockContainer provider, Gee.List<unowned DockElement> moved_items)
