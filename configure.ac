@@ -129,7 +129,6 @@ PLANK_CORE_VALA_PKGS="--pkg gio-unix-2.0 \
                       --pkg posix \
                       --pkg x11"
 
-VALAFLAGS="--target-glib=2.32"
 VALAFLAGS_CORE="--thread"
 
 # -----------------------------------------------------------
@@ -147,6 +146,19 @@ AC_PATH_PROG([XMLLINT],[xmllint],[])
 if test -z "$XMLLINT"; then
   AC_MSG_ERROR([xmllint not found])
 fi
+
+
+# -----------------------------------------------------------
+# Dermine avaiable GLib version and adjust vala's
+#   target-glib flag accoringly
+# -----------------------------------------------------------
+
+VALAFLAGS="--target-glib=2.32"
+
+PKG_CHECK_MODULES(GLIB_2_34,
+	[gobject-2.0 >= 2.34 glib-2.0 >= 2.34 gio-2.0 >= 2.34],	[VALAFLAGS="--target-glib=2.34"], []
+)
+
 
 # -----------------------------------------------------------
 # Optional Dependencies

@@ -75,11 +75,20 @@ namespace Plank.DBus
 		construct
 		{
 			unowned Application? application = GLib.Application.get_default ();
-			unowned string? object_path = null;
+			string? object_path = null;
 			
 			if (application != null) {
+#if GLIB_2_34
 				connection = application.get_dbus_connection ();
 				object_path = application.get_dbus_object_path ();
+#else
+				try {
+					connection = Bus.get_sync (BusType.SESSION);
+				} catch {
+					connection = null;
+				}
+				object_path = "/%s".printf (application.get_application_id ().replace (".", "/").replace ("-", "_"));
+#endif
 			}
 			
 			if (connection == null || object_path == null) {

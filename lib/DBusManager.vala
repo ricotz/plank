@@ -147,6 +147,7 @@ namespace Plank
 	{
 		public DockController controller { private get; construct; }
 		
+		DBusConnection? connection = null;
 		string? dock_object_path;
 		
 		uint dbus_items_id = 0;
@@ -160,8 +161,19 @@ namespace Plank
 		construct
 		{
 			unowned Application application = Application.get_default ();
-			unowned DBusConnection connection = application.get_dbus_connection ();
-			unowned string? object_path = application.get_dbus_object_path ();
+			string? object_path;
+			
+#if GLIB_2_34
+			connection = application.get_dbus_connection ();
+			object_path = application.get_dbus_object_path ();
+#else
+			try {
+				connection = Bus.get_sync (BusType.SESSION);
+			} catch {
+				connection = null;
+			}
+			object_path = "/%s".printf (application.get_application_id ().replace (".", "/").replace ("-", "_"));
+#endif
 			
 			if (connection == null || object_path == null) {
 				critical ("Not able to register our interfaces");
@@ -195,9 +207,6 @@ namespace Plank
 		
 		~DBusManager ()
 		{
-			unowned Application application = Application.get_default ();
-			unowned DBusConnection connection = application.get_dbus_connection ();
-			
 			if (connection != null) {
 				if (dbus_items_id > 0)
 					connection.unregister_object (dbus_items_id);
