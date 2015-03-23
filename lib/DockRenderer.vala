@@ -424,6 +424,7 @@ namespace Plank
 						y_animation_offset -= (int) Math.round (dynamic_animation_offset);
 					break;
 				}
+				background_rect = { background_rect.x + x_offset, background_rect.y + y_offset,	background_rect.width, background_rect.height };
 				break;
 			}
 			
