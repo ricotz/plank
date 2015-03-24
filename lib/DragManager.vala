@@ -194,8 +194,9 @@ namespace Plank
 					cr.restore ();
 			}
 			
-			drag_surface.Internal.set_device_offset (-drag_icon_size / 2.0, -drag_icon_size / 2.0);
-			Gtk.drag_set_icon_surface (context, drag_surface.Internal);
+			unowned Cairo.Surface surface = drag_surface.Internal;
+			surface.set_device_offset (-drag_icon_size / 2.0, -drag_icon_size / 2.0);
+			Gtk.drag_set_icon_surface (context, surface);
 		}
 		
 		void drag_begin (Gtk.Widget w, Gdk.DragContext context)
