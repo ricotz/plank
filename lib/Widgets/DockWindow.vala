@@ -241,7 +241,8 @@ namespace Plank.Widgets
 				return Gdk.EVENT_STOP;
 			
 			update_hovered ((int) event.x, (int) event.y);
-			return Gdk.EVENT_STOP;
+			
+			return Gdk.EVENT_PROPAGATE;
 		}
 		
 		/**
