@@ -356,7 +356,7 @@ namespace Plank
 					start2 = new DateTime.now_local ();
 #endif
 					// Do not draw the currently dragged item or items which are suppose to be drawn later
-					if (move_time < move_duration && dragged_item != item && !items.contains (item)) {
+					if (move_time < move_duration && item.IsVisible && dragged_item != item && !items.contains (item)) {
 						var draw_value = get_animated_draw_value_for_item (item);
 						draw_item (item_cr, item, ref draw_value);
 						draw_item_shadow (shadow_cr, item, ref draw_value);
@@ -452,7 +452,7 @@ namespace Plank
 				start2 = new DateTime.now_local ();
 #endif
 				// Do not draw the currently dragged item
-				if (dragged_item != item) {
+				if (item.IsVisible && dragged_item != item) {
 					var draw_value = get_animated_draw_value_for_item (item);
 					draw_item (item_cr, item, ref draw_value);
 					draw_item_shadow (shadow_cr, item, ref draw_value);

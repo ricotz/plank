@@ -291,8 +291,10 @@ namespace Plank
 					if (DragItem.can_be_removed ()) {
 						// Remove from dock
 						unowned ApplicationDockItem? app_item = (DragItem as ApplicationDockItem);
-						if (app_item == null || !(app_item.is_running () || app_item.has_unity_info ()))
+						if (app_item == null || !(app_item.is_running () || app_item.has_unity_info ())) {
+							DragItem.IsVisible = false;
 							DragItem.Container.remove_item (DragItem);
+						}
 						DragItem.delete ();
 						
 						int x, y;
