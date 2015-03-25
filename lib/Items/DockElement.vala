@@ -111,8 +111,16 @@ namespace Plank.Items
 		/**
 		 * Whether the item is currently hidden on the dock.
 		 * If TRUE it will be drawn and does consume space.
+		 * If FALSE it will not be drawn and does not consume space.
 		 */
 		public bool IsAttached { get; set; default = true; }
+		
+		/**
+		 * Whether the item is currently visible on the dock.
+		 * If TRUE it will be drawn and does consume space.
+		 * If FALSE it will not be drawn and does consume space.
+		 */
+		public bool IsVisible { get; set; default = true; }
 		
 		/**
 		 * The buttons this item shows popup menus for.
