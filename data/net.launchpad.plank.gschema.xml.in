@@ -71,10 +71,26 @@
 			<summary>Icon Size</summary>
 			<description>The size of dock items, in pixels.</description>
 		</key>
+		<key name="item-accelerator" type="s">
+			<default>'Super_L'</default>
+			<summary>The base modifier-key for item keybinding shortcuts</summary>
+			<description></description>
+		</key>
 		<key name="items-alignment" enum='GtkAlignType'>
 			<default>'center'</default>
 			<summary>The alignment of dock items</summary>
 			<description>Possible values are "fill", "start", "end", and "center".</description>
+		</key>
+		<key name="item-option-accelerator" type="s">
+			<default>'Shift_L'</default>
+			<summary>The additional modifier-key for optional item keybinding shortcuts</summary>
+			<description></description>
+		</key>
+		<key name="keybinding-unhide-delay" type="i">
+			<range min="0"/>
+			<default>400</default>
+			<summary>Keybinding unhide delay</summary>
+			<description>Length of the delay before showing keybinding-overlay the dock, in milliseconds.</description>
 		</key>
 		<key name="lock-items" type="b">
 			<default>false</default>

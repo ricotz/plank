@@ -40,6 +40,7 @@ namespace Plank
 		public DockRenderer renderer { get; protected set; }
 		public DockWindow window { get; protected set; }
 		public HoverWindow hover { get; protected set; }
+		public KeybindingManager keybinding_manager { get; protected set; }
 		
 		public DockItemProvider? default_provider { get; private set; }
 		
@@ -100,6 +101,7 @@ namespace Plank
 			window = new DockWindow (this);
 			hover = new HoverWindow ();
 			renderer = new DockRenderer (this, window);
+			keybinding_manager = new KeybindingManager (this);
 		}
 		
 		~DockController ()
@@ -140,6 +142,14 @@ namespace Plank
 			renderer.initialize ();
 			
 			window.show_all ();
+			
+			// FIXME maybe do this on a separate thread while this takes some time if X is stalling
+			// putting it into an idle at least gives the illusion of starting up fast ;-)
+			Idle.add (() => {
+				keybinding_manager.initialize ();
+				
+				return false;
+			});
 		}
 		
 		/**
@@ -222,6 +232,14 @@ namespace Plank
 				app_provider.item_window_added.disconnect (window.update_icon_region);
 				Unity.get_default ().remove_client (app_provider);
 			}
+		}
+		
+		public void virtual_click_item_at (int pos, PopupButton button)
+		{
+			if (visible_items.size < pos + 1)
+				return;
+			
+			visible_items[pos].clicked (button, 0, Gtk.get_current_event_time ());
 		}
 		
 		protected override void update_visible_elements ()

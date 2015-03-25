@@ -64,6 +64,7 @@ libplank_la_VALASOURCES = \
 	DockRenderer.vala \
 	DragManager.vala \
 	HideManager.vala \
+	KeybindingManager.vala \
 	PositionManager.vala \
 	DBus/Client.vala \
 	DBus/Interfaces.vala \

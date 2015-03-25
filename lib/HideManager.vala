@@ -137,6 +137,8 @@ namespace Plank
 			unowned DockWindow window = controller.window;
 			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
 			
+			controller.renderer.notify["VisibleKeybinding"].connect (update_hovered);
+			
 #if HAVE_BARRIERS
 			initialize_barriers_support ();
 #endif
@@ -159,6 +161,7 @@ namespace Plank
 			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
 			
 			controller.prefs.notify.disconnect (prefs_changed);
+			controller.renderer.notify["VisibleKeybinding"].disconnect (update_hovered);
 			
 			window.enter_notify_event.disconnect (handle_enter_notify_event);
 			window.leave_notify_event.disconnect (handle_leave_notify_event);
@@ -215,6 +218,7 @@ namespace Plank
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockWindow window = controller.window;
 			unowned DragManager drag_manager = controller.drag_manager;
+			unowned DockRenderer renderer = controller.renderer;
 			
 			freeze_notify ();
 			
@@ -233,7 +237,7 @@ namespace Plank
 			}
 			
 			// disable hiding if menu is visible or drags are active
-			var disabled = (window.menu_is_visible () || drag_manager.InternalDragActive || drag_manager.ExternalDragActive);
+			var disabled = (window.menu_is_visible () || renderer.VisibleKeybinding > 0 || drag_manager.InternalDragActive || drag_manager.ExternalDragActive);
 			if (Disabled != disabled) {
 				Disabled = disabled;
 				update_needed = true;

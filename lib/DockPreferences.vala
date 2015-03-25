@@ -90,6 +90,15 @@ namespace Plank
 		[Description(nick = "tooltips-enabled", blurb = "Whether to show tooltips when items are hovered.")]
 		public bool TooltipsEnabled { get; set; }
 		
+		[Description(nick = "item-accelerator", blurb = "The base modifier-key for item keybinding shortcuts.")]
+		public string ItemAccelerator { get; set; }
+		
+		[Description(nick = "item-option-accelerator", blurb = "The additional modifier-key for optional item keybinding shortcuts.")]
+		public string ItemOptionAccelerator { get; set; }
+		
+		[Description(nick = "keybinding-unhide-delay", blurb = "Time (in ms) to wait before showing keybinding-overlay the dock.")]
+		public uint KeybindingUnhideDelay { get; set; }
+		
 		/**
 		 * {@inheritDoc}
 		 */

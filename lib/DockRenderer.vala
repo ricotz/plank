@@ -29,6 +29,11 @@ namespace Plank
 		public DockTheme theme { get; private set; }
 		
 		/**
+		 * If the dock should show the keybindings and which.
+		 */
+		public Keybinding VisibleKeybinding { get; set; default = 0; }
+		
+		/**
 		 * The current progress [0.0..1.0] of the hide-animation of the dock.
 		 */
 		[CCode (notify = false)]
@@ -62,13 +67,16 @@ namespace Plank
 		Surface? indicator_buffer = null;
 		Surface? urgent_indicator_buffer = null;
 		Surface? urgent_glow_buffer = null;
+		Gee.HashMap<uint, Surface> keybinding_buffers;
 		
 		int64 last_hide = 0LL;
 		int64 last_hovered_changed = 0LL;
+		int64 last_keybinding = 0LL;
 		
 		bool screen_is_composited = false;
 		bool show_notifications = true;
 		uint reset_position_manager_timer_id = 0U;
+		uint keybindings_timer_id = 0U;
 		int window_scale_factor = 1;
 		bool is_first_frame = true;
 		bool zoom_changed = false;
@@ -98,6 +106,7 @@ namespace Plank
 		{
 			transient_items = new Gee.HashSet<DockItem> ();
 			current_items = new Gee.ArrayList<unowned DockItem> ();
+			keybinding_buffers = new Gee.HashMap<uint, Surface> ();
 #if BENCHMARK
 			benchmark = new Gee.ArrayList<string> ();
 #endif
@@ -127,6 +136,46 @@ namespace Plank
 			controller.hide_manager.notify["Hidden"].disconnect (hidden_changed);
 			controller.hide_manager.notify["Hovered"].disconnect (hovered_changed);
 			controller.window.notify["HoveredItem"].disconnect (animated_draw);
+		}
+		
+		/**
+		 * Unhide the dock immediately if needed and show keybindings after a short delay
+		 */
+		public void show_keybindings ()
+		{
+			if (keybindings_timer_id > 0U)
+				return;
+			
+			keybindings_timer_id = Timeout.add (controller.prefs.KeybindingUnhideDelay, () => {
+				keybindings_timer_id = 0U;
+				last_keybinding = GLib.get_monotonic_time ();
+				VisibleKeybinding |= Keybinding.ITEMS;
+				
+				animated_draw ();
+				
+				return false;
+			});
+		}
+		
+		/**
+		 * Hide keybindings immediately and hide the dock if needed
+		 */
+		public void hide_keybindings ()
+		{
+			if (keybindings_timer_id > 0U) {
+				Source.remove (keybindings_timer_id);
+				keybindings_timer_id = 0U;
+			}
+			
+			if (VisibleKeybinding != 0) {
+				var now = GLib.get_monotonic_time ();
+				if (now - last_keybinding > controller.prefs.KeybindingUnhideDelay * 1000)
+					last_keybinding = now;
+				
+				VisibleKeybinding = 0;
+			}
+			
+			animated_draw ();
 		}
 		
 		void prefs_changed (Object prefs, ParamSpec prop)
@@ -212,6 +261,8 @@ namespace Plank
 			indicator_buffer = null;
 			urgent_indicator_buffer = null;
 			urgent_glow_buffer = null;
+			
+			keybinding_buffers.clear ();
 			
 			animated_draw ();
 		}
@@ -839,6 +890,26 @@ namespace Plank
 			// draw indicators
 			if (draw_value.show_indicator && item.Indicator != IndicatorState.NONE)
 				draw_indicator_state (cr, draw_value.hover_region, item.Indicator, item.State);
+			
+			// draw keybinding overlay
+			var keybinding_time = frame_time - last_keybinding;
+			opacity = double.min (1, keybinding_time / (double) (theme.HideTime * 1000));
+			if (VisibleKeybinding == 0)
+				opacity = 1 - opacity;
+			if (opacity > 0) {
+				//FIXME Use letters for for 10+ items
+				var number = (item.Position + 1) % 10;
+				var is_option = ((VisibleKeybinding & Keybinding.ITEMS_OPTION) == Keybinding.ITEMS_OPTION);
+				var index = (is_option ? number + 1024 : number);
+				
+				Surface? keybinding_surface = null;
+				if ((keybinding_surface = keybinding_buffers.get (index)) == null) {
+					keybinding_surface = theme.create_keybinding (icon_size / 2, number.to_string (), item_buffer, is_option);
+					keybinding_buffers.set (index, keybinding_surface);
+				}
+				cr.set_source_surface (keybinding_surface.Internal, draw_region.x + icon_size / 4, draw_region.y + icon_size / 4);
+				cr.paint_with_alpha (opacity);
+			}
 		}
 		
 		void draw_item_shadow (Cairo.Context cr, DockItem item, DockItemDrawValue draw_value)
@@ -1108,6 +1179,9 @@ namespace Plank
 				if (frame_time - last_hide <= theme.FadeTime * 1000)
 					return true;
 			}
+			
+			if (frame_time - last_keybinding <= theme.HideTime * 1000)
+				return true;
 			
 			if (transient_items.size > 0)
 				return true;

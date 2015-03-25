@@ -276,6 +276,92 @@ namespace Plank
 		}
 
 		/**
+		 * Creates a keybinding overlay
+		 *
+		 * @param size the size of the surface
+		 * @param text the string to show
+		 * @param model existing surface to use as basis of new surface
+		 * @param is_option slightly different style for another function
+		 * @return a new dock surface with the keybinding overlay drawn on it
+		 */
+		public Surface create_keybinding (int size, string text, Surface model, bool is_option = false)
+		{
+			Logger.verbose ("DockTheme.create_keybinding (size = %i, text = %s)", size, text);
+			
+			var surface = new Surface.with_surface (size, size, model);
+			surface.clear ();
+			
+			if (size <= 0)
+				return surface;
+			
+			var cr = surface.Context;
+			
+			var line_width = 2.0;
+			var padding = Math.ceil (size / 12.0);
+			double x = line_width / 2.0;
+			double y = line_width / 2.0;
+			double height = size - 2 * line_width;
+			double width = size - 2 * line_width;
+			
+			cr.set_line_width (line_width);
+			
+			Cairo.Pattern stroke, fill;
+			
+			// draw outline shadow
+			stroke = new Cairo.Pattern.rgba (0.2, 0.2, 0.2, 0.3);
+			draw_rounded_line (cr, x, y, width + line_width, height, true, true, stroke, null);
+			
+			// draw filled gradient with outline
+			stroke = new Cairo.Pattern.linear (0, y, 0, y + height);
+			stroke.add_color_stop_rgba (0.2, 0.0, 0.0, 0.0, 0.9);
+			stroke.add_color_stop_rgba (0.8, 0.0, 0.0, 0.0, 0.8);
+			fill = new Cairo.Pattern.linear (0, y, 0, y + height);
+			fill.add_color_stop_rgba (0.1, 0.0, 0.0, 0.0, 0.8);
+			fill.add_color_stop_rgba (0.9, 0.0, 0.0, 0.0, 0.9);
+			draw_rounded_line (cr, x, y, width, height, true, true, stroke, fill);
+			
+			// draw inline highlight
+			if (!is_option)
+				stroke = new Cairo.Pattern.rgba (0.9, 0.9, 0.9, 0.1);
+			else
+				stroke = new Cairo.Pattern.rgba (0.9, 0.9, 0.9, 0.9);
+			draw_rounded_line (cr, x + line_width, y + line_width, width - 2 * line_width, height - 2 * line_width, true, true, stroke, null);
+			
+			var layout = new Pango.Layout (Gdk.pango_context_get ());
+			layout.set_width ((int) (width * Pango.SCALE));
+			layout.set_ellipsize (Pango.EllipsizeMode.NONE);
+			
+			var font_description = new Gtk.Style ().font_desc;
+			font_description.set_absolute_size ((int) (height * Pango.SCALE));
+			font_description.set_weight (Pango.Weight.BOLD);
+			layout.set_font_description (font_description);
+			
+			layout.set_text (text, -1);
+			Pango.Rectangle ink_rect, logical_rect;
+			layout.get_pixel_extents (out ink_rect, out logical_rect);
+			
+			var scale = double.min (1.0, double.min ((width - 2.0 * padding - 2.0 * line_width) / (double) logical_rect.width, (height - 2.0 * padding) / (double) logical_rect.height));
+			
+			cr.set_source_rgba (1.0, 1.0, 1.0, 0.2);
+			
+			cr.move_to (x + Math.floor (width / 2.0 - scale * logical_rect.width / 2.0), y + Math.floor (height / 2.0 - scale * logical_rect.height / 2.0));
+			
+			// draw text
+			cr.save ();
+			if (scale < 1)
+				cr.scale (scale, scale);
+			
+			cr.set_line_width (line_width);
+			Pango.cairo_layout_path (cr, layout);
+			cr.stroke_preserve ();
+			cr.set_source_rgba (1.0, 1.0, 1.0, 0.95);
+			cr.fill ();
+			cr.restore ();
+			
+			return surface;
+		}
+		
+		/**
 		 * Draws an active glow for an item.
 		 *
 		 * @param surface the surface to draw onto
