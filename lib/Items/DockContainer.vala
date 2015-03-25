@@ -208,7 +208,7 @@ namespace Plank.Items
 			visible_elements.clear ();
 			
 			foreach (var item in internal_elements)
-				if (item.IsVisible)
+				if (item.IsAttached)
 					visible_elements.add (item);
 			
 			var added_items = new Gee.ArrayList<DockElement> ();

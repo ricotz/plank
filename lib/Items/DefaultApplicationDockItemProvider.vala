@@ -67,12 +67,12 @@ namespace Plank.Items
 				unowned Wnck.Workspace? active_workspace = Wnck.Screen.get_default ().get_active_workspace ();
 				foreach (var item in internal_elements) {
 					unowned TransientDockItem? transient = (item as TransientDockItem);
-					item.IsVisible = (transient == null || transient.App == null || active_workspace == null
+					item.IsAttached = (transient == null || transient.App == null || active_workspace == null
 						|| WindowControl.has_window_on_workspace (transient.App, active_workspace));
 				}
 			} else {
 				foreach (var item in internal_elements)
-					item.IsVisible = true;
+					item.IsAttached = true;
 			}
 			
 			base.update_visible_items ();
