@@ -86,11 +86,6 @@ namespace Plank.Items
 		public signal void deleted ();
 		
 		/**
-		 * Signal fired when the launcher associated with the dock item changed.
-		 */
-		public signal void launcher_changed ();
-		
-		/**
 		 * The dock item's icon.
 		 */
 		public string Icon { get; set; default = ""; }
@@ -185,7 +180,10 @@ namespace Plank.Items
 		DockSurface? background_surface = null;
 		DockSurface? foreground_surface = null;
 		
+		FileMonitor? launcher_file_monitor = null;
 		FileMonitor? icon_file_monitor = null;
+		
+		bool launcher_exists = false;
 		
 		/**
 		 * Creates a new dock item.
@@ -198,6 +196,8 @@ namespace Plank.Items
 		construct
 		{
 			Prefs.deleted.connect (handle_deleted);
+			Prefs.notify["Launcher"].connect (handle_launcher_changed);
+			
 			Gtk.IconTheme.get_default ().changed.connect (icon_theme_changed);
 			notify["Icon"].connect (icon_changed);
 			notify["ForcePixbuf"].connect (icon_changed);
@@ -206,11 +206,15 @@ namespace Plank.Items
 			notify["CountVisible"].connect (reset_foreground_buffer);
 			notify["Progress"].connect (reset_foreground_buffer);
 			notify["ProgressVisible"].connect (reset_foreground_buffer);
+			
+			launcher_file_monitor_start ();
 		}
 		
 		~DockItem ()
 		{
 			Prefs.deleted.disconnect (handle_deleted);
+			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
+			
 			Gtk.IconTheme.get_default ().changed.disconnect (icon_theme_changed);
 			notify["Icon"].disconnect (icon_changed);
 			notify["ForcePixbuf"].disconnect (icon_changed);
@@ -220,6 +224,7 @@ namespace Plank.Items
 			notify["Progress"].disconnect (reset_foreground_buffer);
 			notify["ProgressVisible"].disconnect (reset_foreground_buffer);
 			
+			launcher_file_monitor_stop ();
 			icon_file_monitor_stop ();
 		}
 		
@@ -232,10 +237,29 @@ namespace Plank.Items
 		}
 		
 		/**
+		 * Parses the associated launcher and e.g. sets the icon and text from it.
+		 */
+		protected virtual void load_from_launcher ()
+		{
+			// No default implementation needed
+		}
+		
+		void handle_launcher_changed ()
+		{
+			launcher_file_monitor_stop ();
+			
+			load_from_launcher ();
+			
+			launcher_file_monitor_start ();
+		}
+		
+		/**
 		 * Deletes the underlying preferences file.
 		 */
 		public void delete ()
 		{
+			launcher_file_monitor_stop ();
+			
 			Prefs.delete ();
 		}
 		
@@ -313,6 +337,74 @@ namespace Plank.Items
 			icon_file_monitor.changed.disconnect (reset_icon_buffer);
 			icon_file_monitor.cancel ();
 			icon_file_monitor = null;
+		}
+		
+		void launcher_file_changed (File f, File? other, FileMonitorEvent event)
+		{
+			switch (event) {
+			case FileMonitorEvent.CHANGES_DONE_HINT:
+				Logger.verbose ("Launcher file '%s' changed, reloading", f.get_uri ());
+				
+				load_from_launcher ();
+				break;
+			case FileMonitorEvent.MOVED:
+				if (other == null)
+					break;
+				var launcher = other.get_uri ();
+				Logger.verbose ("Launcher file '%s' moved to '%s'", f.get_uri (), launcher);
+				
+				launcher_file_monitor_stop ();
+				Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
+				Prefs.Launcher = launcher;
+				Prefs.notify["Launcher"].connect (handle_launcher_changed);
+				launcher_file_monitor_start ();
+				
+				load_from_launcher ();
+				break;
+			case FileMonitorEvent.DELETED:
+				debug ("Launcher file '%s' deleted, item is invalid now", f.get_uri ());
+				
+				launcher_exists = false;
+				break;
+			case FileMonitorEvent.CREATED:
+				debug ("Launcher file '%s' created, item is valid again", f.get_uri ());
+				
+				launcher_exists = true;
+				break;
+			default:
+				break;
+			}
+			
+			needs_redraw ();
+		}
+		
+		void launcher_file_monitor_start ()
+		{
+			if (launcher_file_monitor != null)
+				return;
+			
+			unowned string? launcher = Prefs.Launcher;
+			if (launcher == null || launcher == "")
+				return;
+			
+			try {
+				var launcher_file = File.new_for_uri (launcher);
+				launcher_exists = launcher_file.query_exists ();
+				launcher_file_monitor = launcher_file.monitor (FileMonitorFlags.SEND_MOVED);
+				launcher_file_monitor.changed.connect (launcher_file_changed);
+			} catch {
+				warning ("Unable to watch the launcher file '%s'", launcher);
+			}
+		}
+		
+		void launcher_file_monitor_stop ()
+		{
+			if (launcher_file_monitor == null)
+				return;
+			
+			launcher_file_monitor.changed.disconnect (launcher_file_changed);
+			launcher_file_monitor.cancel ();
+			launcher_file_monitor = null;
 		}
 		
 		unowned DockSurface get_surface (int width, int height, DockSurface model)
@@ -432,7 +524,7 @@ namespace Plank.Items
 		 */
 		public virtual bool is_valid ()
 		{
-			return File.new_for_uri (Prefs.Launcher).query_exists ();
+			return launcher_exists || Prefs.Launcher == "";
 		}
 		
 		/**

@@ -67,22 +67,25 @@ namespace Plank.Items
 		
 		construct
 		{
-			Prefs.notify["Launcher"].connect (handle_launcher_changed);
-			
 			load_from_launcher ();
 		}
 		
 		~FileDockItem ()
 		{
-			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
-			
 			stop_monitor ();
 		}
 		
-		void load_from_launcher ()
+		/**
+		 * {@inheritDoc}
+		 */
+		protected override void load_from_launcher ()
 		{
 			stop_monitor ();
 			
+			if (Prefs.Launcher == "")
+				return;
+			
+			OwnedFile = File.new_for_uri (Prefs.Launcher);
 			Icon = DrawingService.get_icon_from_file (OwnedFile) ?? DEFAULT_ICONS;
 			
 			if (!OwnedFile.is_native ()) {
@@ -137,7 +140,7 @@ namespace Plank.Items
 		 */
 		protected override void draw_icon (DockSurface surface)
 		{
-			if (!has_default_icon_match ()) {
+			if (!is_valid () || !has_default_icon_match ()) {
 				base.draw_icon (surface);
 				return;
 			}
@@ -218,15 +221,6 @@ namespace Plank.Items
 			}
 		}
 		
-		void handle_launcher_changed ()
-		{
-			OwnedFile = File.new_for_uri (Prefs.Launcher);
-			
-			load_from_launcher ();
-			
-			launcher_changed ();
-		}
-		
 		/**
 		 * Launches the application associated with this item.
 		 */
@@ -235,14 +229,6 @@ namespace Plank.Items
 			Services.System.open (OwnedFile);
 			ClickedAnimation = Animation.BOUNCE;
 			LastClicked = GLib.get_monotonic_time ();
-		}
-		
-		/**
-		 * {@inheritDoc}
-		 */
-		public override bool is_valid ()
-		{
-			return OwnedFile.query_exists ();
 		}
 		
 		/**

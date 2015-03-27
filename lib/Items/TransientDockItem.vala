@@ -48,7 +48,7 @@ namespace Plank.Items
 					Prefs.Launcher = launcher;
 					load_from_launcher ();
 				}
-			} else if (Prefs.Launcher != null) {
+			} else if (Prefs.Launcher != "") {
 				load_from_launcher ();
 			} else {
 				critical ("No source of information for this item available");
@@ -61,6 +61,14 @@ namespace Plank.Items
 		public override bool can_be_removed ()
 		{
 			return false;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public override bool is_valid ()
+		{
+			return true;
 		}
 	}
 }

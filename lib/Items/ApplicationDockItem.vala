@@ -136,11 +136,6 @@ namespace Plank.Items
 			actions_map = new Gee.HashMap<string, string> (str_hash, str_equal);
 #endif
 			
-			Prefs.notify["Launcher"].connect (handle_launcher_changed);
-			
-			if (!is_valid ())
-				return;
-			
 			load_from_launcher ();
 		}
 		
@@ -150,13 +145,10 @@ namespace Plank.Items
 			actions = null;
 			actions_map = null;
 			
-			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
-			
 			App = null;
 #if HAVE_DBUSMENU
 			Quicklist = null;
 #endif
-			stop_monitor ();
 		}
 		
 		void app_signals_connect (Bamf.Application app)
@@ -204,18 +196,6 @@ namespace Plank.Items
 			
 			unowned string? desktop_file = App.get_desktop_file ();
 			return (desktop_file == null || desktop_file == "");
-		}
-		
-		void handle_launcher_changed ()
-		{
-			if (this is TransientDockItem)
-				return;
-			
-			App = Matcher.get_default ().app_for_uri (Prefs.Launcher);
-			
-			load_from_launcher ();
-			
-			launcher_changed ();
 		}
 		
 		void handle_user_visible_changed (bool user_visible)
@@ -572,25 +552,20 @@ namespace Plank.Items
 		}
 		
 		/**
-		 * Parses the associated launcher and sets the icon and text from it.
+		 * {@inheritDoc}
 		 */
-		protected void load_from_launcher ()
+		protected override void load_from_launcher ()
 		{
-			unity_update_application_uri ();
-			
-			unowned string? launcher = Prefs.Launcher;
-			if (launcher == null || launcher == "")
+			if (Prefs.Launcher == "")
 				return;
 			
-			stop_monitor ();
+			unity_update_application_uri ();
 			
 			string icon, text;
-			parse_launcher (launcher, out icon, out text, actions, actions_map, supported_mime_types);
+			parse_launcher (Prefs.Launcher, out icon, out text, actions, actions_map, supported_mime_types);
 			Icon = icon;
 			ForcePixbuf = null;
 			Text = text;
-			
-			start_monitor ();
 		}
 		
 		/**
@@ -742,48 +717,6 @@ namespace Plank.Items
 			}
 		}
 		
-		FileMonitor? monitor = null;
-		
-		void start_monitor ()
-		{
-			if (monitor != null)
-				return;
-			
-			try {
-				monitor = File.new_for_uri (Prefs.Launcher).monitor (0);
-				monitor.changed.connect (monitor_changed);
-			} catch {
-				warning ("Unable to watch the launcher file '%s'", Prefs.Launcher);
-			}
-		}
-		
-		void monitor_changed (File f, File? other, FileMonitorEvent event)
-		{
-			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) != FileMonitorEvent.CHANGES_DONE_HINT
-				&& (event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
-				return;
-			
-			// If the desktop-file for the corresponding application was deleted
-			// request removal of this item from dock
-			if (!f.query_exists ()) {
-				debug ("Launcher file '%s' deleted, removing item '%s'", Prefs.Launcher, Text);
-				deleted ();
-				return;
-			}
-			
-			debug ("Launcher file '%s' changed, reloading", Prefs.Launcher);
-			load_from_launcher ();
-		}
-		
-		void stop_monitor ()
-		{
-			if (monitor == null)
-				return;
-			
-			monitor.changed.disconnect (monitor_changed);
-			monitor.cancel ();
-			monitor = null;
-		}
 		
 		void unity_update_application_uri ()
 		{
