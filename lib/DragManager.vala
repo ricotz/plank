@@ -166,6 +166,11 @@ namespace Plank
 		
 		void set_drag_icon (Gdk.DragContext context, DockItem? item, double opacity = 1.0)
 		{
+			if (item == null) {
+				Gtk.drag_set_icon_default (context);
+				return;
+			}
+
 #if HAVE_HIDPI
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
 #endif
@@ -180,19 +185,17 @@ namespace Plank
 			cairo_surface_set_device_scale (drag_surface.Internal, window_scale_factor, window_scale_factor);
 #endif
 			
-			if (item != null) {
-				var item_surface = item.get_surface_copy (drag_icon_size, drag_icon_size, drag_surface);
-				unowned Cairo.Context cr = drag_surface.Context;
-				if (window_scale_factor > 1) {
-					cr.save ();
-					cr.scale (1.0 / window_scale_factor, 1.0 / window_scale_factor);
-				}
-				cr.set_operator (Cairo.Operator.OVER);
-				cr.set_source_surface (item_surface.Internal, 0, 0);
-				cr.paint_with_alpha (opacity);
-				if (window_scale_factor > 1)
-					cr.restore ();
+			var item_surface = item.get_surface_copy (drag_icon_size, drag_icon_size, drag_surface);
+			unowned Cairo.Context cr = drag_surface.Context;
+			if (window_scale_factor > 1) {
+				cr.save ();
+				cr.scale (1.0 / window_scale_factor, 1.0 / window_scale_factor);
 			}
+			cr.set_operator (Cairo.Operator.OVER);
+			cr.set_source_surface (item_surface.Internal, 0, 0);
+			cr.paint_with_alpha (opacity);
+			if (window_scale_factor > 1)
+				cr.restore ();
 			
 			unowned Cairo.Surface surface = drag_surface.Internal;
 			surface.set_device_offset (-drag_icon_size / 2.0, -drag_icon_size / 2.0);
