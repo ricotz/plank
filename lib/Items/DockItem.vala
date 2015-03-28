@@ -226,7 +226,7 @@ namespace Plank.Items
 		/**
 		 * Signal handler called when the underlying preferences file is deleted.
 		 */
-		protected void handle_deleted ()
+		void handle_deleted ()
 		{
 			deleted ();
 		}
