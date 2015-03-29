@@ -139,15 +139,15 @@ namespace Plank
 			initialize_barriers_support ();
 #endif
 			
-			window.enter_notify_event.connect (enter_notify_event);
-			window.leave_notify_event.connect (leave_notify_event);
+			window.enter_notify_event.connect (handle_enter_notify_event);
+			window.leave_notify_event.connect (handle_leave_notify_event);
 			
 			wnck_screen.window_opened.connect_after (schedule_update);
 			wnck_screen.window_closed.connect_after (schedule_update);
-			wnck_screen.active_window_changed.connect_after (handle_window_changed);
+			wnck_screen.active_window_changed.connect_after (handle_active_window_changed);
 			wnck_screen.active_workspace_changed.connect_after (handle_workspace_changed);
 			
-			setup_active_window ();
+			setup_active_window (wnck_screen);
 		}
 		
 		~HideManager ()
@@ -158,12 +158,12 @@ namespace Plank
 			
 			controller.prefs.notify.disconnect (prefs_changed);
 			
-			window.enter_notify_event.disconnect (enter_notify_event);
-			window.leave_notify_event.disconnect (leave_notify_event);
+			window.enter_notify_event.disconnect (handle_enter_notify_event);
+			window.leave_notify_event.disconnect (handle_leave_notify_event);
 			
 			wnck_screen.window_opened.disconnect (schedule_update);
 			wnck_screen.window_closed.disconnect (schedule_update);
-			wnck_screen.active_window_changed.disconnect (handle_window_changed);
+			wnck_screen.active_window_changed.disconnect (handle_active_window_changed);
 			wnck_screen.active_workspace_changed.disconnect (handle_workspace_changed);
 			
 			stop_timers ();
@@ -358,7 +358,8 @@ namespace Plank
 			});
 		}
 		
-		bool enter_notify_event (Gdk.EventCrossing event)
+		[CCode (instance_pos = -1)]
+		bool handle_enter_notify_event (Gtk.Widget widget, Gdk.EventCrossing event)
 		{
 			if (event.detail == Gdk.NotifyType.INFERIOR)
 				return Hidden;
@@ -382,7 +383,8 @@ namespace Plank
 			return Hidden;
 		}
 		
-		bool leave_notify_event (Gdk.EventCrossing event)
+		[CCode (instance_pos = -1)]
+		bool handle_leave_notify_event (Gtk.Widget widget, Gdk.EventCrossing event)
 		{
 			if (event.detail == Gdk.NotifyType.INFERIOR)
 				return Gdk.EVENT_PROPAGATE;
@@ -477,24 +479,26 @@ namespace Plank
 			});
 		}
 		
-		void handle_workspace_changed (Wnck.Workspace? previous)
+		[CCode (instance_pos = -1)]
+		void handle_workspace_changed (Wnck.Screen screen, Wnck.Workspace? previous)
 		{
 			schedule_update ();
 		}
 		
-		void handle_window_changed (Wnck.Window? previous)
+		[CCode (instance_pos = -1)]
+		void handle_active_window_changed (Wnck.Screen screen, Wnck.Window? previous)
 		{
 			if (previous != null) {
 				previous.geometry_changed.disconnect (handle_geometry_changed);
 				previous.state_changed.disconnect (handle_state_changed);
 			}
 			
-			setup_active_window ();
+			setup_active_window (screen);
 		}
 		
-		void setup_active_window ()
+		void setup_active_window (Wnck.Screen screen)
 		{
-			var active_window = Wnck.Screen.get_default ().get_active_window ();
+			var active_window = screen.get_active_window ();
 			
 			if (active_window != null) {
 				last_window_rect = window_geometry (active_window);
@@ -505,7 +509,8 @@ namespace Plank
 			schedule_update ();
 		}
 		
-		void handle_state_changed (Wnck.WindowState changed_mask, Wnck.WindowState new_state)
+		[CCode (instance_pos = -1)]
+		void handle_state_changed (Wnck.Window window, Wnck.WindowState changed_mask, Wnck.WindowState new_state)
 		{
 			if ((changed_mask & Wnck.WindowState.MINIMIZED) == 0)
 				return;
@@ -513,11 +518,10 @@ namespace Plank
 			schedule_update ();
 		}
 		
-		void handle_geometry_changed (Wnck.Window? w)
+		[CCode (instance_pos = -1)]
+		void handle_geometry_changed (Wnck.Window window)
 		{
-			return_if_fail (w != null);
-			
-			var geo = window_geometry (w);
+			var geo = window_geometry (window);
 			if (geo == last_window_rect)
 				return;
 			
@@ -533,10 +537,10 @@ namespace Plank
 			});
 		}
 		
-		Gdk.Rectangle window_geometry (Wnck.Window w)
+		static Gdk.Rectangle window_geometry (Wnck.Window window)
 		{
 			var win_rect = Gdk.Rectangle ();
-			w.get_geometry (out win_rect.x, out win_rect.y, out win_rect.width, out win_rect.height);
+			window.get_geometry (out win_rect.x, out win_rect.y, out win_rect.width, out win_rect.height);
 			return win_rect;
 		}
 		
@@ -597,7 +601,7 @@ namespace Plank
 		/**
 		 * Event filter method needed to fetch X.Events
 		 */
-		[CCode (instance_pos = 2.9)]
+		[CCode (instance_pos = -1)]
 		Gdk.FilterReturn xevent_filter (Gdk.XEvent gdk_xevent, Gdk.Event gdk_event)
 		{
 			X.Event* xevent = (X.Event*) gdk_xevent;
