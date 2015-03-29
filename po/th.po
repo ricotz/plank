@@ -1,16 +1,16 @@
-# Ukrainian translation for plank
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Thai translation for plank
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
 # This file is distributed under the same license as the plank package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-03-28 11:31+0000\n"
-"PO-Revision-Date: 2015-03-28 07:25+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
-"Language-Team: Ukrainian <uk@li.org>\n"
+"PO-Revision-Date: 2015-03-23 15:43+0000\n"
+"Last-Translator: Artiya Thinkumapang <artiya4u@gmail.com>\n"
+"Language-Team: Thai <th@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,8 +22,8 @@ msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"Plank має намір бути найпростішим доком в світі. Мета - забезпечити тільки "
-"ті функції, для яких потрібні доки та нічого зайвого."
+"แพลงค์ไม่ได้อยากเป็นดอคที่เรียบง่ายที่สุดในโลก "
+"แต่จุดมุ่งหมายหลักแค่ให้ในสิ่งที่ควรจะเป็นกับดอค ไม่ได้มีอะไรมากไปกว่านี้"
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -33,115 +33,114 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
-"Це, проте, бібліотека, яка може бути розширена для створення інших доків-"
-"програм з більш розширеним функціоналом. Таким чином, Plank - це основа для "
-"Docky (починаючи з версії 3.0.0), яка прагне забезпечити всі основні функції "
-"в той час, як Docky розширює його, додаючи гарні речі, як то Доклети, "
-"промалювання, діалоги налаштувань, тощо."
+"อย่างไรก็ตามไลบรารี่ยังสามารถไปเพิ่มเติมคุณสมบัติพิเศษได้มากมาย "
+"เพราะงั้นแพลงค์จึงถูกใช้เป็นเทคโลยีหลักข้างใน Docky (ตั้งแต่เวอร์ชั่น 3.0.0 "
+"เป็นต้นมา) และแพลงค์มุ่งหมายที่จะเพิ่มความสามารถหลักๆ ต่างจาก Docky "
+"ที่มุ่งเพิ่มฟีเจอร์หรูหราอย่างเช่น Docklets, วาดภาพ, การตั้งค่าไดอะลอก ฯลฯ"
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "Plank. Просто легкий."
+msgstr "แพลงค์ ง่ายเหี้ยๆ"
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr "Тема:"
+msgstr "ธีม:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr "Розташування:"
+msgstr "ตำแหน่ง:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr "Ліворуч"
+msgstr "ด้านซ้าย"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr "Праворуч"
+msgstr "ด้านขวา"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr "Вгорі"
+msgstr "ด้านบน"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr "Знизу"
+msgstr "ด้านล่าง"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr "Вирівнювання:"
+msgstr "การจัดเรียง:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr "Заповнити"
+msgstr "ยืดเต็มจอ"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr "На початку"
+msgstr "ต้น"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr "У кінці"
+msgstr "ท้าย"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr "У центрі"
+msgstr "กึ่งกลาง"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "На Головному Екрані:"
+msgstr "แสดงบนหน้าจอหลักเท่านั้น:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr "Зміщення від центру краю екрану у відсотках"
+msgstr "ระยะห่างจากขอบจอคิดเป็นเปอร์เซ็น"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Вирівнювання Піктограм:"
+msgstr "การจัดเรียงของไอคอน:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr "Розмір Піктограм:"
+msgstr "ขนาดไอคอน:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Appearance"
-msgstr "Вигляд"
+msgstr "ลักษณะ"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Intellihide"
-msgstr "«Розумне» приховування"
+msgstr "ซ่อนอัฉริยะ"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Autohide"
-msgstr "Автоматичне приховування"
+msgstr "ซ่อนอัตโนมัติ"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Dodge maximized window"
-msgstr "Приховувати при повноекранних вікнах"
+msgstr "หลบหน้าต่างที่แสดงเต็มจอ"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Window Dodge"
-msgstr "Уникати вікон"
+msgstr "หลบหน้าต่าง"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Hide Dock"
-msgstr "Приховування панелі"
+msgstr "การซ่อนดอค"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Hide Delay:"
-msgstr "Затримка приховування:"
+msgstr "ดีเลย์ของการซ่อน"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Delay in ms before hiding the dock"
-msgstr "Затримка приховування панелі у мілісекундах"
+msgstr "ดีเลย์ก่อนซ่อนเป็นมิลลิวินาที"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Unhide Delay:"
-msgstr "Затримка розкриття:"
+msgstr "ดีเลย์ของการเลิกซ่อน"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before showing the dock"
-msgstr "Затримка розкриття панелі у мілісекундах"
+msgstr "ดีเลย์ก่อนการเลิกซ่อนเป็นมิลลิวินาที"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Pressure Reveal:"
@@ -149,66 +148,66 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Item Management"
-msgstr "Керування елементами"
+msgstr "การจัดการรายการ"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Show Unpinned:"
-msgstr "Показати незакріплені:"
+msgstr "แสดงรายการที่ไม่ได้ปักหมุด"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Restrict to Workspace:"
-msgstr "Обмежити робочим простором:"
+msgstr "แสดงจำกัดเฉพาะในเวอร์สเปค"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Lock Icons:"
-msgstr "Блокування піктограм:"
+msgstr "ล็อกไอคอน"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Automatic Pinning:"
-msgstr "Автоматично прикріплювати:"
+msgstr "ปักหมุดอัตโนมัติ"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Behaviour"
-msgstr "Поведінка"
+msgstr "พฤติกรรม"
 
 #: ../lib/Items/ApplicationDockItem.vala:460
 #: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
 msgid "_Keep in Dock"
-msgstr "_Причепити до панелі"
+msgstr "เก็บไว้ในดอค"
 
 #: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close All"
-msgstr "_Закрити все"
+msgstr "ปิดทั้งหมด"
 
 #: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close"
-msgstr "_Закрити"
+msgstr "ปิด"
 
 #: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
-msgstr "_Відкрити в менеджері файлів"
+msgstr "เปิดไฟล์บราวเซอร์"
 
 #: ../lib/Items/FileDockItem.vala:350
 msgid "_Open"
-msgstr "_Відкрити"
+msgstr "เปิด"
 
 #: ../lib/Items/FileDockItem.vala:354
 msgid "Open Containing _Folder"
-msgstr "Відкрити відповідну _теку"
+msgstr "เปิดโฟลเดอร์ที่เก็บไว้"
 
 #: ../lib/Items/PlaceholderDockItem.vala:35
 msgid "Drop applications or files here"
-msgstr "Перетягніть програми або файли сюди"
+msgstr "ลากวางไฟล์ลงที่นี่"
 
 #: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
-msgstr "Отримати _допомогу..."
+msgstr "ขอความช่วยเหลือออนไลน์"
 
 #: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
-msgstr "_Перекласти цю Програму..."
+msgstr "แปลแอพพลิเคชั่นนี้"
 
 #: ../lib/Widgets/PreferencesWindow.vala:64
 #: ../lib/Widgets/PreferencesWindow.vala:74
 msgid "Preferences"
-msgstr "Параметри"
+msgstr "ปรับแต่ง"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-03-12 17:57+0100\n"
-"PO-Revision-Date: 2015-02-13 07:02+0000\n"
-"Last-Translator: David Mikšovský <miksovsky.david@outlook.cz>\n"
+"POT-Creation-Date: 2015-03-28 11:31+0000\n"
+"PO-Revision-Date: 2015-03-27 07:43+0000\n"
+"Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-14 05:18+0000\n"
-"X-Generator: Launchpad (build 17389)\n"
+"X-Launchpad-Export-Date: 2015-03-29 05:31+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -40,51 +40,51 @@ msgstr "Plank. Stupidně jednoduchý."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "Motiv:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "Umístění:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "Vlevo"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "Vpravo"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "Nahoře"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "Dolů"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "Zarovnání:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "Vyplnit"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "Začátek"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "Konec"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "Uprostřed"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "Na primární monitor:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
@@ -92,35 +92,35 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr ""
+msgstr "Zarovnání ikon:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "Velikost ikon:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Appearance"
-msgstr ""
+msgstr "Vzhled"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Intellihide"
-msgstr ""
+msgstr "Inteligentní skrývání"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Autohide"
-msgstr ""
+msgstr "Automatické skrývání"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Dodge maximized window"
-msgstr ""
+msgstr "Skrýt při maximalizovaném okně"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Window Dodge"
-msgstr ""
+msgstr "Dotyk okna"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Hide Dock"
-msgstr ""
+msgstr "Skrýt Dock"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Hide Delay:"
@@ -128,7 +128,7 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgstr "Zpoždění v ms před skrytím doku"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Unhide Delay:"
@@ -136,7 +136,7 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "Zpoždění v ms před zobrazením doku"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Pressure Reveal:"
@@ -164,7 +164,7 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Behaviour"
-msgstr ""
+msgstr "Chování"
 
 #: ../lib/Items/ApplicationDockItem.vala:460
 #: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
@@ -177,7 +177,7 @@ msgstr "_Zavřít vše"
 
 #: ../lib/Items/ApplicationDockItem.vala:467
 msgid "_Close"
-msgstr ""
+msgstr "_Zavřít"
 
 #: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
@@ -206,4 +206,4 @@ msgstr "_Přeložit tuto aplikaci..."
 #: ../lib/Widgets/PreferencesWindow.vala:64
 #: ../lib/Widgets/PreferencesWindow.vala:74
 msgid "Preferences"
-msgstr ""
+msgstr "Předvolby"
