@@ -132,12 +132,7 @@ namespace Plank.Drawing
 			
 			// Load internal default icon as last resort
 			if (pbuf == null)
-				try {
-					pbuf = new Gdk.Pixbuf.from_resource_at_scale ("%s/img/application-default-icon.svg".printf (Plank.G_RESOURCE_PATH),
-						width, height, true);
-				} catch (Error e) {
-					critical (e.message);
-				}
+				pbuf = load_pixbuf_from_resource (Plank.G_RESOURCE_PATH + "/img/application-default-icon.svg", width, height);
 			
 			if (pbuf != null) {
 				if (width != -1 && height != -1 && (width != pbuf.width || height != pbuf.height))
@@ -160,14 +155,17 @@ namespace Plank.Drawing
 		/**
 		 * Try to get a {@link GLib.File} for the given icon name
 		 *
-		 * @param name a string which might represent an existing file
+		 * @param str a string which might represent an existing file
 		 * @return a {@link GLib.File}, or null if it failed
 		 */
-		public static File? try_get_icon_file (string name)
+		public static File? try_get_icon_file (string str)
 		{
 			File? file = null;
+			var name = str.down ();			
 			
-			if (name.down ().has_prefix ("file://"))
+			if (name.has_prefix ("resource://"))
+				file = File.new_for_uri (name);
+			else if (name.has_prefix ("file://"))
 				file = File.new_for_uri (name);
 			else if (name.has_prefix ("~/"))
 				file = File.new_for_path (name.replace ("~", Environment.get_home_dir ()));
@@ -185,7 +183,19 @@ namespace Plank.Drawing
 			Gdk.Pixbuf? pbuf = null;
 			
 			try {
-				pbuf = new Gdk.Pixbuf.from_file_at_size (file.get_path (), width, height);
+				var fis = file.read ();
+				pbuf = new Gdk.Pixbuf.from_stream_at_scale (fis, width, height, true);
+			} catch { }
+			
+			return pbuf;
+		}
+		
+		static Gdk.Pixbuf? load_pixbuf_from_resource (string resource, int width, int height)
+		{
+			Gdk.Pixbuf? pbuf = null;
+			
+			try {
+				pbuf = new Gdk.Pixbuf.from_resource_at_scale (resource, width, height, true);
 			} catch { }
 			
 			return pbuf;
@@ -253,18 +263,27 @@ namespace Plank.Drawing
 			}
 			
 			// Load internal default icon as last resort
-			if (surface == null) {
-				try {
-					var pbuf = new Gdk.Pixbuf.from_resource_at_scale ("%s/img/application-default-icon.svg".printf (Plank.G_RESOURCE_PATH),
-						width, height, true);
-					surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
-					var cr = new Cairo.Context (surface);
-					Gdk.cairo_set_source_pixbuf (cr, pbuf, (width - pbuf.width) / 2, (height - pbuf.height) / 2);
-					cr.paint ();
-					cairo_surface_set_device_scale (surface, scale, scale);
-				} catch (Error e) {
-					critical (e.message);
-				}
+			if (surface == null)
+				surface = load_surface_from_resource_at_scale (Plank.G_RESOURCE_PATH + "/img/application-default-icon.svg", width, height, scale);
+			
+			return surface;
+		}
+		
+		static Cairo.Surface? load_surface_from_resource_at_scale (string resource, int width, int height, int scale)
+		{
+			Gdk.Pixbuf? pbuf = null;
+			Cairo.Surface? surface = null;
+			
+			try {
+				pbuf = new Gdk.Pixbuf.from_resource_at_scale (resource, width, height, true);
+			} catch { }
+			
+			if (pbuf != null) {
+				surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
+				var cr = new Cairo.Context (surface);
+				Gdk.cairo_set_source_pixbuf (cr, pbuf, (width - pbuf.width) / 2, (height - pbuf.height) / 2);
+				cr.paint ();
+				cairo_surface_set_device_scale (surface, scale, scale);
 			}
 			
 			return surface;
