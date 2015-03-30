@@ -155,17 +155,17 @@ namespace Plank.Drawing
 		/**
 		 * Try to get a {@link GLib.File} for the given icon name
 		 *
-		 * @param str a string which might represent an existing file
+		 * @param name a string which might represent an existing file
 		 * @return a {@link GLib.File}, or null if it failed
 		 */
-		public static File? try_get_icon_file (string str)
+		public static File? try_get_icon_file (string name)
 		{
 			File? file = null;
-			var name = str.down ();			
+			var name_down = name.down ();			
 			
-			if (name.has_prefix ("resource://"))
+			if (name_down.has_prefix ("resource://"))
 				file = File.new_for_uri (name);
-			else if (name.has_prefix ("file://"))
+			else if (name_down.has_prefix ("file://"))
 				file = File.new_for_uri (name);
 			else if (name.has_prefix ("~/"))
 				file = File.new_for_path (name.replace ("~", Environment.get_home_dir ()));
