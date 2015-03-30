@@ -29,6 +29,8 @@ namespace Plank.Items
 	{
 		public DockPreferences Prefs { get; construct; }
 		
+		bool current_workspace_only;
+		
 		/**
 		 * Creates the default container for dock items.
 		 *
@@ -43,20 +45,18 @@ namespace Plank.Items
 		{
 			Prefs.notify["CurrentWorkspaceOnly"].connect (handle_setting_changed);
 			
-			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
-			wnck_screen.active_window_changed.connect_after (handle_window_changed);
-			wnck_screen.active_workspace_changed.connect_after (handle_workspace_changed);
-			wnck_screen.viewports_changed.connect_after (handle_viewports_changed);
+			current_workspace_only = Prefs.CurrentWorkspaceOnly;
+			
+			if (current_workspace_only)
+				connect_wnck ();
 		}
 		
 		~DefaultApplicationDockItemProvider ()
 		{
 			Prefs.notify["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
 			
-			unowned Wnck.Screen wnck_screen = Wnck.Screen.get_default ();
-			wnck_screen.active_window_changed.disconnect (handle_window_changed);
-			wnck_screen.active_workspace_changed.disconnect (handle_workspace_changed);
-			wnck_screen.viewports_changed.disconnect (handle_viewports_changed);
+			if (current_workspace_only)
+				disconnect_wnck ();
 		}
 		
 		protected override void update_visible_items ()
@@ -141,11 +141,27 @@ namespace Plank.Items
 				remove_item (remove);
 		}
 		
+		void connect_wnck ()
+		{
+			unowned Wnck.Screen screen = Wnck.Screen.get_default ();
+			
+			screen.active_window_changed.connect_after (handle_window_changed);
+			screen.active_workspace_changed.connect_after (handle_workspace_changed);
+			screen.viewports_changed.connect_after (handle_viewports_changed);
+		}
+		
+		void disconnect_wnck ()
+		{
+			unowned Wnck.Screen screen = Wnck.Screen.get_default ();
+			
+			screen.active_window_changed.disconnect (handle_window_changed);
+			screen.active_workspace_changed.disconnect (handle_workspace_changed);
+			screen.viewports_changed.disconnect (handle_viewports_changed);
+		}
+		
+		[CCode (instance_pos = -1)]
 		void handle_window_changed (Wnck.Screen screen, Wnck.Window? previous)
 		{
-			if (!Prefs.CurrentWorkspaceOnly)
-				return;
-			
 			unowned Wnck.Workspace? active_workspace = screen.get_active_workspace ();
 			if (previous == null || active_workspace == null
 				|| previous.get_workspace () == active_workspace)
@@ -154,11 +170,9 @@ namespace Plank.Items
 			update_visible_items ();
 		}
 		
+		[CCode (instance_pos = -1)]
 		void handle_workspace_changed (Wnck.Screen screen, Wnck.Workspace? previous)
 		{
-			if (!Prefs.CurrentWorkspaceOnly)
-				return;
-			
 			unowned Wnck.Workspace? active_workspace = screen.get_active_workspace ();
 			if (active_workspace != null && active_workspace.is_virtual ())
 				return;
@@ -166,11 +180,9 @@ namespace Plank.Items
 			update_visible_items ();
 		}
 		
+		[CCode (instance_pos = -1)]
 		void handle_viewports_changed (Wnck.Screen screen)
 		{
-			if (!Prefs.CurrentWorkspaceOnly)
-				return;
-			
 			unowned Wnck.Workspace? active_workspace = screen.get_active_workspace ();
 			if (active_workspace != null && !active_workspace.is_virtual ())
 				return;
@@ -180,6 +192,16 @@ namespace Plank.Items
 		
 		void handle_setting_changed ()
 		{
+			if (current_workspace_only == Prefs.CurrentWorkspaceOnly)
+				return;
+			
+			current_workspace_only = Prefs.CurrentWorkspaceOnly;
+			
+			if (current_workspace_only)
+				connect_wnck ();
+			else
+				disconnect_wnck ();
+			
 			update_visible_items ();
 		}
 		
