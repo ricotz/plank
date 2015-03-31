@@ -146,23 +146,19 @@ namespace Plank.Widgets
 			
 			ClickedItem = HoveredItem;
 			
-			var button = PopupButton.from_event_button (event);
-			if ((button & PopupButton.RIGHT) == PopupButton.RIGHT
-				&& (HoveredItem == null || (event.state & Gdk.ModifierType.CONTROL_MASK) == Gdk.ModifierType.CONTROL_MASK))
-				show_menu (event.button, true);
-			else if (HoveredItem != null && (HoveredItem.Button & button) == button)
-				show_menu (event.button, false);
-			else {
-				long_press_active = false;
-				long_press_button = event.button;
-				if (long_press_timer > 0)
-					Source.remove (long_press_timer);
-				long_press_timer = Gdk.threads_add_timeout (LONG_PRESS_TIME, () => {
-					long_press_active = true;
-					long_press_timer = 0;
-					return false;
-				});
-			}
+			// Check and try to show the menu
+			if (show_menu (HoveredItem, event))
+				return Gdk.EVENT_STOP;
+			
+			long_press_active = false;
+			long_press_button = event.button;
+			if (long_press_timer > 0)
+				Source.remove (long_press_timer);
+			long_press_timer = Gdk.threads_add_timeout (LONG_PRESS_TIME, () => {
+				long_press_active = true;
+				long_press_timer = 0;
+				return false;
+			});
 			
 			return Gdk.EVENT_STOP;
 		}
@@ -588,10 +584,10 @@ namespace Plank.Widgets
 		/**
 		 * Shows the popup menu.
 		 *
-		 * @param button the button used to trigger the popup
-		 * @param show_plank_menu if the 'global' menu should be shown
+		 * @param item the item to show a menu for, or NULL
+		 * @param event the event which triggerd this request
 		 */
-		void show_menu (uint button, bool show_plank_menu)
+		bool show_menu (DockItem? item, Gdk.EventButton event)
 		{
 			if (menu != null) {
 				foreach (var w in menu.get_children ())
@@ -603,32 +599,36 @@ namespace Plank.Widgets
 				menu = null;
 			}
 			
-			Gee.ArrayList<Gtk.MenuItem> items;
-			if (show_plank_menu) {
-				items = PlankDockItem.get_plank_menu_items ();
+			Gee.ArrayList<Gtk.MenuItem>? menu_items = null;
+			Gtk.MenuPositionFunc? position_func = null;
+			var button = PopupButton.from_event_button (event);
+			
+			if ((button & PopupButton.RIGHT) != 0
+				&& (item == null || (event.state & Gdk.ModifierType.CONTROL_MASK) != 0)) {
+				menu_items = PlankDockItem.get_plank_menu_items ();
 				set_hovered_provider (null);
 				set_hovered (null);
-			} else {
-				items = HoveredItem.get_menu_items ();
+			} else if (item != null && (item.Button & button) != 0) {
+				menu_items = item.get_menu_items ();
+				position_func = position_menu;
 			}
 			
-			if (items.size == 0)
-				return;
+			if (menu_items == null || menu_items.size == 0)
+				return false;
 			
 			menu = new Gtk.Menu ();
 			menu.attach_to_widget (this, null);
 			menu.show.connect (on_menu_show);
 			menu.hide.connect (on_menu_hide);
 			
-			foreach (var item in items) {
-				item.show ();
-				menu.append (item);
+			foreach (var menu_item in menu_items) {
+				menu_item.show ();
+				menu.append (menu_item);
 			}
 			
-			if (show_plank_menu)
-				menu.popup (null, null, null, button, Gtk.get_current_event_time ());
-			else
-				menu.popup (null, null, (Gtk.MenuPositionFunc) position_menu, button, Gtk.get_current_event_time ());
+			menu.popup (null, null, position_func, event.button, event.time);
+			
+			return true;
 		}
 		
 		/**
