@@ -127,7 +127,7 @@ namespace Plank.Widgets
 		{
 			// FIXME Needed for gtk+ 3.14+
 			if (menu_is_visible ())
-				return Gdk.EVENT_STOP;
+				return Gdk.EVENT_PROPAGATE;
 			
 			// If the dock is hidden we should ignore it.
 			if (controller.hide_manager.Hidden)
@@ -160,7 +160,7 @@ namespace Plank.Widgets
 				return false;
 			});
 			
-			return Gdk.EVENT_STOP;
+			return Gdk.EVENT_PROPAGATE;
 		}
 		
 		/**
@@ -187,7 +187,7 @@ namespace Plank.Widgets
 				return Gdk.EVENT_STOP;
 
 			// FIXME Needed for gtk+ 3.14+
-			if (ClickedItem == null && menu_is_visible ())
+			if (HoveredItem != null && ClickedItem == null && menu_is_visible ())
 				menu.hide ();
 			
 			// Make sure the HoveredItem is still the same since button-pressed
@@ -196,7 +196,7 @@ namespace Plank.Widgets
 			
 			ClickedItem = null;
 			
-			return Gdk.EVENT_STOP;
+			return Gdk.EVENT_PROPAGATE;
 		}
 		
 		/**
