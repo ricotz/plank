@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-03-12 17:57+0100\n"
-"PO-Revision-Date: 2015-03-14 20:40+0000\n"
-"Last-Translator: Thomas Lekanger <datagutt666@hotmail.com>\n"
+"POT-Creation-Date: 2015-03-31 20:00+0000\n"
+"PO-Revision-Date: 2015-03-30 11:43+0000\n"
+"Last-Translator: ProsjektX <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-15 05:17+0000\n"
-"X-Generator: Launchpad (build 17389)\n"
+"X-Launchpad-Export-Date: 2015-04-01 05:17+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -33,6 +33,11 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"Det er imidlertid et bibliotek som kan utvides for å skape andre dokk "
+"programmer med flere avanserte funksjoner. Dermed er Plank den underliggende "
+"teknologien for Docky (starter i versjon 3.0.0) og har som mål å gi alle "
+"kjernefunksjonene mens Docky utvider det til å legge til mer avanserte ting "
+"som docklets, malere, innstillingsdialoger, etc."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
@@ -40,164 +45,164 @@ msgstr "Plank. Uforstandig enkelt."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "Utseende:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "Posisjon:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "Venstre"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "Høyre"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "Topp"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "Bunn"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "Justering:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "Fyll"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "Ende"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "Sentrér"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "På primær skjerm:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr ""
+msgstr "Forskyvning i prosent fra midten av skjermkanten"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr ""
+msgstr "Ikonjustering:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "Ikonstørrelse:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Appearance"
-msgstr ""
+msgstr "Utseende"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Intellihide"
-msgstr ""
+msgstr "Smartskjul"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Autohide"
-msgstr ""
+msgstr "Skjul automatisk"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Dodge maximized window"
-msgstr ""
+msgstr "Unnvike maksimert vindu"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Window Dodge"
-msgstr ""
+msgstr "Unnvik vindu"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Hide Dock"
-msgstr ""
+msgstr "Skjul dokk"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Hide Delay:"
-msgstr ""
+msgstr "Forsinkelse for skjule:"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgstr "Forsinkelse i ms før dokken skjules"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "Forsinkelse for vise:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "Forsinkelse i ms før dokken vises etter skjuling"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Pressure Reveal:"
-msgstr ""
+msgstr "Avslør trykk:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Item Management"
-msgstr ""
+msgstr "Håndtering av elementer"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Show Unpinned:"
-msgstr ""
+msgstr "Vis løsnede:"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Restrict to Workspace:"
-msgstr ""
+msgstr "Begrens til arbeidsområde:"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Lock Icons:"
-msgstr ""
+msgstr "Lås ikoner:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Automatic Pinning:"
-msgstr ""
+msgstr "Automatisk liming:"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Behaviour"
-msgstr ""
+msgstr "Oppførsel"
 
-#: ../lib/Items/ApplicationDockItem.vala:460
-#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
+#: ../lib/Items/ApplicationDockItem.vala:440
+#: ../lib/Items/FileDockItem.vala:313 ../lib/Items/FileDockItem.vala:331
 msgid "_Keep in Dock"
 msgstr "_Behold i Dokken"
 
-#: ../lib/Items/ApplicationDockItem.vala:467
+#: ../lib/Items/ApplicationDockItem.vala:447
 msgid "_Close All"
 msgstr "_Lukk alle"
 
-#: ../lib/Items/ApplicationDockItem.vala:467
+#: ../lib/Items/ApplicationDockItem.vala:447
 msgid "_Close"
-msgstr ""
+msgstr "_Lukk"
 
-#: ../lib/Items/FileDockItem.vala:332
+#: ../lib/Items/FileDockItem.vala:318
 msgid "_Open in File Browser"
 msgstr "_Åpne i Filbehandler"
 
-#: ../lib/Items/FileDockItem.vala:350
+#: ../lib/Items/FileDockItem.vala:336
 msgid "_Open"
 msgstr "_Åpne"
 
-#: ../lib/Items/FileDockItem.vala:354
+#: ../lib/Items/FileDockItem.vala:340
 msgid "Open Containing _Folder"
 msgstr "Åpne opphavs_mappe"
 
 #: ../lib/Items/PlaceholderDockItem.vala:35
 msgid "Drop applications or files here"
-msgstr "Dra programmer eller filer hit"
+msgstr "Slipp applikasjoner eller filer her"
 
 #: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
-msgstr "Få_hjelp på nettet..."
+msgstr "Få _hjelp på nettet..."
 
 #: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
@@ -206,4 +211,4 @@ msgstr "_Oversett denne applikasjonen...."
 #: ../lib/Widgets/PreferencesWindow.vala:64
 #: ../lib/Widgets/PreferencesWindow.vala:74
 msgid "Preferences"
-msgstr ""
+msgstr "Innstillinger"
