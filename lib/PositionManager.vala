@@ -156,11 +156,20 @@ namespace Plank
 		
 		void update_monitor_geo ()
 		{
-			freeze_notify ();
+			var old_monitor_geo = monitor_geo;
 			
 			controller.window.get_screen ().get_monitor_geometry (controller.prefs.get_monitor (), out monitor_geo);
+			
+			// No need to do anything if nothing has actually changed
+			if (old_monitor_geo.x == monitor_geo.x
+				&& old_monitor_geo.y == monitor_geo.y
+				&& old_monitor_geo.width == monitor_geo.width
+				&& old_monitor_geo.height == monitor_geo.height)
+				return;
+			
+			freeze_notify ();
+			
 			update_dimensions ();
-			update_dock_position ();
 			update_regions ();
 			
 			thaw_notify ();
@@ -303,7 +312,6 @@ namespace Plank
 			update_caches (theme);
 			update_max_icon_size (theme);
 			update_dimensions ();
-			update_dock_position ();
 			update_regions ();
 			
 			thaw_notify ();
@@ -613,10 +621,13 @@ namespace Plank
 				break;
 			}
 			
+			update_dock_position ();
+			
 			// FIXME Maybe no need to purge all cached values?
 			draw_values.clear ();
 			
-			if (old_region.x != static_dock_region.x
+			if (!screen_is_composited
+				|| old_region.x != static_dock_region.x
 				|| old_region.y != static_dock_region.y
 				|| old_region.width != static_dock_region.width
 				|| old_region.height != static_dock_region.height) {

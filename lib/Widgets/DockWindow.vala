@@ -61,7 +61,6 @@ namespace Plank.Widgets
 		 */
 		HoverWindow hover;
 		
-		uint reposition_timer = 0;
 		uint hover_reposition_timer = 0;
 		
 		uint long_press_timer = 0;
@@ -71,6 +70,8 @@ namespace Plank.Widgets
 		bool dock_is_starting = true;
 		
 		Gdk.Rectangle input_rect;
+		int requested_x;
+		int requested_y;		
 		
 		/**
 		 * Creates a new dock window.
@@ -113,10 +114,6 @@ namespace Plank.Widgets
 			if (hover_reposition_timer > 0) {
 				GLib.Source.remove (hover_reposition_timer);
 				hover_reposition_timer = 0;
-			}
-			if (reposition_timer != 0) {
-				GLib.Source.remove (reposition_timer);
-				reposition_timer = 0;
 			}
 		}
 		
@@ -482,7 +479,8 @@ namespace Plank.Widgets
 			if (get_realized ()) {
 				int x_current, y_current;
 				get_position (out x_current, out y_current);
-				needs_reposition = (win_rect.x != x_current || win_rect.y != y_current);
+				needs_reposition = (win_rect.x != x_current || win_rect.y != y_current
+					|| win_rect.x != requested_x || win_rect.y != requested_y);
 			}
 			
 			if (needs_resize) {
@@ -499,42 +497,16 @@ namespace Plank.Widgets
 			}
 			
 			if (needs_reposition) {
-				if (dock_is_starting) {
-					position (win_rect.x, win_rect.y);
-				} else {
-					schedule_position ();
-				}
+				Logger.verbose ("DockWindow.move (x = %i, y = %i)", win_rect.x, win_rect.y);
+				requested_x = win_rect.x;
+				requested_y = win_rect.y;
+				move (win_rect.x, win_rect.y);
+				
+				update_icon_regions ();
+				set_struts ();
+				set_hovered_provider (null);
+				set_hovered (null);
 			}
-		}
-		
-		void schedule_position ()
-		{
-			if (reposition_timer != 0) {
-				GLib.Source.remove (reposition_timer);
-				reposition_timer = 0;
-			}
-			
-			reposition_timer = Gdk.threads_add_timeout (50, () => {
-				reposition_timer = 0;
-				
-				unowned PositionManager position_manager = controller.position_manager;
-				var win_rect = position_manager.get_dock_window_region ();
-				
-				position (win_rect.x, win_rect.y);
-				
-				return false;
-			});
-		}
-		
-		void position (int x, int y)
-		{
-			Logger.verbose ("DockWindow.move (x = %i, y = %i)", x, y);
-			move (x, y);
-			
-			update_icon_regions ();
-			set_struts ();
-			set_hovered_provider (null);
-			set_hovered (null);
 		}
 		
 		/**
