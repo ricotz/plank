@@ -42,8 +42,8 @@ namespace Plank
 		[Description(nick = "hide-delay", blurb = "Time (in ms) to wait before hiding the dock.")]
 		public uint HideDelay { get; set; }
 		
-		[Description(nick = "monitor", blurb = "The monitor number for the dock. Use -1 to keep on the primary monitor.")]
-		public int Monitor { get; set; }
+		[Description(nick = "monitor", blurb = "The plug-name of the monitor for the dock to show on (e.g. DVI-I-1, HDMI1, LVDS1). Leave this empty to keep on the primary monitor.")]
+		public string Monitor { get; set; }
 		
 		[Description(nick = "dock-items", blurb = "List of *.dockitem files on this dock. DO NOT MODIFY")]
 		public string DockItems { get; set; }
@@ -115,7 +115,7 @@ namespace Plank
 			HideMode = HideType.INTELLIGENT;
 			UnhideDelay = 0;
 			HideDelay = 0;
-			Monitor = -1;
+			Monitor = "";
 			DockItems = "";
 			Position = Gtk.PositionType.BOTTOM;
 			Offset = 0;
@@ -126,19 +126,6 @@ namespace Plank
 			PressureReveal = false;
 			PinnedOnly = false;
 			AutoPinning = true;
-		}
-		
-		/**
-		 * Get the actual monitor to place the dock on
-		 *
-		 * @return the number of the monitor
-		 */
-		public int get_monitor ()
-		{
-			unowned Gdk.Screen screen = Gdk.Screen.get_default ();
-			if (Monitor <= -1 || Monitor >= screen.get_n_monitors ())
-				return screen.get_primary_monitor ();
-			return Monitor;
 		}
 		
 		/**
@@ -197,10 +184,9 @@ namespace Plank
 				break;
 			
 			case "Monitor":
-				if (Monitor < -1)
-					Monitor = -1;
-				else if (Monitor != -1 && Monitor >= Gdk.Screen.get_default ().get_n_monitors ())
-					Monitor = Gdk.Screen.get_default ().get_primary_monitor ();
+				// TODO Try to transition old setting
+				if (Monitor == "-1")
+					Monitor = "";
 				break;
 			
 			case "DockItems":

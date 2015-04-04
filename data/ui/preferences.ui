@@ -171,11 +171,10 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </packing>
         </child>
         <child>
-          <object class="GtkSpinButton" id="sp_monitor">
+          <object class="GtkComboBoxText" id="cb_display_plug">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="invisible_char">•</property>
-            <property name="numeric">True</property>
+            <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
           </object>
           <packing>
             <property name="left_attach">3</property>

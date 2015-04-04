@@ -121,7 +121,7 @@ namespace Plank
 			static_dock_region = Gdk.Rectangle ();
 			draw_values = new Gee.HashMap<DockElement, DockItemDrawValue?> ();			
 			
-			controller.prefs.notify["Monitor"].connect (update_monitor_geo);
+			controller.prefs.notify["Monitor"].connect (prefs_monitor_changed);
 		}
 		
 		/**
@@ -132,12 +132,12 @@ namespace Plank
 		{
 			unowned Gdk.Screen screen = controller.window.get_screen ();
 			
-			screen.monitors_changed.connect (update_monitor_geo);
-			screen.size_changed.connect (update_monitor_geo);
-			screen.composited_changed.connect (composited_changed);
+			screen.monitors_changed.connect (screen_changed);
+			screen.size_changed.connect (screen_changed);
+			screen.composited_changed.connect (screen_composited_changed);
 			
 			// NOTE don't call update_monitor_geo to avoid a double-call of dockwindow.set_size on startup
-			screen.get_monitor_geometry (controller.prefs.get_monitor (), out monitor_geo);
+			screen.get_monitor_geometry (find_monitor_number (screen, controller.prefs.Monitor), out monitor_geo);
 			
 			screen_is_composited = screen.is_composited ();
 		}
@@ -146,19 +146,49 @@ namespace Plank
 		{
 			unowned Gdk.Screen screen = controller.window.get_screen ();
 			
-			screen.monitors_changed.disconnect (update_monitor_geo);
-			screen.size_changed.disconnect (update_monitor_geo);
-			screen.composited_changed.disconnect (composited_changed);
-			controller.prefs.notify["Monitor"].disconnect (update_monitor_geo);
+			screen.monitors_changed.disconnect (screen_changed);
+			screen.size_changed.disconnect (screen_changed);
+			screen.composited_changed.disconnect (screen_composited_changed);
+			controller.prefs.notify["Monitor"].disconnect (prefs_monitor_changed);
 			
 			draw_values.clear ();
 		}
 		
-		void update_monitor_geo ()
+		public static Gee.ArrayList<string> get_monitor_plug_names (Gdk.Screen screen)
+		{
+			var result = new Gee.ArrayList<string> ();
+			
+			int n_monitors = screen.get_n_monitors ();
+			
+			for (int i = 0; i < n_monitors; i++)
+				result.add (screen.get_monitor_plug_name (i));
+			
+			return result;
+		}
+		
+		static int find_monitor_number (Gdk.Screen screen, string plug_name)
+		{
+			int n_monitors = screen.get_n_monitors ();
+			
+			for (int i = 0; i < n_monitors; i++) {
+				var name = screen.get_monitor_plug_name (i);
+				if (plug_name == name)
+					return i;
+			}
+			
+			return screen.get_primary_monitor ();
+		}
+		
+		void prefs_monitor_changed ()
+		{
+			screen_changed (controller.window.get_screen ());
+		}
+
+		void screen_changed (Gdk.Screen screen)
 		{
 			var old_monitor_geo = monitor_geo;
 			
-			controller.window.get_screen ().get_monitor_geometry (controller.prefs.get_monitor (), out monitor_geo);
+			screen.get_monitor_geometry (find_monitor_number (screen, controller.prefs.Monitor), out monitor_geo);
 			
 			// No need to do anything if nothing has actually changed
 			if (old_monitor_geo.x == monitor_geo.x
@@ -175,7 +205,7 @@ namespace Plank
 			thaw_notify ();
 		}
 		
-		void composited_changed (Gdk.Screen screen)
+		void screen_composited_changed (Gdk.Screen screen)
 		{
 			freeze_notify ();
 			
