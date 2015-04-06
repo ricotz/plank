@@ -711,7 +711,7 @@ namespace Plank
 			
 			// Enable barrier events
 			uchar[] mask_bits = new uchar[XInput.mask_length (XInput.EventType.LASTEVENT)];
-			XInput.EventMask mask = { XInput.ALL_MASTER_DEVICES, (int) (sizeof (uchar) * mask_bits.length), mask_bits };
+			XInput.EventMask mask = { XInput.ALL_MASTER_DEVICES, (int) (sizeof (uchar) * mask_bits.length), (owned) mask_bits };
 			XInput.set_mask (mask.mask, XInput.EventType.BARRIER_HIT);
 			XInput.set_mask (mask.mask, XInput.EventType.BARRIER_LEAVE);
 			XInput.select_events (display, root_xwindow, &mask, 1);
