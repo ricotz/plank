@@ -476,6 +476,9 @@ namespace Plank.Drawing
 			if (progress < 0)
 				return;
 			
+			if (progress > 1.0)
+				progress = 1.0;
+			
 			unowned Cairo.Context cr = surface.Context;
 			
 			// Expect the icon to be in the center of the given surface
