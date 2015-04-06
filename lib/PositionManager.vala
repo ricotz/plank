@@ -784,7 +784,8 @@ namespace Plank
 				return get_draw_value_for_item (item).hover_region;
 			
 			unowned DockContainer? container = (element as DockContainer);
-			return_val_if_fail (container != null, Gdk.Rectangle ());
+			if (container == null)
+				return Gdk.Rectangle ();
 			
 			unowned Gee.ArrayList<DockElement> items = container.VisibleElements;
 			
