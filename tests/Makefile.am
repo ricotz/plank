@@ -37,6 +37,7 @@ tests_VALASOURCES = \
 	Preferences.vala \
 	Widgets.vala \
 	Main.vala \
+	TestHelper.vala \
 	$(NULL)
 
 nodist_tests_SOURCES = \
@@ -67,8 +68,7 @@ if HAVE_HEADLESS_TESTS
 TESTS_ENVIRONMENT += $(XVFB_RUN) --server-args="-screen 0 1280x1024x24" $(DBUS_LAUNCH)
 endif
 
-check-local:
-	rm -rf $(abs_builddir)/home $(builddir)/test-report.xml; \
+check-local: clean-local
 	$(TESTS_ENVIRONMENT) gtester --verbose --keep-going -o=$(builddir)/test-report.xml $(builddir)/tests
 
 clean-local:

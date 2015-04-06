@@ -164,7 +164,6 @@ namespace Plank.Tests
 	
 	void drawing_docksurface_fast_blur ()
 	{
-		Drawing.Color color, color2;
 		Drawing.DockSurface surface, surface2;
 		Gdk.Pixbuf pixbuf;
 		
@@ -181,20 +180,20 @@ namespace Plank.Tests
 		cr2.paint ();
 		
 		surface.fast_blur (7, 3);
-		surface.fast_blur (15, 3);
-		surface.fast_blur (31, 3);
 		surface2.fast_blur (7, 3);
-		surface2.fast_blur (15, 3);
-		surface2.fast_blur (31, 3);
+		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
 		
-		color = surface.average_color ();
-		color2 = surface2.average_color ();
-		assert (color.equal (color2));
+		surface.fast_blur (15, 3);
+		surface2.fast_blur (15, 3);
+		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
+		
+		surface.fast_blur (31, 3);
+		surface2.fast_blur (31, 3);
+		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
 	}
 	
 	void drawing_docksurface_exponential_blur ()
 	{
-		Drawing.Color color, color2;
 		Drawing.DockSurface surface, surface2;
 		Gdk.Pixbuf pixbuf;
 		
@@ -211,20 +210,20 @@ namespace Plank.Tests
 		cr2.paint ();
 		
 		surface.exponential_blur (7);
-		surface.exponential_blur (15);
-		surface.exponential_blur (31);
 		surface2.exponential_blur (7);
-		surface2.exponential_blur (15);
-		surface2.exponential_blur (31);
+		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
 		
-		color = surface.average_color ();
-		color2 = surface2.average_color ();
-		assert (color.equal (color2));
+		surface.exponential_blur (15);
+		surface2.exponential_blur (15);
+		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
+		
+		surface.exponential_blur (31);
+		surface2.exponential_blur (31);
+		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
 	}
 	
 	void drawing_docksurface_gaussian_blur ()
 	{
-		Drawing.Color color, color2;
 		Drawing.DockSurface surface, surface2;
 		Gdk.Pixbuf pixbuf;
 		
@@ -241,22 +240,22 @@ namespace Plank.Tests
 		cr2.paint ();
 		
 		surface.gaussian_blur (7);
-		surface.gaussian_blur (15);
-		surface.gaussian_blur (31);
 		surface2.gaussian_blur (7);
-		surface2.gaussian_blur (15);
-		surface2.gaussian_blur (31);
+		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
 		
-		color = surface.average_color ();
-		color2 = surface2.average_color ();
-		assert (color.equal (color2));
+		surface.gaussian_blur (15);
+		surface2.gaussian_blur (15);
+		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
+		
+		surface.gaussian_blur (31);
+		surface2.gaussian_blur (31);
+		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
 	}
 	
 	void drawing_docksurface_to_pixbuf ()
 	{
-		Drawing.Color color, color2;
 		Drawing.DockSurface surface, surface2;
-		Gdk.Pixbuf pixbuf, pixbuf2;
+		Gdk.Pixbuf pixbuf;
 		
 		pixbuf = DrawingService.load_icon (TEST_ICON, 256, 256);
 		surface = new DockSurface (256, 256);
@@ -270,18 +269,14 @@ namespace Plank.Tests
 		Gdk.cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
 		cr2.paint ();
 		
-		pixbuf = surface.to_pixbuf ();
-		pixbuf2 = surface2.to_pixbuf ();
-		
-		color = DrawingService.average_color (pixbuf);
-		color2 = DrawingService.average_color (pixbuf2);
-		assert (color.equal (color2));
+		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
 	}
 	
 	void drawing_theme ()
 	{
-		Drawing.DockSurface surface, surface2, surface3;
+		Drawing.DockSurface surface, surface2, surface3, surface4, surface5;
 		DockTheme docktheme;
+		Gdk.Pixbuf pixbuf2, pixbuf3, pixbuf4, pixbuf5;
 		
 		surface = new DockSurface (512, 512);
 		
@@ -298,8 +293,19 @@ namespace Plank.Tests
 		surface2 = docktheme.create_indicator (64, color, surface);
 		surface2 = docktheme.create_urgent_glow (512, color, surface);
 		
-		surface2 = docktheme.create_background (1024, 256, Gtk.PositionType.RIGHT, surface);
-		surface3 = docktheme.create_background (256, 1024, Gtk.PositionType.BOTTOM, surface);
-		assert (DrawingService.average_color (surface2.to_pixbuf ()).equal (DrawingService.average_color (surface3.to_pixbuf ())));
+		surface2 = docktheme.create_background (512, 128, Gtk.PositionType.BOTTOM, surface);
+		pixbuf2 = surface2.to_pixbuf ();
+		
+		surface3 = docktheme.create_background (128, 512, Gtk.PositionType.RIGHT, surface);
+		pixbuf3 = surface3.to_pixbuf ();
+		assert (pixbuf_equal (pixbuf2, pixbuf3.rotate_simple (Gdk.PixbufRotation.CLOCKWISE)));
+		
+		surface4 = docktheme.create_background (512, 128, Gtk.PositionType.TOP, surface);
+		pixbuf4 = surface4.to_pixbuf ();
+		assert (pixbuf_equal (pixbuf2, pixbuf4.rotate_simple (Gdk.PixbufRotation.UPSIDEDOWN)));
+		
+		surface5 = docktheme.create_background (128, 512, Gtk.PositionType.LEFT, surface);
+		pixbuf5 = surface5.to_pixbuf ();
+		assert (pixbuf_equal (pixbuf2, pixbuf5.rotate_simple (Gdk.PixbufRotation.COUNTERCLOCKWISE)));
 	}
 }
