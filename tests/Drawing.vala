@@ -87,6 +87,21 @@ namespace Plank.Tests
 		color.multiply_sat (2.0);
 		assert (color.get_sat () == 0.7);
 		
+		color = color3;
+		color.set_min_sat (0.47);
+		
+		color = color3;
+		color.set_min_val (0.52);
+		
+		color = color3;
+		color.set_max_sat (0.67);
+		
+		color = color3;
+		color.set_max_val (0.72);
+		
+		color = color3;
+		color.darken_by_sat (0.66);
+		
 		color = Drawing.Color.from_prefs_string ("123;;234;;123;;234");
 		assert (color.to_prefs_string () == "123;;234;;123;;234");
 	}
