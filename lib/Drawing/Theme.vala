@@ -302,11 +302,11 @@ namespace Plank.Drawing
 		}
 		
 		/**
-		 * Get a sorted list of all available theme-names
+		 * Get a sorted array of all available theme-names
 		 *
-		 * @return {@link Gee.ArrayList} the list of theme-names
+		 * @return array containing all available theme-names
 		 */
-		public static Gee.ArrayList<string> get_theme_list ()
+		public static string[] get_theme_list ()
 		{
 #if HAVE_GEE_0_8
 			var list = new Gee.HashSet<string> ();
@@ -353,7 +353,7 @@ namespace Plank.Drawing
 			result.sort ((CompareFunc) strcmp);
 #endif
 			
-			return result;
+			return result.to_array ();
 		}
 		
 		/**

@@ -161,7 +161,7 @@ namespace Plank.Widgets
 				break;
 			case "Theme":
 				var pos = 0;
-				foreach (var theme in Plank.Drawing.Theme.get_theme_list ()) {
+				foreach (unowned string theme in Plank.Drawing.Theme.get_theme_list ()) {
 					if (theme == prefs.Theme)
 						cb_theme.set_active (pos);
 					pos++;
@@ -314,7 +314,7 @@ namespace Plank.Widgets
 		void init_dock_tab ()
 		{
 			var pos = 0;
-			foreach (var theme in Plank.Drawing.Theme.get_theme_list ()) {
+			foreach (unowned string theme in Plank.Drawing.Theme.get_theme_list ()) {
 				cb_theme.append ("%i".printf (pos), theme);
 				if (theme == prefs.Theme)
 					cb_theme.set_active (pos);
