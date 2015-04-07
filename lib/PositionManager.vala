@@ -154,14 +154,13 @@ namespace Plank
 			draw_values.clear ();
 		}
 		
-		public static Gee.ArrayList<string> get_monitor_plug_names (Gdk.Screen screen)
+		public static string[] get_monitor_plug_names (Gdk.Screen screen)
 		{
-			var result = new Gee.ArrayList<string> ();
-			
 			int n_monitors = screen.get_n_monitors ();
+			var result = new string[n_monitors];
 			
 			for (int i = 0; i < n_monitors; i++)
-				result.add (screen.get_monitor_plug_name (i));
+				result[i] = screen.get_monitor_plug_name (i);
 			
 			return result;
 		}

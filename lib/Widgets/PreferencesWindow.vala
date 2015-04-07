@@ -141,7 +141,7 @@ namespace Plank.Widgets
 				break;
 			case "Monitor":
 				var pos = 0;
-				foreach (var plug_name in Plank.PositionManager.get_monitor_plug_names (get_screen ())) {
+				foreach (unowned string plug_name in Plank.PositionManager.get_monitor_plug_names (get_screen ())) {
 					if (plug_name == prefs.Monitor)
 						cb_display_plug.set_active (pos);
 					pos++;
@@ -328,7 +328,7 @@ namespace Plank.Widgets
 			adj_unhide_delay.value = prefs.UnhideDelay;
 
 			pos = 0;
-			foreach (var plug_name in Plank.PositionManager.get_monitor_plug_names (get_screen ())) {
+			foreach (unowned string plug_name in Plank.PositionManager.get_monitor_plug_names (get_screen ())) {
 				cb_display_plug.append ("%i".printf (pos), plug_name);
 				if (plug_name == prefs.Monitor)
 					cb_display_plug.set_active (pos);
