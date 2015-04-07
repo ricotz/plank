@@ -23,6 +23,8 @@ namespace Plank.Tests
 	{
 		Test.add_func ("/Widgets/CompositedWindow/basics", composited_window_basics);
 		Test.add_func ("/Widgets/PoofWindow/basics", poof_window_basics);
+		Test.add_func ("/Widgets/HoverWindow/basics", hover_window_basics);
+		Test.add_func ("/Widgets/PreferencesWindow/basics", preferences_window_basics);
 	}
 	
 	void composited_window_basics ()
@@ -64,6 +66,9 @@ namespace Plank.Tests
 	void poof_window_basics ()
 	{
 		PoofWindow window;
+		unowned PoofWindow default_window;
+		
+		default_window = PoofWindow.get_default ();
 		
 		window = new PoofWindow ();
 		window.show_at (100, 100);
@@ -71,6 +76,56 @@ namespace Plank.Tests
 		wait (X_WAIT_MS);
 		
 		window.show_at (200, 200);
+		
+		wait (X_WAIT_MS);
+	}
+	
+	void hover_window_basics ()
+	{
+		HoverWindow window;
+		
+		window = new HoverWindow ();
+		window.set_text ("TEST");
+		
+		window.show_at (200, 200, Gtk.PositionType.BOTTOM);
+		window.show_at (200, 200, Gtk.PositionType.TOP);
+		window.show_at (200, 200, Gtk.PositionType.LEFT);
+		window.show_at (200, 200, Gtk.PositionType.RIGHT);
+		
+		wait (X_WAIT_MS);
+		
+		window = null;
+		
+		wait (X_WAIT_MS);
+	}
+	
+	void preferences_window_basics ()
+	{
+		PreferencesWindow window;
+		DockPreferences prefs;
+		
+		prefs = new DockPreferences ();
+		window = new PreferencesWindow (prefs);
+		window.show ();
+		
+		prefs.CurrentWorkspaceOnly = true;
+		prefs.IconSize = 128;
+		prefs.HideMode = HideType.WINDOW_DODGE;
+		prefs.UnhideDelay = 100;
+		prefs.HideDelay = 100;
+		prefs.Position = Gtk.PositionType.TOP;
+		prefs.Offset = -33;
+		prefs.Theme = Plank.Drawing.Theme.GTK_THEME_NAME;
+		prefs.Alignment = Gtk.Align.FILL;
+		prefs.ItemsAlignment = Gtk.Align.FILL;
+		prefs.LockItems = true;
+		prefs.PressureReveal = true;
+		prefs.PinnedOnly = true;
+		prefs.AutoPinning = false;
+				
+		wait (X_WAIT_MS);
+		
+		window = null;
 		
 		wait (X_WAIT_MS);
 	}
