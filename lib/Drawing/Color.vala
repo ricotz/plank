@@ -73,17 +73,6 @@ namespace Plank.Drawing
 		}
 		
 		/**
-		 * Sets the alpha for the color.
-		 *
-		 * @param alpha the new alpha for the color
-		 */
-		public void set_alpha (double alpha)
-			requires (alpha >= 0 && alpha <= 1)
-		{
-			this.alpha = alpha;
-		}
-		
-		/**
 		 * Get HSV color values of this color.
 		 */
 		public void get_hsv (out double h, out double s, out double v)
@@ -159,7 +148,7 @@ namespace Plank.Drawing
 		 *
 		 * @param val the minimum value allowed
 		 */
-		public void set_min_value (double val)
+		public void set_min_val (double val)
 			requires (val >= 0 && val <= 1)
 		{
 			double h, s, v;

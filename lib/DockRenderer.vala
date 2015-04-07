@@ -920,7 +920,7 @@ namespace Plank
 		{
 			var background_selected_color = controller.window.get_style_context ().get_background_color (Gtk.StateFlags.SELECTED | Gtk.StateFlags.FOCUSED);
 			var selected_color = (Drawing.Color) background_selected_color;
-			selected_color.set_min_value (90 / (double) uint16.MAX);
+			selected_color.set_min_val (90 / (double) uint16.MAX);
 			return selected_color;
 		}
 		
