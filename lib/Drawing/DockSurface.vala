@@ -450,6 +450,9 @@ namespace Plank.Drawing
 		 */
 		public void gaussian_blur (int radius)
 		{
+			if (radius < 1)
+				return;
+			
 			var gaussWidth = radius * 2 + 1;
 			var kernel = build_gaussian_kernel (gaussWidth);
 			

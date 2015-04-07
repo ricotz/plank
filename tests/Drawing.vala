@@ -28,6 +28,7 @@ namespace Plank.Tests
 		Test.add_func ("/Drawing/DrawingService/average_color", drawing_drawingservice_average_color);
 		
 		Test.add_func ("/Drawing/DockSurface/basics", drawing_docksurface);
+		Test.add_func ("/Drawing/DockSurface/create_mask", drawing_docksurface_create_mask);
 		Test.add_func ("/Drawing/DockSurface/exponential_blur", drawing_docksurface_exponential_blur);
 		Test.add_func ("/Drawing/DockSurface/fast_blur", drawing_docksurface_fast_blur);
 		Test.add_func ("/Drawing/DockSurface/gaussian_blur", drawing_docksurface_gaussian_blur);
@@ -146,25 +147,47 @@ namespace Plank.Tests
 
 	void drawing_docksurface ()
 	{
-		Drawing.DockSurface surface, surface2, surface3;
+		Drawing.DockSurface surface, surface2, surface3, surface4;
 		Gdk.Pixbuf pixbuf;
 		
 		surface = new DockSurface (256, 256);
 		surface2 = new DockSurface.with_dock_surface (256, 256, new DockSurface (1, 1));
 		surface3 = new DockSurface.with_surface (256, 256, new DockSurface (1, 1).Internal);
+		surface4 = new DockSurface.with_internal (new Cairo.ImageSurface (Cairo.Format.ARGB32, 256, 256));
 		
 		surface.clear ();
 		surface2.clear ();
 		surface3.clear ();
+		surface4.clear ();
 		
 		assert (surface.Width == surface2.Width);
 		assert (surface.Height == surface2.Height);
 		assert (surface.Width == surface3.Width);
 		assert (surface.Height == surface3.Height);
+		assert (surface.Width == surface4.Width);
+		assert (surface.Height == surface4.Height);
 		
 		pixbuf = surface.to_pixbuf ();
 		assert (surface.Width == pixbuf.width);
 		assert (surface.Height == pixbuf.height);
+	}
+	
+	void drawing_docksurface_create_mask ()
+	{
+		Drawing.DockSurface surface, mask;
+		Gdk.Pixbuf pixbuf;
+		
+		pixbuf = DrawingService.load_icon (TEST_ICON, 256, 256);
+		surface = new DockSurface (256, 256);
+		
+		unowned Cairo.Context cr = surface.Context;
+		Gdk.cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
+		cr.paint ();
+		
+		Gdk.Rectangle extent;
+		mask = surface.create_mask (0.0, out extent);
+		mask = surface.create_mask (0.4711, out extent);
+		mask = surface.create_mask (1.0, out extent);
 	}
 	
 	void drawing_docksurface_fast_blur ()
@@ -183,6 +206,8 @@ namespace Plank.Tests
 		unowned Cairo.Context cr2 = surface2.Context;
 		Gdk.cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
 		cr2.paint ();
+		
+		surface.fast_blur (0, 0);
 		
 		surface.fast_blur (7, 3);
 		surface2.fast_blur (7, 3);
@@ -214,6 +239,8 @@ namespace Plank.Tests
 		Gdk.cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
 		cr2.paint ();
 		
+		surface.exponential_blur (0);
+		
 		surface.exponential_blur (7);
 		surface2.exponential_blur (7);
 		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
@@ -243,6 +270,8 @@ namespace Plank.Tests
 		unowned Cairo.Context cr2 = surface2.Context;
 		Gdk.cairo_set_source_pixbuf (cr2, pixbuf, 0, 0);
 		cr2.paint ();
+		
+		surface.gaussian_blur (0);
 		
 		surface.gaussian_blur (7);
 		surface2.gaussian_blur (7);
