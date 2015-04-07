@@ -34,6 +34,8 @@ namespace Plank.Tests
 		Test.add_func ("/Drawing/DockSurface/gaussian_blur", drawing_docksurface_gaussian_blur);
 		Test.add_func ("/Drawing/DockSurface/to_pixbuf", drawing_docksurface_to_pixbuf);
 		
+		Test.add_func ("/Drawing/Easing/basics", drawing_easing);
+		
 		Test.add_func ("/Drawing/Theme/basics", drawing_theme);
 		Test.add_func ("/Drawing/Theme/draw_background", drawing_theme_draw_background);
 		Test.add_func ("/Drawing/Theme/draw_item_count", drawing_theme_draw_item_count);
@@ -320,6 +322,13 @@ namespace Plank.Tests
 		cr2.paint ();
 		
 		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
+	}
+	
+	void drawing_easing ()
+	{
+		for (int i = AnimationMode.LINEAR; i < AnimationMode.LAST; i++)
+			for (int j = 0; j <= 100; j++)
+				Drawing.easing_for_mode ((AnimationMode) i, j, 100);
 	}
 	
 	void drawing_theme ()
