@@ -110,7 +110,9 @@ namespace Plank.Tests
 	
 	void drawing_drawingservice ()
 	{
-		var icon = DrawingService.load_icon (TEST_ICON, 256, 256);
+		Gdk.Pixbuf icon, icon2;
+		
+		icon = DrawingService.load_icon (TEST_ICON, 256, 256);
 		assert (icon != null);
 		assert (icon.width == 256);
 		assert (icon.height == 256);
@@ -120,7 +122,7 @@ namespace Plank.Tests
 		assert (icon.width == 127);
 		assert (icon.height == 127);
 		
-		var icon2 = DrawingService.load_icon (TEST_ICON, 256, 256);
+		icon2 = DrawingService.load_icon (TEST_ICON, 256, 256);
 		icon2 = DrawingService.ar_scale (icon2, 1, 1);
 		assert (icon2 != null);
 		assert (icon2.width == 1);
@@ -130,6 +132,21 @@ namespace Plank.Tests
 		var color = DrawingService.average_color (icon);
 		var color_copy = DrawingService.average_color (icon_copy);
 		assert (color.equal (color_copy));
+		
+		icon = DrawingService.load_icon ("DOESNT_EXIST", 127, 127);
+		icon2 = DrawingService.load_icon (Plank.G_RESOURCE_PATH + "/img/application-default-icon.svg", 127, 127);
+		assert (pixbuf_equal (icon, icon2));
+		
+#if HAVE_HIDPI
+		Cairo.Surface surface;
+		
+		surface = DrawingService.load_icon_for_scale (TEST_ICON, 256, 256, 1);
+		assert (surface != null);
+		surface = DrawingService.load_icon_for_scale ("DOESNT_EXIST", 127, 127, 1);
+		assert (surface != null);
+		surface = DrawingService.load_icon_for_scale (Plank.G_RESOURCE_PATH + "/img/application-default-icon.svg", 127, 127, 1);
+		assert (surface != null);
+#endif
 	}
 	
 	void drawing_drawingservice_average_color ()
