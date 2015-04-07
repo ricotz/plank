@@ -34,6 +34,7 @@ namespace Plank.Tests
 		Test.add_func ("/Drawing/DockSurface/gaussian_blur", drawing_docksurface_gaussian_blur);
 		Test.add_func ("/Drawing/DockSurface/to_pixbuf", drawing_docksurface_to_pixbuf);
 		
+		Test.add_func ("/Drawing/Theme/basics", drawing_theme);
 		Test.add_func ("/Drawing/Theme/draw_background", drawing_theme_draw_background);
 		Test.add_func ("/Drawing/Theme/draw_item_count", drawing_theme_draw_item_count);
 		Test.add_func ("/Drawing/Theme/draw_item_progress", drawing_theme_draw_item_progress);
@@ -306,6 +307,22 @@ namespace Plank.Tests
 		assert (pixbuf_equal (surface.to_pixbuf (), surface2.to_pixbuf ()));
 	}
 	
+	void drawing_theme ()
+	{
+		DockTheme docktheme;
+		string[] themes;
+		GLib.File theme_folder;
+		
+		docktheme = new DockTheme ("Test");
+		docktheme.get_top_offset ();
+		docktheme.get_bottom_offset ();
+		
+		themes = Theme.get_theme_list ();
+		theme_folder = Theme.get_theme_folder (Theme.DEFAULT_NAME);
+		theme_folder = Theme.get_theme_folder (Theme.GTK_THEME_NAME);
+		theme_folder = Theme.get_theme_folder ("Test");
+	}
+	
 	void drawing_theme_draw_item_count ()
 	{
 		Drawing.DockSurface surface;
@@ -347,9 +364,10 @@ namespace Plank.Tests
 		Drawing.Color color = { 0.5, 0.4, 0.3, 1.0 };
 		
 		docktheme.draw_active_glow (surface, {16, 16, 480, 96}, {16, 16, 80, 80}, color, -0.1, Gtk.PositionType.BOTTOM);
-		docktheme.draw_active_glow (surface, {16, 16, 480, 96}, {16, 16, 80, 80}, color, 0.5, Gtk.PositionType.BOTTOM);
-		docktheme.draw_active_glow (surface, {16, 16, 480, 96}, {16, 16, 80, 80}, color, 1.0, Gtk.PositionType.BOTTOM);
-		docktheme.draw_active_glow (surface, {16, 16, 480, 96}, {16, 16, 80, 80}, color, 2.0, Gtk.PositionType.BOTTOM);
+		docktheme.draw_active_glow (surface, {16, 16, 480, 96}, {16, 16, 80, 80}, color, 0.1, Gtk.PositionType.BOTTOM);
+		docktheme.draw_active_glow (surface, {16, 16, 480, 96}, {16, 16, 80, 80}, color, 0.5, Gtk.PositionType.TOP);
+		docktheme.draw_active_glow (surface, {16, 16, 96, 480}, {16, 16, 80, 80}, color, 1.0, Gtk.PositionType.LEFT);
+		docktheme.draw_active_glow (surface, {16, 16, 96, 480}, {16, 16, 80, 80}, color, 2.0, Gtk.PositionType.RIGHT);
 	}
 	
 	void drawing_theme_create_indicator ()
