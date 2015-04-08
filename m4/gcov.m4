@@ -25,7 +25,7 @@ AC_DEFUN([AC_TDD_GCOV],
   AC_ARG_ENABLE(gcov,
   AS_HELP_STRING([--enable-gcov],
 		 [enable coverage testing with gcov]),
-  [use_gcov=yes], [use_gcov=no])
+  [use_gcov=$enableval], [use_gcov=no])
 
   AM_CONDITIONAL(HAVE_GCOV, test "x$use_gcov" = "xyes")
 
@@ -78,16 +78,26 @@ AC_DEFUN([AC_TDD_GCOV],
     AC_MSG_ERROR([Could not find genhtml from the lcov package])
   fi
 
+  ac_cv_check_gcov=yes
+  ac_cv_check_lcov=yes
+
   # Remove all optimization flags from CFLAGS
   changequote({,})
   CFLAGS=`echo "$CFLAGS" | $SED -e 's/-O[0-9]*//g'`
   changequote([,])
 
   # Add the special gcc flags
-  COVERAGE_CFLAGS="-O0 --coverage"
-  COVERAGE_CXXFLAGS="-O0 --coverage"	
+  COVERAGE_CFLAGS="-O0 -fprofile-arcs -ftest-coverage"
+  COVERAGE_CXXFLAGS="-O0 -fprofile-arcs -ftest-coverage"
   COVERAGE_LDFLAGS="-lgcov"
 
+  # Check availability of gcovr
+  AC_CHECK_PROG(GCOVR, gcovr, gcovr)
+  if test -z "$GCOVR"; then
+    ac_cv_check_gcovr=no
+  else
+    ac_cv_check_gcovr=yes
+  fi
 fi
 ]) # AC_TDD_GCOV
 
