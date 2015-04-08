@@ -26,6 +26,7 @@ test-suite.log
 *.la
 *.gcda
 *.gcno
+coverage.xml
 coverage.info
 coveragereport
 po/*.gmo
@@ -61,6 +62,7 @@ src/*.stamp
 tests/*.c
 tests/*.stamp
 tests/home
+tests/dock
 tests/tests
 data/plank.appdata.xml
 data/plank.desktop

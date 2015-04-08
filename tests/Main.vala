@@ -46,13 +46,13 @@ namespace Plank.Tests
 		register_widgets_tests ();
 
 		// further preparations needed for runtime tests
-		Factory.init (new TestMain (), new ItemFactory ());
-		Logger.initialize ("test");
-		Paths.ensure_directory_exists (Paths.AppConfigFolder.get_child (TEST_DOCK_NAME));
-		WindowControl.initialize ();
+		//Factory.init (new TestMain (), new ItemFactory ());
+		//Logger.initialize ("test");
+		//Paths.ensure_directory_exists (Paths.AppConfigFolder.get_child (TEST_DOCK_NAME));
+		//WindowControl.initialize ();
 		
 		// runtime tests
-		register_controller_tests ();
+		//register_controller_tests ();
 		
 		return Test.run ();
 	}
@@ -67,52 +67,5 @@ namespace Plank.Tests
 		});
 		
 		main_loop.run ();
-	}
-	
-	public class TestMain : AbstractMain
-	{
-		public TestMain ()
-		{
-			var authors = new string[] {
-					"Robert Dyer <robert@go-docky.com>",
-					"Rico Tzschichholz <rtz@go-docky.com>",
-					"Michal Hruby <michal.mhr@gmail.com>"
-				};
-			
-			var documenters = new string[] {
-					"Robert Dyer <robert@go-docky.com>",
-					"Rico Tzschichholz <rtz@go-docky.com>"
-				};
-			
-			var artists = new string[] {
-					"Daniel Foré <bunny@go-docky.com>"
-				};
-			
-			Object (
-				build_data_dir : Config.DATA_DIR,
-				build_pkg_data_dir : Config.DATA_DIR + "/test",
-				build_release_name : "testname",
-				build_version : "0.0.0",
-				build_version_info : "testing",
-			
-				program_name : "Test",
-				exec_name : "test",
-			
-				app_copyright : "2014",
-				app_dbus : "net.launchpad.planktest",
-				app_icon : "test",
-				app_launcher : "test.desktop",
-			
-				main_url : "https://launchpad.net/plank",
-				help_url : "https://answers.launchpad.net/plank",
-				translate_url : "https://translations.launchpad.net/plank",
-			
-				about_authors : authors,
-				about_documenters : documenters,
-				about_artists : artists,
-				about_translators : "",
-				about_license_type : Gtk.License.GPL_3_0
-			);
-		}
 	}
 }
