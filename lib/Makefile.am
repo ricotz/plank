@@ -1,6 +1,7 @@
 include $(top_srcdir)/Makefile.common
 
 AM_CFLAGS = \
+	$(COVERAGE_CFLAGS) \
 	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
 	-include config.h \
 	$(PLANK_CORE_CFLAGS) \
@@ -9,9 +10,11 @@ AM_CFLAGS = \
 
 AM_LDFLAGS = \
 	$(LIBM) \
+	$(COVERAGE_CFLAGS) \
 	$(NULL)
 
 AM_VALAFLAGS = \
+	$(COVERAGE_VALAFLAGS) \
 	$(PLANK_CORE_VALAFLAGS) \
 	--vapidir $(top_srcdir)/vapi \
 	$(top_srcdir)/vapi/compat.vapi \

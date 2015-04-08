@@ -11,7 +11,7 @@ intltool-extract.in
 intltool-merge.in
 intltool-update.in
 libtool
-m4
+m4/*.m4
 mkinstalldirs
 stamp-h1
 Makefile
@@ -24,6 +24,10 @@ test-suite.log
 .libs
 *.lo
 *.la
+*.gcda
+*.gcno
+coverage.info
+coveragereport
 po/*.gmo
 po/.intltool-merge-cache
 po/Makefile.in.in

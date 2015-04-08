@@ -1,6 +1,7 @@
 include $(top_srcdir)/Makefile.common
 
 tests_VALAFLAGS = \
+	$(COVERAGE_VALAFLAGS) \
 	$(PLANK_CORE_VALAFLAGS) \
 	$(top_builddir)/lib/plank.vapi \
 	$(top_builddir)/lib/plank-internal.vapi \
@@ -15,6 +16,7 @@ BUILT_SOURCES = tests_vala.stamp
 check_PROGRAMS = tests
 
 tests_CFLAGS = \
+	$(COVERAGE_CFLAGS) \
 	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
 	$(PLANK_CORE_CFLAGS) \
 	-include config.h \
@@ -25,6 +27,7 @@ tests_CFLAGS = \
 	$(NULL)
 
 tests_LDADD = \
+	$(COVERAGE_LDFLAGS) \
 	$(PLANK_CORE_LIBS) \
 	$(top_builddir)/lib/libplank.la \
 	$(top_builddir)/lib/libplank-internal.la \

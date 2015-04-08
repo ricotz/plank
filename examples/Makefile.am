@@ -1,6 +1,7 @@
 include $(top_srcdir)/Makefile.common
 
 remote_client_VALAFLAGS = \
+	$(COVERAGE_VALAFLAGS) \
 	$(PLANK_CORE_VALAFLAGS) \
 	$(top_builddir)/lib/plank.vapi \
 	--vapidir $(top_srcdir)/vapi \
@@ -12,6 +13,7 @@ BUILT_SOURCES = remote_client_vala.stamp
 noinst_PROGRAMS = remote-client
 
 remote_client_CFLAGS = \
+	$(COVERAGE_CFLAGS) \
 	$(PLANK_CORE_CFLAGS) \
 	-include config.h \
 	-w \
@@ -19,6 +21,7 @@ remote_client_CFLAGS = \
 	$(NULL)
 
 remote_client_LDADD = \
+	$(COVERAGE_LDFLAGS) \
 	$(PLANK_CORE_LIBS) \
 	$(top_builddir)/lib/libplank.la \
 	$(NULL)

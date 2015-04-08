@@ -1,0 +1,52 @@
+
+# Coverage targets
+
+.PHONY: clean-gcno clean-gcda \
+	coverage-html generate-coverage-html clean-coverage-html \
+	coverage-gcovr generate-coverage-gcovr clean-coverage-gcovr
+
+clean-local: clean-gcno clean-coverage-html clean-coverage-gcovr
+
+clean-gcno:
+	@echo Removing old coverage instrumentation
+	-find -name '*.gcno' -print | xargs -r rm
+
+clean-gcda:
+	@echo Removing old coverage results
+	-find -name '*.gcda' -print | xargs -r rm
+
+if HAVE_GCOV
+coverage-html:
+	-$(MAKE) $(AM_MAKEFLAGS) -k check
+	$(MAKE) $(AM_MAKEFLAGS) generate-coverage-html
+
+generate-coverage-html:
+	@echo Collecting coverage data
+	$(LCOV) --directory $(top_builddir) --capture --output-file coverage.info --no-checksum --compat-libtool --derive-func-data
+	$(LCOV) --directory $(top_builddir) --output-file coverage.info --remove coverage.info "*.c" "*.h" "*.vapi"
+	LANG=C $(GENHTML) --output-directory coveragereport --title "@PACKAGE_STRING@" --num-spaces 4 --legend --show-details coverage.info
+
+clean-coverage-html: clean-gcda
+	-$(LCOV) --directory $(top_builddir) -z
+	-rm -rf coverage.info coveragereport
+
+if HAVE_GCOVR
+
+coverage-gcovr:
+	-$(MAKE) $(AM_MAKEFLAGS) -k check
+	$(MAKE) $(AM_MAKEFLAGS) generate-coverage-gcovr
+
+coverage-xml: coverage-gcovr
+
+generate-coverage-gcovr:
+	@echo Generating coverage GCOVR report
+	$(GCOVR) --xml -r $(top_builddir) -e "tests.*" -o $(top_builddir)/coverage.xml
+
+endif # HAVE_GCOVR
+
+endif # HAVE_GCOV
+
+clean-coverage-gcovr: clean-gcda
+	-rm -f $(top_builddir)/coverage.xml
+
+clean-coverage-xml: clean-coverage-gcovr

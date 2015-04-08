@@ -283,6 +283,18 @@ fi
 # Run checks and add build-flags to e.g. differenciate between Linux and BSD
 AC_CHECK_HEADERS([sys/prctl.h], [VALAFLAGS="$VALAFLAGS --define HAVE_SYS_PRCTL_H"])
 
+# Check to enable coverage
+AC_TDD_GCOV
+AM_CONDITIONAL([HAVE_GCOV], [test "x$ac_cv_check_gcov" = "xyes"])
+AM_CONDITIONAL([HAVE_LCOV], [test "x$ac_cv_check_lcov" = "xyes"])
+AM_CONDITIONAL([HAVE_GCOVR], [test "x$ac_cv_check_gcovr" = "xyes"])
+if test "x$ac_cv_check_gcov" = "xyes" ; then
+    COVERAGE_VALAFLAGS="-g"
+fi
+AC_SUBST(COVERAGE_VALAFLAGS)
+AC_SUBST(COVERAGE_CFLAGS)
+AC_SUBST(COVERAGE_LDFLAGS)
+
 
 PLANK_CORE_VALAFLAGS="$VALAFLAGS_CORE $VALAFLAGS $PLANK_CORE_VALA_PKGS"
 AC_SUBST(PLANK_CORE_VALAFLAGS)
@@ -390,5 +402,6 @@ ${PACKAGE} ${VERSION}
     Apport support..............:  ${enable_apport}
 
     Headless Tests..............:  ${enable_headless_tests}
+    Coverage Reporting..........:  ${use_gcov}
     Documentation...............:  ${have_valadoc}
 "

@@ -1,6 +1,7 @@
 include $(top_srcdir)/Makefile.common
 
 plank_VALAFLAGS = \
+	$(COVERAGE_VALAFLAGS) \
 	$(PLANK_CORE_VALAFLAGS) \
 	$(top_builddir)/lib/plank.vapi \
 	--vapidir $(top_srcdir)/vapi \
@@ -13,6 +14,7 @@ BUILT_SOURCES = plank_vala.stamp
 bin_PROGRAMS = plank
 
 plank_CFLAGS = \
+	$(COVERAGE_CFLAGS) \
 	$(PLANK_CORE_CFLAGS) \
 	-include config.h \
 	-w \
@@ -20,6 +22,7 @@ plank_CFLAGS = \
 	$(NULL)
 
 plank_LDADD = \
+	$(COVERAGE_LDFLAGS) \
 	$(PLANK_CORE_LIBS) \
 	$(top_builddir)/lib/libplank.la \
 	$(NULL)
