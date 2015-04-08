@@ -160,7 +160,7 @@ namespace Plank
 			var result = new string[n_monitors];
 			
 			for (int i = 0; i < n_monitors; i++)
-				result[i] = screen.get_monitor_plug_name (i);
+				result[i] = screen.get_monitor_plug_name (i) ?? "PLUG_MONITOR_%i".printf (i);
 			
 			return result;
 		}
@@ -170,7 +170,7 @@ namespace Plank
 			int n_monitors = screen.get_n_monitors ();
 			
 			for (int i = 0; i < n_monitors; i++) {
-				var name = screen.get_monitor_plug_name (i);
+				var name = screen.get_monitor_plug_name (i) ?? "PLUG_MONITOR_%i".printf (i);
 				if (plug_name == name)
 					return i;
 			}
