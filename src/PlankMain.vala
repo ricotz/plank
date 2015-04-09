@@ -31,18 +31,18 @@ namespace Plank
 		public PlankMain ()
 		{
 			var authors = new string[] {
-					"Robert Dyer <robert@go-docky.com>",
-					"Rico Tzschichholz <rtz@go-docky.com>",
+					"Robert Dyer <psybers@gmail.com>",
+					"Rico Tzschichholz <ricotz@ubuntu.com>",
 					"Michal Hruby <michal.mhr@gmail.com>"
 				};
 			
 			var documenters = new string[] {
-					"Robert Dyer <robert@go-docky.com>",
-					"Rico Tzschichholz <rtz@go-docky.com>"
+					"Robert Dyer <psybers@gmail.com>",
+					"Rico Tzschichholz <ricotz@ubuntu.com>"
 				};
 			
 			var artists = new string[] {
-					"Daniel Foré <bunny@go-docky.com>"
+					"Daniel Foré <daniel@elementaryos.org>"
 				};
 			
 			Object (
