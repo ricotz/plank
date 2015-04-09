@@ -88,7 +88,7 @@ namespace Plank.Drawing
 		[Description(nick = "urgent-hue-shift", blurb = "The hue-shift (-180 to 180) of the urgent indicator color.")]
 		public int UrgentHueShift { get; set; }
 		
-		[Description(nick = "item-move-time", blurb = "The time (in ms) to move an item to its new position.")]
+		[Description(nick = "item-move-time", blurb = "The time (in ms) to move an item to its new position or its addition/removal to/from the dock.")]
 		public int ItemMoveTime { get; set; }
 		
 		static Gtk.StyleContext style_context;
