@@ -85,12 +85,9 @@ namespace Plank.Items
 			
 			items.add (new Gtk.SeparatorMenuItem ());
 			
-			// No explicit settings-item on elementary OS
-			if (!System.is_desktop_session ("pantheon")) {
-				item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.PREFERENCES, null);
-				item.activate.connect (() => Application.get_default ().activate_action ("preferences", null));
-				items.add (item);
-			}
+			item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.PREFERENCES, null);
+			item.activate.connect (() => Application.get_default ().activate_action ("preferences", null));
+			items.add (item);
 			
 			item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.ABOUT, null);
 			item.activate.connect (() => Application.get_default ().activate_action ("about", null));
