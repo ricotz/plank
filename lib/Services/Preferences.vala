@@ -265,6 +265,16 @@ namespace Plank.Services
 		}
 		
 		/**
+		 * Returns the backing file.
+		 *
+		 * @return the backing file
+		 */
+		public unowned File? get_backing_file ()
+		{
+			return backing_file;
+		}
+		
+		/**
 		 * This forces the deletion of the backing file for this preferences.
 		 */
 		public void delete ()

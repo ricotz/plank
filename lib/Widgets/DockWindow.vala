@@ -578,10 +578,16 @@ namespace Plank.Widgets
 			if ((button & PopupButton.RIGHT) != 0
 				&& (item == null || (event.state & Gdk.ModifierType.CONTROL_MASK) != 0)) {
 				menu_items = PlankDockItem.get_plank_menu_items ();
+				if ((event.state & Gdk.ModifierType.MOD1_MASK) != 0
+					&& (event.state & Gdk.ModifierType.SHIFT_MASK) != 0)
+					menu_items.add_all (get_dock_debug_menu_items (controller));
 				set_hovered_provider (null);
 				set_hovered (null);
 			} else if (item != null && (item.Button & button) != 0) {
 				menu_items = item.get_menu_items ();
+				if ((event.state & Gdk.ModifierType.MOD1_MASK) != 0
+					&& (event.state & Gdk.ModifierType.SHIFT_MASK) != 0)
+					menu_items.add_all (get_item_debug_menu_items (item));
 				position_func = position_menu;
 			}
 			
@@ -613,6 +619,65 @@ namespace Plank.Widgets
 			menu.popup (null, null, position_func, event.button, event.time);
 			
 			return true;
+		}
+		
+		static Gee.ArrayList<Gtk.MenuItem> get_dock_debug_menu_items (DockController controller)
+		{
+			var debug_items = new Gee.ArrayList<Gtk.MenuItem> ();
+			
+			debug_items.add (new Gtk.SeparatorMenuItem ());
+			debug_items.add (new TitledSeparatorMenuItem.no_line ("debug this dock"));
+			
+			Gtk.MenuItem menu_item;
+			
+			menu_item = new Gtk.MenuItem.with_mnemonic ("Open config folder");
+			menu_item.activate.connect (() => {
+				Services.System.open (controller.config_folder);
+			});
+			debug_items.add (menu_item);
+			
+			menu_item = new Gtk.MenuItem.with_mnemonic ("Open current theme file");
+			menu_item.activate.connect (() => {
+				Services.System.open (controller.renderer.theme.get_backing_file ());
+			});
+			debug_items.add (menu_item);
+			
+			return debug_items;
+		}
+		
+		static Gee.ArrayList<Gtk.MenuItem> get_item_debug_menu_items (DockItem item)
+		{
+			var debug_items = new Gee.ArrayList<Gtk.MenuItem> ();
+			
+			debug_items.add (new Gtk.SeparatorMenuItem ());
+			debug_items.add (new TitledSeparatorMenuItem.no_line ("debug this item"));
+			
+			Gtk.MenuItem menu_item;
+			
+			var dock_item_file = item.Prefs.get_backing_file ();
+			menu_item = new Gtk.MenuItem.with_mnemonic ("Print info to stdout");
+			menu_item.activate.connect (() => {
+				print ("DockItemFile: '%s'\nText = '%s'\nIcon = '%s'\nLauncher = '%s'\n",
+					dock_item_file != null ? dock_item_file.get_uri () : "",
+					item.Text, item.Icon, item.Launcher);
+			});
+			debug_items.add (menu_item);
+			
+			menu_item = new Gtk.MenuItem.with_mnemonic ("Open dockitem file");
+			menu_item.activate.connect (() => {
+				Services.System.open (dock_item_file);
+			});
+			menu_item.sensitive = (dock_item_file != null && dock_item_file.query_exists ());
+			debug_items.add (menu_item);
+			
+			menu_item = new Gtk.MenuItem.with_mnemonic ("Open launcher file");
+			menu_item.activate.connect (() => {
+				Services.System.open (File.new_for_uri (item.Launcher));
+			});
+			menu_item.sensitive = (item.Launcher != "");
+			debug_items.add (menu_item);
+			
+			return debug_items;
 		}
 		
 		/**
