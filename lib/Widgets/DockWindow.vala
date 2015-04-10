@@ -593,9 +593,21 @@ namespace Plank.Widgets
 			menu.show.connect (on_menu_show);
 			menu.hide.connect (on_menu_hide);
 			
-			foreach (var menu_item in menu_items) {
-				menu_item.show ();
-				menu.append (menu_item);
+			var iterator = menu_items.bidir_list_iterator ();
+			if (controller.prefs.Position == Gtk.PositionType.TOP) {
+				iterator.last ();
+				do {
+					var menu_item = iterator.get ();
+					menu_item.show ();
+					menu.append (menu_item);
+				} while (iterator.previous ());
+			} else {
+				iterator.first ();
+				do {
+					var menu_item = iterator.get ();
+					menu_item.show ();
+					menu.append (menu_item);
+				} while (iterator.next ());
 			}
 			
 			menu.popup (null, null, position_func, event.button, event.time);
