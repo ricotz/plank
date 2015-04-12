@@ -24,11 +24,11 @@ generate-coverage-html:
 	@echo Collecting coverage data
 	$(LCOV) --directory $(top_builddir) --capture --output-file coverage.info --no-checksum --compat-libtool --derive-func-data
 	$(LCOV) --directory $(top_builddir) --output-file coverage.info --remove coverage.info "*.c" "*.h" "*.vapi"
-	LANG=C $(GENHTML) --output-directory coveragereport --title "@PACKAGE_STRING@" --num-spaces 4 --legend --show-details coverage.info
+	LANG=C $(GENHTML) --output-directory $(top_builddir)/coveragereport --title "@PACKAGE_STRING@" --num-spaces 4 --legend --show-details $(top_builddir)/coverage.info
 
 clean-coverage-html: clean-gcda
 	-$(LCOV) --directory $(top_builddir) -z
-	-rm -rf coverage.info coveragereport
+	-rm -rf $(top_builddir)/coverage.info $(top_builddir)/coveragereport
 
 if HAVE_GCOVR
 
