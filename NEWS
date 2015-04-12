@@ -2,6 +2,31 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.9.0 "Kanker" (2015-04-12)
+===============================================================================
+ * Add standard set of easing-functions
+ * Animate addition and removal for items (LP: #707651) (increase ItemMoveTime
+   of Default theme to 450ms)
+ * Add "hide-delay" setting (LP: #1411644)
+ * Add "window-dodge" hide-mode (LP: #1431076)
+ * Add DBusManager to provide some remotely accessible actions (LP: #1365168)
+ * Increase default ItemMoveTime to 450ms
+ * settings: Save display-plug-name as "Monitor" which dock should be shown on
+ * Refactor and split up draw_item(), draw final internal dock-buffer on
+   window-context at (0,0) (LP: #1426847)
+ * Trap XErrors caused by Wnck/Cairo (LP: #1293252)
+ * Optimize application-default-icon.svg and replace poof.png with newly
+   created poof.svg (Thanks to Daniel Foré)
+ * Do not stop motion-events by default (LP: #1420043)
+ * Add support for loading icons with "resource://"-uris
+ * Generally watch for changes of the "Launcher"-file
+ * Refactor dealing with monitor-/size-changes to catch races-conditions
+ * Reverse ordering of menu-items for top-docks
+ * Add support for coverage analysis using gcov and lcov
+ * Start to improve coverage of tests
+ * Various API changes and refactoring, see full Changelog for details
+ * Update translations
+
 0.8.1 "May" (2015-01-25)
 ===============================================================================
  * Make use of Gdk.EVENT_PROPAGATE and Gdk.EVENT_STOP
