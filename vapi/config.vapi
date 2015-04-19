@@ -18,13 +18,20 @@
 [CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "config.h")]
 namespace Build
 {
+	public const string GETTEXT_PACKAGE;
+	public const string PACKAGE;
+	public const string PACKAGE_NAME;
+
 	public const string DATADIR;
 	public const string PKGDATADIR;
+
 	public const string RELEASE_NAME;
+
 	public const string VERSION;
+	public const string VERSION_INFO;
+
 	public const uint VERSION_MAJOR;
 	public const uint VERSION_MINOR;
 	public const uint VERSION_MICRO;
 	public const uint VERSION_NANO;
-	public const string VERSION_INFO;
 }

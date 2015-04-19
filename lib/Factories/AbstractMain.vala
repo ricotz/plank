@@ -174,8 +174,6 @@ namespace Plank.Factories
 #endif
 			Environment.set_prgname (exec_name);
 			
-			Intl.bindtextdomain (exec_name, build_data_dir + "/locale");
-			
 			var context = new OptionContext (null);
 			context.add_main_entries (options, exec_name);
 			context.add_group (Gtk.get_option_group (false));

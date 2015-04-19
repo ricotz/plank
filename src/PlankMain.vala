@@ -23,6 +23,11 @@ namespace Plank
 	{
 		public static int main (string[] args)
 		{
+			Intl.setlocale (LocaleCategory.ALL, "");
+			Intl.bindtextdomain (Build.GETTEXT_PACKAGE, Build.DATADIR + "/locale");
+			Intl.bind_textdomain_codeset (Build.GETTEXT_PACKAGE, "UTF-8");
+			Intl.textdomain (Build.GETTEXT_PACKAGE);
+			
 			var application = new PlankMain ();
 			Factory.init (application, new ItemFactory ());
 			return application.run (args);
