@@ -7,21 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-03-12 17:57+0100\n"
-"PO-Revision-Date: 2011-04-08 20:05+0000\n"
-"Last-Translator: Diogo Lavareda <diogolavareda9@hotmail.com>\n"
+"POT-Creation-Date: 2015-04-13 13:13+0000\n"
+"PO-Revision-Date: 2015-04-14 17:18+0000\n"
+"Last-Translator: Sérgio Marques <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-14 05:18+0000\n"
-"X-Generator: Launchpad (build 17389)\n"
+"X-Launchpad-Export-Date: 2015-04-15 05:17+0000\n"
+"X-Generator: Launchpad (build 17428)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"O Plank foi criado para ser a barra mais simples do planeta. O objetivo é "
+"criar uma barra que apenas faça o essencial."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -31,6 +33,11 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"NO entanto, éu ma biblioteca que pode ser expandida para criar outras barras "
+"com muitas mais funcionalidades. O Plank é a infraestrutura da aplicação "
+"Docky (a partir da versão versão 3.0.0) e pretende disponibilizar as "
+"funcionalidades básicas, enquanto que o Docky adiciona muitos mais efeitos "
+"especiais."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
@@ -38,75 +45,75 @@ msgstr "Plank. Estupidamente simples."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "Tema:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "Posição:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "Esquerda"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "Direita"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "Cima"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "Baixo"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "Alinhamento:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "Preencher"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "INICIAR"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "Fím"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "Centro"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "No ecrã primário:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr ""
+msgstr "Deslocação a partir do centro do margem do ecrã (em percentagem)"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr ""
+msgstr "Alinhamento dos ícones:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "Tamanho dos ícones:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Appearance"
-msgstr ""
+msgstr "Aparência"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Intellihide"
-msgstr ""
+msgstr "Ocultação inteligente"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Autohide"
-msgstr ""
+msgstr "Ocultar automaticamente"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Dodge maximized window"
@@ -114,27 +121,27 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Window Dodge"
-msgstr ""
+msgstr "Desvio de janela"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Hide Dock"
-msgstr ""
+msgstr "Ocultar barra"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Hide Delay:"
-msgstr ""
+msgstr "Atraso para ocultar:"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgstr "Atraso, em milissegundos, antes de ocultar a barra"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "Atraso para mostrar:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "Atraso, em milissegundos, antes de mostrar a barra"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Pressure Reveal:"
@@ -142,7 +149,7 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Item Management"
-msgstr ""
+msgstr "Gestão de itens"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Show Unpinned:"
@@ -150,11 +157,11 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Restrict to Workspace:"
-msgstr ""
+msgstr "Restringir à áread e trabalho"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Lock Icons:"
-msgstr ""
+msgstr "Bloquear ícones:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Automatic Pinning:"
@@ -162,46 +169,46 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Behaviour"
-msgstr ""
+msgstr "Comportamento"
 
-#: ../lib/Items/ApplicationDockItem.vala:460
-#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
+#: ../lib/Items/ApplicationDockItem.vala:440
+#: ../lib/Items/FileDockItem.vala:313 ../lib/Items/FileDockItem.vala:331
 msgid "_Keep in Dock"
-msgstr "Manter na Dock (_K)"
+msgstr "_Manter na barra"
 
-#: ../lib/Items/ApplicationDockItem.vala:467
+#: ../lib/Items/ApplicationDockItem.vala:447
 msgid "_Close All"
-msgstr "Fe_char Todas"
+msgstr "Fe_char tudo"
 
-#: ../lib/Items/ApplicationDockItem.vala:467
+#: ../lib/Items/ApplicationDockItem.vala:447
 msgid "_Close"
-msgstr ""
+msgstr "_Fechar"
 
-#: ../lib/Items/FileDockItem.vala:332
+#: ../lib/Items/FileDockItem.vala:318
 msgid "_Open in File Browser"
-msgstr "Abrir n_o Gestor de Ficheiros"
+msgstr "Abrir n_o gestor de ficheiros"
 
-#: ../lib/Items/FileDockItem.vala:350
+#: ../lib/Items/FileDockItem.vala:336
 msgid "_Open"
-msgstr "Abrir (_O)"
+msgstr "A_brir"
 
-#: ../lib/Items/FileDockItem.vala:354
+#: ../lib/Items/FileDockItem.vala:340
 msgid "Open Containing _Folder"
-msgstr "Abrir Pasta respectiva (_F)"
+msgstr "Abrir pasta _respetiva"
 
 #: ../lib/Items/PlaceholderDockItem.vala:35
 msgid "Drop applications or files here"
-msgstr ""
+msgstr "Largue as aplicações ou ficheiros aqui"
 
 #: ../lib/Items/PlankDockItem.vala:78
 msgid "Get _Help Online..."
-msgstr "Obter Ajuda online... (_H)"
+msgstr "Obter ajuda na _web"
 
 #: ../lib/Items/PlankDockItem.vala:82
 msgid "_Translate This Application..."
-msgstr "_Traduzir Esta Aplicação..."
+msgstr "_Traduzir esta aplicação..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:64
 #: ../lib/Widgets/PreferencesWindow.vala:74
 msgid "Preferences"
-msgstr ""
+msgstr "Preferências"
