@@ -3,7 +3,10 @@
 ====== Testing the latest build ======
 
 Get daily builds on Launchpad for Ubuntu 12.04 and later.
-    https://launchpad.net/~ricotz/+archive/docky
+    https://launchpad.net/~ricotz/+archive/ubuntu/docky
+
+Get release builds on Launchpad for Ubuntu 12.04 and later.
+    https://launchpad.net/~docky-core/+archive/ubuntu/stable
 
 
 ====== Join IRC chat rooms ======
