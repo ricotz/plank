@@ -498,7 +498,20 @@ namespace Plank
 			message ("render time - %f ms", diff);
 #endif
 			
-			is_first_frame = false;
+			if (is_first_frame) {
+				Idle.add (() => {
+					// slide the dock in, if it shouldnt start hidden
+					controller.hide_manager.update_hovered ();
+					
+					// FIXME there must be a sane way
+					// https://bugs.launchpad.net/plank/+bug/1256626
+					last_hide = GLib.get_monotonic_time ();
+					hidden_changed ();
+					return false;
+				});
+				
+				is_first_frame = false;
+			}
 		}
 		
 		void draw_dock_background (Cairo.Context cr, Gdk.Rectangle background_rect)

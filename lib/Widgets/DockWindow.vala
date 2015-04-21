@@ -292,13 +292,12 @@ namespace Plank.Widgets
 				debug ("dock window loaded");
 				dock_is_starting = false;
 				
-				// slide the dock in, if it shouldnt start hidden
-				Gdk.threads_add_timeout (400, () => {
-					controller.hide_manager.update_hovered ();
-					return false;
-				});
-				
 				set_input_mask ();
+				
+				// FIXME make sure to trigger a subsequent redraw
+				// https://bugs.launchpad.net/plank/+bug/1256626
+				controller.renderer.animated_draw ();
+				
 				return base.draw (cr);
 			}
 			
