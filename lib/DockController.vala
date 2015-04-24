@@ -32,7 +32,7 @@ namespace Plank
 	public class DockController : DockContainer
 	{
 		public File config_folder { get; construct; }
-		public File launchers_folder { get; construct; }
+		public File launchers_folder { get; private set; }
 		
 		public DockPreferences prefs { get; construct; }
 		
