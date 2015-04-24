@@ -64,7 +64,7 @@ namespace Plank.Items
 			Matcher.get_default ().application_opened.connect (app_opened);
 			
 			try {
-				items_monitor = LaunchersDir.monitor (0);
+				items_monitor = LaunchersDir.monitor_directory (0);
 				items_monitor.changed.connect (handle_items_dir_changed);
 			} catch (Error e) {
 				critical ("Unable to watch the launchers directory. (%s)", e.message);

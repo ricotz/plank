@@ -310,7 +310,7 @@ namespace Plank.Services
 				return;
 			
 			try {
-				backing_monitor = backing_file.monitor (0);
+				backing_monitor = backing_file.monitor_file (0);
 				backing_monitor.changed.connect (backing_file_changed);
 			} catch (Error e) {
 				critical ("Unable to watch the preferences file '%s'", backing_file.get_path () ?? "");

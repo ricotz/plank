@@ -100,7 +100,7 @@ namespace Plank.Items
 				Button = PopupButton.RIGHT | PopupButton.LEFT;
 				
 				try {
-					dir_monitor = OwnedFile.monitor (0);
+					dir_monitor = OwnedFile.monitor_directory (0);
 					dir_monitor.changed.connect (handle_dir_changed);
 				} catch {
 					critical ("Unable to watch the stack directory '%s'.", OwnedFile.get_path () ?? "");

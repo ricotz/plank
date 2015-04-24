@@ -321,7 +321,7 @@ namespace Plank.Items
 				return;
 			
 			try {
-				icon_file_monitor = icon_file.monitor (0);
+				icon_file_monitor = icon_file.monitor_file (0);
 				icon_file_monitor.changed.connect (reset_icon_buffer);
 			} catch (Error e) {
 				critical ("Unable to watch the icon file '%s'", icon_file.get_path () ?? "");
@@ -390,7 +390,7 @@ namespace Plank.Items
 			try {
 				var launcher_file = File.new_for_uri (launcher);
 				launcher_exists = launcher_file.query_exists ();
-				launcher_file_monitor = launcher_file.monitor (FileMonitorFlags.SEND_MOVED);
+				launcher_file_monitor = launcher_file.monitor_file (FileMonitorFlags.SEND_MOVED);
 				launcher_file_monitor.changed.connect (launcher_file_changed);
 			} catch {
 				warning ("Unable to watch the launcher file '%s'", launcher);
