@@ -88,6 +88,8 @@ namespace Plank.Items
 			// Make sure internal window-list of Wnck is most up to date
 			Wnck.Screen.get_default ().force_update ();
 			
+			var transient_items = new Gee.ArrayList<DockElement> ();
+			
 			// Match running applications to their available dock-items
 			foreach (var app in Matcher.get_default ().active_launchers ()) {
 				var found = item_for_application (app);
@@ -99,12 +101,10 @@ namespace Plank.Items
 				if (!app.is_user_visible () || WindowControl.get_num_windows (app) <= 0)
 					continue;
 				
-				var new_item = new TransientDockItem.with_application (app);
-				
-				add_item_without_signaling (new_item);
+				transient_items.add (new TransientDockItem.with_application (app));
 			}
 			
-			update_visible_items ();
+			add_items (transient_items);
 			
 			var favs = new Gee.ArrayList<string> ();
 			
