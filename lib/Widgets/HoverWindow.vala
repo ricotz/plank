@@ -130,8 +130,7 @@ namespace Plank.Widgets
 			
 			if (is_composited ()) {
 				cr.save ();
-				cr.set_source_rgba (0, 0, 0, 0);
-				cr.set_operator (Cairo.Operator.SOURCE);
+				cr.set_operator (Cairo.Operator.CLEAR);
 				cr.paint ();
 				cr.restore ();
 				

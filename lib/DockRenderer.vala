@@ -288,8 +288,7 @@ namespace Plank
 			if (no_full_draw_needed && hide_progress == 1.0 && opacity == 1.0) {
 				// we still need to clear out the previous output
 				cr.save ();
-				cr.set_source_rgba (0, 0, 0, 0);
-				cr.set_operator (Cairo.Operator.SOURCE);
+				cr.set_operator (Cairo.Operator.CLEAR);
 				cr.paint ();
 				cr.restore ();
 				

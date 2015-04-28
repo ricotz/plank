@@ -101,8 +101,7 @@ namespace Plank.Drawing
 		public void clear ()
 		{
 			Context.save ();
-			Context.set_source_rgba (0, 0, 0, 0);
-			Context.set_operator (Cairo.Operator.SOURCE);
+			Context.set_operator (Cairo.Operator.CLEAR);
 			Context.paint ();
 			Context.restore ();
 		}
