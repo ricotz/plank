@@ -100,10 +100,12 @@ namespace Plank.Drawing
 		 */
 		public void clear ()
 		{
-			Context.save ();
-			Context.set_operator (Cairo.Operator.CLEAR);
-			Context.paint ();
-			Context.restore ();
+			unowned Cairo.Context cr = Context;
+			
+			cr.save ();
+			cr.set_operator (Cairo.Operator.CLEAR);
+			cr.paint ();
+			cr.restore ();
 		}
 		
 		/**
@@ -329,11 +331,12 @@ namespace Plank.Drawing
 			
 			original.mark_dirty ();
 			
-			Context.save ();
-			Context.set_operator (Cairo.Operator.SOURCE);
-			Context.set_source_surface (original, 0, 0);
-			Context.paint ();
-			Context.restore ();
+			unowned Cairo.Context target_cr = Context;
+			target_cr.save ();
+			target_cr.set_operator (Cairo.Operator.SOURCE);
+			target_cr.set_source_surface (original, 0, 0);
+			target_cr.paint ();
+			target_cr.restore ();
 		}
 		
 		const int AlphaPrecision = 16;
@@ -381,11 +384,12 @@ namespace Plank.Drawing
 			
 			original.mark_dirty ();
 			
-			Context.save ();
-			Context.set_operator (Cairo.Operator.SOURCE);
-			Context.set_source_surface (original, 0, 0);
-			Context.paint ();
-			Context.restore ();
+			unowned Cairo.Context target_cr = Context;
+			target_cr.save ();
+			target_cr.set_operator (Cairo.Operator.SOURCE);
+			target_cr.set_source_surface (original, 0, 0);
+			target_cr.paint ();
+			target_cr.restore ();
 		}
 		
 		void exponential_blur_columns (uint8* pixels, int width, int height, int startCol, int endCol, int startY, int endY, int alpha)
@@ -526,11 +530,12 @@ namespace Plank.Drawing
 			
 			original.mark_dirty ();
 			
-			Context.save ();
-			Context.set_operator (Cairo.Operator.SOURCE);
-			Context.set_source_surface (original, 0, 0);
-			Context.paint ();
-			Context.restore ();
+			unowned Cairo.Context target_cr = Context;
+			target_cr.save ();
+			target_cr.set_operator (Cairo.Operator.SOURCE);
+			target_cr.set_source_surface (original, 0, 0);
+			target_cr.paint ();
+			target_cr.restore ();
 		}
 
 		void gaussian_blur_horizontal (double* src, double* dest, double* kernel, int gaussWidth, int width, int height, int startRow, int endRow, int[,] shift)
