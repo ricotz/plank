@@ -652,7 +652,9 @@ namespace Plank
 			}
 			
 			// animate addition/removal
-			if (screen_is_composited && item.AddTime > item.RemoveTime) {
+			unowned DockContainer? container = item.Container;
+			var allow_animation = (screen_is_composited && (container == null || container.AddTime < item.AddTime));
+			if (allow_animation && item.AddTime > item.RemoveTime) {
 				var move_duration = theme.ItemMoveTime * 1000;
 				var move_time = frame_time - item.AddTime;
 				if (move_time < move_duration) {
@@ -662,7 +664,7 @@ namespace Plank
 					draw_value.move_in (position, -change);
 					draw_value.show_indicator = false;
 				}
-			} else if (screen_is_composited && item.RemoveTime > 0) {
+			} else if (allow_animation && item.RemoveTime > 0) {
 				var move_duration = theme.ItemMoveTime * 1000;
 				var move_time = frame_time - item.RemoveTime;
 				if (move_time < move_duration) {
