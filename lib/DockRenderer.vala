@@ -545,7 +545,7 @@ namespace Plank
 			// get item's draw-value
 			var draw_value = position_manager.get_draw_value_for_item (item);
 			
-			// check for and calulate click-animatation
+			// check for and calculate click-animation
 			var max_click_time = item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
 			max_click_time *= 1000;
 			var click_time = frame_time - item.LastClicked;
@@ -571,7 +571,7 @@ namespace Plank
 				}
 			}
 			
-			// check for and calulate scroll-animatation
+			// check for and calculate scroll-animation
 			var max_scroll_time = 300 * 1000;
 			var scroll_time = frame_time - item.LastScrolled;
 			if (scroll_time < max_scroll_time) {
@@ -590,7 +590,7 @@ namespace Plank
 				}
 			}
 			
-			// check for and calulate hover-animatation
+			// check for and calculate hover-animation
 			var max_hover_time = 150 * 1000;
 			var hover_time = frame_time - item.LastHovered;
 			if (hover_time < max_hover_time) {
