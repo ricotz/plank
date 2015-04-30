@@ -989,28 +989,35 @@ namespace Plank
 			if (transient_items.size > 0)
 				return true;
 			
-			foreach (var item in controller.VisibleItems) {
-				if (item.ClickedAnimation != Animation.NONE
-					&& render_time - item.LastClicked <= (item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
+			foreach (var item in controller.VisibleItems)
+				if (item_animation_needed (item, render_time))
 					return true;
-				if (item.HoveredAnimation != Animation.NONE
-					&& render_time - item.LastHovered <= 150 * 1000)
-					return true;
-				if (item.ScrolledAnimation != Animation.NONE
-					&& render_time - item.LastScrolled <= 300 * 1000)
-					return true;
-				if (render_time - item.LastActive <= theme.ActiveTime * 1000)
-					return true;
-				if (render_time - item.LastUrgent <= (hide_progress == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
-					return true;
-				if (render_time - item.LastMove <= theme.ItemMoveTime * 1000)
-					return true;
-				if (render_time - item.AddTime <= theme.ItemMoveTime * 1000)
-					return true;
-				if (render_time - item.RemoveTime <= theme.ItemMoveTime * 1000)
-					return true;
-			}
-				
+			
+			return false;
+		}
+
+		inline bool item_animation_needed (DockItem item, int64 render_time)
+		{
+			if (item.ClickedAnimation != Animation.NONE
+				&& render_time - item.LastClicked <= (item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
+				return true;
+			if (item.HoveredAnimation != Animation.NONE
+				&& render_time - item.LastHovered <= 150 * 1000)
+				return true;
+			if (item.ScrolledAnimation != Animation.NONE
+				&& render_time - item.LastScrolled <= 300 * 1000)
+				return true;
+			if (render_time - item.LastActive <= theme.ActiveTime * 1000)
+				return true;
+			if (render_time - item.LastUrgent <= (hide_progress == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
+				return true;
+			if (render_time - item.LastMove <= theme.ItemMoveTime * 1000)
+				return true;
+			if (render_time - item.AddTime <= theme.ItemMoveTime * 1000)
+				return true;
+			if (render_time - item.RemoveTime <= theme.ItemMoveTime * 1000)
+				return true;
+			
 			return false;
 		}
 	}
