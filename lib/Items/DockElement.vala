@@ -78,13 +78,13 @@ namespace Plank.Items
 		{
 			switch (event.button) {
 			default:
-			case 1:
+			case Gdk.BUTTON_PRIMARY:
 				return PopupButton.LEFT;
 			
-			case 2:
+			case Gdk.BUTTON_MIDDLE:
 				return PopupButton.MIDDLE;
 			
-			case 3:
+			case Gdk.BUTTON_SECONDARY:
 				return PopupButton.RIGHT;
 			}
 		}
