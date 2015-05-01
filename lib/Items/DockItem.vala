@@ -210,6 +210,8 @@ namespace Plank.Items
 			notify["ProgressVisible"].connect (reset_foreground_buffer);
 			
 			launcher_file_monitor_start ();
+			if (ForcePixbuf == null)
+				icon_file_monitor_start ();
 		}
 		
 		~DockItem ()
