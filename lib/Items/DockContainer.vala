@@ -144,6 +144,39 @@ namespace Plank.Items
 		}
 		
 		/**
+		 * Prepends a dock item to the collection.
+		 * So the dock item will appear at the first position.
+		 *
+		 * @param item the dock item to add
+		 */
+		public void prepend_item (DockElement item)
+		{
+			if (internal_elements.contains (item)) {
+				critical ("Item '%s' already exists in this DockItemProvider.", item.Text);
+				return;
+			}
+			
+			if (item.Container != null) {
+				critical ("Item '%s' should be removed from its old DockItemProvider first.", item.Text);
+				return;
+			}
+			
+			unowned DockContainer? container = (item as DockContainer);
+			if (container != null)
+				container.prepare ();
+			add_item_without_signaling (item);
+			
+			DockElement? target = null;
+			if (internal_elements.size > 0)
+				target = internal_elements[0];
+			
+			if (target != null && target != placeholder_item)
+				move_item_to (item, target);
+			else
+				update_visible_items ();
+		}
+		
+		/**
 		 * Adds a ordered list of dock items to the collection.
 		 *
 		 * @param items the dock items to add
