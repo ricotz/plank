@@ -34,50 +34,6 @@ namespace Plank.Items
 	public delegate DockSurface DrawItemFunc (DockItem item, DockSurface source, DockSurface? target);
 	
 	/**
-	 * What item indicator to show.
-	 */
-	public enum IndicatorState
-	{
-		/**
-		 * None - no windows for this item.
-		 */
-		NONE,
-		/**
-		 * Show a single indicator - there is 1 window for this item.
-		 */
-		SINGLE,
-		/**
-		 * Show multiple indicators - there are more than 1 window for this item.
-		 */
-		SINGLE_PLUS
-	}
-	
-	/**
-	 * The current activity state of an item.  The item has several
-	 * states to track and can be in any combination of them.
-	 */
-	[Flags]
-	public enum ItemState
-	{
-		/**
-		 * The item is in a normal state.
-		 */
-		NORMAL = 1 << 0,
-		/**
-		 * The item is currently active (a window in the group is focused).
-		 */
-		ACTIVE = 1 << 1,
-		/**
-		 * The item is currently urgent (a window in the group has the urgent flag).
-		 */
-		URGENT = 1 << 2,
-		/**
-		 * The item is currently moved to its new position.
-		 */
-		MOVE = 1 << 3
-	}
-	
-	/**
 	 * The base class for all dock items.
 	 */
 	public class DockItem : DockElement

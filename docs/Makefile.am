@@ -45,6 +45,7 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Items/DockItem.vala \
 	$(top_srcdir)/lib/Items/DockItemProvider.vala \
 	$(top_srcdir)/lib/Items/DockItemPreferences.vala \
+	$(top_srcdir)/lib/Items/Enums.vala \
 	$(top_srcdir)/lib/Items/FileDockItem.vala \
 	$(top_srcdir)/lib/Items/PlaceholderDockItem.vala \
 	$(top_srcdir)/lib/Items/PlankDockItem.vala \

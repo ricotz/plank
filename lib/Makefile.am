@@ -91,6 +91,7 @@ libplank_la_VALASOURCES = \
 	Items/DockItemProvider.vala \
 	Items/DockItemPreferences.vala \
 	Items/DockElement.vala \
+	Items/Enums.vala \
 	Items/FileDockItem.vala \
 	Items/PlaceholderDockItem.vala \
 	Items/PlankDockItem.vala \
