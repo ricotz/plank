@@ -61,7 +61,7 @@ namespace Plank.Items
 				disconnect_wnck ();
 		}
 		
-		protected override void update_visible_items ()
+		protected override void update_visible_elements ()
 		{
 			Logger.verbose ("DefaultDockItemProvider.update_visible_items ()");
 			
@@ -77,7 +77,7 @@ namespace Plank.Items
 					item.IsAttached = true;
 			}
 			
-			base.update_visible_items ();
+			base.update_visible_elements ();
 		}
 		
 		/**
@@ -104,7 +104,7 @@ namespace Plank.Items
 				transient_items.add (new TransientDockItem.with_application (app));
 			}
 			
-			add_items (transient_items);
+			add_all (transient_items);
 			
 			var favs = new Gee.ArrayList<string> ();
 			
@@ -133,14 +133,14 @@ namespace Plank.Items
 			
 			var new_item = new TransientDockItem.with_application (app);
 			
-			add_item (new_item);
+			add (new_item);
 		}
 		
-		void app_closed (DockItem remove)
+		void app_closed (DockItem item)
 		{
-			if (remove is TransientDockItem
-				&& !(((TransientDockItem) remove).has_unity_info ()))
-				remove_item (remove);
+			if (item is TransientDockItem
+				&& !(((TransientDockItem) item).has_unity_info ()))
+				remove (item);
 		}
 		
 		void connect_wnck ()
@@ -169,7 +169,7 @@ namespace Plank.Items
 				|| previous.get_workspace () == active_workspace)
 				return;
 			
-			update_visible_items ();
+			update_visible_elements ();
 		}
 		
 		[CCode (instance_pos = -1)]
@@ -179,7 +179,7 @@ namespace Plank.Items
 			if (active_workspace != null && active_workspace.is_virtual ())
 				return;
 			
-			update_visible_items ();
+			update_visible_elements ();
 		}
 		
 		[CCode (instance_pos = -1)]
@@ -189,7 +189,7 @@ namespace Plank.Items
 			if (active_workspace != null && !active_workspace.is_virtual ())
 				return;
 			
-			update_visible_items ();
+			update_visible_elements ();
 		}
 		
 		void handle_setting_changed ()
@@ -204,7 +204,7 @@ namespace Plank.Items
 			else
 				disconnect_wnck ();
 			
-			update_visible_items ();
+			update_visible_elements ();
 		}
 		
 		protected override void connect_element (DockElement element)
@@ -236,14 +236,14 @@ namespace Plank.Items
 				app = ((ApplicationDockItem) item).App;
 			
 			if (app == null || !app.is_running ()) {
-				remove_item (item);
+				remove (item);
 				return;
 			}
 			
 			var new_item = new TransientDockItem.with_application (app);
 			item.copy_values_to (new_item);
 			
-			replace_item (new_item, item);
+			replace (new_item, item);
 		}
 		
 		public void pin_item (DockItem item)
@@ -270,10 +270,10 @@ namespace Plank.Items
 				var new_item = new ApplicationDockItem.with_dockitem_file (dockitem_file);
 				item.copy_values_to (new_item);
 				
-				replace_item (new_item, item);
+				replace (new_item, item);
 			} else {
 				if (!(app_item.is_running () || app_item.has_unity_info ()))
-					remove_item (item);
+					remove (item);
 				item.delete ();
 			}
 			

@@ -128,14 +128,14 @@ namespace Plank.Items
 			item.deleted.disconnect (handle_item_deleted);
 		}
 		
-		protected void handle_item_state_changed ()
+		void handle_item_state_changed ()
 		{
-			item_state_changed ();
+			states_changed ();
 		}
 		
 		protected virtual void handle_item_deleted (DockItem item)
 		{
-			remove_item (item);
+			remove (item);
 		}
 	}
 }

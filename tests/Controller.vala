@@ -56,28 +56,28 @@ namespace Plank.Tests
 		
 		provider = new ApplicationDockItemProvider (launchers_folder);
 		item = create_controller_testitem ();
-		provider.add_item (item);
+		provider.add (item);
 		assert (item.ref_count > 1);
 
 		controller = new DockController (config_folder);
-		controller.add_item (provider);
+		controller.add (provider);
 		controller.initialize ();
 		
 		wait (1000);
 				
-		provider.remove_item (item);
+		provider.remove (item);
 		assert (item.ref_count == 1);
 		
 		wait (1000);
 
 		item2 = create_controller_testitem ();
-		provider.add_item (item2);
+		provider.add (item2);
 		wait (500);
 		
 		controller_items_match (controller);
 		
 		item3 = create_controller_testitem ();
-		provider.replace_item (item3, item2);
+		provider.replace (item3, item2);
 		wait (500);
 		
 		controller_items_match (controller);

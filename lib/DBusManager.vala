@@ -34,12 +34,12 @@ namespace Plank
 		public DBusItems (DockController _controller)
 		{
 			controller = _controller;
-			controller.items_changed.connect (handle_items_changed);
+			controller.elements_changed.connect (handle_elements_changed);
 		}
 		
 		~DBusItems ()
 		{
-			controller.items_changed.disconnect (handle_items_changed);
+			controller.elements_changed.disconnect (handle_elements_changed);
 			
 			if (changed_timer > 0) {
 				GLib.Source.remove (changed_timer);
@@ -47,7 +47,7 @@ namespace Plank
 			}
 		}
 		
-		void handle_items_changed ()
+		void handle_elements_changed ()
 		{
 			if (changed_timer > 0)
 				return;
@@ -95,7 +95,7 @@ namespace Plank
 				return true;
 			}
 			
-			return provider.remove_item (item);
+			return provider.remove (item);
 		}
 		
 		public int get_count ()

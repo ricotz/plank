@@ -253,7 +253,7 @@ namespace Plank.Items
 				return false;
 			}
 			
-			add_item (item, target);
+			add (item, target);
 			
 			resume_items_monitor ();
 			
@@ -348,7 +348,7 @@ namespace Plank.Items
 				else if (!item.is_valid ())
 					warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());
 				else
-					add_item (item);
+					add (item);
 			}
 			
 			queued_files.clear ();
@@ -442,9 +442,9 @@ namespace Plank.Items
 				// this removed LauncherEntry interface
 				unowned TransientDockItem? transient_item = item as TransientDockItem;
 				if (transient_item != null && transient_item.App == null)
-					remove_item (transient_item);
+					remove (transient_item);
 				else
-					item_state_changed ();
+					states_changed ();
 				
 				break;
 			}
@@ -492,9 +492,9 @@ namespace Plank.Items
 				unowned TransientDockItem? transient_item = current_item as TransientDockItem;
 				if (transient_item != null && transient_item.App == null
 					&& !(transient_item.has_unity_info ()))
-					remove_item (transient_item);
+					remove (transient_item);
 				else
-					item_state_changed ();
+					states_changed ();
 				
 				return;
 			}
@@ -520,7 +520,7 @@ namespace Plank.Items
 					// Only add item if there is actually a visible progress-bar or badge
 					// or the backing application provides a quicklist-dbusmenu
 					if (current_item.has_unity_info ())
-						add_item (current_item);
+						add (current_item);
 				}
 				
 				if (current_item == null)

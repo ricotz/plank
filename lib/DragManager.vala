@@ -303,7 +303,7 @@ namespace Plank
 						unowned ApplicationDockItem? app_item = (DragItem as ApplicationDockItem);
 						if (app_item == null || !(app_item.is_running () || app_item.has_unity_info ())) {
 							DragItem.IsVisible = false;
-							DragItem.Container.remove_item (DragItem);
+							DragItem.Container.remove (DragItem);
 						}
 						DragItem.delete ();
 						
@@ -444,7 +444,7 @@ namespace Plank
 			if (InternalDragActive && DragItem != null && hovered_item != null
 				&& DragItem != hovered_item
 				&& DragItem.Container == hovered_item.Container) {
-				DragItem.Container.move_item_to (DragItem, hovered_item);
+				DragItem.Container.move_to (DragItem, hovered_item);
 			}
 			
 			if (drag_hover_timer > 0) {

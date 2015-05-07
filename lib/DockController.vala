@@ -110,9 +110,9 @@ namespace Plank
 			prefs.notify["PinnedOnly"].disconnect (update_default_provider);
 			prefs.notify["ShowDockItem"].disconnect (update_show_dock_item);
 			
-			item_positions_changed.disconnect (handle_item_positions_changed);
-			item_state_changed.disconnect (handle_item_state_changed);
-			items_changed.disconnect (handle_items_changed);
+			positions_changed.disconnect (handle_positions_changed);
+			states_changed.disconnect (handle_states_changed);
+			elements_changed.disconnect (handle_elements_changed);
 			
 			items.clear ();
 			visible_items.clear ();
@@ -133,9 +133,9 @@ namespace Plank
 			
 			AddTime = GLib.get_monotonic_time ();
 			
-			item_positions_changed.connect (handle_item_positions_changed);
-			item_state_changed.connect (handle_item_state_changed);
-			items_changed.connect (handle_items_changed);
+			positions_changed.connect (handle_positions_changed);
+			states_changed.connect (handle_states_changed);
+			elements_changed.connect (handle_elements_changed);
 			
 			position_manager.initialize ();
 			drag_manager.initialize ();
@@ -157,7 +157,7 @@ namespace Plank
 			Logger.verbose ("DockController.add_default_provider ()");
 			default_provider = create_default_provider ();
 			
-			add_item (default_provider);
+			add (default_provider);
 		}
 		
 		ApplicationDockItemProvider create_default_provider ()
@@ -177,7 +177,7 @@ namespace Plank
 			else
 				provider = new DefaultApplicationDockItemProvider (prefs, launchers_folder);
 			
-			provider.add_items (Factory.item_factory.load_items (launchers_folder, prefs.DockItems));
+			provider.add_all (Factory.item_factory.load_items (launchers_folder, prefs.DockItems));
 			
 			return provider;
 		}
@@ -191,7 +191,7 @@ namespace Plank
 			var old_default_provider = default_provider;
 			default_provider = create_default_provider ();
 			default_provider.prepare ();
-			replace_item (default_provider, old_default_provider);
+			replace (default_provider, old_default_provider);
 			
 			update_items ();
 			
@@ -207,10 +207,10 @@ namespace Plank
 				if (dock_itself_item == null)
 					dock_itself_item = Factory.item_factory.get_item_for_dock ();
 				if (!internal_elements.contains (dock_itself_item))
-					prepend_item (dock_itself_item);
+					prepend (dock_itself_item);
 			} else if (dock_itself_item != null) {
 				if (internal_elements.contains (dock_itself_item))
-					remove_item (dock_itself_item);
+					remove (dock_itself_item);
 				dock_itself_item = null;
 			}
 		}
@@ -221,9 +221,9 @@ namespace Plank
 			if (provider == null)
 				return;
 			
-			provider.item_positions_changed.connect (handle_item_positions_changed);
-			provider.item_state_changed.connect (handle_item_state_changed);
-			provider.items_changed.connect (handle_items_changed);
+			provider.positions_changed.connect (handle_positions_changed);
+			provider.states_changed.connect (handle_states_changed);
+			provider.elements_changed.connect (handle_elements_changed);
 			
 			unowned ApplicationDockItemProvider? app_provider = (provider as ApplicationDockItemProvider);
 			if (app_provider != null)
@@ -236,18 +236,18 @@ namespace Plank
 			if (provider == null)
 				return;
 			
-			provider.item_positions_changed.disconnect (handle_item_positions_changed);
-			provider.item_state_changed.disconnect (handle_item_state_changed);
-			provider.items_changed.disconnect (handle_items_changed);
+			provider.positions_changed.disconnect (handle_positions_changed);
+			provider.states_changed.disconnect (handle_states_changed);
+			provider.elements_changed.disconnect (handle_elements_changed);
 			
 			unowned ApplicationDockItemProvider? app_provider = (provider as ApplicationDockItemProvider);
 			if (app_provider != null)
 				app_provider.item_window_added.disconnect (window.update_icon_region);
 		}
 		
-		protected override void update_visible_items ()
+		protected override void update_visible_elements ()
 		{
-			base.update_visible_items ();
+			base.update_visible_elements ();
 			
 			Logger.verbose ("DockController.update_visible_items ()");
 			
@@ -312,16 +312,16 @@ namespace Plank
 			}
 		}
 		
-		void handle_items_changed (DockContainer provider, Gee.List<DockElement> added, Gee.List<DockElement> removed)
+		void handle_elements_changed (DockContainer container, Gee.List<DockElement> added, Gee.List<DockElement> removed)
 		{
-			if (provider == default_provider)
+			if (container == default_provider)
 				serialize_item_positions ();
 			
 			// Schedule added/removed items for special animations
 			renderer.animate_items (added);
 			renderer.animate_items (removed);
 			
-			update_visible_items ();
+			update_visible_elements ();
 			update_items ();
 			
 			if (prefs.Alignment != Gtk.Align.FILL
@@ -334,12 +334,12 @@ namespace Plank
 			window.update_icon_regions ();
 		}
 		
-		void handle_item_positions_changed (DockContainer provider, Gee.List<unowned DockElement> moved_items)
+		void handle_positions_changed (DockContainer container, Gee.List<unowned DockElement> moved_items)
 		{
-			if (provider == default_provider)
+			if (container == default_provider)
 				serialize_item_positions ();
 			
-			update_visible_items ();
+			update_visible_elements ();
 			
 			foreach (unowned DockElement item in moved_items) {
 				position_manager.reset_item_cache (item);
@@ -350,7 +350,7 @@ namespace Plank
 			renderer.animated_draw ();
 		}
 		
-		void handle_item_state_changed (DockContainer provider)
+		void handle_states_changed (DockContainer container)
 		{
 			renderer.animated_draw ();
 		}

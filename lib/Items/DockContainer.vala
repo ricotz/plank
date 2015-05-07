@@ -35,22 +35,24 @@ namespace Plank.Items
 		}
 		
 		/**
-		 * Triggered when the items collection has changed.
+		 * Triggered when the collection of elements has changed.
 		 *
-		 * @param added the list of added items
-		 * @param removed the list of removed items
+		 * @param added the list of added elements
+		 * @param removed the list of removed elements
 		 */
-		public signal void items_changed (Gee.List<DockElement> added, Gee.List<DockElement> removed);
+		public signal void elements_changed (Gee.List<DockElement> added, Gee.List<DockElement> removed);
 		
 		/**
-		 * Triggered when the state of an item changes.
+		 * Triggered when the state of an element changes.
 		 */
-		public signal void item_state_changed ();
+		public signal void states_changed ();
 		
 		/**
-		 * Triggered anytime item-positions were changed.
+		 * Triggered anytime element-positions were changed.
+		 *
+		 * @param elements the list of moved elements
 		 */
-		public signal void item_positions_changed (Gee.List<unowned DockElement> items);
+		public signal void positions_changed (Gee.List<unowned DockElement> elements);
 		
 		/**
 		 * The ordered list of the visible dock elements.
@@ -95,11 +97,11 @@ namespace Plank.Items
 			
 			visible_elements.clear ();
 			
-			var items = new Gee.HashSet<DockElement> ();
-			items.add_all (internal_elements);
-			foreach (var item in items) {
-				remove_item_without_signaling (item);
-				item.Container = null;
+			var elements = new Gee.HashSet<DockElement> ();
+			elements.add_all (internal_elements);
+			foreach (var element in elements) {
+				remove_without_signaling (element);
+				element.Container = null;
 			}
 			internal_elements.clear ();
 		}
@@ -115,121 +117,121 @@ namespace Plank.Items
 		}
 		
 		/**
-		 * Adds a dock item to the collection.
+		 * Adds a dock-element to the collection.
 		 *
-		 * @param item the dock item to add
+		 * @param element the dock-element to add
 		 * @param target an existing item where to put this new one at
 		 * @return whether adding the item was successful
 		 */
-		public bool add_item (DockElement item, DockElement? target = null)
+		public bool add (DockElement element, DockElement? target = null)
 		{
-			if (internal_elements.contains (item)) {
-				critical ("Item '%s' already exists in this DockItemProvider.", item.Text);
+			if (internal_elements.contains (element)) {
+				critical ("Element '%s' already exists in this DockContainer.", element.Text);
 				return false;
 			}
 			
-			if (item.Container != null) {
-				critical ("Item '%s' should be removed from its old DockItemProvider first.", item.Text);
+			if (element.Container != null) {
+				critical ("Element '%s' should be removed from its old DockContainer first.", element.Text);
 				return false;
 			}
 			
-			add_item_without_signaling (item);
+			add_without_signaling (element);
 			
 			if (target != null && target != placeholder_item)
-				move_item_to (item, target);
+				move_to (element, target);
 			else
-				update_visible_items ();
+				update_visible_elements ();
 			
 			return true;
 		}
 		
 		/**
-		 * Prepends a dock item to the collection.
-		 * So the dock item will appear at the first position.
+		 * Prepends a dock-element to the collection.
+		 * So the dock-element will appear at the first position.
 		 *
-		 * @param item the dock item to add
+		 * @param element the dock-element to add
 		 */
-		public void prepend_item (DockElement item)
+		public void prepend (DockElement element)
 		{
-			if (internal_elements.contains (item)) {
-				critical ("Item '%s' already exists in this DockItemProvider.", item.Text);
+			if (internal_elements.contains (element)) {
+				critical ("Element '%s' already exists in this DockContainer.", element.Text);
 				return;
 			}
 			
-			if (item.Container != null) {
-				critical ("Item '%s' should be removed from its old DockItemProvider first.", item.Text);
+			if (element.Container != null) {
+				critical ("Element '%s' should be removed from its old DockContainer first.", element.Text);
 				return;
 			}
 			
-			unowned DockContainer? container = (item as DockContainer);
+			unowned DockContainer? container = (element as DockContainer);
 			if (container != null)
 				container.prepare ();
-			add_item_without_signaling (item);
+			add_without_signaling (element);
 			
 			DockElement? target = null;
 			if (internal_elements.size > 0)
 				target = internal_elements[0];
 			
 			if (target != null && target != placeholder_item)
-				move_item_to (item, target);
+				move_to (element, target);
 			else
-				update_visible_items ();
+				update_visible_elements ();
 		}
 		
 		/**
-		 * Adds a ordered list of dock items to the collection.
+		 * Adds a ordered list of dock-elements to the collection.
 		 *
-		 * @param items the dock items to add
-		 * @return whether all items were added successfully
+		 * @param elements the dock-elements to add
+		 * @return whether all elements were added successfully
 		 */
-		public bool add_items (Gee.ArrayList<DockElement> items)
+		public bool add_all (Gee.ArrayList<DockElement> elements)
 		{
 			bool result = true;
 			
-			foreach (var item in items) {
-				if (internal_elements.contains (item)) {
-					critical ("Item '%s' already exists in this DockItemProvider.", item.Text);
+			foreach (var element in elements) {
+				if (internal_elements.contains (element)) {
+					critical ("Element '%s' already exists in this DockContainer.", element.Text);
 					result = false;
 					continue;
 				}
 				
-				if (item.Container != null) {
-					critical ("Item '%s' should be removed from its old DockItemProvider first.", item.Text);
+				if (element.Container != null) {
+					critical ("Element '%s' should be removed from its old DockContainer first.", element.Text);
 					result = false;
 					continue;
 				}
 				
-				add_item_without_signaling (item);
+				add_without_signaling (element);
 			}
 			
-			update_visible_items ();
+			update_visible_elements ();
 			
 			return result;
 		}
 		
 		/**
-		 * Removes a dock item from the collection.
+		 * Removes a dock-element from the collection.
 		 *
-		 * @param item the dock item to remove
-		 * @return whether removing the item was successful
+		 * @param element the dock-element to remove
+		 * @return whether removing the element was successful
 		 */
-		public bool remove_item (DockElement item)
+		public bool remove (DockElement element)
 		{
-			if (!internal_elements.contains (item)) {
-				critical ("Item '%s' does not exist in this DockItemProvider.", item.Text);
+			if (!internal_elements.contains (element)) {
+				critical ("Element '%s' does not exist in this DockContainer.", element.Text);
 				return false;
 			}
 			
-			remove_item_without_signaling (item);
+			remove_without_signaling (element);
 			
-			update_visible_items ();
+			update_visible_elements ();
 			
 			return true;
 		}
 		
-		protected virtual void update_visible_items ()
+		protected virtual void update_visible_elements ()
 		{
-			Logger.verbose ("DockItemProvider.update_visible_items ()");
+			Logger.verbose ("DockContainer.update_visible_elements ()");
 			
 			var old_items = new Gee.ArrayList<DockElement> ();
 			old_items.add_all (visible_elements);
@@ -251,18 +253,18 @@ namespace Plank.Items
 				visible_elements.add (placeholder_item);
 			
 			if (added_items.size > 0 || removed_items.size > 0)
-				items_changed (added_items, removed_items);
+				elements_changed (added_items, removed_items);
 		}
 		
 		/**
-		 * Move an item to the position of another item.
-		 * This shifts all items which are between these two items.
+		 * Move an element to the position of another element.
+		 * This shifts all elements which are placed between these two elements.
 		 *
-		 * @param move the item to move
-		 * @param target the item of the new position
-		 * @return whether moving the item was successful
+		 * @param move the element to move
+		 * @param target the element of the new position
+		 * @return whether moving the element was successful
 		 */
-		public virtual bool move_item_to (DockElement move, DockElement target)
+		public virtual bool move_to (DockElement move, DockElement target)
 		{
 			if (move == target)
 				return true;
@@ -270,24 +272,24 @@ namespace Plank.Items
 			int index_move, index_target;
 			
 			if ((index_move = internal_elements.index_of (move)) < 0) {
-				critical ("Item '%s' does not exist in this DockItemProvider.", move.Text);
+				critical ("Element '%s' does not exist in this DockContainer.", move.Text);
 				return false;
 			}
 			
 			if ((index_target = internal_elements.index_of (target)) < 0) {
-				critical ("Item '%s' does not exist in this DockItemProvider.", target.Text);
+				critical ("Element '%s' does not exist in this DockContainer.", target.Text);
 				return false;
 			}
 			
-			move_item (internal_elements, index_move, index_target);
+			move_element (internal_elements, index_move, index_target);
 			
 			if ((index_move = visible_elements.index_of (move)) >= 0
 				&& (index_target = visible_elements.index_of (target)) >= 0) {
 				var moved_items = new Gee.ArrayList<unowned DockElement> ();
-				move_item (visible_elements, index_move, index_target, moved_items);
-				item_positions_changed (moved_items);
+				move_element (visible_elements, index_move, index_target, moved_items);
+				positions_changed (moved_items);
 			} else {
-				update_visible_items ();
+				update_visible_elements ();
 			}
 			
 			return true;
@@ -302,106 +304,106 @@ namespace Plank.Items
 				item.reset_buffers ();
 		}
 		
-		void add_item_without_signaling (DockElement item)
+		void add_without_signaling (DockElement element)
 		{
 			var add_time = GLib.get_monotonic_time ();
 
-			unowned DockContainer? container = (item as DockContainer);
+			unowned DockContainer? container = (element as DockContainer);
 			if (container != null) {
 				container.prepare ();
-				foreach (var element in container.Elements)
-					element.AddTime = add_time;
+				foreach (var e in container.Elements)
+					e.AddTime = add_time;
 			}
 			
-			internal_elements.add (item);
+			internal_elements.add (element);
 			
-			item.Container = this;
-			item.AddTime = add_time;
-			connect_element (item);
+			element.Container = this;
+			element.AddTime = add_time;
+			connect_element (element);
 		}
 		
 		/**
-		 * Replace an item with another item.
+		 * Replace an element with another element.
 		 *
-		 * @param new_item the new item
-		 * @param old_item the item to be replaced
-		 * @return whether replacing the item was successful
+		 * @param new_element the new element
+		 * @param old_element the element to be replaced
+		 * @return whether replacing the element was successful
 		 */
-		public virtual bool replace_item (DockElement new_item, DockElement old_item)
+		public virtual bool replace (DockElement new_element, DockElement old_element)
 		{
-			if (new_item == old_item)
+			if (new_element == old_element)
 				return true;
 			
 			int index;
 			
-			if ((index = internal_elements.index_of (old_item)) < 0) {
-				critical ("Item '%s' does not exist in this DockItemProvider.", old_item.Text);
+			if ((index = internal_elements.index_of (old_element)) < 0) {
+				critical ("Element '%s' does not exist in this DockContainer.", old_element.Text);
 				return false;
 			}
 			
-			if (internal_elements.contains (new_item)) {
-				critical ("Item '%s' already exists in this DockItemProvider.", new_item.Text);
+			if (internal_elements.contains (new_element)) {
+				critical ("Element '%s' already exists in this DockContainer.", new_element.Text);
 				return false;
 			}
 			
-			if (new_item.Container != null) {
-				critical ("Item '%s' should be removed from its old DockItemProvider first.", new_item.Text);
+			if (new_element.Container != null) {
+				critical ("Element '%s' should be removed from its old DockContainer first.", new_element.Text);
 				return false;
 			}
 			
-			//FIXME Logger.verbose ("DockItemProvider.replace_item (%s[%s, %i] > %s[%s, %i])", old_item.Text, old_item.DockItemFilename, (int)old_item, new_item.Text, new_item.DockItemFilename, (int)new_item);
+			//FIXME Logger.verbose ("DockContainer.replace_element (%s[%s, %i] > %s[%s, %i])", old_element.Text, old_element.DockItemFilename, (int)old_element, new_element.Text, new_element.DockItemFilename, (int)new_element);
 			
-			disconnect_element (old_item);
+			disconnect_element (old_element);
 			
-			internal_elements[index] = new_item;
-			old_item.Container = null;
-			new_item.Container = this;
+			internal_elements[index] = new_element;
+			old_element.Container = null;
+			new_element.Container = this;
 			
-			new_item.AddTime = old_item.AddTime;
-			//FIXME new_item.Position = old_item.Position;
-			connect_element (new_item);
+			new_element.AddTime = old_element.AddTime;
+			//FIXME new_element.Position = old_element.Position;
+			connect_element (new_element);
 			
-			if (visible_elements.contains (old_item))
-				update_visible_items ();
+			if (visible_elements.contains (old_element))
+				update_visible_elements ();
 			
 			return true;
 		}
 		
-		void remove_item_without_signaling (DockElement item)
+		void remove_without_signaling (DockElement element)
 		{
 			var remove_time = GLib.get_monotonic_time ();
 			
-			unowned DockContainer? container = (item as DockContainer);
+			unowned DockContainer? container = (element as DockContainer);
 			if (container != null)
-				foreach (var element in container.Elements)
-					element.RemoveTime = remove_time;
+				foreach (var e in container.Elements)
+					e.RemoveTime = remove_time;
 			
-			item.RemoveTime = remove_time;
-			disconnect_element (item);
+			element.RemoveTime = remove_time;
+			disconnect_element (element);
 			
-			internal_elements.remove (item);
-			item.Container = null;
+			internal_elements.remove (element);
+			element.Container = null;
 		}
 		
 		protected abstract void connect_element (DockElement element);
 		
 		protected abstract void disconnect_element (DockElement element);
 		
-		protected static void move_item (Gee.List<DockElement> items, int from, int to, Gee.List<unowned DockElement>? moved = null)
+		protected static void move_element (Gee.List<DockElement> elements, int from, int to, Gee.List<unowned DockElement>? moved = null)
 		{
 			assert (from >= 0);
 			assert (to >= 0);
 			assert (from != to);
-			int size = items.size;
+			int size = elements.size;
 			assert (from < size);
 			assert (to < size);
 
-			var item = items[from];
+			var item = elements[from];
 			if (from < to) {
 				for (int i = from; i < to; i++) {
-					items[i] = items[i + 1];
+					elements[i] = elements[i + 1];
 					if (moved != null)
-						moved.add (items[i]);
+						moved.add (elements[i]);
 				}
 				if (moved != null)
 					moved.add (item);
@@ -409,12 +411,12 @@ namespace Plank.Items
 				if (moved != null)
 					moved.add (item);
 				for (int i = from; i > to; i--) {
-					items[i] = items[i - 1];
+					elements[i] = elements[i - 1];
 					if (moved != null)
-						moved.add (items[i]);
+						moved.add (elements[i]);
 				}
 			}
-			items[to] = item;
+			elements[to] = item;
 		}
 	}
 }

@@ -156,10 +156,10 @@ namespace Plank.Tests
 		provider = new DockItemProvider ();
 		var item = create_testitem ();
 		
-		provider.add_item (item);
+		provider.add (item);
 		assert (item.ref_count > 1);
 		
-		provider.remove_item (item);
+		provider.remove (item);
 		assert (item.ref_count == 1);
 	}
 	
@@ -176,11 +176,11 @@ namespace Plank.Tests
 		var item = create_testitem ();
 		
 		// add item
-		provider.items_changed.connect (itemprovider_added_cb);
-		provider.add_item (item);
+		provider.elements_changed.connect (itemprovider_added_cb);
+		provider.add (item);
 		wait (EVENT_WAIT_MS);
 		now = GLib.get_monotonic_time ();
-		provider.items_changed.disconnect (itemprovider_added_cb);
+		provider.elements_changed.disconnect (itemprovider_added_cb);
 		
 		assert (item == added_item);
 		added_item = null;
@@ -189,19 +189,19 @@ namespace Plank.Tests
 		
 		// change item state
 		items_triggered = false;
-		provider.item_state_changed.connect (itemprovider_state_cb);
+		provider.states_changed.connect (itemprovider_state_cb);
 		item.clicked (0, 0);
 		wait (EVENT_WAIT_MS);
-		provider.item_state_changed.disconnect (itemprovider_state_cb);
+		provider.states_changed.disconnect (itemprovider_state_cb);
 		
 		assert (items_triggered = true);
 		
 		// remove item
-		provider.items_changed.connect (itemprovider_removed_cb);
-		provider.remove_item (item);
+		provider.elements_changed.connect (itemprovider_removed_cb);
+		provider.remove (item);
 		wait (EVENT_WAIT_MS);
 		now = GLib.get_monotonic_time ();
-		provider.items_changed.disconnect (itemprovider_removed_cb);
+		provider.elements_changed.disconnect (itemprovider_removed_cb);
 		
 		assert (item == removed_item);
 		removed_item = null;
