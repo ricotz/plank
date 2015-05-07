@@ -442,7 +442,8 @@ namespace Plank
 			unowned DockItem hovered_item = controller.window.HoveredItem;
 			
 			if (InternalDragActive && DragItem != null && hovered_item != null
-				&& DragItem != hovered_item) {
+				&& DragItem != hovered_item
+				&& DragItem.Container == hovered_item.Container) {
 				DragItem.Container.move_item_to (DragItem, hovered_item);
 			}
 			

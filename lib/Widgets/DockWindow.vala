@@ -430,9 +430,26 @@ namespace Plank.Widgets
 			}
 			
 			bool found_hovered_provider = false;
+			unowned DockItem? item = null;
+			unowned DockItemProvider? provider = null;
 			
 			foreach (var element in controller.VisibleElements) {
-				unowned DockItemProvider? provider = (element as DockItemProvider);
+				item = (element as DockItem);
+				if (item != null) {
+					rect = position_manager.get_item_hover_region (item);
+					if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width)
+						continue;
+					
+					// Do not allow the hovered-item to be the drag-item
+					if (drag_item == item)
+						break;
+					
+					set_hovered_provider (null);
+					set_hovered (item as DockItem);
+					return true;
+				}
+				
+				provider = (element as DockItemProvider);
 				if (provider == null)
 					continue;
 				
@@ -443,16 +460,16 @@ namespace Plank.Widgets
 				set_hovered_provider (provider);
 				found_hovered_provider = true;
 				
-				foreach (var item in provider.VisibleElements) {
-					rect = position_manager.get_item_hover_region (item);
+				foreach (var element2 in provider.VisibleElements) {
+					rect = position_manager.get_item_hover_region (element2);
 					if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width)
 						continue;
 					
 					// Do not allow the hovered-item to be the drag-item
-					if (drag_item == item)
+					if (drag_item == element2)
 						break;
 				
-					set_hovered (item as DockItem);
+					set_hovered (element2 as DockItem);
 					return true;
 				}
 			}

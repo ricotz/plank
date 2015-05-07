@@ -107,6 +107,10 @@ namespace Plank
 		{
 			prefs.notify["PinnedOnly"].disconnect (update_default_provider);
 			
+			item_positions_changed.disconnect (handle_item_positions_changed);
+			item_state_changed.disconnect (handle_item_state_changed);
+			items_changed.disconnect (handle_items_changed);
+			
 			items.clear ();
 			visible_items.clear ();
 		}
@@ -122,6 +126,10 @@ namespace Plank
 				add_default_provider ();
 			
 			update_items ();
+			
+			item_positions_changed.connect (handle_item_positions_changed);
+			item_state_changed.connect (handle_item_state_changed);
+			items_changed.connect (handle_items_changed);
 			
 			position_manager.initialize ();
 			drag_manager.initialize ();
@@ -225,13 +233,26 @@ namespace Plank
 			
 			visible_items.clear ();
 			
+			unowned DockItem? item = null;
+			unowned DockContainer? container = null;
+			
 			var current_pos = 0;
 			foreach (var element in visible_elements) {
-				unowned DockContainer? container = (element as DockContainer);
+				item = (element as DockItem);
+				if (item != null) {
+					if (item.Position != current_pos)
+						item.Position = current_pos;
+					visible_items.add (item);
+					current_pos++;
+					continue;
+				}
+				
+				container = (element as DockContainer);
 				if (container == null)
 					continue;
+				
 				foreach (var element2 in container.VisibleElements) {
-					unowned DockItem? item = (element2 as DockItem);
+					item = (element2 as DockItem);
 					if (item == null)
 						continue;
 					if (item.Position != current_pos)
@@ -248,12 +269,22 @@ namespace Plank
 			
 			items.clear ();
 			
+			unowned DockItem? item = null;
+			unowned DockContainer? container = null;
+			
 			foreach (var element in internal_elements) {
-				unowned DockContainer? container = (element as DockContainer);
+				item = (element as DockItem);
+				if (item != null) {
+					items.add (item);
+					continue;
+				}
+				
+				container = (element as DockContainer);
 				if (container == null)
 					continue;
+				
 				foreach (var element2 in container.Elements) {
-					unowned DockItem? item = (element2 as DockItem);
+					item = (element2 as DockItem);
 					if (item == null)
 						continue;
 					items.add (item);
@@ -281,8 +312,6 @@ namespace Plank
 				position_manager.update_regions ();
 			}
 			window.update_icon_regions ();
-			
-			items_changed (added, removed);
 		}
 		
 		void handle_item_positions_changed (DockContainer provider, Gee.List<unowned DockElement> moved_items)
