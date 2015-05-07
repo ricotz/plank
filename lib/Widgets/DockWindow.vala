@@ -17,6 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Plank.Factories;
 using Plank.Items;
 using Plank.Services;
 using Plank.Services.Windows;
@@ -595,7 +596,7 @@ namespace Plank.Widgets
 			
 			if ((button & PopupButton.RIGHT) != 0
 				&& (item == null || (event.state & Gdk.ModifierType.CONTROL_MASK) != 0)) {
-				menu_items = PlankDockItem.get_plank_menu_items ();
+				menu_items = Factory.item_factory.get_item_for_dock ().get_menu_items ();
 				if ((event.state & Gdk.ModifierType.MOD1_MASK) != 0
 					&& (event.state & Gdk.ModifierType.SHIFT_MASK) != 0)
 					menu_items.add_all (get_dock_debug_menu_items (controller));

@@ -77,6 +77,9 @@ namespace Plank
 		[Description(nick = "auto-pinning", blurb = "Whether to automatically pin an application if it seems useful to do.")]
 		public bool AutoPinning { get; set; }
 		
+		[Description(nick = "show-dock-item", blurb = "Whether to show the item for the dock itself.")]
+		public bool ShowDockItem { get; set; }
+		
 		/**
 		 * {@inheritDoc}
 		 */
@@ -128,6 +131,7 @@ namespace Plank
 			PressureReveal = false;
 			PinnedOnly = false;
 			AutoPinning = true;
+			ShowDockItem = true;
 		}
 		
 		/**
@@ -227,6 +231,9 @@ namespace Plank
 				break;
 			
 			case "AutoPinning":
+				break;
+			
+			case "ShowDockItem":
 				break;
 			}
 		}

@@ -53,6 +53,7 @@ namespace Plank.Widgets
 		Gtk.Switch sw_lock_items;
 		Gtk.Switch sw_auto_pinning;
 		Gtk.Switch sw_pressure_reveal;
+		Gtk.Switch sw_show_dock_item;
 		
 		public PreferencesWindow (DockPreferences prefs)
 		{
@@ -103,6 +104,7 @@ namespace Plank.Widgets
 				sw_lock_items = builder.get_object ("sw_lock_items") as Gtk.Switch;
 				sw_auto_pinning = builder.get_object ("sw_auto_pinning") as Gtk.Switch;
 				sw_pressure_reveal = builder.get_object ("sw_pressure_reveal") as Gtk.Switch;
+				sw_show_dock_item = builder.get_object ("sw_show_dock_item") as Gtk.Switch;
 				cb_alignment = builder.get_object ("cb_alignment") as Gtk.ComboBoxText;
 				cb_items_alignment = builder.get_object ("cb_items_alignment") as Gtk.ComboBoxText;
 				
@@ -160,6 +162,9 @@ namespace Plank.Widgets
 				break;
 			case "PressureReveal":
 				sw_pressure_reveal.set_active (prefs.PressureReveal);
+				break;
+			case "ShowDockItem":
+				sw_show_dock_item.set_active (prefs.ShowDockItem);
 				break;
 			case "Theme":
 				var pos = 0;
@@ -265,6 +270,11 @@ namespace Plank.Widgets
 			prefs.PressureReveal = ((Gtk.Switch) widget).get_active ();
 		}
 		
+		void show_dock_item_toggled (GLib.Object widget, ParamSpec param)
+		{
+			prefs.ShowDockItem = ((Gtk.Switch) widget).get_active ();
+		}
+		
 		void iconsize_changed (Gtk.Adjustment adj)
 		{
 			prefs.IconSize = (int) adj.value;
@@ -309,6 +319,7 @@ namespace Plank.Widgets
 			sw_lock_items.notify["active"].connect (lock_items_toggled);
 			sw_auto_pinning.notify["active"].connect (auto_pinning_toggled);
 			sw_pressure_reveal.notify["active"].connect (pressure_reveal_toggled);
+			sw_show_dock_item.notify["active"].connect (show_dock_item_toggled);
 			cb_alignment.changed.connect (cb_alignment_changed);
 			cb_items_alignment.changed.connect (cb_items_alignment_changed);
 		}
@@ -353,6 +364,7 @@ namespace Plank.Widgets
 			sw_lock_items.set_active (prefs.LockItems);
 			sw_auto_pinning.set_active (prefs.AutoPinning);
 			sw_pressure_reveal.set_active (prefs.PressureReveal);
+			sw_show_dock_item.set_active (prefs.ShowDockItem);
 			cb_alignment.active_id = ((int) prefs.Alignment).to_string ();
 			cb_items_alignment.active_id = ((int) prefs.ItemsAlignment).to_string ();
 			cb_items_alignment.sensitive = (prefs.Alignment == Gtk.Align.FILL);

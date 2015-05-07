@@ -49,6 +49,7 @@ namespace Plank
 		DBusManager dbus_manager;
 		Gee.ArrayList<unowned DockItem> visible_items;
 		Gee.ArrayList<unowned DockItem> items;
+		DockItem? dock_itself_item;
 		
 		/**
 		 * List of all items on this dock
@@ -93,6 +94,7 @@ namespace Plank
 			visible_items = new Gee.ArrayList<unowned DockItem> ();
 			
 			prefs.notify["PinnedOnly"].connect (update_default_provider);
+			prefs.notify["ShowDockItem"].connect (update_show_dock_item);
 			
 			dbus_manager = new DBusManager (this);
 			
@@ -106,6 +108,7 @@ namespace Plank
 		~DockController ()
 		{
 			prefs.notify["PinnedOnly"].disconnect (update_default_provider);
+			prefs.notify["ShowDockItem"].disconnect (update_show_dock_item);
 			
 			item_positions_changed.disconnect (handle_item_positions_changed);
 			item_state_changed.disconnect (handle_item_state_changed);
@@ -125,7 +128,10 @@ namespace Plank
 			if (internal_elements.size <= 0)
 				add_default_provider ();
 			
+			update_show_dock_item ();
 			update_items ();
+			
+			AddTime = GLib.get_monotonic_time ();
 			
 			item_positions_changed.connect (handle_item_positions_changed);
 			item_state_changed.connect (handle_item_state_changed);
@@ -193,6 +199,20 @@ namespace Plank
 			// of the default-provider
 			position_manager.update (renderer.theme);
 			window.update_icon_regions ();
+		}
+		
+		void update_show_dock_item ()
+		{
+			if (prefs.ShowDockItem) {
+				if (dock_itself_item == null)
+					dock_itself_item = Factory.item_factory.get_item_for_dock ();
+				if (!internal_elements.contains (dock_itself_item))
+					prepend_item (dock_itself_item);
+			} else if (dock_itself_item != null) {
+				if (internal_elements.contains (dock_itself_item))
+					remove_item (dock_itself_item);
+				dock_itself_item = null;
+			}
 		}
 		
 		protected override void connect_element (DockElement element)

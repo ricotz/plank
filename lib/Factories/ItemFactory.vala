@@ -105,6 +105,16 @@ namespace Plank.Factories
 		}
 		
 		/**
+		 * Creates a new {@link Items.PlankDockItem} for the dock itself.
+		 *
+		 * @return the new {@link Items.PlankDockItem} created
+		 */
+		public virtual DockItem get_item_for_dock ()
+		{
+			return PlankDockItem.get_instance ();
+		}
+		
+		/**
 		 * Creates a new {@link Items.DockElement} for a launcher parsed from a .dockitem.
 		 *
 		 * @param file the {@link GLib.File} of .dockitem file that was parsed
@@ -113,8 +123,6 @@ namespace Plank.Factories
 		 */
 		protected DockElement default_make_element (GLib.File file, string launcher)
 		{
-			if (Factory.main.is_launcher_for_dock (launcher))
-				return new PlankDockItem.with_dockitem_file (file);
 			if (launcher.has_suffix (".desktop"))
 				return new ApplicationDockItem.with_dockitem_file (file);
 			return new FileDockItem.with_dockitem_file (file);
@@ -286,9 +294,6 @@ namespace Plank.Factories
 		 */
 		public void make_default_items ()
 		{
-			// add plank item!
-			make_dock_item (Paths.DataFolder.get_parent ().get_child ("applications").get_child (Factory.main.app_launcher).get_uri ());
-			
 			if (make_default_gnome_items ())
 				return;
 			

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-12 17:57+0100\n"
+"POT-Creation-Date: 2015-03-15 12:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -161,6 +161,10 @@ msgid "Automatic Pinning:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:32
+msgid "Show Item for Dock:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
 msgstr ""
 
@@ -193,15 +197,15 @@ msgstr ""
 msgid "Drop applications or files here"
 msgstr ""
 
-#: ../lib/Items/PlankDockItem.vala:78
+#: ../lib/Items/PlankDockItem.vala:75
 msgid "Get _Help Online..."
 msgstr ""
 
-#: ../lib/Items/PlankDockItem.vala:82
+#: ../lib/Items/PlankDockItem.vala:79
 msgid "_Translate This Application..."
 msgstr ""
 
-#: ../lib/Widgets/PreferencesWindow.vala:64
-#: ../lib/Widgets/PreferencesWindow.vala:74
+#: ../lib/Widgets/PreferencesWindow.vala:65
+#: ../lib/Widgets/PreferencesWindow.vala:75
 msgid "Preferences"
 msgstr ""
