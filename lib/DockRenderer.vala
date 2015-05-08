@@ -676,6 +676,17 @@ namespace Plank
 				}
 			}
 			
+			// animate icon on invalid state
+			if ((item.State & ItemState.INVALID) != 0) {
+				var invalid_duration = 3000 * 1000;
+				var invalid_time = frame_time - item.LastValid;
+				if (invalid_time < invalid_duration) {
+					draw_value.opacity = 0.10 + (0.90 * (Math.cos (invalid_time / (double) invalid_duration * 4.5 * Math.PI) + 1) / 2);
+				} else {
+					draw_value.opacity = 0.10;
+				}
+			}
+			
 			return draw_value;
 		}
 			
@@ -1016,6 +1027,8 @@ namespace Plank
 			if (render_time - item.AddTime <= theme.ItemMoveTime * 1000)
 				return true;
 			if (render_time - item.RemoveTime <= theme.ItemMoveTime * 1000)
+				return true;
+			if (render_time - item.LastValid <= 3000 * 1000)
 				return true;
 			
 			return false;

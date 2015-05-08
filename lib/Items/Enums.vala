@@ -83,7 +83,11 @@ namespace Plank.Items
 		/**
 		 * The item is currently moved to its new position.
 		 */
-		MOVE = 1 << 3
+		MOVE = 1 << 3,
+		/**
+		 * The item is invalid and should be removed.
+		 */
+		INVALID = 1 << 4
 	}
 	
 	/**

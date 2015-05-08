@@ -116,6 +116,11 @@ namespace Plank.Items
 		public int64 LastMove { get; protected set; }
 		
 		/**
+		 * The last time the item was valid.
+		 */
+		public int64 LastValid { get; protected set; }
+		
+		/**
 		 * Called when an item is clicked on.
 		 *
 		 * @param button the button clicked

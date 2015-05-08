@@ -142,6 +142,7 @@ namespace Plank.Items
 		FileMonitor? icon_file_monitor = null;
 		
 		bool launcher_exists = false;
+		uint removal_timer = 0;
 		
 		/**
 		 * Creates a new dock item.
@@ -186,6 +187,9 @@ namespace Plank.Items
 			
 			launcher_file_monitor_stop ();
 			icon_file_monitor_stop ();
+			
+			if (stop_removal ())
+				@delete ();
 		}
 		
 		/**
@@ -325,11 +329,18 @@ namespace Plank.Items
 				debug ("Launcher file '%s' deleted, item is invalid now", f.get_uri ());
 				
 				launcher_exists = false;
+				LastValid = GLib.get_monotonic_time ();
+				State |= ItemState.INVALID;
+				
+				schedule_removal_if_needed ();
 				break;
 			case FileMonitorEvent.CREATED:
 				debug ("Launcher file '%s' created, item is valid again", f.get_uri ());
 				
 				launcher_exists = true;
+				State &= ~ItemState.INVALID;
+				
+				stop_removal ();
 				break;
 			default:
 				break;
@@ -344,8 +355,10 @@ namespace Plank.Items
 				return;
 			
 			unowned string? launcher = Prefs.Launcher;
-			if (launcher == null || launcher == "")
+			if (launcher == null || launcher == "") {
+				State &= ~ItemState.INVALID;
 				return;
+			}
 			
 			try {
 				var launcher_file = File.new_for_uri (launcher);
@@ -365,6 +378,35 @@ namespace Plank.Items
 			launcher_file_monitor.changed.disconnect (launcher_file_changed);
 			launcher_file_monitor.cancel ();
 			launcher_file_monitor = null;
+		}
+		
+		bool schedule_removal_if_needed ()
+		{
+			if (removal_timer > 0)
+				return true;
+			
+			if (launcher_file_monitor == null || is_valid ())
+				return false;
+			
+			removal_timer = Gdk.threads_add_timeout (3000, () => {
+				removal_timer = 0;
+				if (!is_valid ())
+					@delete ();
+				return false;
+			});
+			
+			return true;
+		}
+		
+		bool stop_removal ()
+		{
+			if (removal_timer == 0)
+				return false;
+			
+			Source.remove (removal_timer);
+			removal_timer = 0;
+			
+			return true;
 		}
 		
 		unowned DockSurface get_surface (int width, int height, DockSurface model)

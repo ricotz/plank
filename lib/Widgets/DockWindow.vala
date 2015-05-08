@@ -602,7 +602,7 @@ namespace Plank.Widgets
 					menu_items.add_all (get_dock_debug_menu_items (controller));
 				set_hovered_provider (null);
 				set_hovered (null);
-			} else if (item != null && (item.Button & button) != 0) {
+			} else if (item != null && item.is_valid () && (item.Button & button) != 0) {
 				menu_items = item.get_menu_items ();
 				if ((event.state & Gdk.ModifierType.MOD1_MASK) != 0
 					&& (event.state & Gdk.ModifierType.SHIFT_MASK) != 0)

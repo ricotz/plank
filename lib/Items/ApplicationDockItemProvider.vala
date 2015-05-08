@@ -342,13 +342,16 @@ namespace Plank.Items
 					continue;
 				
 				unowned DockItem? dupe;
-				if ((dupe = item_for_uri (item.Launcher)) != null)
-					warning ("The launcher '%s' in dock item '%s' is already managed by dock item '%s'",
-						item.Launcher, file.get_path (), dupe.DockItemFilename);
-				else if (!item.is_valid ())
-					warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());
-				else
+				if ((dupe = item_for_uri (item.Launcher)) != null) {
+					warning ("The launcher '%s' in dock item '%s' is already managed by dock item '%s'. Removing '%s'.",
+						item.Launcher, file.get_path (), dupe.DockItemFilename, item.DockItemFilename);
+					item.delete ();
+				} else if (!item.is_valid ()) {
+					warning ("The launcher '%s' in dock item '%s' does not exist. Removing '%s'.", item.Launcher, file.get_path (), item.DockItemFilename);
+					item.delete ();
+				} else {
 					add (item);
+				}
 			}
 			
 			queued_files.clear ();

@@ -178,13 +178,16 @@ namespace Plank.Factories
 						continue;
 					
 					unowned DockItem? dupe;
-					if ((dupe = find_item_for_uri (result, item.Launcher)) != null)
-						warning ("The launcher '%s' in dock item '%s' is already managed by dock item '%s'",
-							item.Launcher, file.get_path (), dupe.DockItemFilename);
-					else if (!item.is_valid ())
-						warning ("The launcher '%s' in dock item '%s' does not exist", item.Launcher, file.get_path ());
-					else
+					if ((dupe = find_item_for_uri (result, item.Launcher)) != null) {
+						warning ("The launcher '%s' in dock item '%s' is already managed by dock item '%s'. Removing '%s'.",
+							item.Launcher, file.get_path (), dupe.DockItemFilename, item.DockItemFilename);
+						item.delete ();
+					} else if (!item.is_valid ()) {
+						warning ("The launcher '%s' in dock item '%s' does not exist. Removing '%s'.", item.Launcher, file.get_path (), item.DockItemFilename);
+						item.delete ();
+					} else {
 						result.add (item);
+					}
 				}
 			} catch (Error e) {
 				critical ("Error loading dock items from '%s'. (%s)", source_dir.get_path () ?? "", e.message);
