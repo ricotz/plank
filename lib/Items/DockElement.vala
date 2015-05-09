@@ -125,10 +125,11 @@ namespace Plank.Items
 		 *
 		 * @param button the button clicked
 		 * @param mod the modifiers
+		 * @param event_time the timestamp of the event triggering this action
 		 */
-		public void clicked (PopupButton button, Gdk.ModifierType mod)
+		public void clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
 		{
-			ClickedAnimation = on_clicked (button, mod);
+			ClickedAnimation = on_clicked (button, mod, event_time);
 			LastClicked = GLib.get_monotonic_time ();
 		}
 		
@@ -137,9 +138,10 @@ namespace Plank.Items
 		 *
 		 * @param button the button clicked
 		 * @param mod the modifiers
+		 * @param event_time the timestamp of the event triggering this action
 		 * @return which type of animation to trigger
 		 */
-		protected virtual Animation on_clicked (PopupButton button, Gdk.ModifierType mod)
+		protected virtual Animation on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
 		{
 			return Animation.NONE;
 		}
@@ -155,6 +157,8 @@ namespace Plank.Items
 		
 		/**
 		 * Called when an item gets hovered.
+		 *
+		 * @return which type of animation to trigger
 		 */
 		protected virtual Animation on_hovered ()
 		{
@@ -166,10 +170,11 @@ namespace Plank.Items
 		 *
 		 * @param direction the scroll direction
 		 * @param mod the modifiers
+		 * @param event_time the timestamp of the event triggering this action
 		 */
-		public void scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod)
+		public void scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod, uint32 event_time)
 		{
-			ScrolledAnimation = on_scrolled (direction, mod);
+			ScrolledAnimation = on_scrolled (direction, mod, event_time);
 		}
 		
 		/**
@@ -177,9 +182,10 @@ namespace Plank.Items
 		 *
 		 * @param direction the scroll direction
 		 * @param mod the modifiers
+		 * @param event_time the timestamp of the event triggering this action
 		 * @return which type of animation to trigger
 		 */
-		protected virtual Animation on_scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod)
+		protected virtual Animation on_scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod, uint32 event_time)
 		{
 			LastScrolled = GLib.get_monotonic_time ();
 			return Animation.NONE;

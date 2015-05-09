@@ -310,7 +310,7 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod)
+		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
 		{
 			if (!is_window ())
 				if (button == PopupButton.MIDDLE
@@ -321,7 +321,7 @@ namespace Plank.Items
 				}
 			
 			if (button == PopupButton.LEFT && App != null && WindowControl.get_num_windows (App) > 0) {
-				WindowControl.smart_focus (App);
+				WindowControl.smart_focus (App, event_time);
 				return Animation.DARKEN;
 			}
 			
@@ -331,7 +331,7 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override Animation on_scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod)
+		protected override Animation on_scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod, uint32 event_time)
 		{
 			if (App == null || WindowControl.get_num_windows (App) == 0)
 				return Animation.NONE;
@@ -342,9 +342,9 @@ namespace Plank.Items
 			LastScrolled = GLib.get_monotonic_time ();
 			
 			if (direction == Gdk.ScrollDirection.UP || direction == Gdk.ScrollDirection.LEFT)
-				WindowControl.focus_previous (App);
+				WindowControl.focus_previous (App, event_time);
 			else
-				WindowControl.focus_next (App);
+				WindowControl.focus_next (App, event_time);
 			
 			return Animation.DARKEN;
 		}
@@ -445,9 +445,10 @@ namespace Plank.Items
 				items.add (item);
 			}
 			
+			var event_time = Gtk.get_current_event_time ();
 			if (is_running () && window_count > 0) {
 				var item = create_menu_item ((window_count > 1 ? _("_Close All") : _("_Close")), "window-close-symbolic;;window-close");
-				item.activate.connect (() => WindowControl.close_all (App));
+				item.activate.connect (() => WindowControl.close_all (App, event_time));
 				items.add (item);
 			}
 			
@@ -504,7 +505,7 @@ namespace Plank.Items
 					if (window.is_active ())
 						window_item.set_sensitive (false);
 					else
-						window_item.activate.connect (() => WindowControl.focus_window (window));
+						window_item.activate.connect (() => WindowControl.focus_window (window, event_time));
 					
 					items.add (window_item);
 				}

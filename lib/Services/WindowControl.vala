@@ -229,7 +229,7 @@ namespace Plank.Services.Windows
 			}
 		}
 		
-		public static void close_all (Bamf.Application app)
+		public static void close_all (Bamf.Application app, uint32 event_time)
 		{
 			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
@@ -239,11 +239,11 @@ namespace Plank.Services.Windows
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				unowned Wnck.Window window = Wnck.Window.@get (xids.index (i));
 				if (window != null && !window.is_skip_tasklist ())
-					window.close (Gtk.get_current_event_time ());
+					window.close (event_time);
 			}
 		}
 		
-		public static void focus_window (Bamf.Window window)
+		public static void focus_window (Bamf.Window window, uint32 event_time)
 		{
 			Wnck.Screen.get_default ();
 			unowned Wnck.Window w = Wnck.Window.@get (window.get_xid ());
@@ -253,10 +253,10 @@ namespace Plank.Services.Windows
 			if (w == null)
 				return;
 			
-			center_and_focus_window (w);
+			center_and_focus_window (w, event_time);
 		}
 		
-		static void focus_window_by_xid (uint32 xid)
+		static void focus_window_by_xid (uint32 xid, uint32 event_time)
 		{
 			Wnck.Screen.get_default ();
 			unowned Wnck.Window w = Wnck.Window.@get (xid);
@@ -266,7 +266,7 @@ namespace Plank.Services.Windows
 			if (w == null)
 				return;
 			
-			center_and_focus_window (w);
+			center_and_focus_window (w, event_time);
 		}
 		
 		static int find_active_xid_index (Array<uint32>? xids)
@@ -280,7 +280,7 @@ namespace Plank.Services.Windows
 			return i;
 		}
 		
-		public static void focus_previous (Bamf.Application app)
+		public static void focus_previous (Bamf.Application app, uint32 event_time)
 		{
 			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
@@ -296,10 +296,10 @@ namespace Plank.Services.Windows
 			if (i < 0)
 				i = (int) xids.length - 1;
 			
-			focus_window_by_xid (xids.index (i));
+			focus_window_by_xid (xids.index (i), event_time);
 		}
 		
-		public static void focus_next (Bamf.Application app)
+		public static void focus_next (Bamf.Application app, uint32 event_time)
 		{
 			Wnck.Screen.get_default ();
 			Array<uint32>? xids = app.get_xids ();
@@ -315,7 +315,7 @@ namespace Plank.Services.Windows
 			if (i == xids.length)
 				i = 0;
 			
-			focus_window_by_xid (xids.index (i));
+			focus_window_by_xid (xids.index (i), event_time);
 		}
 		
 		public static void minimize (Bamf.Application app)
@@ -329,14 +329,14 @@ namespace Plank.Services.Windows
 			}
 		}
 		
-		public static void restore (Bamf.Application app)
+		public static void restore (Bamf.Application app, uint32 event_time)
 		{
 			var stack = get_ordered_window_stack (app);
 			stack.reverse ();
 			foreach (unowned Wnck.Window window in stack) {
 				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
 				if (window.is_minimized () && active_workspace != null && window.is_in_viewport (active_workspace)) {
-					window.unminimize (Gtk.get_current_event_time ());
+					window.unminimize (event_time);
 					Thread.usleep (WINDOW_GROUP_DELAY);
 				}
 			}
@@ -378,7 +378,7 @@ namespace Plank.Services.Windows
 			return windows;
 		}
 		
-		public static void smart_focus (Bamf.Application app)
+		public static void smart_focus (Bamf.Application app, uint32 event_time)
 		{
 			var windows = get_ordered_window_stack (app);
 			
@@ -400,7 +400,7 @@ namespace Plank.Services.Windows
 						continue;
 					
 					if (!window.is_skip_tasklist ()) {
-						intelligent_focus_off_viewport_window (window, windows);
+						intelligent_focus_off_viewport_window (window, windows, event_time);
 						return;
 					}
 				}
@@ -412,7 +412,7 @@ namespace Plank.Services.Windows
 				if (window.is_minimized () && active_workspace != null && window.is_in_viewport (active_workspace)) {
 					foreach (unowned Wnck.Window w in windows)
 						if (w.is_minimized () && w.is_in_viewport (active_workspace)) {
-							w.unminimize (Gtk.get_current_event_time ());
+							w.unminimize (event_time);
 							Thread.usleep (WINDOW_GROUP_DELAY);
 						}
 					return;
@@ -439,7 +439,7 @@ namespace Plank.Services.Windows
 				if (active_workspace != null && window.is_in_viewport (active_workspace)) {
 					foreach (unowned Wnck.Window w in windows)
 						if (w.is_in_viewport (active_workspace)) {
-							center_and_focus_window (w);
+							center_and_focus_window (w, event_time);
 							Thread.usleep (WINDOW_GROUP_DELAY);
 						}
 					return;
@@ -447,21 +447,22 @@ namespace Plank.Services.Windows
 			}
 			
 			// Focus most-top window and all others on its workspace
-			intelligent_focus_off_viewport_window (windows.nth_data (0), windows);
+			intelligent_focus_off_viewport_window (windows.nth_data (0), windows, event_time);
 		}
 		
-		static void intelligent_focus_off_viewport_window (Wnck.Window targetWindow, GLib.List<unowned Wnck.Window> additional_windows)
+		static void intelligent_focus_off_viewport_window (Wnck.Window targetWindow,
+			GLib.List<unowned Wnck.Window> additional_windows, uint32 event_time)
 		{
 			additional_windows.reverse ();
 			
 			foreach (unowned Wnck.Window window in additional_windows) {
 				if (!window.is_minimized () && windows_share_viewport (targetWindow, window)) {
-					center_and_focus_window (window);
+					center_and_focus_window (window, event_time);
 					Thread.usleep (WINDOW_GROUP_DELAY);
 				}
 			}
 			
-			center_and_focus_window (targetWindow);
+			center_and_focus_window (targetWindow, event_time);
 			
 			if (additional_windows.length () <= 1)
 				return;
@@ -473,7 +474,7 @@ namespace Plank.Services.Windows
 			delayed_focus_window = targetWindow;
 			delayed_focus_timer = Gdk.threads_add_timeout (VIEWPORT_CHANGE_DELAY, () => {
 				delayed_focus_timer = 0;
-				delayed_focus_window.activate (Gtk.get_current_event_time ());
+				delayed_focus_window.activate (event_time);
 				delayed_focus_window = null;
 				return false;
 			});
@@ -518,18 +519,17 @@ namespace Plank.Services.Windows
 			return viewpRect.intersect (secondGeo, null);
 		}
 		
-		static void center_and_focus_window (Wnck.Window w)
+		static void center_and_focus_window (Wnck.Window w, uint32 event_time)
 		{
-			var time = Gtk.get_current_event_time ();
 			unowned Wnck.Workspace? workspace = w.get_workspace ();
 			
 			if (workspace != null && workspace != w.get_screen ().get_active_workspace ())
-				workspace.activate (time);
+				workspace.activate (event_time);
 			
 			if (w.is_minimized ())
-				w.unminimize (time);
+				w.unminimize (event_time);
 			
-			w.activate_transient (time);
+			w.activate_transient (event_time);
 		}
 		
 		public static Gdk.Rectangle get_easy_geometry (Wnck.Window w)

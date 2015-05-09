@@ -190,7 +190,7 @@ namespace Plank.Tests
 		// change item state
 		items_triggered = false;
 		provider.states_changed.connect (itemprovider_state_cb);
-		item.clicked (0, 0);
+		item.clicked (0, 0, 0);
 		wait (EVENT_WAIT_MS);
 		provider.states_changed.disconnect (itemprovider_state_cb);
 		

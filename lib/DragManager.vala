@@ -456,7 +456,7 @@ namespace Plank
 				drag_hover_timer = Gdk.threads_add_timeout (1500, () => {
 					unowned DockItem item = controller.window.HoveredItem;
 					if (item != null)
-						item.scrolled (Gdk.ScrollDirection.DOWN, 0);
+						item.scrolled (Gdk.ScrollDirection.DOWN, 0, Gtk.get_current_event_time ());
 					else
 						drag_hover_timer = 0;
 					return item != null;

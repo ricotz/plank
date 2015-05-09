@@ -192,7 +192,7 @@ namespace Plank.Widgets
 			
 			// Make sure the HoveredItem is still the same since button-pressed
 			if (ClickedItem != null && HoveredItem == ClickedItem && !menu_is_visible ())
-				HoveredItem.clicked (PopupButton.from_event_button (event), event.state);
+				HoveredItem.clicked (PopupButton.from_event_button (event), event.state, event.time);
 			
 			ClickedItem = null;
 			
@@ -279,7 +279,7 @@ namespace Plank.Widgets
 			}
 			
 			if (HoveredItem != null) {
-				HoveredItem.scrolled (event.direction, event.state);
+				HoveredItem.scrolled (event.direction, event.state, event.time);
 				controller.renderer.animated_draw ();
 			}
 			
