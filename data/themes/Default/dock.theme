@@ -49,7 +49,7 @@ SlideTime=300
 #The time (in ms) to fade the dock in/out on a hide (if FadeOpacity is < 1).
 FadeTime=250
 #The time (in ms) to slide the dock in/out on a hide (if FadeOpacity is 1).
-HideTime=150
+HideTime=250
 #The size of the urgent glow (shown when dock is hidden), in tenths of a percent of IconSize.
 GlowSize=30
 #The total time (in ms) to show the hidden-dock urgent glow.

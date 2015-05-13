@@ -227,15 +227,22 @@ namespace Plank
 			var fade_opacity = theme.FadeOpacity;
 			
 			if (screen_is_composited) {
-				var time = (fade_opacity == 1.0 ? theme.HideTime : theme.FadeTime);
-				var diff = double.min (1, (frame_time - last_hide) / (double) (time * 1000));
-				hide_progress = (controller.hide_manager.Hidden ? diff : 1.0 - diff);
+				var hide_duration = (fade_opacity == 1.0 ? theme.HideTime : theme.FadeTime) * 1000;
+				var hide_time = frame_time - last_hide;
+				if (hide_time < hide_duration) {
+					if (controller.hide_manager.Hidden)
+						hide_progress = Drawing.easing_for_mode (AnimationMode.EASE_IN_CUBIC, hide_time, hide_duration);
+					else
+						hide_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_OUT_CUBIC, hide_time, hide_duration);
+				} else {
+					hide_progress = (controller.hide_manager.Hidden ? 1.0 : 0.0);
+				}
 			} else {
 				hide_progress = 0.0;
 			}
 			
 			if (fade_opacity < 1.0)
-				opacity = double.min (1.0, double.max (0.0, 1.0 - (1.0 - fade_opacity) * hide_progress));
+				opacity = 1.0 - (1.0 - fade_opacity) * hide_progress;
 			else
 				opacity = 1.0;
 		}

@@ -130,7 +130,7 @@ namespace Plank.Drawing
 			ActiveTime = 300;
 			SlideTime = 300;
 			FadeTime = 250;
-			HideTime = 150;
+			HideTime = 250;
 			GlowSize = 30;
 			GlowTime = 10000;
 			GlowPulseTime = 2000;
