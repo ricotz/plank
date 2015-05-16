@@ -326,15 +326,18 @@ namespace Plank.Drawing
 		 */
 		public static Gdk.Pixbuf ar_scale (Gdk.Pixbuf source, int width, int height)
 		{
-			var xScale = (double) width / (double) source.width;
-			var yScale = (double) height / (double) source.height;
-			var scale = double.min (xScale, yScale);
+			var source_width = (double) source.width;
+			var source_height = (double) source.height;
+			
+			var x_scale = width / source_width;
+			var y_scale = height / source_height;
+			var scale = double.min (x_scale, y_scale);
 			
 			if (scale == 1)
 				return source;
 			
-			var scaled_width = int.max (1, (int) (source.width * scale));
-			var scaled_height = int.max (1, (int) (source.height * scale));
+			var scaled_width = int.max (1, (int) (source_width * scale));
+			var scaled_height = int.max (1, (int) (source_height * scale));
 			
 			return source.scale_simple (scaled_width, scaled_height, Gdk.InterpType.HYPER);
 		}
