@@ -546,11 +546,12 @@ namespace Plank.Drawing
 				for (var x = 0; x < width; x++) {
 					for (var k = 0; k < gaussWidth; k++) {
 						var source = cur_pixel + shift[x, k];
+						var kernel_k = kernel[k];
 						
-						dest[cur_pixel + 0] += src[source + 0] * kernel[k];
-						dest[cur_pixel + 1] += src[source + 1] * kernel[k];
-						dest[cur_pixel + 2] += src[source + 2] * kernel[k];
-						dest[cur_pixel + 3] += src[source + 3] * kernel[k];
+						dest[cur_pixel + 0] += src[source + 0] * kernel_k;
+						dest[cur_pixel + 1] += src[source + 1] * kernel_k;
+						dest[cur_pixel + 2] += src[source + 2] * kernel_k;
+						dest[cur_pixel + 3] += src[source + 3] * kernel_k;
 					}
 					
 					cur_pixel += 4;
@@ -566,11 +567,12 @@ namespace Plank.Drawing
 				for (var x = startCol; x < endCol; x++) {
 					for (var k = 0; k < gaussWidth; k++) {
 						var source = cur_pixel + shift[y, k];
+						var kernel_k = kernel[k];
 						
-						dest[cur_pixel + 0] += src[source + 0] * kernel[k];
-						dest[cur_pixel + 1] += src[source + 1] * kernel[k];
-						dest[cur_pixel + 2] += src[source + 2] * kernel[k];
-						dest[cur_pixel + 3] += src[source + 3] * kernel[k];
+						dest[cur_pixel + 0] += src[source + 0] * kernel_k;
+						dest[cur_pixel + 1] += src[source + 1] * kernel_k;
+						dest[cur_pixel + 2] += src[source + 2] * kernel_k;
+						dest[cur_pixel + 3] += src[source + 3] * kernel_k;
 					}
 					
 					cur_pixel += 4;
