@@ -38,7 +38,7 @@ namespace Plank.Tests
 		DockItem item, item2;
 		File file = File.new_for_path (Config.DATA_DIR + "/test.desktop");
 		
-		item = new DockItem ();
+		item = new TestDockItem ();
 		item.Prefs.Launcher = file.get_uri ();
 		item.Text = "Plank";
 		item.Icon = TEST_ICON;
@@ -57,7 +57,7 @@ namespace Plank.Tests
 		assert (item.ProgressVisible == true);
 		assert (item.Position == 1);
 		
-		item2 = new DockItem ();
+		item2 = new TestDockItem ();
 		item.copy_values_to (item2);
 		assert (item.Count == item2.Count);
 		assert (item.CountVisible == item2.CountVisible);
@@ -136,7 +136,7 @@ namespace Plank.Tests
 	DockItem create_testitem ()
 	{
 		var file = File.new_for_path (Config.DATA_DIR + "/test.desktop");
-		var item = new DockItem ();
+		var item = new TestDockItem ();
 		item.Prefs.Launcher = file.get_uri ();
 		item.Text = "Plank";
 		item.Icon = TEST_ICON;

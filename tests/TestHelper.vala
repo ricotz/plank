@@ -17,8 +17,14 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using Plank.Items;
+
 namespace Plank.Tests
 {
+	public class TestDockItem : DockItem
+	{
+	}
+	
 	public static bool pixbuf_equal (Gdk.Pixbuf p1, Gdk.Pixbuf p2)
 	{
 		if (p1.get_colorspace () != p2.get_colorspace ())

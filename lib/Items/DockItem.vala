@@ -36,7 +36,7 @@ namespace Plank.Items
 	/**
 	 * The base class for all dock items.
 	 */
-	public class DockItem : DockElement
+	public abstract class DockItem : DockElement
 	{
 		/**
 		 * Signal fired when the .dockitem for this item was deleted.

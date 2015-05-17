@@ -32,7 +32,7 @@ namespace Plank.Tests
 	DockItem create_controller_testitem ()
 	{
 		var file = File.new_for_path (Config.DATA_DIR + "/test.desktop");
-		var item = new DockItem ();
+		var item = new TestDockItem ();
 		item.Prefs.Launcher = file.get_uri ();
 		item.Text = "Plank";
 		item.Icon = TEST_ICON;
