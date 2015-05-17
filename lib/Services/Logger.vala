@@ -45,13 +45,13 @@ namespace Plank.Services
 		 */
 		WARN,
 		/**
-		 * Any message considered an error.  These can be recovered from but might make the application function abnormally.
+		 * Any message considered critical. These can be recovered from but might make the application function abnormally.
+		 */
+		CRITICAL,
+		/**
+		 * Any message considered an error. These generally break the application.
 		 */
 		ERROR,
-		/**
-		 * Any message considered fatal.  These generally break the application.
-		 */
-		FATAL,
 	}
 	
 	enum ConsoleColor
@@ -208,10 +208,10 @@ namespace Plank.Services
 			default:
 				set_foreground (ConsoleColor.YELLOW);
 				break;
-			case LogLevel.ERROR:
+			case LogLevel.CRITICAL:
 				set_foreground (ConsoleColor.RED);
 				break;
-			case LogLevel.FATAL:
+			case LogLevel.ERROR:
 				set_background (ConsoleColor.RED);
 				set_foreground (ConsoleColor.WHITE);
 				break;
@@ -251,13 +251,13 @@ namespace Plank.Services
 			message = "%s%s".printf (domain, message);
 			
 			switch (flags) {
-			case LogLevelFlags.LEVEL_CRITICAL:
-				write (LogLevel.FATAL, format_message (message));
-				write (LogLevel.FATAL, format_message (AppName + " will not function properly."));
-				break;
-			
 			case LogLevelFlags.LEVEL_ERROR:
 				write (LogLevel.ERROR, format_message (message));
+				write (LogLevel.ERROR, format_message (AppName + " will not function properly."));
+				break;
+			
+			case LogLevelFlags.LEVEL_CRITICAL:
+				write (LogLevel.CRITICAL, format_message (message));
 				break;
 			
 			case LogLevelFlags.LEVEL_INFO:
