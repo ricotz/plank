@@ -278,6 +278,17 @@ namespace Plank.Items
 			reset_icon_buffer ();
 		}
 		
+		void icon_file_changed (File f, File? other, FileMonitorEvent event)
+		{
+			switch (event) {
+			case FileMonitorEvent.CHANGES_DONE_HINT:
+				reset_icon_buffer ();
+				break;
+			default:
+				break;
+			}
+		}
+		
 		void icon_file_monitor_start ()
 		{
 			var icon_file = DrawingService.try_get_icon_file (Icon);
@@ -286,7 +297,7 @@ namespace Plank.Items
 			
 			try {
 				icon_file_monitor = icon_file.monitor_file (0);
-				icon_file_monitor.changed.connect (reset_icon_buffer);
+				icon_file_monitor.changed.connect (icon_file_changed);
 			} catch (Error e) {
 				critical ("Unable to watch the icon file '%s'", icon_file.get_path () ?? "");
 				debug (e.message);
@@ -298,7 +309,7 @@ namespace Plank.Items
 			if (icon_file_monitor == null)
 				return;
 			
-			icon_file_monitor.changed.disconnect (reset_icon_buffer);
+			icon_file_monitor.changed.disconnect (icon_file_changed);
 			icon_file_monitor.cancel ();
 			icon_file_monitor = null;
 		}
