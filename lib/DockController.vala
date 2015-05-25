@@ -44,7 +44,7 @@ namespace Plank
 		public DockRenderer renderer { get; protected set; }
 		public DockWindow window { get; protected set; }
 		
-		public ApplicationDockItemProvider? default_provider { get; private set; }
+		public DockItemProvider? default_provider { get; private set; }
 		
 		DBusManager dbus_manager;
 		Gee.ArrayList<unowned DockItem> visible_items;
@@ -160,9 +160,9 @@ namespace Plank
 			add (default_provider);
 		}
 		
-		ApplicationDockItemProvider create_default_provider ()
+		DockItemProvider create_default_provider ()
 		{
-			ApplicationDockItemProvider provider;
+			DockItemProvider provider;
 			
 			// If we made the default-launcher-directory,
 			// assume a first run and pre-populate with launchers
@@ -357,10 +357,11 @@ namespace Plank
 		
 		void serialize_item_positions ()
 		{
-			if (default_provider == null)
+			unowned ApplicationDockItemProvider? provider = (default_provider as ApplicationDockItemProvider);
+			if (provider == null)
 				return;
 			
-			var item_list = default_provider.get_item_list_string ();
+			var item_list = provider.get_item_list_string ();
 			
 			if (prefs.DockItems != item_list)
 				prefs.DockItems = item_list;

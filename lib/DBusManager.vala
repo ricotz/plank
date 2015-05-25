@@ -64,7 +64,7 @@ namespace Plank
 		{
 			debug ("Try to remotely add '%s'", uri);
 			
-			unowned ApplicationDockItemProvider? provider = controller.default_provider;
+			unowned ApplicationDockItemProvider? provider = (controller.default_provider as ApplicationDockItemProvider);
 			if (provider == null)
 				return false;
 			
@@ -81,7 +81,7 @@ namespace Plank
 		{
 			debug ("Try to remotely remove '%s'", uri);
 			
-			unowned ApplicationDockItemProvider? provider = controller.default_provider;
+			unowned ApplicationDockItemProvider? provider = (controller.default_provider as ApplicationDockItemProvider);
 			if (provider == null)
 				return false;
 			
