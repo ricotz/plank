@@ -523,11 +523,7 @@ namespace Plank.Services
 			is_changed = false;
 			
 			try {
-				DataOutputStream stream;
-				if (backing_file.query_exists ())
-					stream = new DataOutputStream (backing_file.replace (null, false, 0));
-				else
-					stream = new DataOutputStream (backing_file.create (0));
+				var stream = new DataOutputStream (backing_file.replace (null, false, 0));
 				stream.put_string (file.to_data ());
 				stream.close ();
 			} catch (Error e) {
