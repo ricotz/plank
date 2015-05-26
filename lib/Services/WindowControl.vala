@@ -492,8 +492,8 @@ namespace Plank.Services.Windows
 			if (wksp == null)
 				return false;
 			
-			var firstGeo = Gdk.Rectangle ();
-			var secondGeo = Gdk.Rectangle ();
+			Gdk.Rectangle firstGeo = {};
+			Gdk.Rectangle secondGeo = {};
 			
 			first.get_geometry (out firstGeo.x, out firstGeo.y, out firstGeo.width, out firstGeo.height);
 			second.get_geometry (out secondGeo.x, out secondGeo.y, out secondGeo.width, out secondGeo.height);
@@ -510,12 +510,7 @@ namespace Plank.Services.Windows
 			var firstViewportX = ((firstGeo.x + firstGeo.width / 2) / viewportWidth) * viewportWidth;
 			var firstViewportY = ((firstGeo.y + firstGeo.height / 2) / viewportHeight) * viewportHeight;
 			
-			var viewpRect = Gdk.Rectangle ();
-			viewpRect.x = firstViewportX;
-			viewpRect.y = firstViewportY;
-			viewpRect.width = viewportWidth;
-			viewpRect.height = viewportHeight;
-			
+			Gdk.Rectangle viewpRect = { firstViewportX, firstViewportY, viewportWidth, viewportHeight };
 			return viewpRect.intersect (secondGeo, null);
 		}
 		
@@ -534,7 +529,7 @@ namespace Plank.Services.Windows
 		
 		public static Gdk.Rectangle get_easy_geometry (Wnck.Window w)
 		{
-			Gdk.Rectangle geo = Gdk.Rectangle ();
+			Gdk.Rectangle geo = {};
 			
 			w.get_geometry (out geo.x, out geo.y, out geo.width, out geo.height);
 			

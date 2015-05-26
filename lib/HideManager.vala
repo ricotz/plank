@@ -541,7 +541,7 @@ namespace Plank
 		
 		static Gdk.Rectangle window_geometry (Wnck.Window window)
 		{
-			var win_rect = Gdk.Rectangle ();
+			Gdk.Rectangle win_rect = {};
 			window.get_geometry (out win_rect.x, out win_rect.y, out win_rect.width, out win_rect.height);
 			return win_rect;
 		}

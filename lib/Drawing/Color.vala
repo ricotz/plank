@@ -368,7 +368,7 @@ namespace Plank.Drawing
 			
 			if (parts.length != 4) {
 				critical ("Malformed color string '%s'", s);
-				return {0};
+				return {};
 			}
 			
 			return { double.min (uint8.MAX, double.max (0, int.parse (parts [0]))) / uint8.MAX,

@@ -120,7 +120,7 @@ namespace Plank
 		
 		construct
 		{
-			static_dock_region = Gdk.Rectangle ();
+			static_dock_region = {};
 			draw_values = new Gee.HashMap<DockElement, DockItemDrawValue?> ();			
 			
 			controller.prefs.notify["Monitor"].connect (prefs_monitor_changed);
@@ -786,12 +786,12 @@ namespace Plank
 			
 			unowned DockContainer? container = (element as DockContainer);
 			if (container == null)
-				return Gdk.Rectangle ();
+				return {};
 			
 			unowned Gee.ArrayList<DockElement> items = container.VisibleElements;
 			
 			if (items.size == 0)
-				return { 0 };
+				return {};
 			
 			var first_rect = get_item_hover_region (items.first ());
 			if (items.size == 1)
@@ -806,7 +806,7 @@ namespace Plank
 		{
 			unowned DockPreferences prefs = controller.prefs;
 			
-			var rect = Gdk.Rectangle ();
+			Gdk.Rectangle rect = {};
 			
 			switch (Position) {
 			default:
@@ -1212,7 +1212,7 @@ namespace Plank
 #if HAVE_BARRIERS
 		public Gdk.Rectangle get_barrier ()
 		{
-			Gdk.Rectangle barrier = {0};
+			Gdk.Rectangle barrier = {};
 			
 			switch (Position) {
 			default:
