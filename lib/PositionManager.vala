@@ -799,7 +799,9 @@ namespace Plank
 			
 			var last_rect = get_item_hover_region (items.last ());
 			
-			return { first_rect.x, first_rect.y, last_rect.x + last_rect.width, last_rect.y + last_rect.height };
+			Gdk.Rectangle result;
+			first_rect.union (last_rect, out result);
+			return result;
 		}
 			
 		Gdk.Rectangle internal_get_item_hover_region (DockItem item)
