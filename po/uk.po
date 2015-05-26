@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-03-28 11:31+0000\n"
+"POT-Creation-Date: 2015-05-25 09:11+0000\n"
 "PO-Revision-Date: 2015-03-28 07:25+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-29 05:32+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"X-Launchpad-Export-Date: 2015-05-26 05:39+0000\n"
+"X-Generator: Launchpad (build 17514)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -168,47 +168,51 @@ msgid "Automatic Pinning:"
 msgstr "Автоматично прикріплювати:"
 
 #: ../data/ui/preferences.ui.h:32
+msgid "Show Item for Dock:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
 msgstr "Поведінка"
 
-#: ../lib/Items/ApplicationDockItem.vala:460
-#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
+#: ../lib/Items/ApplicationDockItem.vala:442
+#: ../lib/Items/FileDockItem.vala:315 ../lib/Items/FileDockItem.vala:333
 msgid "_Keep in Dock"
 msgstr "_Причепити до панелі"
 
-#: ../lib/Items/ApplicationDockItem.vala:467
+#: ../lib/Items/ApplicationDockItem.vala:450
 msgid "_Close All"
 msgstr "_Закрити все"
 
-#: ../lib/Items/ApplicationDockItem.vala:467
+#: ../lib/Items/ApplicationDockItem.vala:450
 msgid "_Close"
 msgstr "_Закрити"
 
-#: ../lib/Items/FileDockItem.vala:332
+#: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
 msgstr "_Відкрити в менеджері файлів"
 
-#: ../lib/Items/FileDockItem.vala:350
+#: ../lib/Items/FileDockItem.vala:338
 msgid "_Open"
 msgstr "_Відкрити"
 
-#: ../lib/Items/FileDockItem.vala:354
+#: ../lib/Items/FileDockItem.vala:342
 msgid "Open Containing _Folder"
 msgstr "Відкрити відповідну _теку"
 
-#: ../lib/Items/PlaceholderDockItem.vala:35
+#: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
 msgstr "Перетягніть програми або файли сюди"
 
-#: ../lib/Items/PlankDockItem.vala:78
+#: ../lib/Items/PlankDockItem.vala:77
 msgid "Get _Help Online..."
 msgstr "Отримати _допомогу..."
 
-#: ../lib/Items/PlankDockItem.vala:82
+#: ../lib/Items/PlankDockItem.vala:81
 msgid "_Translate This Application..."
 msgstr "_Перекласти цю Програму..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:64
-#: ../lib/Widgets/PreferencesWindow.vala:74
+#: ../lib/Widgets/PreferencesWindow.vala:67
+#: ../lib/Widgets/PreferencesWindow.vala:77
 msgid "Preferences"
 msgstr "Параметри"

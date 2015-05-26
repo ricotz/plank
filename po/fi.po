@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-03-18 11:27+0000\n"
+"POT-Creation-Date: 2015-05-25 09:11+0000\n"
 "PO-Revision-Date: 2015-03-17 08:45+0000\n"
 "Last-Translator: Jiri Grönroos <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-19 05:22+0000\n"
-"X-Generator: Launchpad (build 17403)\n"
+"X-Launchpad-Export-Date: 2015-05-26 05:39+0000\n"
+"X-Generator: Launchpad (build 17514)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -167,47 +167,51 @@ msgid "Automatic Pinning:"
 msgstr "Automaattinen kiinnittäminen:"
 
 #: ../data/ui/preferences.ui.h:32
+msgid "Show Item for Dock:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
 msgstr "Toiminta"
 
-#: ../lib/Items/ApplicationDockItem.vala:460
-#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
+#: ../lib/Items/ApplicationDockItem.vala:442
+#: ../lib/Items/FileDockItem.vala:315 ../lib/Items/FileDockItem.vala:333
 msgid "_Keep in Dock"
 msgstr "Pi_dä käynnistimessä"
 
-#: ../lib/Items/ApplicationDockItem.vala:467
+#: ../lib/Items/ApplicationDockItem.vala:450
 msgid "_Close All"
 msgstr "Sulje kai_kki"
 
-#: ../lib/Items/ApplicationDockItem.vala:467
+#: ../lib/Items/ApplicationDockItem.vala:450
 msgid "_Close"
 msgstr "_Sulje"
 
-#: ../lib/Items/FileDockItem.vala:332
+#: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
 msgstr "A_vaa tiedostonhallinnassa"
 
-#: ../lib/Items/FileDockItem.vala:350
+#: ../lib/Items/FileDockItem.vala:338
 msgid "_Open"
 msgstr "_Avaa"
 
-#: ../lib/Items/FileDockItem.vala:354
+#: ../lib/Items/FileDockItem.vala:342
 msgid "Open Containing _Folder"
 msgstr "Näy_tä kansiossa"
 
-#: ../lib/Items/PlaceholderDockItem.vala:35
+#: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
 msgstr "Pudota sovellukset tai tiedostot tähän"
 
-#: ../lib/Items/PlankDockItem.vala:78
+#: ../lib/Items/PlankDockItem.vala:77
 msgid "Get _Help Online..."
 msgstr "_Hae apua verkosta..."
 
-#: ../lib/Items/PlankDockItem.vala:82
+#: ../lib/Items/PlankDockItem.vala:81
 msgid "_Translate This Application..."
 msgstr "Kää_nnä tämä ohjelma..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:64
-#: ../lib/Widgets/PreferencesWindow.vala:74
+#: ../lib/Widgets/PreferencesWindow.vala:67
+#: ../lib/Widgets/PreferencesWindow.vala:77
 msgid "Preferences"
 msgstr "Asetukset"

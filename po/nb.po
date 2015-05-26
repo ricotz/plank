@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-03-31 20:00+0000\n"
-"PO-Revision-Date: 2015-03-30 11:43+0000\n"
+"POT-Creation-Date: 2015-05-25 09:11+0000\n"
+"PO-Revision-Date: 2015-05-09 09:08+0000\n"
 "Last-Translator: ProsjektX <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-01 05:17+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"X-Launchpad-Export-Date: 2015-05-26 05:39+0000\n"
+"X-Generator: Launchpad (build 17514)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -168,47 +168,51 @@ msgid "Automatic Pinning:"
 msgstr "Automatisk liming:"
 
 #: ../data/ui/preferences.ui.h:32
+msgid "Show Item for Dock:"
+msgstr "Vis element for dokken:"
+
+#: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
 msgstr "Oppførsel"
 
-#: ../lib/Items/ApplicationDockItem.vala:440
-#: ../lib/Items/FileDockItem.vala:313 ../lib/Items/FileDockItem.vala:331
+#: ../lib/Items/ApplicationDockItem.vala:442
+#: ../lib/Items/FileDockItem.vala:315 ../lib/Items/FileDockItem.vala:333
 msgid "_Keep in Dock"
 msgstr "_Behold i Dokken"
 
-#: ../lib/Items/ApplicationDockItem.vala:447
+#: ../lib/Items/ApplicationDockItem.vala:450
 msgid "_Close All"
 msgstr "_Lukk alle"
 
-#: ../lib/Items/ApplicationDockItem.vala:447
+#: ../lib/Items/ApplicationDockItem.vala:450
 msgid "_Close"
 msgstr "_Lukk"
 
-#: ../lib/Items/FileDockItem.vala:318
+#: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
 msgstr "_Åpne i Filbehandler"
 
-#: ../lib/Items/FileDockItem.vala:336
+#: ../lib/Items/FileDockItem.vala:338
 msgid "_Open"
 msgstr "_Åpne"
 
-#: ../lib/Items/FileDockItem.vala:340
+#: ../lib/Items/FileDockItem.vala:342
 msgid "Open Containing _Folder"
 msgstr "Åpne opphavs_mappe"
 
-#: ../lib/Items/PlaceholderDockItem.vala:35
+#: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
 msgstr "Slipp applikasjoner eller filer her"
 
-#: ../lib/Items/PlankDockItem.vala:78
+#: ../lib/Items/PlankDockItem.vala:77
 msgid "Get _Help Online..."
 msgstr "Få _hjelp på nettet..."
 
-#: ../lib/Items/PlankDockItem.vala:82
+#: ../lib/Items/PlankDockItem.vala:81
 msgid "_Translate This Application..."
 msgstr "_Oversett denne applikasjonen...."
 
-#: ../lib/Widgets/PreferencesWindow.vala:64
-#: ../lib/Widgets/PreferencesWindow.vala:74
+#: ../lib/Widgets/PreferencesWindow.vala:67
+#: ../lib/Widgets/PreferencesWindow.vala:77
 msgid "Preferences"
 msgstr "Innstillinger"
