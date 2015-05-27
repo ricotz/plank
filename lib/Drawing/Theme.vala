@@ -122,44 +122,42 @@ namespace Plank.Drawing
 		public void draw_background (DockSurface surface)
 		{
 			unowned Cairo.Context cr = surface.Context;
-			
+			Cairo.Pattern gradient;
+			var width = surface.Width;
+			var height = surface.Height;
 			var bottom_offset = BottomRoundness > 0 ? LineWidth : -LineWidth;
 			
-			var gradient = new Cairo.Pattern.linear (0, 0, 0, surface.Height);
+			cr.save ();
 			
+			gradient = new Cairo.Pattern.linear (0, 0, 0, height);
 			gradient.add_color_stop_rgba (0, FillStartColor.red, FillStartColor.green, FillStartColor.blue, FillStartColor.alpha);
 			gradient.add_color_stop_rgba (1, FillEndColor.red, FillEndColor.green, FillEndColor.blue, FillEndColor.alpha);
 			
-			cr.save ();
 			cr.set_source (gradient);
-			
 			draw_rounded_rect (cr,
 				LineWidth / 2.0,
 				LineWidth / 2.0,
-				surface.Width - LineWidth,
-				surface.Height - LineWidth / 2.0 - bottom_offset / 2.0,
+				width - LineWidth,
+				height - LineWidth / 2.0 - bottom_offset / 2.0,
 				TopRoundness,
 				BottomRoundness,
 				LineWidth);
 			cr.fill_preserve ();
-			cr.restore ();
 			
 			cr.set_source_rgba (OuterStrokeColor.red, OuterStrokeColor.green, OuterStrokeColor.blue, OuterStrokeColor.alpha);
 			cr.set_line_width (LineWidth);
 			cr.stroke ();
 			
-			gradient = new Cairo.Pattern.linear (0, 2 * LineWidth, 0, surface.Height - 2 * LineWidth - bottom_offset);
-			
+			gradient = new Cairo.Pattern.linear (0, 2 * LineWidth, 0, height - 2 * LineWidth - bottom_offset);
 			gradient.add_color_stop_rgba (0, InnerStrokeColor.red, InnerStrokeColor.green, InnerStrokeColor.blue, 0.5);
-			gradient.add_color_stop_rgba ((TopRoundness > 0 ? TopRoundness : LineWidth) / (double) surface.Height, InnerStrokeColor.red, InnerStrokeColor.green, InnerStrokeColor.blue, 0.12);
-			gradient.add_color_stop_rgba (1 - (BottomRoundness > 0 ? BottomRoundness : LineWidth) / (double) surface.Height, InnerStrokeColor.red, InnerStrokeColor.green, InnerStrokeColor.blue, 0.08);
+			gradient.add_color_stop_rgba ((TopRoundness > 0 ? TopRoundness : LineWidth) / (double) height, InnerStrokeColor.red, InnerStrokeColor.green, InnerStrokeColor.blue, 0.12);
+			gradient.add_color_stop_rgba (1 - (BottomRoundness > 0 ? BottomRoundness : LineWidth) / (double) height, InnerStrokeColor.red, InnerStrokeColor.green, InnerStrokeColor.blue, 0.08);
 			gradient.add_color_stop_rgba (1, InnerStrokeColor.red, InnerStrokeColor.green, InnerStrokeColor.blue, 0.19);
 			
-			cr.save ();
 			cr.set_source (gradient);
-			
-			draw_inner_rect (cr, surface.Width, surface.Height);
+			draw_inner_rect (cr, width, height);
 			cr.stroke ();
+			
 			cr.restore ();
 		}
 		
