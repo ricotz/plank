@@ -100,6 +100,7 @@ libplank_la_VALASOURCES = \
 	Services/Paths.vala \
 	Services/Preferences.vala \
 	Services/System.vala \
+	Services/Worker.vala \
 	Widgets/CompositedWindow.vala \
 	Widgets/DockWindow.vala \
 	Widgets/HoverWindow.vala \
