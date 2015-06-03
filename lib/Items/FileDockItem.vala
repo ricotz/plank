@@ -177,6 +177,19 @@ namespace Plank.Items
 			cr.set_source (rg);
 			cr.fill ();
 			
+			// Schedule expensive and blocking file operations
+			Worker.get_default ().add_task (() => {
+				draw_file_icons (cr, width, height, radius);
+				Idle.add (() => {
+					needs_redraw ();
+					return false;
+				});
+				return null;
+			}, TaskPriority.DEFAULT);
+		}
+		
+		void draw_file_icons (Cairo.Context cr, int width, int height, int radius)
+		{
 #if HAVE_GEE_0_8
 			var icons = new Gee.HashMap<string, string> ();
 #else
@@ -221,6 +234,8 @@ namespace Plank.Items
 					y * (icon_height + offset) + offset + (icon_height - pbuf.height) / 2);
 				cr.paint ();
 			}
+			
+			Logger.verbose ("FileDockItem.draw_icon (%s) ... done", Text);
 		}
 		
 		/**
