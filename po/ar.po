@@ -7,21 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-05-25 09:11+0000\n"
-"PO-Revision-Date: 2015-02-13 07:01+0000\n"
-"Last-Translator: abd <raryat@gmail.com>\n"
+"POT-Creation-Date: 2015-05-30 13:27+0000\n"
+"PO-Revision-Date: 2015-05-28 06:12+0000\n"
+"Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-05-26 05:39+0000\n"
-"X-Generator: Launchpad (build 17514)\n"
+"X-Launchpad-Export-Date: 2015-05-31 05:17+0000\n"
+"X-Generator: Launchpad (build 17532)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"يهدف بلانك لأن يكون أبسط حامل في العالم. الهدف هو تقديم ما يحتاجه حامل "
+"أيقونات فقط و لا شيء آخر على الإطلاق"
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -38,51 +40,51 @@ msgstr "بلانك، بسيط بغباء."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "سِمة:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "الموقع:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "يسار"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "يمين"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "فوق"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "أسفل"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "محاذاة:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "ملأ"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "إبدأ"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "إنهاء"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "وَسَط"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "على الشاشة الأساسية"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
@@ -90,23 +92,23 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr ""
+msgstr "ترتيب الأيقونات:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "حجم الأيقونات:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Appearance"
-msgstr ""
+msgstr "المظهر"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Intellihide"
-msgstr ""
+msgstr "إخفاء ذكي"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Autohide"
-msgstr ""
+msgstr "إخفاء تلقائي"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Dodge maximized window"
@@ -118,27 +120,27 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Hide Dock"
-msgstr ""
+msgstr "إخفاء الحامل"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Hide Delay:"
-msgstr ""
+msgstr "تأجيل الإخفاء"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgstr "مدة التأجيل بأجزاء الثانية قبل إخفاء الحامل"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "تأجيل الإظهار"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "مدة التأجيل بأجزاء الثانية قبل إظهار الحامل"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Pressure Reveal:"
-msgstr ""
+msgstr "عرض الضغط"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Item Management"
@@ -146,19 +148,19 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Show Unpinned:"
-msgstr ""
+msgstr "إظهار غير المثبتة"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Restrict to Workspace:"
-msgstr ""
+msgstr "حضر عن مساحة العمل"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Lock Icons:"
-msgstr ""
+msgstr "ربط أيقونات"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Automatic Pinning:"
-msgstr ""
+msgstr "تثبيت تلقائي"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Show Item for Dock:"
@@ -166,7 +168,7 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
-msgstr ""
+msgstr "سلوك"
 
 #: ../lib/Items/ApplicationDockItem.vala:442
 #: ../lib/Items/FileDockItem.vala:315 ../lib/Items/FileDockItem.vala:333
@@ -179,7 +181,7 @@ msgstr "أ_غلق الكلّ"
 
 #: ../lib/Items/ApplicationDockItem.vala:450
 msgid "_Close"
-msgstr ""
+msgstr "أ_غلق"
 
 #: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
@@ -208,4 +210,4 @@ msgstr "ترجم هذا الت_طبيق"
 #: ../lib/Widgets/PreferencesWindow.vala:67
 #: ../lib/Widgets/PreferencesWindow.vala:77
 msgid "Preferences"
-msgstr ""
+msgstr "التفضيلات"
