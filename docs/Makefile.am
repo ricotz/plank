@@ -54,6 +54,7 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Services/Paths.vala \
 	$(top_srcdir)/lib/Services/Preferences.vala \
 	$(top_srcdir)/lib/Services/System.vala \
+	$(top_srcdir)/lib/Services/Worker.vala \
 	$(top_srcdir)/lib/Widgets/CompositedWindow.vala \
 	$(top_srcdir)/lib/Widgets/DockWindow.vala \
 	$(top_srcdir)/lib/Widgets/HoverWindow.vala \
