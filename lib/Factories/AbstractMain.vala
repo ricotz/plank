@@ -264,6 +264,13 @@ namespace Plank.Factories
 			message ("+ XInput Barriers support enabled");
 #endif
 			
+			// Make sure we are not doing silly things like trying to run in a wayland-session!
+			if (!(Gdk.Screen.get_default () is Gdk.X11.Screen)) {
+				critical ("Only X11 environments are supported.");
+				quit ();
+				return;
+			}
+			
 			Paths.initialize (exec_name, build_pkg_data_dir);
 			WindowControl.initialize ();
 			
