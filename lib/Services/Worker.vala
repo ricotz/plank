@@ -27,6 +27,8 @@ namespace Plank.Services
 		HIGH,
 	}
 	
+	public delegate G TaskFunc<G> () throws Error;
+	
 	[Compact]
 	class Task
 	{
@@ -39,9 +41,9 @@ namespace Plank.Services
 			priority = _priority;
 		}
 		
-		public void run ()
+		public void* run ()
 		{
-			func ();
+			return func ();
 		}
 	}
 	
@@ -56,7 +58,7 @@ namespace Plank.Services
 			return worker;
 		}
 		
-		ThreadPool<Task>? pool;
+		ThreadPool<Task> pool;
 		
 		private Worker ()
 		{
@@ -71,8 +73,7 @@ namespace Plank.Services
 				
 				pool.set_sort_function ((CompareDataFunc) compare_task_priority);
 			} catch (ThreadError e) {
-				critical ("Creating ThreadPool failed! (%s)", e.message);
-				pool = null;
+				error ("Creating ThreadPool failed! (%s)", e.message);
 			}
 		}
 		
@@ -92,17 +93,49 @@ namespace Plank.Services
 		 */
 		public void add_task (owned ThreadFunc<void*> func, TaskPriority priority = TaskPriority.DEFAULT)
 		{
-			if (pool == null) {
-				critical ("ThreadPool not available!");
-				func ();
-				return;
-			}
-			
 			try {
 				pool.add (new Task (func, priority));
 			} catch (ThreadError e) {
 				warning (e.message);
 			}
+		}
+		
+		/**
+		 * Schedule given function to be run in our ThreadPool
+		 * The given priority influences execution-time of the task 
+		 * depending on the currently scheduled amount of tasks.
+		 *
+		 * @param func the function to be executed returning a typed result
+		 * @param priority priority of the given function
+		 * @return the typed result
+		 */
+		public async G add_task_with_result<G> (owned TaskFunc<G> func, TaskPriority priority = TaskPriority.DEFAULT) throws Error
+		{
+			SourceFunc resume = add_task_with_result.callback;
+			Error err = null;
+			G result = null;
+			
+			try {
+				ThreadFunc tfunc = () => {
+					try {
+						result = func ();
+					} catch (Error e) {
+						err = e;
+					}
+					
+					Idle.add ((owned) resume);
+					return null;
+				};
+				pool.add (new Task (tfunc, priority));
+			} catch (ThreadError e) {
+				warning (e.message);
+			}
+			
+			yield;
+			if (err != null)
+				throw err;
+			
+			return result;
 		}
 	}
 }
