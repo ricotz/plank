@@ -79,6 +79,7 @@ namespace Plank
 		Gee.ArrayList<string>? drag_data = null;
 		
 		int window_scale_factor = 1;
+		ulong drag_item_redraw_id = 0UL;
 		
 		/**
 		 * Creates a new instance of a DragManager, which handles
@@ -230,6 +231,9 @@ namespace Plank
 				DragItem = null;
 			
 			set_drag_icon (context, DragItem, 0.8);
+			drag_item_redraw_id = DragItem.needs_redraw.connect (() => {
+				set_drag_icon (context, DragItem, 0.8);
+			});
 		}
 
 		[CCode (instance_pos = -1)]
@@ -294,6 +298,12 @@ namespace Plank
 		void drag_end (Gtk.Widget w, Gdk.DragContext context)
 		{
 			unowned HideManager hide_manager = controller.hide_manager;
+			
+			if (drag_item_redraw_id > 0UL) {
+				if (DragItem != null)
+					GLib.SignalHandler.disconnect (DragItem, drag_item_redraw_id);
+				drag_item_redraw_id = 0UL;
+			}
 			
 			if (!drag_canceled && DragItem != null) {
 				hide_manager.update_hovered ();
