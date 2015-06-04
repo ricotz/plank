@@ -140,23 +140,16 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override void draw_icon (DockSurface surface)
+		protected override void draw_icon_fast (DockSurface surface)
 		{
-			if (!is_valid () || !has_default_icon_match ()) {
-				base.draw_icon (surface);
-				return;
-			}
-			
-			double x_scale = 1.0, y_scale = 1.0;
-#if HAVE_HIDPI
-			cairo_surface_get_device_scale (surface.Internal, out x_scale, out y_scale);
-#endif
-			
 			unowned Cairo.Context cr = surface.Context;
 			var width = surface.Width;
 			var height = surface.Height;
 			var radius = 3 + 6 * height / (128 - 48);
-			
+			double x_scale = 1.0, y_scale = 1.0;
+#if HAVE_HIDPI
+			cairo_surface_get_device_scale (surface.Internal, out x_scale, out y_scale);
+#endif
 			var line_width_half = 0.5 * (int) double.max (x_scale, y_scale);
 			
 			cr.move_to (radius, line_width_half);
@@ -176,20 +169,29 @@ namespace Plank.Items
 			
 			cr.set_source (rg);
 			cr.fill ();
-			
-			// Schedule expensive and blocking file operations
-			Worker.get_default ().add_task (() => {
-				draw_file_icons (cr, width, height, radius);
-				Idle.add (() => {
-					needs_redraw ();
-					return false;
-				});
-				return null;
-			}, TaskPriority.DEFAULT);
 		}
 		
-		void draw_file_icons (Cairo.Context cr, int width, int height, int radius)
+		/**
+		 * {@inheritDoc}
+		 */
+		protected override void draw_icon (DockSurface surface)
 		{
+			if (!is_valid () || !has_default_icon_match ()) {
+				base.draw_icon (surface);
+				return;
+			}
+			
+			unowned Cairo.Context cr = surface.Context;
+			var width = surface.Width;
+			var height = surface.Height;
+			var radius = 3 + 6 * height / (128 - 48);
+			double x_scale = 1.0, y_scale = 1.0;
+#if HAVE_HIDPI
+			cairo_surface_get_device_scale (surface.Internal, out x_scale, out y_scale);
+#endif
+			
+			draw_icon_fast (surface);
+			
 #if HAVE_GEE_0_8
 			var icons = new Gee.HashMap<string, string> ();
 #else
@@ -234,8 +236,6 @@ namespace Plank.Items
 					y * (icon_height + offset) + offset + (icon_height - pbuf.height) / 2);
 				cr.paint ();
 			}
-			
-			Logger.verbose ("FileDockItem.draw_icon (%s) ... done", Text);
 		}
 		
 		/**

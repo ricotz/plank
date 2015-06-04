@@ -144,6 +144,8 @@ namespace Plank.Items
 		bool launcher_exists = false;
 		uint removal_timer = 0;
 		
+		int surface_is_drawn = 0;
+		
 		/**
 		 * Creates a new dock item.
 		 */
@@ -426,7 +428,35 @@ namespace Plank.Items
 				surface = new DockSurface.with_dock_surface (width, height, model);
 				
 				Logger.verbose ("DockItem.draw_icon (width = %i, height = %i)", width, height);
-				draw_icon (surface);
+				draw_icon_fast (surface);
+				
+				AtomicInt.set (ref surface_is_drawn, 0);
+				
+				Worker.get_default ().add_task_with_result.begin<DockSurface> (() => {
+					var task_surface = new DockSurface (width, height);
+					draw_icon (task_surface);
+					return task_surface;
+				}, TaskPriority.DEFAULT, (obj, res) => {
+						DockSurface result = ((Worker) obj).add_task_with_result.end (res);
+						
+						// If the surface dimensions don't match we likely got superseeded by another draw request
+						if (result.Width != surface.Width || result.Height != surface.Height)
+							return;
+						
+						unowned Cairo.Context cr = surface.Context;
+						cr.save ();
+						cr.set_operator (Cairo.Operator.SOURCE);
+						cr.set_source_surface (result.Internal, 0, 0);
+						cr.paint ();
+						cr.restore ();
+						AverageIconColor = surface.average_color ();
+						
+						Logger.verbose ("DockItem.draw_icon (%s) ... done", Text);
+						
+						AtomicInt.set (ref surface_is_drawn, 1);
+						needs_redraw ();
+						return;
+					});
 				
 				AverageIconColor = surface.average_color ();
 			}
@@ -448,7 +478,7 @@ namespace Plank.Items
 		public unowned DockSurface? get_background_surface (DrawItemFunc? draw_func = null)
 			requires (surface != null)
 		{
-			if (draw_func != null)
+			if (AtomicInt.get (ref surface_is_drawn) == 1 && draw_func != null)
 				background_surface = draw_func (this, surface, background_surface);
 			else
 				background_surface = null;
@@ -470,7 +500,7 @@ namespace Plank.Items
 		public unowned DockSurface? get_foreground_surface (DrawItemFunc? draw_func = null)
 			requires (surface != null)
 		{
-			if (draw_func != null)
+			if (AtomicInt.get (ref surface_is_drawn) == 1 && draw_func != null)
 				foreground_surface = draw_func (this, surface, foreground_surface);
 			else
 				foreground_surface = null;
@@ -528,6 +558,38 @@ namespace Plank.Items
 			} else {
 				warn_if_reached ();
 			}
+		}
+		
+		/**
+		 * Draws a placeholder icon onto a surface.
+		 * This method should be considered time-critical!
+		 * Make sure to only use simple drawing routines, and do not rely on external resources!
+		 *
+		 * @param surface the surface to draw on
+		 */
+		protected virtual void draw_icon_fast (DockSurface surface)
+		{
+			unowned Cairo.Context cr = surface.Context;
+			var width = surface.Width;
+			var height = surface.Height;
+			var radius = width / 2 - 1;
+			
+			var line_width_half = 1;
+			
+			cr.move_to (radius, line_width_half);
+			cr.arc (radius + line_width_half, radius + line_width_half, radius, 0, 2 * Math.PI);
+			cr.close_path ();
+			
+			cr.set_source_rgba (1, 1, 1, 0.2);
+			cr.set_line_width (2 * line_width_half);
+			cr.stroke_preserve ();
+			
+			var rg = new Cairo.Pattern.radial (width / 2, height, height / 8, width / 2, height, height);
+			rg.add_color_stop_rgba (0, 0, 0, 0, 0.6);
+			rg.add_color_stop_rgba (1, 0, 0, 0, 0.3);
+			
+			cr.set_source (rg);
+			cr.fill ();
 		}
 		
 		/**
