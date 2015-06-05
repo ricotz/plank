@@ -38,6 +38,13 @@ namespace Plank.Items
 	 */
 	public abstract class DockItem : DockElement
 	{
+		enum SurfaceStatus
+		{
+			DRAWN,
+			PENDING,
+			SCHEDULED,
+		}
+		
 		/**
 		 * Signal fired when the .dockitem for this item was deleted.
 		 */
@@ -144,7 +151,8 @@ namespace Plank.Items
 		bool launcher_exists = false;
 		uint removal_timer = 0;
 		
-		int surface_is_drawn = 0;
+		int surface_status = 0;
+		uint draw_icon_fast_timer = 0;
 		
 		/**
 		 * Creates a new dock item.
@@ -428,40 +436,62 @@ namespace Plank.Items
 				surface = new DockSurface.with_dock_surface (width, height, model);
 				
 				Logger.verbose ("DockItem.draw_icon (width = %i, height = %i)", width, height);
-				draw_icon_fast (surface);
 				
-				AtomicInt.set (ref surface_is_drawn, 0);
+				// Schedule drawing of a placeholder to be shown until the "real" icon is available
+				if (draw_icon_fast_timer > 0)
+					GLib.Source.remove (draw_icon_fast_timer);
+				draw_icon_fast_timer = Gdk.threads_add_idle_full (GLib.Priority.LOW, () => {
+					draw_icon_fast_timer = 0;
+					if (AtomicInt.get (ref surface_status) == SurfaceStatus.SCHEDULED) {
+						draw_icon_fast (surface);
+						AverageIconColor = surface.average_color ();
+						needs_redraw ();
+					}
+					return false;
+				});
+				
+				AtomicInt.set (ref surface_status, SurfaceStatus.SCHEDULED);
 				
 				Worker.get_default ().add_task_with_result.begin<DockSurface> (() => {
 					var task_surface = new DockSurface (width, height);
 					draw_icon (task_surface);
+					AtomicInt.set (ref surface_status, SurfaceStatus.PENDING);
 					return task_surface;
-				}, TaskPriority.DEFAULT, (obj, res) => {
-						DockSurface result = ((Worker) obj).add_task_with_result.end (res);
-						
-						// If the surface dimensions don't match we likely got superseeded by another draw request
-						if (result.Width != surface.Width || result.Height != surface.Height)
-							return;
-						
-						unowned Cairo.Context cr = surface.Context;
-						cr.save ();
-						cr.set_operator (Cairo.Operator.SOURCE);
-						cr.set_source_surface (result.Internal, 0, 0);
-						cr.paint ();
-						cr.restore ();
-						AverageIconColor = surface.average_color ();
-						
-						Logger.verbose ("DockItem.draw_icon (%s) ... done", Text);
-						
-						AtomicInt.set (ref surface_is_drawn, 1);
-						needs_redraw ();
-						return;
-					});
-				
-				AverageIconColor = surface.average_color ();
+				}, TaskPriority.DEFAULT, (AsyncReadyCallback) task_draw_result);
 			}
 			
 			return surface;
+		}
+		
+		[CCode (instance_pos = -1)]
+		void task_draw_result (Worker worker, AsyncResult res)
+		{
+			var result = worker.add_task_with_result.end<DockSurface> (res);
+			
+			// If the surface dimensions don't match we likely got superseeded by another draw request
+			if (result == null || surface == null
+				|| result.Width != surface.Width || result.Height != surface.Height)
+				return;
+			
+			// Stop possibly scheduled placeholder-drawing
+			if (draw_icon_fast_timer > 0) {
+				GLib.Source.remove (draw_icon_fast_timer);
+				draw_icon_fast_timer = 0;
+			}
+			
+			unowned Cairo.Context cr = surface.Context;
+			cr.save ();
+			cr.set_operator (Cairo.Operator.SOURCE);
+			cr.set_source_surface (result.Internal, 0, 0);
+			cr.paint ();
+			cr.restore ();
+			AverageIconColor = surface.average_color ();
+			
+			Logger.verbose ("DockItem.draw_icon (%s) ... done", Text);
+			
+			AtomicInt.set (ref surface_status, SurfaceStatus.DRAWN);
+			
+			needs_redraw ();
 		}
 		
 		/**
@@ -478,7 +508,7 @@ namespace Plank.Items
 		public unowned DockSurface? get_background_surface (DrawItemFunc? draw_func = null)
 			requires (surface != null)
 		{
-			if (AtomicInt.get (ref surface_is_drawn) == 1 && draw_func != null)
+			if (AtomicInt.get (ref surface_status) == SurfaceStatus.DRAWN && draw_func != null)
 				background_surface = draw_func (this, surface, background_surface);
 			else
 				background_surface = null;
@@ -500,7 +530,7 @@ namespace Plank.Items
 		public unowned DockSurface? get_foreground_surface (DrawItemFunc? draw_func = null)
 			requires (surface != null)
 		{
-			if (AtomicInt.get (ref surface_is_drawn) == 1 && draw_func != null)
+			if (AtomicInt.get (ref surface_status) == SurfaceStatus.DRAWN && draw_func != null)
 				foreground_surface = draw_func (this, surface, foreground_surface);
 			else
 				foreground_surface = null;
