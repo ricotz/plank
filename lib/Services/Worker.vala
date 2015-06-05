@@ -105,6 +105,9 @@ namespace Plank.Services
 		 * The given priority influences execution-time of the task 
 		 * depending on the currently scheduled amount of tasks.
 		 *
+		 * AsyncReadyCallback will be executed on the main-thread through an idle
+		 * with GLib.Priority.HIGH_IDLE.
+		 *
 		 * @param func the function to be executed returning a typed result
 		 * @param priority priority of the given function
 		 * @return the typed result
@@ -123,7 +126,7 @@ namespace Plank.Services
 						err = e;
 					}
 					
-					Idle.add ((owned) resume);
+					Idle.add ((owned) resume, GLib.Priority.HIGH_IDLE);
 					return null;
 				};
 				pool.add (new Task (tfunc, priority));
