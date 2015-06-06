@@ -89,21 +89,14 @@ namespace Plank
 		
 		construct
 		{
-			// init filter to retrieve X.Events
-			var rootwin = Gdk.get_default_root_window ();
-			if (rootwin != null)
-				rootwin.add_filter ((Gdk.FilterFunc)xevent_filter);
-			else
-				critical ("No root window");
+			gdk_window_add_filter (null, (Gdk.FilterFunc) xevent_filter);
 		}
 		
 		~KeybindingManager ()
 		{
 			unbind_all ();
 			
-			var rootwin = Gdk.get_default_root_window ();
-			if (rootwin != null)
-				rootwin.remove_filter ((Gdk.FilterFunc)xevent_filter);
+			gdk_window_remove_filter (null, (Gdk.FilterFunc) xevent_filter);
 		}
 		
 		public void initialize ()
