@@ -167,7 +167,7 @@ namespace Plank.Items
 			Prefs.deleted.connect (handle_deleted);
 			Prefs.notify["Launcher"].connect (handle_launcher_changed);
 			
-			Gtk.IconTheme.get_default ().changed.connect (icon_theme_changed);
+			DrawingService.get_icon_theme ().changed.connect (icon_theme_changed);
 			notify["Icon"].connect (icon_changed);
 			notify["ForcePixbuf"].connect (icon_changed);
 			
@@ -186,7 +186,7 @@ namespace Plank.Items
 			Prefs.deleted.disconnect (handle_deleted);
 			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
 			
-			Gtk.IconTheme.get_default ().changed.disconnect (icon_theme_changed);
+			DrawingService.get_icon_theme ().changed.disconnect (icon_theme_changed);
 			notify["Icon"].disconnect (icon_changed);
 			notify["ForcePixbuf"].disconnect (icon_changed);
 			

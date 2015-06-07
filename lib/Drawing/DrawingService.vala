@@ -34,8 +34,19 @@ namespace Plank.Drawing
 		const double WEIGHT_THRESHOLD = 1.0;
 		const uint8 ALPHA_THRESHOLD = 24;
 		
+		static Mutex icon_theme_mutex;
+		static Gtk.IconTheme icon_theme;
+		
 		DrawingService ()
 		{
+		}
+		
+		public static unowned Gtk.IconTheme get_icon_theme ()
+		{
+			if (icon_theme == null)
+				icon_theme = Gtk.IconTheme.get_for_screen (Gdk.Screen.get_default ());
+			
+			return icon_theme;
 		}
 		
 		/**
@@ -206,7 +217,9 @@ namespace Plank.Drawing
 		static Gdk.Pixbuf? load_pixbuf (string icon, int size)
 		{
 			Gdk.Pixbuf? pbuf = null;
-			unowned Gtk.IconTheme icon_theme = Gtk.IconTheme.get_default ();
+			unowned Gtk.IconTheme icon_theme = get_icon_theme ();
+			
+			icon_theme_mutex.lock ();
 			
 			try {
 				pbuf = icon_theme.load_icon (icon, size, 0);
@@ -218,6 +231,8 @@ namespace Plank.Drawing
 					pbuf = icon_theme.load_icon (parts [0], size, 0);
 				}
 			} catch { }
+			
+			icon_theme_mutex.unlock ();
 			
 			return pbuf;
 		}
@@ -295,7 +310,9 @@ namespace Plank.Drawing
 		{
 			Cairo.Surface? surface = null;
 			Gtk.IconInfo? info = null;
-			unowned Gtk.IconTheme icon_theme = Gtk.IconTheme.get_default ();
+			unowned Gtk.IconTheme icon_theme = get_icon_theme ();
+			
+			icon_theme_mutex.lock ();
 			
 			try {
 				info = icon_theme.lookup_icon_for_scale (icon, size, scale, Gtk.IconLookupFlags.FORCE_SIZE);
@@ -311,6 +328,8 @@ namespace Plank.Drawing
 						surface = info.load_surface (null);
 				}
 			} catch { }
+			
+			icon_theme_mutex.unlock ();
 			
 			return surface;
 		}

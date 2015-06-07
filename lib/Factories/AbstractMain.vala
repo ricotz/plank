@@ -284,9 +284,6 @@ namespace Plank.Factories
 		 */
 		protected virtual void initialize ()
 		{
-			// Force early synchronous initialization to avoid critical threading issues
-			// FIXME Is Gtk.IconTheme really not thread-safe?
-			Gtk.IconTheme.get_default ().has_icon (app_icon);
 		}
 		
 		/**
