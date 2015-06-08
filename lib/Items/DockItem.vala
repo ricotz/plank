@@ -40,6 +40,7 @@ namespace Plank.Items
 	{
 		enum SurfaceStatus
 		{
+			NONE,
 			DRAWN,
 			PENDING,
 			SCHEDULED,
@@ -243,6 +244,8 @@ namespace Plank.Items
 		protected void reset_icon_buffer ()
 		{
 			surface = null;
+			AtomicInt.set (ref surface_status, SurfaceStatus.NONE);
+			
 			background_surface = null;
 			foreground_surface = null;
 			
