@@ -19,8 +19,6 @@
 
 namespace Plank.Services
 {
-	const int MAX_THREAD_COUNT = 3;
-	
 	public enum TaskPriority {
 		LOW,
 		DEFAULT,
@@ -67,9 +65,14 @@ namespace Plank.Services
 		construct
 		{
 			try {
+				ThreadPool.set_max_unused_threads (0);
+				
+				var thread_count = (int) GLib.get_num_processors ();
+				message ("Using up to %i threads.", thread_count);
+				
 				pool = new ThreadPool<Task>.with_owned_data ((task) => {
 					task.run ();
-				}, MAX_THREAD_COUNT, true);
+				}, thread_count, false);
 				
 				pool.set_sort_function ((CompareDataFunc) compare_task_priority);
 			} catch (ThreadError e) {

@@ -161,6 +161,7 @@ libplank_internal_la_VALASOURCES = \
 	$(NULL)
 
 nodist_libplank_internal_la_SOURCES = \
+	glib-compat.c \
 	$(libplank_internal_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
