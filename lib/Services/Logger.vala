@@ -1,5 +1,6 @@
 //
 //  Copyright (C) 2011 Robert Dyer
+//                2015 Rico Tzschichholz
 //
 //  This file is part of Plank.
 //
@@ -19,6 +20,16 @@
 
 namespace Plank.Services
 {
+	const string[] LOG_LEVEL_TO_STRING = {
+		"VERBOSE",
+		"DEBUG",
+		"INFO",
+		"NOTIFY",
+		"WARN",
+		"CRITICAL",
+		"ERROR",
+	};
+	
 	/**
 	 * Controls what messages show in the console log.
 	 */
@@ -71,29 +82,13 @@ namespace Plank.Services
 	 */
 	public class Logger : GLib.Object
 	{
-		class LogMessage : GLib.Object
-		{
-			public LogLevel Level { get; construct; }
-			public string Message { get; construct; }
-			
-			public LogMessage (LogLevel level, string message)
-			{
-				GLib.Object (Level : level, Message : message);
-			}
-		}
-		
 		/**
 		 * The current log level.  Controls what log messages actually appear on the console.
 		 */
 		public static LogLevel DisplayLevel { get; set; default = LogLevel.WARN; }
 		
-		static string AppName { get; set; }
-		
-		static Object? queue_lock = null;
-		
-		static Gee.ArrayList<LogMessage> log_queue;
-		static bool is_writing;
-		
+		static string app_domain;
+		static Mutex write_mutex;
 		static Regex? re = null;
 		
 		Logger ()
@@ -107,14 +102,13 @@ namespace Plank.Services
 		 */
 		public static void initialize (string app_name)
 		{
-			AppName = app_name;
-			is_writing = false;
-			log_queue = new Gee.ArrayList<LogMessage> ();
+			app_domain = app_name;
+			
 			try {
 				re = new Regex ("""[(]?.*?([^/]*?)(\.2)?\.vala(:\d+)[)]?:\s*(.*)""");
 			} catch { }
 			
-			Log.set_default_handler (glib_log_func);
+			Log.set_default_handler ((GLib.LogFunc) glib_log_func);
 		}
 		
 		static string format_message (string msg)
@@ -154,39 +148,20 @@ namespace Plank.Services
 			return "%.2d:%.2d:%.2d.%.6d".printf (now.get_hour (), now.get_minute (), now.get_second (), now.get_microsecond ());
 		}
 		
-		static void write (LogLevel level, string msg)
+		static void write (LogLevel level, owned string msg)
 		{
 			if (level < DisplayLevel)
 				return;
+
+			write_mutex.lock ();
 			
-			if (is_writing) {
-				lock (queue_lock)
-					log_queue.add (new LogMessage (level, msg));
-			} else {
-				is_writing = true;
-				
-				if (log_queue.size > 0) {
-					var logs = log_queue;
-					lock (queue_lock)
-						log_queue = new Gee.ArrayList<LogMessage> ();
-					
-					foreach (var log in logs)
-						print_log (log);
-				}
-				
-				print_log (new LogMessage (level, msg));
-				
-				is_writing = false;
-			}
-		}
-		
-		static void print_log (LogMessage log)
-		{
-			set_color_for_level (log.Level);
-			stdout.printf ("[%s %s]", log.Level.to_string ().substring (25), get_time ());
+			set_color_for_level (level);
+			stdout.printf ("[%s %s]", LOG_LEVEL_TO_STRING[level], get_time ());
 			
 			reset_color ();
-			stdout.printf (" %s\n", log.Message);
+			stdout.printf (" %s\n", msg);
+			
+			write_mutex.unlock ();
 		}
 		
 		static void set_color_for_level (LogLevel level)
@@ -243,37 +218,44 @@ namespace Plank.Services
 		
 		static void glib_log_func (string? d, LogLevelFlags flags, string msg)
 		{
-			var domain = "";
+			string domain;
 			if (d != null)
-				domain = "[%s] ".printf (d ?? "");
+				domain = "[%s] ".printf (d);
+			else
+				domain = "";
 			
-			var message = msg.replace ("\n", "").replace ("\r", "");
-			message = "%s%s".printf (domain, message);
+			string message;
+			if (msg.contains ("\n") || msg.contains ("\r"))
+				message = "%s%s".printf (domain, msg.replace ("\n", "").replace ("\r", ""));
+			else
+				message = "%s%s".printf (domain, msg);
+			
+			LogLevel level;
+			
+			// Strip internal flags to make it possible to use a switch-statement
+			flags = (flags & LogLevelFlags.LEVEL_MASK);
 			
 			switch (flags) {
 			case LogLevelFlags.LEVEL_ERROR:
-				write (LogLevel.ERROR, format_message (message));
-				write (LogLevel.ERROR, format_message (AppName + " will not function properly."));
+				level = LogLevel.ERROR;
 				break;
-			
 			case LogLevelFlags.LEVEL_CRITICAL:
-				write (LogLevel.CRITICAL, format_message (message));
+				level = LogLevel.CRITICAL;
 				break;
-			
 			case LogLevelFlags.LEVEL_INFO:
 			case LogLevelFlags.LEVEL_MESSAGE:
-				write (LogLevel.INFO, format_message (message));
+				level = LogLevel.INFO;
 				break;
-			
 			case LogLevelFlags.LEVEL_DEBUG:
-				write (LogLevel.DEBUG, format_message (message));
+				level = LogLevel.DEBUG;
 				break;
-			
 			case LogLevelFlags.LEVEL_WARNING:
 			default:
-				write (LogLevel.WARN, format_message (message));
+				level = LogLevel.WARN;
 				break;
 			}
+			
+			write (level, format_message (message));
 		}
 	}
 }
