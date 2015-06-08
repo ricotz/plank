@@ -160,8 +160,11 @@ libplank_internal_la_VALASOURCES = \
 	Services/WindowControl.vala \
 	$(NULL)
 
-nodist_libplank_internal_la_SOURCES = \
+libplank_internal_la_SOURCES = \
 	glib-compat.c \
+	$(NULL)
+
+nodist_libplank_internal_la_SOURCES = \
 	$(libplank_internal_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
