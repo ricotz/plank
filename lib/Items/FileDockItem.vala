@@ -185,10 +185,6 @@ namespace Plank.Items
 			var width = surface.Width;
 			var height = surface.Height;
 			var radius = 3 + 6 * height / (128 - 48);
-			double x_scale = 1.0, y_scale = 1.0;
-#if HAVE_HIDPI
-			cairo_surface_get_device_scale (surface.Internal, out x_scale, out y_scale);
-#endif
 			
 			draw_icon_fast (surface);
 			
