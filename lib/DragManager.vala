@@ -243,7 +243,7 @@ namespace Plank
 				var uris = Uri.list_extract_uris ((string) selection_data.get_data ());
 				
 				drag_data = new Gee.ArrayList<string> ();
-				foreach (string s in uris) {
+				foreach (unowned string s in uris) {
 					var uri = File.new_for_uri (s).get_uri ();
 					if (uri != null)
 						drag_data.add (uri);

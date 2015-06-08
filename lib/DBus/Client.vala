@@ -109,7 +109,7 @@ namespace Plank.DBus
 			dbus_name_owner_changed_signal_id = connection.signal_subscribe ("org.freedesktop.DBus", "org.freedesktop.DBus",
 				"NameOwnerChanged", "/org/freedesktop/DBus", null, DBusSignalFlags.NONE, handle_name_owner_changed);
 			
-			client_object_path = object_path;
+			client_object_path = (owned) object_path;
 			
 			try {
 				// Broadcast to inform running docks

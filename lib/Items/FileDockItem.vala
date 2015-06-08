@@ -130,7 +130,7 @@ namespace Plank.Items
 				return true;
 			
 			var default_icons = DEFAULT_ICONS.split (";;");
-			foreach (string icon in Icon.split (";;"))
+			foreach (unowned string icon in Icon.split (";;"))
 				if (icon in default_icons)
 					return true;
 			

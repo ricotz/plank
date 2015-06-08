@@ -197,7 +197,7 @@ namespace Plank
 				warning ("Could not register service (%s)", e.message);
 			}
 			
-			dock_object_path = object_path;
+			dock_object_path = (owned) object_path;
 			
 			try {
 				// Broadcast to inform running clients
