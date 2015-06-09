@@ -119,15 +119,12 @@ namespace Plank.Drawing
 		 */
 		public static Gdk.Pixbuf load_icon (string names, int width, int height)
 		{
-			var all_names = new Gee.ArrayList<string> ();
-			
-			foreach (unowned string s in names.split (";;"))
-				all_names.add (s);
-			all_names.add (DEFAULT_ICON);
-			
 			Gdk.Pixbuf? pbuf = null;
 			
-			foreach (var name in all_names) {
+			var all_names = names.split (";;");
+			all_names += DEFAULT_ICON;
+			
+			foreach (unowned string name in all_names) {
 				var file = try_get_icon_file (name);
 				if (file != null) {
 					pbuf = load_pixbuf_from_file (file, width, height);
@@ -139,7 +136,7 @@ namespace Plank.Drawing
 				if (pbuf != null)
 					break;
 				
-				if (name != all_names.last ())
+				if (name != DEFAULT_ICON)
 					message ("Could not find icon '%s'", name);
 			}
 			
@@ -249,15 +246,12 @@ namespace Plank.Drawing
 		 */
 		public static Cairo.Surface? load_icon_for_scale (string names, int width, int height, int scale)
 		{
-			var all_names = new Gee.ArrayList<string> ();
-			
-			foreach (unowned string s in names.split (";;"))
-				all_names.add (s);
-			all_names.add (DEFAULT_ICON);
-			
 			Cairo.Surface? surface = null;
 			
-			foreach (var name in all_names) {
+			var all_names = names.split (";;");
+			all_names += DEFAULT_ICON;
+			
+			foreach (unowned string name in all_names) {
 				var file = try_get_icon_file (name);
 				if (file != null) {
 					var pbuf = load_pixbuf_from_file (file, width, height);
@@ -275,7 +269,7 @@ namespace Plank.Drawing
 				if (surface != null)
 					break;
 				
-				if (name != all_names.last ())
+				if (name != DEFAULT_ICON)
 					message ("Could not find icon '%s'", name);
 			}
 			
