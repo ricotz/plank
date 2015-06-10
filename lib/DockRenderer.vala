@@ -507,7 +507,7 @@ namespace Plank
 #endif
 			
 			if (is_first_frame) {
-				Idle.add (() => {
+				Gdk.threads_add_idle_full (GLib.Priority.LOW, () => {
 					// slide the dock in, if it shouldnt start hidden
 					controller.hide_manager.update_hovered ();
 					
