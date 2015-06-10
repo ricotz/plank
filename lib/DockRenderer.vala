@@ -57,7 +57,6 @@ namespace Plank
 		DockSurface? urgent_glow_buffer = null;
 		
 		int64 last_hide = 0;
-		int64 frame_time = 0;
 		
 		bool screen_is_composited = false;
 		uint reset_position_manager_timer = 0;
@@ -101,8 +100,6 @@ namespace Plank
 		public void initialize ()
 			requires (controller.window != null)
 		{
-			init_current_frame ();
-			
 			controller.position_manager.update (theme);
 			
 			controller.window.notify["HoveredItem"].connect (animated_draw);
@@ -217,10 +214,13 @@ namespace Plank
 			animated_draw ();
 		}
 		
-		void init_current_frame ()
-			requires (theme != null)
+		/**
+		 * {@inheritDoc}
+		 */
+		protected override void initialize_frame (int64 frame_time)
 		{
-			frame_time = GLib.get_monotonic_time ();
+			return_if_fail (theme != null);
+			
 			screen_is_composited = controller.position_manager.screen_is_composited;
 			dynamic_animation_offset = 0.0;
 			
@@ -248,11 +248,9 @@ namespace Plank
 		}
 		
 		/**
-		 * Draws the dock onto a context.
-		 *
-		 * @param cr the context to use for drawing
+		 * {@inheritDoc}
 		 */
-		public void draw_dock (Cairo.Context cr)
+		public override void draw (Cairo.Context cr, int64 frame_time)
 		{
 #if HAVE_HIDPI
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
@@ -260,8 +258,6 @@ namespace Plank
 			// take the previous frame values into account to decide if we
 			// can bail a full draw to not miss a finishing animation-frame
 			var no_full_draw_needed = (!is_first_frame && hide_progress == 1.0 && opacity == 1.0);
-			
-			init_current_frame ();
 			
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockItem dragged_item = controller.drag_manager.DragItem;
@@ -300,7 +296,7 @@ namespace Plank
 				cr.restore ();
 				
 				foreach (var item in items)
-					draw_urgent_glow (item, cr);
+					draw_urgent_glow (item, cr, frame_time);
 				
 				return;
 			}
@@ -362,8 +358,8 @@ namespace Plank
 #endif
 					// Do not draw the currently dragged item or items which are suppose to be drawn later
 					if (move_time < move_duration && item.IsVisible && dragged_item != item && !items.contains (item)) {
-						var draw_value = get_animated_draw_value_for_item (item);
-						draw_item (item_cr, item, ref draw_value);
+						var draw_value = get_animated_draw_value_for_item (item, frame_time);
+						draw_item (item_cr, item, ref draw_value, frame_time);
 						draw_item_shadow (shadow_cr, item, ref draw_value);
 					}
 #if BENCHMARK
@@ -458,8 +454,8 @@ namespace Plank
 #endif
 				// Do not draw the currently dragged item
 				if (item.IsVisible && dragged_item != item) {
-					var draw_value = get_animated_draw_value_for_item (item);
-					draw_item (item_cr, item, ref draw_value);
+					var draw_value = get_animated_draw_value_for_item (item, frame_time);
+					draw_item (item_cr, item, ref draw_value, frame_time);
 					draw_item_shadow (shadow_cr, item, ref draw_value);
 				}
 #if BENCHMARK
@@ -494,7 +490,7 @@ namespace Plank
 			// draw urgent-glow if dock is completely hidden
 			if (hide_progress == 1.0) {
 				foreach (var item in items)
-					draw_urgent_glow (item, cr);
+					draw_urgent_glow (item, cr, frame_time);
 			}
 			
 #if BENCHMARK
@@ -513,7 +509,9 @@ namespace Plank
 					
 					// FIXME there must be a sane way
 					// https://bugs.launchpad.net/plank/+bug/1256626
-					last_hide = GLib.get_monotonic_time ();
+					force_frame_time_update ();
+					last_hide = frame_time;
+					
 					hidden_changed ();
 					return false;
 				});
@@ -540,7 +538,7 @@ namespace Plank
 			cr.paint ();
 		}
 		
-		PositionManager.DockItemDrawValue get_animated_draw_value_for_item (DockItem item)
+		PositionManager.DockItemDrawValue get_animated_draw_value_for_item (DockItem item, int64 frame_time)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockItem hovered_item = controller.window.HoveredItem;
@@ -697,7 +695,7 @@ namespace Plank
 			return draw_value;
 		}
 			
-		void draw_item (Cairo.Context cr, DockItem item, ref PositionManager.DockItemDrawValue draw_value)
+		void draw_item (Cairo.Context cr, DockItem item, ref PositionManager.DockItemDrawValue draw_value, int64 frame_time)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			var icon_size = position_manager.IconSize;
@@ -921,7 +919,7 @@ namespace Plank
 			}
 		}
 		
-		void draw_urgent_glow (DockItem item, Cairo.Context cr)
+		void draw_urgent_glow (DockItem item, Cairo.Context cr, int64 frame_time)
 		{
 			if ((item.State & ItemState.URGENT) == 0)
 				return;
@@ -957,7 +955,8 @@ namespace Plank
 		
 		void hidden_changed ()
 		{
-			var now = GLib.get_monotonic_time ();
+			force_frame_time_update ();
+			var now = frame_time;
 			var diff = now - last_hide;
 			var time = (theme.FadeOpacity == 1.0 ? theme.HideTime : theme.FadeTime) * 1000;
 			
@@ -994,13 +993,13 @@ namespace Plank
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override bool animation_needed (int64 render_time)
+		protected override bool animation_needed (int64 frame_time)
 		{
 			if (theme.FadeOpacity == 1.0) {
-				if (render_time - last_hide <= theme.HideTime * 1000)
+				if (frame_time - last_hide <= theme.HideTime * 1000)
 					return true;
 			} else {
-				if (render_time - last_hide <= theme.FadeTime * 1000)
+				if (frame_time - last_hide <= theme.FadeTime * 1000)
 					return true;
 			}
 			
@@ -1008,7 +1007,7 @@ namespace Plank
 				return true;
 			
 			foreach (var item in controller.VisibleItems)
-				if (item_animation_needed (item, render_time))
+				if (item_animation_needed (item, frame_time))
 					return true;
 			
 			return false;

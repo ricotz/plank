@@ -25,14 +25,14 @@ namespace Plank.Drawing
 	 */
 	public abstract class AnimatedRenderer : GLib.Object
 	{
-		/**
-		 * How many frames per second (roughly) we want while animating.
-		 */
-		const uint FPS = 60;
-		
 		public Gtk.Widget widget { get; construct; }
 		
-		uint animation_timer = 0;
+		[CCode (notify = false)]
+		public int64 frame_time { get; private set; }
+		
+		uint timer_id = 0;
+		ulong widget_realize_id = 0;
+		ulong widget_draw_id = 0;
 		
 		/**
 		 * Creates a new animation renderer.
@@ -42,51 +42,111 @@ namespace Plank.Drawing
 			Object (widget : widget);
 		}
 		
+		construct
+		{
+			widget_realize_id = widget.realize.connect (on_widget_realize);
+			widget_draw_id = widget.draw.connect (on_widget_draw);
+		}
+		
 		~AnimatedRenderer ()
 		{
-			if (animation_timer > 0) {
-				GLib.Source.remove (animation_timer);
-				animation_timer = 0;
+			if (timer_id > 0) {
+				GLib.Source.remove (timer_id);
+				timer_id = 0;
+			}
+			
+			if (widget_realize_id > 0) {
+				widget.disconnect (widget_realize_id);
+				widget_realize_id = 0;
+			}
+			
+			if (widget_draw_id > 0) {
+				widget.disconnect (widget_draw_id);
+				widget_draw_id = 0;
 			}
 		}
 		
 		/**
 		 * Determines if animation should continue.
 		 *
-		 * @param render_time the current time for this frame's render
+		 * @param frame_time the current time for this frame's render
 		 * @return if another animation frame is needed
 		 */
-		protected abstract bool animation_needed (int64 render_time);
+		protected abstract bool animation_needed (int64 frame_time);
+		
+		/**
+		 * Preparations which are not requiring a drawing context yet.
+		 *
+		 * @param frame_time the current time for this frame's render
+		 */
+		protected abstract void initialize_frame (int64 frame_time);
+		
+		/**
+		 * Draws onto a context.
+		 *
+		 * @param cr the context to use for drawing
+		 */
+		public abstract void draw (Cairo.Context cr, int64 frame_time);
+		
+		/**
+		 * Force an immediate update of the frame_time property.
+		 */
+		protected void force_frame_time_update ()
+		{
+			frame_time = GLib.get_monotonic_time ();
+		}
 		
 		/**
 		 * Request re-drawing.
 		 */
 		public void animated_draw ()
 		{
-			if (animation_timer > 0)
+			if (timer_id > 0)
 				return;
 			
 			widget.queue_draw ();
 			
-			if (animation_needed (GLib.get_monotonic_time ()))
-				animation_timer = Gdk.threads_add_timeout (1000 / FPS, draw_timeout);
+			force_frame_time_update ();
+			if (animation_needed (frame_time)) {
+				// This roughly means driving animations with 60 fps
+				timer_id = Gdk.threads_add_timeout (16, draw_timeout);
+			}
 		}
 		
 		bool draw_timeout ()
 		{
 			widget.queue_draw ();
 			
-			if (animation_needed (GLib.get_monotonic_time ()))
+			force_frame_time_update ();
+			if (animation_needed (frame_time))
 				return true;
 			
-			if (animation_timer > 0) {
-				GLib.Source.remove (animation_timer);
-				animation_timer = 0;
-			}
-
-			// one final draw to clear out the end of previous animations
-			widget.queue_draw ();
+			timer_id = 0;
 			return false;
 		}
+		
+		[CCode (instance_pos = -1)]
+		bool on_widget_draw (Gtk.Widget widget, Cairo.Context cr)
+		{
+			force_frame_time_update ();
+			initialize_frame (frame_time);
+			
+			draw (cr, frame_time);
+		
+			return Gdk.EVENT_PROPAGATE;
+		}
+		
+		[CCode (instance_pos = -1)]
+		void on_widget_realize (Gtk.Widget widget)
+		{
+			force_frame_time_update ();
+			initialize_frame (frame_time);
+			
+			if (widget_realize_id > 0) {
+				widget.disconnect (widget_realize_id);
+				widget_realize_id = 0;
+			}
+		}
+		
 	}
 }

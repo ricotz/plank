@@ -70,8 +70,6 @@ namespace Plank.Widgets
 		bool long_press_active = false;
 		uint long_press_button = 0;
 
-		bool dock_is_starting = true;
-		
 		Gdk.Rectangle input_rect;
 		int requested_x;
 		int requested_y;		
@@ -291,20 +289,6 @@ namespace Plank.Widgets
 		 */
 		public override bool draw (Cairo.Context cr)
 		{
-			if (dock_is_starting) {
-				debug ("dock window loaded");
-				dock_is_starting = false;
-				
-				set_input_mask ();
-				
-				// FIXME make sure to trigger a subsequent redraw
-				// https://bugs.launchpad.net/plank/+bug/1256626
-				controller.renderer.animated_draw ();
-				
-				return base.draw (cr);
-			}
-			
-			controller.renderer.draw_dock (cr);
 			set_input_mask ();
 			
 			return Gdk.EVENT_STOP;
