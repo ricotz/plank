@@ -43,8 +43,12 @@ namespace Plank.Drawing
 		
 		public static unowned Gtk.IconTheme get_icon_theme ()
 		{
+			icon_theme_mutex.lock ();
+			
 			if (icon_theme == null)
 				icon_theme = Gtk.IconTheme.get_for_screen (Gdk.Screen.get_default ());
+			
+			icon_theme_mutex.unlock ();
 			
 			return icon_theme;
 		}
