@@ -1,16 +1,16 @@
-# Norwegian Nynorsk translation for plank
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Uzbek translation for plank
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
 # This file is distributed under the same license as the plank package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-06-09 08:03+0000\n"
-"PO-Revision-Date: 2013-06-17 06:28+0000\n"
-"Last-Translator: Martin Myrvold <Unknown>\n"
-"Language-Team: Norwegian Nynorsk <nn@li.org>\n"
+"PO-Revision-Date: 2015-06-10 00:16+0000\n"
+"Last-Translator: Learner <muzaffar.habibullayev@yandex.ru>\n"
+"Language-Team: Uzbek <uz@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,6 +22,8 @@ msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"Plank dunyodagi eng sodda dok bo'lishga mo'ljallangan. Maqsad shunchaki dok "
+"bo'lish va boshqa hech narsa emas."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -31,62 +33,66 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"Ammo, bu kutubxona kengaytirlishi mumkin va rivojlangan funksiyalarga ega "
+"boshqa dok dasturlarini yaratish mumkin. Dock Docky (3.0.0 versiyadan "
+"boshlab) uchun asos texnlogiya va asosiy xususiyatlarni ta'minlashga "
+"qaratilgan, Docky esa qo'shimchalarni qamrab olgan."
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "Plank. Idiotsikkert"
+msgstr "Plank. Ahmoqona darajada sodda."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "Mavzu:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "Joylashishi"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "Chap"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "Oʻng"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "Yuqori"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "Pasti"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "Tekislash"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "To'la"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "Boshlash"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "Oxiri"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "Markaz"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "Asosiy Ekranda:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr ""
+msgstr "Ekran qirrasi markazidan foizdagi siljish"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
@@ -94,19 +100,19 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "Nishoncha Hajmi:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Appearance"
-msgstr ""
+msgstr "Tashqi Ko‘rinishi"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Intellihide"
-msgstr ""
+msgstr "Aqlli yashirish"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Autohide"
-msgstr ""
+msgstr "Avtoyashirsh"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Dodge maximized window"
@@ -118,23 +124,23 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Hide Dock"
-msgstr ""
+msgstr "Dokni Yashir"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Hide Delay:"
-msgstr ""
+msgstr "Yashirish vaqti:"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgstr "Yashirish vaqti mslarda"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "Tikash Vaqti:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "Tiklash vaqti mslarda"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Pressure Reveal:"
@@ -142,7 +148,7 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Item Management"
-msgstr ""
+msgstr "Narsalarni Boshqarish"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Show Unpinned:"
@@ -150,11 +156,11 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Restrict to Workspace:"
-msgstr ""
+msgstr "Ish maydoniga Cheklash"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Lock Icons:"
-msgstr ""
+msgstr "Nishonchalarni Qulflash"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Automatic Pinning:"
@@ -166,46 +172,46 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
-msgstr ""
+msgstr "O'zini tutish"
 
 #: ../lib/Items/ApplicationDockItem.vala:442
 #: ../lib/Items/FileDockItem.vala:326 ../lib/Items/FileDockItem.vala:344
 msgid "_Keep in Dock"
-msgstr "_Fest til Dock"
+msgstr "_Dokda Saqlash"
 
 #: ../lib/Items/ApplicationDockItem.vala:450
 msgid "_Close All"
-msgstr "_Lukk alle"
+msgstr "_Barchasini Yopish"
 
 #: ../lib/Items/ApplicationDockItem.vala:450
 msgid "_Close"
-msgstr ""
+msgstr "_Yopish"
 
 #: ../lib/Items/FileDockItem.vala:331
 msgid "_Open in File Browser"
-msgstr ""
+msgstr "_Fayl boshqaruvhcisida ochish"
 
 #: ../lib/Items/FileDockItem.vala:349
 msgid "_Open"
-msgstr "_Opna"
+msgstr "_Ochish"
 
 #: ../lib/Items/FileDockItem.vala:353
 msgid "Open Containing _Folder"
-msgstr "Åpne innhaldet _mappe"
+msgstr "Saqlangan_Jildni Ochish"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr ""
+msgstr "Fayl yoki dasturlarni bu yerga tashlang"
 
 #: ../lib/Items/PlankDockItem.vala:77
 msgid "Get _Help Online..."
-msgstr ""
+msgstr "Onlayn Yordam_Olish"
 
 #: ../lib/Items/PlankDockItem.vala:81
 msgid "_Translate This Application..."
-msgstr ""
+msgstr "_Ushbu Dasturni_Tarjima qilish"
 
 #: ../lib/Widgets/PreferencesWindow.vala:67
 #: ../lib/Widgets/PreferencesWindow.vala:77
 msgid "Preferences"
-msgstr ""
+msgstr "Xususiyatlar"

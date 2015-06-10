@@ -1,16 +1,16 @@
-# Norwegian Nynorsk translation for plank
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Georgian translation for plank
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
 # This file is distributed under the same license as the plank package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-06-09 08:03+0000\n"
-"PO-Revision-Date: 2013-06-17 06:28+0000\n"
-"Last-Translator: Martin Myrvold <Unknown>\n"
-"Language-Team: Norwegian Nynorsk <nn@li.org>\n"
+"PO-Revision-Date: 2015-06-07 15:02+0000\n"
+"Last-Translator: guja <guja1995@gmail.com>\n"
+"Language-Team: Georgian <ka@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,6 +22,8 @@ msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"Plank არის ყველაზე მარტივი dock-ი მთელს პლანეტაზე.  თუმცა მას გააჩნია "
+"ყველაფერი რაც dock-ს სჭირდება და არაფერი სხვა!!"
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -34,75 +36,75 @@ msgstr ""
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "Plank. Idiotsikkert"
+msgstr "Plank. ძალიან მარტივი აი ძალიან"
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "თემა:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "მდებარეობა:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "მარცხნივ"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "მარჯვნივ"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "თავში"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "ბოლოში"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "წყობა:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "შევსება"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "დაწყება"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "დასასრული"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "ცენტრში"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "(აქტიურ) დესკტოპზე გამოტანა"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr ""
+msgstr "პროცენტული სიზუსტე კუთხიდან ცენტრამდე"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr ""
+msgstr "ხატულას (Icon)-ის მდებარეობა"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "ხატულის ზომა:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Appearance"
-msgstr ""
+msgstr "ინტერფეისი"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Intellihide"
-msgstr ""
+msgstr "დამალვა როცა არ გჭირდება"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Autohide"
@@ -171,11 +173,11 @@ msgstr ""
 #: ../lib/Items/ApplicationDockItem.vala:442
 #: ../lib/Items/FileDockItem.vala:326 ../lib/Items/FileDockItem.vala:344
 msgid "_Keep in Dock"
-msgstr "_Fest til Dock"
+msgstr ""
 
 #: ../lib/Items/ApplicationDockItem.vala:450
 msgid "_Close All"
-msgstr "_Lukk alle"
+msgstr ""
 
 #: ../lib/Items/ApplicationDockItem.vala:450
 msgid "_Close"
@@ -187,11 +189,11 @@ msgstr ""
 
 #: ../lib/Items/FileDockItem.vala:349
 msgid "_Open"
-msgstr "_Opna"
+msgstr ""
 
 #: ../lib/Items/FileDockItem.vala:353
 msgid "Open Containing _Folder"
-msgstr "Åpne innhaldet _mappe"
+msgstr ""
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
