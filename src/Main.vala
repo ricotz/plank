@@ -21,21 +21,21 @@ using Plank.Factories;
 
 namespace Plank
 {
-	public class PlankMain : AbstractMain
+	public static int main (string[] argv)
 	{
-		public static int main (string[] args)
-		{
-			Intl.setlocale (LocaleCategory.ALL, "");
-			Intl.bindtextdomain (Build.GETTEXT_PACKAGE, Build.DATADIR + "/locale");
-			Intl.bind_textdomain_codeset (Build.GETTEXT_PACKAGE, "UTF-8");
-			Intl.textdomain (Build.GETTEXT_PACKAGE);
-			
-			var application = new PlankMain ();
-			Factory.init (application, new ItemFactory ());
-			return application.run (args);
-		}
+		Intl.setlocale (LocaleCategory.ALL, "");
+		Intl.bindtextdomain (Build.GETTEXT_PACKAGE, Build.DATADIR + "/locale");
+		Intl.bind_textdomain_codeset (Build.GETTEXT_PACKAGE, "UTF-8");
+		Intl.textdomain (Build.GETTEXT_PACKAGE);
 		
-		public PlankMain ()
+		var application = new Plank.Main ();
+		Factory.init (application, new ItemFactory ());
+		return application.run (argv);
+	}
+	
+	public class Main : AbstractMain
+	{
+		public Main ()
 		{
 			var authors = new string[] {
 					"Robert Dyer <psybers@gmail.com>",

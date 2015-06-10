@@ -28,7 +28,7 @@ plank_LDADD = \
 	$(NULL)
 
 plank_VALASOURCES = \
-	PlankMain.vala \
+	Main.vala \
 	$(NULL)
 
 nodist_plank_SOURCES = \
