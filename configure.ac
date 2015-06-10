@@ -174,6 +174,14 @@ if test "x$enable_hidpi" = "xyes" ; then
 fi
 AM_CONDITIONAL([HAVE_HIDPI], [test "x$enable_hidpi" = "xyes"])
 
+# Check for FrameClock support of Gtk+
+GTK_PKGS="gtk+-3.0 >= 3.8"
+PKG_CHECK_MODULES(FRAMECLOCK, $GTK_PKGS, [enable_gtk38=yes], [enable_gtk38=no])
+if test "x$enable_gtk38" = "xyes" ; then
+    VALAFLAGS="$VALAFLAGS --define HAVE_GTK_3_8"
+fi
+AM_CONDITIONAL([HAVE_GTK_3_8], [test "x$enable_gtk38" = "xyes"])
+
 # Check for CSD support of Gtk+
 GTK_PKGS="gtk+-3.0 >= $GTK_MIN_VERSION"
 PKG_CHECK_MODULES(GTK, $GTK_PKGS, [enable_gtk310=yes], [enable_gtk310=no])
