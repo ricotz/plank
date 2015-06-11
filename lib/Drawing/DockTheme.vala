@@ -398,7 +398,12 @@ namespace Plank.Drawing
 			var max_width = icon_size - 2.0 * line_width;
 			if (width > max_width)
 				width = max_width;
-			x += icon_size - width - line_width / 2.0;
+
+			// Mirror horizontal badge-position for RTL environments
+			if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL)
+				x += line_width + line_width / 2.0;
+			else
+				x += icon_size - width - line_width / 2.0;
 			y += line_width + line_width / 2.0;
 			
 			cr.set_line_width (line_width);
@@ -527,7 +532,12 @@ namespace Plank.Drawing
 			var finished_width = Math.ceil (progress * width);
 			stroke = new Cairo.Pattern.rgba (0.8, 0.8, 0.8, 1.0);
 			fill = new Cairo.Pattern.rgba (0.9, 0.9, 0.9, 1.0);
-			draw_rounded_line (cr, x + line_width / 2.0, y + line_width / 2.0, finished_width, height, true, true, stroke, fill);
+			
+			// Mirror progress-bar for RTL environments
+			if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL)
+				draw_rounded_line (cr, x + line_width / 2.0 + width - finished_width, y + line_width / 2.0, finished_width, height, true, true, stroke, fill);
+			else
+				draw_rounded_line (cr, x + line_width / 2.0, y + line_width / 2.0, finished_width, height, true, true, stroke, fill);
 		}
 		
 		/**

@@ -94,6 +94,7 @@ namespace Plank
 			visible_items = new Gee.ArrayList<unowned DockItem> ();
 			
 			prefs.notify["PinnedOnly"].connect (update_default_provider);
+			prefs.notify["Position"].connect (update_visible_elements);
 			prefs.notify["ShowDockItem"].connect (update_show_dock_item);
 			
 			dbus_manager = new DBusManager (this);
@@ -108,6 +109,7 @@ namespace Plank
 		~DockController ()
 		{
 			prefs.notify["PinnedOnly"].disconnect (update_default_provider);
+			prefs.notify["Position"].disconnect (update_visible_elements);
 			prefs.notify["ShowDockItem"].disconnect (update_show_dock_item);
 			
 			positions_changed.disconnect (handle_positions_changed);
@@ -253,34 +255,52 @@ namespace Plank
 			
 			visible_items.clear ();
 			
+			var current_position = 0;
+			update_visible_items_recursive (this, ref current_position);
+		}
+		
+		void update_visible_items_recursive (DockContainer container, ref int current_position)
+		{
+#if HAVE_GEE_0_8
+			var iterator = container.VisibleElements.bidir_list_iterator ();
+#else
+			var iterator = container.VisibleElements.list_iterator ();
+#endif
+			// Reverse dock-item-order for RTL environments if dock is placed horizontally
+			if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL && prefs.is_horizontal_dock ()) {
+				iterator.last ();
+				do {
+					update_visible_items_add_from_iterator (iterator, ref current_position);
+				} while (iterator.previous ());
+			} else {
+				iterator.first ();
+				do {
+					update_visible_items_add_from_iterator (iterator, ref current_position);
+				} while (iterator.next ());
+			}
+		}
+		
+		inline void update_visible_items_add_from_iterator (Gee.Iterator<DockElement> iterator, ref int current_position)
+		{
+			DockElement? element = iterator.get ();
 			unowned DockItem? item = null;
 			unowned DockContainer? container = null;
 			
-			var current_pos = 0;
-			foreach (var element in visible_elements) {
-				item = (element as DockItem);
-				if (item != null) {
-					if (item.Position != current_pos)
-						item.Position = current_pos;
-					visible_items.add (item);
-					current_pos++;
-					continue;
-				}
-				
-				container = (element as DockContainer);
-				if (container == null)
-					continue;
-				
-				foreach (var element2 in container.VisibleElements) {
-					item = (element2 as DockItem);
-					if (item == null)
-						continue;
-					if (item.Position != current_pos)
-						item.Position = current_pos;
-					visible_items.add (item);
-					current_pos++;
-				}
+			container = (element as DockContainer);
+			if (container != null) {
+				update_visible_items_recursive (container, ref current_position);
+				return;
 			}
+
+			item = (element as DockItem);
+			if (item == null)
+				return;
+			
+			if (item.Position != current_position)
+				item.Position = current_position;
+			current_position++;
+			
+			visible_items.add (item);
 		}
 		
 		void update_items ()

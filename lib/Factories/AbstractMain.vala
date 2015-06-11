@@ -266,6 +266,8 @@ namespace Plank.Factories
 #if HAVE_BARRIERS
 			message ("+ XInput Barriers support enabled");
 #endif
+			if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL)
+				message ("+ RTL support enabled");
 			
 			// Make sure we are not doing silly things like trying to run in a wayland-session!
 			if (!(Gdk.Screen.get_default () is Gdk.X11.Screen)) {

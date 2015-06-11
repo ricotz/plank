@@ -238,6 +238,21 @@ namespace Plank
 		public Gtk.PositionType Position { get; private set; }
 		
 		/**
+		 * Cached alignment of the dock.
+		 */
+		public Gtk.Align Alignment { get; private set; }
+		
+		/**
+		 * Cached alignment of the items.
+		 */
+		public Gtk.Align ItemsAlignment { get; private set; }
+		
+		/**
+		 * Cached offset of the dock.
+		 */
+		public int Offset { get; private set; }
+		
+		/**
 		 * Theme-based indicator size, scaled by icon size.
 		 */
 		public int IndicatorSize { get; private set; }
@@ -371,6 +386,32 @@ namespace Plank
 			unowned DockPreferences prefs = controller.prefs;
 			
 			Position = prefs.Position;
+			Alignment = prefs.Alignment;
+			ItemsAlignment = prefs.ItemsAlignment;
+			Offset = prefs.Offset;
+			
+			// Mirror position/alignments/offset for RTL environments if needed
+			if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL) {
+				if (is_horizontal_dock ()) {
+					if (Alignment == Gtk.Align.START)
+						Alignment = Gtk.Align.END;
+					else if (Alignment == Gtk.Align.END)
+						Alignment = Gtk.Align.START;
+					
+					if (ItemsAlignment == Gtk.Align.START)
+						ItemsAlignment = Gtk.Align.END;
+					else if (ItemsAlignment == Gtk.Align.END)
+						ItemsAlignment = Gtk.Align.START;
+					
+					Offset = -Offset;
+				} else {
+					if (Position == Gtk.PositionType.RIGHT)
+						Position = Gtk.PositionType.LEFT;
+					else
+						Position = Gtk.PositionType.RIGHT;
+				}
+			}
+			
 			IconSize = int.min (MaxIconSize, prefs.IconSize);
 			
 			var scaled_icon_size = IconSize / 10.0;
@@ -440,8 +481,6 @@ namespace Plank
 		
 		void update_dimensions ()
 		{
-			unowned DockPreferences prefs = controller.prefs;
-			
 			Logger.verbose ("PositionManager.update_dimensions ()");
 			
 			// height of the visible (cursor) rect of the dock
@@ -457,7 +496,7 @@ namespace Plank
 			var dock_height = height + (screen_is_composited ? UrgentBounceHeight : 0);
 			
 			var width = 0;
-			switch (prefs.Alignment) {
+			switch (Alignment) {
 			default:
 			case Gtk.Align.START:
 			case Gtk.Align.END:
@@ -586,8 +625,6 @@ namespace Plank
 		 */
 		public void update_regions ()
 		{
-			unowned DockPreferences prefs = controller.prefs;
-			
 			Logger.verbose ("PositionManager.update_regions ()");
 			
 			var old_region = static_dock_region;
@@ -602,11 +639,11 @@ namespace Plank
 			var yoffset = (DockHeight - static_dock_region.height) / 2;
 			
 			if (screen_is_composited) {
-				var offset = prefs.Offset;
+				var offset = Offset;
 				xoffset = (int) ((1 + offset / 100.0) * xoffset);
 				yoffset = (int) ((1 + offset / 100.0) * yoffset);
 				
-				switch (prefs.Alignment) {
+				switch (Alignment) {
 				default:
 				case Gtk.Align.CENTER:
 				case Gtk.Align.FILL:
@@ -806,8 +843,6 @@ namespace Plank
 			
 		Gdk.Rectangle internal_get_item_hover_region (DockItem item)
 		{
-			unowned DockPreferences prefs = controller.prefs;
-			
 			Gdk.Rectangle rect = {};
 			
 			switch (Position) {
@@ -838,10 +873,10 @@ namespace Plank
 				break;
 			}
 			
-			if (prefs.Alignment != Gtk.Align.FILL)
+			if (Alignment != Gtk.Align.FILL)
 				return rect;
 			
-			switch (prefs.ItemsAlignment) {
+			switch (ItemsAlignment) {
 			default:
 			case Gtk.Align.FILL:
 			case Gtk.Align.CENTER:
@@ -967,17 +1002,15 @@ namespace Plank
 		 */
 		public void update_dock_position ()
 		{
-			unowned DockPreferences prefs = controller.prefs;
-			
 			var xoffset = 0;
 			var yoffset = 0;
 			
 			if (!screen_is_composited) {
-				var offset = prefs.Offset;
+				var offset = Offset;
 				xoffset = (int) ((1 + offset / 100.0) * (monitor_geo.width - DockWidth) / 2);
 				yoffset = (int) ((1 + offset / 100.0) * (monitor_geo.height - DockHeight) / 2);
 				
-				switch (prefs.Alignment) {
+				switch (Alignment) {
 				default:
 				case Gtk.Align.CENTER:
 				case Gtk.Align.FILL:
