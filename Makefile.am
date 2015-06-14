@@ -1,7 +1,7 @@
 include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.coverage
 
-ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+ACLOCAL_AMFLAGS = --install -I m4 ${ACLOCAL_FLAGS}
 
 SUBDIRS = \
 	data \

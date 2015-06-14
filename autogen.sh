@@ -4,37 +4,35 @@
 srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 
-PKG_NAME="plank"
-
-(test -f $srcdir/configure.ac \
-  && test -f $srcdir/autogen.sh) || {
-    echo -n "**Error**: Directory \`$srcdir' does not look like the"
-    echo " top-level $PKG_NAME directory"
-    exit 1
+(test -f $srcdir/configure.ac) || {
+	echo "**Error**: Directory "\`$srcdir\'" does not look like the top-level project directory"
+	exit 1
 }
 
-if which gnome-autogen.sh ; then
-  REQUIRED_AUTOMAKE_VERSION=1.11 . gnome-autogen.sh
+PKG_NAME=`autoconf --trace 'AC_INIT:$1' "$srcdir/configure.ac"`
+
+if [ "$#" = 0 -a "x$NOCONFIGURE" = "x" ]; then
+	echo "**Warning**: I am going to run \`configure' with no arguments." >&2
+	echo "If you wish to pass any to it, please specify them on the" >&2
+	echo \`$0\'" command line." >&2
+	echo "" >&2
+fi
+
+set -x
+aclocal --install || exit 1
+intltoolize --force --copy --automake || exit 1
+autoreconf --verbose --force --install -Wno-portability || exit 1
+set +x
+
+if [ "$NOCONFIGURE" = "" ]; then
+	set -x
+	$srcdir/configure "$@" || exit 1
+	set +x
+
+	if [ "$1" = "--help" ]; then exit 0 else
+		echo "Now type \`make\' to compile $PKG_NAME" || exit 1
+	fi
 else
-  if which intltoolize && which autoreconf ; then
-    intltoolize --copy --force --automake || \
-      (echo "There was an error in running intltoolize." > /dev/stderr;
-       exit 1)
-    autoreconf --force --install || \
-      (echo "There was an error in running autoreconf." > /dev/stderr;
-       exit 1)
-  else
-    echo "No build script available.  You have two choices:"
-    echo "1. You need to install the gnome-common module and make"
-    echo "   sure the gnome-autogen.sh script is in your \$PATH."
-    echo "2. You need to install the following scripts:"
-    echo "   * intltool"
-    echo "   * libtool"
-    echo "   * automake"
-    echo "   * autoconf"
-    echo "   Additionally, you need to make"
-    echo "   sure that they are in your \$PATH."
-    exit 1
-  fi
+	echo "Skipping configure process."
 fi
 
