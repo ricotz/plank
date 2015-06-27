@@ -40,11 +40,13 @@ namespace Plank.Widgets
 		Gtk.SpinButton sp_hide_delay;
 		Gtk.SpinButton sp_unhide_delay;
 		Gtk.Scale s_offset;
+		Gtk.Scale s_zoom_percent;
 		
 		Gtk.Adjustment adj_hide_delay;
 		Gtk.Adjustment adj_unhide_delay;
 		Gtk.Adjustment adj_iconsize;
 		Gtk.Adjustment adj_offset;
+		Gtk.Adjustment adj_zoom_percent;
 		
 		Gtk.Switch sw_hide;
 		Gtk.Switch sw_primary_display;
@@ -54,6 +56,7 @@ namespace Plank.Widgets
 		Gtk.Switch sw_auto_pinning;
 		Gtk.Switch sw_pressure_reveal;
 		Gtk.Switch sw_show_dock_item;
+		Gtk.Switch sw_zoom_enabled;
 		
 		public PreferencesWindow (DockPreferences prefs)
 		{
@@ -105,7 +108,9 @@ namespace Plank.Widgets
 				adj_unhide_delay = builder.get_object ("adj_unhide_delay") as Gtk.Adjustment;
 				adj_iconsize = builder.get_object ("adj_iconsize") as Gtk.Adjustment;
 				adj_offset = builder.get_object ("adj_offset") as Gtk.Adjustment;
+				adj_zoom_percent = builder.get_object ("adj_zoom_percent") as Gtk.Adjustment;
 				s_offset = builder.get_object ("s_offset") as Gtk.Scale;
+				s_zoom_percent = builder.get_object ("s_zoom_percent") as Gtk.Scale;
 				sw_hide = builder.get_object ("sw_hide") as Gtk.Switch;
 				sw_primary_display = builder.get_object ("sw_primary_display") as Gtk.Switch;
 				sw_workspace_only = builder.get_object ("sw_workspace_only") as Gtk.Switch;
@@ -114,6 +119,7 @@ namespace Plank.Widgets
 				sw_auto_pinning = builder.get_object ("sw_auto_pinning") as Gtk.Switch;
 				sw_pressure_reveal = builder.get_object ("sw_pressure_reveal") as Gtk.Switch;
 				sw_show_dock_item = builder.get_object ("sw_show_dock_item") as Gtk.Switch;
+				sw_zoom_enabled = builder.get_object ("sw_zoom_enabled") as Gtk.Switch;
 				cb_alignment = builder.get_object ("cb_alignment") as Gtk.ComboBoxText;
 				cb_items_alignment = builder.get_object ("cb_items_alignment") as Gtk.ComboBoxText;
 				
@@ -196,6 +202,12 @@ namespace Plank.Widgets
 				break;
 			case "UnhideDelay":
 				adj_unhide_delay.value = prefs.UnhideDelay;
+				break;
+			case "ZoomEnabled":
+				sw_zoom_enabled.set_active (prefs.ZoomEnabled);
+				break;
+			case "ZoomPercent":
+				adj_zoom_percent.value = prefs.ZoomPercent;
 				break;
 			// Ignored settings
 			case "DockItems":
@@ -292,6 +304,17 @@ namespace Plank.Widgets
 			prefs.ShowDockItem = ((Gtk.Switch) widget).get_active ();
 		}
 		
+		void zoom_enabled_toggled (GLib.Object widget, ParamSpec param)
+		{
+			if (((Gtk.Switch) widget).get_active ()) {
+				prefs.ZoomEnabled = true;
+				s_zoom_percent.sensitive = true;
+			} else {
+				prefs.ZoomEnabled = false;
+				s_zoom_percent.sensitive = false;
+			}
+		}
+		
 		void iconsize_changed (Gtk.Adjustment adj)
 		{
 			prefs.IconSize = (int) adj.value;
@@ -312,6 +335,11 @@ namespace Plank.Widgets
 			prefs.UnhideDelay = (int) adj.value;
 		}
 		
+		void zoom_percent_changed (Gtk.Adjustment adj)
+		{
+			prefs.ZoomPercent = (int) adj.value;
+		}
+		
 		void monitor_changed (Gtk.ComboBox widget)
 		{
 			prefs.Monitor = ((Gtk.ComboBoxText) widget).get_active_text ();
@@ -329,6 +357,7 @@ namespace Plank.Widgets
 			cb_display_plug.changed.connect (monitor_changed);
 			adj_iconsize.value_changed.connect (iconsize_changed);
 			adj_offset.value_changed.connect (offset_changed);
+			adj_zoom_percent.value_changed.connect (zoom_percent_changed);
 			sw_hide.notify["active"].connect (hide_toggled);
 			sw_primary_display.notify["active"].connect (primary_display_toggled);
 			sw_workspace_only.notify["active"].connect (workspace_only_toggled);
@@ -337,6 +366,7 @@ namespace Plank.Widgets
 			sw_auto_pinning.notify["active"].connect (auto_pinning_toggled);
 			sw_pressure_reveal.notify["active"].connect (pressure_reveal_toggled);
 			sw_show_dock_item.notify["active"].connect (show_dock_item_toggled);
+			sw_zoom_enabled.notify["active"].connect (zoom_enabled_toggled);
 			cb_alignment.changed.connect (cb_alignment_changed);
 			cb_items_alignment.changed.connect (cb_items_alignment_changed);
 		}
@@ -373,7 +403,9 @@ namespace Plank.Widgets
 			
 			adj_iconsize.value = prefs.IconSize;
 			adj_offset.value = prefs.Offset;
+			adj_zoom_percent.value = prefs.ZoomPercent;
 			s_offset.sensitive = (prefs.Alignment == Gtk.Align.CENTER);
+			s_zoom_percent.sensitive = prefs.ZoomEnabled;
 			sw_hide.set_active (prefs.HideMode != HideType.NONE);
 			sw_primary_display.set_active (prefs.Monitor == "");
 			sw_workspace_only.set_active (prefs.CurrentWorkspaceOnly);
@@ -382,6 +414,7 @@ namespace Plank.Widgets
 			sw_auto_pinning.set_active (prefs.AutoPinning);
 			sw_pressure_reveal.set_active (prefs.PressureReveal);
 			sw_show_dock_item.set_active (prefs.ShowDockItem);
+			sw_zoom_enabled.set_active (prefs.ZoomEnabled);
 			cb_alignment.active_id = ((int) prefs.Alignment).to_string ();
 			cb_items_alignment.active_id = ((int) prefs.ItemsAlignment).to_string ();
 			cb_items_alignment.sensitive = (prefs.Alignment == Gtk.Align.FILL);
