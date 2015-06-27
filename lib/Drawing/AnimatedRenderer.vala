@@ -105,11 +105,15 @@ namespace Plank.Drawing
 		{
 #if HAVE_GTK_3_8
 			unowned Gdk.FrameClock? frame_clock = widget.get_frame_clock ();
-			if (frame_clock != null)
+			if (frame_clock != null) {
 				frame_time = frame_clock.get_frame_time ();
-			else
+			} else {
 #endif
 				frame_time = GLib.get_monotonic_time ();
+#if HAVE_GTK_3_8
+				critical ("FrameClock not availble");
+			}
+#endif
 		}
 		
 		/**
@@ -124,9 +128,11 @@ namespace Plank.Drawing
 #endif
 				return;
 			
+			force_frame_time_update ();
+			initialize_frame (frame_time);
+			
 			widget.queue_draw ();
 			
-			force_frame_time_update ();
 			if (animation_needed (frame_time)) {
 #if HAVE_GTK_3_8
 				unowned Gdk.FrameClock? frame_clock = widget.get_frame_clock ();
@@ -145,15 +151,13 @@ namespace Plank.Drawing
 		{
 			frame_time = frame_clock.get_frame_time ();
 			initialize_frame (frame_time);
-			
-			widget.queue_draw ();
 #else
 		bool draw_timeout ()
 		{
-			widget.queue_draw ();
-			
 			force_frame_time_update ();
 #endif
+			widget.queue_draw ();
+			
 			if (animation_needed (frame_time))
 				return true;
 			
