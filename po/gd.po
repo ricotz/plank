@@ -1,0 +1,221 @@
+# Gaelic; Scottish translation for plank
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
+# This file is distributed under the same license as the plank package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+# GunChleoc <fios@foramnagaidhlig.net>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: plank\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-06-17 06:23+0000\n"
+"PO-Revision-Date: 2015-06-22 11:57+0000\n"
+"Last-Translator: GunChleoc <Unknown>\n"
+"Language-Team: Fòram na Gàidhlig\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2015-06-23 05:21+0000\n"
+"X-Generator: Launchpad (build 17572)\n"
+"Language: gd\n"
+
+#: ../data/plank.appdata.xml.in.h:1
+msgid ""
+"Plank is meant to be the simplest dock on the planet. The goal is to provide "
+"just what a dock needs and absolutely nothing more."
+msgstr ""
+"Is fainear Plank gur e an doca as simplidhe air an t-saoghail a bhios ann. "
+"Tha sinn ag amas toirt dhut na dh'fheumas tu airson doca gun càil sam bith "
+"eile."
+
+#: ../data/plank.appdata.xml.in.h:2
+msgid ""
+"It is, however, a library which can be extended to create other dock "
+"programs with more advanced features. Thus, Plank is the underlying "
+"technology for Docky (starting in version 3.0.0) and aims to provide all the "
+"core features while Docky extends it to add fancier things like Docklets, "
+"painters, settings dialogs, etc."
+msgstr ""
+"'S e leabharlann a th' ann co-dhiù a ghabhas leudachadh gus prògraman doca "
+"eile a chruthachadh air a bheil barrachd roghainnean adhartach. Mar sin, 's "
+"e an teicneolas air air a tha Docky stèidhichte (on tionndadh 3.0.0. a-mach) "
+"a th' ann am Plank agus tha sinn ag amas na feartan bunasach uile a thoirt "
+"dhuibh fhad 's a chuireas Docky ris le rudan spaideil leithid Docklets, "
+"peantairean, còmhraidhean airson roghainnean is msaa."
+
+#: ../data/plank.desktop.in.h:1
+msgid "Plank. Stupidly simple."
+msgstr "Plank. Cho furasta 's a ghabhas."
+
+#: ../data/ui/preferences.ui.h:1
+msgid "Theme:"
+msgstr "Ùrlar:"
+
+#: ../data/ui/preferences.ui.h:2
+msgid "Position:"
+msgstr "Ionad:"
+
+#: ../data/ui/preferences.ui.h:3
+msgid "Left"
+msgstr "Clì"
+
+#: ../data/ui/preferences.ui.h:4
+msgid "Right"
+msgstr "Deas"
+
+#: ../data/ui/preferences.ui.h:5
+msgid "Top"
+msgstr "Barr"
+
+#: ../data/ui/preferences.ui.h:6
+msgid "Bottom"
+msgstr "Bonn"
+
+#: ../data/ui/preferences.ui.h:7
+msgid "Alignment:"
+msgstr "Co-thaobhadh:"
+
+#: ../data/ui/preferences.ui.h:8
+msgid "Fill"
+msgstr "Lìon"
+
+#: ../data/ui/preferences.ui.h:9
+msgid "Start"
+msgstr "Toiseach"
+
+#: ../data/ui/preferences.ui.h:10
+msgid "End"
+msgstr "Deireadh"
+
+#: ../data/ui/preferences.ui.h:11
+msgid "Center"
+msgstr "Meadhan"
+
+#: ../data/ui/preferences.ui.h:12
+msgid "On Primary Display:"
+msgstr "Air a' phrìomh uidheam-taisbeanaidh:"
+
+#: ../data/ui/preferences.ui.h:13
+msgid "Offset in percent from the center of the screen-edge"
+msgstr "An frìth-àireamh na cheudad o mheadhan oir na sgrìn"
+
+#: ../data/ui/preferences.ui.h:14
+msgid "Icon Alignment:"
+msgstr "Co-thaobhadh nan ìomhaigheagan:"
+
+#: ../data/ui/preferences.ui.h:15
+msgid "Icon Size:"
+msgstr "Meud nan ìomhaigheagan:"
+
+#: ../data/ui/preferences.ui.h:16
+msgid "Appearance"
+msgstr "Coltas"
+
+#: ../data/ui/preferences.ui.h:17
+msgid "Intellihide"
+msgstr "Falach tapaidh"
+
+#: ../data/ui/preferences.ui.h:18
+msgid "Autohide"
+msgstr "Fèin-fhalaich"
+
+#: ../data/ui/preferences.ui.h:19
+msgid "Dodge maximized window"
+msgstr "Sioft fo uinneagan làn-mheudaichte"
+
+#: ../data/ui/preferences.ui.h:20
+msgid "Window Dodge"
+msgstr "Sioft uinneagan"
+
+#: ../data/ui/preferences.ui.h:21
+msgid "Hide Dock"
+msgstr "Falaich an doca"
+
+#: ../data/ui/preferences.ui.h:22
+msgid "Hide Delay:"
+msgstr "Dàil an fhalaich:"
+
+#: ../data/ui/preferences.ui.h:23
+msgid "Delay in ms before hiding the dock"
+msgstr "Dàil ann am ms mus dèid an doca fhalach"
+
+#: ../data/ui/preferences.ui.h:24
+msgid "Unhide Delay:"
+msgstr "Dàil an neo-fhalaich:"
+
+#: ../data/ui/preferences.ui.h:25
+msgid "Delay in ms before showing the dock"
+msgstr "Dàil ann am ms mus dèid an doca a shealltainn"
+
+#: ../data/ui/preferences.ui.h:26
+msgid "Pressure Reveal:"
+msgstr "Foillseachadh brùthaidh:"
+
+#: ../data/ui/preferences.ui.h:27
+msgid "Item Management"
+msgstr "Stiùireadh nan ìomhaigheagan"
+
+#: ../data/ui/preferences.ui.h:28
+msgid "Show Unpinned:"
+msgstr "Seall neo-phrìnichte:"
+
+#: ../data/ui/preferences.ui.h:29
+msgid "Restrict to Workspace:"
+msgstr "Cuingich air an rum-obrach:"
+
+#: ../data/ui/preferences.ui.h:30
+msgid "Lock Icons:"
+msgstr "Glais na h-ìomhaigheagan:"
+
+#: ../data/ui/preferences.ui.h:31
+msgid "Automatic Pinning:"
+msgstr "Prìneachadh fèin-obrachail:"
+
+#: ../data/ui/preferences.ui.h:32
+msgid "Show Item for Dock:"
+msgstr "Seall nì airson an doca:"
+
+#: ../data/ui/preferences.ui.h:33
+msgid "Behaviour"
+msgstr "Giùlan"
+
+#: ../lib/Items/ApplicationDockItem.vala:442
+#: ../lib/Items/FileDockItem.vala:326 ../lib/Items/FileDockItem.vala:344
+msgid "_Keep in Dock"
+msgstr "_Cum san doca"
+
+#: ../lib/Items/ApplicationDockItem.vala:450
+msgid "_Close All"
+msgstr "_Dùin na h-uile"
+
+#: ../lib/Items/ApplicationDockItem.vala:450
+msgid "_Close"
+msgstr "_Dùin"
+
+#: ../lib/Items/FileDockItem.vala:331
+msgid "_Open in File Browser"
+msgstr "F_osgail an am brabhsair nam faidhlichean"
+
+#: ../lib/Items/FileDockItem.vala:349
+msgid "_Open"
+msgstr "F_osgail"
+
+#: ../lib/Items/FileDockItem.vala:353
+msgid "Open Containing _Folder"
+msgstr "_Fosgail am pasgan far a bheil e"
+
+#: ../lib/Items/PlaceholderDockItem.vala:37
+msgid "Drop applications or files here"
+msgstr "Leig às aplacaidean no faidhlichean an-seo"
+
+#: ../lib/Items/PlankDockItem.vala:77
+msgid "Get _Help Online..."
+msgstr "Faigh cob_hair air loidhne..."
+
+#: ../lib/Items/PlankDockItem.vala:81
+msgid "_Translate This Application..."
+msgstr "Eadar-_theangaich an aplacaid seo..."
+
+#: ../lib/Widgets/PreferencesWindow.vala:67
+#: ../lib/Widgets/PreferencesWindow.vala:77
+msgid "Preferences"
+msgstr "Roghainnean"
