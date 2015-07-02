@@ -234,6 +234,7 @@ namespace Plank.Widgets
 			if (menu_is_visible ())
 				return Gdk.EVENT_STOP;
 			
+			controller.renderer.update_local_cursor ((int) event.x, (int) event.y);
 			update_hovered ((int) event.x, (int) event.y);
 			
 			return Gdk.EVENT_PROPAGATE;
@@ -394,7 +395,7 @@ namespace Plank.Widgets
 			
 			// check if there already was a hovered-item and if it is still hovered to speed up things
 			if (HoveredItem != null) {
-				rect = position_manager.get_item_hover_region (HoveredItem);
+				rect = position_manager.get_hover_region_for_element (HoveredItem);
 				if (y >= rect.y && y < rect.y + rect.height && x >= rect.x && x < rect.x + rect.width)
 					// Do not allow the hovered-item to be the drag-item
 					if (drag_item == HoveredItem) {
@@ -421,7 +422,7 @@ namespace Plank.Widgets
 			foreach (var element in controller.VisibleElements) {
 				item = (element as DockItem);
 				if (item != null) {
-					rect = position_manager.get_item_hover_region (item);
+					rect = position_manager.get_hover_region_for_element (item);
 					if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width)
 						continue;
 					
@@ -438,7 +439,7 @@ namespace Plank.Widgets
 				if (provider == null)
 					continue;
 				
-				rect = position_manager.get_item_hover_region (provider);
+				rect = position_manager.get_hover_region_for_element (provider);
 				if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width)
 					continue;
 				
@@ -446,7 +447,7 @@ namespace Plank.Widgets
 				found_hovered_provider = true;
 				
 				foreach (var element2 in provider.VisibleElements) {
-					rect = position_manager.get_item_hover_region (element2);
+					rect = position_manager.get_hover_region_for_element (element2);
 					if (y < rect.y || y >= rect.y + rect.height || x < rect.x || x >= rect.x + rect.width)
 						continue;
 					

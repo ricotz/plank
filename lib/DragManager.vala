@@ -178,7 +178,7 @@ namespace Plank
 #if HAVE_HIDPI
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
 #endif
-			var drag_icon_size = (int) (1.2 * controller.position_manager.IconSize);
+			var drag_icon_size = (int) (1.2 * controller.position_manager.ZoomIconSize);
 			if (drag_icon_size % 2 == 1)
 				drag_icon_size++;
 #if HAVE_HIDPI
@@ -441,6 +441,7 @@ namespace Plank
 				Gdk.drag_status (context, Gdk.DragAction.COPY, time_);
 			}
 			
+			controller.renderer.update_local_cursor (x, y);
 			hide_manager.update_hovered ();
 			window.update_hovered (x, y);
 			

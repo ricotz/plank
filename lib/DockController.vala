@@ -348,7 +348,6 @@ namespace Plank
 				&& added.size != removed.size) {
 				position_manager.update (renderer.theme);
 			} else {
-				position_manager.reset_item_caches ();
 				position_manager.update_regions ();
 			}
 			window.update_icon_regions ();
@@ -362,7 +361,6 @@ namespace Plank
 			update_visible_elements ();
 			
 			foreach (unowned DockElement item in moved_items) {
-				position_manager.reset_item_cache (item);
 				unowned ApplicationDockItem? app_item = (item as ApplicationDockItem);
 				if (app_item != null)
 					window.update_icon_region (app_item);
