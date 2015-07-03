@@ -228,7 +228,7 @@ namespace Plank
 			
 			if (screen_is_composited) {
 				var hide_duration = (fade_opacity == 1.0 ? theme.HideTime : theme.FadeTime) * 1000;
-				var hide_time = frame_time - last_hide;
+				var hide_time = int64.max (0LL, frame_time - last_hide);
 				if (hide_time < hide_duration) {
 					if (controller.hide_manager.Hidden)
 						hide_progress = Drawing.easing_for_mode (AnimationMode.EASE_IN_CUBIC, hide_time, hide_duration);
@@ -335,7 +335,7 @@ namespace Plank
 					remove_time = item.RemoveTime;
 					
 					if (add_time > remove_time) {
-						move_time = frame_time - add_time;
+						move_time = int64.max (0LL, frame_time - add_time);
 						if (move_time < move_duration) {
 							var move_animation_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_OUT_QUINT, move_time, move_duration);
 							dynamic_animation_offset -= move_animation_progress * (position_manager.IconSize + position_manager.ItemPadding);
@@ -343,7 +343,7 @@ namespace Plank
 							transient_items_it.remove ();
 						}
 					} else if (remove_time > 0) {
-						move_time = frame_time - remove_time;
+						move_time = int64.max (0LL, frame_time - remove_time);
 						if (move_time < move_duration) {
 							var move_animation_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_IN_QUINT, move_time, move_duration);
 							dynamic_animation_offset += move_animation_progress * (position_manager.IconSize + position_manager.ItemPadding);
@@ -553,7 +553,7 @@ namespace Plank
 			// check for and calculate click-animation
 			var max_click_time = item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
 			max_click_time *= 1000;
-			var click_time = frame_time - item.LastClicked;
+			var click_time = int64.max (0LL, frame_time - item.LastClicked);
 			if (click_time < max_click_time) {
 				var click_animation_progress = click_time / (double) max_click_time;
 				
@@ -578,7 +578,7 @@ namespace Plank
 			
 			// check for and calculate scroll-animation
 			var max_scroll_time = 300 * 1000;
-			var scroll_time = frame_time - item.LastScrolled;
+			var scroll_time = int64.max (0LL, frame_time - item.LastScrolled);
 			if (scroll_time < max_scroll_time) {
 				var scroll_animation_progress = scroll_time / (double) max_scroll_time;
 				
@@ -597,7 +597,7 @@ namespace Plank
 			
 			// check for and calculate hover-animation
 			var max_hover_time = 150 * 1000;
-			var hover_time = frame_time - item.LastHovered;
+			var hover_time = int64.max (0LL, frame_time - item.LastHovered);
 			if (hover_time < max_hover_time) {
 				var hover_animation_progress = 0.0;
 				if (hovered_item == item) {
@@ -627,7 +627,7 @@ namespace Plank
 			
 			// bounce icon on urgent state
 			if (screen_is_composited && (item.State & ItemState.URGENT) != 0) {
-				var urgent_time = frame_time - item.LastUrgent;
+				var urgent_time = int64.max (0LL, frame_time - item.LastUrgent);
 				var bounce_animation_progress = urgent_time / (double) (theme.UrgentBounceTime * 1000);
 				if (bounce_animation_progress < 1.0) {
 					var change = Math.fabs (Math.sin (Math.PI * bounce_animation_progress) * position_manager.UrgentBounceHeight * double.min (1.0, 2.0 * (1.0 - bounce_animation_progress)));
@@ -638,7 +638,7 @@ namespace Plank
 			// animate icon movement on move state
 			if ((item.State & ItemState.MOVE) != 0) {
 				var move_duration = theme.ItemMoveTime * 1000;
-				var move_time = frame_time - item.LastMove;
+				var move_time = int64.max (0LL, frame_time - item.LastMove);
 				if (move_time < move_duration) {
 					var move_animation_progress = 0.0;
 					if (transient_items.size > 0) {
@@ -661,7 +661,7 @@ namespace Plank
 			var allow_animation = (screen_is_composited && (container == null || container.AddTime < item.AddTime));
 			if (allow_animation && item.AddTime > item.RemoveTime) {
 				var move_duration = theme.ItemMoveTime * 1000;
-				var move_time = frame_time - item.AddTime;
+				var move_time = int64.max (0LL, frame_time - item.AddTime);
 				if (move_time < move_duration) {
 					var move_animation_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.LINEAR, move_time, move_duration);
 					draw_value.opacity = Drawing.easing_for_mode (AnimationMode.EASE_IN_EXPO, move_time, move_duration);
@@ -671,7 +671,7 @@ namespace Plank
 				}
 			} else if (allow_animation && item.RemoveTime > 0) {
 				var move_duration = theme.ItemMoveTime * 1000;
-				var move_time = frame_time - item.RemoveTime;
+				var move_time = int64.max (0LL, frame_time - item.RemoveTime);
 				if (move_time < move_duration) {
 					var move_animation_progress = Drawing.easing_for_mode (AnimationMode.LINEAR, move_time, move_duration);
 					draw_value.opacity = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_OUT_EXPO, move_time, move_duration);
@@ -684,7 +684,7 @@ namespace Plank
 			// animate icon on invalid state
 			if ((item.State & ItemState.INVALID) != 0) {
 				var invalid_duration = 3000 * 1000;
-				var invalid_time = frame_time - item.LastValid;
+				var invalid_time = int64.max (0LL, frame_time - item.LastValid);
 				if (invalid_time < invalid_duration) {
 					draw_value.opacity = 0.10 + (0.90 * (Math.cos (invalid_time / (double) invalid_duration * 4.5 * Math.PI) + 1) / 2);
 				} else {
@@ -739,7 +739,7 @@ namespace Plank
 			}
 			
 			// draw active glow
-			var active_time = frame_time - item.LastActive;
+			var active_time = int64.max (0LL, frame_time - item.LastActive);
 			var opacity = double.min (1, active_time / (double) (theme.ActiveTime * 1000));
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
@@ -924,7 +924,7 @@ namespace Plank
 			if ((item.State & ItemState.URGENT) == 0)
 				return;
 			
-			var diff = frame_time - item.LastUrgent;
+			var diff = int64.max (0LL, frame_time - item.LastUrgent);
 			if (diff >= theme.GlowTime * 1000)
 				return;
 			
