@@ -46,7 +46,11 @@ namespace Plank
 		/**
 		 * The dock hides if there is any window overlapping it.
 		 */
-		WINDOW_DODGE
+		WINDOW_DODGE,
+		/**
+		 * The dock hides if there is the active window overlapping it.
+		 */
+		DODGE_ACTIVE,
 	}
 	
 	/**
@@ -96,6 +100,7 @@ namespace Plank
 		uint timer_prefs_changed = 0;
 		
 		bool window_intersect = false;
+		bool active_window_intersect = false;
 		bool active_application_intersect = false;
 		bool active_maximized_window_intersect = false;
 		bool dialog_windows_intersect = false;
@@ -302,6 +307,13 @@ namespace Plank
 				else
 					hide ();
 				break;
+			
+			case HideType.DODGE_ACTIVE:
+				if (Hovered || !active_window_intersect)
+					show ();
+				else
+					hide ();
+				break;
 			}
 			pointer_update = true;
 		}
@@ -421,6 +433,7 @@ namespace Plank
 			var intersect = false;
 			var dialog_intersect = false;
 			var active_intersect = false;
+			var new_active_window_intersect = false;
 			var active_maximized_intersect = false;
 			unowned Wnck.Screen screen = Wnck.Screen.get_default ();
 			unowned Wnck.Window? active_window = screen.get_active_window ();
@@ -449,6 +462,8 @@ namespace Plank
 						
 						active_intersect = true;
 						
+						new_active_window_intersect = new_active_window_intersect || (active_window == w);
+						
 						active_maximized_intersect = active_maximized_intersect || (active_window == w
 							&& (w.is_maximized () || w.is_maximized_vertically () || w.is_maximized_horizontally ()));
 						
@@ -463,6 +478,7 @@ namespace Plank
 			window_intersect = intersect;
 			dialog_windows_intersect = dialog_intersect;
 			active_application_intersect = active_intersect;
+			active_window_intersect = new_active_window_intersect;
 			active_maximized_window_intersect = active_maximized_intersect;
 			
 			pointer_update = false;
