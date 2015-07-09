@@ -132,9 +132,9 @@ namespace Plank.Drawing
 		}
 		
 		/**
-		 * Limits the color's saturation.
+		 * Assures the color's saturation is greater than or equal to the given one.
 		 *
-		 * @param sat the minimum saturation allowed
+		 * @param sat the minimum saturation
 		 */
 		public void set_min_sat (double sat)
 			requires (sat >= 0 && sat <= 1)
@@ -146,9 +146,9 @@ namespace Plank.Drawing
 		}
 		
 		/**
-		 * Limits the color's value.
+		 * Assures the color's value is greater than or equal to the given one.
 		 *
-		 * @param val the minimum value allowed
+		 * @param val the minimum value
 		 */
 		public void set_min_val (double val)
 			requires (val >= 0 && val <= 1)
@@ -160,9 +160,9 @@ namespace Plank.Drawing
 		}
 		
 		/**
-		 * Limits the color's saturation.
+		 * Assures the color's saturation is less than or equal to the given one.
 		 *
-		 * @param sat the maximum saturation allowed
+		 * @param sat the maximum saturation
 		 */
 		public void set_max_sat (double sat)
 			requires (sat >= 0 && sat <= 1)
@@ -174,9 +174,9 @@ namespace Plank.Drawing
 		}
 
 		/**
-		 * Limits the color's value.
+		 * Assures the color's value is less than or equal to the given one.
 		 *
-		 * @param val the maximum value allowed
+		 * @param val the maximum value
 		 */
 		public void set_max_val (double val)
 			requires (val >= 0 && val <= 1)
