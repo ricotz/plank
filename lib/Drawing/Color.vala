@@ -291,10 +291,6 @@ namespace Plank.Drawing
 			requires (s >= 0 && s <= 1)
 			requires (v >= 0 && v <= 1)
 		{
-			r = 0;
-			g = 0;
-			b = 0;
-
 			if (s == 0) {
 				r = v;
 				g = v;
@@ -338,6 +334,8 @@ namespace Plank.Drawing
 					g = p;
 					b = q;
 					break;
+				default:
+					assert_not_reached ();
 				}
 			}
 		}
