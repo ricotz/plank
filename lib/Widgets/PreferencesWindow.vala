@@ -125,6 +125,14 @@ namespace Plank.Widgets
 			}
 		}
 		
+		public override bool key_press_event (Gdk.EventKey event)
+		{
+			if (event.keyval == Gdk.Key.Escape)
+				hide ();
+			
+			return base.key_press_event (event);
+		}
+		
 		void prefs_changed (Object o, ParamSpec prop)
 		{
 			switch (prop.name) {
