@@ -71,20 +71,29 @@ namespace Plank.Widgets
 			gravity = Gdk.Gravity.CENTER;
 			icon_name = "plank";
 			
-#if HAVE_GTK_3_10
-			var headerbar = new Gtk.HeaderBar ();
-			headerbar.show_close_button = true;
-			headerbar.set_title (_("Preferences"));
-			headerbar.show ();
-			set_titlebar (headerbar);
-#endif
-			
 			try {
 				builder = new Gtk.Builder ();
+#if HAVE_GTK_3_10
 				builder.add_from_resource ("%s/ui/preferences.ui".printf (Plank.G_RESOURCE_PATH));
 				
-				var notebook = builder.get_object ("dock_preferences") as Gtk.Notebook;
+				var headerbar = new Gtk.HeaderBar ();
+				headerbar.show_close_button = true;
+				headerbar.set_custom_title ((Gtk.Widget) builder.get_object ("dock_preferences_switcher"));
+				headerbar.show ();
+				set_titlebar (headerbar);
+				
+				var stack = (Gtk.Stack) builder.get_object ("dock_preferences");
+				add (stack);
+#else
+				const string[] ids = { "grid_appearance", "grid_behaviour", "adj_hide_delay", "adj_iconsize", "adj_offset", "adj_unhide_delay" };
+				builder.add_objects_from_resource ("%s/ui/preferences.ui".printf (Plank.G_RESOURCE_PATH), ids);
+				
+				var notebook = new Gtk.Notebook ();
+				notebook.append_page ((Gtk.Widget) builder.get_object ("grid_appearance"), new Gtk.Label (_("Appearance")));
+				notebook.append_page ((Gtk.Widget) builder.get_object ("grid_behaviour"), new Gtk.Label (_("Behaviour")));
+				notebook.show ();
 				add (notebook);
+#endif
 				
 				cb_theme = builder.get_object ("cb_theme") as Gtk.ComboBoxText;
 				cb_hidemode = builder.get_object ("cb_hidemode") as Gtk.ComboBoxText;

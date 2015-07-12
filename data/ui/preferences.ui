@@ -20,7 +20,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
 <interface domain="plank">
-  <requires lib="gtk+" version="3.4"/>
+  <requires lib="gtk+" version="3.10"/>
   <!-- interface-license-type gplv3 -->
   <!-- interface-name plank -->
   <!-- interface-copyright 2014 Rico Tzschichholz -->
@@ -42,11 +42,9 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
     <property name="upper">2500</property>
     <property name="step_increment">50</property>
   </object>
-  <object class="GtkNotebook" id="dock_preferences">
+  <object class="GtkStack" id="dock_preferences">
     <property name="visible">True</property>
-    <property name="can_focus">True</property>
-    <property name="show_border">False</property>
-    <property name="scrollable">True</property>
+    <property name="can_focus">False</property>
     <child>
       <object class="GtkGrid" id="grid_appearance">
         <property name="visible">True</property>
@@ -69,7 +67,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">0</property>
-            <property name="top_attach">1</property>
+            <property name="top_attach">0</property>
           </packing>
         </child>
         <child>
@@ -82,7 +80,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">0</property>
-            <property name="top_attach">2</property>
+            <property name="top_attach">1</property>
           </packing>
         </child>
         <child>
@@ -94,7 +92,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">1</property>
-            <property name="top_attach">1</property>
+            <property name="top_attach">0</property>
             <property name="width">3</property>
           </packing>
         </child>
@@ -112,7 +110,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">1</property>
-            <property name="top_attach">2</property>
+            <property name="top_attach">1</property>
             <property name="width">3</property>
           </packing>
         </child>
@@ -126,7 +124,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">0</property>
-            <property name="top_attach">4</property>
+            <property name="top_attach">3</property>
           </packing>
         </child>
         <child>
@@ -142,7 +140,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">1</property>
-            <property name="top_attach">4</property>
+            <property name="top_attach">3</property>
           </packing>
         </child>
         <child>
@@ -154,7 +152,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">0</property>
-            <property name="top_attach">3</property>
+            <property name="top_attach">2</property>
             <property name="width">2</property>
           </packing>
         </child>
@@ -167,7 +165,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">2</property>
-            <property name="top_attach">3</property>
+            <property name="top_attach">2</property>
           </packing>
         </child>
         <child>
@@ -178,7 +176,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">3</property>
-            <property name="top_attach">3</property>
+            <property name="top_attach">2</property>
           </packing>
         </child>
         <child>
@@ -193,7 +191,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">2</property>
-            <property name="top_attach">4</property>
+            <property name="top_attach">3</property>
             <property name="width">2</property>
           </packing>
         </child>
@@ -207,7 +205,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">0</property>
-            <property name="top_attach">5</property>
+            <property name="top_attach">4</property>
             <property name="width">2</property>
           </packing>
         </child>
@@ -223,7 +221,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">2</property>
-            <property name="top_attach">5</property>
+            <property name="top_attach">4</property>
             <property name="width">2</property>
           </packing>
         </child>
@@ -237,7 +235,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">0</property>
-            <property name="top_attach">6</property>
+            <property name="top_attach">5</property>
           </packing>
         </child>
         <child>
@@ -250,7 +248,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">1</property>
-            <property name="top_attach">6</property>
+            <property name="top_attach">5</property>
           </packing>
         </child>
         <child>
@@ -264,32 +262,14 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </object>
           <packing>
             <property name="left_attach">2</property>
-            <property name="top_attach">6</property>
+            <property name="top_attach">5</property>
             <property name="width">2</property>
           </packing>
         </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-      </object>
-    </child>
-    <child type="tab">
-      <object class="GtkLabel" id="l_tab_appearance">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Appearance</property>
       </object>
       <packing>
-        <property name="tab_fill">False</property>
+        <property name="name">grid_appearance</property>
+        <property name="title" translatable="yes">Appearance</property>
       </packing>
     </child>
     <child>
@@ -543,12 +523,6 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
           </packing>
         </child>
         <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
           <object class="GtkLabel" id="l_show_dock_item">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -582,27 +556,24 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
         <child>
           <placeholder/>
         </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
       </object>
       <packing>
+        <property name="name">grid_behaviour</property>
+        <property name="title" translatable="yes">Behaviour</property>
         <property name="position">1</property>
       </packing>
     </child>
-    <child type="tab">
-      <object class="GtkLabel" id="l_tab_behaviour">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Behaviour</property>
-      </object>
-      <packing>
-        <property name="position">1</property>
-        <property name="tab_fill">False</property>
-      </packing>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child type="tab">
-      <placeholder/>
-    </child>
+  </object>
+  <object class="GtkStackSwitcher" id="dock_preferences_switcher">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="halign">center</property>
+    <property name="stack">dock_preferences</property>
   </object>
 </interface>

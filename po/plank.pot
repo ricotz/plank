@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-09 11:38+0200\n"
+"POT-Creation-Date: 2015-07-12 09:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -96,7 +96,7 @@ msgstr ""
 msgid "Icon Size:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:16
+#: ../data/ui/preferences.ui.h:16 ../lib/Widgets/PreferencesWindow.vala:92
 msgid "Appearance"
 msgstr ""
 
@@ -168,7 +168,7 @@ msgstr ""
 msgid "Show Item for Dock:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:34
+#: ../data/ui/preferences.ui.h:34 ../lib/Widgets/PreferencesWindow.vala:93
 msgid "Behaviour"
 msgstr ""
 
@@ -210,6 +210,5 @@ msgid "_Translate This Application..."
 msgstr ""
 
 #: ../lib/Widgets/PreferencesWindow.vala:67
-#: ../lib/Widgets/PreferencesWindow.vala:77
 msgid "Preferences"
 msgstr ""
