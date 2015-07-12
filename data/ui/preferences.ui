@@ -20,7 +20,7 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
 <interface domain="plank">
-  <requires lib="gtk+" version="3.10"/>
+  <requires lib="gtk+" version="3.4"/>
   <!-- interface-license-type gplv3 -->
   <!-- interface-name plank -->
   <!-- interface-copyright 2014 Rico Tzschichholz -->
