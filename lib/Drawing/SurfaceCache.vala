@@ -292,8 +292,10 @@ namespace Plank.Drawing
 		{
 			cache_mutex.lock ();
 			
-			if (cache_map.size <= 1)
+			if (cache_map.size <= 1) {
+				cache_mutex.unlock ();
 				return;
+			}
 			
 			var now = GLib.get_monotonic_time ();
 			var size_before = cache_map.size;
