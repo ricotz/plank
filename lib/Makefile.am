@@ -79,6 +79,7 @@ libplank_la_VALASOURCES = \
 	Drawing/DockSurface.vala \
 	Drawing/DockTheme.vala \
 	Drawing/Easing.vala \
+	Drawing/SurfaceCache.vala \
 	Drawing/Theme.vala \
 	Factories/AbstractMain.vala \
 	Factories/Factory.vala \

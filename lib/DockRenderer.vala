@@ -749,7 +749,7 @@ namespace Plank
 			
 			DockSurface? icon_overlay_surface = null;
 			if (item.CountVisible || item.ProgressVisible)
-				icon_overlay_surface = item.get_foreground_surface (draw_item_foreground);
+				icon_overlay_surface = item.get_foreground_surface (icon_size * window_scale_factor, icon_size * window_scale_factor, item_buffer, (DrawDataFunc<DockItem>) draw_item_foreground);
 			
 			if (icon_overlay_surface != null) {
 				icon_cr.set_source_surface (icon_overlay_surface.Internal, 0, 0);
@@ -809,11 +809,13 @@ namespace Plank
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			var shadow_size = position_manager.IconShadowSize;
-
+			// Inflate size to fit shadow
+			var icon_size = (int) draw_value.icon_size + 2 * shadow_size;
+			
 			// load and draw the icon shadow
 			DockSurface? icon_shadow_surface = null;
 			if (shadow_size > 0)
-				icon_shadow_surface = item.get_background_surface (draw_item_background);
+				icon_shadow_surface = item.get_background_surface (icon_size * window_scale_factor, icon_size * window_scale_factor, item_buffer, (DrawDataFunc<DockItem>) draw_item_background);
 			
 			if (icon_shadow_surface != null) {
 				if (window_scale_factor > 1) {
@@ -832,18 +834,11 @@ namespace Plank
 			}
 		}
 		
-		DockSurface draw_item_foreground (DockItem item, DockSurface icon_surface, DockSurface? current_surface)
+		[CCode (instance_pos = -1)]
+		DockSurface draw_item_foreground (int width, int height, DockSurface model, DockItem item)
 		{
-			unowned PositionManager position_manager = controller.position_manager;
-			var width = icon_surface.Width;
-			var height = icon_surface.Height;
-			
-			if (current_surface != null
-				&& width == current_surface.Width && height == current_surface.Height)
-				return current_surface;
-			
 			Logger.verbose ("DockItem.draw_item_overlay (width = %i, height = %i)", width, height);
-			var surface = new DockSurface.with_dock_surface (width, height, icon_surface);
+			var surface = new DockSurface.with_dock_surface (width, height, model);
 			
 			var icon_size = int.min (width, height) * window_scale_factor;
 			var urgent_color = get_styled_color ();
@@ -860,21 +855,18 @@ namespace Plank
 			return surface;
 		}
 		
-		DockSurface draw_item_background (DockItem item, DockSurface icon_surface, DockSurface? current_surface)
+		[CCode (instance_pos = -1)]
+		DockSurface draw_item_background (int width, int height, DockSurface model, DockItem item)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			var shadow_size = position_manager.IconShadowSize * window_scale_factor;
 			
-			// Inflate size to fit shadow
-			var width = icon_surface.Width + 2 * shadow_size;
-			var height = icon_surface.Height + 2 * shadow_size;
-			
-			if (current_surface != null
-				&& width == current_surface.Width && height == current_surface.Height)
-				return current_surface;
+			var draw_value = position_manager.get_draw_value_for_item (item);
+			var icon_size = (int) draw_value.icon_size;
+			var icon_surface = item.get_surface (icon_size, icon_size, model);
 			
 			Logger.verbose ("DockItem.draw_icon_with_shadow (width = %i, height = %i, shadow_size = %i)", width, height, shadow_size);
-			var surface = new DockSurface.with_dock_surface (width, height, icon_surface);
+			var surface = new DockSurface.with_dock_surface (width, height, model);
 			unowned Cairo.Context cr = surface.Context;
 			var shadow_surface = icon_surface.create_mask (0.4, null);
 			

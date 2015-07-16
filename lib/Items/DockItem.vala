@@ -24,16 +24,6 @@ using Plank.Services.Windows;
 namespace Plank.Items
 {
 	/**
-	 * Draws a modified surface onto another newly created or given surface
-	 *
-	 * @param item the dock-item
-	 * @param source original surface which may not be changed
-	 * @param target the previously modified surface
-	 * @return the modified surface or passed through target
-	 */
-	public delegate DockSurface DrawItemFunc (DockItem item, DockSurface source, DockSurface? target);
-	
-	/**
 	 * The base class for all dock items.
 	 */
 	public abstract class DockItem : DockElement
@@ -134,8 +124,8 @@ namespace Plank.Items
 		 */
 		public DockItemPreferences Prefs { get; construct; }
 		
-		DockSurface? surface = null;
-		DockSurface? background_surface = null;
+		SurfaceCache<DockItem> buffer;
+		SurfaceCache<DockItem> background_buffer;
 		DockSurface? foreground_surface = null;
 		
 		FileMonitor? launcher_file_monitor = null;
@@ -154,6 +144,9 @@ namespace Plank.Items
 		
 		construct
 		{
+			buffer = new SurfaceCache<DockItem> (SurfaceCacheFlags.NONE);
+			background_buffer = new SurfaceCache<DockItem> (SurfaceCacheFlags.ALLOW_SCALE);
+			
 			Prefs.deleted.connect (handle_deleted);
 			Prefs.notify["Launcher"].connect (handle_launcher_changed);
 			
@@ -173,6 +166,9 @@ namespace Plank.Items
 		
 		~DockItem ()
 		{
+			buffer.clear ();
+			background_buffer.clear ();
+			
 			Prefs.deleted.disconnect (handle_deleted);
 			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
 			
@@ -232,8 +228,8 @@ namespace Plank.Items
 		 */
 		protected void reset_icon_buffer ()
 		{
-			surface = null;
-			background_surface = null;
+			buffer.clear ();
+			background_buffer.clear ();
 			foreground_surface = null;
 			
 			needs_redraw ();
@@ -244,7 +240,7 @@ namespace Plank.Items
 		 */
 		public override void reset_buffers ()
 		{
-			background_surface = null;
+			background_buffer.clear ();
 			foreground_surface = null;
 		}
 		
@@ -420,16 +416,31 @@ namespace Plank.Items
 			return true;
 		}
 		
-		unowned DockSurface get_surface (int width, int height, DockSurface model)
+		/**
+		 * Returns the dock surface for this item.
+		 *
+		 * It might trigger an internal redraw if the requested size
+		 * isn't cached yet.
+		 *
+		 * @param width width of the icon surface
+		 * @param height height of the icon surface
+		 * @param model existing surface to use as basis of new surface
+		 * @return the dock surface for this item which may not be changed
+		 */
+		public DockSurface get_surface (int width, int height, DockSurface model)
 		{
-			if (surface == null || width != surface.Width || height != surface.Height) {
-				surface = new DockSurface.with_dock_surface (width, height, model);
-				
-				Logger.verbose ("DockItem.draw_icon (width = %i, height = %i)", width, height);
-				draw_icon (surface);
-				
-				AverageIconColor = surface.average_color ();
-			}
+			return buffer.get_surface<DockItem> (width, height, model, (DrawFunc<DockItem>) internal_get_surface, null);
+		}
+		
+		[CCode (instance_pos = -1)]
+		DockSurface internal_get_surface (int width, int height, DockSurface model, DrawDataFunc<DockItem>? draw_data_func)
+		{
+			var surface = new DockSurface.with_dock_surface (width, height, model);
+			
+			Logger.verbose ("DockItem.draw_icon (width = %i, height = %i)", width, height);
+			draw_icon (surface);
+			
+			AverageIconColor = surface.average_color ();
 			
 			return surface;
 		}
@@ -442,18 +453,21 @@ namespace Plank.Items
 		 *
 		 * Passing null as draw_func will destroy the internal background buffer.
 		 *
-		 * @param draw_func function which creates/changes the background surface
+		 * @param draw_data_func function which creates/changes the background surface
 		 * @return the background surface of this item which may not be changed
 		 */
-		public unowned DockSurface? get_background_surface (DrawItemFunc? draw_func = null)
-			requires (surface != null)
+		public DockSurface? get_background_surface (int width, int height, DockSurface model, DrawDataFunc<DockItem>? draw_data_func)
 		{
-			if (draw_func != null)
-				background_surface = draw_func (this, surface, background_surface);
-			else
-				background_surface = null;
+			return background_buffer.get_surface<DockItem> (width, height, model, (DrawFunc<DockItem>) internal_get_background_surface, (DrawDataFunc<DockItem>) draw_data_func);
+		}
+		
+		[CCode (instance_pos = -1)]
+		DockSurface? internal_get_background_surface (int width, int height, DockSurface model, DrawDataFunc<DockItem>? draw_data_func)
+		{
+			if (draw_data_func == null)
+				return null;
 			
-			return background_surface;
+			return draw_data_func (width, height, model, this);
 		}
 		
 		/**
@@ -464,16 +478,21 @@ namespace Plank.Items
 		 *
 		 * Passing null as draw_func will destroy the internal foreground buffer.
 		 *
-		 * @param draw_func function which creates/changes the foreground surface
+		 * @param draw_data_func function which creates/changes the foreground surface
 		 * @return the background surface of this item which may not be changed
 		 */
-		public unowned DockSurface? get_foreground_surface (DrawItemFunc? draw_func = null)
-			requires (surface != null)
+		public DockSurface? get_foreground_surface (int width, int height, DockSurface model, DrawDataFunc<DockItem>? draw_data_func)
 		{
-			if (draw_func != null)
-				foreground_surface = draw_func (this, surface, foreground_surface);
-			else
+			if (draw_data_func == null) {
 				foreground_surface = null;
+				return null;
+			}
+			
+			if (foreground_surface != null
+				&& foreground_surface.Width == width && foreground_surface.Height == height)
+				return foreground_surface;
+			
+			foreground_surface = draw_data_func (width, height, model, this);
 			
 			return foreground_surface;
 		}

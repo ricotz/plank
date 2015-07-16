@@ -125,6 +125,27 @@ namespace Plank.Drawing
 		}
 		
 		/**
+		 * Create a scaled copy of the surface
+		 *
+		 * @param width the resulting width
+		 * @param height the resulting height
+		 * @return scaled copy of this surface
+		 */
+		public DockSurface scaled_copy (int width, int height)
+		{
+			var result = new DockSurface.with_dock_surface (width, height, this);
+			unowned Cairo.Context cr = result.Context;
+			
+			cr.save ();
+			cr.scale ((double) width / Width, (double) height / Height);
+			cr.set_source_surface (Internal, 0, 0);
+			cr.paint ();
+			cr.restore ();
+			
+			return result;
+		}
+		
+		/**
 		 * Saves the current dock surface to a {@link Gdk.Pixbuf}.
 		 *
 		 * @return the {@link Gdk.Pixbuf}

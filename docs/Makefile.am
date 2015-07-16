@@ -33,6 +33,7 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Drawing/DockSurface.vala \
 	$(top_srcdir)/lib/Drawing/DockTheme.vala \
 	$(top_srcdir)/lib/Drawing/Easing.vala \
+	$(top_srcdir)/lib/Drawing/SurfaceCache.vala \
 	$(top_srcdir)/lib/Drawing/Theme.vala \
 	$(top_srcdir)/lib/Factories/AbstractMain.vala \
 	$(top_srcdir)/lib/Factories/Factory.vala \
