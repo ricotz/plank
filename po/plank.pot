@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-12 09:39+0200\n"
+"POT-Creation-Date: 2015-07-16 13:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -96,79 +96,83 @@ msgstr ""
 msgid "Icon Size:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:16 ../lib/Widgets/PreferencesWindow.vala:92
+#: ../data/ui/preferences.ui.h:16
+msgid "Icon Zoom:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:95
 msgid "Appearance"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:17
+#: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:18
+#: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:19
+#: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:20
+#: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:21
+#: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:22
+#: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:23
+#: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:24
+#: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:25
+#: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:26
+#: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:27
+#: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:28
+#: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:29
+#: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:30
+#: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:31
+#: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:32
+#: ../data/ui/preferences.ui.h:33
 msgid "Automatic Pinning:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:33
+#: ../data/ui/preferences.ui.h:34
 msgid "Show Item for Dock:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:34 ../lib/Widgets/PreferencesWindow.vala:93
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
 msgid "Behaviour"
 msgstr ""
 
@@ -209,6 +213,6 @@ msgstr ""
 msgid "_Translate This Application..."
 msgstr ""
 
-#: ../lib/Widgets/PreferencesWindow.vala:67
+#: ../lib/Widgets/PreferencesWindow.vala:70
 msgid "Preferences"
 msgstr ""
