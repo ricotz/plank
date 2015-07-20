@@ -176,6 +176,9 @@ namespace Plank.Factories
 #endif
 			Environment.set_prgname (exec_name);
 			
+			Intl.bindtextdomain (Build.GETTEXT_PACKAGE, Build.DATADIR + "/locale");
+			Intl.bind_textdomain_codeset (Build.GETTEXT_PACKAGE, "UTF-8");
+			
 			var context = new OptionContext (null);
 			context.add_main_entries (options, exec_name);
 			context.add_group (Gtk.get_option_group (false));
