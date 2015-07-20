@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-06-10 20:29+0000\n"
+"POT-Creation-Date: 2015-07-16 18:33+0000\n"
 "PO-Revision-Date: 2015-03-13 06:54+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-06-11 05:26+0000\n"
-"X-Generator: Launchpad (build 17549)\n"
+"X-Launchpad-Export-Date: 2015-07-17 05:22+0000\n"
+"X-Generator: Launchpad (build 17628)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -99,74 +99,82 @@ msgid "Icon Size:"
 msgstr "圖示大小："
 
 #: ../data/ui/preferences.ui.h:16
+msgid "Icon Zoom:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:95
 msgid "Appearance"
 msgstr "外觀"
 
-#: ../data/ui/preferences.ui.h:17
+#: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
 msgstr "智慧隱藏"
 
-#: ../data/ui/preferences.ui.h:18
+#: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
 msgstr "自動隱藏"
 
-#: ../data/ui/preferences.ui.h:19
+#: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
 msgstr "視窗最大化時閃避"
 
-#: ../data/ui/preferences.ui.h:20
+#: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
 msgstr "視窗切換"
 
-#: ../data/ui/preferences.ui.h:21
+#: ../data/ui/preferences.ui.h:22
+msgid "Dodge active window"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
 msgstr "隱藏 Dock"
 
-#: ../data/ui/preferences.ui.h:22
+#: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
 msgstr "隱藏延遲："
 
-#: ../data/ui/preferences.ui.h:23
+#: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
 msgstr "隱藏延遲間隔長度 (ms)"
 
-#: ../data/ui/preferences.ui.h:24
+#: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
 msgstr "結束隱藏延遲："
 
-#: ../data/ui/preferences.ui.h:25
+#: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
 msgstr "在顯示 Dock 前的延遲秒數"
 
-#: ../data/ui/preferences.ui.h:26
+#: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
 msgstr "感壓揭開："
 
-#: ../data/ui/preferences.ui.h:27
+#: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
 msgstr "項目管理"
 
-#: ../data/ui/preferences.ui.h:28
+#: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
 msgstr "顯示未釘選："
 
-#: ../data/ui/preferences.ui.h:29
+#: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
 msgstr "限制在工作區："
 
-#: ../data/ui/preferences.ui.h:30
+#: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
 msgstr "鎖定圖示："
 
-#: ../data/ui/preferences.ui.h:31
+#: ../data/ui/preferences.ui.h:33
 msgid "Automatic Pinning:"
 msgstr "自動釘選："
 
-#: ../data/ui/preferences.ui.h:32
+#: ../data/ui/preferences.ui.h:34
 msgid "Show Item for Dock:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:33
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
 msgid "Behaviour"
 msgstr "行為"
 
@@ -207,7 +215,6 @@ msgstr "取得線上幫助(_H)..."
 msgid "_Translate This Application..."
 msgstr "翻譯本應用程式(_T)..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:67
-#: ../lib/Widgets/PreferencesWindow.vala:77
+#: ../lib/Widgets/PreferencesWindow.vala:70
 msgid "Preferences"
 msgstr "偏好設定"

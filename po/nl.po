@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-06-10 20:29+0000\n"
+"POT-Creation-Date: 2015-07-16 18:33+0000\n"
 "PO-Revision-Date: 2015-03-13 06:56+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-06-11 05:26+0000\n"
-"X-Generator: Launchpad (build 17549)\n"
+"X-Launchpad-Export-Date: 2015-07-17 05:22+0000\n"
+"X-Generator: Launchpad (build 17628)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -105,74 +105,82 @@ msgid "Icon Size:"
 msgstr "Pictogramgrootte:"
 
 #: ../data/ui/preferences.ui.h:16
+msgid "Icon Zoom:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:95
 msgid "Appearance"
 msgstr "Weergave"
 
-#: ../data/ui/preferences.ui.h:17
+#: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
 msgstr "Intelligent verbergen"
 
-#: ../data/ui/preferences.ui.h:18
+#: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
 msgstr "Automatisch verbergen"
 
-#: ../data/ui/preferences.ui.h:19
+#: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
 msgstr "Gemaximaliseerde vensters ontwijken"
 
-#: ../data/ui/preferences.ui.h:20
+#: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
 msgstr "Ontwijk vensters"
 
-#: ../data/ui/preferences.ui.h:21
-msgid "Hide Dock"
-msgstr "Dock verbergen"
-
 #: ../data/ui/preferences.ui.h:22
-msgid "Hide Delay:"
+msgid "Dodge active window"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:23
-msgid "Delay in ms before hiding the dock"
-msgstr "Pauze in ms voor het dock verborgen wordt"
+msgid "Hide Dock"
+msgstr "Dock verbergen"
 
 #: ../data/ui/preferences.ui.h:24
-msgid "Unhide Delay:"
+msgid "Hide Delay:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:25
+msgid "Delay in ms before hiding the dock"
+msgstr "Pauze in ms voor het dock verborgen wordt"
+
+#: ../data/ui/preferences.ui.h:26
+msgid "Unhide Delay:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
 msgstr "Aantal milliseconden waarna het dock tevoorschijn komt"
 
-#: ../data/ui/preferences.ui.h:26
+#: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
 msgstr "Drukgevoeligheid:"
 
-#: ../data/ui/preferences.ui.h:27
+#: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
 msgstr "Itembeheer"
 
-#: ../data/ui/preferences.ui.h:28
+#: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
 msgstr "Niet vastgezette toepassingen tonen:"
 
-#: ../data/ui/preferences.ui.h:29
+#: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
 msgstr "Beperken tot één werkblad:"
 
-#: ../data/ui/preferences.ui.h:30
+#: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
 msgstr "Pictogrammen vastzetten:"
 
-#: ../data/ui/preferences.ui.h:31
+#: ../data/ui/preferences.ui.h:33
 msgid "Automatic Pinning:"
 msgstr "Automatisch vastzetten op het dock:"
 
-#: ../data/ui/preferences.ui.h:32
+#: ../data/ui/preferences.ui.h:34
 msgid "Show Item for Dock:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:33
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
 msgid "Behaviour"
 msgstr "Gedrag"
 
@@ -213,7 +221,6 @@ msgstr "Online _hulp vragen…"
 msgid "_Translate This Application..."
 msgstr "Deze toepassing ver_talen…"
 
-#: ../lib/Widgets/PreferencesWindow.vala:67
-#: ../lib/Widgets/PreferencesWindow.vala:77
+#: ../lib/Widgets/PreferencesWindow.vala:70
 msgid "Preferences"
 msgstr "Voorkeuren"

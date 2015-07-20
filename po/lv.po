@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-06-10 20:29+0000\n"
+"POT-Creation-Date: 2015-07-16 18:33+0000\n"
 "PO-Revision-Date: 2013-06-17 06:26+0000\n"
 "Last-Translator: Kārlis Lukstiņš <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-06-11 05:26+0000\n"
-"X-Generator: Launchpad (build 17549)\n"
+"X-Launchpad-Export-Date: 2015-07-17 05:22+0000\n"
+"X-Generator: Launchpad (build 17628)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -97,74 +97,82 @@ msgid "Icon Size:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:16
+msgid "Icon Zoom:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:95
 msgid "Appearance"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:17
+#: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:18
+#: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:19
+#: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:20
+#: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:21
-msgid "Hide Dock"
-msgstr ""
-
 #: ../data/ui/preferences.ui.h:22
-msgid "Hide Delay:"
+msgid "Dodge active window"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:23
-msgid "Delay in ms before hiding the dock"
+msgid "Hide Dock"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:24
-msgid "Unhide Delay:"
+msgid "Hide Delay:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:25
-msgid "Delay in ms before showing the dock"
+msgid "Delay in ms before hiding the dock"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:26
-msgid "Pressure Reveal:"
+msgid "Unhide Delay:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:27
-msgid "Item Management"
+msgid "Delay in ms before showing the dock"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:28
-msgid "Show Unpinned:"
+msgid "Pressure Reveal:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:29
-msgid "Restrict to Workspace:"
+msgid "Item Management"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:30
-msgid "Lock Icons:"
+msgid "Show Unpinned:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:31
-msgid "Automatic Pinning:"
+msgid "Restrict to Workspace:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:32
-msgid "Show Item for Dock:"
+msgid "Lock Icons:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:33
+msgid "Automatic Pinning:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:34
+msgid "Show Item for Dock:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
 msgid "Behaviour"
 msgstr ""
 
@@ -205,7 +213,6 @@ msgstr "Meklēt _palīdzību tiešsaitē..."
 msgid "_Translate This Application..."
 msgstr "_Tulkot šo lietotni..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:67
-#: ../lib/Widgets/PreferencesWindow.vala:77
+#: ../lib/Widgets/PreferencesWindow.vala:70
 msgid "Preferences"
 msgstr ""

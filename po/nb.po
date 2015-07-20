@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-06-10 20:29+0000\n"
+"POT-Creation-Date: 2015-07-16 18:33+0000\n"
 "PO-Revision-Date: 2015-05-09 09:08+0000\n"
 "Last-Translator: ProsjektX <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-06-11 05:26+0000\n"
-"X-Generator: Launchpad (build 17549)\n"
+"X-Launchpad-Export-Date: 2015-07-17 05:22+0000\n"
+"X-Generator: Launchpad (build 17628)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -104,74 +104,82 @@ msgid "Icon Size:"
 msgstr "Ikonstørrelse:"
 
 #: ../data/ui/preferences.ui.h:16
+msgid "Icon Zoom:"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:95
 msgid "Appearance"
 msgstr "Utseende"
 
-#: ../data/ui/preferences.ui.h:17
+#: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
 msgstr "Smartskjul"
 
-#: ../data/ui/preferences.ui.h:18
+#: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
 msgstr "Skjul automatisk"
 
-#: ../data/ui/preferences.ui.h:19
+#: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
 msgstr "Unnvike maksimert vindu"
 
-#: ../data/ui/preferences.ui.h:20
+#: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
 msgstr "Unnvik vindu"
 
-#: ../data/ui/preferences.ui.h:21
+#: ../data/ui/preferences.ui.h:22
+msgid "Dodge active window"
+msgstr ""
+
+#: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
 msgstr "Skjul dokk"
 
-#: ../data/ui/preferences.ui.h:22
+#: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
 msgstr "Forsinkelse for skjule:"
 
-#: ../data/ui/preferences.ui.h:23
+#: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
 msgstr "Forsinkelse i ms før dokken skjules"
 
-#: ../data/ui/preferences.ui.h:24
+#: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
 msgstr "Forsinkelse for vise:"
 
-#: ../data/ui/preferences.ui.h:25
+#: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
 msgstr "Forsinkelse i ms før dokken vises etter skjuling"
 
-#: ../data/ui/preferences.ui.h:26
+#: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
 msgstr "Avslør trykk:"
 
-#: ../data/ui/preferences.ui.h:27
+#: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
 msgstr "Håndtering av elementer"
 
-#: ../data/ui/preferences.ui.h:28
+#: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
 msgstr "Vis løsnede:"
 
-#: ../data/ui/preferences.ui.h:29
+#: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
 msgstr "Begrens til arbeidsområde:"
 
-#: ../data/ui/preferences.ui.h:30
+#: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
 msgstr "Lås ikoner:"
 
-#: ../data/ui/preferences.ui.h:31
+#: ../data/ui/preferences.ui.h:33
 msgid "Automatic Pinning:"
 msgstr "Automatisk liming:"
 
-#: ../data/ui/preferences.ui.h:32
+#: ../data/ui/preferences.ui.h:34
 msgid "Show Item for Dock:"
 msgstr "Vis element for dokken:"
 
-#: ../data/ui/preferences.ui.h:33
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
 msgid "Behaviour"
 msgstr "Oppførsel"
 
@@ -212,7 +220,6 @@ msgstr "Få _hjelp på nettet..."
 msgid "_Translate This Application..."
 msgstr "_Oversett denne applikasjonen...."
 
-#: ../lib/Widgets/PreferencesWindow.vala:67
-#: ../lib/Widgets/PreferencesWindow.vala:77
+#: ../lib/Widgets/PreferencesWindow.vala:70
 msgid "Preferences"
 msgstr "Innstillinger"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-07-06 18:33+0000\n"
-"PO-Revision-Date: 2015-07-09 16:56+0000\n"
+"POT-Creation-Date: 2015-07-16 18:33+0000\n"
+"PO-Revision-Date: 2015-07-16 16:32+0000\n"
 "Last-Translator: Jung-Kyu Park <bagjunggyu@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-07-10 05:30+0000\n"
-"X-Generator: Launchpad (build 17608)\n"
+"X-Launchpad-Export-Date: 2015-07-17 05:22+0000\n"
+"X-Generator: Launchpad (build 17628)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -37,7 +37,7 @@ msgstr ""
 
 #: ../data/plank.desktop.in.h:1
 msgid "Plank. Stupidly simple."
-msgstr "플랭크, 어리석을만큼 간단함."
+msgstr "플랭크. 어처구니없으리 만치 단순한."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
@@ -100,74 +100,82 @@ msgid "Icon Size:"
 msgstr "아이콘 크기:"
 
 #: ../data/ui/preferences.ui.h:16
+msgid "Icon Zoom:"
+msgstr "아이콘 줌 효과:"
+
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:95
 msgid "Appearance"
 msgstr "모양"
 
-#: ../data/ui/preferences.ui.h:17
+#: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
 msgstr "똑똑하게 숨기기"
 
-#: ../data/ui/preferences.ui.h:18
+#: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
 msgstr "자동으로 숨기기"
 
-#: ../data/ui/preferences.ui.h:19
-msgid "Dodge maximized window"
-msgstr "최대화된 창일 때 숨기기"
-
 #: ../data/ui/preferences.ui.h:20
+msgid "Dodge maximized window"
+msgstr "최대화된 창은 피하기"
+
+#: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
 msgstr "창은 무조건 피하기"
 
-#: ../data/ui/preferences.ui.h:21
+#: ../data/ui/preferences.ui.h:22
+msgid "Dodge active window"
+msgstr "사용 중인 창은 피하기"
+
+#: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
 msgstr "Dock 숨기기"
 
-#: ../data/ui/preferences.ui.h:22
+#: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
 msgstr "숨기기 지연 시간"
 
-#: ../data/ui/preferences.ui.h:23
+#: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
 msgstr "Dock을 숨기기 전 지연 시간 (ms)"
 
-#: ../data/ui/preferences.ui.h:24
+#: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
 msgstr "숨김 해제 지연 시간"
 
-#: ../data/ui/preferences.ui.h:25
+#: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
 msgstr "Dock이 나타나기 전 지연 시간 (ms)"
 
-#: ../data/ui/preferences.ui.h:26
+#: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
 msgstr "압력 표시:"
 
-#: ../data/ui/preferences.ui.h:27
+#: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
 msgstr "아이콘 관리"
 
-#: ../data/ui/preferences.ui.h:28
+#: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
 msgstr "고정되지 않은 아이콘 보이기:"
 
-#: ../data/ui/preferences.ui.h:29
+#: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
 msgstr "작업공간으로 제한하기:"
 
-#: ../data/ui/preferences.ui.h:30
+#: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
 msgstr "아이콘 고정:"
 
-#: ../data/ui/preferences.ui.h:31
+#: ../data/ui/preferences.ui.h:33
 msgid "Automatic Pinning:"
 msgstr "아이콘 자동 고정:"
 
-#: ../data/ui/preferences.ui.h:32
+#: ../data/ui/preferences.ui.h:34
 msgid "Show Item for Dock:"
 msgstr "Dock 아이콘 보이기:"
 
-#: ../data/ui/preferences.ui.h:33
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
 msgid "Behaviour"
 msgstr "동작"
 
@@ -208,7 +216,6 @@ msgstr "온라인으로 도움받기... (_H)"
 msgid "_Translate This Application..."
 msgstr "이 애플리케이션을 번역하기..(_T)"
 
-#: ../lib/Widgets/PreferencesWindow.vala:67
-#: ../lib/Widgets/PreferencesWindow.vala:77
+#: ../lib/Widgets/PreferencesWindow.vala:70
 msgid "Preferences"
 msgstr "기본 설정"
