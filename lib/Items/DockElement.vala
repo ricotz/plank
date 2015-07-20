@@ -271,7 +271,7 @@ namespace Plank.Items
 		 */
 		public string as_uri ()
 		{
-			return "plank://" + unique_id ();
+			return "plank://%s".printf (unique_id ());
 		}
 		
 		/**

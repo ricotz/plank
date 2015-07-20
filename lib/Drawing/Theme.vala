@@ -91,7 +91,7 @@ namespace Plank.Drawing
 				return;
 			}
 			
-			init_from_file (theme_folder.get_child (type + ".theme"));
+			init_from_file (theme_folder.get_child ("%s.theme".printf (type)));
 		}
 		
 		/**

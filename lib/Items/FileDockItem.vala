@@ -205,8 +205,9 @@ namespace Plank.Items
 					text = file.get_basename () ?? "";
 				}
 				
-				icons.set (text + uri, icon);
-				keys.add (text + uri);
+				var key = "%s%s".printf (text, uri);
+				icons.set (key, icon);
+				keys.add (key);
 			}
 			
 			var pos = 0;
@@ -308,8 +309,9 @@ namespace Plank.Items
 					});
 				}
 				
-				menu_items.set (text + uri, item);
-				keys.add (text + uri);
+				var key = "%s%s".printf (text, uri);
+				menu_items.set (key, item);
+				keys.add (key);
 			}
 			
 #if HAVE_GEE_0_8

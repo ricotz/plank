@@ -280,15 +280,23 @@ namespace Plank.Items
 		 */
 		public string get_item_list_string ()
 		{
-			var item_list = "";
+			string? item_list = null;
 			foreach (var element in internal_elements) {
 				unowned DockItem? item = (element as DockItem);
-				if (item != null && !(item is TransientDockItem) && item.DockItemFilename.length > 0) {
-					if (item_list.length > 0)
-						item_list += ";;";
-					item_list += item.DockItemFilename;
+				if (item == null || (item is TransientDockItem))
+					continue;
+				
+				var dock_item_filename = item.DockItemFilename;
+				if (dock_item_filename.length > 0) {
+					if (item_list != null)
+						item_list = "%s;;%s".printf (item_list, dock_item_filename);
+					else
+						item_list = (owned) dock_item_filename;
 				}
 			}
+			
+			if (item_list == null)
+				return "";
 			
 			return item_list;
 		}

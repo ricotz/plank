@@ -206,7 +206,7 @@ namespace Plank.Factories
 			
 			dock_name = NAME;
 			
-			application_id = app_dbus + "." + dock_name;
+			application_id = "%s.%s".printf (app_dbus, dock_name);
 			
 			try {
 				register ();
@@ -369,10 +369,10 @@ namespace Plank.Factories
 			about_dlg.set_transient_for (controller.window);
 			
 			about_dlg.set_program_name (exec_name);
-			about_dlg.set_version (build_version + "\n" + build_version_info);
+			about_dlg.set_version ("%s\n%s".printf (build_version, build_version_info));
 			about_dlg.set_logo_icon_name (app_icon);
 			
-			about_dlg.set_comments (program_name + ". " + build_release_name);
+			about_dlg.set_comments ("%s. %s".printf (program_name, build_release_name));
 			about_dlg.set_copyright ("Copyright © %s %s Developers".printf (app_copyright, program_name));
 			about_dlg.set_website (main_url);
 			about_dlg.set_website_label ("Website");

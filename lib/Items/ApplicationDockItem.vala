@@ -733,7 +733,7 @@ namespace Plank.Items
 			if (p.length == 0)
 				return;
 			
-			unity_application_uri = "application://" + p[p.length - 1];
+			unity_application_uri = "application://%s".printf (p[p.length - 1]);
 		}
 		
 		/**

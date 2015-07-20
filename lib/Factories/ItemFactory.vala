@@ -360,7 +360,7 @@ namespace Plank.Factories
 					var basename = (launcher_file.get_basename () ?? "unknown");
 					var index_of_last_dot = basename.last_index_of (".");
 					var launcher_base = (index_of_last_dot >= 0 ? basename.slice (0, index_of_last_dot) : basename);
-					var dockitem = launcher_base + ".dockitem";
+					var dockitem = "%s.dockitem".printf (launcher_base);
 					var dockitem_file = target_dir.get_child (dockitem);
 					var counter = 1;
 					
