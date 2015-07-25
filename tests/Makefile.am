@@ -126,6 +126,7 @@ gmock_tests_LDADD = \
 
 gmock_tests_SOURCES = \
 	gmock/main.cpp \
+	gmock/color.cpp \
 	$(NULL)
 
 endif
