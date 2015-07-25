@@ -183,7 +183,7 @@ namespace Plank.Items
 			handle_active_changed (App.is_active ());
 			handle_urgent_changed (App.is_urgent ());
 			
-			update_indicator (WindowControl.get_num_windows (App));
+			update_indicator ();
 		}
 		
 		public bool is_running ()
@@ -269,24 +269,34 @@ namespace Plank.Items
 		
 		void handle_window_added (Bamf.View? child)
 		{
-			update_indicator (WindowControl.get_num_windows (App));
+			update_indicator ();
 			
 			app_window_added ();
 		}
 		
 		void handle_window_removed (Bamf.View? child)
 		{
-			update_indicator (WindowControl.get_num_windows (App));
+			update_indicator ();
 			
 			app_window_removed ();
 		}
 		
-		void update_indicator (uint window_count)
+		void update_indicator ()
 		{
-			if (window_count == 0) {
+			//FIXME Do not be silly if the application is running
+			//  we must indicate it, same goes for the opposite.
+			
+			var is_running = is_running ();
+			
+			if (!is_running) {
 				if (Indicator != IndicatorState.NONE)
 					Indicator = IndicatorState.NONE;
-			} else if (window_count == 1) {
+				return;
+			}
+			
+			var window_count = WindowControl.get_num_windows (App);
+			
+			if (window_count <= 1) {
 				if (Indicator != IndicatorState.SINGLE)
 					Indicator = IndicatorState.SINGLE;
 			} else {
@@ -299,7 +309,9 @@ namespace Plank.Items
 		{
 			handle_urgent_changed (false);
 			handle_active_changed (false);
-			update_indicator (0);
+			
+			if (Indicator != IndicatorState.NONE)
+				Indicator = IndicatorState.NONE;
 		}
 		
 		void launch ()
