@@ -63,6 +63,7 @@ tests/*.c
 tests/*.stamp
 tests/home
 tests/dock
+tests/gmock-tests
 tests/tests
 data/plank.appdata.xml
 data/plank.desktop

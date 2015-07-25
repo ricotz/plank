@@ -98,3 +98,34 @@ check-local: clean-local
 
 clean-local:
 	rm -rf $(abs_builddir)/home $(builddir)/test-report.xml
+
+
+if HAVE_GMOCK
+include $(top_srcdir)/Makefile.gmock
+
+noinst_PROGRAMS = gmock-tests
+check_PROGRAMS += gmock-tests
+
+gmock_tests_CXXFLAGS = \
+	$(COVERAGE_CFLAGS) \
+	$(GMOCK_CLFAGS) \
+	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
+	$(PLANK_CORE_CFLAGS) \
+	-include config.h \
+	-I$(top_builddir)/lib \
+	-I$(top_srcdir) \
+	$(NULL)
+
+gmock_tests_LDADD = \
+	$(COVERAGE_LDFLAGS) \
+	$(GMOCK_LDFLAGS) \
+	$(PLANK_CORE_LIBS) \
+	$(top_builddir)/lib/libplank.la \
+	$(top_builddir)/lib/libplank-internal.la \
+	$(NULL)
+
+gmock_tests_SOURCES = \
+	gmock/main.cpp \
+	$(NULL)
+
+endif

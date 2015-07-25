@@ -1,0 +1,32 @@
+# Google-Mock targets
+
+.PHONY: clean-gmock check-gmock
+
+#clean-local: clean-gmock
+
+clean-gmock: clean-gtest
+	-$(RM) -f $(builddir)/libgmock.a $(builddir)/gmock-all.o
+
+clean-gtest:
+	-$(RM) -f $(builddir)/gtest-all.o
+
+if HAVE_GMOCK
+
+build-gmock: $(builddir)/libgmock.a
+
+$(builddir)/libgmock.a: $(builddir)/gtest-all.o
+	$(CXX) -I$(GMOCK_INCLUDEDIR) -I$(GMOCK_SRCDIR) -c $(GMOCK_SRCDIR)/src/gmock-all.cc -o $(builddir)/gmock-all.o
+	$(AR) -rv $(builddir)/libgmock.a $(builddir)/gmock-all.o $(abs_builddir)/gtest-all.o
+
+build-gtest: $(builddir)/gtest-all.o
+
+$(builddir)/gtest-all.o:
+	$(CXX) -I$(GTEST_INCLUDEDIR) -I$(GTEST_SRCDIR) -c $(GTEST_SRCDIR)/src/gtest-all.cc -o $(builddir)/gtest-all.o
+
+check-gmock: build-gmock
+	$(MAKE) $(AM_MAKEFLAGS) -k check
+
+GMOCK_LDFLAGS = $(builddir)/libgmock.a
+GMOCK_CLFAGS = -I$(GMOCK_INCLUDEDIR) -I$(GTEST_INCLUDEDIR)
+
+endif # HAVE_GMOCK

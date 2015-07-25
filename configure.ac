@@ -53,6 +53,8 @@ AM_MAINTAINER_MODE([enable])
 
 AC_PROG_CC
 AM_PROG_CC_C_O
+AC_PROG_CXX
+AC_PROG_CXX_C_O
 AC_PROG_INSTALL
 
 LT_PREREQ([2.2.6])
@@ -305,6 +307,9 @@ AC_SUBST(COVERAGE_VALAFLAGS)
 AC_SUBST(COVERAGE_CFLAGS)
 AC_SUBST(COVERAGE_LDFLAGS)
 
+# Check to enable gmock and gtest
+AC_GMOCK
+
 
 PLANK_CORE_VALAFLAGS="$VALAFLAGS_CORE $VALAFLAGS $PLANK_CORE_VALA_PKGS"
 AC_SUBST(PLANK_CORE_VALAFLAGS)
@@ -412,6 +417,7 @@ ${PACKAGE} ${VERSION}
     Apport support..............:  ${enable_apport}
 
     Headless Tests..............:  ${enable_headless_tests}
+    Google-Mock Tests...........:  ${use_gmock}
     Coverage Reporting..........:  ${use_gcov}
     Documentation...............:  ${have_valadoc}
 "
