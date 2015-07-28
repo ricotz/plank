@@ -194,11 +194,6 @@ namespace Plank
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockWindow window = controller.window;
-			unowned DragManager drag_manager = controller.drag_manager;
-			
-			freeze_notify ();
-			
-			bool update_needed = false;
 			
 			// get current mouse pointer location
 			int x, y;
@@ -208,11 +203,30 @@ namespace Plank
 			
 			// get window location
 			var win_rect = position_manager.get_dock_window_region ();
+			x -= win_rect.x;
+			y -= win_rect.y;
+			
+			update_hovered_with_coords (x, y);
+		}
+		
+		/**
+		 * Checks to see if the dock is being hovered by the mouse cursor.
+		 *
+		 * @param x the x coordinate of the pointer relative to the dock window
+		 * @param y the y coordinate of the pointer relative to the dock window
+		 */
+		public void update_hovered_with_coords (int x, int y)
+		{
+			unowned PositionManager position_manager = controller.position_manager;
+			unowned DockWindow window = controller.window;
+			unowned DragManager drag_manager = controller.drag_manager;
+			
+			freeze_notify ();
+			
+			bool update_needed = false;
 			
 			// compute rect of the window
 			var dock_rect = position_manager.get_cursor_region ();
-			dock_rect.x += win_rect.x;
-			dock_rect.y += win_rect.y;
 			
 			// use the dock rect and cursor location to determine if dock is hovered
 			var hovered = (x >= dock_rect.x && x < dock_rect.x + dock_rect.width
@@ -223,8 +237,8 @@ namespace Plank
 				update_needed = true;
 			}
 			
-			// disable hiding if drags are active
-			var disabled = (drag_manager.InternalDragActive || drag_manager.ExternalDragActive);
+			// disable hiding if menu is visible or drags are active
+			var disabled = (window.menu_is_visible () || drag_manager.InternalDragActive || drag_manager.ExternalDragActive);
 			if (Disabled != disabled) {
 				Disabled = disabled;
 				update_needed = true;
@@ -383,16 +397,8 @@ namespace Plank
 				return Hidden;
 #endif
 			
-			if ((bool) event.send_event) {
-				if (!Hovered) {
-					freeze_notify ();
-					Hovered = true;
-					update_hidden ();
-					thaw_notify ();
-				}
-			} else {
-				update_hovered ();
-			}
+			if (!Hovered)
+				update_hovered_with_coords ((int) event.x, (int) event.y);
 			
 			return Hidden;
 		}
@@ -403,12 +409,8 @@ namespace Plank
 			if (event.detail == Gdk.NotifyType.INFERIOR)
 				return Gdk.EVENT_PROPAGATE;
 			
-			// ignore this event if it was sent explicitly
-			if ((bool) event.send_event)
-				return Gdk.EVENT_PROPAGATE;
-			
-			if (Hovered && !controller.window.menu_is_visible ())
-				update_hovered ();
+			if (Hovered)
+				update_hovered_with_coords ((int) event.x, (int) event.y);
 			
 			return Gdk.EVENT_PROPAGATE;
 		}

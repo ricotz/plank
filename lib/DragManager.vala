@@ -442,7 +442,7 @@ namespace Plank
 			}
 			
 			controller.renderer.update_local_cursor (x, y);
-			hide_manager.update_hovered ();
+			hide_manager.update_hovered_with_coords (x, y);
 			window.update_hovered (x, y);
 			
 			return true;

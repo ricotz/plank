@@ -202,6 +202,7 @@ namespace Plank.Widgets
 		 */
 		public override bool enter_notify_event (Gdk.EventCrossing event)
 		{
+			controller.renderer.update_local_cursor ((int) event.x, (int) event.y);
 			update_hovered ((int) event.x, (int) event.y);
 			
 			return Gdk.EVENT_STOP;
@@ -212,10 +213,6 @@ namespace Plank.Widgets
 		 */
 		public override bool leave_notify_event (Gdk.EventCrossing event)
 		{
-			// ignore this event if it was sent explicitly
-			if ((bool) event.send_event)
-				return Gdk.EVENT_PROPAGATE;
-			
 			if (!menu_is_visible ()) {
 				set_hovered_provider (null);
 				set_hovered (null);
