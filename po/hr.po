@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-07-16 18:33+0000\n"
+"POT-Creation-Date: 2015-07-25 14:58+0000\n"
 "PO-Revision-Date: 2015-04-25 20:00+0000\n"
 "Last-Translator: Ivan Vrljić <vrlja92@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-07-17 05:22+0000\n"
+"X-Launchpad-Export-Date: 2015-07-26 05:21+0000\n"
 "X-Generator: Launchpad (build 17628)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
@@ -176,28 +176,28 @@ msgstr ""
 msgid "Behaviour"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:442
-#: ../lib/Items/FileDockItem.vala:326 ../lib/Items/FileDockItem.vala:344
+#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/FileDockItem.vala:328 ../lib/Items/FileDockItem.vala:346
 msgid "_Keep in Dock"
 msgstr "_Zadrži u Docku"
 
-#: ../lib/Items/ApplicationDockItem.vala:450
+#: ../lib/Items/ApplicationDockItem.vala:462
 msgid "_Close All"
 msgstr "_Zatvori sve"
 
-#: ../lib/Items/ApplicationDockItem.vala:450
+#: ../lib/Items/ApplicationDockItem.vala:462
 msgid "_Close"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:331
+#: ../lib/Items/FileDockItem.vala:333
 msgid "_Open in File Browser"
 msgstr "_Otvori u Pregledniku datoteka"
 
-#: ../lib/Items/FileDockItem.vala:349
+#: ../lib/Items/FileDockItem.vala:351
 msgid "_Open"
 msgstr "_Otvori"
 
-#: ../lib/Items/FileDockItem.vala:353
+#: ../lib/Items/FileDockItem.vala:355
 msgid "Open Containing _Folder"
 msgstr "Otvori Sadržajnu _mapu"
 

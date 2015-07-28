@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-07-16 18:33+0000\n"
-"PO-Revision-Date: 2015-04-14 17:18+0000\n"
-"Last-Translator: Sérgio Marques <Unknown>\n"
+"POT-Creation-Date: 2015-07-25 14:58+0000\n"
+"PO-Revision-Date: 2015-07-28 05:22+0000\n"
+"Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-07-17 05:22+0000\n"
+"X-Launchpad-Export-Date: 2015-07-28 05:25+0000\n"
 "X-Generator: Launchpad (build 17628)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
@@ -121,7 +121,7 @@ msgstr "Ocultar automaticamente"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr ""
+msgstr "Desviar da janela maximizada"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
@@ -177,34 +177,34 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Show Item for Dock:"
-msgstr ""
+msgstr "Mostrar item da barra:"
 
 #: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
 msgid "Behaviour"
 msgstr "Comportamento"
 
-#: ../lib/Items/ApplicationDockItem.vala:442
-#: ../lib/Items/FileDockItem.vala:326 ../lib/Items/FileDockItem.vala:344
+#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/FileDockItem.vala:328 ../lib/Items/FileDockItem.vala:346
 msgid "_Keep in Dock"
 msgstr "_Manter na barra"
 
-#: ../lib/Items/ApplicationDockItem.vala:450
+#: ../lib/Items/ApplicationDockItem.vala:462
 msgid "_Close All"
 msgstr "Fe_char tudo"
 
-#: ../lib/Items/ApplicationDockItem.vala:450
+#: ../lib/Items/ApplicationDockItem.vala:462
 msgid "_Close"
 msgstr "_Fechar"
 
-#: ../lib/Items/FileDockItem.vala:331
+#: ../lib/Items/FileDockItem.vala:333
 msgid "_Open in File Browser"
 msgstr "Abrir n_o gestor de ficheiros"
 
-#: ../lib/Items/FileDockItem.vala:349
+#: ../lib/Items/FileDockItem.vala:351
 msgid "_Open"
 msgstr "A_brir"
 
-#: ../lib/Items/FileDockItem.vala:353
+#: ../lib/Items/FileDockItem.vala:355
 msgid "Open Containing _Folder"
 msgstr "Abrir pasta _respetiva"
 

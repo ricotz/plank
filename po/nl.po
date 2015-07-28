@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-07-16 18:33+0000\n"
-"PO-Revision-Date: 2015-03-13 06:56+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2015-07-25 14:58+0000\n"
+"PO-Revision-Date: 2015-07-28 05:12+0000\n"
+"Last-Translator: Levi Voorintholt <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-07-17 05:22+0000\n"
+"X-Launchpad-Export-Date: 2015-07-28 05:25+0000\n"
 "X-Generator: Launchpad (build 17628)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
@@ -106,7 +106,7 @@ msgstr "Pictogramgrootte:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr ""
+msgstr "Pictogram vergroten:"
 
 #: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:95
 msgid "Appearance"
@@ -130,7 +130,7 @@ msgstr "Ontwijk vensters"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr ""
+msgstr "Ontwijk actief venster"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
@@ -138,7 +138,7 @@ msgstr "Dock verbergen"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr ""
+msgstr "Vertraging voor het verbergen:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
@@ -146,7 +146,7 @@ msgstr "Pauze in ms voor het dock verborgen wordt"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "Vertraging voor het verschijnen:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
@@ -178,34 +178,34 @@ msgstr "Automatisch vastzetten op het dock:"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Show Item for Dock:"
-msgstr ""
+msgstr "Icoon voor dock tonen:"
 
 #: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
 msgid "Behaviour"
 msgstr "Gedrag"
 
-#: ../lib/Items/ApplicationDockItem.vala:442
-#: ../lib/Items/FileDockItem.vala:326 ../lib/Items/FileDockItem.vala:344
+#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/FileDockItem.vala:328 ../lib/Items/FileDockItem.vala:346
 msgid "_Keep in Dock"
 msgstr "_Vastzetten in dock"
 
-#: ../lib/Items/ApplicationDockItem.vala:450
+#: ../lib/Items/ApplicationDockItem.vala:462
 msgid "_Close All"
 msgstr "Alles sl_uiten"
 
-#: ../lib/Items/ApplicationDockItem.vala:450
+#: ../lib/Items/ApplicationDockItem.vala:462
 msgid "_Close"
 msgstr "Sl_uiten"
 
-#: ../lib/Items/FileDockItem.vala:331
+#: ../lib/Items/FileDockItem.vala:333
 msgid "_Open in File Browser"
 msgstr "In bestandsbeheer _openen"
 
-#: ../lib/Items/FileDockItem.vala:349
+#: ../lib/Items/FileDockItem.vala:351
 msgid "_Open"
 msgstr "_Openen"
 
-#: ../lib/Items/FileDockItem.vala:353
+#: ../lib/Items/FileDockItem.vala:355
 msgid "Open Containing _Folder"
 msgstr "Bovenliggende _map openen"
 
