@@ -213,6 +213,10 @@ namespace Plank.Widgets
 		 */
 		public override bool leave_notify_event (Gdk.EventCrossing event)
 		{
+			// ignore this event if it was sent explicitly
+			if ((bool) event.send_event)
+				return Gdk.EVENT_PROPAGATE;
+			
 			if (!menu_is_visible ()) {
 				set_hovered_provider (null);
 				set_hovered (null);
