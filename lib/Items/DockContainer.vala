@@ -319,6 +319,7 @@ namespace Plank.Items
 			
 			element.Container = this;
 			element.AddTime = add_time;
+			element.RemoveTime = 0;
 			connect_element (element);
 		}
 		
@@ -360,6 +361,7 @@ namespace Plank.Items
 			new_element.Container = this;
 			
 			new_element.AddTime = old_element.AddTime;
+			new_element.RemoveTime = old_element.RemoveTime;
 			//FIXME new_element.Position = old_element.Position;
 			connect_element (new_element);
 			
