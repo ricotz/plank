@@ -478,8 +478,16 @@ namespace Plank
 			
 			if (is_first_frame) {
 				Gdk.threads_add_idle_full (GLib.Priority.LOW, () => {
+					unowned HideManager hide_manager = controller.hide_manager;
+					
+					// FIXME HideManager.initialize () -> setup_active_window ();
+					// is already taking care of updating the Hidden-state,
+					// but only if there is already an active/open window
+					if (hide_manager.Hidden)
+						return false;
+					
 					// slide the dock in, if it shouldnt start hidden
-					controller.hide_manager.update_hovered ();
+					hide_manager.update_hovered ();
 					
 					// FIXME there must be a sane way
 					// https://bugs.launchpad.net/plank/+bug/1256626
