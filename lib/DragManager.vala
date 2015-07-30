@@ -73,13 +73,13 @@ namespace Plank
 		bool drag_canceled = false;
 		bool drag_known = false;
 		bool drag_data_requested = false;
-		uint marker = 0;
-		uint drag_hover_timer = 0;
+		uint marker = 0U;
+		uint drag_hover_timer_id = 0U;
 		
 		Gee.ArrayList<string>? drag_data = null;
 		
 		int window_scale_factor = 1;
-		ulong drag_item_redraw_id = 0UL;
+		ulong drag_item_redraw_handler_id = 0UL;
 		
 		/**
 		 * Creates a new instance of a DragManager, which handles
@@ -231,7 +231,7 @@ namespace Plank
 				DragItem = null;
 			
 			set_drag_icon (context, DragItem, 0.8);
-			drag_item_redraw_id = DragItem.needs_redraw.connect (() => {
+			drag_item_redraw_handler_id = DragItem.needs_redraw.connect (() => {
 				set_drag_icon (context, DragItem, 0.8);
 			});
 		}
@@ -273,9 +273,9 @@ namespace Plank
 		{
 			Gtk.drag_finish (context, true, false, time_);
 			
-			if (drag_hover_timer > 0) {
-				GLib.Source.remove (drag_hover_timer);
-				drag_hover_timer = 0;
+			if (drag_hover_timer_id > 0U) {
+				GLib.Source.remove (drag_hover_timer_id);
+				drag_hover_timer_id = 0U;
 			}
 			
 			if (drag_data == null)
@@ -299,10 +299,10 @@ namespace Plank
 		{
 			unowned HideManager hide_manager = controller.hide_manager;
 			
-			if (drag_item_redraw_id > 0UL) {
+			if (drag_item_redraw_handler_id > 0UL) {
 				if (DragItem != null)
-					GLib.SignalHandler.disconnect (DragItem, drag_item_redraw_id);
-				drag_item_redraw_id = 0UL;
+					GLib.SignalHandler.disconnect (DragItem, drag_item_redraw_handler_id);
+				drag_item_redraw_handler_id = 0UL;
 			}
 			
 			if (!drag_canceled && DragItem != null) {
@@ -359,9 +359,9 @@ namespace Plank
 		[CCode (instance_pos = -1)]
 		void drag_leave (Gtk.Widget w, Gdk.DragContext context, uint time_)
 		{
-			if (drag_hover_timer > 0) {
-				GLib.Source.remove (drag_hover_timer);
-				drag_hover_timer = 0;
+			if (drag_hover_timer_id > 0U) {
+				GLib.Source.remove (drag_hover_timer_id);
+				drag_hover_timer_id = 0U;
 			}
 			
 			controller.hide_manager.update_hovered ();
@@ -458,18 +458,18 @@ namespace Plank
 				DragItem.Container.move_to (DragItem, hovered_item);
 			}
 			
-			if (drag_hover_timer > 0) {
-				GLib.Source.remove (drag_hover_timer);
-				drag_hover_timer = 0;
+			if (drag_hover_timer_id > 0U) {
+				GLib.Source.remove (drag_hover_timer_id);
+				drag_hover_timer_id = 0U;
 			}
 			
 			if (ExternalDragActive && drag_data != null)
-				drag_hover_timer = Gdk.threads_add_timeout (1500, () => {
+				drag_hover_timer_id = Gdk.threads_add_timeout (1500, () => {
 					unowned DockItem item = controller.window.HoveredItem;
 					if (item != null)
 						item.scrolled (Gdk.ScrollDirection.DOWN, 0, Gtk.get_current_event_time ());
 					else
-						drag_hover_timer = 0;
+						drag_hover_timer_id = 0U;
 					return item != null;
 				});
 		}

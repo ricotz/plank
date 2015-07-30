@@ -39,11 +39,11 @@ namespace Plank.Services.Windows
 	public class WindowControl : GLib.Object
 	{
 		// when working on a group of windows, wait this amount between each action
-		public const uint WINDOW_GROUP_DELAY = 10000;
+		public const uint WINDOW_GROUP_DELAY = 10000U;
 		// when changing a viewport, wait this time (for viewport change animations) before continuing
-		public const uint VIEWPORT_CHANGE_DELAY = 200;
+		public const uint VIEWPORT_CHANGE_DELAY = 200U;
 		
-		static uint delayed_focus_timer = 0;
+		static uint delayed_focus_timer_id = 0U;
 		static Wnck.Window? delayed_focus_window = null;
 		
 		WindowControl ()
@@ -81,9 +81,9 @@ namespace Plank.Services.Windows
 		
 		static void handle_window_closed (Wnck.Window window)
 		{
-			if (delayed_focus_timer > 0 && delayed_focus_window == window) {
-				GLib.Source.remove (delayed_focus_timer);
-				delayed_focus_timer = 0;
+			if (delayed_focus_timer_id > 0U && delayed_focus_window == window) {
+				GLib.Source.remove (delayed_focus_timer_id);
+				delayed_focus_timer_id = 0U;
 				delayed_focus_window = null;
 			}
 		}
@@ -469,11 +469,11 @@ namespace Plank.Services.Windows
 			
 			// we do this to make sure our active window is also at the front... Its a tricky thing to do.
 			// sometimes compiz plays badly.  This hacks around it
-			if (delayed_focus_timer > 0)
-				GLib.Source.remove (delayed_focus_timer);
+			if (delayed_focus_timer_id > 0U)
+				GLib.Source.remove (delayed_focus_timer_id);
 			delayed_focus_window = targetWindow;
-			delayed_focus_timer = Gdk.threads_add_timeout (VIEWPORT_CHANGE_DELAY, () => {
-				delayed_focus_timer = 0;
+			delayed_focus_timer_id = Gdk.threads_add_timeout (VIEWPORT_CHANGE_DELAY, () => {
+				delayed_focus_timer_id = 0U;
 				delayed_focus_window.activate (event_time);
 				delayed_focus_window = null;
 				return false;

@@ -68,16 +68,16 @@ namespace Plank
 		DockSurface? urgent_indicator_buffer = null;
 		DockSurface? urgent_glow_buffer = null;
 		
-		int64 last_hide = 0;
-		int64 last_hovered_changed = 0;
+		int64 last_hide = 0LL;
+		int64 last_hovered_changed = 0LL;
 		
 		bool screen_is_composited = false;
-		uint reset_position_manager_timer = 0;
+		uint reset_position_manager_timer_id = 0U;
 		int window_scale_factor = 1;
 		bool is_first_frame = true;
 		bool zoom_changed = false;
 		
-		ulong gtk_theme_name_changed_id = 0;
+		ulong gtk_theme_name_changed_handler_id = 0UL;
 		
 		double dynamic_animation_offset = 0.0;
 		
@@ -162,11 +162,11 @@ namespace Plank
 			// Don't perform an update immediately and summon further
 			// update-requests, wait at least 50ms after the last request
 			
-			if (reset_position_manager_timer > 0)
-				Source.remove (reset_position_manager_timer);
+			if (reset_position_manager_timer_id > 0U)
+				Source.remove (reset_position_manager_timer_id);
 			
-			reset_position_manager_timer = Gdk.threads_add_timeout (50, () => {
-				reset_position_manager_timer = 0;
+			reset_position_manager_timer_id = Gdk.threads_add_timeout (50, () => {
+				reset_position_manager_timer_id = 0U;
 				
 				reset_buffers ();
 				reset_item_buffers ();
@@ -185,11 +185,11 @@ namespace Plank
 			
 			unowned string name = controller.prefs.Theme;
 			if (name == Drawing.Theme.GTK_THEME_NAME) {
-				if (gtk_theme_name_changed_id <= 0)
-					gtk_theme_name_changed_id = Gtk.Settings.get_default ().notify["gtk-theme-name"].connect (load_theme);
-			} else if (gtk_theme_name_changed_id > 0) {
-				SignalHandler.disconnect (Gtk.Settings.get_default (), gtk_theme_name_changed_id);
-				gtk_theme_name_changed_id = 0;
+				if (gtk_theme_name_changed_handler_id == 0UL)
+					gtk_theme_name_changed_handler_id = Gtk.Settings.get_default ().notify["gtk-theme-name"].connect (load_theme);
+			} else if (gtk_theme_name_changed_handler_id > 0UL) {
+				SignalHandler.disconnect (Gtk.Settings.get_default (), gtk_theme_name_changed_handler_id);
+				gtk_theme_name_changed_handler_id = 0UL;
 			}
 			
 			theme = new DockTheme (name);

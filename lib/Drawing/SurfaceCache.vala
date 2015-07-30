@@ -124,7 +124,7 @@ namespace Plank.Drawing
 		unowned SurfaceInfo? last_info;
 		Mutex cache_mutex;
 		
-		uint clean_up_timer = 0U;
+		uint clean_up_timer_id = 0U;
 		
 		public SurfaceCache (SurfaceCacheFlags flags = SurfaceCacheFlags.NONE)
 		{
@@ -143,7 +143,7 @@ namespace Plank.Drawing
 			last_info = null;
 			
 			//TODO Adaptive delay depending on the access rate
-			clean_up_timer = Gdk.threads_add_timeout (5 * 60 * 1000, () => {
+			clean_up_timer_id = Gdk.threads_add_timeout (5 * 60 * 1000, () => {
 				clean_up ();
 				return true;
 			});
@@ -151,9 +151,9 @@ namespace Plank.Drawing
 		
 		~SurfaceCache ()
 		{
-			if (clean_up_timer > 0U) {
-				GLib.Source.remove (clean_up_timer);
-				clean_up_timer = 0U;
+			if (clean_up_timer_id > 0U) {
+				GLib.Source.remove (clean_up_timer_id);
+				clean_up_timer_id = 0U;
 			}
 			
 			cache_map.clear ();

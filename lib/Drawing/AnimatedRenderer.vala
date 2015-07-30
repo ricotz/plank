@@ -30,9 +30,9 @@ namespace Plank.Drawing
 		[CCode (notify = false)]
 		public int64 frame_time { get; private set; }
 		
-		uint timer_id = 0;
-		ulong widget_realize_id = 0;
-		ulong widget_draw_id = 0;
+		uint timer_id = 0U;
+		ulong widget_realize_handler_id = 0UL;
+		ulong widget_draw_handler_id = 0UL;
 #if HAVE_GTK_3_8
 		bool is_updating = false;
 #endif
@@ -50,29 +50,29 @@ namespace Plank.Drawing
 #if HAVE_GTK_3_8
 			timer_id = widget.add_tick_callback ((Gtk.TickCallback) draw_timeout);
 #endif
-			widget_realize_id = widget.realize.connect (on_widget_realize);
-			widget_draw_id = widget.draw.connect (on_widget_draw);
+			widget_realize_handler_id = widget.realize.connect (on_widget_realize);
+			widget_draw_handler_id = widget.draw.connect (on_widget_draw);
 		}
 		
 		~AnimatedRenderer ()
 		{
-			if (timer_id > 0) {
+			if (timer_id > 0U) {
 #if HAVE_GTK_3_8
 				widget.remove_tick_callback (timer_id);
 #else
 				GLib.Source.remove (timer_id);
 #endif
-				timer_id = 0;
+				timer_id = 0U;
 			}
 			
-			if (widget_realize_id > 0) {
-				widget.disconnect (widget_realize_id);
-				widget_realize_id = 0;
+			if (widget_realize_handler_id > 0UL) {
+				widget.disconnect (widget_realize_handler_id);
+				widget_realize_handler_id = 0UL;
 			}
 			
-			if (widget_draw_id > 0) {
-				widget.disconnect (widget_draw_id);
-				widget_draw_id = 0;
+			if (widget_draw_handler_id > 0UL) {
+				widget.disconnect (widget_draw_handler_id);
+				widget_draw_handler_id = 0UL;
 			}
 		}
 		
@@ -124,7 +124,7 @@ namespace Plank.Drawing
 #if HAVE_GTK_3_8
 			if (is_updating || !widget.get_realized ())
 #else
-			if (timer_id > 0)
+			if (timer_id > 0U)
 #endif
 				return;
 			
@@ -166,7 +166,7 @@ namespace Plank.Drawing
 			is_updating = false;
 			return true;
 #else
-			timer_id = 0;
+			timer_id = 0U;
 			return false;
 #endif
 		}
@@ -189,9 +189,9 @@ namespace Plank.Drawing
 			force_frame_time_update ();
 			initialize_frame (frame_time);
 			
-			if (widget_realize_id > 0) {
-				widget.disconnect (widget_realize_id);
-				widget_realize_id = 0;
+			if (widget_realize_handler_id > 0UL) {
+				widget.disconnect (widget_realize_handler_id);
+				widget_realize_handler_id = 0UL;
 			}
 		}
 		

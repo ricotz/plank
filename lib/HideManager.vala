@@ -61,12 +61,12 @@ namespace Plank
 		// a delay between window changes and updating our data
 		// this allows window animations to occur, which might change
 		// the results of our update
-		const uint UPDATE_TIMEOUT = 200;
+		const uint UPDATE_TIMEOUT = 200U;
 		
 #if HAVE_BARRIERS
 		// FIXME Use an IconSize-based value?
 		const double PRESSURE_THRESHOLD = 60.0;
-		const int PRESSURE_TIMEOUT = 1000;
+		const uint PRESSURE_TIMEOUT = 1000U;
 #endif
 		
 		static int plank_pid;
@@ -93,12 +93,13 @@ namespace Plank
 		 */
 		public bool Hovered { get; private set; default = false; }
 		
-		uint timer_hide = 0;
-		uint timer_unhide = 0;
+		uint hide_timer_id = 0U;
+		uint unhide_timer_id = 0U;
+		uint prefs_changed_timer_id = 0U;
+		uint geometry_timer_id = 0U;
+		uint window_changed_timer_id = 0U;
+		
 		bool pointer_update = true;
-		
-		uint timer_prefs_changed = 0;
-		
 		bool window_intersect = false;
 		bool active_window_intersect = false;
 		bool active_application_intersect = false;
@@ -106,14 +107,11 @@ namespace Plank
 		bool dialog_windows_intersect = false;
 		Gdk.Rectangle last_window_rect;
 		
-		uint timer_geo = 0;
-		uint timer_window_changed = 0;
-		
 #if HAVE_BARRIERS
 		XFixes.PointerBarrier barrier = 0;
 		int opcode = 0;
 		double pressure = 0.0;
-		uint pressure_timer = 0;
+		uint pressure_timer_id = 0U;
 		bool barriers_supported = false;
 #endif
 		
@@ -255,17 +253,17 @@ namespace Plank
 			switch (prop.name) {
 			case "HideMode":
 			case "Position":
-				if (timer_prefs_changed > 0) {
-					GLib.Source.remove (timer_prefs_changed);
-					timer_prefs_changed = 0;
+				if (prefs_changed_timer_id > 0U) {
+					GLib.Source.remove (prefs_changed_timer_id);
+					prefs_changed_timer_id = 0U;
 				}
 				
-				timer_prefs_changed = Gdk.threads_add_timeout (UPDATE_TIMEOUT, () => {
+				prefs_changed_timer_id = Gdk.threads_add_timeout (UPDATE_TIMEOUT, () => {
 					update_window_intersect ();
 #if HAVE_BARRIERS
 					update_barrier ();
 #endif
-					timer_prefs_changed = 0;
+					prefs_changed_timer_id = 0U;
 					return false;
 				});
 				break;
@@ -334,54 +332,54 @@ namespace Plank
 		
 		void hide ()
 		{
-			if (timer_unhide > 0) {
-				GLib.Source.remove (timer_unhide);
-				timer_unhide = 0;
+			if (unhide_timer_id > 0U) {
+				GLib.Source.remove (unhide_timer_id);
+				unhide_timer_id = 0U;
 			}
 			
 			if (Hidden)
 				return;
 			
-			if (controller.prefs.HideDelay == 0) {
+			if (controller.prefs.HideDelay == 0U) {
 				if (!Hidden)
 					Hidden = true;
 				return;
 			}
 			
-			if (timer_hide > 0)
+			if (hide_timer_id > 0U)
 				return;
 			
-			timer_hide = Gdk.threads_add_timeout (controller.prefs.HideDelay, () => {
+			hide_timer_id = Gdk.threads_add_timeout (controller.prefs.HideDelay, () => {
 				if (!Hidden)
 					Hidden = true;
-				timer_hide = 0;
+				hide_timer_id = 0U;
 				return false;
 			});
 		}
 
 		void show ()
 		{
-			if (timer_hide > 0) {
-				GLib.Source.remove (timer_hide);
-				timer_hide = 0;
+			if (hide_timer_id > 0U) {
+				GLib.Source.remove (hide_timer_id);
+				hide_timer_id = 0U;
 			}
 			
 			if (!Hidden)
 				return;
 			
-			if (!pointer_update || controller.prefs.UnhideDelay == 0) {
+			if (!pointer_update || controller.prefs.UnhideDelay == 0U) {
 				if (Hidden)
 					Hidden = false;
 				return;
 			}
 			
-			if (timer_unhide > 0)
+			if (unhide_timer_id > 0U)
 				return;
 			
-			timer_unhide = Gdk.threads_add_timeout (controller.prefs.UnhideDelay, () => {
+			unhide_timer_id = Gdk.threads_add_timeout (controller.prefs.UnhideDelay, () => {
 				if (Hidden)
 					Hidden = false;
-				timer_unhide = 0;
+				unhide_timer_id = 0U;
 				return false;
 			});
 		}
@@ -489,12 +487,12 @@ namespace Plank
 		
 		void schedule_update ()
 		{
-			if (timer_window_changed > 0)
+			if (window_changed_timer_id > 0U)
 				return;
 			
-			timer_window_changed = Gdk.threads_add_timeout (UPDATE_TIMEOUT, () => {
+			window_changed_timer_id = Gdk.threads_add_timeout (UPDATE_TIMEOUT, () => {
 				update_window_intersect ();
-				timer_window_changed = 0;
+				window_changed_timer_id = 0U;
 				return false;
 			});
 		}
@@ -547,12 +545,12 @@ namespace Plank
 			
 			last_window_rect = geo;
 			
-			if (timer_geo > 0)
+			if (geometry_timer_id > 0U)
 				return;
 			
-			timer_geo = Gdk.threads_add_timeout (UPDATE_TIMEOUT, () => {
+			geometry_timer_id = Gdk.threads_add_timeout (UPDATE_TIMEOUT, () => {
 				update_window_intersect ();
-				timer_geo = 0;
+				geometry_timer_id = 0U;
 				return false;
 			});
 		}
@@ -566,29 +564,29 @@ namespace Plank
 		
 		void stop_timers ()
 		{
-			if (timer_geo > 0) {
-				GLib.Source.remove (timer_geo);
-				timer_geo = 0;
+			if (geometry_timer_id > 0U) {
+				GLib.Source.remove (geometry_timer_id);
+				geometry_timer_id = 0U;
 			}
 			
-			if (timer_window_changed > 0) {
-				GLib.Source.remove (timer_window_changed);
-				timer_window_changed = 0;
+			if (window_changed_timer_id > 0U) {
+				GLib.Source.remove (window_changed_timer_id);
+				window_changed_timer_id = 0U;
 			}
 			
-			if (timer_prefs_changed > 0) {
-				GLib.Source.remove (timer_prefs_changed);
-				timer_prefs_changed = 0;
+			if (prefs_changed_timer_id > 0U) {
+				GLib.Source.remove (prefs_changed_timer_id);
+				prefs_changed_timer_id = 0U;
 			}
 			
-			if (timer_hide > 0) {
-				GLib.Source.remove (timer_hide);
-				timer_hide = 0;
+			if (hide_timer_id > 0U) {
+				GLib.Source.remove (hide_timer_id);
+				hide_timer_id = 0U;
 			}
 			
-			if (timer_unhide > 0) {
-				GLib.Source.remove (timer_unhide);
-				timer_unhide = 0;
+			if (unhide_timer_id > 0U) {
+				GLib.Source.remove (unhide_timer_id);
+				unhide_timer_id = 0U;
 			}
 		}
 		
@@ -667,11 +665,11 @@ namespace Plank
 				}
 				
 				if (pressure >= PRESSURE_THRESHOLD) {
-					pressure = 0;
+					pressure = 0.0;
 					
-					if (pressure_timer > 0) {
-						GLib.Source.remove (pressure_timer);
-						pressure_timer = 0;
+					if (pressure_timer_id > 0U) {
+						GLib.Source.remove (pressure_timer_id);
+						pressure_timer_id = 0U;
 					}
 					
 					Logger.verbose ("HideManager (pressure-threshold reached > unhide (%f))", PRESSURE_THRESHOLD);
@@ -687,10 +685,10 @@ namespace Plank
 				}
 				break;
 			case XInput.EventType.BARRIER_LEAVE:
-				if (pressure_timer == 0)
-					pressure_timer = Gdk.threads_add_timeout (PRESSURE_TIMEOUT, () => {
-						pressure = 0;
-						pressure_timer = 0;
+				if (pressure_timer_id == 0U)
+					pressure_timer_id = Gdk.threads_add_timeout (PRESSURE_TIMEOUT, () => {
+						pressure = 0.0;
+						pressure_timer_id = 0U;
 						return false;
 					});
 				break;

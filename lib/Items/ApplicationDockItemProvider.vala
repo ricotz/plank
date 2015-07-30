@@ -29,7 +29,7 @@ namespace Plank.Items
 	public class ApplicationDockItemProvider : DockItemProvider
 	{
 		static DBusConnection connection = null;
-		static uint unity_bus_id = 0;
+		static uint unity_bus_id = 0U;
 		
 		public signal void item_window_added (ApplicationDockItem item);
 		
@@ -41,8 +41,8 @@ namespace Plank.Items
 		bool delay_items_monitor_handle = false;
 		Gee.ArrayList<GLib.File> queued_files;
 		
-		uint launcher_entry_dbus_signal_id = 0;
-		uint dbus_name_owner_changed_signal_id = 0;
+		uint launcher_entry_dbus_signal_id = 0U;
+		uint dbus_name_owner_changed_signal_id = 0U;
 		
 		/**
 		 * Creates a new container for dock items.
@@ -96,13 +96,13 @@ namespace Plank.Items
 				items_monitor = null;
 			}
 			
-			if (unity_bus_id > 0)
+			if (unity_bus_id > 0U)
 				Bus.unown_name (unity_bus_id);
 			
 			if (connection != null) {
-				if (launcher_entry_dbus_signal_id > 0)
+				if (launcher_entry_dbus_signal_id > 0U)
 					connection.signal_unsubscribe (launcher_entry_dbus_signal_id);
-				if (dbus_name_owner_changed_signal_id > 0)
+				if (dbus_name_owner_changed_signal_id > 0U)
 					connection.signal_unsubscribe (dbus_name_owner_changed_signal_id);
 			}
 		}
@@ -126,7 +126,7 @@ namespace Plank.Items
 				return;
 			}
 			
-			if (unity_bus_id == 0) {
+			if (unity_bus_id == 0U) {
 				// Acquire Unity bus-name to activate libunity clients since normally there shouldn't be a running Unity
 				unity_bus_id = Bus.own_name (BusType.SESSION, "com.canonical.Unity", BusNameOwnerFlags.ALLOW_REPLACEMENT,
 					handle_bus_acquired, handle_name_acquired, handle_name_lost);
@@ -138,9 +138,9 @@ namespace Plank.Items
 		 */
 		public static void release_unity_dbus ()
 		{
-			if (unity_bus_id > 0) {
+			if (unity_bus_id > 0U) {
 				Bus.unown_name (unity_bus_id);
-				unity_bus_id = 0;
+				unity_bus_id = 0U;
 			}
 			
 			if (connection != null) {

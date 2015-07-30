@@ -43,10 +43,10 @@ namespace Plank.Widgets
 		int poof_size;
 		int poof_frames;
 		
-		int64 start_time = 0;
-		int64 frame_time = 0;
+		int64 start_time = 0LL;
+		int64 frame_time = 0LL;
 		
-		uint animation_timer = 0;
+		uint animation_timer_id = 0U;
 		
 		/**
 		 * Creates a new poof window at the screen-relative coordinates specified.
@@ -77,9 +77,9 @@ namespace Plank.Widgets
 		
 		~PoofWindow ()
 		{
-			if (animation_timer > 0) {
-				GLib.Source.remove (animation_timer);
-				animation_timer = 0;
+			if (animation_timer_id > 0U) {
+				GLib.Source.remove (animation_timer_id);
+				animation_timer_id = 0U;
 			}
 		}
 		
@@ -91,8 +91,8 @@ namespace Plank.Widgets
 		 */
 		public void show_at (int x, int y)
 		{
-			if (animation_timer > 0)
-				GLib.Source.remove (animation_timer);
+			if (animation_timer_id > 0U)
+				GLib.Source.remove (animation_timer_id);
 			
 			if (poof_image == null && poof_frames > 0)
 				return;
@@ -105,7 +105,7 @@ namespace Plank.Widgets
 			show ();
 			move (x - (poof_size / 2), y - (poof_size / 2));
 
-			animation_timer = Gdk.threads_add_timeout (30, () => {
+			animation_timer_id = Gdk.threads_add_timeout (30, () => {
 				frame_time = GLib.get_monotonic_time ();
 				
 				if (frame_time - start_time <= RUN_LENGTH) {
@@ -113,7 +113,7 @@ namespace Plank.Widgets
 					return true;
 				}
 				
-				animation_timer = 0;
+				animation_timer_id = 0U;
 				hide ();
 				return false;
 			});

@@ -132,7 +132,7 @@ namespace Plank.Items
 		FileMonitor? icon_file_monitor = null;
 		
 		bool launcher_exists = false;
-		uint removal_timer = 0;
+		uint removal_timer_id = 0U;
 		
 		/**
 		 * Creates a new dock item.
@@ -389,14 +389,14 @@ namespace Plank.Items
 		
 		bool schedule_removal_if_needed ()
 		{
-			if (removal_timer > 0)
+			if (removal_timer_id > 0U)
 				return true;
 			
 			if (launcher_file_monitor == null || is_valid ())
 				return false;
 			
-			removal_timer = Gdk.threads_add_timeout (3000, () => {
-				removal_timer = 0;
+			removal_timer_id = Gdk.threads_add_timeout (3000, () => {
+				removal_timer_id = 0U;
 				if (!is_valid ())
 					@delete ();
 				return false;
@@ -407,11 +407,11 @@ namespace Plank.Items
 		
 		bool stop_removal ()
 		{
-			if (removal_timer == 0)
+			if (removal_timer_id == 0U)
 				return false;
 			
-			Source.remove (removal_timer);
-			removal_timer = 0;
+			Source.remove (removal_timer_id);
+			removal_timer_id = 0U;
 			
 			return true;
 		}

@@ -29,8 +29,8 @@ namespace Plank.Widgets
 	 */
 	public class DockWindow : CompositedWindow
 	{
-		const uint LONG_PRESS_TIME = 750;
-		const uint HOVER_DELAY_TIME = 200;
+		const uint LONG_PRESS_TIME = 750U;
+		const uint HOVER_DELAY_TIME = 200U;
 		
 		/**
 		 * The controller for this dock.
@@ -64,11 +64,11 @@ namespace Plank.Widgets
 		 */
 		HoverWindow hover;
 		
-		uint hover_reposition_timer = 0;
+		uint hover_reposition_timer_id = 0U;
 		
-		uint long_press_timer = 0;
+		uint long_press_timer_id = 0U;
 		bool long_press_active = false;
-		uint long_press_button = 0;
+		uint long_press_button = 0U;
 
 		Gdk.Rectangle input_rect;
 		int requested_x;
@@ -112,9 +112,9 @@ namespace Plank.Widgets
 			
 			controller.prefs.notify["HideMode"].disconnect (set_struts);
 			
-			if (hover_reposition_timer > 0) {
-				GLib.Source.remove (hover_reposition_timer);
-				hover_reposition_timer = 0;
+			if (hover_reposition_timer_id > 0U) {
+				GLib.Source.remove (hover_reposition_timer_id);
+				hover_reposition_timer_id = 0U;
 			}
 		}
 		
@@ -150,11 +150,11 @@ namespace Plank.Widgets
 			
 			long_press_active = false;
 			long_press_button = event.button;
-			if (long_press_timer > 0)
-				Source.remove (long_press_timer);
-			long_press_timer = Gdk.threads_add_timeout (LONG_PRESS_TIME, () => {
+			if (long_press_timer_id > 0U)
+				Source.remove (long_press_timer_id);
+			long_press_timer_id = Gdk.threads_add_timeout (LONG_PRESS_TIME, () => {
 				long_press_active = true;
-				long_press_timer = 0;
+				long_press_timer_id = 0U;
 				return false;
 			});
 			
@@ -170,9 +170,9 @@ namespace Plank.Widgets
 			if (controller.hide_manager.Hidden)
 				return Gdk.EVENT_STOP;
 			
-			if (long_press_timer > 0) {
-				Source.remove (long_press_timer);
-				long_press_timer = 0;
+			if (long_press_timer_id > 0U) {
+				Source.remove (long_press_timer_id);
+				long_press_timer_id = 0U;
 			}
 			
 			if (long_press_active && long_press_button == event.button) {
@@ -247,9 +247,9 @@ namespace Plank.Widgets
 		public override void drag_begin (Gdk.DragContext context)
 		{
 			long_press_active = false;
-			if (long_press_timer > 0) {
-				Source.remove (long_press_timer);
-				long_press_timer = 0;
+			if (long_press_timer_id > 0U) {
+				Source.remove (long_press_timer_id);
+				long_press_timer_id = 0U;
 			}
 		}
 
@@ -338,9 +338,9 @@ namespace Plank.Widgets
 			HoveredItem = item;
 			
 			// if HoveredItem changed always stop scheduled popup and hide the tooltip
-			if (hover_reposition_timer > 0) {
-				Source.remove (hover_reposition_timer);
-				hover_reposition_timer = 0;
+			if (hover_reposition_timer_id > 0U) {
+				Source.remove (hover_reposition_timer_id);
+				hover_reposition_timer_id = 0U;
 			}
 			
 			hover.hide ();
@@ -349,9 +349,9 @@ namespace Plank.Widgets
 				return;
 			
 			// don't be that demanding this delay is still fast enough
-			hover_reposition_timer = Gdk.threads_add_timeout (HOVER_DELAY_TIME, () => {
+			hover_reposition_timer_id = Gdk.threads_add_timeout (HOVER_DELAY_TIME, () => {
 				if (HoveredItem == null) {
-					hover_reposition_timer = 0;
+					hover_reposition_timer_id = 0U;
 					return false;
 				}
 				
@@ -360,7 +360,7 @@ namespace Plank.Widgets
 					&& controller.renderer.hide_progress > 0.0)
 					return true;
 				
-				hover_reposition_timer = 0;
+				hover_reposition_timer_id = 0U;
 				
 				int x, y;
 				hover.set_text (HoveredItem.Text);
