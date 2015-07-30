@@ -1048,8 +1048,28 @@ namespace Plank
 		Gdk.Rectangle get_item_background_region (DockItemDrawValue val)
 		{
 			Gdk.Rectangle rect;
+			var hover_region = val.hover_region;
 			
-			if (!val.hover_region.intersect (get_background_region (), out rect))
+			// FIXME Do this a better way
+			switch (Position) {
+			default:
+			case Gtk.PositionType.BOTTOM:
+				hover_region.height = (background_rect.y + background_rect.height - hover_region.y).abs ();
+				break;
+			case Gtk.PositionType.TOP:
+				hover_region.y = background_rect.y;
+				hover_region.height = (hover_region.y - background_rect.y + background_rect.height).abs ();
+				break;
+			case Gtk.PositionType.LEFT:
+				hover_region.x = background_rect.x;
+				hover_region.width = (hover_region.x - background_rect.x + background_rect.width).abs ();
+				break;
+			case Gtk.PositionType.RIGHT:
+				hover_region.width = (background_rect.x + background_rect.width - hover_region.x).abs ();
+				break;
+			}
+			
+			if (!hover_region.intersect (background_rect, out rect))
 				return {};
 			
 			return rect;
