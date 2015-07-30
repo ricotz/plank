@@ -344,7 +344,6 @@ namespace Plank.Widgets
 			}
 			
 			hover.hide ();
-			controller.renderer.animated_draw ();
 			
 			if (HoveredItem == null || controller.drag_manager.InternalDragActive)
 				return;

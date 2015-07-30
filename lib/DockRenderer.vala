@@ -118,6 +118,7 @@ namespace Plank
 		{
 			controller.position_manager.update (theme);
 			
+			controller.window.notify["HoveredItem"].connect (animated_draw);
 			controller.hide_manager.notify["Hidden"].connect (hidden_changed);
 			controller.hide_manager.notify["Hovered"].connect (hovered_changed);
 		}
@@ -129,6 +130,7 @@ namespace Plank
 			
 			controller.hide_manager.notify["Hidden"].disconnect (hidden_changed);
 			controller.hide_manager.notify["Hovered"].disconnect (hovered_changed);
+			controller.window.notify["HoveredItem"].disconnect (animated_draw);
 		}
 		
 		void prefs_changed (Object prefs, ParamSpec prop)
