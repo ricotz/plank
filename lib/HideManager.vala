@@ -408,7 +408,7 @@ namespace Plank
 				return Gdk.EVENT_PROPAGATE;
 			
 			if (Hovered)
-				update_hovered_with_coords ((int) event.x, (int) event.y);
+				update_hovered_with_coords (-1, -1);
 			
 			return Gdk.EVENT_PROPAGATE;
 		}
