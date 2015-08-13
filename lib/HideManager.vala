@@ -407,6 +407,10 @@ namespace Plank
 			if (event.detail == Gdk.NotifyType.INFERIOR)
 				return Gdk.EVENT_PROPAGATE;
 			
+			// ignore this event if it was sent explicitly
+			if ((bool) event.send_event)
+				return Gdk.EVENT_PROPAGATE;
+			
 			if (Hovered)
 				update_hovered_with_coords (-1, -1);
 			
