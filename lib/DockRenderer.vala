@@ -479,6 +479,8 @@ namespace Plank
 #endif
 			
 			if (is_first_frame) {
+				message ("Cairo.SurfaceType: %s", cairo_surface_type_to_string (cr.get_target ().get_type ()));
+				
 				Gdk.threads_add_idle_full (GLib.Priority.LOW, () => {
 					unowned HideManager hide_manager = controller.hide_manager;
 					
@@ -1132,6 +1134,42 @@ namespace Plank
 				return -1;
 			
 			return 1;
+		}
+		
+		static unowned string cairo_surface_type_to_string (Cairo.SurfaceType type)
+		{
+			unowned string result;
+			
+			switch (type) {
+			case Cairo.SurfaceType.IMAGE: result = "IMAGE"; break;
+			case Cairo.SurfaceType.PDF: result = "PDF"; break;
+			case Cairo.SurfaceType.PS: result = "PS"; break;
+			case Cairo.SurfaceType.XLIB: result = "XLIB"; break;
+			case Cairo.SurfaceType.XCB: result = "XCB"; break;
+			case Cairo.SurfaceType.GLITZ: result = "GLITZ"; break;
+			case Cairo.SurfaceType.QUARTZ: result = "QUARTZ"; break;
+			case Cairo.SurfaceType.WIN32: result = "WIN32"; break;
+			case Cairo.SurfaceType.BEOS: result = "BEOS"; break;
+			case Cairo.SurfaceType.DIRECTFB: result = "DIRECTFB"; break;
+			case Cairo.SurfaceType.SVG: result = "SVG"; break;
+			case Cairo.SurfaceType.OS2: result = "OS2"; break;
+			case Cairo.SurfaceType.WIN32_PRINTING: result = "WIN32_PRINTING"; break;
+			case Cairo.SurfaceType.QUARTZ_IMAGE: result = "QUARTZ_IMAGE"; break;
+			case Cairo.SurfaceType.SCRIPT: result = "SCRIPT"; break;
+			case Cairo.SurfaceType.QT: result = "QT"; break;
+			case Cairo.SurfaceType.RECORDING: result = "RECORDING"; break;
+			case Cairo.SurfaceType.VG: result = "VG"; break;
+			case Cairo.SurfaceType.GL: result = "GL"; break;
+			case Cairo.SurfaceType.DRM: result = "DRM"; break;
+			case Cairo.SurfaceType.TEE: result = "TEE"; break;
+			case Cairo.SurfaceType.XML: result = "XML"; break;
+			case Cairo.SurfaceType.SKIA: result = "SKIA"; break;
+			case Cairo.SurfaceType.SUBSURFACE: result = "SUBSURFACE"; break;
+			case Cairo.SurfaceType.COGL: result = "COGL"; break;
+			default: result = "???"; break;
+			}
+			
+			return result;
 		}
 	}
 }
