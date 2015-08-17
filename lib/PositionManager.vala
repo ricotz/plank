@@ -1450,33 +1450,35 @@ namespace Plank
 			
 			var center_first = val_first.center;
 			var center_last = val_last.center;
-			var padding = IconSize + ItemPadding + 2 * HorizPadding + 4 * LineWidth;
+			var padding = ItemPadding + 2 * HorizPadding + 4 * LineWidth;
+			var padding_first = (val_first.icon_size + padding) / 2.0;
+			var padding_last = (val_last.icon_size + padding) / 2.0;
 			
 			switch (Position) {
 			default:
 			case Gtk.PositionType.BOTTOM:
-				x = (int) Math.round (center_first.x - padding / 2.0);
+				x = (int) Math.round (center_first.x - padding_first);
 				y += height - DockBackgroundHeight;
-				width = (int) Math.round (center_last.x - center_first.x + padding);
+				width = (int) Math.round (center_last.x - center_first.x + padding_first + padding_last);
 				height = DockBackgroundHeight;
 				break;
 			case Gtk.PositionType.TOP:
-				x = (int) Math.round (center_first.x - padding / 2.0);
+				x = (int) Math.round (center_first.x - padding_first);
 				y = 0;
-				width = (int) Math.round (center_last.x - center_first.x + padding);
+				width = (int) Math.round (center_last.x - center_first.x + padding_first + padding_last);
 				height = DockBackgroundHeight;
 				break;
 			case Gtk.PositionType.LEFT:
 				x = 0;
-				y = (int) Math.round (center_first.y - padding / 2.0);
+				y = (int) Math.round (center_first.y - padding_first);
 				width = DockBackgroundWidth;
-				height = (int) Math.round (center_last.y - center_first.y + padding);
+				height = (int) Math.round (center_last.y - center_first.y + padding_first + padding_last);
 				break;
 			case Gtk.PositionType.RIGHT:
 				x += width - DockBackgroundWidth;
-				y = (int) Math.round (center_first.y - padding / 2.0);
+				y = (int) Math.round (center_first.y - padding_first);
 				width = DockBackgroundWidth;
-				height = (int) Math.round (center_last.y - center_first.y + padding);
+				height = (int) Math.round (center_last.y - center_first.y + padding_first + padding_last);
 				break;
 			}
 			
