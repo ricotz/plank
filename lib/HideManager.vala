@@ -391,7 +391,9 @@ namespace Plank
 				return Hidden;
 			
 #if HAVE_BARRIERS
-			if (Hidden && barriers_supported && controller.prefs.PressureReveal)
+			if (Hidden && barriers_supported
+				&& controller.prefs.PressureReveal
+				&& device_supports_pressure (event.get_source_device ()))
 				return Hidden;
 #endif
 			
@@ -415,6 +417,11 @@ namespace Plank
 				update_hovered_with_coords (-1, -1);
 			
 			return Gdk.EVENT_PROPAGATE;
+		}
+		
+		inline bool device_supports_pressure (Gdk.Device device)
+		{
+			return (device.input_source == Gdk.InputSource.MOUSE);
 		}
 		
 		//
