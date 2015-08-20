@@ -261,7 +261,7 @@ namespace Plank.Items
 		{
 			// TODO this is a unique ID, but it is not stable!
 			// do we still need stable IDs?
-			return "dockelement%d".printf ((int) this);
+			return "dockelement%p".printf (this);
 		}
 		
 		/**
