@@ -776,7 +776,8 @@ namespace Plank.Widgets
 			                      32, X.PropMode.Replace, (uchar[]) struts, struts.length);
 			display.change_property (xid, display.intern_atom ("_NET_WM_STRUT", false), X.XA_CARDINAL,
 			                      32, X.PropMode.Replace, (uchar[]) first_struts, first_struts.length);
-			gdk_display.error_trap_pop ();
+			if (gdk_display.error_trap_pop () != X.Success)
+				critical ("Error while setting struts");
 		}
 	}
 }
