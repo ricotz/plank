@@ -820,12 +820,12 @@ namespace Plank
 			unowned PositionManager position_manager = controller.position_manager;
 			var shadow_size = position_manager.IconShadowSize;
 			// Inflate size to fit shadow
-			var icon_size = (int) draw_value.icon_size + 2 * shadow_size;
+			var icon_size = (int) (draw_value.icon_size + 2 * shadow_size) * window_scale_factor;
 			
 			// load and draw the icon shadow
 			DockSurface? icon_shadow_surface = null;
 			if (shadow_size > 0)
-				icon_shadow_surface = item.get_background_surface (icon_size * window_scale_factor, icon_size * window_scale_factor, item_buffer, (DrawDataFunc<DockItem>) draw_item_background);
+				icon_shadow_surface = item.get_background_surface (icon_size, icon_size, item_buffer, (DrawDataFunc<DockItem>) draw_item_background);
 			
 			if (icon_shadow_surface != null) {
 				if (window_scale_factor > 1) {
@@ -872,7 +872,7 @@ namespace Plank
 			var shadow_size = position_manager.IconShadowSize * window_scale_factor;
 			
 			var draw_value = position_manager.get_draw_value_for_item (item);
-			var icon_size = (int) draw_value.icon_size;
+			var icon_size = (int) draw_value.icon_size * window_scale_factor;
 			var icon_surface = item.get_surface (icon_size, icon_size, model);
 			
 			Logger.verbose ("DockItem.draw_icon_with_shadow (width = %i, height = %i, shadow_size = %i)", width, height, shadow_size);
