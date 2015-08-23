@@ -110,6 +110,7 @@ GTK_MIN_VERSION=3.4.0
 GLIB_MIN_VERSION=2.32.0
 GDK_PIXBUF_MIN_VERSION=2.26.0
 BAMF_MIN_VERSION=0.2.92
+CAIRO_MIN_VERSION=1.10
 
 PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  glib-2.0 >= $GLIB_MIN_VERSION \
@@ -119,6 +120,7 @@ PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  gtk+-3.0 >= $GTK_MIN_VERSION \
                  gdk-x11-3.0 >= $GTK_MIN_VERSION \
                  gdk-pixbuf-2.0 >= $GDK_PIXBUF_MIN_VERSION \
+                 cairo >= $CAIRO_MIN_VERSION \
                  libbamf3 >= $BAMF_MIN_VERSION \
                  libwnck-3.0 \
                  x11"
@@ -128,6 +130,7 @@ PLANK_CORE_VALA_PKGS="--pkg gio-unix-2.0 \
                       --pkg gtk+-3.0 \
                       --pkg gdk-x11-3.0 \
                       --pkg gdk-pixbuf-2.0 \
+                      --pkg cairo \
                       --pkg libbamf3 \
                       --pkg libwnck-3.0 \
                       --pkg posix \
@@ -169,9 +172,7 @@ PKG_CHECK_MODULES(GLIB_2_34,
 # -----------------------------------------------------------
 
 # Check for HiDPI support of Gtk+ and Cairo
-GTK_MIN_VERSION=3.10.0
-CAIRO_MIN_VERSION=1.13
-HIDPI_PKGS="gtk+-3.0 >= $GTK_MIN_VERSION cairo >= $CAIRO_MIN_VERSION"
+HIDPI_PKGS="gtk+-3.0 >= 3.10.0 cairo >= 1.13"
 PKG_CHECK_MODULES(HIDPI, $HIDPI_PKGS, [enable_hidpi=yes], [enable_hidpi=no])
 if test "x$enable_hidpi" = "xyes" ; then
     VALAFLAGS="$VALAFLAGS --define HAVE_HIDPI"
