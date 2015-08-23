@@ -29,7 +29,7 @@ namespace Plank
 	class DBusItems : GLib.Object, Plank.DBus.ItemsIface
 	{
 		DockController controller;
-		uint changed_timer = 0;		
+		uint changed_timer_id = 0U;
 		
 		public DBusItems (DockController _controller)
 		{
@@ -41,20 +41,20 @@ namespace Plank
 		{
 			controller.elements_changed.disconnect (handle_elements_changed);
 			
-			if (changed_timer > 0) {
-				GLib.Source.remove (changed_timer);
-				changed_timer = 0;
+			if (changed_timer_id > 0U) {
+				GLib.Source.remove (changed_timer_id);
+				changed_timer_id = 0U;
 			}
 		}
 		
 		void handle_elements_changed ()
 		{
-			if (changed_timer > 0)
+			if (changed_timer_id > 0U)
 				return;
 			
 			// Fire updates with a reasonable rate
-			changed_timer = Timeout.add (500, () => {
-				changed_timer = 0;
+			changed_timer_id = Timeout.add (500, () => {
+				changed_timer_id = 0U;
 				changed ();
 				return false;
 			});
@@ -152,8 +152,8 @@ namespace Plank
 		DBusConnection? connection = null;
 		string? dock_object_path;
 		
-		uint dbus_items_id = 0;
-		uint dbus_client_ping_id = 0;
+		uint dbus_items_signal_id = 0U;
+		uint dbus_client_ping_signal_id = 0U;
 		
 		public DBusManager (DockController controller)
 		{
@@ -184,7 +184,7 @@ namespace Plank
 			
 			// Listen for "Ping" signals coming from clients
 			try {
-				dbus_client_ping_id = connection.signal_subscribe (null, Plank.DBus.CLIENT_INTERFACE_NAME,
+				dbus_client_ping_signal_id = connection.signal_subscribe (null, Plank.DBus.CLIENT_INTERFACE_NAME,
 					Plank.DBus.PING_NAME, null, null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_client_ping);
 			} catch (IOError e) {
 				warning ("Could not subscribe for client signal (%s)", e.message);
@@ -192,7 +192,7 @@ namespace Plank
 			
 			try {
 				var dbus_items = new DBusItems (controller);
-				dbus_items_id = connection.register_object<Plank.DBus.ItemsIface> (object_path, dbus_items);
+				dbus_items_signal_id = connection.register_object<Plank.DBus.ItemsIface> (object_path, dbus_items);
 			} catch (IOError e) {
 				warning ("Could not register service (%s)", e.message);
 			}
@@ -210,10 +210,10 @@ namespace Plank
 		~DBusManager ()
 		{
 			if (connection != null) {
-				if (dbus_items_id > 0)
-					connection.unregister_object (dbus_items_id);
-				if (dbus_client_ping_id > 0)
-					connection.signal_unsubscribe (dbus_client_ping_id);
+				if (dbus_items_signal_id > 0U)
+					connection.unregister_object (dbus_items_signal_id);
+				if (dbus_client_ping_signal_id > 0U)
+					connection.signal_unsubscribe (dbus_client_ping_signal_id);
 			}
 		}
 		
