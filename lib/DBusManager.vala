@@ -185,7 +185,7 @@ namespace Plank
 			// Listen for "Ping" signals coming from clients
 			try {
 				dbus_client_ping_id = connection.signal_subscribe (null, Plank.DBus.CLIENT_INTERFACE_NAME,
-					Plank.DBus.PING_NAME, null, null, DBusSignalFlags.NONE, handle_client_ping);
+					Plank.DBus.PING_NAME, null, null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_client_ping);
 			} catch (IOError e) {
 				warning ("Could not subscribe for client signal (%s)", e.message);
 			}
@@ -217,6 +217,7 @@ namespace Plank
 			}
 		}
 		
+		[CCode (instance_pos = -1)]
 		void handle_client_ping (DBusConnection connection, string sender_name, string object_path,
 			string interface_name, string signal_name, Variant parameters)
 		{

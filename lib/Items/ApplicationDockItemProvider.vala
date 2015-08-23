@@ -78,9 +78,9 @@ namespace Plank.Items
 				debug ("Unity: Initalizing LauncherEntry support");
 				
 				launcher_entry_dbus_signal_id = connection.signal_subscribe (null, "com.canonical.Unity.LauncherEntry",
-					null, null, null, DBusSignalFlags.NONE, handle_entry_signal);
+					null, null, null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_entry_signal);
 				dbus_name_owner_changed_signal_id = connection.signal_subscribe ("org.freedesktop.DBus", "org.freedesktop.DBus",
-					"NameOwnerChanged", "/org/freedesktop/DBus", null, DBusSignalFlags.NONE, handle_name_owner_changed);
+					"NameOwnerChanged", "/org/freedesktop/DBus", null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_name_owner_changed);
 			}
 		}
 		
@@ -420,6 +420,7 @@ namespace Plank.Items
 			item_window_added (item);
 		}
 		
+		[CCode (instance_pos = -1)]
 		void handle_entry_signal (DBusConnection connection, string sender_name, string object_path,
 			string interface_name, string signal_name, Variant parameters)
 		{
@@ -430,6 +431,7 @@ namespace Plank.Items
 				handle_update_request (sender_name, parameters);
 		}
 		
+		[CCode (instance_pos = -1)]
 		void handle_name_owner_changed (DBusConnection connection, string sender_name, string object_path,
 			string interface_name, string signal_name, Variant parameters)
 		{

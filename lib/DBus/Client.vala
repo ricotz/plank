@@ -101,13 +101,13 @@ namespace Plank.DBus
 			try {
 				// Listen for "Ping" signals coming from docks
 				dbus_dock_ping_id = connection.signal_subscribe (null, Plank.DBus.DOCK_INTERFACE_NAME,
-					Plank.DBus.PING_NAME, null, null, DBusSignalFlags.NONE, handle_dock_ping);
+					Plank.DBus.PING_NAME, null, null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_dock_ping);
 			} catch (IOError e) {
 				warning ("Could not subscribe for dock signal (%s)", e.message);
 			}
 			
 			dbus_name_owner_changed_signal_id = connection.signal_subscribe ("org.freedesktop.DBus", "org.freedesktop.DBus",
-				"NameOwnerChanged", "/org/freedesktop/DBus", null, DBusSignalFlags.NONE, handle_name_owner_changed);
+				"NameOwnerChanged", "/org/freedesktop/DBus", null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_name_owner_changed);
 			
 			client_object_path = (owned) object_path;
 			
@@ -129,6 +129,7 @@ namespace Plank.DBus
 			}
 		}
 		
+		[CCode (instance_pos = -1)]
 		void handle_dock_ping (DBusConnection connection, string sender_name, string object_path,
 			string interface_name, string signal_name, Variant parameters)
 		{
@@ -136,6 +137,7 @@ namespace Plank.DBus
 				connect_proxies (connection, sender_name, object_path);
 		}
 		
+		[CCode (instance_pos = -1)]
 		void handle_name_owner_changed (DBusConnection connection, string sender_name, string object_path,
 			string interface_name, string signal_name, Variant parameters)
 		{
