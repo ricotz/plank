@@ -188,7 +188,7 @@ fi
 AM_CONDITIONAL([HAVE_GTK_3_8], [test "x$enable_gtk38" = "xyes"])
 
 # Check for CSD support of Gtk+
-GTK_PKGS="gtk+-3.0 >= $GTK_MIN_VERSION"
+GTK_PKGS="gtk+-3.0 >= 3.10.0"
 PKG_CHECK_MODULES(GTK, $GTK_PKGS, [enable_gtk310=yes], [enable_gtk310=no])
 if test "x$enable_gtk310" = "xyes" ; then
     VALAFLAGS="$VALAFLAGS --define HAVE_GTK_3_10"
@@ -196,8 +196,7 @@ fi
 AM_CONDITIONAL([HAVE_GTK_3_10], [test "x$enable_gtk310" = "xyes"])
 
 # Check for newer BAMF
-BAMF_MIN_VERSION=0.4.0
-BAMF_PKGS="libbamf3 >= $BAMF_MIN_VERSION"
+BAMF_PKGS="libbamf3 >= 0.4.0"
 PKG_CHECK_MODULES(BAMF, $BAMF_PKGS, [enable_bamf_0_4=yes], [enable_bamf_0_4=no])
 if test "x$enable_bamf_0_4" = "xyes" ; then
     VALAFLAGS="$VALAFLAGS --define HAVE_BAMF_0_4"
