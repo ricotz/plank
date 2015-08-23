@@ -129,7 +129,8 @@ namespace Plank.Items
 			if (unity_bus_id == 0U) {
 				// Acquire Unity bus-name to activate libunity clients since normally there shouldn't be a running Unity
 				unity_bus_id = Bus.own_name (BusType.SESSION, "com.canonical.Unity", BusNameOwnerFlags.ALLOW_REPLACEMENT,
-					handle_bus_acquired, handle_name_acquired, handle_name_lost);
+					(BusAcquiredCallback) handle_bus_acquired, (BusNameAcquiredCallback) handle_name_acquired,
+					(BusNameLostCallback) handle_name_lost);
 			}
 		}
 		

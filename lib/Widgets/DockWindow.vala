@@ -593,7 +593,7 @@ namespace Plank.Widgets
 				if ((event.state & Gdk.ModifierType.MOD1_MASK) != 0
 					&& (event.state & Gdk.ModifierType.SHIFT_MASK) != 0)
 					menu_items.add_all (get_item_debug_menu_items (item));
-				position_func = position_menu;
+				position_func = (Gtk.MenuPositionFunc) position_menu;
 			}
 			
 			if (menu_items == null || menu_items.size == 0)
