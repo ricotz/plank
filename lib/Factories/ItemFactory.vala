@@ -140,10 +140,14 @@ namespace Plank.Factories
 				var keyfile = new KeyFile ();
 				keyfile.load_from_file (file.get_path (), KeyFileFlags.NONE);
 				
-				return keyfile.get_string (typeof (Items.DockItemPreferences).name (), "Launcher");
-			} catch {
-				return "";
+				unowned string group_name = typeof (DockItemPreferences).name ();
+				if (keyfile.has_group (group_name))
+					return keyfile.get_string (group_name, "Launcher");
+			} catch (Error e) {
+				warning ("%s (%s)", e.message, file.get_basename ());
 			}
+			
+			return "";
 		}
 			
 		/**
