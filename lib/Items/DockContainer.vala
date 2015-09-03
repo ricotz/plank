@@ -229,6 +229,26 @@ namespace Plank.Items
 			return true;
 		}
 		
+		/**
+		 * Removes all dock-elements from the collection.
+		 *
+		 * @return whether removing the elements was successful
+		 */
+		public bool remove_all ()
+		{
+			var elements = new Gee.HashSet<DockElement> ();
+			elements.add_all (internal_elements);
+			foreach (var element in elements) {
+				remove_without_signaling (element);
+				element.Container = null;
+			}
+			internal_elements.clear ();
+			
+			update_visible_elements ();
+			
+			return true;
+		}
+		
 		protected virtual void update_visible_elements ()
 		{
 			Logger.verbose ("DockContainer.update_visible_elements ()");
