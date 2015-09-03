@@ -239,6 +239,14 @@ namespace Plank
 		{
 			return_if_fail (theme != null);
 			
+			unowned Gee.ArrayList<unowned DockItem> new_items = controller.VisibleItems;
+			
+			// FIXME This should never happen
+			if (new_items.size <= 0) {
+				critical ("No items available to initialize frame");
+				return;
+			}
+			
 			unowned PositionManager position_manager = controller.position_manager;
 			
 			screen_is_composited = position_manager.screen_is_composited;
@@ -281,7 +289,7 @@ namespace Plank
 			
 			// Update *ordered* list of items
 			current_items.clear ();
-			current_items.add_all (controller.VisibleItems);
+			current_items.add_all (new_items);
 			
 			if (screen_is_composited) {
 				var add_time = 0LL;
@@ -336,6 +344,12 @@ namespace Plank
 		 */
 		public override void draw (Cairo.Context cr, int64 frame_time)
 		{
+			// FIXME This should never happen
+			if (current_items.size <= 0) {
+				critical ("No items available to draw frame");
+				return;
+			}
+			
 #if HAVE_HIDPI
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
 #endif
