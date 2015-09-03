@@ -194,6 +194,7 @@ namespace Plank
 			default_provider = create_default_provider ();
 			default_provider.prepare ();
 			replace (default_provider, old_default_provider);
+			old_default_provider.remove_all ();
 			
 			update_items ();
 			
