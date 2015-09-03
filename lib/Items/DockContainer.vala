@@ -169,13 +169,13 @@ namespace Plank.Items
 			add_without_signaling (element);
 			
 			DockElement? target = null;
-			if (internal_elements.size > 0)
+			if (internal_elements.size > 1)
 				target = internal_elements[0];
 			
-			if (target != null && target != placeholder_item)
-				move_to (element, target);
-			else
-				update_visible_elements ();
+			if (target != null && target != element)
+				move_element (internal_elements, internal_elements.size - 1, 0);
+			
+			update_visible_elements ();
 		}
 		
 		/**
