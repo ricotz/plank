@@ -788,13 +788,13 @@ namespace Plank
 		public DockItemDrawValue get_draw_value_for_item (DockItem item)
 		{
 			if (draw_values.size == 0) {
-				critical ("Without draw_values there is trouble ahead");
+				debug ("Without draw_values there is trouble ahead");
 				update_draw_values (controller.VisibleItems);
 			}
 			
 			var draw_value = draw_values[item];
 			if (draw_value == null) {
-				critical ("Without a draw_value there is trouble ahead for '%s'", item.Text);
+				warning ("Without a draw_value there is trouble ahead for '%s'", item.Text);
 				draw_value = new DockItemDrawValue ();
 			}
 			
