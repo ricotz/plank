@@ -247,7 +247,7 @@ namespace Plank.Factories
 				return;
 			}
 			
-			var filename = app_info.get_filename ();
+			unowned string filename = app_info.get_filename ();
 			if (filename == null) {
 				warning ("Failed to create dock item for '%s'", id);
 				return;
