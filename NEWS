@@ -2,6 +2,27 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.10.0 "Bartonschmeer" (2015-09-07)
+===============================================================================
+ * Clean up and review appearances of DockItem in API an prefer DockElement
+ * Make the item for the dock-itself really special with its own setting
+ * Pass-through event on scroll/click to have a proper timestamps for
+   WindowControl.* calls (LP: #1167787) (LP: #1431556)
+ * Handle invalid item on runtime (LP: #1444830)
+ * Fix LogLevel naming (Logger.FATAL -> Logger.ERROR, Logger.ERROR ->
+   Logger.CRITICAL)
+ * Make DockItem abstract
+ * Add frame_time to AnimatedRenderer with conditional use of GdkFrameClock
+   (gtk+ >= 3.8)
+ * Add RTL support (LP: #1455892)
+ * Add DODGE_ACTIVE hide-mode
+ * Conditional use of GtkStack instead of GtkNotebook in preferences-dialog
+   (gtk+ >= 3.10)
+ * Drop conditional dependency on gnome-common (and rely on autoconf-archive)
+ * Add icon-zoom hover-effect (LP: #707650)
+ * Don't use pressure reveal for absolute input devices (LP: #1349506)
+ * Force indicating running applications (LP: #1406282)
+
 0.9.1 "Kanker" (2015-05-02)
 ===============================================================================
  * Initialize i18n as suggested here,
