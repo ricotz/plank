@@ -111,7 +111,7 @@ namespace Plank.Drawing
 #endif
 				frame_time = GLib.get_monotonic_time ();
 #if HAVE_GTK_3_8
-				critical ("FrameClock not availble");
+				critical ("FrameClock not available");
 			}
 #endif
 		}
