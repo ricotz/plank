@@ -1166,6 +1166,7 @@ namespace Plank
 			case Cairo.SurfaceType.BEOS: result = "BEOS"; break;
 			case Cairo.SurfaceType.DIRECTFB: result = "DIRECTFB"; break;
 			case Cairo.SurfaceType.SVG: result = "SVG"; break;
+#if VALA_0_26
 			case Cairo.SurfaceType.OS2: result = "OS2"; break;
 			case Cairo.SurfaceType.WIN32_PRINTING: result = "WIN32_PRINTING"; break;
 			case Cairo.SurfaceType.QUARTZ_IMAGE: result = "QUARTZ_IMAGE"; break;
@@ -1179,6 +1180,7 @@ namespace Plank
 			case Cairo.SurfaceType.XML: result = "XML"; break;
 			case Cairo.SurfaceType.SKIA: result = "SKIA"; break;
 			case Cairo.SurfaceType.SUBSURFACE: result = "SUBSURFACE"; break;
+#endif
 			//FIXME Available in cairo since 1.12
 			//case Cairo.SurfaceType.COGL: result = "COGL"; break;
 			default: result = "???"; break;

@@ -134,11 +134,7 @@ namespace Plank.Widgets
 				cr.paint ();
 				cr.restore ();
 				
-#if VALA_0_24
 				shape_combine_region (null);
-#else
-				gtk_widget_shape_combine_region (this, null);
-#endif
 				
 				context.render_background (cr, 0, 0, width, height);
 				context.render_frame (cr, 0, 0, width, height);  
