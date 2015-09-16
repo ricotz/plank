@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-09-03 21:06+0000\n"
-"PO-Revision-Date: 2015-09-06 13:11+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2015-09-10 15:01+0000\n"
+"PO-Revision-Date: 2015-09-15 13:57+0000\n"
+"Last-Translator: Papp Ferenc <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-09-07 05:42+0000\n"
-"X-Generator: Launchpad (build 17706)\n"
+"X-Launchpad-Export-Date: 2015-09-16 05:28+0000\n"
+"X-Generator: Launchpad (build 17737)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -143,6 +143,7 @@ msgstr "Elrejtés késleltetése:"
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
 msgstr ""
+"A késleltetés mértéke ezredmásodpercben megadva, mielőtt eltűnne a dokk"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
