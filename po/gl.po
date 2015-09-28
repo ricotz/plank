@@ -7,23 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-09-10 15:01+0000\n"
-"PO-Revision-Date: 2015-03-13 07:00+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2015-09-16 09:50+0000\n"
+"PO-Revision-Date: 2015-09-18 15:00+0000\n"
+"Last-Translator: Xosé <Unknown>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-09-11 05:43+0000\n"
-"X-Generator: Launchpad (build 17720)\n"
+"X-Launchpad-Export-Date: 2015-09-19 05:22+0000\n"
+"X-Generator: Launchpad (build 17746)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"Plank está destinada a seren a doca máis simple no planeta. O obxectivo é "
-"ofrecer xusto o que necesita unha doca e absolutamente nada mási."
+"Plank está pensado para ser a doca máis simple no planeta. O obxectivo é "
+"ofrecer xusto o que necesita unha doca e absolutamente nada máis."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -35,8 +35,8 @@ msgid ""
 msgstr ""
 "Porén, é una biblioteca que pode estenderse para crear outros programas de "
 "doca con características máis avanzadas. Polo tanto, Plank é a tecnoloxía "
-"subxacente para Docky (a partires da versión 3.0.0) e ten como obxectivo "
-"fornecer todas as características básicas, mentres Docky estendese para "
+"subxacente de Docky (a partires da versión 3.0.0) e ten como obxectivo "
+"fornecer todas as características básicas, mentres que Docky esténdea  para "
 "engadir cousas máis elegantes como trebellos, pintores, diálogos de axuste, "
 "etc."
 
@@ -78,7 +78,7 @@ msgstr "Encher"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr "Comezar"
+msgstr "Inicio"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
@@ -102,11 +102,11 @@ msgstr "Aliñamentos das iconas"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr "Tamaño da ícona:"
+msgstr "Tamaño das iconas:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr ""
+msgstr "Ampliación das iconas:"
 
 #: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:95
 msgid "Appearance"
@@ -130,7 +130,7 @@ msgstr "Esquivar xanela"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr ""
+msgstr "Evitar a xanela activa"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
@@ -138,19 +138,19 @@ msgstr "Agochar a doca"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr ""
+msgstr "Demora en agochar:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgstr "Demora en milisegundos antes de agochar a doca"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "Demora en reaparecer:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr "Retardo en milisegundos antes de amosar a doca"
+msgstr "Demora en milisegundos antes de amosar a doca"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
@@ -178,7 +178,7 @@ msgstr "Ancorado automático:"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Show Item for Dock:"
-msgstr ""
+msgstr "Mostar elemento de doca:"
 
 #: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
 msgid "Behaviour"
