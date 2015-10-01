@@ -230,6 +230,9 @@ namespace Plank
 		
 		static int find_monitor_number (Gdk.Screen screen, string plug_name)
 		{
+			if (plug_name == "")
+				return screen.get_primary_monitor ();
+			
 			int n_monitors = screen.get_n_monitors ();
 			
 			for (int i = 0; i < n_monitors; i++) {
