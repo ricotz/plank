@@ -262,6 +262,9 @@ namespace Plank
 				&& old_monitor_geo.height == monitor_geo.height)
 				return;
 			
+			Logger.verbose ("PositionManager.monitor_geo_changed (%i,%i-%ix%i)",
+				monitor_geo.x, monitor_geo.y, monitor_geo.width, monitor_geo.height);
+			
 			freeze_notify ();
 			
 			update_dimensions ();
