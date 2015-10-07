@@ -62,7 +62,7 @@ namespace Plank.Items
 		 */
 		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
 		{
-			Application.get_default ().activate_action ("about", null);
+			Application.get_default ().activate_action ("preferences", null);
 			
 			return Animation.DARKEN;
 		}
