@@ -369,17 +369,16 @@ namespace Plank.Items
 		[CCode (instance_pos = -1)]
 		void handle_items_dir_changed (File f, File? other, FileMonitorEvent event)
 		{
+			// only watch for new items, existing ones watch themselves for updates or deletions
+			if (event != FileMonitorEvent.CREATED)
+				return;
+			
 			try {
 				if (!file_is_dockitem (f.query_info (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0)))
 					return;
 			} catch {
 				return;
 			}
-			
-			// only watch for new items
-			// items watch themselves for updates or deletions
-			if ((event & FileMonitorEvent.CREATED) != FileMonitorEvent.CREATED)
-				return;
 			
 			// bail if an item already manages this dockitem-file
 			foreach (var element in internal_elements) {

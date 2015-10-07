@@ -323,16 +323,16 @@ namespace Plank.Services
 		[CCode (instance_pos = -1)]
 		void backing_file_changed (File f, File? other, FileMonitorEvent event)
 		{
-			// only watch for change or delete events
-			if ((event & FileMonitorEvent.CHANGES_DONE_HINT) != FileMonitorEvent.CHANGES_DONE_HINT
-				&& (event & FileMonitorEvent.DELETED) != FileMonitorEvent.DELETED)
-				return;
-			
-			if ((event & FileMonitorEvent.DELETED) == FileMonitorEvent.DELETED) {
+			switch (event) {
+			case FileMonitorEvent.CHANGES_DONE_HINT:
+				load_prefs ();
+				break;
+			case FileMonitorEvent.DELETED:
 				if (!f.query_exists ())
 					deleted ();
-			} else {
-				load_prefs ();
+				break;
+			default:
+				break;
 			}
 		}
 		
