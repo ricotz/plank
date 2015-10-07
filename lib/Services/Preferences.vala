@@ -320,6 +320,7 @@ namespace Plank.Services
 			}
 		}
 		
+		[CCode (instance_pos = -1)]
 		void backing_file_changed (File f, File? other, FileMonitorEvent event)
 		{
 			// only watch for change or delete events

@@ -119,6 +119,7 @@ namespace Plank.Items
 			}
 		}
 		
+		[CCode (instance_pos = -1)]
 		void handle_dir_changed (File f, File? other, FileMonitorEvent event)
 		{
 			reset_icon_buffer ();

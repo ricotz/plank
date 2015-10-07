@@ -274,6 +274,7 @@ namespace Plank.Items
 			reset_icon_buffer ();
 		}
 		
+		[CCode (instance_pos = -1)]
 		void icon_file_changed (File f, File? other, FileMonitorEvent event)
 		{
 			switch (event) {
@@ -310,6 +311,7 @@ namespace Plank.Items
 			icon_file_monitor = null;
 		}
 		
+		[CCode (instance_pos = -1)]
 		void launcher_file_changed (File f, File? other, FileMonitorEvent event)
 		{
 			switch (event) {

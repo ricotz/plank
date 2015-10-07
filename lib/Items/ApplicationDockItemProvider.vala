@@ -366,6 +366,7 @@ namespace Plank.Items
 			queued_files.clear ();
 		}
 		
+		[CCode (instance_pos = -1)]
 		void handle_items_dir_changed (File f, File? other, FileMonitorEvent event)
 		{
 			try {
