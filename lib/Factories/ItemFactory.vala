@@ -177,7 +177,7 @@ namespace Plank.Factories
 					
 					var file = source_dir.get_child (info.get_name ());
 					var element = make_element (file);
-					var item = (element as DockItem);
+					unowned DockItem? item = (element as DockItem);
 					if (item == null)
 						continue;
 					

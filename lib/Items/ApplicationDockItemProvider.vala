@@ -174,7 +174,7 @@ namespace Plank.Items
 				debug ("Unity: %s lost", name);
 		}
 		
-		protected ApplicationDockItem? item_for_application (Bamf.Application app)
+		protected unowned ApplicationDockItem? item_for_application (Bamf.Application app)
 		{
 			var app_desktop_file = app.get_desktop_file ();
 			if (app_desktop_file != null && app_desktop_file.has_prefix ("/"))
@@ -189,7 +189,7 @@ namespace Plank.Items
 				if (appitem == null)
 					continue;
 				
-				var item_app = appitem.App;
+				unowned Bamf.Application? item_app = appitem.App;
 				if (item_app != null && item_app == app)
 					return appitem;
 				
@@ -248,7 +248,7 @@ namespace Plank.Items
 			}
 			
 			var element = Factory.item_factory.make_element (dockitem_file);
-			var item = (element as DockItem);
+			unowned DockItem? item = (element as DockItem);
 			if (item == null) {
 				resume_items_monitor ();
 				return false;
@@ -268,7 +268,7 @@ namespace Plank.Items
 		{
 			// Match running applications to their available dock-items
 			foreach (var app in Matcher.get_default ().active_launchers ()) {
-				var found = item_for_application (app);
+				unowned ApplicationDockItem? found = item_for_application (app);
 				if (found != null)
 					found.App = app;
 			}
@@ -307,7 +307,7 @@ namespace Plank.Items
 			// Make sure internal window-list of Wnck is most up to date
 			Wnck.Screen.get_default ().force_update ();
 			
-			var found = item_for_application (app);
+			unowned ApplicationDockItem? found = item_for_application (app);
 			if (found != null)
 				found.App = app;
 		}
@@ -346,7 +346,7 @@ namespace Plank.Items
 				
 				Logger.verbose ("ApplicationDockItemProvider.process_queued_files ('%s')", basename);
 				var element = Factory.item_factory.make_element (file);
-				var item = (element as DockItem);
+				unowned DockItem? item = (element as DockItem);
 				if (item == null)
 					continue;
 				

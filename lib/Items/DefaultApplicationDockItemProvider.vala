@@ -92,7 +92,7 @@ namespace Plank.Items
 			
 			// Match running applications to their available dock-items
 			foreach (var app in Matcher.get_default ().active_launchers ()) {
-				var found = item_for_application (app);
+				unowned ApplicationDockItem? found = item_for_application (app);
 				if (found != null) {
 					found.App = app;
 					continue;
@@ -122,7 +122,7 @@ namespace Plank.Items
 			// Make sure internal window-list of Wnck is most up to date
 			Wnck.Screen.get_default ().force_update ();
 			
-			var found = item_for_application (app);
+			unowned ApplicationDockItem? found = item_for_application (app);
 			if (found != null) {
 				found.App = app;
 				return;
