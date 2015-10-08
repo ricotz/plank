@@ -85,9 +85,6 @@ namespace Plank.Items
 		 */
 		public override void prepare ()
 		{
-			// Make sure internal window-list of Wnck is most up to date
-			Wnck.Screen.get_default ().force_update ();
-			
 			var transient_items = new Gee.ArrayList<DockElement> ();
 			
 			// Match running applications to their available dock-items
@@ -98,7 +95,7 @@ namespace Plank.Items
 					continue;
 				}
 				
-				if (!app.is_user_visible () || WindowControl.get_num_windows (app) <= 0)
+				if (!app.is_user_visible ())
 					continue;
 				
 				transient_items.add (new TransientDockItem.with_application (app));
@@ -119,17 +116,11 @@ namespace Plank.Items
 		
 		protected override void app_opened (Bamf.Application app)
 		{
-			// Make sure internal window-list of Wnck is most up to date
-			Wnck.Screen.get_default ().force_update ();
-			
 			unowned ApplicationDockItem? found = item_for_application (app);
 			if (found != null) {
 				found.App = app;
 				return;
 			}
-			
-			if (!app.is_user_visible () || WindowControl.get_num_windows (app) <= 0)
-				return;
 			
 			var new_item = new TransientDockItem.with_application (app);
 			
