@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-09-16 09:50+0000\n"
+"POT-Creation-Date: 2015-10-08 19:57+0000\n"
 "PO-Revision-Date: 2015-09-15 14:07+0000\n"
 "Last-Translator: muhammed shameem <shameempk@live.com>\n"
 "Language-Team: Malayalam <ml@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-09-17 05:31+0000\n"
-"X-Generator: Launchpad (build 17737)\n"
+"X-Launchpad-Export-Date: 2015-10-09 05:23+0000\n"
+"X-Generator: Launchpad (build 17802)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -184,7 +184,7 @@ msgid "Behaviour"
 msgstr ""
 
 #: ../lib/Items/ApplicationDockItem.vala:454
-#: ../lib/Items/FileDockItem.vala:328 ../lib/Items/FileDockItem.vala:346
+#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:348
 msgid "_Keep in Dock"
 msgstr "ഡോക്കില്‍ _സൂക്ഷിക്കുക"
 
@@ -196,15 +196,15 @@ msgstr "എല്ലാം _അടയ്ക്കുക"
 msgid "_Close"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:333
+#: ../lib/Items/FileDockItem.vala:335
 msgid "_Open in File Browser"
 msgstr "ഫയല്‍ ബ്രൗസറില്‍ _തുറക്കുക"
 
-#: ../lib/Items/FileDockItem.vala:351
+#: ../lib/Items/FileDockItem.vala:353
 msgid "_Open"
 msgstr "_തുറക്കുക"
 
-#: ../lib/Items/FileDockItem.vala:355
+#: ../lib/Items/FileDockItem.vala:357
 msgid "Open Containing _Folder"
 msgstr "ഉള്‍പ്പെടുന്ന _അറ തുറക്കുക"
 
