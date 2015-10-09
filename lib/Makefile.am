@@ -8,11 +8,6 @@ AM_CFLAGS = \
 	-w \
 	$(NULL)
 
-AM_LDFLAGS = \
-	$(LIBM) \
-	$(COVERAGE_CFLAGS) \
-	$(NULL)
-
 AM_VALAFLAGS = \
 	$(COVERAGE_VALAFLAGS) \
 	$(PLANK_CORE_VALAFLAGS) \
@@ -60,6 +55,8 @@ libplank_la_VALAFLAGS = \
 
 libplank_la_LIBADD = \
 	$(PLANK_CORE_LIBS) \
+	$(COVERAGE_LDFLAGS) \
+	$(LIBM) \
 	$(builddir)/libplank-internal.la \
 	$(NULL)
 
