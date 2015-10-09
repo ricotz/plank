@@ -2,6 +2,14 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.10.1 "Bartonschmeer" (2015-10-09)
+===============================================================================
+ * Require valac >= 0.24.0 as actually needed
+ * Correctly display filenames with underscores in folder-menu (LP: #1501499)
+ * plankdockitem: Open "preferences" on left-click instead of "about"
+ * Properly determine drop-position of external drags with enabled icon-zoom
+ * Update translations
+
 0.10.0 "Bartonschmeer" (2015-09-07)
 ===============================================================================
  * Clean up and review appearances of DockItem in API an prefer DockElement
