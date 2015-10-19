@@ -1071,7 +1071,8 @@ namespace Plank
 					transient_items.add (item);
 			}
 			
-			animated_draw ();
+			if (transient_items.size > 0)
+				animated_draw ();
 		}
 		
 		/**
