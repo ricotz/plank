@@ -20,8 +20,6 @@ AM_VALAFLAGS = \
 	$(NULL)
 
 BUILT_SOURCES = \
-	libplank_internal_la_vala.stamp \
-	libplank_la_vala.stamp \
 	plank.h \
 	plank-resources.c \
 	$(NULL)
@@ -121,6 +119,7 @@ plank-resources.c: $(top_srcdir)/data/plank.gresource.xml Makefile $(shell $(GLI
 	$(AM_V_GEN) XMLLINT=$(XMLLINT) $(GLIB_COMPILE_RESOURCES) --target $@ --sourcedir $(top_srcdir)/data --generate --c-name plank $<
 
 plank.h plank.vapi: libplank_la_vala.stamp
+$(libplank_la_VALASOURCES:.vala=.c): libplank_la_vala.stamp
 
 libplank_la_vala.stamp build-abi: libplank_internal_la_vala.stamp $(libplank_la_VALASOURCES) $(libplank_la_BUILT_VALASOURCES) Makefile
 	$(AM_V_VALA)$(VALAC) \
@@ -167,6 +166,7 @@ nodist_libplank_internal_la_SOURCES = \
 	$(NULL)
 
 plank-internal.h plank-internal.vapi: libplank_internal_la_vala.stamp
+$(libplank_internal_la_VALASOURCES:.vala=.c): libplank_internal_la_vala.stamp
 
 libplank_internal_la_vala.stamp: $(libplank_internal_la_VALASOURCES) Makefile
 	$(AM_V_VALA)$(VALAC) \
@@ -181,6 +181,8 @@ libplank_internal_la_vala.stamp: $(libplank_internal_la_VALASOURCES) Makefile
 TESTS = abicheck.sh
 
 CLEANFILES = \
+	libplank_la_vala.stamp \
+	libplank_internal_la_vala.stamp \
 	$(nodist_libplank_la_SOURCES) \
 	$(nodist_libplank_internal_la_SOURCES) \
 	build-abi \

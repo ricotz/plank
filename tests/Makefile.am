@@ -44,9 +44,10 @@ tests_VALASOURCES = \
 	$(NULL)
 
 nodist_tests_SOURCES = \
-	tests_vala.stamp \
 	$(tests_VALASOURCES:.vala=.c) \
 	$(NULL)
+
+$(tests_VALASOURCES:.vala=.c): tests_vala.stamp
 
 tests_vala.stamp: $(tests_VALASOURCES) $(top_builddir)/lib/plank.vapi $(top_builddir)/lib/plank-internal.vapi Makefile
 	$(AM_V_VALA)$(VALAC) \
@@ -63,9 +64,10 @@ dock_VALASOURCES = \
 	$(NULL)
 
 nodist_dock_SOURCES = \
-	dock_vala.stamp \
 	$(dock_VALASOURCES:.vala=.c) \
 	$(NULL)
+
+$(dock_VALASOURCES:.vala=.c): dock_vala.stamp
 
 dock_vala.stamp: $(dock_VALASOURCES) $(top_builddir)/lib/plank.vapi $(top_builddir)/lib/plank-internal.vapi Makefile
 	$(AM_V_VALA)$(VALAC) \
@@ -74,6 +76,8 @@ dock_vala.stamp: $(dock_VALASOURCES) $(top_builddir)/lib/plank.vapi $(top_buildd
 	$(AM_V_at)touch $@
 
 CLEANFILES = \
+	dock_vala.stamp \
+	tests_vala.stamp \
 	$(nodist_dock_SOURCES) \
 	$(nodist_tests_SOURCES) \
 	$(NULL)
