@@ -266,17 +266,18 @@ namespace Plank
 					hide_progress = (controller.hide_manager.Hidden ? 1.0 : 0.0);
 				}
 				
-				var zoom_duration = 150 * 1000;
+				var zoom_duration = 200 * 1000;
 				var zoom_time = int64.max (0LL, frame_time - last_hovered_changed);
 				double zoom_progress;
-				if (zoom_time < zoom_duration)
-					zoom_progress = Drawing.easing_for_mode (AnimationMode.LINEAR, zoom_time, zoom_duration);
-				else
-					zoom_progress = 1.0;
-				if (!controller.hide_manager.Hovered)
-					zoom_progress = 1.0 - zoom_progress;
-				zoom_progress *= 1.0 - hide_progress;
-				zoom_in_progress = zoom_progress;
+				if (zoom_time < zoom_duration) {
+					if (controller.hide_manager.Hovered)
+						zoom_progress = Drawing.easing_for_mode (AnimationMode.EASE_OUT_CUBIC, zoom_time, zoom_duration);
+					else
+						zoom_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_IN_CUBIC, zoom_time, zoom_duration);
+				} else {
+					zoom_progress = (controller.hide_manager.Hovered ? 1.0 : 0.0);
+				}
+				zoom_in_progress = zoom_progress * (1.0 - hide_progress);
 			} else {
 				hide_progress = 0.0;
 				zoom_in_progress = 0.0;
@@ -1086,7 +1087,7 @@ namespace Plank
 				return true;
 			}
 			
-			if (frame_time - last_hovered_changed <= 150 * 1000)
+			if (frame_time - last_hovered_changed <= 200 * 1000)
 				return true;
 			
 			if (theme.FadeOpacity == 1.0) {
