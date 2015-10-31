@@ -227,18 +227,22 @@ namespace Plank.Drawing
 
 	EasingFunc easing_func_for_mode (AnimationMode mode)
 	{
-		assert (animation_modes[mode].mode == mode);
-		assert (animation_modes[mode].func != null);
+		AnimationModeMapping* animation = &(animation_modes[mode]);
 		
-		return animation_modes[mode].func;
+		assert (animation.mode == mode);
+		assert (animation.func != null);
+		
+		return animation.func;
 	}
 
 	unowned string easing_name_for_mode (AnimationMode mode)
 	{
-		assert (animation_modes[mode].mode == mode);
-		assert (animation_modes[mode].func != null);
+		AnimationModeMapping* animation = &(animation_modes[mode]);
 		
-		return animation_modes[mode].name;
+		assert (animation.mode == mode);
+		assert (animation.func != null);
+		
+		return animation.name;
 	}
 
 	/**
@@ -255,10 +259,12 @@ namespace Plank.Drawing
 		requires (t <= d)
 		ensures (result >= -1.0 && result <= 2.0)
 	{
-		assert (animation_modes[mode].mode == mode);
-		assert (animation_modes[mode].func != null);
+		AnimationModeMapping* animation = &(animation_modes[mode]);
 		
-		return animation_modes[mode].func (t, d);
+		assert (animation.mode == mode);
+		assert (animation.func != null);
+		
+		return animation.func (t, d);
 	}
 	
 	double linear (double t, double d)
