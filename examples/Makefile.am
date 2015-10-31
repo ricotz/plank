@@ -8,8 +8,6 @@ remote_client_VALAFLAGS = \
 	-C \
 	$(NULL)
 
-BUILT_SOURCES = remote_client_vala.stamp
-
 noinst_PROGRAMS = remote-client
 
 remote_client_CFLAGS = \
@@ -31,9 +29,10 @@ remote_client_VALASOURCES = \
 	$(NULL)
 
 nodist_remote_client_SOURCES = \
-	remote_client_vala.stamp \
 	$(remote_client_VALASOURCES:.vala=.c) \
 	$(NULL)
+
+$(remote_client_VALASOURCES:.vala=.c): remote_client_vala.stamp
 
 remote_client_vala.stamp: $(remote_client_VALASOURCES) $(top_builddir)/lib/plank.vapi Makefile
 	$(AM_V_VALA)$(VALAC) \
@@ -42,6 +41,7 @@ remote_client_vala.stamp: $(remote_client_VALASOURCES) $(top_builddir)/lib/plank
 	$(AM_V_at)touch $@
 
 CLEANFILES = \
+	remote_client_vala.stamp \
 	$(nodist_remote_client_SOURCES) \
 	$(NULL)
 
