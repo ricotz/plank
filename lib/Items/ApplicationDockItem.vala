@@ -348,7 +348,7 @@ namespace Plank.Items
 			if (App == null || WindowControl.get_num_windows (App) == 0)
 				return Animation.NONE;
 			
-			if (GLib.get_monotonic_time () - LastScrolled < 300 * 1000)
+			if (GLib.get_monotonic_time () - LastScrolled < ITEM_SCROLL_DURATION * 1000)
 				return Animation.DARKEN;
 			
 			LastScrolled = GLib.get_monotonic_time ();

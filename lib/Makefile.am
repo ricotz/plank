@@ -153,6 +153,7 @@ libplank_internal_la_LIBADD = \
 	$(NULL)
 
 libplank_internal_la_VALASOURCES = \
+	InternalConsts.vala \
 	Services/Matcher.vala \
 	Services/WindowControl.vala \
 	$(NULL)

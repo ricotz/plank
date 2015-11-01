@@ -266,7 +266,7 @@ namespace Plank
 					hide_progress = (controller.hide_manager.Hidden ? 1.0 : 0.0);
 				}
 				
-				var zoom_duration = 200 * 1000;
+				var zoom_duration = DOCK_ZOOM_DURATION * 1000;
 				var zoom_time = int64.max (0LL, frame_time - last_hovered_changed);
 				double zoom_progress;
 				if (zoom_time < zoom_duration) {
@@ -575,7 +575,7 @@ namespace Plank
 			}
 			
 			// check for and calculate scroll-animation
-			var max_scroll_time = 300 * 1000;
+			var max_scroll_time = ITEM_SCROLL_DURATION * 1000;
 			var scroll_time = int64.max (0LL, frame_time - item.LastScrolled);
 			if (scroll_time < max_scroll_time) {
 				var scroll_animation_progress = scroll_time / (double) max_scroll_time;
@@ -594,7 +594,7 @@ namespace Plank
 			}
 			
 			// check for and calculate hover-animation
-			var max_hover_time = 150 * 1000;
+			var max_hover_time = ITEM_HOVER_DURATION * 1000;
 			var hover_time = int64.max (0LL, frame_time - item.LastHovered);
 			if (hover_time < max_hover_time) {
 				var hover_animation_progress = 0.0;
@@ -687,7 +687,7 @@ namespace Plank
 			
 			// animate icon on invalid state
 			if ((item.State & ItemState.INVALID) != 0) {
-				var invalid_duration = 3000 * 1000;
+				var invalid_duration = ITEM_INVALID_DURATION * 1000;
 				var invalid_time = int64.max (0LL, frame_time - item.LastValid);
 				if (invalid_time < invalid_duration) {
 					draw_value.opacity = 0.10 + (0.90 * (Math.cos (invalid_time / (double) invalid_duration * 4.5 * Math.PI) + 1) / 2);
@@ -1035,7 +1035,7 @@ namespace Plank
 			force_frame_time_update ();
 			var now = frame_time;
 			var diff = now - last_hovered_changed;
-			var time = 150 * 1000;
+			var time = DOCK_ZOOM_DURATION * 1000;
 			
 			if (diff < time)
 				last_hovered_changed = now + (diff - time);
@@ -1085,7 +1085,7 @@ namespace Plank
 				return true;
 			}
 			
-			if (frame_time - last_hovered_changed <= 200 * 1000)
+			if (frame_time - last_hovered_changed <= DOCK_ZOOM_DURATION * 1000)
 				return true;
 			
 			if (theme.FadeOpacity == 1.0) {
@@ -1112,10 +1112,10 @@ namespace Plank
 				&& render_time - item.LastClicked <= (item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
 				return true;
 			if (item.HoveredAnimation != Animation.NONE
-				&& render_time - item.LastHovered <= 150 * 1000)
+				&& render_time - item.LastHovered <= ITEM_HOVER_DURATION * 1000)
 				return true;
 			if (item.ScrolledAnimation != Animation.NONE
-				&& render_time - item.LastScrolled <= 300 * 1000)
+				&& render_time - item.LastScrolled <= ITEM_SCROLL_DURATION * 1000)
 				return true;
 			if (render_time - item.LastActive <= theme.ActiveTime * 1000)
 				return true;
@@ -1127,7 +1127,7 @@ namespace Plank
 				return true;
 			if (render_time - item.RemoveTime <= theme.ItemMoveTime * 1000)
 				return true;
-			if (render_time - item.LastValid <= 3000 * 1000)
+			if (render_time - item.LastValid <= ITEM_INVALID_DURATION * 1000)
 				return true;
 			
 			return false;
