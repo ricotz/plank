@@ -562,9 +562,8 @@ namespace Plank
 				case Animation.NONE:
 					break;
 				case Animation.BOUNCE:
-					if (!screen_is_composited)
-						break;
-					y_offset += Math.fabs (Math.sin (2 * Math.PI * click_animation_progress) * position_manager.LaunchBounceHeight * double.min (1.0, 1.3333 * (1.0 - click_animation_progress)));
+					if (screen_is_composited)
+						y_offset += position_manager.LaunchBounceHeight * easing_bounce (click_time, max_click_time, 2);
 					break;
 				case Animation.DARKEN:
 					draw_value.darken = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
@@ -626,11 +625,10 @@ namespace Plank
 			
 			// bounce icon on urgent state
 			if (screen_is_composited && (item.State & ItemState.URGENT) != 0) {
+				var urgent_duration = theme.UrgentBounceTime * 1000;
 				var urgent_time = int64.max (0LL, frame_time - item.LastUrgent);
-				var bounce_animation_progress = urgent_time / (double) (theme.UrgentBounceTime * 1000);
-				if (bounce_animation_progress < 1.0) {
-					y_offset += Math.fabs (Math.sin (Math.PI * bounce_animation_progress) * position_manager.UrgentBounceHeight * double.min (1.0, 2.0 * (1.0 - bounce_animation_progress)));
-				}
+				if (urgent_time < urgent_duration)
+					y_offset += position_manager.UrgentBounceHeight * easing_bounce (urgent_time, urgent_duration, 1.0);
 			}
 			
 			// animate addition/removal
@@ -1150,6 +1148,14 @@ namespace Plank
 				return -1;
 			
 			return 1;
+		}
+		
+		static double easing_bounce (double t, double d, double n)
+			requires (t >= 0.0 && d > 0.0 && n >= 1.0)
+			requires (t <= d)
+		{
+			var p = t / d;
+			return Math.fabs (Math.sin (n * Math.PI * p) * double.min (1.0, (1.0 - p) * (2.0 * n) / (2.0 * n - 1.0)));
 		}
 		
 		static unowned string cairo_surface_type_to_string (Cairo.SurfaceType type)
