@@ -187,7 +187,7 @@ namespace Plank.Drawing
 		string name;
 	}
 
-	const AnimationModeMapping[] animation_modes = {
+	const AnimationModeMapping[] ANIMATION_MODES = {
 		{ AnimationMode.CUSTOM,              null, "custom" },
 
 		{ AnimationMode.LINEAR,              linear, "linear" },
@@ -227,7 +227,7 @@ namespace Plank.Drawing
 
 	EasingFunc easing_func_for_mode (AnimationMode mode)
 	{
-		AnimationModeMapping* animation = &(animation_modes[mode]);
+		AnimationModeMapping* animation = &(ANIMATION_MODES[mode]);
 		
 		assert (animation.mode == mode);
 		assert (animation.func != null);
@@ -237,7 +237,7 @@ namespace Plank.Drawing
 
 	unowned string easing_name_for_mode (AnimationMode mode)
 	{
-		AnimationModeMapping* animation = &(animation_modes[mode]);
+		AnimationModeMapping* animation = &(ANIMATION_MODES[mode]);
 		
 		assert (animation.mode == mode);
 		assert (animation.func != null);
@@ -259,7 +259,7 @@ namespace Plank.Drawing
 		requires (t <= d)
 		ensures (result >= -1.0 && result <= 2.0)
 	{
-		AnimationModeMapping* animation = &(animation_modes[mode]);
+		AnimationModeMapping* animation = &(ANIMATION_MODES[mode]);
 		
 		assert (animation.mode == mode);
 		assert (animation.func != null);
