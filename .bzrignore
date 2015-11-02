@@ -34,6 +34,8 @@ po/.intltool-merge-cache
 po/Makefile.in.in
 po/POTFILES
 po/stamp-it
+docklets/*/*.c
+docklets/*/*.stamp
 docs/*.stamp
 docs/c-doc
 docs/vala-doc
@@ -50,6 +52,7 @@ lib/*.vapi
 lib/*.pc
 lib/*.stamp
 lib/DBus/*.c
+lib/Docklets/*.c
 lib/Drawing/*.c
 lib/Factories/*.c
 lib/Services/*.c

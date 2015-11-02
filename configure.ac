@@ -117,6 +117,7 @@ PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  gthread-2.0 >= $GLIB_MIN_VERSION \
                  gio-2.0 >= $GLIB_MIN_VERSION \
                  gio-unix-2.0 >= $GLIB_MIN_VERSION \
+                 gmodule-2.0 \
                  gtk+-3.0 >= $GTK_MIN_VERSION \
                  gdk-x11-3.0 >= $GTK_MIN_VERSION \
                  gdk-pixbuf-2.0 >= $GDK_PIXBUF_MIN_VERSION \
@@ -127,6 +128,7 @@ PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
 PLANK_CORE_OPTIONAL_PKGS=""
 
 PLANK_CORE_VALA_PKGS="--pkg gio-unix-2.0 \
+                      --pkg gmodule-2.0 \
                       --pkg gtk+-3.0 \
                       --pkg gdk-x11-3.0 \
                       --pkg gdk-pixbuf-2.0 \
@@ -137,6 +139,10 @@ PLANK_CORE_VALA_PKGS="--pkg gio-unix-2.0 \
                       --pkg x11"
 
 VALAFLAGS_CORE="--thread"
+
+# Docklets
+DOCKLET_LDFLAGS="-module -avoid-version"
+AC_SUBST([DOCKLET_LDFLAGS])
 
 # -----------------------------------------------------------
 # GLib Resources
@@ -392,6 +398,11 @@ lib/plank.deps
 lib/plank.pc
 lib/Version.vala
 src/Makefile
+docklets/Makefile
+docklets/Clippy/Makefile
+docklets/Clock/Makefile
+docklets/Desktop/Makefile
+docklets/Trash/Makefile
 docs/Makefile
 po/Makefile.in
 tests/Makefile

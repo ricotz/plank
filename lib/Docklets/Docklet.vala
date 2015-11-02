@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
+//  Copyright (C) 2011 Robert Dyer
 //
 //  This file is part of Plank.
 //
@@ -17,24 +17,20 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-[CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "config.h")]
-namespace Build
+namespace Docky
 {
-	public const string GETTEXT_PACKAGE;
-	public const string PACKAGE;
-	public const string PACKAGE_NAME;
-
-	public const string DATADIR;
-	public const string PKGDATADIR;
-	public const string DOCKLETSDIR;
-
-	public const string RELEASE_NAME;
-
-	public const string VERSION;
-	public const string VERSION_INFO;
-
-	public const uint VERSION_MAJOR;
-	public const uint VERSION_MINOR;
-	public const uint VERSION_MICRO;
-	public const uint VERSION_NANO;
+	/**
+	 * The base class for all docklets.
+	 */
+	public abstract class Docklet : Object
+	{
+		public string name { get; construct; }
+		
+		public virtual bool supports_launcher (string launcher)
+		{
+			return (launcher == "docklet://%s".printf (name));
+		}
+		
+		public abstract Plank.Items.DockElement make_element (string launcher, GLib.File file);
+	}
 }

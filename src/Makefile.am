@@ -4,6 +4,7 @@ plank_VALAFLAGS = \
 	$(COVERAGE_VALAFLAGS) \
 	$(PLANK_CORE_VALAFLAGS) \
 	$(top_builddir)/lib/plank.vapi \
+	$(top_builddir)/lib/plank-docklets.vapi \
 	--vapidir $(top_srcdir)/vapi \
 	$(top_srcdir)/vapi/config.vapi \
 	-C \
@@ -25,6 +26,11 @@ plank_LDADD = \
 	$(COVERAGE_LDFLAGS) \
 	$(PLANK_CORE_LIBS) \
 	$(top_builddir)/lib/libplank.la \
+	$(top_builddir)/lib/libplank-docklets.la \
+	$(NULL)
+
+plank_LDFLAGS = \
+	-L$(pkglibdir) \
 	$(NULL)
 
 plank_VALASOURCES = \
@@ -37,7 +43,7 @@ nodist_plank_SOURCES = \
 
 $(plank_VALASOURCES:.vala=.c): plank_vala.stamp
 
-plank_vala.stamp: $(plank_VALASOURCES) $(top_builddir)/lib/plank.vapi Makefile
+plank_vala.stamp: $(plank_VALASOURCES) $(top_builddir)/lib/plank.vapi $(top_builddir)/lib/plank-docklets.vapi Makefile
 	$(AM_V_VALA)$(VALAC) \
 		$(plank_VALAFLAGS) \
 		$(filter %.vala %.c,$^)

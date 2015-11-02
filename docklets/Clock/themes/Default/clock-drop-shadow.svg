@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="100"
+   height="100"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45pre1"
+   version="1.0"
+   sodipodi:docbase="/home/mirco/src/cairo-clock-0.3.2/themes/default"
+   sodipodi:docname="clock-drop-shadow.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   sodipodi:modified="true">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient2202">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop2204" />
+      <stop
+         id="stop2200"
+         offset="0.86259544"
+         style="stop-color:#000000;stop-opacity:0.49803922;" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop2206" />
+    </linearGradient>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2202"
+       id="radialGradient2208"
+       cx="29.116467"
+       cy="22.941767"
+       fx="29.116467"
+       fy="22.941767"
+       r="19.174698"
+       gradientTransform="matrix(0.944994,3.007559e-16,-4.476419e-16,0.65058,1.601592,8.016313)"
+       gradientUnits="userSpaceOnUse" />
+    <filter
+       inkscape:collect="always"
+       id="filter3270">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.7700384"
+         id="feGaussianBlur3272" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="4.98"
+     inkscape:cx="54.790264"
+     inkscape:cy="39.317609"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1280"
+     inkscape:window-height="800"
+     inkscape:window-x="3"
+     inkscape:window-y="50">
+    <sodipodi:guide
+       orientation="horizontal"
+       position="50"
+       id="guide1307" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="50"
+       id="guide1309" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="100"
+       id="guide1311" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="0"
+       id="guide1313" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="100"
+       id="guide1315" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="0"
+       id="guide1317" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="90.060241"
+       id="guide1319" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="10.040161"
+       id="guide1321" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="90.060241"
+       id="guide1323" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="10.040161"
+       id="guide1325" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       sodipodi:type="arc"
+       style="opacity:0.75;fill:url(#radialGradient2208);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter3270)"
+       id="path1327"
+       sodipodi:cx="29.116467"
+       sodipodi:cy="22.941767"
+       sodipodi:rx="18.674698"
+       sodipodi:ry="12.700803"
+       d="M 47.791164 22.941767 A 18.674698 12.700803 0 1 1  10.441769,22.941767 A 18.674698 12.700803 0 1 1  47.791164 22.941767 z"
+       transform="matrix(2.570433,0,0,3.77945,-22.84399,-34.70931)" />
+  </g>
+</svg>

@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
+//  Copyright (C) 2011 Robert Dyer
 //
 //  This file is part of Plank.
 //
@@ -17,24 +17,18 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-[CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "config.h")]
-namespace Build
+public static void docklet_init (Docky.DockletManager manager)
 {
-	public const string GETTEXT_PACKAGE;
-	public const string PACKAGE;
-	public const string PACKAGE_NAME;
+	manager.register_docklet ("Trash", typeof (Docky.TrashDocklet));
+}
 
-	public const string DATADIR;
-	public const string PKGDATADIR;
-	public const string DOCKLETSDIR;
-
-	public const string RELEASE_NAME;
-
-	public const string VERSION;
-	public const string VERSION_INFO;
-
-	public const uint VERSION_MAJOR;
-	public const uint VERSION_MINOR;
-	public const uint VERSION_MICRO;
-	public const uint VERSION_NANO;
+namespace Docky
+{
+	public class TrashDocklet : Docklet
+	{
+		public override Plank.Items.DockElement make_element (string launcher, GLib.File file)
+		{
+			return new TrashDockItem.with_dockitem_file (file);
+		}
+	}
 }

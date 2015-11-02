@@ -10,4 +10,5 @@ AM_CPPFLAGS = \
 	-DPKGDATADIR=\"$(pkgdatadir)\" \
 	-DLIBDIR=\"$(libdir)\" \
 	-DPKGLIBDIR=\"$(pkglibdir)\" \
+	-DDOCKLETSDIR=\"$(pkglibdir)/docklets\" \
 	$(NULL)

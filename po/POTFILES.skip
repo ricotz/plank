@@ -1,3 +1,7 @@
+docklets/Clippy/ClippyDockItem.c
+docklets/Clock/ClockDockItem.c
+docklets/Desktop/DesktopDockItem.c
+docklets/Trash/TrashDockItem.c
 lib/Items/ApplicationDockItem.c
 lib/Items/FileDockItem.c
 lib/Items/PlaceholderDockItem.c

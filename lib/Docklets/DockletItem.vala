@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2011 Robert Dyer, Rico Tzschichholz
+//  Copyright (C) 2011 Robert Dyer
 //
 //  This file is part of Plank.
 //
@@ -17,24 +17,15 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-[CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "config.h")]
-namespace Build
+using Plank.Items;
+
+namespace Docky
 {
-	public const string GETTEXT_PACKAGE;
-	public const string PACKAGE;
-	public const string PACKAGE_NAME;
-
-	public const string DATADIR;
-	public const string PKGDATADIR;
-	public const string DOCKLETSDIR;
-
-	public const string RELEASE_NAME;
-
-	public const string VERSION;
-	public const string VERSION_INFO;
-
-	public const uint VERSION_MAJOR;
-	public const uint VERSION_MINOR;
-	public const uint VERSION_MICRO;
-	public const uint VERSION_NANO;
+	public abstract class DockletItem : DockItem
+	{
+		public override bool is_valid ()
+		{
+			return true;
+		}
+	}
 }
