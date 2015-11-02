@@ -167,8 +167,6 @@ namespace Plank
 		{
 			static_dock_region = {};
 			draw_values = new Gee.HashMap<DockElement, DockItemDrawValue> ();
-			
-			controller.prefs.notify.connect (prefs_changed);
 		}
 		
 		/**
@@ -179,6 +177,7 @@ namespace Plank
 		{
 			unowned Gdk.Screen screen = controller.window.get_screen ();
 			
+			controller.prefs.notify.connect (prefs_changed);
 			screen.monitors_changed.connect (screen_changed);
 			screen.size_changed.connect (screen_changed);
 			screen.composited_changed.connect (screen_composited_changed);

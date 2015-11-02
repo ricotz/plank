@@ -24,8 +24,20 @@ namespace Plank
 	/**
 	 * Contains all preferences for docks.
 	 */
-	public class DockPreferences : Preferences
+	public class DockPreferences : Plank.Services.Settings
 	{
+		static GLib.Settings create_settings (string schema_id, string? path = null)
+		{
+			//FIXME Only to make it run/work uninstalled from top_builddir
+			Environment.set_variable ("GSETTINGS_SCHEMA_DIR", Environment.get_current_dir () + "/data", false);
+			
+			var schema = GLib.SettingsSchemaSource.get_default ().lookup (schema_id, true);
+			if (schema == null)
+				error ("GSettingsSchema '%s' not found", schema_id);
+			
+			return new GLib.Settings.full (schema, null, path);
+		}
+		
 		public const int MIN_ICON_SIZE = 24;
 		public const int MAX_ICON_SIZE = 128;
 		
@@ -50,8 +62,8 @@ namespace Plank
 		[Description(nick = "monitor", blurb = "The plug-name of the monitor for the dock to show on (e.g. DVI-I-1, HDMI1, LVDS1). Leave this empty to keep on the primary monitor.")]
 		public string Monitor { get; set; }
 		
-		[Description(nick = "dock-items", blurb = "List of *.dockitem files on this dock. DO NOT MODIFY")]
-		public string DockItems { get; set; }
+		[Description(nick = "dock-items", blurb = "Array of the dockitem-files on this dock. DO NOT MODIFY")]
+		public string[] DockItems { get; set; }
 		
 		[Description(nick = "position", blurb = "The position for the dock on the monitor.  If 0, left.  If 1, right.  If 2, top.  If 3, bottom.")]
 		public Gtk.PositionType Position { get; set; }
@@ -92,57 +104,13 @@ namespace Plank
 		/**
 		 * {@inheritDoc}
 		 */
-		public DockPreferences ()
+		public DockPreferences (string name)
 		{
-			base ();
-		}
-		
-		/**
-		 * {@inheritDoc}
-		 */
-		public DockPreferences.with_file (File file)
-		{
-			base.with_file (file);
-		}
-		
-		/**
-		 * {@inheritDoc}
-		 */
-		public DockPreferences.with_filename (string filename)
-		{
-			base.with_filename (filename);
+			Object (settings: create_settings ("net.launchpad.plank.dock.settings", "/net/launchpad/plank/docks/%s/".printf (name)));
 		}
 		
 		~DockPreferences ()
 		{
-		}
-		
-		/**
-		 * {@inheritDoc}
-		 */
-		protected override void reset_properties ()
-		{
-			Logger.verbose ("DockPreferences.reset_properties ()");
-			
-			CurrentWorkspaceOnly = false;
-			IconSize = 48;
-			HideMode = HideType.INTELLIGENT;
-			UnhideDelay = 0;
-			HideDelay = 0;
-			Monitor = "";
-			DockItems = "";
-			Position = Gtk.PositionType.BOTTOM;
-			Offset = 0;
-			Theme = Plank.Drawing.Theme.DEFAULT_NAME;
-			Alignment = Gtk.Align.CENTER;
-			ItemsAlignment = Gtk.Align.CENTER;
-			LockItems = false;
-			PressureReveal = false;
-			PinnedOnly = false;
-			AutoPinning = true;
-			ShowDockItem = true;
-			ZoomEnabled = false;
-			ZoomPercent = 150;
 		}
 		
 		/**
@@ -179,9 +147,6 @@ namespace Plank
 		protected override void verify (string prop)
 		{
 			switch (prop) {
-			case "CurrentWorkspaceOnly":
-				break;
-			
 			case "IconSize":
 				if (IconSize < MIN_ICON_SIZE)
 					IconSize = MIN_ICON_SIZE;
@@ -191,70 +156,11 @@ namespace Plank
 					IconSize -= 1;
 				break;
 			
-			case "HideMode":
-				break;
-			
-			case "UnhideDelay":
-				break;
-			
-			case "HideDelay":
-				break;
-			
-			case "Monitor":
-				// TODO Try to transition old setting
-				if (Monitor == "-1")
-					Monitor = "";
-				break;
-			
-			case "DockItems":
-				break;
-			
-			case "Position":
-				break;
-			
-			case "Offset":
-				if (Offset < -100)
-					Offset = -100;
-				else if (Offset > 100)
-					Offset = 100;
-				break;
-			
 			case "Theme":
 				if (Theme == "")
 					Theme = Plank.Drawing.Theme.DEFAULT_NAME;
 				else if (Theme.contains ("/"))
 					Theme = Theme.replace ("/", "");
-				break;
-			
-			case "Alignment":
-				break;
-			
-			case "ItemsAlignment":
-				break;
-			
-			case "LockItems":
-				break;
-			
-			case "PressureReveal":
-				break;
-			
-			case "PinnedOnly":
-				break;
-			
-			case "AutoPinning":
-				break;
-			
-			case "ShowDockItem":
-				break;
-			
-			case "ZoomEnabled":
-				break;
-			
-			case "ZoomPercent":
-				if (ZoomPercent < MIN_ICON_ZOOM)
-					ZoomPercent = MIN_ICON_ZOOM;
-				else if (ZoomPercent > MAX_ICON_ZOOM)
-					ZoomPercent = MAX_ICON_ZOOM;
 				break;
 			}
 		}

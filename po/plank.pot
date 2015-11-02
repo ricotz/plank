@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-16 13:47+0200\n"
+"POT-Creation-Date: 2015-09-15 13:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,100 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:1
+msgid "The alignment for the dock on the monitor's edge."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:2
+msgid "fill, start, end, center"
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:3
+msgid "Whether to automatically pin an application if it seems useful to do."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:4
+msgid "Whether to show only windows of the current workspace."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:5
+msgid "Array of dockitem-files on this dock. DO NOT MODIFY"
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:6
+msgid "Time (in ms) to wait before hiding the dock."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:7
+msgid "Hidemode of the dock."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:8
+msgid "none, intelligent, auto"
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:9
+msgid "The size of dock icons (in pixels)."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:10
+msgid "The alignment of the items in this dock."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:11
+msgid "Whether to prevent drag'n'drop actions and lock items on the dock."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:12
+msgid ""
+"The plug-name of the monitor for the dock to show on (e.g. DVI-I-1, HDMI1, "
+"LVDS1). Leave this empty to keep on the primary monitor."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:13
+msgid "The dock's position offset from center (in percent)."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:14
+msgid ""
+"Whether to show only pinned applications. Useful for running more then one "
+"dock."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:15
+msgid "The position for the dock on the monitor."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:16
+msgid "left, right, top, bottom"
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:17
+msgid ""
+"Whether to use pressure-based revealing of the dock if the support is "
+"available."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:18
+msgid "Whether to show the item for the dock itself."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:19
+msgid "The name of the dock's theme to use."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:20
+msgid "Time (in ms) to wait before unhiding the dock."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:21
+msgid "Whether the dock will zoom when hovered."
+msgstr ""
+
+#: ../data/net.launchpad.plank.gschema.xml.in.in.h:22
+msgid "The dock's icon-zoom (in percent)."
+msgstr ""
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -176,28 +270,28 @@ msgstr ""
 msgid "Behaviour"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:442
-#: ../lib/Items/FileDockItem.vala:326 ../lib/Items/FileDockItem.vala:344
+#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/FileDockItem.vala:328 ../lib/Items/FileDockItem.vala:346
 msgid "_Keep in Dock"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:450
+#: ../lib/Items/ApplicationDockItem.vala:462
 msgid "_Close All"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:450
+#: ../lib/Items/ApplicationDockItem.vala:462
 msgid "_Close"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:331
+#: ../lib/Items/FileDockItem.vala:333
 msgid "_Open in File Browser"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:349
+#: ../lib/Items/FileDockItem.vala:351
 msgid "_Open"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:353
+#: ../lib/Items/FileDockItem.vala:355
 msgid "Open Containing _Folder"
 msgstr ""
 

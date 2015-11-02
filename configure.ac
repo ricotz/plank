@@ -63,6 +63,8 @@ PKG_PROG_PKG_CONFIG([0.21])
 
 LT_LIB_M
 
+GLIB_GSETTINGS
+
 AC_SUBST([CFLAGS])
 AC_SUBST([CPPFLAGS])
 AC_SUBST([LDFLAGS])
@@ -390,6 +392,7 @@ IT_PROG_INTLTOOL([0.35.0])
 AC_CONFIG_FILES([
 Makefile
 data/Makefile
+data/net.launchpad.plank.gschema.xml.in
 data/apport/Makefile
 data/icons/Makefile
 data/themes/Makefile

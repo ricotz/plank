@@ -157,7 +157,7 @@ namespace Plank.Factories
 		 * @param ordering a ";;"-separated string to be used to order the loaded DockItems
 		 * @return the new List of DockItems
 		 */
-		public Gee.ArrayList<DockItem> load_items (GLib.File source_dir, string? ordering = null)
+		public Gee.ArrayList<DockItem> load_items (GLib.File source_dir, string[]? ordering = null)
 		{
 			var result = new Gee.ArrayList<DockItem> ();
 			
@@ -204,7 +204,7 @@ namespace Plank.Factories
 			var new_items = new Gee.ArrayList<DockItem> ();
 			
 			foreach (var item in result) {
-				if (ordering.contains (item.DockItemFilename))
+				if (item.DockItemFilename in ordering)
 					existing_items.add (item);
 				else
 					new_items.add (item);
@@ -213,8 +213,7 @@ namespace Plank.Factories
 			result.clear ();
 			
 			// add saved dockitems based on their serialized order
-			var dockitems = ordering.split (";;");
-			foreach (unowned string dockitem in dockitems)
+			foreach (unowned string dockitem in ordering)
 				foreach (var item in existing_items)
 					if (dockitem == item.DockItemFilename) {
 						result.add (item);

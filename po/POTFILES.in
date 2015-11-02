@@ -1,3 +1,4 @@
+data/net.launchpad.plank.gschema.xml.in.in
 data/plank.appdata.xml.in
 data/plank.desktop.in
 [type: gettext/glade]data/ui/preferences.ui

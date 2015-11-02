@@ -1,0 +1,132 @@
+<schemalist>
+	<enum id="PlankHideType">
+		<value nick="none" value="0"/>
+		<value nick="intelligent" value="1"/>
+		<value nick="auto" value="2"/>
+		<value nick="dodge-maximized" value="3"/>
+		<value nick="window-dodge" value="4"/>
+		<value nick="dodge-active" value="5"/>
+	</enum>
+
+	<enum id="GtkAlignType">
+		<value nick="fill" value="0"/>
+		<value nick="start" value="1"/>
+		<value nick="end" value="2"/>
+		<value nick="center" value="3"/>
+	</enum>
+
+	<enum id="GtkPositionType">
+		<value nick="left" value="0"/>
+		<value nick="right" value="1"/>
+		<value nick="top" value="2"/>
+		<value nick="bottom" value="3"/>
+	</enum>
+
+
+	<schema id="net.launchpad.plank" path="/net/launchpad/plank/">
+		<child name="docks" schema="net.launchpad.plank.dock.settings"/>
+	</schema>
+
+	<schema id="net.launchpad.plank.dock.settings" gettext-domain="@GETTEXT_PACKAGE@">
+		<key name="alignment" enum='GtkAlignType'>
+			<default>'center'</default>
+			<_summary>The alignment for the dock on the monitor's edge.</_summary>
+			<_description>fill, start, end, center</_description>
+		</key>
+		<key name="auto-pinning" type="b">
+			<default>true</default>
+			<_summary>Whether to automatically pin an application if it seems useful to do.</_summary>
+			<_description></_description>
+		</key>
+		<key name="current-workspace-only" type="b">
+			<default>false</default>
+			<_summary>Whether to show only windows of the current workspace.</_summary>
+			<_description></_description>
+		</key>
+		<key name="dock-items" type="as">
+			<default>[]</default>
+			<_summary>Array of dockitem-files on this dock. DO NOT MODIFY</_summary>
+			<_description></_description>
+		</key>
+		<key name="hide-delay" type="i">
+			<range min="0"/>
+			<default>0</default>
+			<_summary>Time (in ms) to wait before hiding the dock.</_summary>
+			<_description></_description>
+		</key>
+		<key name="hide-mode" enum='PlankHideType'>
+			<default>'intelligent'</default>
+			<_summary>Hidemode of the dock.</_summary>
+			<_description>none, intelligent, auto</_description>
+		</key>
+		<key name="icon-size" type="i">
+			<range min="24" max="128"/>
+			<default>48</default>
+			<_summary>The size of dock icons (in pixels).</_summary>
+			<_description></_description>
+		</key>
+		<key name="items-alignment" enum='GtkAlignType'>
+			<default>'center'</default>
+			<_summary>The alignment of the items in this dock.</_summary>
+			<_description>fill, start, end, center</_description>
+		</key>
+		<key name="lock-items" type="b">
+			<default>false</default>
+			<_summary>Whether to prevent drag'n'drop actions and lock items on the dock.</_summary>
+			<_description></_description>
+		</key>
+		<key name="monitor" type="s">
+			<default>''</default>
+			<_summary>The plug-name of the monitor for the dock to show on (e.g. DVI-I-1, HDMI1, LVDS1). Leave this empty to keep on the primary monitor.</_summary>
+			<_description></_description>
+		</key>
+		<key name="offset" type="i">
+			<range min="-100" max="100"/>
+			<default>0</default>
+			<_summary>The dock's position offset from center (in percent).</_summary>
+			<_description></_description>
+		</key>
+		<key name="pinned-only" type="b">
+			<default>false</default>
+			<_summary>Whether to show only pinned applications. Useful for running more then one dock.</_summary>
+			<_description></_description>
+		</key>
+		<key name="position" enum='GtkPositionType'>
+			<default>'bottom'</default>
+			<_summary>The position for the dock on the monitor.</_summary>
+			<_description>left, right, top, bottom</_description>
+		</key>
+		<key name="pressure-reveal" type="b">
+			<default>false</default>
+			<_summary>Whether to use pressure-based revealing of the dock if the support is available.</_summary>
+			<_description></_description>
+		</key>
+		<key name="show-dock-item" type="b">
+			<default>true</default>
+			<_summary>Whether to show the item for the dock itself.</_summary>
+			<_description></_description>
+		</key>
+		<key name="theme" type="s">
+			<default>'Default'</default>
+			<_summary>The name of the dock's theme to use.</_summary>
+			<_description></_description>
+		</key>
+		<key name="unhide-delay" type="i">
+			<range min="0"/>
+			<default>0</default>
+			<_summary>Time (in ms) to wait before unhiding the dock.</_summary>
+			<_description></_description>
+		</key>
+		<key name="zoom-enabled" type="b">
+			<default>false</default>
+			<_summary>Whether the dock will zoom when hovered.</_summary>
+			<_description></_description>
+		</key>
+		<key name="zoom-percent" type="i">
+			<range min="100" max="200"/>
+			<default>150</default>
+			<_summary>The dock's icon-zoom (in percent).</_summary>
+			<_description></_description>
+		</key>
+	</schema>
+</schemalist>

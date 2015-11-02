@@ -90,7 +90,7 @@ EXTRA_DIST = \
 	data \
 	$(NULL)
 
-TESTS_ENVIRONMENT = HOME=$(abs_builddir)/home
+TESTS_ENVIRONMENT = HOME=$(abs_builddir)/home GSETTINGS_SCHEMA_DIR=$(abs_top_builddir)/data
 
 if HAVE_HEADLESS_TESTS
 TESTS_ENVIRONMENT += $(XVFB_RUN) --auto-servernum --server-args="-screen 0 1280x1024x24" $(DBUS_LAUNCH)

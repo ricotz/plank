@@ -277,11 +277,11 @@ namespace Plank.Items
 		/**
 		 * Serializes the dockitem-filenames
 		 *
-		 * @return string containing all filesnames separated by ';;'
+		 * @return a array of string containing all filesnames
 		 */
-		public string get_item_list_string ()
+		public string[] get_item_list_string ()
 		{
-			string? item_list = null;
+			var item_list = new Gee.ArrayList<string> ();
 			foreach (var element in internal_elements) {
 				unowned DockItem? item = (element as DockItem);
 				if (item == null || (item is TransientDockItem))
@@ -289,17 +289,11 @@ namespace Plank.Items
 				
 				var dock_item_filename = item.DockItemFilename;
 				if (dock_item_filename.length > 0) {
-					if (item_list != null)
-						item_list = "%s;;%s".printf (item_list, dock_item_filename);
-					else
-						item_list = (owned) dock_item_filename;
+					item_list.add ((owned) dock_item_filename);
 				}
 			}
 			
-			if (item_list == null)
-				return "";
-			
-			return item_list;
+			return item_list.to_array ();
 		}
 		
 		protected virtual void app_opened (Bamf.Application app)

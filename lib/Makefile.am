@@ -95,6 +95,7 @@ libplank_la_VALASOURCES = \
 	Services/Logger.vala \
 	Services/Paths.vala \
 	Services/Preferences.vala \
+	Services/Settings.vala \
 	Services/System.vala \
 	Services/Worker.vala \
 	Widgets/CompositedWindow.vala \

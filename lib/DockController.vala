@@ -74,15 +74,14 @@ namespace Plank
 		 *
 		 * @param config_folder the base-folder to load settings from and save them to
 		 */
-		public DockController (File config_folder)
+		public DockController (string dock_name, File config_folder)
 		{
 			// Make sure our config-directory exists
 			Paths.ensure_directory_exists (config_folder);
 			
 			Logger.verbose ("DockController (config_folder = %s)", config_folder.get_path ());
 			
-			Object (config_folder : config_folder,
-				prefs : new DockPreferences.with_file (config_folder.get_child ("settings")));
+			Object (config_folder : config_folder, prefs : new DockPreferences (dock_name));
 		}
 		
 		construct

@@ -59,7 +59,7 @@ namespace Plank.Tests
 		provider.add (item);
 		assert (item.ref_count > 1);
 
-		controller = new DockController (config_folder);
+		controller = new DockController (TEST_DOCK_NAME, config_folder);
 		controller.add (provider);
 		controller.initialize ();
 		
@@ -88,7 +88,7 @@ namespace Plank.Tests
 		DockController controller;
 		
 		File config_folder = Paths.AppConfigFolder.get_child (TEST_DOCK_NAME);
-		controller = new DockController (config_folder);
+		controller = new DockController (TEST_DOCK_NAME, config_folder);
 		controller.initialize ();
 	}
 	

@@ -299,7 +299,7 @@ namespace Plank.Factories
 		 */
 		protected virtual void create_controller ()
 		{
-			controller = new DockController (Paths.AppConfigFolder.get_child (dock_name));
+			controller = new DockController (dock_name, Paths.AppConfigFolder.get_child (dock_name));
 			controller.initialize ();
 			
 			add_window (controller.window);
