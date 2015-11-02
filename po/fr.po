@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-10-08 19:57+0000\n"
-"PO-Revision-Date: 2015-08-11 09:50+0000\n"
-"Last-Translator: Maxime Gauduin <alucryd@archlinux.org>\n"
+"POT-Creation-Date: 2015-11-01 21:34+0000\n"
+"PO-Revision-Date: 2015-10-17 17:13+0000\n"
+"Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-10-09 05:23+0000\n"
-"X-Generator: Launchpad (build 17802)\n"
+"X-Launchpad-Export-Date: 2015-11-02 05:20+0000\n"
+"X-Generator: Launchpad (build 17838)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -46,11 +46,11 @@ msgstr "Plank. Stupidement simple."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr "Thème:"
+msgstr "Thème :"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr "Position:"
+msgstr "Position :"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
@@ -70,7 +70,7 @@ msgstr "Bas"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr "Alignement:"
+msgstr "Alignement :"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
@@ -98,15 +98,15 @@ msgstr "Décalage par rapport au milieu du bord de l'écran en pourcentage"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Alignement des icônes:"
+msgstr "Alignement des icônes :"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr "Taille d'icône:"
+msgstr "Taille de l'icône :"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr "Zoom sur icône:"
+msgstr "Zoom sur icône :"
 
 #: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:95
 msgid "Appearance"
@@ -138,7 +138,7 @@ msgstr "Masquer le dock"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr "Délai avant masquage:"
+msgstr "Délai avant masquage :"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
@@ -146,7 +146,7 @@ msgstr "Délai en ms précédant le masquage du dock"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr "Délai avant apparition:"
+msgstr "Délai avant apparition :"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
@@ -154,7 +154,7 @@ msgstr "Délai en ms avant d'afficher le dock"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr "Pression d'activation:"
+msgstr "Pression d'activation :"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
@@ -162,23 +162,23 @@ msgstr "Gestion des éléments"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr "Afficher les éléments non épinglés"
+msgstr "Afficher les éléments non épinglés :"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr "Contraindre à l'espace de travail:"
+msgstr "Restreindre à l'espace de travail :"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr "Verrouiller les icônes:"
+msgstr "Verrouiller les icônes :"
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Automatic Pinning:"
-msgstr "Épinglage automatique:"
+msgstr "Épinglage automatique :"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Show Item for Dock:"
-msgstr "Afficher l'icône du dock:"
+msgstr "Afficher l'icône du dock :"
 
 #: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
 msgid "Behaviour"
