@@ -20,10 +20,6 @@
 namespace Plank
 {
 	/**
-<<<<<<< TREE
-=======
-	public delegate Surface DrawItemFunc (DockItem item, Surface source, Surface? target);
->>>>>>> MERGE-SOURCE
 	 * The base class for all dock items.
 	 */
 	public abstract class DockItem : DockElement
