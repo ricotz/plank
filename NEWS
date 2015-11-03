@@ -2,6 +2,16 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.11.0 "..." (201X-XX-XX)
+===============================================================================
+ * Use non-linear transition in/out of the "zoom" state
+ * Add internal docklets support (Clippy, Clock, Desktop, Trash) (LP: #731915)
+ * Use GSettings for dock settings (themes and dockitem files remain at their
+   location) (LP: #994007)
+ * Consolidate public API (breaks old themes and dockitem files, those are
+   transitioned accordingly if possible)
+ * Update translations
+
 0.10.1 "Bartonschmeer" (2015-10-09)
 ===============================================================================
  * Require valac >= 0.24.0 as actually needed
