@@ -17,11 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Factories;
-using Plank.Services;
-using Plank.Services.Windows;
-
-namespace Plank.Items
+namespace Plank
 {
 	/**
 	 * A container and controller class for managing application dock items on a dock.

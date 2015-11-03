@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Drawing
+namespace Plank
 {
 	/**
 	 * A dock surface is a wrapper class for a {@link Cairo.Surface}.
@@ -69,11 +69,11 @@ namespace Plank.Drawing
 		}
 
 		/**
-		 * Creates a new dock surface compatible with an existing {@link Drawing.DockSurface}.
+		 * Creates a new dock surface compatible with an existing {@link DockSurface}.
 		 *
 		 * @param width width of the new surface
 		 * @param height height of the new surface
-		 * @param model existing {@link Drawing.DockSurface} to be similar to
+		 * @param model existing {@link DockSurface} to be similar to
 		 */
 		public DockSurface.with_dock_surface (int width, int height, DockSurface model)
 		{
@@ -219,7 +219,7 @@ namespace Plank.Drawing
 		 *
 		 * @return the average color of the surface
 		 */
-		public Drawing.Color average_color ()
+		public Color average_color ()
 		{
 			return DrawingService.average_color (Gdk.pixbuf_get_from_surface (Internal, 0, 0, Width, Height));
 		}

@@ -17,12 +17,12 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Items
+namespace Plank
 {
 	/**
 	 * What type of animation to perform when an item is or was interacted with.
 	 */
-	public enum Animation
+	public enum AnimationType
 	{
 		/**
 		 * No animation.

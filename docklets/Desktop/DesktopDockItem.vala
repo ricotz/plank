@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Items;
+using Plank;
 
 namespace Docky
 {
@@ -41,15 +41,15 @@ namespace Docky
 		{
 		}
 		
-		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
+		protected override AnimationType on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
 		{
 			if (button == PopupButton.LEFT) {
 				unowned Wnck.Screen screen = Wnck.Screen.get_default ();
 				screen.toggle_showing_desktop (!screen.get_showing_desktop ());
-				return Animation.BOUNCE;
+				return AnimationType.BOUNCE;
 			}
 			
-			return Animation.NONE;
+			return AnimationType.NONE;
 		}
 	}
 }

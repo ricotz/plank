@@ -17,9 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Drawing;
-
-namespace Plank.Items
+namespace Plank
 {
 	/**
 	 * The base class for all dock elements.
@@ -63,17 +61,17 @@ namespace Plank.Items
 		/**
 		 * The animation to show for the item's last click event.
 		 */
-		public Animation ClickedAnimation { get; protected set; default = Animation.NONE; }
+		public AnimationType ClickedAnimation { get; protected set; default = AnimationType.NONE; }
 		
 		/**
 		 * The animation to show for the item's last hover event.
 		 */
-		public Animation HoveredAnimation { get; protected set; default = Animation.NONE; }
+		public AnimationType HoveredAnimation { get; protected set; default = AnimationType.NONE; }
 		
 		/**
 		 * The animation to show for the item's last scroll event.
 		 */
-		public Animation ScrolledAnimation { get; protected set; default = Animation.NONE; }
+		public AnimationType ScrolledAnimation { get; protected set; default = AnimationType.NONE; }
 		
 		/**
 		 * The time the item was added to the dock.
@@ -141,9 +139,9 @@ namespace Plank.Items
 		 * @param event_time the timestamp of the event triggering this action
 		 * @return which type of animation to trigger
 		 */
-		protected virtual Animation on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
+		protected virtual AnimationType on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
 		{
-			return Animation.NONE;
+			return AnimationType.NONE;
 		}
 		
 		/**
@@ -160,9 +158,9 @@ namespace Plank.Items
 		 *
 		 * @return which type of animation to trigger
 		 */
-		protected virtual Animation on_hovered ()
+		protected virtual AnimationType on_hovered ()
 		{
-			return Animation.LIGHTEN;
+			return AnimationType.LIGHTEN;
  		}
 		
 		/**
@@ -185,10 +183,10 @@ namespace Plank.Items
 		 * @param event_time the timestamp of the event triggering this action
 		 * @return which type of animation to trigger
 		 */
-		protected virtual Animation on_scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod, uint32 event_time)
+		protected virtual AnimationType on_scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod, uint32 event_time)
 		{
 			LastScrolled = GLib.get_monotonic_time ();
-			return Animation.NONE;
+			return AnimationType.NONE;
 		}
 		
 		/**

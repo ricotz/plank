@@ -28,7 +28,7 @@ namespace Docky
 	
 	public class DesktopDocklet : Docklet
 	{
-		public override Plank.Items.DockElement make_element (string launcher, GLib.File file)
+		public override Plank.DockElement make_element (string launcher, GLib.File file)
 		{
 			return new DesktopDockItem.with_dockitem_file (file);
 		}

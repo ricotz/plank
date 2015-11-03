@@ -17,10 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Drawing;
-using Plank.Items;
-using Plank.Services;
-using Plank.Widgets;
+using Plank;
 
 namespace Docky
 {
@@ -110,14 +107,14 @@ namespace Docky
 			return 0U;
 		}
 		
-		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
+		protected override AnimationType on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
 		{
 			if (button == PopupButton.LEFT) {
 				open_trash ();
-				return Animation.BOUNCE;
+				return AnimationType.BOUNCE;
 			}
 			
-			return Animation.NONE;
+			return AnimationType.NONE;
 		}
 		
 		protected override bool can_accept_drop (Gee.ArrayList<string> uris)

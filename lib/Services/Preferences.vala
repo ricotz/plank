@@ -17,30 +17,28 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Drawing;
-
-namespace Plank.Services
+namespace Plank
 {
 	/**
 	 * This interface is used by objects that need to be serialized in a Preferences.
 	 * The object must have a string representation and provide these methods to
 	 * translate between the string and object representations.
 	 */
-	public interface PrefsSerializable : GLib.Object
+	public interface Serializable : GLib.Object
 	{
 		/**
 		 * Serializes the object into a string representation.
 		 *
 		 * @return the string representation of the object
 		 */
-		public abstract string prefs_serialize ();
+		public abstract string serialize ();
 		
 		/**
 		 * De-serializes the object from a string representation.
 		 *
 		 * @param s the string representation of the object
 		 */
-		public abstract void prefs_deserialize (string s);
+		public abstract void deserialize (string s);
 	}
 	
 	/**
@@ -404,21 +402,21 @@ namespace Plank.Services
 							if (old_val == new_val)
 								continue;
 							@set (prop.name, new_val);
-						} else if (type.is_a (typeof (Drawing.Color)) || type.is_a (typeof (Gdk.RGBA))) {
+						} else if (type.is_a (typeof (Color)) || type.is_a (typeof (Gdk.RGBA))) {
 							var val = Value (type);
 							get_property (prop.name, ref val);
-							Drawing.Color* old_val = val.get_boxed ();
+							Color* old_val = val.get_boxed ();
 							var old_val_string = old_val.to_prefs_string ();
 							var new_val_string = file.get_string (group_name, prop.name);
 							if (old_val_string == new_val_string)
 								continue;
-							var new_val = Drawing.Color.from_prefs_string (new_val_string);
+							var new_val = Color.from_prefs_string (new_val_string);
 							val.set_boxed (&new_val);
 							set_property (prop.name, val);
-						} else if (type.is_a (typeof (PrefsSerializable))) {
-							PrefsSerializable val;
+						} else if (type.is_a (typeof (Serializable))) {
+							Serializable val;
 							@get (prop.name, out val);
-							val.prefs_deserialize (file.get_string (group_name, prop.name));
+							val.deserialize (file.get_string (group_name, prop.name));
 							continue;
 						} else {
 							debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
@@ -499,15 +497,15 @@ namespace Plank.Services
 					int new_val;
 					@get (prop.name, out new_val);
 					file.set_integer (group_name, prop.name, new_val);
-				} else if (type.is_a (typeof (Drawing.Color)) || type.is_a (typeof (Gdk.RGBA))) {
+				} else if (type.is_a (typeof (Color)) || type.is_a (typeof (Gdk.RGBA))) {
 					var val = Value (type);
 					get_property (prop.name, ref val);
-					Drawing.Color* color = val.get_boxed ();
+					Color* color = val.get_boxed ();
 					file.set_string (group_name, prop.name, (color.to_prefs_string ()));
-				} else if (type.is_a (typeof (PrefsSerializable))) {
+				} else if (type.is_a (typeof (Serializable))) {
 					var val = Value (type);
 					get_property (prop.name, ref val);
-					file.set_string (group_name, prop.name, (val.get_object () as PrefsSerializable).prefs_serialize ());
+					file.set_string (group_name, prop.name, ((Serializable) val.get_object ()).serialize ());
 				} else {
 					debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
 					continue;

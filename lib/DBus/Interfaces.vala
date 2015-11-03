@@ -17,18 +17,18 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.DBus
+namespace Plank
 {
-	const string PING_NAME = "Ping";
+	const string DBUS_PING_NAME = "Ping";
 	
-	const string DOCK_INTERFACE_NAME = "net.launchpad.plank";
-	const string CLIENT_INTERFACE_NAME = "net.launchpad.plank.Client";
+	const string DBUS_DOCK_INTERFACE_NAME = "net.launchpad.plank";
+	const string DBUS_CLIENT_INTERFACE_NAME = "net.launchpad.plank.Client";
 
 	/**
 	 * Provide an interface to manage items of the dock
 	 */
 	[DBus (name = "net.launchpad.plank.Items")]
-	interface ItemsIface : GLib.Object
+	interface DBusItemsIface : GLib.Object
 	{
 		/**
 		 * Emmited when items are changed

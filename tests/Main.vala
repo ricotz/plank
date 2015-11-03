@@ -17,13 +17,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Drawing;
-using Plank.Factories;
-using Plank.Services;
+using Plank;
 
-using Plank.Services.Windows;
-
-namespace Plank.Tests
+namespace PlankTests
 {
 	public const string TEST_ICON = Config.DATA_DIR + "/test-icon.svg";
 	public const string TEST_DOCK_NAME = "dock1";

@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Items
+namespace Plank
 {
 	/**
 	 * A dock item as a placeholder for the dock itself if nothing was added yet.
@@ -41,9 +41,9 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
+		protected override AnimationType on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
 		{
-			return Animation.NONE;
+			return AnimationType.NONE;
 		}
 		
 		/**

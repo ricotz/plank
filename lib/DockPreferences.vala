@@ -17,14 +17,12 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Services;
-
 namespace Plank
 {
 	/**
 	 * Contains all preferences for docks.
 	 */
-	public class DockPreferences : Plank.Services.Settings
+	public class DockPreferences : Plank.Settings
 	{
 		static GLib.Settings create_settings (string schema_id, string? path = null)
 		{
@@ -158,7 +156,7 @@ namespace Plank
 			
 			case "Theme":
 				if (Theme == "")
-					Theme = Plank.Drawing.Theme.DEFAULT_NAME;
+					Theme = Plank.Theme.DEFAULT_NAME;
 				else if (Theme.contains ("/"))
 					Theme = Theme.replace ("/", "");
 				break;

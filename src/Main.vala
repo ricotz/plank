@@ -17,9 +17,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Factories;
-using Plank.Items;
-
 namespace Plank
 {
 	public static int main (string[] argv)

@@ -17,9 +17,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Widgets;
+using Plank;
 
-namespace Plank.Tests
+namespace PlankTests
 {
 	public static void register_widgets_tests ()
 	{
@@ -117,7 +117,7 @@ namespace Plank.Tests
 		prefs.HideDelay = 100;
 		prefs.Position = Gtk.PositionType.TOP;
 		prefs.Offset = -33;
-		prefs.Theme = Plank.Drawing.Theme.GTK_THEME_NAME;
+		prefs.Theme = Plank.Theme.GTK_THEME_NAME;
 		prefs.Alignment = Gtk.Align.FILL;
 		prefs.ItemsAlignment = Gtk.Align.FILL;
 		prefs.LockItems = true;

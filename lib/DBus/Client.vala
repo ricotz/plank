@@ -17,23 +17,23 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.DBus
+namespace Plank
 {
 	/**
 	 * Connects to a running instance of plank via DBus and
 	 * provides remote interface to a currently runnning dock.
 	 */
-	public class Client : GLib.Object
+	public class DBusClient : GLib.Object
 	{
-		static Client? instance;
+		static DBusClient? instance;
 		
 		/**
-		 * Get the singleton instance of {@link Plank.DBus.Client}
+		 * Get the singleton instance of {@link Plank.DBusClient}
 		 */
-		public static unowned Client get_instance ()
+		public static unowned DBusClient get_instance ()
 		{
 			if (instance == null)
-				instance = new Client ();
+				instance = new DBusClient ();
 			
 			return instance;
 		}
@@ -64,12 +64,12 @@ namespace Plank.DBus
 		uint dbus_dock_ping_id = 0;
 		uint dbus_name_owner_changed_signal_id = 0;
 		
-		ItemsIface? items_proxy = null;
+		DBusItemsIface? items_proxy = null;
 		int items_count = int.MIN;
 		string[]? persistent_apps_list = null;
 		string[]? transient_apps_list = null;
 		
-		Client ()
+		DBusClient ()
 		{
 			Object ();
 		}
@@ -100,8 +100,8 @@ namespace Plank.DBus
 			
 			try {
 				// Listen for "Ping" signals coming from docks
-				dbus_dock_ping_id = connection.signal_subscribe (null, Plank.DBus.DOCK_INTERFACE_NAME,
-					Plank.DBus.PING_NAME, null, null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_dock_ping);
+				dbus_dock_ping_id = connection.signal_subscribe (null, Plank.DBUS_DOCK_INTERFACE_NAME,
+					Plank.DBUS_PING_NAME, null, null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_dock_ping);
 			} catch (IOError e) {
 				warning ("Could not subscribe for dock signal (%s)", e.message);
 			}
@@ -113,13 +113,13 @@ namespace Plank.DBus
 			
 			try {
 				// Broadcast to inform running docks
-				connection.emit_signal (null, client_object_path, Plank.DBus.CLIENT_INTERFACE_NAME, Plank.DBus.PING_NAME, null);
+				connection.emit_signal (null, client_object_path, Plank.DBUS_CLIENT_INTERFACE_NAME, Plank.DBUS_PING_NAME, null);
 			} catch (Error e) {
 				warning ("Could not ping running docks (%s)", e.message);
 			}
 		}
 		
-		~Client ()
+		~DBusClient ()
 		{
 			if (connection != null) {
 				if (dbus_dock_ping_id > 0)
@@ -163,7 +163,7 @@ namespace Plank.DBus
 			debug ("Connecting and create proxies for '%s' (%s)", sender_name, object_path);
 			
 			try {
-				items_proxy = connection.get_proxy_sync<Plank.DBus.ItemsIface> (sender_name, object_path, DBusProxyFlags.NONE);
+				items_proxy = connection.get_proxy_sync<Plank.DBusItemsIface> (sender_name, object_path, DBusProxyFlags.NONE);
 				items_proxy.changed.connect (invalidate_items_cache);
 				dock_bus_owner = ((DBusProxy) items_proxy).get_name_owner ();
 				dock_bus_name = sender_name;

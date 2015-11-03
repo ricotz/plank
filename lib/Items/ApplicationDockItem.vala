@@ -17,11 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Drawing;
-using Plank.Services;
-using Plank.Services.Windows;
-
-namespace Plank.Items
+namespace Plank
 {
 	/**
 	 * A dock item for applications (with .desktop launchers).
@@ -316,40 +312,40 @@ namespace Plank.Items
 		
 		void launch ()
 		{
-			Services.System.launch (File.new_for_uri (Prefs.Launcher));
+			System.launch (File.new_for_uri (Prefs.Launcher));
 		}
 		
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
+		protected override AnimationType on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
 		{
 			if (!is_window ())
 				if (button == PopupButton.MIDDLE
 					|| (button == PopupButton.LEFT && (App == null || WindowControl.get_num_windows (App) == 0
 					|| (mod & Gdk.ModifierType.CONTROL_MASK) == Gdk.ModifierType.CONTROL_MASK))) {
 					launch ();
-					return Animation.BOUNCE;
+					return AnimationType.BOUNCE;
 				}
 			
 			if (button == PopupButton.LEFT && App != null && WindowControl.get_num_windows (App) > 0) {
 				WindowControl.smart_focus (App, event_time);
-				return Animation.DARKEN;
+				return AnimationType.DARKEN;
 			}
 			
-			return Animation.NONE;
+			return AnimationType.NONE;
 		}
 		
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override Animation on_scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod, uint32 event_time)
+		protected override AnimationType on_scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod, uint32 event_time)
 		{
 			if (App == null || WindowControl.get_num_windows (App) == 0)
-				return Animation.NONE;
+				return AnimationType.NONE;
 			
 			if (GLib.get_monotonic_time () - LastScrolled < ITEM_SCROLL_DURATION * 1000)
-				return Animation.DARKEN;
+				return AnimationType.DARKEN;
 			
 			LastScrolled = GLib.get_monotonic_time ();
 			
@@ -358,7 +354,7 @@ namespace Plank.Items
 			else
 				WindowControl.focus_next (App, event_time);
 			
-			return Animation.DARKEN;
+			return AnimationType.DARKEN;
 		}
 		
 		static void combine_strings (ref string[] result, string delimiter, int n, int i)
@@ -561,7 +557,7 @@ namespace Plank.Items
 			foreach (var uri in uris)
 				files.add (File.new_for_uri (uri));
 			
-			Services.System.launch_with_files (File.new_for_uri (Prefs.Launcher), files.to_array ());
+			System.launch_with_files (File.new_for_uri (Prefs.Launcher), files.to_array ());
 			
 			return true;
 		}

@@ -17,9 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Services;
-
-namespace Plank.Drawing
+namespace Plank
 {
 	/**
 	 * Creates a new surface based on the given information
@@ -44,7 +42,7 @@ namespace Plank.Drawing
 	public delegate DockSurface? DrawDataFunc<G> (int width, int height, DockSurface model, G? data);
 	
 	/**
-	 * Controls some internal behaviors of a {@link Plank.Drawing.SurfaceCache}
+	 * Controls some internal behaviors of a {@link Plank.SurfaceCache}
 	 */
 	[Flags]
 	public enum SurfaceCacheFlags

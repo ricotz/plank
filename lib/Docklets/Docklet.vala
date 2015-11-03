@@ -31,6 +31,6 @@ namespace Docky
 			return (launcher == "docklet://%s".printf (name));
 		}
 		
-		public abstract Plank.Items.DockElement make_element (string launcher, GLib.File file);
+		public abstract Plank.DockElement make_element (string launcher, GLib.File file);
 	}
 }

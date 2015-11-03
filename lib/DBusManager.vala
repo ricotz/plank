@@ -17,16 +17,12 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Factories;
-using Plank.Items;
-using Plank.Services;
-
 namespace Plank
 {
 	/**
 	 * Provide an interface to manage items of the dock
 	 */
-	class DBusItems : GLib.Object, Plank.DBus.ItemsIface
+	class DBusItems : GLib.Object, Plank.DBusItemsIface
 	{
 		DockController controller;
 		uint changed_timer_id = 0U;
@@ -184,15 +180,15 @@ namespace Plank
 			
 			// Listen for "Ping" signals coming from clients
 			try {
-				dbus_client_ping_signal_id = connection.signal_subscribe (null, Plank.DBus.CLIENT_INTERFACE_NAME,
-					Plank.DBus.PING_NAME, null, null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_client_ping);
+				dbus_client_ping_signal_id = connection.signal_subscribe (null, Plank.DBUS_CLIENT_INTERFACE_NAME,
+					Plank.DBUS_PING_NAME, null, null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_client_ping);
 			} catch (IOError e) {
 				warning ("Could not subscribe for client signal (%s)", e.message);
 			}
 			
 			try {
 				var dbus_items = new DBusItems (controller);
-				dbus_items_signal_id = connection.register_object<Plank.DBus.ItemsIface> (object_path, dbus_items);
+				dbus_items_signal_id = connection.register_object<Plank.DBusItemsIface> (object_path, dbus_items);
 			} catch (IOError e) {
 				warning ("Could not register service (%s)", e.message);
 			}
@@ -201,7 +197,7 @@ namespace Plank
 			
 			try {
 				// Broadcast to inform running clients
-				connection.emit_signal (null, dock_object_path, Plank.DBus.DOCK_INTERFACE_NAME, Plank.DBus.PING_NAME, null);
+				connection.emit_signal (null, dock_object_path, Plank.DBUS_DOCK_INTERFACE_NAME, Plank.DBUS_PING_NAME, null);
 			} catch (Error e) {
 				warning ("Could not ping running clients (%s)", e.message);
 			}
@@ -223,7 +219,7 @@ namespace Plank
 		{
 			try {
 				// Broadcast to inform running clients
-				connection.emit_signal (null, dock_object_path, Plank.DBus.DOCK_INTERFACE_NAME, Plank.DBus.PING_NAME, null);
+				connection.emit_signal (null, dock_object_path, Plank.DBUS_DOCK_INTERFACE_NAME, Plank.DBUS_PING_NAME, null);
 			} catch (Error e) {
 				warning ("Could not ping running clients (%s)", e.message);
 			}

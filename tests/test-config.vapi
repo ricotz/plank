@@ -18,7 +18,8 @@
 //
 
 [CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "test-config.h")]
-namespace Plank.Tests.Config {
+namespace PlankTests.Config
+{
 	public const string DATA_DIR;
 	public const string HOME_DIR;
 }

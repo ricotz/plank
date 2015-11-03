@@ -17,12 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Items;
-using Plank.Drawing;
-using Plank.Services;
-using Plank.Services.Windows;
-
-namespace Plank.Widgets
+namespace Plank
 {
 	public class PreferencesWindow : Gtk.Window
 	{
@@ -191,7 +186,7 @@ namespace Plank.Widgets
 				break;
 			case "Theme":
 				var pos = 0;
-				foreach (unowned string theme in Plank.Drawing.Theme.get_theme_list ()) {
+				foreach (unowned string theme in Plank.Theme.get_theme_list ()) {
 					if (theme == prefs.Theme)
 						cb_theme.set_active (pos);
 					pos++;
@@ -374,7 +369,7 @@ namespace Plank.Widgets
 		void init_dock_tab ()
 		{
 			var pos = 0;
-			foreach (unowned string theme in Plank.Drawing.Theme.get_theme_list ()) {
+			foreach (unowned string theme in Plank.Theme.get_theme_list ()) {
 				cb_theme.append ("%i".printf (pos), theme);
 				if (theme == prefs.Theme)
 					cb_theme.set_active (pos);

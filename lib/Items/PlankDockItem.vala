@@ -17,11 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Factories;
-using Plank.Services;
-using Plank.Widgets;
-
-namespace Plank.Items
+namespace Plank
 {
 	/**
 	 * A dock item for the dock itself.  Has things like about, help, quit etc.
@@ -60,11 +56,11 @@ namespace Plank.Items
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
+		protected override AnimationType on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
 		{
 			Application.get_default ().activate_action ("preferences", null);
 			
-			return Animation.DARKEN;
+			return AnimationType.DARKEN;
 		}
 		
 		/**

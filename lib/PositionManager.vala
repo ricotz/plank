@@ -17,11 +17,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Items;
-using Plank.Drawing;
-using Plank.Services;
-using Plank.Services.Windows;
-
 namespace Plank
 {
 	/**

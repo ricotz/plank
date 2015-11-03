@@ -17,11 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Widgets;
-using Plank.Services;
-using Plank.Services.Windows;
-
-namespace Plank.Factories
+namespace Plank
 {
 	/**
 	 * The main class for all dock applications.  All docks should extend this class.
@@ -314,13 +310,13 @@ namespace Plank.Factories
 			
 			action = new SimpleAction ("help", null);
 			action.activate.connect (() => {
-				Services.System.open_uri (help_url);
+				System.open_uri (help_url);
 			});
 			add_action (action);
 			
 			action = new SimpleAction ("translate", null);
 			action.activate.connect (() => {
-				Services.System.open_uri (translate_url);
+				System.open_uri (translate_url);
 			});
 			add_action (action);
 			

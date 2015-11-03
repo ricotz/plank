@@ -17,10 +17,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.DBus;
-using Plank.Services;
+using Plank;
 
-namespace Plank.Examples
+namespace PlankExamples
 {
 	public class RemoteClient : GLib.Application
 	{
@@ -37,11 +36,11 @@ namespace Plank.Examples
 		{
 			hold ();
 			
-			var client = Client.get_instance ();
+			var client = Plank.DBusClient.get_instance ();
 			client.proxy_changed.connect (handle_proxy_changed);
 		}
 		
-		void handle_proxy_changed (Client client)
+		void handle_proxy_changed (DBusClient client)
 		{
 			if (!client.is_connected)
 				return;

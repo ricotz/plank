@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Services
+namespace Plank
 {
 	/**
 	 * A utility class for launching applications and opening files/URIs.

@@ -20,7 +20,7 @@
 //  Modified by Robert Dyer, Rico Tzschichholz
 //
 
-namespace Plank.Widgets
+namespace Plank
 {
 	/**
 	 * A {@link Gtk.SeparatorMenuItem} with a title on it.

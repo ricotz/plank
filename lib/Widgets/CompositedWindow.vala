@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Widgets
+namespace Plank
 {
 	/**
 	 * A {@link Gtk.Window} with compositing support enabled.

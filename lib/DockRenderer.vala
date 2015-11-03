@@ -17,11 +17,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Items;
-using Plank.Drawing;
-using Plank.Services;
-using Plank.Widgets;
-
 namespace Plank
 {
 	/**
@@ -184,7 +179,7 @@ namespace Plank
 				theme.notify.disconnect (theme_changed);
 			
 			unowned string name = controller.prefs.Theme;
-			if (name == Drawing.Theme.GTK_THEME_NAME) {
+			if (name == Theme.GTK_THEME_NAME) {
 				if (gtk_theme_name_changed_handler_id == 0UL)
 					gtk_theme_name_changed_handler_id = Gtk.Settings.get_default ().notify["gtk-theme-name"].connect (load_theme);
 			} else if (gtk_theme_name_changed_handler_id > 0UL) {
@@ -259,9 +254,9 @@ namespace Plank
 				var hide_time = int64.max (0LL, frame_time - last_hide);
 				if (hide_time < hide_duration) {
 					if (controller.hide_manager.Hidden)
-						hide_progress = Drawing.easing_for_mode (AnimationMode.EASE_IN_CUBIC, hide_time, hide_duration);
+						hide_progress = easing_for_mode (AnimationMode.EASE_IN_CUBIC, hide_time, hide_duration);
 					else
-						hide_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_OUT_CUBIC, hide_time, hide_duration);
+						hide_progress = 1.0 - easing_for_mode (AnimationMode.EASE_OUT_CUBIC, hide_time, hide_duration);
 				} else {
 					hide_progress = (controller.hide_manager.Hidden ? 1.0 : 0.0);
 				}
@@ -271,9 +266,9 @@ namespace Plank
 				double zoom_progress;
 				if (zoom_time < zoom_duration) {
 					if (controller.hide_manager.Hovered)
-						zoom_progress = Drawing.easing_for_mode (AnimationMode.EASE_OUT_CUBIC, zoom_time, zoom_duration);
+						zoom_progress = easing_for_mode (AnimationMode.EASE_OUT_CUBIC, zoom_time, zoom_duration);
 					else
-						zoom_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_IN_CUBIC, zoom_time, zoom_duration);
+						zoom_progress = 1.0 - easing_for_mode (AnimationMode.EASE_IN_CUBIC, zoom_time, zoom_duration);
 				} else {
 					zoom_progress = (controller.hide_manager.Hovered ? 1.0 : 0.0);
 				}
@@ -551,7 +546,7 @@ namespace Plank
 			var x_offset = 0.0, y_offset = 0.0;
 			
 			// check for and calculate click-animation
-			var max_click_time = item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
+			var max_click_time = item.ClickedAnimation == AnimationType.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime;
 			max_click_time *= 1000;
 			var click_time = int64.max (0LL, frame_time - item.LastClicked);
 			if (click_time < max_click_time) {
@@ -559,16 +554,16 @@ namespace Plank
 				
 				switch (item.ClickedAnimation) {
 				default:
-				case Animation.NONE:
+				case AnimationType.NONE:
 					break;
-				case Animation.BOUNCE:
+				case AnimationType.BOUNCE:
 					if (screen_is_composited)
 						y_offset += position_manager.LaunchBounceHeight * easing_bounce (click_time, max_click_time, 2);
 					break;
-				case Animation.DARKEN:
+				case AnimationType.DARKEN:
 					draw_value.darken = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
 					break;
-				case Animation.LIGHTEN:
+				case AnimationType.LIGHTEN:
 					draw_value.lighten = double.max (0, Math.sin (Math.PI * click_animation_progress)) * 0.5;
 					break;
 				}
@@ -582,12 +577,12 @@ namespace Plank
 				
 				switch (item.ScrolledAnimation) {
 				default:
-				case Animation.NONE:
+				case AnimationType.NONE:
 					break;
-				case Animation.DARKEN:
+				case AnimationType.DARKEN:
 					draw_value.darken = double.max (0, Math.sin (Math.PI * scroll_animation_progress)) * 0.5;
 					break;
-				case Animation.LIGHTEN:
+				case AnimationType.LIGHTEN:
 					draw_value.lighten = double.max (0, Math.sin (Math.PI * scroll_animation_progress)) * 0.5;
 					break;
 				}
@@ -599,16 +594,16 @@ namespace Plank
 			if (hover_time < max_hover_time) {
 				var hover_animation_progress = 0.0;
 				if (hovered_item == item) {
-					hover_animation_progress = Drawing.easing_for_mode (AnimationMode.LINEAR, hover_time, max_hover_time);
+					hover_animation_progress = easing_for_mode (AnimationMode.LINEAR, hover_time, max_hover_time);
 				} else {
-					hover_animation_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.LINEAR, hover_time, max_hover_time);
+					hover_animation_progress = 1.0 - easing_for_mode (AnimationMode.LINEAR, hover_time, max_hover_time);
 				}
 				
 				switch (item.HoveredAnimation) {
 				default:
-				case Animation.NONE:
+				case AnimationType.NONE:
 					break;
-				case Animation.LIGHTEN:
+				case AnimationType.LIGHTEN:
 					draw_value.lighten = hover_animation_progress * 0.2;
 					break;
 				}
@@ -638,13 +633,13 @@ namespace Plank
 				var move_duration = theme.ItemMoveTime * 1000;
 				var move_time = int64.max (0LL, frame_time - item.AddTime);
 				if (move_time < move_duration) {
-					var move_animation_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.LINEAR, move_time, move_duration);
-					draw_value.opacity = Drawing.easing_for_mode (AnimationMode.EASE_IN_EXPO, move_time, move_duration);
+					var move_animation_progress = 1.0 - easing_for_mode (AnimationMode.LINEAR, move_time, move_duration);
+					draw_value.opacity = easing_for_mode (AnimationMode.EASE_IN_EXPO, move_time, move_duration);
 					y_offset -= move_animation_progress * (icon_size + position_manager.BottomPadding);
 					draw_value.show_indicator = false;
 					
 					// calculate the resulting incremental dynamic-animation-offset used to animate the background-resize and icon-offset
-					move_animation_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_OUT_QUINT, move_time, move_duration);
+					move_animation_progress = 1.0 - easing_for_mode (AnimationMode.EASE_OUT_QUINT, move_time, move_duration);
 					dynamic_animation_offset -= move_animation_progress * (icon_size + position_manager.ItemPadding);
 					x_offset += dynamic_animation_offset;
 				}
@@ -652,13 +647,13 @@ namespace Plank
 				var move_duration = theme.ItemMoveTime * 1000;
 				var move_time = int64.max (0LL, frame_time - item.RemoveTime);
 				if (move_time < move_duration) {
-					var move_animation_progress = Drawing.easing_for_mode (AnimationMode.LINEAR, move_time, move_duration);
-					draw_value.opacity = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_OUT_EXPO, move_time, move_duration);
+					var move_animation_progress = easing_for_mode (AnimationMode.LINEAR, move_time, move_duration);
+					draw_value.opacity = 1.0 - easing_for_mode (AnimationMode.EASE_OUT_EXPO, move_time, move_duration);
 					y_offset -= move_animation_progress * (icon_size + position_manager.BottomPadding);
 					draw_value.show_indicator = false;
 					
 					// calculate the resulting incremental dynamic-animation-offset used to animate the background-resize and icon-offset
-					move_animation_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_IN_QUINT, move_time, move_duration);
+					move_animation_progress = 1.0 - easing_for_mode (AnimationMode.EASE_IN_QUINT, move_time, move_duration);
 					dynamic_animation_offset += move_animation_progress * (icon_size + position_manager.ItemPadding);
 					x_offset += dynamic_animation_offset - (icon_size + position_manager.ItemPadding);
 				}
@@ -672,11 +667,11 @@ namespace Plank
 					var move_animation_progress = 0.0;
 					if (transient_items.size > 0) {
 						if (dynamic_animation_offset > 0)
-							move_animation_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_IN_QUINT, move_time, move_duration);
+							move_animation_progress = 1.0 - easing_for_mode (AnimationMode.EASE_IN_QUINT, move_time, move_duration);
 						else
-							move_animation_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_OUT_QUINT, move_time, move_duration);
+							move_animation_progress = 1.0 - easing_for_mode (AnimationMode.EASE_OUT_QUINT, move_time, move_duration);
 					} else {
-						move_animation_progress = 1.0 - Drawing.easing_for_mode (AnimationMode.EASE_OUT_CIRC, move_time, move_duration);
+						move_animation_progress = 1.0 - easing_for_mode (AnimationMode.EASE_OUT_CIRC, move_time, move_duration);
 					}
 					var change = move_animation_progress * (icon_size + position_manager.ItemPadding);
 					x_offset += (item.Position < item.LastPosition ? change : -change);
@@ -999,10 +994,10 @@ namespace Plank
 			cr.paint_with_alpha (opacity);
 		}
 		
-		Drawing.Color get_styled_color ()
+		Color get_styled_color ()
 		{
 			var background_selected_color = controller.window.get_style_context ().get_background_color (Gtk.StateFlags.SELECTED | Gtk.StateFlags.FOCUSED);
-			var selected_color = (Drawing.Color) background_selected_color;
+			var selected_color = (Color) background_selected_color;
 			selected_color.set_min_val (90 / (double) uint16.MAX);
 			return selected_color;
 		}
@@ -1108,13 +1103,13 @@ namespace Plank
 
 		inline bool item_animation_needed (DockItem item, int64 render_time)
 		{
-			if (item.ClickedAnimation != Animation.NONE
-				&& render_time - item.LastClicked <= (item.ClickedAnimation == Animation.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
+			if (item.ClickedAnimation != AnimationType.NONE
+				&& render_time - item.LastClicked <= (item.ClickedAnimation == AnimationType.BOUNCE ? theme.LaunchBounceTime : theme.ClickTime) * 1000)
 				return true;
-			if (item.HoveredAnimation != Animation.NONE
+			if (item.HoveredAnimation != AnimationType.NONE
 				&& render_time - item.LastHovered <= ITEM_HOVER_DURATION * 1000)
 				return true;
-			if (item.ScrolledAnimation != Animation.NONE
+			if (item.ScrolledAnimation != AnimationType.NONE
 				&& render_time - item.LastScrolled <= ITEM_SCROLL_DURATION * 1000)
 				return true;
 			if (render_time - item.LastActive <= theme.ActiveTime * 1000)

@@ -17,10 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Drawing;
-using Plank.Services;
-
-namespace Plank.Items
+namespace Plank
 {
 	/**
 	 * A dock item for files or folders on the dock.
@@ -241,28 +238,28 @@ namespace Plank.Items
 		 */
 		public void launch ()
 		{
-			Services.System.open (OwnedFile);
-			ClickedAnimation = Animation.BOUNCE;
+			System.open (OwnedFile);
+			ClickedAnimation = AnimationType.BOUNCE;
 			LastClicked = GLib.get_monotonic_time ();
 		}
 		
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
+		protected override AnimationType on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
 		{
 			if (button == PopupButton.MIDDLE) {
 				launch ();
-				return Animation.BOUNCE;
+				return AnimationType.BOUNCE;
 			}
 			
 			// this actually only happens if its a file, not a directory
 			if (button == PopupButton.LEFT) {
 				launch ();
-				return Animation.BOUNCE;
+				return AnimationType.BOUNCE;
 			}
 			
-			return Animation.NONE;
+			return AnimationType.NONE;
 		}
 		
 		/**
@@ -295,8 +292,8 @@ namespace Plank.Items
 					ApplicationDockItem.parse_launcher (uri, out icon, out text);
 					item = create_menu_item (text, icon, true);
 					item.activate.connect (() => {
-						Services.System.launch (file);
-						ClickedAnimation = Animation.BOUNCE;
+						System.launch (file);
+						ClickedAnimation = AnimationType.BOUNCE;
 						LastClicked = GLib.get_monotonic_time ();
 					});
 				} else {
@@ -305,8 +302,8 @@ namespace Plank.Items
 					text = text.replace ("_", "__");
 					item = create_menu_item (text, icon, true);
 					item.activate.connect (() => {
-						Services.System.open (file);
-						ClickedAnimation = Animation.BOUNCE;
+						System.open (file);
+						ClickedAnimation = AnimationType.BOUNCE;
 						LastClicked = GLib.get_monotonic_time ();
 					});
 				}
@@ -356,8 +353,8 @@ namespace Plank.Items
 			
 			item = create_menu_item (_("Open Containing _Folder"), "folder");
 			item.activate.connect (() => {
-				Services.System.open (OwnedFile.get_parent ());
-				ClickedAnimation = Animation.BOUNCE;
+				System.open (OwnedFile.get_parent ());
+				ClickedAnimation = AnimationType.BOUNCE;
 				LastClicked = GLib.get_monotonic_time ();
 			});
 			items.add (item);

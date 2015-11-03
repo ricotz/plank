@@ -15,7 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Services
+namespace Plank
 {
 	/**
 	 * The base class for gsettings-based configuration classes. Defined properties will be bound

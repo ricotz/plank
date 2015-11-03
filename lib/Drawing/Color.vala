@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Drawing
+namespace Plank
 {
 	/**
 	 * Represents a RGBA color and has methods for manipulating the color.

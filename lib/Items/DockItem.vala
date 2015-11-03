@@ -17,11 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Drawing;
-using Plank.Services;
-using Plank.Services.Windows;
-
-namespace Plank.Items
+namespace Plank
 {
 	/**
 	 * The base class for all dock items.
@@ -103,7 +99,7 @@ namespace Plank.Items
 		/**
 		 * The average color of this item's icon.
 		 */
-		public Drawing.Color AverageIconColor { get; protected set; default = Drawing.Color () { red = 0.0, green = 0.0, blue = 0.0, alpha = 0.0 }; }
+		public Color AverageIconColor { get; protected set; default = Color () { red = 0.0, green = 0.0, blue = 0.0, alpha = 0.0 }; }
 		
 		/**
 		 * The filename of the preferences backing file.

@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Widgets
+namespace Plank
 {
 	/**
 	 * A hover window that shows labels for dock items.

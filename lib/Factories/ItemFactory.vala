@@ -17,13 +17,10 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Items;
-using Plank.Services;
-
-namespace Plank.Factories
+namespace Plank
 {
 	/**
-	 * An item factory.  Creates {@link Items.DockItem}s based on .dockitem files.
+	 * An item factory.  Creates {@link DockItem}s based on .dockitem files.
 	 */
 	public class ItemFactory : GLib.Object
 	{
@@ -94,10 +91,10 @@ namespace Plank.Factories
 		public File launchers_dir;
 		
 		/**
-		 * Creates a new {@link Items.DockElement} from a .dockitem.
+		 * Creates a new {@link DockElement} from a .dockitem.
 		 *
 		 * @param file the {@link GLib.File} of .dockitem file to parse
-		 * @return the new {@link Items.DockElement} created
+		 * @return the new {@link DockElement} created
 		 */
 		public virtual DockElement make_element (GLib.File file)
 		{
@@ -105,9 +102,9 @@ namespace Plank.Factories
 		}
 		
 		/**
-		 * Creates a new {@link Items.PlankDockItem} for the dock itself.
+		 * Creates a new {@link PlankDockItem} for the dock itself.
 		 *
-		 * @return the new {@link Items.PlankDockItem} created
+		 * @return the new {@link PlankDockItem} created
 		 */
 		public virtual DockItem get_item_for_dock ()
 		{
@@ -115,11 +112,11 @@ namespace Plank.Factories
 		}
 		
 		/**
-		 * Creates a new {@link Items.DockElement} for a launcher parsed from a .dockitem.
+		 * Creates a new {@link DockElement} for a launcher parsed from a .dockitem.
 		 *
 		 * @param file the {@link GLib.File} of .dockitem file that was parsed
 		 * @param launcher the launcher name from the .dockitem
-		 * @return the new {@link Items.DockElement} created
+		 * @return the new {@link DockElement} created
 		 */
 		protected DockElement default_make_element (GLib.File file, string launcher)
 		{
@@ -356,7 +353,7 @@ namespace Plank.Factories
 			if (launcher_file.query_exists ()) {
 				var file = new KeyFile ();
 				
-				file.set_string (typeof (Items.DockItemPreferences).name (), "Launcher", uri);
+				file.set_string (typeof (DockItemPreferences).name (), "Launcher", uri);
 				
 				try {
 					// find a unique file name, based on the name of the launcher

@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Services
+namespace Plank
 {
 	/**
 	 * A wrapper class that gives static instances of {@link GLib.File}

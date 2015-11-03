@@ -28,7 +28,7 @@ namespace Docky
 	
 	public class ClockDocklet : Docklet
 	{
-		public override Plank.Items.DockElement make_element (string launcher, GLib.File file)
+		public override Plank.DockElement make_element (string launcher, GLib.File file)
 		{
 			return new ClockDockItem.with_dockitem_file (file);
 		}

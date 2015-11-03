@@ -17,9 +17,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Services;
+using Plank;
 
-namespace Plank.Tests
+namespace PlankTests
 {
 	public static void register_preferences_tests ()
 	{
@@ -39,7 +39,7 @@ namespace Plank.Tests
 		public double DoubleSetting { get; set; }
 		public int IntSetting { get; set; }
 		public string StringSetting { get; set; }
-		public Plank.Drawing.Color ColorSetting  { get; set; }
+		public Plank.Color ColorSetting  { get; set; }
 		
 		public TestPreferences (string filename)
 		{
@@ -81,8 +81,8 @@ namespace Plank.Tests
 
 	void preferences_basics ()
 	{
-		Plank.Drawing.Color color = { 0.3, 0.6, 0.1, 1.0 };
-		Plank.Drawing.Color color2 = { 0.5, 0.3, 0.7, 0.9 };
+		Plank.Color color = { 0.3, 0.6, 0.1, 1.0 };
+		Plank.Color color2 = { 0.5, 0.3, 0.7, 0.9 };
 		
 		var prefs = new TestPreferences ("test_preferences_basics");
 		assert (prefs.BoolSetting == true);

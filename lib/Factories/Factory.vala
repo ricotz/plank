@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Factories
+namespace Plank
 {
 	/**
 	 * The main factory class for the dock.

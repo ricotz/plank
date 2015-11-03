@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Drawing
+namespace Plank
 {
 	/**
 	 * Utility service for loading icons and working with pixbufs.
@@ -368,7 +368,7 @@ namespace Plank.Drawing
 		 * @param source the pixbuf to use
 		 * @return the average color of the pixbuf
 		 */
-		public static Drawing.Color average_color (Gdk.Pixbuf source)
+		public static Color average_color (Gdk.Pixbuf source)
 		{
 			uint8 r, g, b, a, min, max;
 			double delta;

@@ -17,9 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Items;
-using Plank.Services;
-using Plank.Widgets;
+using Plank;
 
 namespace Docky
 {

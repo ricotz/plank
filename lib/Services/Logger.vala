@@ -18,7 +18,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Services
+namespace Plank
 {
 	const string[] LOG_LEVEL_TO_STRING = {
 		"VERBOSE",

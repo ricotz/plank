@@ -17,12 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Factories;
-using Plank.Items;
-using Plank.Services;
-using Plank.Services.Windows;
-
-namespace Plank.Widgets
+namespace Plank
 {
 	/**
 	 * The main window for all docks.
@@ -641,13 +636,13 @@ namespace Plank.Widgets
 			
 			menu_item = new Gtk.MenuItem.with_mnemonic ("Open config folder");
 			menu_item.activate.connect (() => {
-				Services.System.open (controller.config_folder);
+				System.open (controller.config_folder);
 			});
 			debug_items.add (menu_item);
 			
 			menu_item = new Gtk.MenuItem.with_mnemonic ("Open current theme file");
 			menu_item.activate.connect (() => {
-				Services.System.open (controller.renderer.theme.get_backing_file ());
+				System.open (controller.renderer.theme.get_backing_file ());
 			});
 			debug_items.add (menu_item);
 			
@@ -674,14 +669,14 @@ namespace Plank.Widgets
 			
 			menu_item = new Gtk.MenuItem.with_mnemonic ("Open dockitem file");
 			menu_item.activate.connect (() => {
-				Services.System.open (dock_item_file);
+				System.open (dock_item_file);
 			});
 			menu_item.sensitive = (dock_item_file != null && dock_item_file.query_exists ());
 			debug_items.add (menu_item);
 			
 			menu_item = new Gtk.MenuItem.with_mnemonic ("Open launcher file");
 			menu_item.activate.connect (() => {
-				Services.System.open (File.new_for_uri (item.Launcher));
+				System.open (File.new_for_uri (item.Launcher));
 			});
 			menu_item.sensitive = (item.Launcher != "");
 			debug_items.add (menu_item);

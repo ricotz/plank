@@ -26,7 +26,7 @@ namespace Docky
 {
 	public class TrashDocklet : Docklet
 	{
-		public override Plank.Items.DockElement make_element (string launcher, GLib.File file)
+		public override Plank.DockElement make_element (string launcher, GLib.File file)
 		{
 			return new TrashDockItem.with_dockitem_file (file);
 		}

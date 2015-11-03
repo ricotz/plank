@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Items;
+using Plank;
 
 namespace Docky
 {
@@ -126,7 +126,7 @@ namespace Docky
 			updated ();
 		}
 		
-		protected override Animation on_scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod, uint32 event_time)
+		protected override AnimationType on_scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod, uint32 event_time)
 		{
 			if (direction == Gdk.ScrollDirection.UP)
 				cur_position++;
@@ -140,17 +140,17 @@ namespace Docky
 			
 			updated ();
 			
-			return Animation.NONE;
+			return AnimationType.NONE;
 		}
 		
-		protected override Animation on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
+		protected override AnimationType on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
 		{
 			if (button == PopupButton.LEFT && clips.size > 0) {
 				copy_entry ();
-				return Animation.BOUNCE;
+				return AnimationType.BOUNCE;
 			}
 			
-			return Animation.NONE;
+			return AnimationType.NONE;
 		}
 		
 		public override Gee.ArrayList<Gtk.MenuItem> get_menu_items ()

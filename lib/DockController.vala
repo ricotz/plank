@@ -17,11 +17,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank.Factories;
-using Plank.Items;
-using Plank.Widgets;
-using Plank.Services;
-
 namespace Plank
 {
 	public const string G_RESOURCE_PATH = "/net/launchpad/plank";
@@ -122,7 +117,7 @@ namespace Plank
 		/**
 		 * Initialize this controller.
 		 * Call this when added at least one DockItemProvider otherwise the
-		 * {@link Plank.Items.DefaultApplicationDockItemProvider} will be added by default.
+		 * {@link Plank.DefaultApplicationDockItemProvider} will be added by default.
 		 */
 		public void initialize ()
 		{
@@ -148,7 +143,7 @@ namespace Plank
 		
 		/**
 		 * Add the default provider which is an instance of
-		 * {@link Plank.Items.DefaultApplicationDockItemProvider} 
+		 * {@link Plank.DefaultApplicationDockItemProvider}
 		 */
 		public void add_default_provider ()
 		{

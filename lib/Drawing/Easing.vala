@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Plank.Drawing
+namespace Plank
 {
 	/**
 	 * Utility functions to calculate progress of transitions.
