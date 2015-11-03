@@ -140,6 +140,10 @@ namespace Plank
 				unowned string group_name = typeof (DockItemPreferences).name ();
 				if (keyfile.has_group (group_name))
 					return keyfile.get_string (group_name, "Launcher");
+				
+				// 0.10.1 > 0.10.9/0.11.x
+				if (keyfile.has_group ("PlankItemsDockItemPreferences"))
+					return keyfile.get_string ("PlankItemsDockItemPreferences", "Launcher");
 			} catch (Error e) {
 				warning ("%s (%s)", e.message, file.get_basename ());
 			}

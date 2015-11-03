@@ -49,6 +49,14 @@ namespace Plank
 	 */
 	public abstract class Preferences : GLib.Object
 	{
+		// Transition old group-names to new ones to preserve existing settings and keep themes working
+		static string[,] TRANSITION_MAP = {
+			// 0.10.1 > 0.10.9/0.11.x
+			{"PlankItemsDockItemPreferences", "PlankDockItemPreferences"},
+			{"PlankDrawingTheme", "PlankTheme"},
+			{"PlankDrawingDockTheme", "PlankDockTheme"}
+		};
+		
 		/**
 		 * This signal indicates that the backing file for this preferences was deleted.
 		 */
@@ -350,6 +358,16 @@ namespace Plank
 				
 				foreach (var prop in get_class ().list_properties ()) {
 					unowned string group_name = prop.owner_type.name ();
+					
+					if (!file.has_group (group_name)) {
+						// Accept and handle old preferences files
+						for (var i = 0; i < 3; i++)
+							if (TRANSITION_MAP[i,1] == group_name) {
+								group_name = TRANSITION_MAP[i,0];
+								missing_keys = true;
+								break;
+							}
+					}
 					
 					if (!file.has_group (group_name) || !file.has_key (group_name, prop.name)) {
 						warning ("Missing key '%s' for group '%s' in preferences file '%s' - using default value", prop.name, group_name, backing_file.get_path () ?? "");
