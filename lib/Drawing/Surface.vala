@@ -20,13 +20,13 @@
 namespace Plank
 {
 	/**
-	 * A dock surface is a wrapper class for a {@link Cairo.Surface}.
+	 * A surface is a wrapper class for a {@link Cairo.Surface}.
 	 * It encapsulates a surface/context and provides utility methods.
 	 */
-	public class DockSurface : GLib.Object
+	public class Surface : GLib.Object
 	{
 		/**
-		 * The internal {@link Cairo.Surface} backing the dock surface.
+		 * The internal {@link Cairo.Surface} backing the surface.
 		 */
 		public Cairo.Surface Internal { get; construct; }
 		
@@ -41,51 +41,51 @@ namespace Plank
 		public int Height { get; construct; }
 		
 		/**
-		 * A {@link Cairo.Context} for the dock surface.
+		 * A {@link Cairo.Context} for the surface.
 		 */
 		public Cairo.Context Context { get; construct; }
 		
 		/**
-		 * Creates a new dock surface.
+		 * Creates a new surface.
 		 *
 		 * @param width width of the new surface
 		 * @param height height of the new surface
 		 */
-		public DockSurface (int width, int height)
+		public Surface (int width, int height)
 		{
 			Object (Width: width, Height: height, Internal: new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height));
 		}
 		
 		/**
-		 * Creates a new dock surface compatible with an existing {@link Cairo.Surface}.
+		 * Creates a new surface compatible with an existing {@link Cairo.Surface}.
 		 *
 		 * @param width width of the new surface
 		 * @param height height of the new surface
 		 * @param model existing {@link Cairo.Surface} to be similar to
 		 */
-		public DockSurface.with_surface (int width, int height, Cairo.Surface model)
+		public Surface.with_cairo_surface (int width, int height, Cairo.Surface model)
 		{
 			Object (Width: width, Height: height, Internal: new Cairo.Surface.similar (model, Cairo.Content.COLOR_ALPHA, width, height));
 		}
 
 		/**
-		 * Creates a new dock surface compatible with an existing {@link DockSurface}.
+		 * Creates a new surface compatible with an existing {@link Surface}.
 		 *
 		 * @param width width of the new surface
 		 * @param height height of the new surface
-		 * @param model existing {@link DockSurface} to be similar to
+		 * @param model existing {@link Surface} to be similar to
 		 */
-		public DockSurface.with_dock_surface (int width, int height, DockSurface model)
+		public Surface.with_surface (int width, int height, Surface model)
 		{
 			Object (Width: width, Height: height, Internal: new Cairo.Surface.similar (model.Internal, Cairo.Content.COLOR_ALPHA, width, height));
 		}
 		
 		/**
-		 * Creates a new dock surface with the given {@link Cairo.ImageSurface} as Internal.
+		 * Creates a new surface with the given {@link Cairo.ImageSurface} as Internal.
 		 *
 		 * @param image existing {@link Cairo.ImageSurface} as Internal
 		 */
-		public DockSurface.with_internal (Cairo.ImageSurface image)
+		public Surface.with_internal (Cairo.ImageSurface image)
 		{
 			Object (Width: image.get_width (), Height: image.get_height (), Internal: image);
 		}
@@ -113,9 +113,9 @@ namespace Plank
 		 *
 		 * @return copy of this surface
 		 */
-		public DockSurface copy ()
+		public Surface copy ()
 		{
-			var copy = new DockSurface.with_dock_surface (Width, Height, this);
+			var copy = new Surface.with_surface (Width, Height, this);
 			unowned Cairo.Context cr = copy.Context;
 			
 			cr.set_source_surface (Internal, 0, 0);
@@ -131,9 +131,9 @@ namespace Plank
 		 * @param height the resulting height
 		 * @return scaled copy of this surface
 		 */
-		public DockSurface scaled_copy (int width, int height)
+		public Surface scaled_copy (int width, int height)
 		{
-			var result = new DockSurface.with_dock_surface (width, height, this);
+			var result = new Surface.with_surface (width, height, this);
 			unowned Cairo.Context cr = result.Context;
 			
 			cr.save ();
@@ -146,7 +146,7 @@ namespace Plank
 		}
 		
 		/**
-		 * Saves the current dock surface to a {@link Gdk.Pixbuf}.
+		 * Saves the current surface to a {@link Gdk.Pixbuf}.
 		 *
 		 * @return the {@link Gdk.Pixbuf}
 		 */
@@ -162,7 +162,7 @@ namespace Plank
 		 * @param extent bounding box of the found mask
 		 * @return a new surface containing the mask
 		 */
-		public DockSurface create_mask (double threshold, out Gdk.Rectangle extent)
+		public Surface create_mask (double threshold, out Gdk.Rectangle extent)
 			requires (threshold >= 0.0 && threshold <= 1.0)
 		{
 			var surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, Width, Height);
@@ -211,7 +211,7 @@ namespace Plank
 			
 			extent = {left, top, right - left, bottom - top};
 			
-			return new DockSurface.with_internal (surface);
+			return new Surface.with_internal (surface);
 		}
 		
 		/**

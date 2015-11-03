@@ -52,16 +52,16 @@ namespace Plank
 		[CCode (notify = false)]
 		public Gdk.Point local_cursor { get; private set; }
 
-		DockSurface? main_buffer = null;
-		DockSurface? fade_buffer = null;
-		DockSurface? item_buffer = null;
-		DockSurface? shadow_buffer = null;
+		Surface? main_buffer = null;
+		Surface? fade_buffer = null;
+		Surface? item_buffer = null;
+		Surface? shadow_buffer = null;
 		
-		DockSurface? background_buffer = null;
+		Surface? background_buffer = null;
 		Gdk.Rectangle background_rect;
-		DockSurface? indicator_buffer = null;
-		DockSurface? urgent_indicator_buffer = null;
-		DockSurface? urgent_glow_buffer = null;
+		Surface? indicator_buffer = null;
+		Surface? urgent_indicator_buffer = null;
+		Surface? urgent_glow_buffer = null;
 		
 		int64 last_hide = 0LL;
 		int64 last_hovered_changed = 0LL;
@@ -358,21 +358,21 @@ namespace Plank
 			var win_rect = position_manager.get_dock_window_region ();
 			
 			if (main_buffer == null) {
-				main_buffer = new DockSurface.with_surface (win_rect.width, win_rect.height, cr.get_target ());
+				main_buffer = new Surface.with_cairo_surface (win_rect.width, win_rect.height, cr.get_target ());
 #if HAVE_HIDPI
 				cairo_surface_set_device_scale (main_buffer.Internal, window_scale_factor, window_scale_factor);
 #endif
 			}
 			
 			if (item_buffer == null) {
-				item_buffer = new DockSurface.with_surface (win_rect.width, win_rect.height, cr.get_target ());
+				item_buffer = new Surface.with_cairo_surface (win_rect.width, win_rect.height, cr.get_target ());
 #if HAVE_HIDPI
 				cairo_surface_set_device_scale (item_buffer.Internal, window_scale_factor, window_scale_factor);
 #endif
 			}
 			
 			if (shadow_buffer == null) {
-				shadow_buffer = new DockSurface.with_surface (win_rect.width, win_rect.height, cr.get_target ());
+				shadow_buffer = new Surface.with_cairo_surface (win_rect.width, win_rect.height, cr.get_target ());
 #if HAVE_HIDPI
 				cairo_surface_set_device_scale (shadow_buffer.Internal, window_scale_factor, window_scale_factor);
 #endif
@@ -395,7 +395,7 @@ namespace Plank
 			}
 
 			if (opacity < 1.0 && fade_buffer == null) {
-				fade_buffer = new DockSurface.with_surface (win_rect.width, win_rect.height, cr.get_target ());
+				fade_buffer = new Surface.with_cairo_surface (win_rect.width, win_rect.height, cr.get_target ());
 #if HAVE_HIDPI
 				cairo_surface_set_device_scale (fade_buffer.Internal, window_scale_factor, window_scale_factor);
 #endif
@@ -765,7 +765,7 @@ namespace Plank
 			var icon_surface = item.get_surface_copy (icon_size * window_scale_factor, icon_size * window_scale_factor, item_buffer);
 			unowned Cairo.Context icon_cr = icon_surface.Context;
 			
-			DockSurface? icon_overlay_surface = null;
+			Surface? icon_overlay_surface = null;
 			if (item.CountVisible || item.ProgressVisible)
 				icon_overlay_surface = item.get_foreground_surface (icon_size * window_scale_factor, icon_size * window_scale_factor, item_buffer, (DrawDataFunc<DockItem>) draw_item_foreground);
 			
@@ -831,7 +831,7 @@ namespace Plank
 			var icon_size = (int) (draw_value.icon_size + 2 * shadow_size) * window_scale_factor;
 			
 			// load and draw the icon shadow
-			DockSurface? icon_shadow_surface = null;
+			Surface? icon_shadow_surface = null;
 			if (shadow_size > 0)
 				icon_shadow_surface = item.get_background_surface (icon_size, icon_size, item_buffer, (DrawDataFunc<DockItem>) draw_item_background);
 			
@@ -853,10 +853,10 @@ namespace Plank
 		}
 		
 		[CCode (instance_pos = -1)]
-		DockSurface draw_item_foreground (int width, int height, DockSurface model, DockItem item)
+		Surface draw_item_foreground (int width, int height, Surface model, DockItem item)
 		{
 			Logger.verbose ("DockItem.draw_item_overlay (width = %i, height = %i)", width, height);
-			var surface = new DockSurface.with_dock_surface (width, height, model);
+			var surface = new Surface.with_surface (width, height, model);
 			
 			var icon_size = int.min (width, height) * window_scale_factor;
 			var urgent_color = get_styled_color ();
@@ -874,7 +874,7 @@ namespace Plank
 		}
 		
 		[CCode (instance_pos = -1)]
-		DockSurface draw_item_background (int width, int height, DockSurface model, DockItem item)
+		Surface draw_item_background (int width, int height, Surface model, DockItem item)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			var shadow_size = position_manager.IconShadowSize * window_scale_factor;
@@ -884,7 +884,7 @@ namespace Plank
 			var icon_surface = item.get_surface (icon_size, icon_size, model);
 			
 			Logger.verbose ("DockItem.draw_icon_with_shadow (width = %i, height = %i, shadow_size = %i)", width, height, shadow_size);
-			var surface = new DockSurface.with_dock_surface (width, height, model);
+			var surface = new Surface.with_surface (width, height, model);
 			unowned Cairo.Context cr = surface.Context;
 			var shadow_surface = icon_surface.create_mask (0.4, null);
 			
@@ -928,7 +928,7 @@ namespace Plank
 				urgent_indicator_buffer = theme.create_indicator (position_manager.IndicatorSize, urgent_indicator_color, item_buffer);
 			}
 			
-			unowned DockSurface indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
+			unowned Surface indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
 			
 			var x = 0.0, y = 0.0;
 			switch (position_manager.Position) {

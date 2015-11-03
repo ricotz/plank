@@ -30,9 +30,9 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Drawing/AnimatedRenderer.vala \
 	$(top_srcdir)/lib/Drawing/Color.vala \
 	$(top_srcdir)/lib/Drawing/DrawingService.vala \
-	$(top_srcdir)/lib/Drawing/DockSurface.vala \
 	$(top_srcdir)/lib/Drawing/DockTheme.vala \
 	$(top_srcdir)/lib/Drawing/Easing.vala \
+	$(top_srcdir)/lib/Drawing/Surface.vala \
 	$(top_srcdir)/lib/Drawing/SurfaceCache.vala \
 	$(top_srcdir)/lib/Drawing/Theme.vala \
 	$(top_srcdir)/lib/Factories/AbstractMain.vala \

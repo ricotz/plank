@@ -20,6 +20,10 @@
 namespace Plank
 {
 	/**
+<<<<<<< TREE
+=======
+	public delegate Surface DrawItemFunc (DockItem item, Surface source, Surface? target);
+>>>>>>> MERGE-SOURCE
 	 * The base class for all dock items.
 	 */
 	public abstract class DockItem : DockElement
@@ -122,7 +126,7 @@ namespace Plank
 		
 		SurfaceCache<DockItem> buffer;
 		SurfaceCache<DockItem> background_buffer;
-		DockSurface? foreground_surface = null;
+		Surface? foreground_surface = null;
 		
 		FileMonitor? launcher_file_monitor = null;
 		FileMonitor? icon_file_monitor = null;
@@ -415,7 +419,7 @@ namespace Plank
 		}
 		
 		/**
-		 * Returns the dock surface for this item.
+		 * Returns the surface for this item.
 		 *
 		 * It might trigger an internal redraw if the requested size
 		 * isn't cached yet.
@@ -423,17 +427,17 @@ namespace Plank
 		 * @param width width of the icon surface
 		 * @param height height of the icon surface
 		 * @param model existing surface to use as basis of new surface
-		 * @return the dock surface for this item which may not be changed
+		 * @return the surface for this item which may not be changed
 		 */
-		public DockSurface get_surface (int width, int height, DockSurface model)
+		public Surface get_surface (int width, int height, Surface model)
 		{
 			return buffer.get_surface<DockItem> (width, height, model, (DrawFunc<DockItem>) internal_get_surface, null);
 		}
 		
 		[CCode (instance_pos = -1)]
-		DockSurface internal_get_surface (int width, int height, DockSurface model, DrawDataFunc<DockItem>? draw_data_func)
+		Surface internal_get_surface (int width, int height, Surface model, DrawDataFunc<DockItem>? draw_data_func)
 		{
-			var surface = new DockSurface.with_dock_surface (width, height, model);
+			var surface = new Surface.with_surface (width, height, model);
 			
 			Logger.verbose ("DockItem.draw_icon (width = %i, height = %i)", width, height);
 			draw_icon (surface);
@@ -454,13 +458,13 @@ namespace Plank
 		 * @param draw_data_func function which creates/changes the background surface
 		 * @return the background surface of this item which may not be changed
 		 */
-		public DockSurface? get_background_surface (int width, int height, DockSurface model, DrawDataFunc<DockItem>? draw_data_func)
+		public Surface? get_background_surface (int width, int height, Surface model, DrawDataFunc<DockItem>? draw_data_func)
 		{
 			return background_buffer.get_surface<DockItem> (width, height, model, (DrawFunc<DockItem>) internal_get_background_surface, (DrawDataFunc<DockItem>) draw_data_func);
 		}
 		
 		[CCode (instance_pos = -1)]
-		DockSurface? internal_get_background_surface (int width, int height, DockSurface model, DrawDataFunc<DockItem>? draw_data_func)
+		Surface? internal_get_background_surface (int width, int height, Surface model, DrawDataFunc<DockItem>? draw_data_func)
 		{
 			if (draw_data_func == null)
 				return null;
@@ -479,7 +483,7 @@ namespace Plank
 		 * @param draw_data_func function which creates/changes the foreground surface
 		 * @return the background surface of this item which may not be changed
 		 */
-		public DockSurface? get_foreground_surface (int width, int height, DockSurface model, DrawDataFunc<DockItem>? draw_data_func)
+		public Surface? get_foreground_surface (int width, int height, Surface model, DrawDataFunc<DockItem>? draw_data_func)
 		{
 			if (draw_data_func == null) {
 				foreground_surface = null;
@@ -496,7 +500,7 @@ namespace Plank
 		}
 		
 		/**
-		 * Returns a copy of the dock surface for this item.
+		 * Returns a copy of the surface for this item.
 		 *
 		 * It will trigger an internal redraw if the requested size
 		 * isn't matching the cache.
@@ -504,9 +508,9 @@ namespace Plank
 		 * @param width width of the icon surface
 		 * @param height height of the icon surface
 		 * @param model existing surface to use as basis of new surface
-		 * @return the copied dock surface for this item
+		 * @return the copied surface for this item
 		 */
-		public DockSurface get_surface_copy (int width, int height, DockSurface model)
+		public Surface get_surface_copy (int width, int height, Surface model)
 		{
 			return get_surface (width, height, model).copy ();
 		}
@@ -516,7 +520,7 @@ namespace Plank
 		 *
 		 * @param surface the surface to draw on
 		 */
-		protected virtual void draw_icon (DockSurface surface)
+		protected virtual void draw_icon (Surface surface)
 		{
 			Cairo.Surface? icon = null;
 			Gdk.Pixbuf? pbuf = ForcePixbuf;
@@ -554,7 +558,7 @@ namespace Plank
 		 *
 		 * @param surface the surface to draw on
 		 */
-		protected virtual void draw_icon_fast (DockSurface surface)
+		protected virtual void draw_icon_fast (Surface surface)
 		{
 			unowned Cairo.Context cr = surface.Context;
 			var width = surface.Width;

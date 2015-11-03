@@ -89,7 +89,7 @@ namespace Docky
 			reset_icon_buffer ();
 		}
 		
-		protected override void draw_icon (DockSurface surface)
+		protected override void draw_icon (Surface surface)
 		{
 			unowned ClockPreferences prefs = (ClockPreferences) Prefs;
 			
@@ -113,7 +113,7 @@ namespace Docky
 			cr.paint ();
 		}
 		
-		void render_digital_clock (DockSurface surface, DateTime now, int size)
+		void render_digital_clock (Surface surface, DateTime now, int size)
 		{
 			unowned ClockPreferences prefs = (ClockPreferences) Prefs;
 			unowned Cairo.Context cr = surface.Context;

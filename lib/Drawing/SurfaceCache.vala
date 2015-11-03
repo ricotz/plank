@@ -28,7 +28,7 @@ namespace Plank
 	 * @param draw_data_func function which changes the surface
 	 * @return the newly created surface or NULL
 	 */
-	public delegate DockSurface? DrawFunc<G> (int width, int height, DockSurface model, DrawDataFunc<G>? draw_data_func);
+	public delegate Surface? DrawFunc<G> (int width, int height, Surface model, DrawDataFunc<G>? draw_data_func);
 	
 	/**
 	 * Creates a new surface using the given element and information
@@ -39,7 +39,7 @@ namespace Plank
 	 * @param data the data object used for drawing
 	 * @return the newly created surface or NULL
 	 */
-	public delegate DockSurface? DrawDataFunc<G> (int width, int height, DockSurface model, G? data);
+	public delegate Surface? DrawDataFunc<G> (int width, int height, Surface model, G? data);
 	
 	/**
 	 * Controls some internal behaviors of a {@link Plank.SurfaceCache}
@@ -118,7 +118,7 @@ namespace Plank
 		public SurfaceCacheFlags flags { get; construct; }
 		
 		Gee.TreeSet<unowned SurfaceInfo> infos;
-		Gee.HashMap<SurfaceInfo, DockSurface> cache_map;
+		Gee.HashMap<SurfaceInfo, Surface> cache_map;
 		unowned SurfaceInfo? last_info;
 		Mutex cache_mutex;
 		
@@ -133,10 +133,10 @@ namespace Plank
 		{
 #if HAVE_GEE_0_8
 			infos = new Gee.TreeSet<unowned SurfaceInfo> ((CompareDataFunc) SurfaceInfo.compare);
-			cache_map = new Gee.HashMap<SurfaceInfo, DockSurface> ((Gee.HashDataFunc<SurfaceInfo>) SurfaceInfo.hash);
+			cache_map = new Gee.HashMap<SurfaceInfo, Surface> ((Gee.HashDataFunc<SurfaceInfo>) SurfaceInfo.hash);
 #else
 			infos = new Gee.TreeSet<unowned SurfaceInfo> ((CompareFunc) SurfaceInfo.compare);
-			cache_map = new Gee.HashMap<SurfaceInfo, DockSurface> ((HashFunc<SurfaceInfo>) SurfaceInfo.hash);
+			cache_map = new Gee.HashMap<SurfaceInfo, Surface> ((HashFunc<SurfaceInfo>) SurfaceInfo.hash);
 #endif
 			last_info = null;
 			
@@ -159,14 +159,14 @@ namespace Plank
 			last_info = null;
 		}
 		
-		public DockSurface? get_surface<G> (int width, int height, DockSurface model, DrawFunc<G> draw_func, DrawDataFunc<G>? draw_data_func)
+		public Surface? get_surface<G> (int width, int height, Surface model, DrawFunc<G> draw_func, DrawDataFunc<G>? draw_data_func)
 			requires (width >= 0 && height >= 0)
 		{
 			cache_mutex.lock ();
 			
 			unowned SurfaceInfo? info;
 			SurfaceInfo? current_info = null;
-			DockSurface? surface = null;
+			Surface? surface = null;
 			bool needs_scaling = false;
 			
 			info = find_match ((uint16) width, (uint16) height, out needs_scaling);

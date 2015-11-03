@@ -138,7 +138,7 @@ namespace Plank
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override void draw_icon_fast (DockSurface surface)
+		protected override void draw_icon_fast (Surface surface)
 		{
 			unowned Cairo.Context cr = surface.Context;
 			var width = surface.Width;
@@ -172,7 +172,7 @@ namespace Plank
 		/**
 		 * {@inheritDoc}
 		 */
-		protected override void draw_icon (DockSurface surface)
+		protected override void draw_icon (Surface surface)
 		{
 			if (!is_valid () || !has_default_icon_match ()) {
 				base.draw_icon (surface);

@@ -28,12 +28,12 @@ namespace PlankTests
 		Test.add_func ("/Drawing/DrawingService/basics", drawing_drawingservice);
 		Test.add_func ("/Drawing/DrawingService/average_color", drawing_drawingservice_average_color);
 		
-		Test.add_func ("/Drawing/DockSurface/basics", drawing_docksurface);
-		Test.add_func ("/Drawing/DockSurface/create_mask", drawing_docksurface_create_mask);
-		Test.add_func ("/Drawing/DockSurface/exponential_blur", drawing_docksurface_exponential_blur);
-		Test.add_func ("/Drawing/DockSurface/fast_blur", drawing_docksurface_fast_blur);
-		Test.add_func ("/Drawing/DockSurface/gaussian_blur", drawing_docksurface_gaussian_blur);
-		Test.add_func ("/Drawing/DockSurface/to_pixbuf", drawing_docksurface_to_pixbuf);
+		Test.add_func ("/Drawing/Surface/basics", drawing_docksurface);
+		Test.add_func ("/Drawing/Surface/create_mask", drawing_docksurface_create_mask);
+		Test.add_func ("/Drawing/Surface/exponential_blur", drawing_docksurface_exponential_blur);
+		Test.add_func ("/Drawing/Surface/fast_blur", drawing_docksurface_fast_blur);
+		Test.add_func ("/Drawing/Surface/gaussian_blur", drawing_docksurface_gaussian_blur);
+		Test.add_func ("/Drawing/Surface/to_pixbuf", drawing_docksurface_to_pixbuf);
 		
 		Test.add_func ("/Drawing/Easing/basics", drawing_easing);
 		
@@ -168,8 +168,8 @@ namespace PlankTests
 	void drawing_drawingservice_average_color_helper (Color color, double delta)
 	{
 		Color average;
-		DockSurface surface;
-		surface = new DockSurface (256, 256);
+		Surface surface;
+		surface = new Surface (256, 256);
 		unowned Cairo.Context cr = surface.Context;
 		
 		cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
@@ -183,13 +183,13 @@ namespace PlankTests
 
 	void drawing_docksurface ()
 	{
-		DockSurface surface, surface2, surface3, surface4;
+		Surface surface, surface2, surface3, surface4;
 		Gdk.Pixbuf pixbuf;
 		
-		surface = new DockSurface (256, 256);
-		surface2 = new DockSurface.with_dock_surface (256, 256, new DockSurface (1, 1));
-		surface3 = new DockSurface.with_surface (256, 256, new DockSurface (1, 1).Internal);
-		surface4 = new DockSurface.with_internal (new Cairo.ImageSurface (Cairo.Format.ARGB32, 256, 256));
+		surface = new Surface (256, 256);
+		surface2 = new Surface.with_surface (256, 256, new Surface (1, 1));
+		surface3 = new Surface.with_cairo_surface (256, 256, new Surface (1, 1).Internal);
+		surface4 = new Surface.with_internal (new Cairo.ImageSurface (Cairo.Format.ARGB32, 256, 256));
 		
 		surface.clear ();
 		surface2.clear ();
@@ -210,11 +210,11 @@ namespace PlankTests
 	
 	void drawing_docksurface_create_mask ()
 	{
-		DockSurface surface, mask;
+		Surface surface, mask;
 		Gdk.Pixbuf pixbuf;
 		
 		pixbuf = DrawingService.load_icon (TEST_ICON, 256, 256);
-		surface = new DockSurface (256, 256);
+		surface = new Surface (256, 256);
 		
 		unowned Cairo.Context cr = surface.Context;
 		Gdk.cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
@@ -228,12 +228,12 @@ namespace PlankTests
 	
 	void drawing_docksurface_fast_blur ()
 	{
-		DockSurface surface, surface2;
+		Surface surface, surface2;
 		Gdk.Pixbuf pixbuf;
 		
 		pixbuf = DrawingService.load_icon (TEST_ICON, 256, 256);
-		surface = new DockSurface (256, 256);
-		surface2 = new DockSurface (256, 256);
+		surface = new Surface (256, 256);
+		surface2 = new Surface (256, 256);
 		
 		unowned Cairo.Context cr = surface.Context;
 		Gdk.cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
@@ -260,12 +260,12 @@ namespace PlankTests
 	
 	void drawing_docksurface_exponential_blur ()
 	{
-		DockSurface surface, surface2;
+		Surface surface, surface2;
 		Gdk.Pixbuf pixbuf;
 		
 		pixbuf = DrawingService.load_icon (TEST_ICON, 256, 256);
-		surface = new DockSurface (256, 256);
-		surface2 = new DockSurface (256, 256);
+		surface = new Surface (256, 256);
+		surface2 = new Surface (256, 256);
 		
 		unowned Cairo.Context cr = surface.Context;
 		Gdk.cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
@@ -292,12 +292,12 @@ namespace PlankTests
 	
 	void drawing_docksurface_gaussian_blur ()
 	{
-		DockSurface surface, surface2;
+		Surface surface, surface2;
 		Gdk.Pixbuf pixbuf;
 		
 		pixbuf = DrawingService.load_icon (TEST_ICON, 256, 256);
-		surface = new DockSurface (256, 256);
-		surface2 = new DockSurface (256, 256);
+		surface = new Surface (256, 256);
+		surface2 = new Surface (256, 256);
 		
 		unowned Cairo.Context cr = surface.Context;
 		Gdk.cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
@@ -324,12 +324,12 @@ namespace PlankTests
 	
 	void drawing_docksurface_to_pixbuf ()
 	{
-		DockSurface surface, surface2;
+		Surface surface, surface2;
 		Gdk.Pixbuf pixbuf;
 		
 		pixbuf = DrawingService.load_icon (TEST_ICON, 256, 256);
-		surface = new DockSurface (256, 256);
-		surface2 = new DockSurface (256, 256);
+		surface = new Surface (256, 256);
+		surface2 = new Surface (256, 256);
 		
 		unowned Cairo.Context cr = surface.Context;
 		Gdk.cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
@@ -367,10 +367,10 @@ namespace PlankTests
 	
 	void drawing_theme_draw_item_count ()
 	{
-		DockSurface surface;
+		Surface surface;
 		DockTheme docktheme;
 		
-		surface = new DockSurface (512, 512);
+		surface = new Surface (512, 512);
 		docktheme = new DockTheme ("Test");
 		Color color = { 0.5, 0.4, 0.3, 1.0 };
 		
@@ -382,10 +382,10 @@ namespace PlankTests
 	
 	void drawing_theme_draw_item_progress ()
 	{
-		DockSurface surface;
+		Surface surface;
 		DockTheme docktheme;
 		
-		surface = new DockSurface (512, 512);
+		surface = new Surface (512, 512);
 		docktheme = new DockTheme ("Test");
 		Color color = { 0.5, 0.4, 0.3, 1.0 };
 		
@@ -398,10 +398,10 @@ namespace PlankTests
 	
 	void drawing_theme_draw_active_glow ()
 	{
-		DockSurface surface;
+		Surface surface;
 		DockTheme docktheme;
 		
-		surface = new DockSurface (512, 128);
+		surface = new Surface (512, 128);
 		docktheme = new DockTheme ("Test");
 		Color color = { 0.5, 0.4, 0.3, 1.0 };
 		
@@ -414,10 +414,10 @@ namespace PlankTests
 	
 	void drawing_theme_create_indicator ()
 	{
-		DockSurface surface, surface2;
+		Surface surface, surface2;
 		DockTheme docktheme;
 		
-		surface = new DockSurface (512, 512);
+		surface = new Surface (512, 512);
 		docktheme = new DockTheme ("Test");
 		Color color = { 0.5, 0.4, 0.3, 1.0 };
 		
@@ -428,10 +428,10 @@ namespace PlankTests
 	
 	void drawing_theme_create_urgent_glow ()
 	{
-		DockSurface surface, surface2;
+		Surface surface, surface2;
 		DockTheme docktheme;
 		
-		surface = new DockSurface (512, 512);
+		surface = new Surface (512, 512);
 		docktheme = new DockTheme ("Test");
 		Color color = { 0.5, 0.4, 0.3, 1.0 };
 		
@@ -442,11 +442,11 @@ namespace PlankTests
 	
 	void drawing_theme_draw_background ()
 	{
-		DockSurface surface, surface2, surface3, surface4, surface5;
+		Surface surface, surface2, surface3, surface4, surface5;
 		DockTheme docktheme;
 		Gdk.Pixbuf pixbuf2, pixbuf3, pixbuf4, pixbuf5;
 		
-		surface = new DockSurface (512, 512);
+		surface = new Surface (512, 512);
 		docktheme = new DockTheme ("Test");
 		docktheme.draw_background (surface);
 		

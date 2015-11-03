@@ -115,9 +115,9 @@ namespace Plank
 		/**
 		 * Draws a background onto the surface.
 		 *
-		 * @param surface the dock surface to draw on
+		 * @param surface the surface to draw on
 		 */
-		public void draw_background (DockSurface surface)
+		public void draw_background (Surface surface)
 		{
 			unowned Cairo.Context cr = surface.Context;
 			Cairo.Pattern gradient;

@@ -180,7 +180,7 @@ namespace Plank
 #if HAVE_HIDPI
 			drag_icon_size *= window_scale_factor;
 #endif
-			var drag_surface = new DockSurface (drag_icon_size, drag_icon_size);
+			var drag_surface = new Surface (drag_icon_size, drag_icon_size);
 #if HAVE_HIDPI
 			cairo_surface_set_device_scale (drag_surface.Internal, window_scale_factor, window_scale_factor);
 #endif
