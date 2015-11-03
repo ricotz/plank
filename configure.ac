@@ -3,7 +3,7 @@ m4_define([plank_released], [0])
 
 m4_define([plank_major_version], [0])
 m4_define([plank_minor_version], [10])
-m4_define([plank_micro_version], [1])
+m4_define([plank_micro_version], [9])
 m4_define([plank_nano_version], [0])
 
 # If library source has changed since last release, increment revision
@@ -11,7 +11,7 @@ m4_define([plank_nano_version], [0])
 #  increment current and set revision to 0
 # If interfaces have been added since last release, increment age
 # If interfaces have been removed since last release, set age to 0
-m4_define([plank_lt_current], [0])
+m4_define([plank_lt_current], [1])
 m4_define([plank_lt_revision], [0])
 m4_define([plank_lt_age], [0])
 
@@ -87,7 +87,7 @@ AC_SUBST([PLANK_MICRO_VERSION])
 PLANK_NANO_VERSION=plank_nano_version
 AC_SUBST([PLANK_NANO_VERSION])
 
-API_VERSION=0.3
+API_VERSION=0.11
 AC_SUBST([API_VERSION])
 
 
