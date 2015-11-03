@@ -68,11 +68,11 @@ libplank_la_VALASOURCES = \
 	PositionManager.vala \
 	DBus/Client.vala \
 	DBus/Interfaces.vala \
-	Drawing/AnimatedRenderer.vala \
 	Drawing/Color.vala \
 	Drawing/DrawingService.vala \
 	Drawing/DockTheme.vala \
 	Drawing/Easing.vala \
+	Drawing/Renderer.vala \
 	Drawing/Surface.vala \
 	Drawing/SurfaceCache.vala \
 	Drawing/Theme.vala \

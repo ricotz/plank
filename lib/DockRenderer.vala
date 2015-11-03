@@ -22,7 +22,7 @@ namespace Plank
 	/**
 	 * Handles all of the drawing for a dock.
 	 */
-	public class DockRenderer : AnimatedRenderer
+	public class DockRenderer : Renderer
 	{
 		public DockController controller { private get; construct; }
 		

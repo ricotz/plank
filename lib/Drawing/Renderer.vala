@@ -23,7 +23,7 @@ namespace Plank
 	 * Handles animated rendering.  Uses a timer and continues requesting
 	 * redraws for a widget until no more animation is needed.
 	 */
-	public abstract class AnimatedRenderer : GLib.Object
+	public abstract class Renderer : GLib.Object
 	{
 		public Gtk.Widget widget { get; construct; }
 		
@@ -40,7 +40,7 @@ namespace Plank
 		/**
 		 * Creates a new animation renderer.
 		 */
-		public AnimatedRenderer (Gtk.Widget widget)
+		public Renderer (Gtk.Widget widget)
 		{
 			Object (widget : widget);
 		}
@@ -54,7 +54,7 @@ namespace Plank
 			widget_draw_handler_id = widget.draw.connect (on_widget_draw);
 		}
 		
-		~AnimatedRenderer ()
+		~Renderer ()
 		{
 			if (timer_id > 0U) {
 #if HAVE_GTK_3_8

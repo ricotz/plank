@@ -27,11 +27,11 @@ plank_doc_files = \
 	$(top_builddir)/lib/Version.vala \
 	$(top_srcdir)/lib/DBus/Client.vala \
 	$(top_srcdir)/lib/DBus/Interfaces.vala \
-	$(top_srcdir)/lib/Drawing/AnimatedRenderer.vala \
 	$(top_srcdir)/lib/Drawing/Color.vala \
 	$(top_srcdir)/lib/Drawing/DrawingService.vala \
 	$(top_srcdir)/lib/Drawing/DockTheme.vala \
 	$(top_srcdir)/lib/Drawing/Easing.vala \
+	$(top_srcdir)/lib/Drawing/Renderer.vala \
 	$(top_srcdir)/lib/Drawing/Surface.vala \
 	$(top_srcdir)/lib/Drawing/SurfaceCache.vala \
 	$(top_srcdir)/lib/Drawing/Theme.vala \
