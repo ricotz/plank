@@ -27,22 +27,8 @@ namespace Plank
 		Intl.textdomain (Build.GETTEXT_PACKAGE);
 		
 		var application = new Plank.Main ();
-		Factory.init (application, new DockletsItemFactory ());
+		Factory.init (application, new ItemFactory ());
 		return application.run (argv);
-	}
-	
-	public class DockletsItemFactory : ItemFactory
-	{
-		public override DockElement make_element (GLib.File file)
-		{
-			var launcher = get_launcher_from_dockitem (file);
-			
-			Docky.Docklet? docklet;
-			if ((docklet = Docky.DockletManager.get_default ().get_docklet_by_uri (launcher)) != null)
-				return docklet.make_element (launcher, file);
-			
-			return default_make_element (file, launcher);
-		}
 	}
 	
 	public class Main : AbstractMain
@@ -89,11 +75,6 @@ namespace Plank
 				about_translators : "",
 				about_license_type : Gtk.License.GPL_3_0
 			);
-		}
-		
-		public override void initialize ()
-		{
-			Docky.DockletManager.get_default ().load_docklets ();
 		}
 	}
 }

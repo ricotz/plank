@@ -68,6 +68,9 @@ libplank_la_VALASOURCES = \
 	PositionManager.vala \
 	DBus/Client.vala \
 	DBus/Interfaces.vala \
+	Docklets/Docklet.vala \
+	Docklets/DockletItem.vala \
+	Docklets/DockletManager.vala \
 	Drawing/Color.vala \
 	Drawing/DrawingService.vala \
 	Drawing/DockTheme.vala \
@@ -180,62 +183,18 @@ libplank_internal_la_vala.stamp: $(libplank_internal_la_VALASOURCES) Makefile
 	$(AM_V_at)touch $@
 
 
-libplank_docklets_la_LTLIBRARIES = libplank-docklets.la
-libplank_docklets_ladir = $(pkglibdir)
-
-libplank_docklets_la_LDFLAGS = \
-	-avoid-version \
-	$(PLANK_CORE_LDFLAGS) \
-	$(NULL)
-
-libplank_docklets_la_VALAFLAGS = \
-	$(builddir)/plank.vapi \
-	$(NULL)
-
-libplank_docklets_la_LIBADD = \
-	$(PLANK_CORE_LIBS) \
-	$(builddir)/libplank.la \
-	$(NULL)
-
-libplank_docklets_la_VALASOURCES = \
-	Docklets/Docklet.vala \
-	Docklets/DockletItem.vala \
-	Docklets/DockletManager.vala \
-	$(NULL)
-
-nodist_libplank_docklets_la_SOURCES = \
-	$(libplank_docklets_la_VALASOURCES:.vala=.c) \
-	$(NULL)
-
-plank-docklets.h plank-docklets.vapi: libplank_docklets_la_vala.stamp
-$(libplank_docklets_la_VALASOURCES:.vala=.c): libplank_docklets_la_vala.stamp
-
-libplank_docklets_la_vala.stamp: $(libplank_docklets_la_VALASOURCES) $(builddir)/plank.vapi Makefile
-	$(AM_V_VALA)$(VALAC) \
-		$(AM_VALAFLAGS) $(libplank_docklets_la_VALAFLAGS) \
-		-H plank-docklets.h \
-		--library plank-docklets \
-		--vapi plank-docklets.vapi \
-		$(filter %.vala %.c,$^)
-	$(AM_V_at)touch $@
-
-
 TESTS = abicheck.sh
 
 CLEANFILES = \
 	libplank_la_vala.stamp \
-	libplank_docklets_la_vala.stamp \
 	libplank_internal_la_vala.stamp \
 	$(nodist_libplank_la_SOURCES) \
-	$(nodist_libplank_docklets_la_SOURCES) \
 	$(nodist_libplank_internal_la_SOURCES) \
 	build-abi \
 	plank.deps \
 	plank.pc \
 	plank.vapi \
 	plank.h \
-	plank-docklets.vapi \
-	plank-docklets.h \
 	plank-internal.vapi \
 	plank-internal.h \
 	Version.vala \
@@ -243,7 +202,6 @@ CLEANFILES = \
 
 EXTRA_DIST = \
 	$(libplank_la_VALASOURCES) \
-	$(libplank_docklets_la_VALASOURCES) \
 	$(libplank_internal_la_VALASOURCES) \
 	abicheck.sh \
 	libplank.symbols \

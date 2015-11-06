@@ -40,9 +40,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-using Plank;
-
-namespace Docky
+namespace Plank
 {
 	public const string DOCKLET_ENTRY_POINT = "docklet_init";
 	

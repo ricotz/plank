@@ -22,7 +22,6 @@ libdocklet_clippy_la_VALAFLAGS = \
 	--vapidir $(top_srcdir)/vapi \
 	--vapidir $(top_builddir)/lib \
 	--pkg plank \
-	--pkg plank-docklets \
 	$(NULL)
 
 libdocklet_clippy_la_LIBADD = \
@@ -43,7 +42,7 @@ libdocklet_clippy_la_CFLAGS = \
 
 $(libdocklet_clippy_la_VALASOURCES:.vala=.c): libdocklet_clippy_la_vala.stamp
 
-libdocklet_clippy_la_vala.stamp: $(libdocklet_clippy_la_VALASOURCES) $(top_builddir)/lib/plank-docklets.vapi Makefile
+libdocklet_clippy_la_vala.stamp: $(libdocklet_clippy_la_VALASOURCES) $(top_builddir)/lib/plank.vapi Makefile
 	$(AM_V_VALA)$(VALAC) \
 		$(libdocklet_clippy_la_VALAFLAGS) \
 		-C \

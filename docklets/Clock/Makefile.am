@@ -27,7 +27,6 @@ libdocklet_clock_la_VALAFLAGS = \
 	--vapidir $(top_srcdir)/vapi \
 	--vapidir $(top_builddir)/lib \
 	--pkg plank \
-	--pkg plank-docklets \
 	$(NULL)
 
 libdocklet_clock_la_LIBADD = \
@@ -38,7 +37,6 @@ libdocklet_clock_la_LDFLAGS = \
 	$(DOCKLET_LDFLAGS) \
 	$(PLANK_CORE_LDFLAGS) \
 	$(top_builddir)/lib/libplank.la \
-	$(top_builddir)/lib/libplank-docklets.la \
 	$(NULL)
 
 libdocklet_clock_la_CFLAGS = \
@@ -52,7 +50,7 @@ docky-clock-resources.c: $(srcdir)/clock.gresource.xml Makefile $(shell $(GLIB_C
 
 $(libdocklet_clock_la_VALASOURCES:.vala=.c): libdocklet_clock_la_vala.stamp
 
-libdocklet_clock_la_vala.stamp: $(libdocklet_clock_la_VALASOURCES) $(top_builddir)/lib/plank-docklets.vapi Makefile
+libdocklet_clock_la_vala.stamp: $(libdocklet_clock_la_VALASOURCES) $(top_builddir)/lib/plank.vapi Makefile
 	$(AM_V_VALA)$(VALAC) \
 		$(libdocklet_clock_la_VALAFLAGS) \
 		-C \

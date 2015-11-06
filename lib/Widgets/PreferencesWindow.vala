@@ -83,12 +83,14 @@ namespace Plank
 				var stack = (Gtk.Stack) builder.get_object ("dock_preferences");
 				add (stack);
 #else
-				const string[] ids = { "grid_appearance", "grid_behaviour", "adj_hide_delay", "adj_iconsize", "adj_offset", "adj_unhide_delay" };
+				const string[] ids = { "grid_appearance", "grid_behaviour", "view_docklets",
+					"adj_hide_delay", "adj_iconsize", "adj_offset", "adj_unhide_delay" };
 				builder.add_objects_from_resource ("%s/ui/preferences.ui".printf (Plank.G_RESOURCE_PATH), ids);
 				
 				var notebook = new Gtk.Notebook ();
 				notebook.append_page ((Gtk.Widget) builder.get_object ("grid_appearance"), new Gtk.Label (_("Appearance")));
 				notebook.append_page ((Gtk.Widget) builder.get_object ("grid_behaviour"), new Gtk.Label (_("Behaviour")));
+				notebook.append_page ((Gtk.Widget) builder.get_object ("view_docklets"), new Gtk.Label (_("Docklets")));
 				notebook.show ();
 				add (notebook);
 #endif

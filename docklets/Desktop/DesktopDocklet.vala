@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-public static void docklet_init (Docky.DockletManager manager)
+public static void docklet_init (Plank.DockletManager manager)
 {
 	manager.register_docklet ("Desktop", typeof (Docky.DesktopDocklet));
 }
@@ -26,7 +26,7 @@ namespace Docky
 {
 	public const string G_RESOURCE_PATH = "/net/launchpad/plank/docklets/desktop";
 	
-	public class DesktopDocklet : Docklet
+	public class DesktopDocklet : Plank.Docklet
 	{
 		public override Plank.DockElement make_element (string launcher, GLib.File file)
 		{

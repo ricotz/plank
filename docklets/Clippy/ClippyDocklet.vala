@@ -17,14 +17,14 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-public static void docklet_init (Docky.DockletManager manager)
+public static void docklet_init (Plank.DockletManager manager)
 {
 	manager.register_docklet ("Clippy", typeof (Docky.ClippyDocklet));
 }
 
 namespace Docky
 {
-	public class ClippyDocklet : Docklet
+	public class ClippyDocklet : Plank.Docklet
 	{
 		public override Plank.DockElement make_element (string launcher, GLib.File file)
 		{

@@ -98,7 +98,13 @@ namespace Plank
 		 */
 		public virtual DockElement make_element (GLib.File file)
 		{
-			return default_make_element (file, get_launcher_from_dockitem (file));
+			var launcher = get_launcher_from_dockitem (file);
+			
+			Docklet? docklet;
+			if ((docklet = DockletManager.get_default ().get_docklet_by_uri (launcher)) != null)
+				return docklet.make_element (launcher, file);
+			
+			return default_make_element (file, launcher);
 		}
 		
 		/**

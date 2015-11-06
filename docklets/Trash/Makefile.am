@@ -21,7 +21,6 @@ libdocklet_trash_la_VALAFLAGS = \
 	--vapidir $(top_srcdir)/vapi \
 	--vapidir $(top_builddir)/lib \
 	--pkg plank \
-	--pkg plank-docklets \
 	$(NULL)
 
 libdocklet_trash_la_LIBADD = \
@@ -42,7 +41,7 @@ libdocklet_trash_la_CFLAGS = \
 
 $(libdocklet_trash_la_VALASOURCES:.vala=.c): libdocklet_trash_la_vala.stamp
 
-libdocklet_trash_la_vala.stamp: $(libdocklet_trash_la_VALASOURCES) $(top_builddir)/lib/plank-docklets.vapi Makefile
+libdocklet_trash_la_vala.stamp: $(libdocklet_trash_la_VALASOURCES) $(top_builddir)/lib/plank.vapi Makefile
 	$(AM_V_VALA)$(VALAC) \
 		$(libdocklet_trash_la_VALAFLAGS) \
 		-C \

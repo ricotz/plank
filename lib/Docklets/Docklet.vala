@@ -17,7 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace Docky
+namespace Plank
 {
 	/**
 	 * The base class for all docklets.

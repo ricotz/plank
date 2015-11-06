@@ -17,14 +17,14 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-public static void docklet_init (Docky.DockletManager manager)
+public static void docklet_init (Plank.DockletManager manager)
 {
 	manager.register_docklet ("Trash", typeof (Docky.TrashDocklet));
 }
 
 namespace Docky
 {
-	public class TrashDocklet : Docklet
+	public class TrashDocklet : Plank.Docklet
 	{
 		public override Plank.DockElement make_element (string launcher, GLib.File file)
 		{

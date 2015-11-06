@@ -17,9 +17,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using Plank;
-
-namespace Docky
+namespace Plank
 {
 	public abstract class DockletItem : DockItem
 	{

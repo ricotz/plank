@@ -26,7 +26,6 @@ libdocklet_desktop_la_VALAFLAGS = \
 	--vapidir $(top_srcdir)/vapi \
 	--vapidir $(top_builddir)/lib \
 	--pkg plank \
-	--pkg plank-docklets \
 	$(NULL)
 
 libdocklet_desktop_la_LIBADD = \
@@ -51,7 +50,7 @@ docky-desktop-resources.c: $(srcdir)/desktop.gresource.xml Makefile $(shell $(GL
 
 $(libdocklet_desktop_la_VALASOURCES:.vala=.c): libdocklet_desktop_la_vala.stamp
 
-libdocklet_desktop_la_vala.stamp: $(libdocklet_desktop_la_VALASOURCES) $(top_builddir)/lib/plank-docklets.vapi Makefile
+libdocklet_desktop_la_vala.stamp: $(libdocklet_desktop_la_VALASOURCES) $(top_builddir)/lib/plank.vapi Makefile
 	$(AM_V_VALA)$(VALAC) \
 		$(libdocklet_desktop_la_VALAFLAGS) \
 		-C \

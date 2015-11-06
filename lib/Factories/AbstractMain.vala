@@ -277,6 +277,7 @@ namespace Plank
 			
 			Paths.initialize (exec_name, build_pkg_data_dir);
 			WindowControl.initialize ();
+			DockletManager.get_default ().load_docklets ();
 			
 			initialize ();
 			create_controller ();
