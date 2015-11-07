@@ -20,16 +20,19 @@
 namespace Plank
 {
 	/**
-	 * The base class for all docklets.
+	 * The common interface for all docklets.
 	 */
-	public abstract class Docklet : Object
+	public interface Docklet : Object
 	{
-		public string name { get; construct; }
+		public abstract unowned string get_id ();
 		
-		public virtual bool supports_launcher (string launcher)
-		{
-			return (launcher == "docklet://%s".printf (name));
-		}
+		public abstract unowned string get_name ();
+		
+		public abstract unowned string get_description ();
+		
+		public abstract unowned string get_icon ();
+		
+		public abstract bool is_supported ();
 		
 		public abstract Plank.DockElement make_element (string launcher, GLib.File file);
 	}

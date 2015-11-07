@@ -19,16 +19,41 @@
 
 public static void docklet_init (Plank.DockletManager manager)
 {
-	manager.register_docklet ("Desktop", typeof (Docky.DesktopDocklet));
+	manager.register_docklet (typeof (Docky.DesktopDocklet));
 }
 
 namespace Docky
 {
 	public const string G_RESOURCE_PATH = "/net/launchpad/plank/docklets/desktop";
 	
-	public class DesktopDocklet : Plank.Docklet
+	public class DesktopDocklet : Object, Plank.Docklet
 	{
-		public override Plank.DockElement make_element (string launcher, GLib.File file)
+		public unowned string get_id ()
+		{
+			return "desktop";
+		}
+		
+		public unowned string get_name ()
+		{
+			return _("Desktop");
+		}
+		
+		public unowned string get_description ()
+		{
+			return "";
+		}
+		
+		public unowned string get_icon ()
+		{
+			return "resource://" + Docky.G_RESOURCE_PATH + "/icons/show-desktop.svg";
+		}
+		
+		public bool is_supported ()
+		{
+			return true;
+		}
+		
+		public Plank.DockElement make_element (string launcher, GLib.File file)
 		{
 			return new DesktopDockItem.with_dockitem_file (file);
 		}

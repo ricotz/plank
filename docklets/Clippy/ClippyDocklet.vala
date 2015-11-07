@@ -19,14 +19,39 @@
 
 public static void docklet_init (Plank.DockletManager manager)
 {
-	manager.register_docklet ("Clippy", typeof (Docky.ClippyDocklet));
+	manager.register_docklet (typeof (Docky.ClippyDocklet));
 }
 
 namespace Docky
 {
-	public class ClippyDocklet : Plank.Docklet
+	public class ClippyDocklet : Object, Plank.Docklet
 	{
-		public override Plank.DockElement make_element (string launcher, GLib.File file)
+		public unowned string get_id ()
+		{
+			return "clippy";
+		}
+		
+		public unowned string get_name ()
+		{
+			return _("Clippy");
+		}
+		
+		public unowned string get_description ()
+		{
+			return "";
+		}
+		
+		public unowned string get_icon ()
+		{
+			return "edit-cut";
+		}
+		
+		public bool is_supported ()
+		{
+			return true;
+		}
+		
+		public Plank.DockElement make_element (string launcher, GLib.File file)
 		{
 			return new ClippyDockItem.with_dockitem_file (file);
 		}

@@ -19,16 +19,41 @@
 
 public static void docklet_init (Plank.DockletManager manager)
 {
-	manager.register_docklet ("Clock", typeof (Docky.ClockDocklet));
+	manager.register_docklet (typeof (Docky.ClockDocklet));
 }
 
 namespace Docky
 {
 	public const string G_RESOURCE_PATH = "/net/launchpad/plank/docklets/clock";
 	
-	public class ClockDocklet : Plank.Docklet
+	public class ClockDocklet : Object, Plank.Docklet
 	{
-		public override Plank.DockElement make_element (string launcher, GLib.File file)
+		public unowned string get_id ()
+		{
+			return "clock";
+		}
+		
+		public unowned string get_name ()
+		{
+			return _("Clock");
+		}
+		
+		public unowned string get_description ()
+		{
+			return "";
+		}
+		
+		public unowned string get_icon ()
+		{
+			return "application-x-addon";
+		}
+		
+		public bool is_supported ()
+		{
+			return true;
+		}
+		
+		public Plank.DockElement make_element (string launcher, GLib.File file)
 		{
 			return new ClockDockItem.with_dockitem_file (file);
 		}

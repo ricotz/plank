@@ -19,14 +19,39 @@
 
 public static void docklet_init (Plank.DockletManager manager)
 {
-	manager.register_docklet ("Trash", typeof (Docky.TrashDocklet));
+	manager.register_docklet (typeof (Docky.TrashDocklet));
 }
 
 namespace Docky
 {
-	public class TrashDocklet : Plank.Docklet
+	public class TrashDocklet : Object, Plank.Docklet
 	{
-		public override Plank.DockElement make_element (string launcher, GLib.File file)
+		public unowned string get_id ()
+		{
+			return "trash";
+		}
+		
+		public unowned string get_name ()
+		{
+			return _("Trash");
+		}
+		
+		public unowned string get_description ()
+		{
+			return "";
+		}
+		
+		public unowned string get_icon ()
+		{
+			return "user-trash-full";
+		}
+		
+		public bool is_supported ()
+		{
+			return true;
+		}
+		
+		public Plank.DockElement make_element (string launcher, GLib.File file)
 		{
 			return new TrashDockItem.with_dockitem_file (file);
 		}

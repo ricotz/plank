@@ -95,38 +95,34 @@ namespace Plank
 		/**
 		 * Register docklet with given name and type
 		 *
-		 * @param name a name
+		 * @param id a unique id
 		 * @param type a type
 		 */
-		public void register_docklet (string name, Type type)
+		public void register_docklet (Type type)
 		{
-			Type parent_type;
-			for (parent_type = type.parent (); parent_type != 0; parent_type = parent_type.parent ()) {
-				if (parent_type == typeof (Docklet))
-					break;
-			}
-			if (parent_type == 0) {
+			if (!type.is_a (typeof (Docklet))) {
 				warning ("'%s' is not a Docklet", type.name ());
 				return;
 			}
 			
-			var docklet = (Docklet) Object.new (type, "name", name);
+			var docklet = (Docklet) Object.new (type);
 			
-			message ("Docklet '%s' registered", name);
-			docklets.set (name, docklet);
+			unowned string id = docklet.get_id ();
+			message ("Docklet '%s' registered", id);
+			docklets.set (id, docklet);
 			
 			docklet_added (docklet);
 		}
 		
 		/**
-		 * Find docklet for given name
+		 * Find docklet for given id
 		 *
-		 * @param name a name
+		 * @param id a unique id
 		 * @return a docklet or null
 		 */
-		public Docklet? get_docklet_by_name (string name)
+		public Docklet? get_docklet_by_id (string id)
 		{
-			return docklets.get (name);
+			return docklets.get (id);
 		}
 		
 		/**
@@ -137,14 +133,18 @@ namespace Plank
 		 */
 		public Docklet? get_docklet_by_uri (string uri)
 		{
-			var iterator = docklets.map_iterator ();
-			while (iterator.next ()) {
-				var docklet = iterator.get_value ();
-				if (docklet.supports_launcher (uri))
-					return docklet;
-			}
+			Docklet? docklet = null;
 			
-			return null;
+			var it = docklets.map_iterator ();
+			it.foreach ((k, v) => {
+				if (uri == "docklet://%s".printf (k)) {
+					docklet = v;
+					return false;
+				}
+				return true;
+			});
+			
+			return docklet;
 		}
 		
 		/**
