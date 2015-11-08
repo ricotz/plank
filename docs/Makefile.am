@@ -27,6 +27,9 @@ plank_doc_files = \
 	$(top_builddir)/lib/Version.vala \
 	$(top_srcdir)/lib/DBus/Client.vala \
 	$(top_srcdir)/lib/DBus/Interfaces.vala \
+	$(top_srcdir)/lib/Docklets/Docklet.vala \
+	$(top_srcdir)/lib/Docklets/DockletItem.vala \
+	$(top_srcdir)/lib/Docklets/DockletManager.vala \
 	$(top_srcdir)/lib/Drawing/Color.vala \
 	$(top_srcdir)/lib/Drawing/DrawingService.vala \
 	$(top_srcdir)/lib/Drawing/DockTheme.vala \

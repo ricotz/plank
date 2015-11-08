@@ -95,7 +95,6 @@ namespace Plank
 		/**
 		 * Register docklet with given name and type
 		 *
-		 * @param id a unique id
 		 * @param type a type
 		 */
 		public void register_docklet (Type type)
