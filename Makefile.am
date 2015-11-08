@@ -49,6 +49,9 @@ distclean-local:
 		rm -f ChangeLog; \
 	fi
 
+run: $(top_builddir)/data/gschemas.compiled $(top_builddir)/lib/libplank.la $(top_builddir)/src/plank
+	GSETTINGS_SCHEMA_DIR=$(abs_top_builddir)/data PLANK_DOCKLET_DIRS=$(abs_top_builddir)/docklets $(top_builddir)/src/plank
+
 ChangeLog:
 	@echo Creating $@
 	@if test -d "$(srcdir)/.bzr"; then \
