@@ -1,9 +1,13 @@
 data/net.launchpad.plank.gschema.xml.in
 data/net.launchpad.plank.gschema.xml.in.in
 docklets/Clippy/ClippyDockItem.c
+docklets/Clippy/ClippyDocklet.c
 docklets/Clock/ClockDockItem.c
+docklets/Clock/ClockDocklet.c
 docklets/Desktop/DesktopDockItem.c
+docklets/Desktop/DesktopDocklet.c
 docklets/Trash/TrashDockItem.c
+docklets/Trash/TrashDocklet.c
 lib/Items/ApplicationDockItem.c
 lib/Items/FileDockItem.c
 lib/Items/PlaceholderDockItem.c
