@@ -121,6 +121,7 @@ namespace Plank
 				cb_items_alignment = builder.get_object ("cb_items_alignment") as Gtk.ComboBoxText;
 				
 				init_dock_tab ();
+				init_docklets_tab ();
  				connect_signals ();
 			} catch (Error e) {
 				builder = null;
@@ -415,6 +416,26 @@ namespace Plank
 			cb_alignment.active_id = ((int) prefs.Alignment).to_string ();
 			cb_items_alignment.active_id = ((int) prefs.ItemsAlignment).to_string ();
 			cb_items_alignment.sensitive = (prefs.Alignment == Gtk.Align.FILL);
+		}
+		
+		void init_docklets_tab ()
+		{
+			Gtk.TreeIter iter;
+			
+			var model_docklets = (Gtk.ListStore) builder.get_object ("model_docklets");
+			var view_docklets = (Gtk.IconView) builder.get_object ("view_docklets");
+			
+			view_docklets.set_text_column (1);
+			view_docklets.set_tooltip_column (2);
+			view_docklets.set_pixbuf_column (3);
+			model_docklets.set_sort_column_id (1, Gtk.SortType.ASCENDING);
+			
+			model_docklets.clear ();
+			foreach (var docklet in DockletManager.get_default ().list_docklets ()) {
+				model_docklets.append (out iter);
+				var icon = DrawingService.load_icon (docklet.get_icon (), 48, 48);
+				model_docklets.set (iter, 0, docklet.get_id (), 1, docklet.get_name (), 2, docklet.get_description (), 3, icon);
+			}
 		}
 	}
 }

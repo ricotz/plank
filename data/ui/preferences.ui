@@ -49,6 +49,18 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
     <property name="step_increment">5</property>
     <property name="page_increment">10</property>
   </object>
+  <object class="GtkListStore" id="model_docklets">
+    <columns>
+      <!-- column-name id -->
+      <column type="gchararray"/>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name description -->
+      <column type="gchararray"/>
+      <!-- column-name icon -->
+      <column type="GdkPixbuf"/>
+    </columns>
+  </object>
   <object class="GtkStack" id="dock_preferences">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -613,6 +625,27 @@ along with plank.  If not, see <http://www.gnu.org/licenses/>.
         <property name="name">grid_behaviour</property>
         <property name="title" translatable="yes">Behaviour</property>
         <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow" id="sw_docklets">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="hscrollbar_policy">never</property>
+        <child>
+          <object class="GtkIconView" id="view_docklets">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="margin">6</property>
+            <property name="model">model_docklets</property>
+            <property name="columns">3</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="name">view_docklets</property>
+        <property name="title" translatable="yes">Docklets</property>
+        <property name="position">2</property>
       </packing>
     </child>
   </object>
