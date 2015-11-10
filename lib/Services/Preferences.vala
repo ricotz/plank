@@ -344,7 +344,9 @@ namespace Plank
 		
 		void load_prefs ()
 		{
-			debug ("Loading preferences from file '%s'", backing_file.get_path () ?? "");
+			string backing_file_path = (backing_file.get_path () ?? "");
+			
+			debug ("Loading preferences from file '%s'", backing_file_path);
 			
 			var missing_keys = false;
 			
@@ -354,7 +356,7 @@ namespace Plank
 			is_delayed_internal = true;
 			try {
 				var file = new KeyFile ();
-				file.load_from_file (backing_file.get_path () ?? "", 0);
+				file.load_from_file (backing_file_path, 0);
 				
 #if VALA_0_26
 				(unowned ParamSpec)[] properties = g_object_class_list_properties (get_class ());
@@ -364,6 +366,7 @@ namespace Plank
 				
 				foreach (unowned ParamSpec prop in properties) {
 					unowned string group_name = prop.owner_type.name ();
+					unowned string prop_name = prop.get_name ();
 					
 					if (!file.has_group (group_name)) {
 						// Accept and handle old preferences files
@@ -375,8 +378,8 @@ namespace Plank
 							}
 					}
 					
-					if (!file.has_group (group_name) || !file.has_key (group_name, prop.name)) {
-						warning ("Missing key '%s' for group '%s' in preferences file '%s' - using default value", prop.name, group_name, backing_file.get_path () ?? "");
+					if (!file.has_group (group_name) || !file.has_key (group_name, prop_name)) {
+						warning ("Missing key '%s' for group '%s' in preferences file '%s' - using default value", prop_name, group_name, backing_file_path);
 						missing_keys = true;
 						continue;
 					}
@@ -386,75 +389,75 @@ namespace Plank
 					try {
 						if (type == typeof (int)) {
 							int old_val;
-							@get (prop.name, out old_val);
-							var new_val = file.get_integer (group_name, prop.name);
+							@get (prop_name, out old_val);
+							var new_val = file.get_integer (group_name, prop_name);
 							if (old_val == new_val)
 								continue;
-							@set (prop.name, new_val);
+							@set (prop_name, new_val);
 						} else if (type == typeof (uint)) {
 							uint old_val;
-							@get (prop.name, out old_val);
-							var new_val = (uint) file.get_integer (group_name, prop.name);
+							@get (prop_name, out old_val);
+							var new_val = (uint) file.get_integer (group_name, prop_name);
 							if (old_val == new_val)
 								continue;
-							@set (prop.name, new_val);
+							@set (prop_name, new_val);
 						} else if (type == typeof (double)) {
 							double old_val;
-							@get (prop.name, out old_val);
-							var new_val = file.get_double (group_name, prop.name);
+							@get (prop_name, out old_val);
+							var new_val = file.get_double (group_name, prop_name);
 							if (old_val == new_val)
 								continue;
-							@set (prop.name, new_val);
+							@set (prop_name, new_val);
 						} else if (type == typeof (string)) {
 							string old_val;
-							@get (prop.name, out old_val);
-							var new_val = file.get_string (group_name, prop.name);
+							@get (prop_name, out old_val);
+							var new_val = file.get_string (group_name, prop_name);
 							if (old_val == new_val)
 								continue;
-							@set (prop.name, new_val);
+							@set (prop_name, new_val);
 						} else if (type == typeof (bool)) {
 							bool old_val;
-							@get (prop.name, out old_val);
-							var new_val = file.get_boolean (group_name, prop.name);
+							@get (prop_name, out old_val);
+							var new_val = file.get_boolean (group_name, prop_name);
 							if (old_val == new_val)
 								continue;
-							@set (prop.name, new_val);
+							@set (prop_name, new_val);
 						} else if (type.is_enum ()) {
 							int old_val;
-							@get (prop.name, out old_val);
-							var new_val = file.get_integer (group_name, prop.name);
+							@get (prop_name, out old_val);
+							var new_val = file.get_integer (group_name, prop_name);
 							if (old_val == new_val)
 								continue;
-							@set (prop.name, new_val);
+							@set (prop_name, new_val);
 						} else if (type.is_a (typeof (Color)) || type.is_a (typeof (Gdk.RGBA))) {
 							var val = Value (type);
-							get_property (prop.name, ref val);
+							get_property (prop_name, ref val);
 							Color* old_val = val.get_boxed ();
 							var old_val_string = old_val.to_prefs_string ();
-							var new_val_string = file.get_string (group_name, prop.name);
+							var new_val_string = file.get_string (group_name, prop_name);
 							if (old_val_string == new_val_string)
 								continue;
 							var new_val = Color.from_prefs_string (new_val_string);
 							val.set_boxed (&new_val);
-							set_property (prop.name, val);
+							set_property (prop_name, val);
 						} else if (type.is_a (typeof (Serializable))) {
 							Serializable val;
-							@get (prop.name, out val);
-							val.deserialize (file.get_string (group_name, prop.name));
+							@get (prop_name, out val);
+							val.deserialize (file.get_string (group_name, prop_name));
 							continue;
 						} else {
-							debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
+							debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop_name, backing_file_path);
 							continue;
 						}
 						
-						call_verify (prop.name);
+						call_verify (prop_name);
 					} catch (KeyFileError e) {
-						warning ("Problem loading preferences from file '%s' for property '%s'", backing_file.get_path () ?? "", prop.name);
+						warning ("Problem loading preferences from file '%s' for property '%s'", backing_file_path, prop_name);
 						debug (e.message);
 					}
 				}
 			} catch (Error e) {
-				warning ("Unable to load preferences from file '%s'", backing_file.get_path () ?? "");
+				warning ("Unable to load preferences from file '%s'", backing_file_path);
 				debug (e.message);
 				deleted ();
 			}
@@ -474,12 +477,10 @@ namespace Plank
 			if (read_only)
 				return;
 			
+			string backing_file_path = (backing_file.get_path () ?? "");
+			
 			if (is_delayed || is_delayed_internal) {
-				if (backing_file != null && backing_file.get_path () != null)
-					Logger.verbose ("Preferences.save_prefs('%s') - delaying save", backing_file.get_path ());
-				else
-					Logger.verbose ("Preferences.save_prefs() - delaying save");
-				
+				Logger.verbose ("Preferences.save_prefs('%s') - delaying save", backing_file_path);
 				is_changed = true;
 				return;
 			}
@@ -501,54 +502,55 @@ namespace Plank
 			
 			foreach (unowned ParamSpec prop in properties) {
 				unowned string group_name = prop.owner_type.name ();
+				unowned string prop_name = prop.get_name ();
 				var type = prop.value_type;
 				
 				if (type == typeof (int)) {
 					int new_val;
-					@get (prop.name, out new_val);
-					file.set_integer (group_name, prop.name, new_val);
+					@get (prop_name, out new_val);
+					file.set_integer (group_name, prop_name, new_val);
 				} else if (type == typeof (uint)) {
 					uint new_val;
-					@get (prop.name, out new_val);
-					file.set_integer (group_name, prop.name, (int) new_val);
+					@get (prop_name, out new_val);
+					file.set_integer (group_name, prop_name, (int) new_val);
 				} else if (type == typeof (double)) {
 					double new_val;
-					@get (prop.name, out new_val);
-					file.set_double (group_name, prop.name, new_val);
+					@get (prop_name, out new_val);
+					file.set_double (group_name, prop_name, new_val);
 				} else if (type == typeof (string)) {
 					string new_val;
-					@get (prop.name, out new_val);
-					file.set_string (group_name, prop.name, new_val);
+					@get (prop_name, out new_val);
+					file.set_string (group_name, prop_name, new_val);
 				} else if (type == typeof (bool)) {
 					bool new_val;
-					@get (prop.name, out new_val);
-					file.set_boolean (group_name, prop.name, new_val);
+					@get (prop_name, out new_val);
+					file.set_boolean (group_name, prop_name, new_val);
 				} else if (type.is_enum ()) {
 					int new_val;
-					@get (prop.name, out new_val);
-					file.set_integer (group_name, prop.name, new_val);
+					@get (prop_name, out new_val);
+					file.set_integer (group_name, prop_name, new_val);
 				} else if (type.is_a (typeof (Color)) || type.is_a (typeof (Gdk.RGBA))) {
 					var val = Value (type);
-					get_property (prop.name, ref val);
+					get_property (prop_name, ref val);
 					Color* color = val.get_boxed ();
-					file.set_string (group_name, prop.name, (color.to_prefs_string ()));
+					file.set_string (group_name, prop_name, (color.to_prefs_string ()));
 				} else if (type.is_a (typeof (Serializable))) {
 					var val = Value (type);
-					get_property (prop.name, ref val);
-					file.set_string (group_name, prop.name, ((Serializable) val.get_object ()).serialize ());
+					get_property (prop_name, ref val);
+					file.set_string (group_name, prop_name, ((Serializable) val.get_object ()).serialize ());
 				} else {
-					debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop.name, backing_file.get_path () ?? "");
+					debug ("Unsupported preferences type '%s' for property '%s' in file '%s'", type.name (), prop_name, backing_file_path);
 					continue;
 				}
 				
-				var blurb = prop.get_blurb ();
-				if (blurb != null && blurb != "" && blurb != prop.name)
+				unowned string prop_blurb = prop.get_blurb ();
+				if (prop_blurb != null && prop_blurb != "" && prop_blurb != prop_name)
 					try {
-						file.set_comment (group_name, prop.name, blurb);
+						file.set_comment (group_name, prop_name, prop_blurb);
 					} catch { }
 			}
 			
-			debug ("Saving preferences '%s'", backing_file.get_path () ?? "");
+			debug ("Saving preferences '%s'", backing_file_path);
 			is_changed = false;
 			
 			try {
@@ -556,7 +558,7 @@ namespace Plank
 				stream.put_string (file.to_data ());
 				stream.close ();
 			} catch (Error e) {
-				warning ("Unable to create the preferences file '%s'", backing_file.get_path () ?? "");
+				warning ("Unable to create the preferences file '%s'", backing_file_path);
 				debug (e.message);
 			}
 			
