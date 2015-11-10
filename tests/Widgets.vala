@@ -106,7 +106,7 @@ namespace PlankTests
 		PreferencesWindow window;
 		DockPreferences prefs;
 		
-		prefs = new DockPreferences ("test");
+		prefs = new DockPreferences ("test1");
 		window = new PreferencesWindow (prefs);
 		window.show ();
 		

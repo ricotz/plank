@@ -22,7 +22,7 @@ using Plank;
 namespace PlankTests
 {
 	public const string TEST_ICON = Config.DATA_DIR + "/test-icon.svg";
-	public const string TEST_DOCK_NAME = "dock1";
+	public const string TEST_DOCK_NAME = "test1";
 	public const uint IO_WAIT_MS = 1500;
 	public const uint EVENT_WAIT_MS = 100;
 	public const uint X_WAIT_MS = 200;

@@ -98,7 +98,7 @@ endif
 
 check-local: clean-local
 	$(TESTS_ENVIRONMENT) gtester --verbose --keep-going -o=$(builddir)/test-report.xml $(builddir)/tests
-	$(TESTS_ENVIRONMENT) $(builddir)/dock
+	$(TESTS_ENVIRONMENT) $(builddir)/dock -n test1
 
 clean-local:
 	rm -rf $(abs_builddir)/home $(builddir)/test-report.xml
