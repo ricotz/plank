@@ -45,7 +45,9 @@ namespace Plank
 		
 		construct
 		{
-			debug ("Bind '%s' to '%s'", get_type ().name (), settings.path);
+			unowned string class_type_name = get_type ().name ();
+			
+			debug ("Bind '%s' to '%s'", class_type_name, settings.path);
 			
 #if VALA_0_26
 			(unowned ParamSpec)[] properties = g_object_class_list_properties (get_class ());
@@ -66,7 +68,7 @@ namespace Plank
 				unowned string nick = property.get_nick ();
 				var type = property.value_type;
 				
-				Logger.verbose ("Bind '%s%s' to '%s.%s'", settings.path, nick, get_type ().name (), name);
+				Logger.verbose ("Bind '%s%s' to '%s.%s'", settings.path, nick, class_type_name, name);
 				if (type.is_fundamental () || type.is_enum () || type.is_flags () || type == typeof(string[])) {
 					settings.bind (nick, this, name, SettingsBindFlags.DEFAULT);
 				} else {
