@@ -26,6 +26,11 @@ namespace Plank
 	public void cairo_surface_set_device_scale (Cairo.Surface surface, double x_scale, double y_scale);
 #endif
 
+#if VALA_0_26
+	[CCode (array_length_type = "guint", cheader_filename = "glib-object.h", cname = "g_object_class_list_properties")]
+	public (unowned GLib.ParamSpec)[] g_object_class_list_properties (GLib.ObjectClass oclass);
+#endif
+
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "gdk_window_add_filter", instance_pos = 1.9)]
 	public void gdk_window_add_filter (Gdk.Window? window, Gdk.FilterFunc function);
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "gdk_window_add_filter", instance_pos = 1.9)]

@@ -47,7 +47,11 @@ namespace Plank
 		{
 			debug ("Bind '%s' to '%s'", get_type ().name (), settings.path);
 			
+#if VALA_0_26
+			(unowned ParamSpec)[] properties = g_object_class_list_properties (get_class ());
+#else
 			unowned ParamSpec[] properties = get_class ().list_properties ();
+#endif
 			
 			// Bind available gsettings-keys to their class-properties
 			foreach (unowned string key in settings.list_keys ()) {
