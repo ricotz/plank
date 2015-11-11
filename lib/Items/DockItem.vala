@@ -596,7 +596,13 @@ namespace Plank
 		 */
 		public void copy_values_to (DockItem target)
 		{
-			foreach (var prop in get_class ().list_properties ()) {
+#if VALA_0_26
+			(unowned ParamSpec)[] properties = g_object_class_list_properties (get_class ());
+#else
+			unowned ParamSpec[] properties = get_class ().list_properties ();
+#endif
+			
+			foreach (unowned ParamSpec prop in properties) {
 				// Skip non-copyable properties to avoid warnings
 				if ((prop.flags & ParamFlags.WRITABLE) == 0
 					|| (prop.flags & ParamFlags.CONSTRUCT_ONLY) != 0)
@@ -606,7 +612,7 @@ namespace Plank
 				
 				// Do not copy these
 				if (name == "Container")
-				    continue;
+					continue;
 				
 				var type = prop.value_type;
 				var val = Value (type);
