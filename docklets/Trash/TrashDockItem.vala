@@ -159,7 +159,8 @@ namespace Docky
 			var items = new Gee.ArrayList<Gtk.MenuItem> ();
 			
 			try {
-				var enumerator = owned_file.enumerate_children ("standard::type,standard::name", FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
+				var enumerator = owned_file.enumerate_children (FileAttribute.STANDARD_TYPE + ","
+					+ FileAttribute.STANDARD_NAME, FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
 				var files = new Gee.ArrayList<File> ();
 				
 				if (enumerator != null) {
@@ -241,15 +242,22 @@ namespace Docky
 		
 		void empty_trash ()
 		{
-			// Use corresponding DBus-interface of Nautilus if available
-			try {
-				NautilusFileOperations nautilus_file_operations = Bus.get_proxy_sync (BusType.SESSION,
-					"org.gnome.Nautilus", "/org/gnome/Nautilus");
-				nautilus_file_operations.empty_trash ();
-				return;
-			} catch (IOError e) {
+			if (environment_is_session_desktop (XdgSessionDesktop.GNOME | XdgSessionDesktop.UNITY)) {
+				// Try using corresponding DBus-interface of Nautilus if available (GNOME, Unity)
+				try {
+					NautilusFileOperations nautilus_file_operations = Bus.get_proxy_sync (BusType.SESSION,
+						"org.gnome.Nautilus", "/org/gnome/Nautilus");
+					nautilus_file_operations.empty_trash ();
+				} catch {
+					empty_trash_internal ();
+				}
+			} else {
+				empty_trash_internal ();
 			}
-			
+		}
+		
+		void empty_trash_internal ()
+		{
 			if (!confirm_trash_delete) {
 				perform_empty_trash ();
 				return;
@@ -277,14 +285,48 @@ namespace Docky
 			if (trash_monitor != null)
 				trash_monitor.changed.disconnect (trash_changed);
 			
-			// TODO
-			//owned_file.Delete_Recurse ();
+			Worker.get_default ().add_task_with_result.begin<void*> (() => {
+				delete_children_recursive (owned_file);
+				return null;
+			}, TaskPriority.HIGH, () => {
+				// enable events again
+				if (trash_monitor != null)
+					trash_monitor.changed.connect (trash_changed);
+				update ();
+			});
+		}
+		
+		static void delete_children_recursive (GLib.File file)
+		{
+			FileEnumerator? enumerator = null;
 			
-			// enable events again
-			if (trash_monitor != null)
-				trash_monitor.changed.connect (trash_changed);
+			try {
+				enumerator = file.enumerate_children (FileAttribute.STANDARD_TYPE + ","	+ FileAttribute.STANDARD_NAME + ","
+					+ FileAttribute.ACCESS_CAN_DELETE, FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
+			} catch (Error e) {
+				critical (e.message);
+			}
 			
-			update ();
+			if (enumerator == null)
+				return;
+			
+			try {
+				FileInfo info;
+				while ((info = enumerator.next_file ()) != null) {
+					File child = file.get_child (info.get_name ());
+					if (info.get_file_type () == FileType.DIRECTORY)
+						delete_children_recursive (child);
+					try {
+						if (info.get_attribute_boolean (FileAttribute.ACCESS_CAN_DELETE))
+							child.delete (null);
+					} catch {
+						// if it fails to delete, not much we can do!
+					}
+				}
+				enumerator.close (null);
+			} catch (Error e) {
+				critical (e.message);
+			}
 		}
 	}
 }
