@@ -89,7 +89,7 @@ namespace Plank
 			items.add (item);
 			
 			// No explicit quit-item on elementary OS
-			if (!System.is_desktop_session ("pantheon")) {
+			if (!environment_is_session_desktop (XdgSessionDesktop.PANTHEON)) {
 				items.add (new Gtk.SeparatorMenuItem ());
 			
 				item = new Gtk.ImageMenuItem.from_stock (Gtk.Stock.QUIT, null);

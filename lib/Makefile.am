@@ -95,6 +95,7 @@ libplank_la_VALASOURCES = \
 	Items/PlaceholderDockItem.vala \
 	Items/PlankDockItem.vala \
 	Items/TransientDockItem.vala \
+	Services/Environment.vala \
 	Services/Logger.vala \
 	Services/Paths.vala \
 	Services/Preferences.vala \
