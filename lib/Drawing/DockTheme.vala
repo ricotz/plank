@@ -91,6 +91,9 @@ namespace Plank
 		[Description(nick = "item-move-time", blurb = "The time (in ms) to move an item to its new position or its addition/removal to/from the dock.")]
 		public int ItemMoveTime { get; set; }
 		
+		[Description(nick = "cascade-hide", blurb = "Whether background and icons will unhide/hide with different speeds. The top-border of both will leave/hit the screen-edge at the same time.")]
+		public bool CascadeHide { get; set; }
+		
 		static Gtk.StyleContext style_context;
 		
 		static construct
@@ -134,6 +137,7 @@ namespace Plank
 			GlowPulseTime = 2000;
 			UrgentHueShift = 150;
 			ItemMoveTime = 450;
+			CascadeHide = false;
 		}
 		
 		/**

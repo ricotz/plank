@@ -530,6 +530,13 @@ namespace Plank
 				background_buffer = theme.create_background (background_rect.width, background_rect.height,
 					position_manager.Position, main_buffer);
 			
+			if (hide_progress > 0.0 && theme.CascadeHide) {
+				int x, y;
+				position_manager.get_background_padding (out x, out y);
+				x_offset -= (int) (x * hide_progress);
+				y_offset -= (int) (y * hide_progress);
+			}
+			
 			cr.set_source_surface (background_buffer.Internal, background_rect.x + x_offset, background_rect.y + y_offset);
 			cr.paint ();
 		}
