@@ -1438,6 +1438,35 @@ namespace Plank
 		}
 		
 		/**
+		 * Get's the padding between background and icons of the dock.
+		 *
+		 * @param x the horizontal padding
+		 * @param y the vertical padding
+		 */
+		public void get_background_padding (out int x, out int y)
+		{
+			switch (Position) {
+			default:
+			case Gtk.PositionType.BOTTOM:
+				x = 0;
+				y = VisibleDockHeight - DockBackgroundHeight + extra_hide_offset;
+				break;
+			case Gtk.PositionType.TOP:
+				x = 0;
+				y = -(VisibleDockHeight - DockBackgroundHeight + extra_hide_offset);
+				break;
+			case Gtk.PositionType.LEFT:
+				x = -(VisibleDockWidth - DockBackgroundWidth + extra_hide_offset);
+				y = 0;
+				break;
+			case Gtk.PositionType.RIGHT:
+				x = VisibleDockWidth - DockBackgroundWidth + extra_hide_offset;
+				y = 0;
+				break;
+			}
+		}
+		
+		/**
 		 * Get's the region for background of the dock.
 		 *
 		 * @return the region for the dock background
