@@ -213,7 +213,6 @@ namespace Plank
 			controller.prefs.delay ();
 			
 			InternalDragActive = true;
-			context.get_device ().grab (window.get_window (), Gdk.GrabOwnership.APPLICATION, true, Gdk.EventMask.ALL_EVENTS_MASK, null, Gtk.get_current_event_time ());
 			drag_canceled = false;
 			
 			if (proxy_window != null) {
@@ -226,10 +225,18 @@ namespace Plank
 			if (RepositionMode)
 				DragItem = null;
 			
+			if (DragItem == null) {
+				Gdk.drag_abort (context, Gtk.get_current_event_time ());
+				return;
+			}
+			
 			set_drag_icon (context, DragItem, 0.8);
 			drag_item_redraw_handler_id = DragItem.needs_redraw.connect (() => {
 				set_drag_icon (context, DragItem, 0.8);
 			});
+			
+			context.get_device ().grab (window.get_window (), Gdk.GrabOwnership.APPLICATION, true,
+				Gdk.EventMask.ALL_EVENTS_MASK, null, Gtk.get_current_event_time ());
 		}
 
 		[CCode (instance_pos = -1)]
