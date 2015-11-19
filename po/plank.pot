@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-02 19:48+0100\n"
+"POT-Creation-Date: 2015-11-17 07:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,7 +100,7 @@ msgstr ""
 msgid "Icon Zoom:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:95
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:91
 msgid "Appearance"
 msgstr ""
 
@@ -172,32 +172,36 @@ msgstr ""
 msgid "Show Item for Dock:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:92
 msgid "Behaviour"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:454
-#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:348
+#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:93
+msgid "Docklets"
+msgstr ""
+
+#: ../lib/Items/ApplicationDockItem.vala:450
+#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
 msgid "_Keep in Dock"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:462
+#: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close All"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:462
+#: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:335
+#: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:353
+#: ../lib/Items/FileDockItem.vala:350
 msgid "_Open"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:357
+#: ../lib/Items/FileDockItem.vala:354
 msgid "Open Containing _Folder"
 msgstr ""
 
@@ -205,14 +209,14 @@ msgstr ""
 msgid "Drop applications or files here"
 msgstr ""
 
-#: ../lib/Items/PlankDockItem.vala:77
+#: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
 msgstr ""
 
-#: ../lib/Items/PlankDockItem.vala:81
+#: ../lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."
 msgstr ""
 
-#: ../lib/Widgets/PreferencesWindow.vala:70
+#: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
 msgstr ""

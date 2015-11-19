@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-11-01 21:34+0000\n"
-"PO-Revision-Date: 2015-11-01 10:15+0000\n"
-"Last-Translator: Jiri Grönroos <Unknown>\n"
+"POT-Creation-Date: 2015-11-16 20:48+0000\n"
+"PO-Revision-Date: 2015-11-10 15:03+0000\n"
+"Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-11-02 05:20+0000\n"
-"X-Generator: Launchpad (build 17838)\n"
+"X-Launchpad-Export-Date: 2015-11-17 05:24+0000\n"
+"X-Generator: Launchpad (build 17847)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -106,7 +106,7 @@ msgstr "Kuvakekoko:"
 msgid "Icon Zoom:"
 msgstr "Kuvakesuurennus:"
 
-#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:95
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:91
 msgid "Appearance"
 msgstr "Ulkoasu"
 
@@ -178,32 +178,36 @@ msgstr "Automaattinen kiinnittäminen:"
 msgid "Show Item for Dock:"
 msgstr "Näytettävä kohde telakalle:"
 
-#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:92
 msgid "Behaviour"
 msgstr "Toiminta"
 
-#: ../lib/Items/ApplicationDockItem.vala:454
-#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:348
+#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:93
+msgid "Docklets"
+msgstr "Telakkasovelmat"
+
+#: ../lib/Items/ApplicationDockItem.vala:450
+#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
 msgid "_Keep in Dock"
 msgstr "Pi_dä käynnistimessä"
 
-#: ../lib/Items/ApplicationDockItem.vala:462
+#: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close All"
 msgstr "Sulje kai_kki"
 
-#: ../lib/Items/ApplicationDockItem.vala:462
+#: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
 msgstr "_Sulje"
 
-#: ../lib/Items/FileDockItem.vala:335
+#: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
 msgstr "A_vaa tiedostonhallinnassa"
 
-#: ../lib/Items/FileDockItem.vala:353
+#: ../lib/Items/FileDockItem.vala:350
 msgid "_Open"
 msgstr "_Avaa"
 
-#: ../lib/Items/FileDockItem.vala:357
+#: ../lib/Items/FileDockItem.vala:354
 msgid "Open Containing _Folder"
 msgstr "Näy_tä kansiossa"
 
@@ -211,14 +215,14 @@ msgstr "Näy_tä kansiossa"
 msgid "Drop applications or files here"
 msgstr "Pudota sovellukset tai tiedostot tähän"
 
-#: ../lib/Items/PlankDockItem.vala:77
+#: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
 msgstr "_Hae apua verkosta..."
 
-#: ../lib/Items/PlankDockItem.vala:81
+#: ../lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."
 msgstr "Kää_nnä tämä ohjelma..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:70
+#: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
 msgstr "Asetukset"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-10-08 19:57+0000\n"
+"POT-Creation-Date: 2015-11-16 20:48+0000\n"
 "PO-Revision-Date: 2015-01-07 13:44+0000\n"
 "Last-Translator: Venkata Jaswanth <aj.jaswanth@gmail.com>\n"
 "Language-Team: Telugu <te@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-10-09 05:23+0000\n"
-"X-Generator: Launchpad (build 17802)\n"
+"X-Launchpad-Export-Date: 2015-11-17 05:24+0000\n"
+"X-Generator: Launchpad (build 17847)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -103,7 +103,7 @@ msgstr "ఇకాన్ పరిమాణం"
 msgid "Icon Zoom:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:95
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:91
 msgid "Appearance"
 msgstr "కనిపించు విధానం"
 
@@ -175,32 +175,36 @@ msgstr "స్వయంగా పిన్ చేయి"
 msgid "Show Item for Dock:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:96
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:92
 msgid "Behaviour"
 msgstr "ప్రవర్తన"
 
-#: ../lib/Items/ApplicationDockItem.vala:454
-#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:348
+#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:93
+msgid "Docklets"
+msgstr ""
+
+#: ../lib/Items/ApplicationDockItem.vala:450
+#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
 msgid "_Keep in Dock"
 msgstr "డాక్ లోనే ఉంచు"
 
-#: ../lib/Items/ApplicationDockItem.vala:462
+#: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close All"
 msgstr "అన్నీ మూసివేయి (_C)"
 
-#: ../lib/Items/ApplicationDockItem.vala:462
+#: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
 msgstr "మూసివేయి (_C)"
 
-#: ../lib/Items/FileDockItem.vala:335
+#: ../lib/Items/FileDockItem.vala:332
 msgid "_Open in File Browser"
 msgstr "ఫైల్ బ్రౌజర్ లో తెరువు"
 
-#: ../lib/Items/FileDockItem.vala:353
+#: ../lib/Items/FileDockItem.vala:350
 msgid "_Open"
 msgstr "తెరువు (_O)"
 
-#: ../lib/Items/FileDockItem.vala:357
+#: ../lib/Items/FileDockItem.vala:354
 msgid "Open Containing _Folder"
 msgstr "కలిగి ఉన్న ఫోల్డర్ ను తెరువు"
 
@@ -208,14 +212,14 @@ msgstr "కలిగి ఉన్న ఫోల్డర్ ను తెరు�
 msgid "Drop applications or files here"
 msgstr "అప్లికేషన్లు కానీ ఫైల్స్ కానీ వేయండి"
 
-#: ../lib/Items/PlankDockItem.vala:77
+#: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
 msgstr "అంతర్జాలంలో సహాయాన్ని పొందు"
 
-#: ../lib/Items/PlankDockItem.vala:81
+#: ../lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."
 msgstr "ఈ అప్లికేషన్ ను తర్జూమా చేయి"
 
-#: ../lib/Widgets/PreferencesWindow.vala:70
+#: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
 msgstr "ప్రాధాన్యతలు"
