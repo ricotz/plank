@@ -72,7 +72,8 @@ namespace Plank.Widgets
 
 		Gdk.Rectangle input_rect;
 		int requested_x;
-		int requested_y;		
+		int requested_y;
+		int window_position_retry = 0;
 		
 		/**
 		 * Creates a new dock window.
@@ -96,7 +97,8 @@ namespace Plank.Widgets
 						Gdk.EventMask.ENTER_NOTIFY_MASK |
 						Gdk.EventMask.LEAVE_NOTIFY_MASK |
 						Gdk.EventMask.POINTER_MOTION_MASK |
-						Gdk.EventMask.SCROLL_MASK);
+						Gdk.EventMask.SCROLL_MASK |
+						Gdk.EventMask.STRUCTURE_MASK);
 			
 			hover = new HoverWindow ();
 			
@@ -284,6 +286,27 @@ namespace Plank.Widgets
 			}
 			
 			return Gdk.EVENT_STOP;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public override bool configure_event (Gdk.EventConfigure event)
+		{
+			var win_rect = controller.position_manager.get_dock_window_region ();
+			var needs_update = (win_rect.width != event.width || win_rect.height != event.height
+				|| win_rect.x != event.x || win_rect.y != event.y);
+			
+			if (needs_update) {
+				if (++window_position_retry < 3) {
+					critical ("Retry #%i update_size_and_position() to force requested values!", window_position_retry);
+					update_size_and_position ();
+				}
+			} else {
+				window_position_retry = 0;
+			}
+			
+			return base.configure_event (event);
 		}
 		
 		/**
