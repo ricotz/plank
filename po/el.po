@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: Kostas Milonas <milonas.ko@gmail.com>\n"
-"POT-Creation-Date: 2015-11-16 20:48+0000\n"
-"PO-Revision-Date: 2015-11-17 09:16+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2015-11-30 16:47+0000\n"
+"PO-Revision-Date: 2015-11-29 19:44+0000\n"
+"Last-Translator: Tom Tryfonidis <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-11-18 05:18+0000\n"
-"X-Generator: Launchpad (build 17847)\n"
+"X-Launchpad-Export-Date: 2015-12-01 05:20+0000\n"
+"X-Generator: Launchpad (build 17850)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -91,7 +91,7 @@ msgstr "Κέντρο"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "Στην Κύρια Οθόνη:"
+msgstr "Στην κύρια οθόνη:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
@@ -99,15 +99,15 @@ msgstr "Αντιστάθμιση σε ποσοστό απο το κέντρο τ
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Στοίχιση Εικονιδίων:"
+msgstr "Στοίχιση εικονιδίων:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr "Μέγεθος Εικονιδίων:"
+msgstr "Μέγεθος εικονιδίου:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr "Μεγέθυνση Εικονιδίων:"
+msgstr "Μεγέθυνση εικονιδίων:"
 
 #: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:91
 msgid "Appearance"
@@ -115,7 +115,7 @@ msgstr "Εμφάνιση"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr "Έξυπνη Απόκρυψη"
+msgstr "Έξυπνη απόκρυψη"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
@@ -127,7 +127,7 @@ msgstr "Αποφυγή μεγιστοποιημένου παραθύρου"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr "Αποφυγή Παραθύρου"
+msgstr "Αποφυγή παραθύρου"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
@@ -135,11 +135,11 @@ msgstr "Αποφυγή ενεργού παραθύρου"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr "Απόκρυψη της Υποδοχής"
+msgstr "Απόκρυψη της υποδοχής"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr "Καθυστέρηση Απόκρυψης:"
+msgstr "Καθυστέρηση απόκρυψης:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
@@ -147,7 +147,7 @@ msgstr "Καθυστέρηση σε ms πριν την απόκρυψη της �
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr "καθυστέρηση Επανεμφάνισης:"
+msgstr "Καθυστέρηση επανεμφάνισης:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"

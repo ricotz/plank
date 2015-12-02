@@ -7,21 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-11-16 20:48+0000\n"
-"PO-Revision-Date: 2012-07-23 18:29+0000\n"
-"Last-Translator: Ibai Oihanguren Sala <Unknown>\n"
+"POT-Creation-Date: 2015-11-30 16:47+0000\n"
+"PO-Revision-Date: 2015-12-01 07:56+0000\n"
+"Last-Translator: Endika <endikaml@hotmail.com>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-11-17 05:24+0000\n"
-"X-Generator: Launchpad (build 17847)\n"
+"X-Launchpad-Export-Date: 2015-12-02 05:25+0000\n"
+"X-Generator: Launchpad (build 17856)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"Plank munduko dockarik arruntena izateko dago eginda. Helburua, dock batek "
+"behar duena eskaintzea da eta ezer gehiago."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -38,11 +40,11 @@ msgstr "Plank. Inozoentzako ere erabilerraza."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "Gaia:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "Tokia:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
@@ -82,27 +84,27 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "Lehenengo pantailan:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr ""
+msgstr "Oreka portzentaia pantailaren ertzeko erditik"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr ""
+msgstr "Ikonoen lerrokaketa:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "Ikonoen tamaina:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr ""
+msgstr "Ikonoen zooma:"
 
 #: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:91
 msgid "Appearance"
-msgstr ""
+msgstr "Itxura"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
@@ -110,39 +112,39 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr ""
+msgstr "Ezkutatze automatikoa"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr ""
+msgstr "Lehio maximizatuak saihestu"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr ""
+msgstr "Lehioak saihestu"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr ""
+msgstr "Lehio aktiboa saihestu"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr ""
+msgstr "Docka ezkutatu"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr ""
+msgstr "Ezkutatze atzerapena:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgstr "ms-tan atzeratu docka ezkutatu baino lehen"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "Erakusteko atzerapena:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "ms-tan atzeratu docka erakutsi baino lehen"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
