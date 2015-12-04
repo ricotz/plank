@@ -26,7 +26,7 @@ namespace Plank
 	public void cairo_surface_set_device_scale (Cairo.Surface surface, double x_scale, double y_scale);
 #endif
 
-#if VALA_0_26
+#if VALA_0_26 && !VALA_0_32
 	[CCode (array_length_type = "guint", cheader_filename = "glib-object.h", cname = "g_object_class_list_properties")]
 	public (unowned GLib.ParamSpec)[] g_object_class_list_properties (GLib.ObjectClass oclass);
 #endif

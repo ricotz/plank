@@ -49,7 +49,9 @@ namespace Plank
 			
 			debug ("Bind '%s' to '%s'", class_type_name, settings.path);
 			
-#if VALA_0_26
+#if VALA_0_32
+			(unowned ParamSpec)[] properties = get_class ().list_properties ();
+#elif VALA_0_26
 			(unowned ParamSpec)[] properties = g_object_class_list_properties (get_class ());
 #else
 			unowned ParamSpec[] properties = get_class ().list_properties ();
