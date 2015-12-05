@@ -72,7 +72,7 @@ namespace Plank
 				about_authors : authors,
 				about_documenters : documenters,
 				about_artists : artists,
-				about_translators : "",
+				about_translators : _("translator-credits"),
 				about_license_type : Gtk.License.GPL_3_0
 			);
 		}

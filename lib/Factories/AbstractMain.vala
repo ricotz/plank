@@ -384,6 +384,8 @@ namespace Plank
 				about_dlg.set_artists (about_artists);
 			if (about_translators != null && about_translators != "")
 				about_dlg.set_translator_credits (about_translators);
+			else
+				about_dlg.set_translator_credits (_("translator-credits"));
 			about_dlg.set_license_type (about_license_type);
 			
 			about_dlg.response.connect (() => {

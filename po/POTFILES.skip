@@ -8,8 +8,10 @@ docklets/Desktop/DesktopDockItem.c
 docklets/Desktop/DesktopDocklet.c
 docklets/Trash/TrashDockItem.c
 docklets/Trash/TrashDocklet.c
+lib/Factories/AbstractMain.c
 lib/Items/ApplicationDockItem.c
 lib/Items/FileDockItem.c
 lib/Items/PlaceholderDockItem.c
 lib/Items/PlankDockItem.c
 lib/Widgets/PreferencesWindow.c
+src/Main.c
