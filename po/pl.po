@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-30 16:47+0000\n"
-"PO-Revision-Date: 2015-11-23 15:33+0000\n"
-"Last-Translator: Piotr Strębski <strebski@o2.pl>\n"
+"POT-Creation-Date: 2015-12-05 17:20+0100\n"
+"PO-Revision-Date: 2015-12-05 16:30+0000\n"
+"Last-Translator: Launchpad Translations Administrators <Unknown>\n"
 "Language-Team: Polish <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-12-01 05:20+0000\n"
-"X-Generator: Launchpad (build 17850)\n"
+"X-Launchpad-Export-Date: 2015-12-06 05:49+0000\n"
+"X-Generator: Launchpad (build 17862)\n"
 "Language: \n"
 
 #: ../data/plank.appdata.xml.in.h:1
@@ -187,6 +187,18 @@ msgstr "Zachowanie"
 #: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:93
 msgid "Docklets"
 msgstr "Docklety"
+
+#: ../lib/Factories/AbstractMain.vala:388 ../src/Main.vala:75
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Hubert Dworczynski https://launchpad.net/~hubert-dworczynski\n"
+"  Piotr Komur https://launchpad.net/~pkomur\n"
+"  Piotr Sokół https://launchpad.net/~psokol\n"
+"  Piotr Strębski https://launchpad.net/~strebski\n"
+"  Przemysław S https://launchpad.net/~jakis-ktos2\n"
+"  Rico Tzschichholz https://launchpad.net/~ricotz\n"
+"  Tomasz Wiśniewski https://launchpad.net/~weykk27"
 
 #: ../lib/Items/ApplicationDockItem.vala:450
 #: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345

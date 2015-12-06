@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-11-30 16:47+0000\n"
-"PO-Revision-Date: 2015-11-17 09:18+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2015-12-05 17:20+0100\n"
+"PO-Revision-Date: 2015-12-05 16:30+0000\n"
+"Last-Translator: Launchpad Translations Administrators <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-12-01 05:20+0000\n"
-"X-Generator: Launchpad (build 17850)\n"
+"X-Launchpad-Export-Date: 2015-12-06 05:49+0000\n"
+"X-Generator: Launchpad (build 17862)\n"
 
 #: ../data/plank.appdata.xml.in.h:1
 msgid ""
@@ -186,6 +186,19 @@ msgstr "Поведінка"
 #: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:93
 msgid "Docklets"
 msgstr "Доклети"
+
+#: ../lib/Factories/AbstractMain.vala:388 ../src/Main.vala:75
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Bondar Ye. https://launchpad.net/~bondarzhenya\n"
+"  Max_ym https://launchpad.net/~kontact-cat\n"
+"  Maxim Nosovets https://launchpad.net/~molny\n"
+"  Ostap Fedoryak https://launchpad.net/~osutapu\n"
+"  Rico Tzschichholz https://launchpad.net/~ricotz\n"
+"  Sergii Cynailo https://launchpad.net/~funeral20\n"
+"  sawka6600 https://launchpad.net/~sawik87\n"
+"  Микола Ткач https://launchpad.net/~stuartlittle1970"
 
 #: ../lib/Items/ApplicationDockItem.vala:450
 #: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
