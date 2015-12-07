@@ -165,6 +165,7 @@ libplank_internal_la_VALASOURCES = \
 
 libplank_internal_la_SOURCES = \
 	glib-compat.c \
+	gtk-compat.c \
 	$(NULL)
 
 nodist_libplank_internal_la_SOURCES = \

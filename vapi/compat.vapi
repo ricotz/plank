@@ -48,6 +48,14 @@ namespace Plank
 	public int getpid ();
 }
 
+[CCode (cheader_filename = "")]
+namespace PlankCompat
+{
+	// Conditional compat-layer for Gtk+ 3.19.1+
+	public void gtk_widget_class_set_css_name (GLib.ObjectClass widget_class, string name);
+	public void gtk_widget_path_iter_set_object_name (Gtk.WidgetPath path, int pos, string? name);
+}
+
 [CCode (cheader_filename = "X11/Xlib.h")]
 namespace X
 {
