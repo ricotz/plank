@@ -1003,10 +1003,10 @@ namespace Plank
 		
 		Color get_styled_color ()
 		{
-			var background_selected_color = controller.window.get_style_context ().get_background_color (Gtk.StateFlags.SELECTED | Gtk.StateFlags.FOCUSED);
-			var selected_color = (Color) background_selected_color;
-			selected_color.set_min_val (90 / (double) uint16.MAX);
-			return selected_color;
+			unowned Gtk.StyleContext context = theme.get_style_context ();
+			var color = (Color) context.get_background_color (context.get_state ());
+			color.set_min_val (90 / (double) uint16.MAX);
+			return color;
 		}
 		
 		void hidden_changed ()

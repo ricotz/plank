@@ -94,15 +94,6 @@ namespace Plank
 		[Description(nick = "cascade-hide", blurb = "Whether background and icons will unhide/hide with different speeds. The top-border of both will leave/hit the screen-edge at the same time.")]
 		public bool CascadeHide { get; set; }
 		
-		static Gtk.StyleContext style_context;
-		
-		static construct
-		{
-			style_context = new Gtk.StyleContext ();
-			style_context.set_path (new Gtk.WidgetPath ());
-			style_context.set_screen (Gdk.Screen.get_default ());
-		}
-		
 		public DockTheme (string name)
 		{
 			base.with_name (name);
@@ -436,11 +427,8 @@ namespace Plank
 			layout.set_width ((int) (width * Pango.SCALE));
 			layout.set_ellipsize (Pango.EllipsizeMode.NONE);
 			
-			//FIXME This is not actually needed if we would listen to some signals.
-			// So just to make sure we follow the current theme settings.
-			style_context.invalidate ();
-			
-			var font_description = style_context.get_font (Gtk.StateFlags.NORMAL);
+			unowned Gtk.StyleContext style_context = get_style_context ();
+			unowned Pango.FontDescription font_description = style_context.get_font (style_context.get_state ());
 			font_description.set_absolute_size ((int) (height * Pango.SCALE));
 			font_description.set_weight (Pango.Weight.BOLD);
 			layout.set_font_description (font_description);

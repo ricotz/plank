@@ -27,7 +27,36 @@ namespace Plank
 		public const string DEFAULT_NAME = "Default";
 		public const string GTK_THEME_NAME = "Gtk+";
 		
-		File? theme_folder;
+		public static Gtk.StyleContext create_style_context (GLib.Type widget_type, Gtk.StyleContext? parent_style,
+			Gtk.CssProvider provider, string? object_name, string first_class, ...)
+		{
+			Gtk.WidgetPath path;
+
+			var style = new Gtk.StyleContext ();
+			//FIXME
+			//style.set_scale (get_window_scaling_factor ());
+			style.set_parent (parent_style);
+
+			if (parent_style != null)
+				path = parent_style.get_path ().copy ();
+			else
+				path = new Gtk.WidgetPath ();
+
+			path.append_type (widget_type);
+
+			if (object_name != null)
+				PlankCompat.gtk_widget_path_iter_set_object_name (path, -1, object_name);
+
+			path.iter_add_class (-1, first_class);
+			var name_list = va_list ();
+			for (unowned string? name = name_list.arg<unowned string> (); name != null; name = name_list.arg<unowned string> ())
+				path.iter_add_class (-1, name);
+
+			style.set_path (path);
+			style.add_provider (provider, Gtk.STYLE_PROVIDER_PRIORITY_SETTINGS);
+
+			return style;
+		}
 		
 		[Description(nick = "top-roundness", blurb = "The roundness of the top corners.")]
 		public int TopRoundness { get; set; }
@@ -50,6 +79,9 @@ namespace Plank
 		[Description(nick = "inner-stroke-color", blurb = "The color (RGBA) of the inner stroke.")]
 		public Color InnerStrokeColor { get; set; }
 		
+		File? theme_folder;
+		Gtk.StyleContext style_context;
+		
 		public Theme ()
 		{
 			theme_folder = get_theme_folder (DEFAULT_NAME);
@@ -58,6 +90,44 @@ namespace Plank
 		public Theme.with_name (string name)
 		{
 			theme_folder = get_theme_folder (name);
+		}
+		
+		construct
+		{
+			unowned Gtk.Settings gtk_settings = Gtk.Settings.get_default ();
+			
+			var theme_name = gtk_settings.gtk_theme_name;
+			update_style_context (theme_name);
+			
+			gtk_settings.notify["gtk-theme-name"].connect (gtk_theme_name_changed);
+		}
+		
+		void update_style_context (string? theme_name)
+		{
+			Gtk.CssProvider provider;
+			if (theme_name != null)
+				provider = Gtk.CssProvider.get_named (theme_name, null);
+			else
+				provider = Gtk.CssProvider.get_default ();
+			
+			style_context = Theme.create_style_context (typeof (Gtk.IconView), null, provider,
+				"iconview", Gtk.STYLE_CLASS_VIEW);
+			
+			style_context.set_state (Gtk.StateFlags.FOCUSED | Gtk.StateFlags.SELECTED);
+		}
+		
+		void gtk_theme_name_changed (Object o, ParamSpec p)
+		{
+			var theme_name = ((Gtk.Settings) o).gtk_theme_name;
+			update_style_context (theme_name);
+			
+			//FIXME Do we want a dedicated signal here?
+			notify (new ParamSpecBoolean ("theme-changed", "theme-changed", "theme-changed", true, ParamFlags.READABLE));
+		}
+		
+		public unowned Gtk.StyleContext get_style_context ()
+		{
+			return style_context;
 		}
 		
 		/**

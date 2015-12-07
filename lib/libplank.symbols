@@ -641,6 +641,7 @@ plank_system_open_uri
 plank_task_priority_get_type
 plank_theme_construct
 plank_theme_construct_with_name
+plank_theme_create_style_context
 plank_theme_draw_background
 plank_theme_draw_inner_rect
 plank_theme_draw_rounded_line
@@ -652,6 +653,7 @@ plank_theme_get_FillStartColor
 plank_theme_get_InnerStrokeColor
 plank_theme_get_LineWidth
 plank_theme_get_OuterStrokeColor
+plank_theme_get_style_context
 plank_theme_get_theme_folder
 plank_theme_get_theme_list
 plank_theme_get_top_offset
