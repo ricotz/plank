@@ -289,7 +289,7 @@ namespace Plank.Items
 		void icon_file_monitor_start ()
 		{
 			var icon_file = DrawingService.try_get_icon_file (Icon);
-			if (icon_file == null)
+			if (icon_file == null || icon_file.get_uri_scheme () != "file")
 				return;
 			
 			try {
