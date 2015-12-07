@@ -28,6 +28,12 @@ namespace Plank
 	 */
 	public class TitledSeparatorMenuItem : Gtk.SeparatorMenuItem
 	{
+		static construct
+		{
+			set_accessible_role (Atk.Role.SEPARATOR);
+			PlankCompat.gtk_widget_class_set_css_name ((GLib.ObjectClass) typeof (TitledSeparatorMenuItem).class_ref (), "menuitem");
+		}
+		
 		bool draw_line = true;
 		
 		string text;
@@ -46,7 +52,7 @@ namespace Plank
 		protected override bool draw (Cairo.Context cr)
 		{
 			unowned Gtk.StyleContext context = get_style_context ();
-			var state = get_state_flags ();
+			var state = context.get_state ();
 			
 			int x, y, w, h;
 			int border_width = (int) get_border_width ();
@@ -91,7 +97,7 @@ namespace Plank
 			context.render_background (cr, 0, y, x + logical_rect.width + padding.left + padding.right, h);
 			context.render_frame (cr, 0, y, x + logical_rect.width + padding.left + padding.right, h);
 			
-			var color = context.get_color (Gtk.StateFlags.NORMAL);
+			var color = context.get_color (state);
 			cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
 			cr.move_to (x + padding.left, y + (h - logical_rect.height) / 2);
 			Pango.cairo_show_layout (cr, layout);

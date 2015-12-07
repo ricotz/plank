@@ -27,6 +27,12 @@ namespace Plank
 	{
 		const int PADDING = 10;
 		
+		static construct
+		{
+			set_accessible_role (Atk.Role.TOOL_TIP);
+			PlankCompat.gtk_widget_class_set_css_name ((GLib.ObjectClass) typeof (HoverWindow).class_ref (), "tooltip");
+		}
+		
 		Gtk.Box box;
 		Gtk.Label label;
 		
