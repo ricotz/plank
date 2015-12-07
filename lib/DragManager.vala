@@ -243,7 +243,14 @@ namespace Plank
 		void drag_data_received (Gtk.Widget w, Gdk.DragContext context, int x, int y, Gtk.SelectionData selection_data, uint info, uint time_)
 		{
 			if (drag_data_requested) {
-				var uris = Uri.list_extract_uris ((string) selection_data.get_data ());
+				unowned string? data = (string?) selection_data.get_data ();
+				if (data == null) {
+					drag_data_requested = false;
+					Gdk.drag_status (context, Gdk.DragAction.COPY, time_);
+					return;
+				}
+				
+				var uris = Uri.list_extract_uris (data);
 				
 				drag_data = new Gee.ArrayList<string> ();
 				foreach (unowned string s in uris) {
