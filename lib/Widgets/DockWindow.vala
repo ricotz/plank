@@ -54,11 +54,6 @@ namespace Plank
 		 */
 		Gtk.Menu? menu;
 		
-		/**
-		 * The tooltip window for this dock.
-		 */
-		HoverWindow hover;
-		
 		uint hover_reposition_timer_id = 0U;
 		
 		uint long_press_timer_id = 0U;
@@ -94,8 +89,6 @@ namespace Plank
 						Gdk.EventMask.POINTER_MOTION_MASK |
 						Gdk.EventMask.SCROLL_MASK |
 						Gdk.EventMask.STRUCTURE_MASK);
-			
-			hover = new HoverWindow ();
 			
 			controller.prefs.notify["HideMode"].connect (set_struts);
 		}
@@ -218,7 +211,7 @@ namespace Plank
 				set_hovered_provider (null);
 				set_hovered (null);
 			} else
-				hover.hide ();
+				controller.hover.hide ();
 			
 			return Gdk.EVENT_STOP;
 		}
@@ -361,7 +354,7 @@ namespace Plank
 				hover_reposition_timer_id = 0U;
 			}
 			
-			hover.hide ();
+			controller.hover.hide ();
 			
 			if (HoveredItem == null || controller.drag_manager.InternalDragActive)
 				return;
@@ -379,6 +372,7 @@ namespace Plank
 					return true;
 				
 				hover_reposition_timer_id = 0U;
+				unowned HoverWindow hover = controller.hover;
 				
 				int x, y;
 				hover.set_text (HoveredItem.Text);
@@ -727,7 +721,7 @@ namespace Plank
 		void on_menu_show ()
 		{
 			update_icon_regions ();
-			hover.hide ();
+			controller.hover.hide ();
 			controller.renderer.animated_draw ();
 		}
 		
