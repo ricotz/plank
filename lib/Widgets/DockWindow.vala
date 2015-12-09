@@ -354,6 +354,9 @@ namespace Plank
 				hover_reposition_timer_id = 0U;
 			}
 			
+			if (controller.drag_manager.ExternalDragActive)
+				return;
+			
 			controller.hover.hide ();
 			
 			if (HoveredItem == null || controller.drag_manager.InternalDragActive)

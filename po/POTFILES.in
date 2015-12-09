@@ -1,6 +1,7 @@
 data/plank.appdata.xml.in
 data/plank.desktop.in
 [type: gettext/glade]data/ui/preferences.ui
+lib/DragManager.vala
 lib/Factories/AbstractMain.vala
 lib/Items/ApplicationDockItem.vala
 lib/Items/FileDockItem.vala

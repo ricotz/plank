@@ -46,6 +46,11 @@ namespace Plank
 			return AnimationType.NONE;
 		}
 		
+		public override string get_drop_text ()
+		{
+			return _("Drop to add to dock");
+		}
+		
 		/**
 		 * {@inheritDoc}
 		 */

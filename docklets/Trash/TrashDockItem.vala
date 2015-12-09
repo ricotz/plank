@@ -117,6 +117,11 @@ namespace Docky
 			return AnimationType.NONE;
 		}
 		
+		public override string get_drop_text ()
+		{
+			return _("Drop to move to Trash");
+		}
+		
 		protected override bool can_accept_drop (Gee.ArrayList<string> uris)
 		{
 			bool accepted = false;

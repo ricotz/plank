@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-05 17:20+0100\n"
+"POT-Creation-Date: 2015-12-08 12:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -180,6 +180,10 @@ msgstr ""
 msgid "Docklets"
 msgstr ""
 
+#: ../lib/DragManager.vala:470 ../lib/Items/PlaceholderDockItem.vala:51
+msgid "Drop to add to dock"
+msgstr ""
+
 #: ../lib/Factories/AbstractMain.vala:388 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
@@ -195,6 +199,11 @@ msgstr ""
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
+msgstr ""
+
+#: ../lib/Items/ApplicationDockItem.vala:530
+#, c-format
+msgid "Drop to open with %s"
 msgstr ""
 
 #: ../lib/Items/FileDockItem.vala:332

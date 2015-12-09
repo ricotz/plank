@@ -219,6 +219,16 @@ namespace Plank
 		}
 		
 		/**
+		 * The item's text for drop actions.
+		 *
+		 * @return the item's drop-text
+		 */
+		public virtual string get_drop_text ()
+		{
+			return "";
+		}
+		
+		/**
 		 * Returns if this item can be removed from the dock.
 		 *
 		 * @return if this item can be removed from the dock

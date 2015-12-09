@@ -359,6 +359,8 @@ namespace Plank
 			// Perform persistent write of dock-preference
 			controller.prefs.apply ();
 			
+			controller.hover.hide ();
+			
 			// Force last redraw for InternalDrag
 			controller.renderer.animated_draw ();
 			
@@ -385,6 +387,8 @@ namespace Plank
 				// Delay it to preserve functionality in drag_drop.
 				Gdk.threads_add_idle (() => {
 					ExternalDragActive = false;
+					
+					controller.hover.hide ();
 					
 					// If an item was hovered we need it in drag_drop,
 					// so reset HoveredItem here not earlier.
@@ -449,6 +453,25 @@ namespace Plank
 				}
 			} else {
 				Gdk.drag_status (context, Gdk.DragAction.COPY, time_);
+			}
+			
+			if (ExternalDragActive) {
+				unowned PositionManager position_manager = controller.position_manager;
+				unowned DockItem hovered_item = window.HoveredItem;
+				unowned HoverWindow hover = controller.hover;
+				if (hovered_item != null && hovered_item.can_accept_drop (drag_data)) {
+					int hx, hy;
+					position_manager.get_hover_position (hovered_item, out hx, out hy);
+					hover.set_text (hovered_item.get_drop_text ());
+					hover.show_at (hx, hy, position_manager.Position);
+				} else if (hide_manager.Hovered) {
+					int hx = x, hy = y;
+					position_manager.get_hover_position_at (ref hx, ref hy);
+					hover.set_text (_("Drop to add to dock"));
+					hover.show_at (hx, hy, position_manager.Position);
+				} else {
+					hover.hide ();
+				}
 			}
 			
 			controller.renderer.update_local_cursor (x, y);

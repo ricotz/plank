@@ -525,6 +525,14 @@ namespace Plank
 		/**
 		 * {@inheritDoc}
 		 */
+		public override string get_drop_text ()
+		{
+			return _("Drop to open with %s").printf (Text);
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
 		public override bool can_accept_drop (Gee.ArrayList<string> uris)
 		{
 			if (uris == null || is_window ())

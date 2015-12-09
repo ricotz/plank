@@ -1273,6 +1273,35 @@ namespace Plank
 		}
 		
 		/**
+		 * Get's the x and y position to display a hover window for the given coordinates.
+		 *
+		 * @param x the resulting x position
+		 * @param y the resulting y position
+		 */
+		public void get_hover_position_at (ref int x, ref int y)
+		{
+			// Any element will suffice since only the constant coordinate of center is used
+			var center = get_draw_value_for_item (controller.VisibleItems.first ()).static_center;
+			var offset = (ZoomIconSize - IconSize / 2.0);
+			
+			switch (Position) {
+			default:
+			case Gtk.PositionType.BOTTOM:
+				y = (int) Math.round (center.y + win_y - offset);
+				break;
+			case Gtk.PositionType.TOP:
+				y = (int) Math.round (center.y + win_y + offset);
+				break;
+			case Gtk.PositionType.LEFT:
+				x = (int) Math.round (center.x + win_x + offset);
+				break;
+			case Gtk.PositionType.RIGHT:
+				x = (int) Math.round (center.x + win_x - offset);
+				break;
+			}
+		}
+		
+		/**
 		 * Get's the x and y position to display the urgent-glow for a dock item.
 		 *
 		 * @param item the item to show urgent-glow for
