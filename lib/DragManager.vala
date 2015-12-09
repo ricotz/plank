@@ -459,7 +459,7 @@ namespace Plank
 				unowned PositionManager position_manager = controller.position_manager;
 				unowned DockItem hovered_item = window.HoveredItem;
 				unowned HoverWindow hover = controller.hover;
-				if (hovered_item != null && hovered_item.can_accept_drop (drag_data)) {
+				if (!DragIsDesktopFile && hovered_item != null && hovered_item.can_accept_drop (drag_data)) {
 					int hx, hy;
 					position_manager.get_hover_position (hovered_item, out hx, out hy);
 					hover.set_text (hovered_item.get_drop_text ());
