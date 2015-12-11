@@ -247,4 +247,4 @@ msgstr "_Terjemahkan Aplikasi ini..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
-msgstr ""
+msgstr "Preferensi"

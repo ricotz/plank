@@ -215,7 +215,7 @@ msgstr "Za_mknij wszystkie"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
-msgstr "_Zamknij"
+msgstr "Za_mknij"
 
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format

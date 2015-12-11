@@ -235,4 +235,4 @@ msgstr "_Translate This Application..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
-msgstr ""
+msgstr "Preferences"

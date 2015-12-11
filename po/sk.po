@@ -210,7 +210,7 @@ msgstr "_Zavrieť všetko"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
-msgstr "_Zavrieť"
+msgstr "Za_vrieť"
 
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format

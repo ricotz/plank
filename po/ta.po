@@ -203,7 +203,7 @@ msgstr "அனைத்தையும் மூடு (_C)"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
-msgstr ""
+msgstr "மூடு (_C)"
 
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format
@@ -236,4 +236,4 @@ msgstr "இதை மொழிபெயர்க்கவும்"
 
 #: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
-msgstr ""
+msgstr "முன்னுரிமைகள்"

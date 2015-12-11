@@ -235,4 +235,4 @@ msgstr "_Përkthe këtë program..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
-msgstr "Parapëlqimet"
+msgstr "Preferimet"

@@ -204,7 +204,7 @@ msgstr "_Zatvori sve"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
-msgstr ""
+msgstr "_Zatvori"
 
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format
@@ -237,4 +237,4 @@ msgstr "_Prevedi ovu aplikaciju..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
-msgstr ""
+msgstr "Postavke"

@@ -205,7 +205,7 @@ msgstr "Itxi _dena"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
-msgstr ""
+msgstr "It_xi"
 
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format
@@ -238,4 +238,4 @@ msgstr "It_zuli aplikazio hau..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
-msgstr ""
+msgstr "Hobespenak"

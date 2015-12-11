@@ -241,4 +241,4 @@ msgstr "_Ushbu Dasturni_Tarjima qilish"
 
 #: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
-msgstr "Xususiyatlar"
+msgstr "Parametrlar"

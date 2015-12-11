@@ -208,7 +208,7 @@ msgstr "ปิดทั้งหมด"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
-msgstr "ปิด"
+msgstr "ปิ_ด"
 
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format

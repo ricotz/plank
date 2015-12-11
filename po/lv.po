@@ -203,7 +203,7 @@ msgstr "_Aizvērt Visu"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
-msgstr ""
+msgstr "_Aizvērt"
 
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format
@@ -236,4 +236,4 @@ msgstr "_Tulkot šo lietotni..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
-msgstr ""
+msgstr "Iestatījumi"

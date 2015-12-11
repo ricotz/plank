@@ -204,7 +204,7 @@ msgstr "În_chide toate"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
-msgstr ""
+msgstr "În_chide"
 
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format
@@ -237,4 +237,4 @@ msgstr "_Traduceți această aplicație..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
-msgstr ""
+msgstr "Preferințe"

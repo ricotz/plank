@@ -204,7 +204,7 @@ msgstr ""
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
-msgstr ""
+msgstr "_დახურვა"
 
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format
@@ -237,4 +237,4 @@ msgstr ""
 
 #: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
-msgstr ""
+msgstr "პარამეტრები"

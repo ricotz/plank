@@ -210,7 +210,7 @@ msgstr "_Sulge"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
-msgstr "_Sulge"
+msgstr "Sul_ge"
 
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format

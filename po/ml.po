@@ -211,7 +211,7 @@ msgstr "എല്ലാം _അടയ്ക്കുക"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
-msgstr ""
+msgstr "_അടയ്ക്കുക"
 
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format

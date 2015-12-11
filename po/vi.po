@@ -203,7 +203,7 @@ msgstr "Đó_ng tất cả"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
-msgstr ""
+msgstr "Đón_g"
 
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format
@@ -236,4 +236,4 @@ msgstr "_Dịch ứng dụng..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:65
 msgid "Preferences"
-msgstr ""
+msgstr "Tù_y thích"
