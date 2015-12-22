@@ -41,8 +41,8 @@ msgstr ""
 "elaborate come docklets, pittori, impostazioni finestre di dialogo, ecc"
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Stupidamente semplice."
+msgid "Stupidly simple."
+msgstr "Stupidamente semplice."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

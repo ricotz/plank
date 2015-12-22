@@ -39,8 +39,8 @@ msgstr ""
 "Docky прави всички красоти, като доклети, теми, диалози за настройка и т.н."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Пределно прост."
+msgid "Stupidly simple."
+msgstr "Пределно прост."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

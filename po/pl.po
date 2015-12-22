@@ -41,8 +41,8 @@ msgstr ""
 "sprawami, takimi jak obsługa dokletów, drukarek, okien z ustawieniami itd."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Idiotycznie prosty."
+msgid "Stupidly simple."
+msgstr "Idiotycznie prosty."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

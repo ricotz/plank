@@ -41,8 +41,8 @@ msgstr ""
 "például Dockleteket, festőket (painters), beállítóablakot, stb."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Nagyszerűen egyszerű."
+msgid "Stupidly simple."
+msgstr "Nagyszerűen egyszerű."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

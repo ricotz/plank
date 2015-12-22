@@ -39,8 +39,8 @@ msgstr ""
 "qaratilgan, Docky esa qo'shimchalarni qamrab olgan."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Ahmoqona darajada sodda."
+msgid "Stupidly simple."
+msgstr "Ahmoqona darajada sodda."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

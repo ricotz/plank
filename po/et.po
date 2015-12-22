@@ -39,8 +39,8 @@ msgstr ""
 "rohkem võimalusi, nagu dokletid, värvid, eelistuste dialoogid, jne."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank, hämmastavalt lihtne."
+msgid "Stupidly simple."
+msgstr "Hämmastavalt lihtne."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

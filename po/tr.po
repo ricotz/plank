@@ -40,8 +40,8 @@ msgstr ""
 "karşılamayı amaçlar."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Son derece basit."
+msgid "Stupidly simple."
+msgstr "Son derece basit."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

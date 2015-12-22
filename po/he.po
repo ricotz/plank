@@ -39,8 +39,8 @@ msgstr ""
 "לשנות את העיצוב או את אופן הפעולה, להוסיף לוחיות יישומים נוספות"
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank, טפשי עד כמה שזה פשוט"
+msgid "Stupidly simple."
+msgstr "טפשי עד כמה שזה פשוט"
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

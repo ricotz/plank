@@ -40,8 +40,8 @@ msgstr ""
 "промалювання, діалоги налаштувань, тощо."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Просто легкий."
+msgid "Stupidly simple."
+msgstr "Просто легкий."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

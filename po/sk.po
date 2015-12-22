@@ -39,8 +39,8 @@ msgstr ""
 "pridá ozdobné veci ako Doklety, paintery, dialógy pre nastavenia a i."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Primitívne jednoduchý."
+msgid "Stupidly simple."
+msgstr "Primitívne jednoduchý."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

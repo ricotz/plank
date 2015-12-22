@@ -43,8 +43,8 @@ msgstr ""
 "peantairean, còmhraidhean airson roghainnean is msaa."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Cho furasta 's a ghabhas."
+msgid "Stupidly simple."
+msgstr "Cho furasta 's a ghabhas."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

@@ -41,8 +41,8 @@ msgstr ""
 "прочее."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. До безумного прост."
+msgid "Stupidly simple."
+msgstr "До безумного прост."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

@@ -40,8 +40,8 @@ msgstr ""
 "docklets, kleuropties, instellingendialoog, enz."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Belachelijk eenvoudig."
+msgid "Stupidly simple."
+msgstr "Belachelijk eenvoudig."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

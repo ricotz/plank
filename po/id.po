@@ -40,8 +40,8 @@ msgstr ""
 "hal-hal menawan seperti Docklets, painter, setelan dialog, dsb."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Begitu sederhana."
+msgid "Stupidly simple."
+msgstr "Begitu sederhana."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

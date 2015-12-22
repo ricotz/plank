@@ -35,8 +35,8 @@ msgid ""
 msgstr ""
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. ძალიან მარტივი აი ძალიან"
+msgid "Stupidly simple."
+msgstr "ძალიან მარტივი აი ძალიან"
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

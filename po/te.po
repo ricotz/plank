@@ -36,8 +36,8 @@ msgstr ""
 "అత్యాధునిక ఫీచర్లను తయారు చేయవచ్చు. డాకీ ప్లాంక్ మీదే ఆధార పది పని చేస్తుంది."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "ప్లాంక్. చాలా సరళమైనది."
+msgid "Stupidly simple."
+msgstr "చాలా సరళమైనది."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
