@@ -1,21 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2014 Rico Tzschichholz <ricotz@ubuntu.com> -->
-<application>
-	<id type="desktop">plank.desktop</id>
-	<license>GPL-3.0+</license>
-	<name>Plank</name>
-	<summary>Stupidly simple.</summary>
-	<description>
-		<_p>
-			Plank is meant to be the simplest dock on the planet. The goal is to provide just what a dock needs and absolutely nothing more.
-		</_p>
-		<_p>
-			It is, however, a library which can be extended to create other dock programs with more advanced features. Thus, Plank is the underlying technology for Docky (starting in version 3.0.0) and aims to provide all the core features while Docky extends it to add fancier things like Docklets, painters, settings dialogs, etc.
-		</_p>
-	</description>
-	<url type="homepage">https://launchpad.net/plank</url>
-	<screenshots>
-		<screenshot type="default">http://people.ubuntu.com/~ricotz/appdata/plank.png</screenshot>
-	</screenshots>
-	<updatecontact>ricotz@ubuntu.com</updatecontact>
-</application>
+<component type="desktop">
+  <id>plank.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <name>Plank</name>
+  <summary>Stupidly simple.</summary>
+  <description>
+    <_p>
+      Plank is meant to be the simplest dock on the planet. The goal is to provide just what a dock needs and
+      absolutely nothing more.
+    </_p>
+    <_p>
+      It is, however, a library which can be extended to create other dock programs with more advanced features.
+      Thus, Plank is the underlying technology for Docky (starting in version 3.0.0) and aims to provide all the
+      core features while Docky extends it to add fancier things like Docklets, painters, settings dialogs, etc.
+    </_p>
+  </description>
+  <url type="homepage">https://launchpad.net/plank</url>
+  <url type="bugtracker">https://bugs.launchpad.net/plank</url>
+  <url type="faq">https://answers.launchpad.net/plank</url>
+  <provides>
+    <library>libplank.so.1</library>
+    <binary>plank</binary>
+  </provides>
+  <releases>
+    <release version="0.10.1" timestamp="1444388400"/>
+    <release version="0.10.0" timestamp="1441623600"/>
+    <release version="0.9.1" timestamp="1430564400"/>
+    <release version="0.9.0" timestamp="1428836400"/>
+    <release version="0.8.1" timestamp="1422187200"/>
+    <release version="0.8.0" timestamp="1420200000"/>
+    <release version="0.7.1" timestamp="1411470000"/>
+    <release version="0.7.0" timestamp="1410778800"/>
+    <release version="0.6.1" timestamp="1400583600"/>
+    <release version="0.6.0" timestamp="1397473200"/>
+    <release version="0.5.0" timestamp="1384689600"/>
+    <release version="0.4.0" timestamp="1382094000"/>
+    <release version="0.3.0" timestamp="1372158000"/>
+  </releases>
+  <screenshots>
+    <screenshot type="default">
+      <image>http://people.ubuntu.com/~ricotz/appdata/plank_dock.png</image>
+    </screenshot>
+    <screenshot>
+      <image>http://people.ubuntu.com/~ricotz/appdata/plank_preferences_appearance.png</image>
+    </screenshot>
+    <screenshot>
+      <image>http://people.ubuntu.com/~ricotz/appdata/plank_preferences_behaviour.png</image>
+    </screenshot>
+  </screenshots>
+  <project_license>GPL-3.0</project_license>
+  <developer_name>The Plank Developers</developer_name>
+  <update_contact>ricotz_at_ubuntu.com</update_contact>
+</component>
