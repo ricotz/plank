@@ -40,8 +40,8 @@ msgstr ""
 "തുടങ്ങിയവ ഉള്പെടുതുവാൻ ഇതിനെ വിപുലീകരിച്ചു."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "പ്ലാങ്ക്. അനായാസം."
+msgid "Stupidly simple."
+msgstr "അനായാസം."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

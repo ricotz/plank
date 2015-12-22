@@ -39,8 +39,8 @@ msgstr ""
 "jolloin Docky voi laajentaa ominaisuuksia omin lisäosin."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Todella yksinkertainen."
+msgid "Stupidly simple."
+msgstr "Todella yksinkertainen."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

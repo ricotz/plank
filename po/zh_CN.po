@@ -35,8 +35,8 @@ msgstr ""
 "的功能。Docky在其基础上扩展了更多酷炫特性如Docklet、画笔、设置对话框等。"
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. 简单得无语。"
+msgid "Stupidly simple."
+msgstr "简单得无语。"
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

@@ -4,7 +4,7 @@
   <id>plank.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <name>Plank</name>
-  <summary>Stupidly simple.</summary>
+  <_summary>Stupidly simple.</_summary>
   <description>
     <_p>
       Plank is meant to be the simplest dock on the planet. The goal is to provide just what a dock needs and

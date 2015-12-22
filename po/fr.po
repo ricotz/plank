@@ -41,8 +41,8 @@ msgstr ""
 "décorateurs, les fenêtres de paramètres, etc."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Stupidement simple."
+msgid "Stupidly simple."
+msgstr "Stupidement simple."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

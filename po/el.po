@@ -42,8 +42,8 @@ msgstr ""
 "πράγματα όπως Υποδοχίδια, χρωματιστές, ρυθμίσεις διαλόγων, κλπ."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Βλακωδώς απλό."
+msgid "Stupidly simple."
+msgstr "Βλακωδώς απλό."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

@@ -39,8 +39,8 @@ msgstr ""
 "extiende con «docklets» y otras funciones."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "Plank. Estúpidamente simple."
+msgid "Stupidly simple."
+msgstr "Estúpidamente simple."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

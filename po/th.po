@@ -39,8 +39,8 @@ msgstr ""
 "ที่มุ่งเพิ่มฟีเจอร์หรูหราอย่างเช่น Docklets, วาดภาพ, การตั้งค่าไดอะลอก ฯลฯ"
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "แพลงค์ ง่ายเหี้ยๆ"
+msgid "Stupidly simple."
+msgstr "ง่ายเหี้ยๆ"
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"

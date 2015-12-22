@@ -36,8 +36,8 @@ msgstr ""
 "기반으로 사용되고 있으며, 저희는 기초적인 기능을 제공하고 Docky가 더 상세한 기능들을 제공할 것입니다."
 
 #: ../data/plank.desktop.in.h:1
-msgid "Plank. Stupidly simple."
-msgstr "플랭크. 어처구니없으리 만치 단순한."
+msgid "Stupidly simple."
+msgstr "어처구니없으리 만치 단순한."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
