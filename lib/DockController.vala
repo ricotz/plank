@@ -176,6 +176,7 @@ namespace Plank
 				provider = new DefaultApplicationDockItemProvider (prefs, launchers_folder);
 			
 			provider.add_all (Factory.item_factory.load_items (launchers_folder, prefs.DockItems));
+			serialize_item_positions ();
 			
 			return provider;
 		}
