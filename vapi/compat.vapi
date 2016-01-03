@@ -46,6 +46,11 @@ namespace Plank
 
 	[CCode (cheader_filename = "unistd.h", cname = "getpid")]
 	public int getpid ();
+
+	[CCode (cheader_filename = "", cname = "CLAMP")]
+	public int clamp (int x, int low, int high);
+	[CCode (cheader_filename = "", cname = "CLAMP")]
+	public double fclamp (double x, double low, double high);
 }
 
 [CCode (cheader_filename = "")]

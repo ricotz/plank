@@ -105,8 +105,8 @@ namespace Plank
 				break;
 			}
 			
-			x = int.max (monitor.x, int.min (x, monitor.x + monitor.width - width));
-			y = int.max (monitor.y, int.min (y, monitor.y + monitor.height - height));
+			x = x.clamp (monitor.x, monitor.x + monitor.width - width);
+			y = y.clamp (monitor.y, monitor.y + monitor.height - height);
 			
 			move (x, y);
 		}

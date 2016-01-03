@@ -266,8 +266,8 @@ namespace Plank
 		{
 			var min_size  = double.min (width, height);
 			
-			top_radius    = double.max (0, double.min (top_radius, min_size));
-			bottom_radius = double.max (0, double.min (bottom_radius, min_size - top_radius));
+			top_radius = top_radius.clamp (0.0, min_size);
+			bottom_radius = bottom_radius.clamp (0.0, min_size - top_radius);
 			
 			if (!Gdk.Screen.get_default ().is_composited ())
 				top_radius = bottom_radius = 0.0;
