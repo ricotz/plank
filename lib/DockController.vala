@@ -176,7 +176,7 @@ namespace Plank
 				provider = new DefaultApplicationDockItemProvider (prefs, launchers_folder);
 			
 			provider.add_all (Factory.item_factory.load_items (launchers_folder, prefs.DockItems));
-			serialize_item_positions ();
+			serialize_item_positions (provider);
 			
 			return provider;
 		}
@@ -333,7 +333,7 @@ namespace Plank
 		void handle_elements_changed (DockContainer container, Gee.List<DockElement> added, Gee.List<DockElement> removed)
 		{
 			if (container == default_provider)
-				serialize_item_positions ();
+				serialize_item_positions (container);
 			
 			// Schedule added/removed items for special animations
 			renderer.animate_items (added);
@@ -354,7 +354,7 @@ namespace Plank
 		void handle_positions_changed (DockContainer container, Gee.List<unowned DockElement> moved_items)
 		{
 			if (container == default_provider)
-				serialize_item_positions ();
+				serialize_item_positions (container);
 			
 			update_visible_elements ();
 			
@@ -371,9 +371,9 @@ namespace Plank
 			renderer.animated_draw ();
 		}
 		
-		void serialize_item_positions ()
+		void serialize_item_positions (DockContainer container)
 		{
-			unowned ApplicationDockItemProvider? provider = (default_provider as ApplicationDockItemProvider);
+			unowned ApplicationDockItemProvider? provider = (container as ApplicationDockItemProvider);
 			if (provider == null)
 				return;
 			
