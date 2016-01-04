@@ -369,10 +369,10 @@ namespace Plank
 				return {};
 			}
 			
-			return { clamp (int.parse (parts [0]) / uint8.MAX, 0, uint8.MAX),
-				clamp (int.parse (parts [1]) / uint8.MAX, 0, uint8.MAX),
-				clamp (int.parse (parts [2]) / uint8.MAX, 0, uint8.MAX),
-				clamp (int.parse (parts [3]) / uint8.MAX, 0, uint8.MAX) };
+			return { fclamp (int.parse (parts [0]), 0.0, uint8.MAX) / uint8.MAX,
+				fclamp (int.parse (parts [1]), 0.0, uint8.MAX) / uint8.MAX,
+				fclamp (int.parse (parts [2]), 0.0, uint8.MAX) / uint8.MAX,
+				fclamp (int.parse (parts [3]), 0.0, uint8.MAX) / uint8.MAX };
 		}
 	}
 }
