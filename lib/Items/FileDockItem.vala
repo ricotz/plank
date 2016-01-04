@@ -324,10 +324,14 @@ namespace Plank
 			if (keys.size > 0)
 				items.add (new Gtk.SeparatorMenuItem ());
 			
-			var delete_item = new Gtk.CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
-			delete_item.active = true;
-			delete_item.activate.connect (() => delete ());
-			items.add (delete_item);
+			unowned DefaultApplicationDockItemProvider? default_provider = (Container as DefaultApplicationDockItemProvider);
+			if (default_provider != null
+				&& !default_provider.Prefs.LockItems) {
+				var delete_item = new Gtk.CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
+				delete_item.active = true;
+				delete_item.activate.connect (() => delete ());
+				items.add (delete_item);
+			}
 			
 			var item = create_menu_item (_("_Open in File Browser"), "gtk-open");
 			item.activate.connect (() => {
@@ -342,10 +346,14 @@ namespace Plank
 		{
 			var items = new Gee.ArrayList<Gtk.MenuItem> ();
 			
-			var delete_item = new Gtk.CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
-			delete_item.active = true;
-			delete_item.activate.connect (() => delete ());
-			items.add (delete_item);
+			unowned DefaultApplicationDockItemProvider? default_provider = (Container as DefaultApplicationDockItemProvider);
+			if (default_provider != null
+				&& !default_provider.Prefs.LockItems) {
+				var delete_item = new Gtk.CheckMenuItem.with_mnemonic (_("_Keep in Dock"));
+				delete_item.active = true;
+				delete_item.activate.connect (() => delete ());
+				items.add (delete_item);
+			}
 			
 			var item = create_menu_item (_("_Open"), "gtk-open");
 			item.activate.connect (launch);
