@@ -7,17 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-12-09 13:08+0000\n"
-"PO-Revision-Date: 2015-12-06 18:12+0000\n"
+"POT-Creation-Date: 2016-01-04 19:57+0000\n"
+"PO-Revision-Date: 2015-12-23 00:40+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-12-11 05:23+0000\n"
-"X-Generator: Launchpad (build 17865)\n"
+"X-Launchpad-Export-Date: 2016-01-05 05:15+0000\n"
+"X-Generator: Launchpad (build 17876)\n"
 
-#: ../data/plank.appdata.xml.in.h:1
+#: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
+msgid "Stupidly simple."
+msgstr "Nagyszerűen egyszerű."
+
+#: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
@@ -26,7 +30,7 @@ msgstr ""
 "a cél, hogy csak annyit nyújtson amennyit egy dokknak feltétlenül kell és "
 "semmi többet."
 
-#: ../data/plank.appdata.xml.in.h:2
+#: ../data/plank.appdata.xml.in.h:3
 msgid ""
 "It is, however, a library which can be extended to create other dock "
 "programs with more advanced features. Thus, Plank is the underlying "
@@ -39,10 +43,6 @@ msgstr ""
 "technológia (a 3.0.0 verziótól kezdve) és az alapfunkciók biztosítását "
 "célozza, míg a Docky ezt kibővítve látványosabb dolgokat ad hozzá, mint "
 "például Dockleteket, festőket (painters), beállítóablakot, stb."
-
-#: ../data/plank.desktop.in.h:1
-msgid "Stupidly simple."
-msgstr "Nagyszerűen egyszerű."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
@@ -204,7 +204,7 @@ msgstr ""
 "  Robert Kuszinger https://launchpad.net/~kuszinger"
 
 #: ../lib/Items/ApplicationDockItem.vala:450
-#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
+#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:352
 msgid "_Keep in Dock"
 msgstr "_Zárolás a dokkhoz"
 
@@ -221,15 +221,15 @@ msgstr "_Bezárás"
 msgid "Drop to open with %s"
 msgstr "Engedje el a %s-(v)al megnyitáshoz"
 
-#: ../lib/Items/FileDockItem.vala:332
+#: ../lib/Items/FileDockItem.vala:336
 msgid "_Open in File Browser"
 msgstr "Megnyitás a _fájlböngészőben"
 
-#: ../lib/Items/FileDockItem.vala:350
+#: ../lib/Items/FileDockItem.vala:358
 msgid "_Open"
 msgstr "Meg_nyitás"
 
-#: ../lib/Items/FileDockItem.vala:354
+#: ../lib/Items/FileDockItem.vala:362
 msgid "Open Containing _Folder"
 msgstr "_Tartalmazó mappa megnyitása"
 

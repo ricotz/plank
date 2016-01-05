@@ -7,17 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-12-09 13:08+0000\n"
-"PO-Revision-Date: 2015-12-06 18:12+0000\n"
+"POT-Creation-Date: 2016-01-04 19:57+0000\n"
+"PO-Revision-Date: 2015-12-23 16:04+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Hebrew <he@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-12-11 05:23+0000\n"
-"X-Generator: Launchpad (build 17865)\n"
+"X-Launchpad-Export-Date: 2016-01-05 05:15+0000\n"
+"X-Generator: Launchpad (build 17876)\n"
 
-#: ../data/plank.appdata.xml.in.h:1
+#: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
+msgid "Stupidly simple."
+msgstr "טפשי עד כמה שזה פשוט"
+
+#: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
@@ -25,7 +29,7 @@ msgstr ""
 "Plank נועד להיות מעגן היישומים הפשוט בעולם. המטרה היא לספק בדיוק מה שהמעגן "
 "צריך ורק את זה."
 
-#: ../data/plank.appdata.xml.in.h:2
+#: ../data/plank.appdata.xml.in.h:3
 msgid ""
 "It is, however, a library which can be extended to create other dock "
 "programs with more advanced features. Thus, Plank is the underlying "
@@ -37,10 +41,6 @@ msgstr ""
 "מאפיינים מתקדמים יותר. כך, למשל, Plank הוא התשתית הטכנולוגית של Docky (החל "
 "מגרסה 3.0.0), במטרה לספק את כל מאפייני הליבה, בעוד ש-Docky מרחיב אותו ומאפשר "
 "לשנות את העיצוב או את אופן הפעולה, להוסיף לוחיות יישומים נוספות"
-
-#: ../data/plank.desktop.in.h:1
-msgid "Stupidly simple."
-msgstr "טפשי עד כמה שזה פשוט"
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
@@ -176,7 +176,7 @@ msgstr "הצמדת יישומים אוטומטית:"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Show Item for Dock:"
-msgstr ""
+msgstr "הראה אייקון עבור הסרגל:"
 
 #: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:92
 msgid "Behaviour"
@@ -184,7 +184,7 @@ msgstr "התנהגות"
 
 #: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:93
 msgid "Docklets"
-msgstr ""
+msgstr "גאדג'טים"
 
 #: ../lib/DragManager.vala:470 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
@@ -202,7 +202,7 @@ msgstr ""
 "  yagel sheli https://launchpad.net/~yagelsheli"
 
 #: ../lib/Items/ApplicationDockItem.vala:450
-#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
+#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:352
 msgid "_Keep in Dock"
 msgstr "_שמירה במעגן"
 
@@ -219,15 +219,15 @@ msgstr "_סגירה"
 msgid "Drop to open with %s"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:332
+#: ../lib/Items/FileDockItem.vala:336
 msgid "_Open in File Browser"
 msgstr "_פתיחה בדפדפן הקבצים"
 
-#: ../lib/Items/FileDockItem.vala:350
+#: ../lib/Items/FileDockItem.vala:358
 msgid "_Open"
 msgstr "_פתיחה"
 
-#: ../lib/Items/FileDockItem.vala:354
+#: ../lib/Items/FileDockItem.vala:362
 msgid "Open Containing _Folder"
 msgstr "פתיחת התיקייה המ_כילה"
 

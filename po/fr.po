@@ -7,17 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-12-09 13:08+0000\n"
-"PO-Revision-Date: 2015-12-06 18:12+0000\n"
+"POT-Creation-Date: 2016-01-04 19:57+0000\n"
+"PO-Revision-Date: 2015-12-23 15:40+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-12-11 05:23+0000\n"
-"X-Generator: Launchpad (build 17865)\n"
+"X-Launchpad-Export-Date: 2016-01-05 05:15+0000\n"
+"X-Generator: Launchpad (build 17876)\n"
 
-#: ../data/plank.appdata.xml.in.h:1
+#: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
+msgid "Stupidly simple."
+msgstr "Stupidement simple."
+
+#: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
@@ -25,7 +29,7 @@ msgstr ""
 "Plank a été conçu comme le dock le plus simple de la planète. Son but est de "
 "fournir uniquement ce qui est fondamental  pour un dock et rien de plus."
 
-#: ../data/plank.appdata.xml.in.h:2
+#: ../data/plank.appdata.xml.in.h:3
 msgid ""
 "It is, however, a library which can be extended to create other dock "
 "programs with more advanced features. Thus, Plank is the underlying "
@@ -39,10 +43,6 @@ msgstr ""
 "fournir toutes les fonctionnalités essentielles tandis que Docky la "
 "développe pour ajouter des fantaisies telles que les Docklets, les "
 "décorateurs, les fenêtres de paramètres, etc."
-
-#: ../data/plank.desktop.in.h:1
-msgid "Stupidly simple."
-msgstr "Stupidement simple."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
@@ -90,7 +90,7 @@ msgstr "Centré"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "Sur l'écran principal:"
+msgstr "Sur l'écran principal :"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
@@ -217,7 +217,7 @@ msgstr ""
 "  houdas.rodolphe https://launchpad.net/~houdas-rodolphe"
 
 #: ../lib/Items/ApplicationDockItem.vala:450
-#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
+#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:352
 msgid "_Keep in Dock"
 msgstr "_Épingler au Dock"
 
@@ -234,15 +234,15 @@ msgstr "_Fermer"
 msgid "Drop to open with %s"
 msgstr "Relâcher pour ouvrir avec %s"
 
-#: ../lib/Items/FileDockItem.vala:332
+#: ../lib/Items/FileDockItem.vala:336
 msgid "_Open in File Browser"
 msgstr "_Ouvrir dans le Gestionnaire de Fichiers"
 
-#: ../lib/Items/FileDockItem.vala:350
+#: ../lib/Items/FileDockItem.vala:358
 msgid "_Open"
 msgstr "_Ouvrir"
 
-#: ../lib/Items/FileDockItem.vala:354
+#: ../lib/Items/FileDockItem.vala:362
 msgid "Open Containing _Folder"
 msgstr "Ouvrir le _dossier contenant"
 

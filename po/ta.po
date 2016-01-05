@@ -7,23 +7,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-12-09 13:08+0000\n"
-"PO-Revision-Date: 2015-12-06 18:12+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2016-01-04 19:57+0000\n"
+"PO-Revision-Date: 2016-01-04 14:55+0000\n"
+"Last-Translator: Lakshmi Narayanan Sreethar <slnarayanan.tvl@gmail.com>\n"
 "Language-Team: Tamil <ta@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-12-11 05:23+0000\n"
-"X-Generator: Launchpad (build 17865)\n"
+"X-Launchpad-Export-Date: 2016-01-05 05:15+0000\n"
+"X-Generator: Launchpad (build 17876)\n"
 
-#: ../data/plank.appdata.xml.in.h:1
+#: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
+msgid "Stupidly simple."
+msgstr "மிகவும் எளிது"
+
+#: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
 
-#: ../data/plank.appdata.xml.in.h:2
+#: ../data/plank.appdata.xml.in.h:3
 msgid ""
 "It is, however, a library which can be extended to create other dock "
 "programs with more advanced features. Thus, Plank is the underlying "
@@ -32,33 +36,29 @@ msgid ""
 "painters, settings dialogs, etc."
 msgstr ""
 
-#: ../data/plank.desktop.in.h:1
-msgid "Stupidly simple."
-msgstr "மிகவும் எளிது"
-
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
 msgstr ""
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "நிலை:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "இடது"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "வலது"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "மேல்"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "கீழ்"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
@@ -106,11 +106,11 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr ""
+msgstr "அறிவார்ந்த மறைத்தல்"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr ""
+msgstr "தானாக மறைதல்"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
@@ -188,12 +188,13 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
+"  Lakshmi Narayanan Sreethar https://launchpad.net/~lkshminarayanan\n"
 "  Rajesh Pandian M https://launchpad.net/~mrprajesh\n"
 "  Rico Tzschichholz https://launchpad.net/~ricotz\n"
 "  Shanthakumar https://launchpad.net/~shanth"
 
 #: ../lib/Items/ApplicationDockItem.vala:450
-#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
+#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:352
 msgid "_Keep in Dock"
 msgstr "பலகையில் வைத்துகொல் (_k)"
 
@@ -210,15 +211,15 @@ msgstr "மூடு (_C)"
 msgid "Drop to open with %s"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:332
+#: ../lib/Items/FileDockItem.vala:336
 msgid "_Open in File Browser"
 msgstr "கோப்பு உலாவியில் திற"
 
-#: ../lib/Items/FileDockItem.vala:350
+#: ../lib/Items/FileDockItem.vala:358
 msgid "_Open"
 msgstr "திற (_O)"
 
-#: ../lib/Items/FileDockItem.vala:354
+#: ../lib/Items/FileDockItem.vala:362
 msgid "Open Containing _Folder"
 msgstr "கோப்புள்ள அடைவை திற (_F)"
 

@@ -7,17 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-12-11 13:37+0000\n"
-"PO-Revision-Date: 2015-12-22 08:06+0000\n"
+"POT-Creation-Date: 2016-01-04 19:57+0000\n"
+"PO-Revision-Date: 2015-12-23 00:40+0000\n"
 "Last-Translator: José Alfredo Múrcia Andrés <joamuran@gmail.com>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-12-22 14:40+0000\n"
-"X-Generator: Launchpad (build 17865)\n"
+"X-Launchpad-Export-Date: 2016-01-05 05:15+0000\n"
+"X-Generator: Launchpad (build 17876)\n"
 
-#: ../data/plank.appdata.xml.in.h:1
+#: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
+msgid "Stupidly simple."
+msgstr "Estúpidament simple."
+
+#: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
@@ -25,7 +29,7 @@ msgstr ""
 "El Plank pretèn ser el dock més simple del planeta. El seu objectiu és "
 "proporcionar allò que un dock necessita, i cap altra cosa més."
 
-#: ../data/plank.appdata.xml.in.h:2
+#: ../data/plank.appdata.xml.in.h:3
 msgid ""
 "It is, however, a library which can be extended to create other dock "
 "programs with more advanced features. Thus, Plank is the underlying "
@@ -39,10 +43,6 @@ msgstr ""
 "versió 3.0.0), i té com a objectiu proporcionar totes les característiques "
 "bàsiques, mentre que el Docky esten aquestes per incorporar coses més "
 "elegants com Docklets, pintors, quadres de diàleg d'ajustos, etc."
-
-#: ../data/plank.desktop.in.h:1
-msgid "Stupidly simple."
-msgstr "Estúpidament simple."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
@@ -202,7 +202,7 @@ msgstr ""
 "  Rico Tzschichholz https://launchpad.net/~ricotz"
 
 #: ../lib/Items/ApplicationDockItem.vala:450
-#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
+#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:352
 msgid "_Keep in Dock"
 msgstr "_Ancora al dock"
 
@@ -219,15 +219,15 @@ msgstr "_Tanca"
 msgid "Drop to open with %s"
 msgstr "Deixa anar per obrir amb %s"
 
-#: ../lib/Items/FileDockItem.vala:332
+#: ../lib/Items/FileDockItem.vala:336
 msgid "_Open in File Browser"
 msgstr "_Obre al navegador de fitxers"
 
-#: ../lib/Items/FileDockItem.vala:350
+#: ../lib/Items/FileDockItem.vala:358
 msgid "_Open"
 msgstr "_Obre"
 
-#: ../lib/Items/FileDockItem.vala:354
+#: ../lib/Items/FileDockItem.vala:362
 msgid "Open Containing _Folder"
 msgstr "Obre la _carpeta contenidora"
 

@@ -7,23 +7,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-12-09 13:08+0000\n"
-"PO-Revision-Date: 2015-12-06 18:12+0000\n"
+"POT-Creation-Date: 2016-01-04 19:57+0000\n"
+"PO-Revision-Date: 2015-12-23 00:42+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-12-11 05:24+0000\n"
-"X-Generator: Launchpad (build 17865)\n"
+"X-Launchpad-Export-Date: 2016-01-05 05:15+0000\n"
+"X-Generator: Launchpad (build 17876)\n"
 
-#: ../data/plank.appdata.xml.in.h:1
+#: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
+msgid "Stupidly simple."
+msgstr "極簡。"
+
+#: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr "Plank 決心要成為地球上最簡易的 Dock。目的是要做出 Dcok 的所有需求，但沒有任何多餘的東西。"
 
-#: ../data/plank.appdata.xml.in.h:2
+#: ../data/plank.appdata.xml.in.h:3
 msgid ""
 "It is, however, a library which can be extended to create other dock "
 "programs with more advanced features. Thus, Plank is the underlying "
@@ -33,10 +37,6 @@ msgid ""
 msgstr ""
 "它，雖然也是個可以擴展開來建立其他具備更多進階功能的 Dock 程式函式庫。因此，Plank 是 Docky (3.0.0 版起) "
 "的基底技術，以提供所有基本核心功能為目標；而 Docky 將之擴展，增添更多新穎的功能，例如 Dock 元件、繪製器、設定對話盒…等等。"
-
-#: ../data/plank.desktop.in.h:1
-msgid "Stupidly simple."
-msgstr "極簡。"
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
@@ -196,7 +196,7 @@ msgstr ""
 "  shoting https://launchpad.net/~shoting"
 
 #: ../lib/Items/ApplicationDockItem.vala:450
-#: ../lib/Items/FileDockItem.vala:327 ../lib/Items/FileDockItem.vala:345
+#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:352
 msgid "_Keep in Dock"
 msgstr "留在 Dock 中(_K)"
 
@@ -213,15 +213,15 @@ msgstr "關閉(_C)"
 msgid "Drop to open with %s"
 msgstr "拖曳來以 %s 開啟"
 
-#: ../lib/Items/FileDockItem.vala:332
+#: ../lib/Items/FileDockItem.vala:336
 msgid "_Open in File Browser"
 msgstr "在檔案瀏覽器中開啟(_O)"
 
-#: ../lib/Items/FileDockItem.vala:350
+#: ../lib/Items/FileDockItem.vala:358
 msgid "_Open"
 msgstr "開啟(_O)"
 
-#: ../lib/Items/FileDockItem.vala:354
+#: ../lib/Items/FileDockItem.vala:362
 msgid "Open Containing _Folder"
 msgstr "開啟所在資料夾(_F)"
 
