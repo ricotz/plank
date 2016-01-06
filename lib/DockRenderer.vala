@@ -767,19 +767,19 @@ namespace Plank
 		void draw_item (Cairo.Context cr, DockItem item, PositionManager.DockItemDrawValue draw_value, int64 frame_time)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
-			var icon_size = (int) draw_value.icon_size;
+			var icon_size = (int) draw_value.icon_size * window_scale_factor;
 			var position = position_manager.Position;
 			
 			// load the icon
 #if BENCHMARK
 			var start = new DateTime.now_local ();
 #endif
-			var icon_surface = item.get_surface_copy (icon_size * window_scale_factor, icon_size * window_scale_factor, item_buffer);
+			var icon_surface = item.get_surface_copy (icon_size, icon_size, item_buffer);
 			unowned Cairo.Context icon_cr = icon_surface.Context;
 			
 			DockSurface? icon_overlay_surface = null;
 			if (item.CountVisible || item.ProgressVisible)
-				icon_overlay_surface = item.get_foreground_surface (icon_size * window_scale_factor, icon_size * window_scale_factor, item_buffer, (DrawDataFunc<DockItem>) draw_item_foreground);
+				icon_overlay_surface = item.get_foreground_surface (icon_size, icon_size, item_buffer, (DrawDataFunc<DockItem>) draw_item_foreground);
 			
 			if (icon_overlay_surface != null) {
 				icon_cr.set_source_surface (icon_overlay_surface.Internal, 0, 0);
@@ -870,7 +870,7 @@ namespace Plank
 			Logger.verbose ("DockItem.draw_item_overlay (width = %i, height = %i)", width, height);
 			var surface = new DockSurface.with_dock_surface (width, height, model);
 			
-			var icon_size = int.min (width, height) * window_scale_factor;
+			var icon_size = int.min (width, height);
 			var urgent_color = get_styled_color ();
 			urgent_color.add_hue (theme.UrgentHueShift);
 			
