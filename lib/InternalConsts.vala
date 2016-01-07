@@ -26,4 +26,6 @@ namespace Plank
 	public const uint ITEM_HOVER_DURATION = 150;
 	public const uint ITEM_INVALID_DURATION = 3000;
 	public const uint ITEM_SCROLL_DURATION = 300;
+	
+	public const uint UNITY_UPDATE_THRESHOLD_DURATION = 32;
 }
