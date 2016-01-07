@@ -794,18 +794,26 @@ namespace Plank
 			Variant prop_value;
 			
 			while (prop_iter.next ("{sv}", out prop_key, out prop_value)) {
-				if (prop_key == "count")
-					Count = prop_value.get_int64 ();
-				else if (prop_key == "count-visible")
-					CountVisible = prop_value.get_boolean ();
-				else if (prop_key == "progress")
-					Progress = prop_value.get_double ();
-				else if (prop_key == "progress-visible")
-					ProgressVisible = prop_value.get_boolean ();
-				else if (prop_key == "urgent")
+				if (prop_key == "count") {
+					var val = prop_value.get_int64 ();
+					if (Count != val)
+						Count = val;
+				} else if (prop_key == "count-visible") {
+					var val = prop_value.get_boolean ();
+					if (CountVisible != val)
+						CountVisible = val;
+				} else if (prop_key == "progress") {
+					var val = nround (prop_value.get_double (), 3U);
+					if (Progress != val)
+						Progress = val;
+				} else if (prop_key == "progress-visible") {
+					var val = prop_value.get_boolean ();
+					if (ProgressVisible != val)
+						ProgressVisible = val;
+				} else if (prop_key == "urgent") {
 					set_urgent (prop_value.get_boolean ());
 #if HAVE_DBUSMENU
-				else if (prop_key == "quicklist") {
+				} else if (prop_key == "quicklist") {
 					/* The value is the object path of the dbusmenu */
 					unowned string dbus_path = prop_value.get_string ();
 					// Make sure we don't update our Quicklist instance if isn't necessary
