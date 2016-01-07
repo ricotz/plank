@@ -824,8 +824,8 @@ namespace Plank
 						} else {
 							Quicklist = null;
 						}
-				}
 #endif
+				}
 			}
 		}
 		
