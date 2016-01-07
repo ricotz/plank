@@ -447,8 +447,6 @@ namespace Plank
 				unowned TransientDockItem? transient_item = item as TransientDockItem;
 				if (transient_item != null && transient_item.App == null)
 					remove (transient_item);
-				else
-					states_changed ();
 				
 				break;
 			}
@@ -497,8 +495,6 @@ namespace Plank
 				if (transient_item != null && transient_item.App == null
 					&& !(transient_item.has_unity_info ()))
 					remove (transient_item);
-				else
-					states_changed ();
 				
 				return;
 			}

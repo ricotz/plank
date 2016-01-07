@@ -248,6 +248,8 @@ namespace Plank
 		void reset_foreground_buffer ()
 		{
 			foreground_surface = null;
+			
+			needs_redraw ();
 		}
 		
 		void icon_theme_changed ()
