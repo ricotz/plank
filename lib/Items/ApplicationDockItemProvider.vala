@@ -23,6 +23,15 @@ using Plank.Services.Windows;
 
 namespace Plank.Items
 {
+	class LauncherEntry
+	{
+		public int64 last_update = 0LL;
+		public string? sender_name;
+		public Variant? parameters;
+		public uint timer_id = 0U;
+		public bool warned = false;
+	}
+	
 	/**
 	 * A container and controller class for managing application dock items on a dock.
 	 */
@@ -43,6 +52,8 @@ namespace Plank.Items
 		
 		uint launcher_entry_dbus_signal_id = 0U;
 		uint dbus_name_owner_changed_signal_id = 0U;
+		Gee.HashMap<string, LauncherEntry> launcher_entries;
+		uint launcher_entries_timer_id = 0U;
 		
 		/**
 		 * Creates a new container for dock items.
@@ -59,6 +70,7 @@ namespace Plank.Items
 			handles_transients = (this is DefaultApplicationDockItemProvider);
 			
 			queued_files = new Gee.ArrayList<GLib.File> ();
+			launcher_entries = new Gee.HashMap<string, LauncherEntry> ();
 			
 			// Make sure our launchers-directory exists
 			Paths.ensure_directory_exists (LaunchersDir);
@@ -86,7 +98,11 @@ namespace Plank.Items
 		
 		~ApplicationDockItemProvider ()
 		{
+			if (launcher_entries_timer_id > 0U)
+				Source.remove (launcher_entries_timer_id);
+			
 			queued_files = null;
+			launcher_entries = null;
 			
 			Matcher.get_default ().application_opened.disconnect (app_opened);
 			
@@ -464,7 +480,63 @@ namespace Plank.Items
 			}
 		}
 		
-		void handle_update_request (string sender_name, Variant parameters, bool is_retry = false)
+		void handle_update_request (string sender_name, Variant parameters)
+		{
+			var current_time = GLib.get_monotonic_time ();
+			LauncherEntry? entry;
+			if ((entry = launcher_entries.get (sender_name)) != null) {
+				entry.parameters = parameters;
+				if (current_time - entry.last_update < UNITY_UPDATE_THRESHOLD_DURATION * 1000) {
+					if (entry.timer_id <= 0U) {
+						if (!entry.warned) {
+							warning ("Unity.handle_update_request (%s is behaving badly, skipping requests)", sender_name);
+							entry.warned = true;
+						}
+						entry.timer_id = Timeout.add (UNITY_UPDATE_THRESHOLD_DURATION, () => {
+							entry.timer_id = 0U;
+							entry.last_update = GLib.get_monotonic_time ();
+							perform_update (entry.sender_name, entry.parameters);
+							return false;
+						});
+					}
+				} else {
+					entry.last_update = current_time;
+					perform_update (entry.sender_name, entry.parameters);
+				}
+			} else {
+				entry = new LauncherEntry ();
+				entry.last_update = current_time;
+				entry.sender_name = sender_name;
+				entry.parameters = parameters;
+				launcher_entries.set (sender_name, entry);
+				perform_update (sender_name, parameters);
+			}
+			
+			if (launcher_entries_timer_id <= 0U)
+				launcher_entries_timer_id = Timeout.add (60 * 1000, clean_up_launcher_entries);
+		}
+		
+		bool clean_up_launcher_entries ()
+		{
+			var current_time = GLib.get_monotonic_time ();
+			
+			var launcher_entries_it = launcher_entries.map_iterator ();
+			while (launcher_entries_it.next ()) {
+				var entry = launcher_entries_it.get_value ();
+				if (current_time - entry.last_update > 10 * UNITY_UPDATE_THRESHOLD_DURATION * 1000)
+					launcher_entries_it.unset ();
+			}
+			
+			var keep_running = (launcher_entries.size > 0);
+			if (!keep_running)
+				launcher_entries_timer_id = 0U;
+			
+			Logger.verbose ("Unity: Keeping %i active LauncherEntries", launcher_entries.size);
+			
+			return keep_running;
+		}
+		
+		void perform_update (string sender_name, Variant parameters, bool is_retry = false)
 		{
 			if (!parameters.is_of_type (new VariantType ("(sa{sv})"))) {
 				warning ("Unity.handle_update_request (illegal payload signature '%s' from %s. expected '(sa{sv})')", parameters.get_type_string (), sender_name);
@@ -517,7 +589,7 @@ namespace Plank.Items
 				// Wait to let further update requests come in to catch the case where one application
 				// sends out multiple LauncherEntry-updates with different application-uris, e.g. Nautilus
 				Idle.add (() => {
-					handle_update_request (sender_name, parameters, true);
+					perform_update (sender_name, parameters, true);
 					return false;
 				});
 				
