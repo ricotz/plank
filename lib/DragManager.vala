@@ -464,7 +464,7 @@ namespace Plank
 					position_manager.get_hover_position (hovered_item, out hx, out hy);
 					hover.set_text (hovered_item.get_drop_text ());
 					hover.show_at (hx, hy, position_manager.Position);
-				} else if (hide_manager.Hovered) {
+				} else if (hide_manager.Hovered && !controller.prefs.LockItems) {
 					int hx = x, hy = y;
 					position_manager.get_hover_position_at (ref hx, ref hy);
 					hover.set_text (_("Drop to add to dock"));

@@ -812,10 +812,9 @@ namespace Plank
 			DrawValuesFunc? post_func = null)
 		{
 			unowned DockPreferences prefs = controller.prefs;
+			unowned DockRenderer renderer = controller.renderer;
 			
 			draw_values.clear ();
-			
-			bool external_drag_active = controller.drag_manager.ExternalDragActive;
 			
 			// first we do the math as if this is a top dock, to do this we need to set
 			// up some "pretend" variables. we pretend we are a top dock because 0,0 is
@@ -824,8 +823,7 @@ namespace Plank
 			int height = DockHeight;
 			int icon_size = IconSize;
 			
-			double zoom_in_progress = controller.renderer.zoom_in_progress;
-			Gdk.Point cursor = controller.renderer.local_cursor;
+			Gdk.Point cursor = renderer.local_cursor;
 			
 			// "relocate" our cursor to be on the top
 			switch (Position) {
@@ -888,8 +886,11 @@ namespace Plank
 			// zoom_in_percent is a range of 1 to ZoomPercent.
 			// We need a number that is 1 when ZoomIn is 0, and ZoomPercent when ZoomIn is 1.
 			// Then we treat this as if it were the ZoomPercent for the rest of the calculation.
-			double zoom_in_percent = (prefs.ZoomEnabled ? 1.0 + (ZoomPercent - 1.0) * zoom_in_progress : 1.0);
-			double zoom_icon_size = (prefs.ZoomEnabled ? ZoomIconSize : 2.0 * icon_size);
+			bool expand_for_drop = (controller.drag_manager.ExternalDragActive && !prefs.LockItems);
+			bool zoom_enabled = prefs.ZoomEnabled;
+			double zoom_in_progress = (zoom_enabled || expand_for_drop ? renderer.zoom_in_progress : 0.0);
+			double zoom_in_percent = (zoom_enabled ? 1.0 + (ZoomPercent - 1.0) * zoom_in_progress : 1.0);
+			double zoom_icon_size = ZoomIconSize;
 			
 			foreach (unowned DockItem item in items) {
 				DockItemDrawValue val = new DockItemDrawValue ();
@@ -909,10 +910,10 @@ namespace Plank
 				double offset = double.min (Math.fabs (cursor_position - center_position), zoom_icon_size);
 				
 				double offset_percent;
-				if (external_drag_active) {
+				if (expand_for_drop) {
 					// Provide space for dropping between items
 					offset += offset * zoom_icon_size / icon_size;
-					offset_percent = double.min (1.0, offset / (zoom_icon_size + ZoomIconSize));
+					offset_percent = double.min (1.0, offset / (2.0 * zoom_icon_size));
 				} else {
 					offset_percent = offset / zoom_icon_size;
 				}
@@ -930,11 +931,7 @@ namespace Plank
 				//         value. The center is 100%. (1 - offset_percent) == 0,1 distance from center
 				// The .66 value comes from the area under the curve.  Dont ask me to explain it too much because it's too clever for me.
 				
-				// for external drags with no zoom, we pretend there is actually a zoom of 200%
-				if (external_drag_active && ZoomPercent == 1.0)
-					offset *= zoom_in_progress / 2.0;
-				else
-					offset *= zoom_in_percent - 1.0;
+				offset *= zoom_in_progress / 2.0;
 				offset *= 1.0 - offset_percent / 3.0;
 				
 				if (cursor_position > center_position)
@@ -1203,6 +1200,23 @@ namespace Plank
 			}
 			
 			return result;
+		}
+		
+		/**
+		 * Get the item which is the appropriate target for a drag'n'drop action.
+		 * The returned item may not hovered and is meant to be used as target
+		 * for e.g. DockContainer.add/move_to functions.
+		 * If a container is given the result will be restricted to its children.
+		 *
+		 * @param container a container or NULL 
+		 */
+		public unowned DockItem? get_current_target_item (DockContainer? container = null)
+		{
+			unowned DockRenderer renderer = controller.renderer;
+			var cursor = renderer.local_cursor;
+			var offset = (int) ((renderer.zoom_in_progress * ZoomIconSize + ItemPadding) / 2.0);
+			
+			return get_nearest_item_at (cursor.x + offset, cursor.y + offset, container);
 		}
 		
 		/**

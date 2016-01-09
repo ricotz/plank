@@ -85,19 +85,15 @@ namespace Plank
 		{
 			bool result = false;
 			
-			unowned DockItem? hovered_item = null;
+			unowned DockItem? target_item = null;
 			unowned DockController? controller = get_dock ();
 			if (controller != null && controller.window.HoveredItemProvider == this) {
-				hovered_item = controller.window.HoveredItem;
-				if (hovered_item == null) {
-					var cursor = controller.renderer.local_cursor;
-					hovered_item = controller.position_manager.get_nearest_item_at (cursor.x, cursor.y, this);
-				}
+				target_item = controller.position_manager.get_current_target_item (this);
 			}
 			
 			foreach (var uri in uris) {
 				if (!item_exists_for_uri (uri)) {
-					add_item_with_uri (uri, hovered_item);
+					add_item_with_uri (uri, target_item);
 					result = true;
 				}
 			}

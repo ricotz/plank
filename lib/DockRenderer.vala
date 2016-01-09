@@ -1055,7 +1055,7 @@ namespace Plank
 			
 			local_cursor = new_cursor;
 			
-			if (controller.prefs.ZoomEnabled) {
+			if (screen_is_composited) {
 				zoom_changed = true;
 				animated_draw ();
 			}
