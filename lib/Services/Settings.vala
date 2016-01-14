@@ -59,10 +59,13 @@ namespace Plank
 			
 			// Bind available gsettings-keys to their class-properties
 			foreach (unowned string key in settings.list_keys ()) {
-				unowned ParamSpec? property = null;
+				//Not taking a references of matched ParamSpec results in undefined behaviour
+				ParamSpec? property = null;
 				foreach (unowned ParamSpec p in properties)
-					if (p.get_nick () == key)
+					if (p.get_nick () == key) {
 						property = p;
+						break;
+					}
 				if (property == null)
 					continue;
 				
