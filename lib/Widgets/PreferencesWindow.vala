@@ -473,7 +473,7 @@ namespace Plank
 			surface.set_device_offset (-icon_size / 2.0, -icon_size / 2.0);
 			Gtk.drag_set_icon_surface (context, surface);
 #else
-			var pbuf = DrawingService.load_icon (icon_name, icon_size, icon_size);
+			var pixbuf = DrawingService.load_icon (icon_name, icon_size, icon_size);
 			Gtk.drag_set_icon_pixbuf (context, pixbuf, icon_size / 2, icon_size / 2);
 #endif
 		}
