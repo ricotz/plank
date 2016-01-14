@@ -60,7 +60,6 @@ namespace Plank
 		[Description(nick = "monitor", blurb = "The plug-name of the monitor for the dock to show on (e.g. DVI-I-1, HDMI1, LVDS1). Leave this empty to keep on the primary monitor.")]
 		public string Monitor { get; set; }
 		
-		[CCode (notify = false)]
 		[Description(nick = "dock-items", blurb = "Array of the dockitem-files on this dock. DO NOT MODIFY")]
 		public string[] DockItems { get; set; }
 		
