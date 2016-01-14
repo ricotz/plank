@@ -162,6 +162,7 @@ libplank_internal_la_VALASOURCES = \
 	Services/Matcher.vala \
 	Services/WindowControl.vala \
 	Services/Utils.vala \
+	Widgets/DockletViewModel.vala \
 	$(NULL)
 
 libplank_internal_la_SOURCES = \

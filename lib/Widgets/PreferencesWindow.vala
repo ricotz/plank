@@ -21,7 +21,12 @@ namespace Plank
 {
 	public class PreferencesWindow : Gtk.Window
 	{
-		public DockPreferences prefs { get; construct; }
+		/**
+		 * The controller for this dock.
+		 */
+		public DockController controller { private get; construct; }
+		
+		DockPreferences prefs;
 		
 		Gtk.Builder? builder;
 		
@@ -53,13 +58,15 @@ namespace Plank
 		Gtk.Switch sw_show_dock_item;
 		Gtk.Switch sw_zoom_enabled;
 		
-		public PreferencesWindow (DockPreferences prefs)
+		public PreferencesWindow (DockController controller)
 		{
-			Object (prefs : prefs, type: Gtk.WindowType.TOPLEVEL, type_hint: Gdk.WindowTypeHint.DIALOG);
+			Object (controller: controller, type: Gtk.WindowType.TOPLEVEL, type_hint: Gdk.WindowTypeHint.DIALOG);
 		}
 		
 		construct
 		{
+			prefs = controller.prefs;
+			
 			skip_pager_hint = true;
 			skip_taskbar_hint = true;
 			title = _("Preferences");
@@ -420,22 +427,73 @@ namespace Plank
 		
 		void init_docklets_tab ()
 		{
-			Gtk.TreeIter iter;
-			
-			var model_docklets = (Gtk.ListStore) builder.get_object ("model_docklets");
+			var model_docklets = new DockletViewModel ();
+			var sorted_docklets = new Gtk.TreeModelSort.with_model (model_docklets);
 			var view_docklets = (Gtk.IconView) builder.get_object ("view_docklets");
 			
-			view_docklets.set_text_column (1);
-			view_docklets.set_tooltip_column (2);
-			view_docklets.set_pixbuf_column (3);
-			model_docklets.set_sort_column_id (1, Gtk.SortType.ASCENDING);
+			Gtk.TargetEntry te = { "text/plank-uri-list", Gtk.TargetFlags.SAME_APP, 0};
+			view_docklets.enable_model_drag_source (Gdk.ModifierType.BUTTON1_MASK, { te }, Gdk.DragAction.PRIVATE);
+			view_docklets.set_text_column (DockletViewModel.Column.NAME);
+			view_docklets.set_tooltip_column (DockletViewModel.Column.DESCRIPTION);
+			view_docklets.set_pixbuf_column (DockletViewModel.Column.PIXBUF);
+			view_docklets.drag_begin.connect_after (view_drag_begin);
+			view_docklets.item_activated.connect (view_item_activated);
 			
-			model_docklets.clear ();
 			foreach (var docklet in DockletManager.get_default ().list_docklets ()) {
-				model_docklets.append (out iter);
-				var icon = DrawingService.load_icon (docklet.get_icon (), 48, 48);
-				model_docklets.set (iter, 0, docklet.get_id (), 1, docklet.get_name (), 2, docklet.get_description (), 3, icon);
+				var pixbuf = DrawingService.load_icon (docklet.get_icon (), 48, 48);
+				model_docklets.add (docklet.get_id (), docklet.get_name (), docklet.get_description (), docklet.get_icon (), pixbuf);
 			}
+			
+			sorted_docklets.set_sort_column_id (DockletViewModel.Column.NAME, Gtk.SortType.ASCENDING);
+			view_docklets.set_model (sorted_docklets);
+		}
+		
+		[CCode (instance_pos = -1)]
+		void view_drag_begin (Gtk.Widget widget, Gdk.DragContext context)
+		{
+			unowned Gtk.IconView view = (Gtk.IconView) widget;
+			var selection = view.get_selected_items ();
+			unowned List<Gtk.TreePath>? path_list = selection.first ();
+			if (path_list == null)
+				return;
+			
+			unowned Gtk.TreeModel model = view.get_model ();
+			Gtk.TreeIter iter;
+			GLib.Value val;
+			var path = path_list.data;
+			model.get_iter (out iter, path);
+			model.get_value (iter, DockletViewModel.Column.ICON, out val);
+			
+			var icon_name = val.get_string ();
+			var icon_size = prefs.IconSize;
+#if HAVE_HIDPI
+			var window_scale_factor = get_window ().get_scale_factor ();
+			icon_size *= window_scale_factor;
+			var surface = DrawingService.load_icon_for_scale (icon_name, icon_size, icon_size, window_scale_factor);
+			surface.set_device_offset (-icon_size / 2.0, -icon_size / 2.0);
+			Gtk.drag_set_icon_surface (context, surface);
+#else
+			var pbuf = DrawingService.load_icon (icon_name, icon_size, icon_size);
+			Gtk.drag_set_icon_pixbuf (context, pixbuf, icon_size / 2, icon_size / 2);
+#endif
+		}
+		
+		[CCode (instance_pos = -1)]
+		void view_item_activated (Gtk.IconView view, Gtk.TreePath path)
+		{
+			unowned ApplicationDockItemProvider? provider = (controller.default_provider as ApplicationDockItemProvider);
+			if (provider == null)
+				return;
+			
+			unowned Gtk.TreeModel model = view.get_model ();
+			Gtk.TreeIter iter;
+			GLib.Value val;
+			model.get_iter (out iter, path);
+			model.get_value (iter, DockletViewModel.Column.ID, out val);
+			
+			var uri = "%s%s".printf (DOCKLET_URI_PREFIX, val.get_string ());
+			debug ("Try to add docklet for '%s'", uri);
+			provider.add_item_with_uri (uri);
 		}
 	}
 }

@@ -411,7 +411,7 @@ namespace Plank
 				return;
 			}
 			
-			preferences_dlg = new PreferencesWindow (controller.prefs);
+			preferences_dlg = new PreferencesWindow (controller);
 			preferences_dlg.set_transient_for (controller.window);
 			
 			preferences_dlg.destroy.connect (() => {
