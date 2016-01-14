@@ -136,7 +136,7 @@ namespace Plank
 			
 			var it = docklets.map_iterator ();
 			it.foreach ((k, v) => {
-				if (uri == "docklet://%s".printf (k)) {
+				if (uri == "%s%s".printf (DOCKLET_URI_PREFIX, k)) {
 					docklet = v;
 					return false;
 				}

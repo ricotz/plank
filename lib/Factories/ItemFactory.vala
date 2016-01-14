@@ -358,16 +358,24 @@ namespace Plank
 			if (target_dir == null)
 				target_dir = launchers_dir;
 			
-			var launcher_file = File.new_for_uri (uri);
+			bool is_valid = false;
+			string basename;
+			if (uri.has_prefix (DOCKLET_URI_PREFIX)) {
+				is_valid = true;
+				basename = uri.substring (10);
+			} else {
+				var launcher_file = File.new_for_uri (uri);
+				is_valid = launcher_file.query_exists ();
+				basename = (launcher_file.get_basename () ?? "unknown");
+			}
 			
-			if (launcher_file.query_exists ()) {
+			if (is_valid) {
 				var file = new KeyFile ();
 				
 				file.set_string (typeof (DockItemPreferences).name (), "Launcher", uri);
 				
 				try {
 					// find a unique file name, based on the name of the launcher
-					var basename = (launcher_file.get_basename () ?? "unknown");
 					var index_of_last_dot = basename.last_index_of (".");
 					var launcher_base = (index_of_last_dot >= 0 ? basename.slice (0, index_of_last_dot) : basename);
 					var dockitem = "%s.dockitem".printf (launcher_base);

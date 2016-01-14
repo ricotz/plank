@@ -30,7 +30,7 @@ namespace Plank
 
 		public DockItem? DragItem { get; private set; default = null; }
 		
-		public bool DragIsDesktopFile { get; private set; default = false; }
+		public bool DragNeedsCheck { get; private set; default = true; }
 		
 		bool external_drag_active = false;
 		public bool ExternalDragActive {
@@ -44,7 +44,7 @@ namespace Plank
 					drag_known = false;
 					drag_data = null;
 					drag_data_requested = false;
-					DragIsDesktopFile = false;
+					DragNeedsCheck = true;
 				}
 			}
 		}
@@ -254,6 +254,11 @@ namespace Plank
 				
 				drag_data = new Gee.ArrayList<string> ();
 				foreach (unowned string s in uris) {
+					if (s.has_prefix (DOCKLET_URI_PREFIX)) {
+						drag_data.add (s);
+						continue;
+					}
+					
 					var uri = File.new_for_uri (s).get_uri ();
 					if (uri != null)
 						drag_data.add (uri);
@@ -261,10 +266,12 @@ namespace Plank
 				
 				drag_data_requested = false;
 				
-				if (drag_data.size == 1)
-					DragIsDesktopFile = drag_data[0].has_suffix (".desktop");
-				else
-					DragIsDesktopFile = false;
+				if (drag_data.size == 1) {
+					var uri = drag_data[0];
+					DragNeedsCheck = !(uri.has_prefix (DOCKLET_URI_PREFIX) || uri.has_suffix (".desktop"));
+				} else {
+					DragNeedsCheck = true;
+				}
 				
 				// Force initial redraw for ExternalDrag to pick up new
 				// drag_data for can_accept_drop check
@@ -295,7 +302,7 @@ namespace Plank
 			unowned DockItem? item = window.HoveredItem;
 			unowned DockItemProvider? provider = window.HoveredItemProvider;
 			
-			if (!DragIsDesktopFile && item != null && item.can_accept_drop (drag_data))
+			if (DragNeedsCheck && item != null && item.can_accept_drop (drag_data))
 				item.accept_drop (drag_data);
 			else if (!controller.prefs.LockItems && provider != null && provider.can_accept_drop (drag_data))
 				provider.accept_drop (drag_data);
@@ -459,7 +466,7 @@ namespace Plank
 				unowned PositionManager position_manager = controller.position_manager;
 				unowned DockItem hovered_item = window.HoveredItem;
 				unowned HoverWindow hover = controller.hover;
-				if (!DragIsDesktopFile && hovered_item != null && hovered_item.can_accept_drop (drag_data)) {
+				if (DragNeedsCheck && hovered_item != null && hovered_item.can_accept_drop (drag_data)) {
 					int hx, hy;
 					position_manager.get_hover_position (hovered_item, out hx, out hy);
 					hover.set_text (hovered_item.get_drop_text ());
