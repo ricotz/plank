@@ -28,4 +28,5 @@ namespace Plank
 	public const uint ITEM_SCROLL_DURATION = 300;
 	
 	public const uint UNITY_UPDATE_THRESHOLD_DURATION = 32;
+	public const uint UNITY_UPDATE_THRESHOLD_FAST_COUNT = 3;
 }

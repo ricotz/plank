@@ -21,6 +21,7 @@ namespace Plank
 {
 	class LauncherEntry
 	{
+		public uint fast_count = 0U;
 		public int64 last_update = 0LL;
 		public string? sender_name;
 		public Variant? parameters;
@@ -474,7 +475,8 @@ namespace Plank
 			LauncherEntry? entry;
 			if ((entry = launcher_entries.get (sender_name)) != null) {
 				entry.parameters = parameters;
-				if (current_time - entry.last_update < UNITY_UPDATE_THRESHOLD_DURATION * 1000) {
+				if (current_time - entry.last_update < UNITY_UPDATE_THRESHOLD_DURATION * 1000
+					&& entry.fast_count > UNITY_UPDATE_THRESHOLD_FAST_COUNT) {
 					if (entry.timer_id <= 0U) {
 						if (!entry.warned) {
 							warning ("Unity.handle_update_request (%s is behaving badly, skipping requests)", sender_name);
@@ -488,11 +490,13 @@ namespace Plank
 						});
 					}
 				} else {
+					entry.fast_count++;
 					entry.last_update = current_time;
 					perform_update (entry.sender_name, entry.parameters);
 				}
 			} else {
 				entry = new LauncherEntry ();
+				entry.fast_count++;
 				entry.last_update = current_time;
 				entry.sender_name = sender_name;
 				entry.parameters = parameters;
