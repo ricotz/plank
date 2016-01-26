@@ -24,7 +24,7 @@ namespace Plank
 		/**
 		 * The controller for this dock.
 		 */
-		public DockController controller { private get; construct; }
+		public DockController controller { get; construct set; }
 		
 		DockPreferences prefs;
 		
@@ -129,11 +129,23 @@ namespace Plank
 				
 				init_dock_tab ();
 				init_docklets_tab ();
- 				connect_signals ();
+				connect_signals ();
+				
+				notify["controller"].connect (controller_changed);
 			} catch (Error e) {
 				builder = null;
 				critical (e.message);
 			}
+		}
+		
+		void controller_changed ()
+		{
+			disconnect_signals ();
+			
+			prefs = controller.prefs;
+			
+			init_dock_tab ();
+			connect_signals ();
 		}
 		
 		public override bool key_press_event (Gdk.EventKey event)
@@ -376,9 +388,36 @@ namespace Plank
 			cb_items_alignment.changed.connect (cb_items_alignment_changed);
 		}
 		
+		void disconnect_signals ()
+		{
+			prefs.notify.disconnect (prefs_changed);
+			
+			cb_theme.changed.disconnect (cb_theme_changed);
+			cb_hidemode.changed.disconnect (cb_hidemode_changed);
+			cb_position.changed.disconnect (cb_position_changed);
+			adj_hide_delay.value_changed.disconnect (hide_delay_changed);
+			adj_unhide_delay.value_changed.disconnect (unhide_delay_changed);
+			cb_display_plug.changed.disconnect (monitor_changed);
+			adj_iconsize.value_changed.disconnect (iconsize_changed);
+			adj_offset.value_changed.disconnect (offset_changed);
+			adj_zoom_percent.value_changed.disconnect (zoom_percent_changed);
+			sw_hide.notify["active"].disconnect (hide_toggled);
+			sw_primary_display.notify["active"].disconnect (primary_display_toggled);
+			sw_workspace_only.notify["active"].disconnect (workspace_only_toggled);
+			sw_show_unpinned.notify["active"].disconnect (show_unpinned_toggled);
+			sw_lock_items.notify["active"].disconnect (lock_items_toggled);
+			sw_auto_pinning.notify["active"].disconnect (auto_pinning_toggled);
+			sw_pressure_reveal.notify["active"].disconnect (pressure_reveal_toggled);
+			sw_show_dock_item.notify["active"].disconnect (show_dock_item_toggled);
+			sw_zoom_enabled.notify["active"].disconnect (zoom_enabled_toggled);
+			cb_alignment.changed.disconnect (cb_alignment_changed);
+			cb_items_alignment.changed.disconnect (cb_items_alignment_changed);
+		}
+		
 		void init_dock_tab ()
 		{
 			var pos = 0;
+			cb_theme.remove_all ();
 			foreach (unowned string theme in Plank.Theme.get_theme_list ()) {
 				cb_theme.append ("%i".printf (pos), theme);
 				if (theme == prefs.Theme)
@@ -393,6 +432,7 @@ namespace Plank
 			adj_unhide_delay.value = prefs.UnhideDelay;
 
 			pos = 0;
+			cb_display_plug.remove_all ();
 			foreach (unowned string plug_name in Plank.PositionManager.get_monitor_plug_names (get_screen ())) {
 				cb_display_plug.append ("%i".printf (pos), plug_name);
 				if (plug_name == prefs.Monitor)
