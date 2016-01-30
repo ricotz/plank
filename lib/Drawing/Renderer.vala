@@ -140,7 +140,7 @@ namespace Plank
 				is_updating = true;
 #else
 				// This roughly means driving animations with 60 fps
-				timer_id = Gdk.threads_add_timeout (16, draw_timeout);
+				timer_id = Gdk.threads_add_timeout (16, (SourceFunc) draw_timeout);
 #endif
 			}
 		}

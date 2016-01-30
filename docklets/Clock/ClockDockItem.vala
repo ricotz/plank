@@ -55,7 +55,7 @@ namespace Docky
 			prefs.notify["ShowDate"].connect (handle_prefs_changed);
 			prefs.notify["ShowDigital"].connect (handle_prefs_changed);
 			
-			timer_id = Gdk.threads_add_timeout (1000, update_timer);
+			timer_id = Gdk.threads_add_timeout (1000, (SourceFunc) update_timer);
 			current_theme = (prefs.ShowMilitary ? THEME_BASE_URI + "Default24" : THEME_BASE_URI + "Default");
 		}
 		

@@ -47,7 +47,7 @@ namespace Docky
 			else
 				clipboard = Gtk.Clipboard.get (Gdk.Atom.intern ("CLIPBOARD", true));
 			
-			timer_id = Gdk.threads_add_timeout (prefs.TimerDelay, check_clipboard);
+			timer_id = Gdk.threads_add_timeout (prefs.TimerDelay, (SourceFunc) check_clipboard);
 			
 			updated ();
 		}
