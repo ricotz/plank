@@ -60,6 +60,7 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Services/Preferences.vala \
 	$(top_srcdir)/lib/Services/Settings.vala \
 	$(top_srcdir)/lib/Services/System.vala \
+	$(top_srcdir)/lib/Services/Unity.vala \
 	$(top_srcdir)/lib/Services/Worker.vala \
 	$(top_srcdir)/lib/Widgets/CompositedWindow.vala \
 	$(top_srcdir)/lib/Widgets/DockWindow.vala \

@@ -101,6 +101,7 @@ libplank_la_VALASOURCES = \
 	Services/Preferences.vala \
 	Services/Settings.vala \
 	Services/System.vala \
+	Services/Unity.vala \
 	Services/Worker.vala \
 	Widgets/CompositedWindow.vala \
 	Widgets/DockWindow.vala \

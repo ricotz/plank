@@ -226,8 +226,10 @@ namespace Plank
 			provider.elements_changed.connect (handle_elements_changed);
 			
 			unowned ApplicationDockItemProvider? app_provider = (provider as ApplicationDockItemProvider);
-			if (app_provider != null)
+			if (app_provider != null) {
 				app_provider.item_window_added.connect (window.update_icon_region);
+				Unity.get_default ().add_client (app_provider);
+			}
 		}
 		
 		protected override void disconnect_element (DockElement element)
@@ -241,8 +243,10 @@ namespace Plank
 			provider.elements_changed.disconnect (handle_elements_changed);
 			
 			unowned ApplicationDockItemProvider? app_provider = (provider as ApplicationDockItemProvider);
-			if (app_provider != null)
+			if (app_provider != null) {
 				app_provider.item_window_added.disconnect (window.update_icon_region);
+				Unity.get_default ().remove_client (app_provider);
+			}
 		}
 		
 		protected override void update_visible_elements ()

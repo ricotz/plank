@@ -19,24 +19,11 @@
 
 namespace Plank
 {
-	class LauncherEntry
-	{
-		public uint fast_count = 0U;
-		public int64 last_update = 0LL;
-		public string? sender_name;
-		public Variant? parameters;
-		public uint timer_id = 0U;
-		public bool warned = false;
-	}
-	
 	/**
 	 * A container and controller class for managing application dock items on a dock.
 	 */
-	public class ApplicationDockItemProvider : DockItemProvider
+	public class ApplicationDockItemProvider : DockItemProvider, UnityClient
 	{
-		static DBusConnection connection = null;
-		static uint unity_bus_id = 0U;
-		
 		public signal void item_window_added (ApplicationDockItem item);
 		
 		public File LaunchersDir { get; construct; }
@@ -46,11 +33,6 @@ namespace Plank
 		FileMonitor? items_monitor = null;
 		bool delay_items_monitor_handle = false;
 		Gee.ArrayList<GLib.File> queued_files;
-		
-		uint launcher_entry_dbus_signal_id = 0U;
-		uint dbus_name_owner_changed_signal_id = 0U;
-		Gee.HashMap<string, LauncherEntry> launcher_entries;
-		uint launcher_entries_timer_id = 0U;
 		
 		/**
 		 * Creates a new container for dock items.
@@ -67,7 +49,6 @@ namespace Plank
 			handles_transients = (this is DefaultApplicationDockItemProvider);
 			
 			queued_files = new Gee.ArrayList<GLib.File> ();
-			launcher_entries = new Gee.HashMap<string, LauncherEntry> ();
 			
 			// Make sure our launchers-directory exists
 			Paths.ensure_directory_exists (LaunchersDir);
@@ -80,26 +61,11 @@ namespace Plank
 			} catch (Error e) {
 				critical ("Unable to watch the launchers directory. (%s)", e.message);
 			}
-			
-			acquire_unity_dbus ();
-			
-			if (connection != null) {
-				debug ("Unity: Initalizing LauncherEntry support");
-				
-				launcher_entry_dbus_signal_id = connection.signal_subscribe (null, "com.canonical.Unity.LauncherEntry",
-					null, null, null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_entry_signal);
-				dbus_name_owner_changed_signal_id = connection.signal_subscribe ("org.freedesktop.DBus", "org.freedesktop.DBus",
-					"NameOwnerChanged", "/org/freedesktop/DBus", null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_name_owner_changed);
-			}
 		}
 		
 		~ApplicationDockItemProvider ()
 		{
-			if (launcher_entries_timer_id > 0U)
-				Source.remove (launcher_entries_timer_id);
-			
 			queued_files = null;
-			launcher_entries = null;
 			
 			Matcher.get_default ().application_opened.disconnect (app_opened);
 			
@@ -108,83 +74,6 @@ namespace Plank
 				items_monitor.cancel ();
 				items_monitor = null;
 			}
-			
-			if (unity_bus_id > 0U)
-				Bus.unown_name (unity_bus_id);
-			
-			if (connection != null) {
-				if (launcher_entry_dbus_signal_id > 0U)
-					connection.signal_unsubscribe (launcher_entry_dbus_signal_id);
-				if (dbus_name_owner_changed_signal_id > 0U)
-					connection.signal_unsubscribe (dbus_name_owner_changed_signal_id);
-			}
-		}
-		
-		static construct
-		{
-			acquire_unity_dbus ();
-		}
-		
-		/**
-		 * Connect DBus connection and try to aquire unity busname
-		 */
-		public static void acquire_unity_dbus ()
-		{
-			// Initialize Unity DBus
-			try {
-				if (connection == null)
-					connection = Bus.get_sync (BusType.SESSION, null);
-			} catch (Error e) {
-				warning (e.message);
-				return;
-			}
-			
-			if (unity_bus_id == 0U) {
-				// Acquire Unity bus-name to activate libunity clients since normally there shouldn't be a running Unity
-				unity_bus_id = Bus.own_name (BusType.SESSION, "com.canonical.Unity", BusNameOwnerFlags.ALLOW_REPLACEMENT,
-					(BusAcquiredCallback) handle_bus_acquired, (BusNameAcquiredCallback) handle_name_acquired,
-					(BusNameLostCallback) handle_name_lost);
-			}
-		}
-		
-		/**
-		 * Disconnect DBus connection and release unity busname
-		 */
-		public static void release_unity_dbus ()
-		{
-			if (unity_bus_id > 0U) {
-				Bus.unown_name (unity_bus_id);
-				unity_bus_id = 0U;
-			}
-			
-			if (connection != null) {
-				try {
-					connection.flush_sync ();
-					connection.close_sync ();
-				} catch (Error e) {
-					warning (e.message);
-				} finally {
-					connection = null;
-				}
-			}
-		}
-		
-		static void handle_bus_acquired (DBusConnection conn, string name)
-		{
-			// Nothing here since we just want to provide this bus without any functionality
-		}
-
-		static void handle_name_acquired (DBusConnection conn, string name)
-		{
-			debug ("Unity: %s acquired", name);
-		}
-
-		static void handle_name_lost (DBusConnection conn, string name)
-		{
-			if (conn == null)
-				warning ("Unity: %s failed", name);
-			else
-				debug ("Unity: %s lost", name);
 		}
 		
 		protected unowned ApplicationDockItem? item_for_application (Bamf.Application app)
@@ -427,34 +316,15 @@ namespace Plank
 			item_window_added (item);
 		}
 		
-		[CCode (instance_pos = -1)]
-		void handle_entry_signal (DBusConnection connection, string sender_name, string object_path,
-			string interface_name, string signal_name, Variant parameters)
+		public void remove_launcher_entry (string sender_name)
 		{
-			if (parameters == null || signal_name == null || sender_name == null)
-				return;
-			
-			if (signal_name == "Update")
-				handle_update_request (sender_name, parameters);
-		}
-		
-		[CCode (instance_pos = -1)]
-		void handle_name_owner_changed (DBusConnection connection, string sender_name, string object_path,
-			string interface_name, string signal_name, Variant parameters)
-		{
-			string name, before, after;
-			parameters.get ("(sss)", out name, out before, out after);
-			
-			if (after != null && after != "")
-				return;
-			
 			// Reset item since there is no new NameOwner
 			foreach (var item in internal_elements) {
 				unowned ApplicationDockItem? app_item = item as ApplicationDockItem;
 				if (app_item == null)
 					continue;
 				
-				if (app_item.get_unity_dbusname () != name)
+				if (app_item.get_unity_dbusname () != sender_name)
 					continue;
 				
 				app_item.unity_reset ();
@@ -469,72 +339,8 @@ namespace Plank
 			}
 		}
 		
-		void handle_update_request (string sender_name, Variant parameters)
+		public void update_launcher_entry (string sender_name, Variant parameters, bool is_retry = false)
 		{
-			var current_time = GLib.get_monotonic_time ();
-			LauncherEntry? entry;
-			if ((entry = launcher_entries.get (sender_name)) != null) {
-				entry.parameters = parameters;
-				if (current_time - entry.last_update < UNITY_UPDATE_THRESHOLD_DURATION * 1000
-					&& entry.fast_count > UNITY_UPDATE_THRESHOLD_FAST_COUNT) {
-					if (entry.timer_id <= 0U) {
-						if (!entry.warned) {
-							warning ("Unity.handle_update_request (%s is behaving badly, skipping requests)", sender_name);
-							entry.warned = true;
-						}
-						entry.timer_id = Timeout.add (UNITY_UPDATE_THRESHOLD_DURATION, () => {
-							entry.timer_id = 0U;
-							entry.last_update = GLib.get_monotonic_time ();
-							perform_update (entry.sender_name, entry.parameters);
-							return false;
-						});
-					}
-				} else {
-					entry.fast_count++;
-					entry.last_update = current_time;
-					perform_update (entry.sender_name, entry.parameters);
-				}
-			} else {
-				entry = new LauncherEntry ();
-				entry.fast_count++;
-				entry.last_update = current_time;
-				entry.sender_name = sender_name;
-				entry.parameters = parameters;
-				launcher_entries.set (sender_name, entry);
-				perform_update (sender_name, parameters);
-			}
-			
-			if (launcher_entries_timer_id <= 0U)
-				launcher_entries_timer_id = Timeout.add (60 * 1000, clean_up_launcher_entries);
-		}
-		
-		bool clean_up_launcher_entries ()
-		{
-			var current_time = GLib.get_monotonic_time ();
-			
-			var launcher_entries_it = launcher_entries.map_iterator ();
-			while (launcher_entries_it.next ()) {
-				var entry = launcher_entries_it.get_value ();
-				if (current_time - entry.last_update > 10 * UNITY_UPDATE_THRESHOLD_DURATION * 1000)
-					launcher_entries_it.unset ();
-			}
-			
-			var keep_running = (launcher_entries.size > 0);
-			if (!keep_running)
-				launcher_entries_timer_id = 0U;
-			
-			Logger.verbose ("Unity: Keeping %i active LauncherEntries", launcher_entries.size);
-			
-			return keep_running;
-		}
-		
-		void perform_update (string sender_name, Variant parameters, bool is_retry = false)
-		{
-			if (!parameters.is_of_type (new VariantType ("(sa{sv})"))) {
-				warning ("Unity.handle_update_request (illegal payload signature '%s' from %s. expected '(sa{sv})')", parameters.get_type_string (), sender_name);
-				return;
-			}
-			
 			string app_uri;
 			VariantIter prop_iter;
 			parameters.get ("(sa{sv})", out app_uri, out prop_iter);
@@ -579,7 +385,7 @@ namespace Plank
 				// Wait to let further update requests come in to catch the case where one application
 				// sends out multiple LauncherEntry-updates with different application-uris, e.g. Nautilus
 				Idle.add (() => {
-					perform_update (sender_name, parameters, true);
+					update_launcher_entry (sender_name, parameters, true);
 					return false;
 				});
 				
