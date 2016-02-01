@@ -231,7 +231,7 @@ namespace Plank
 				return;
 
 			clients.foreach ((client) => {
-				client.remove_launcher_entry (sender_name);
+				client.remove_launcher_entry (name);
 				return true;
 			});
 		}
