@@ -1,33 +1,33 @@
 # Serbian translation for plank
 # Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the plank package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2016.
 msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-01-04 19:57+0000\n"
-"PO-Revision-Date: 2015-12-23 00:40+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
-"Language-Team: Serbian <sr@li.org>\n"
+"POT-Creation-Date: 2016-02-01 06:37+0000\n"
+"PO-Revision-Date: 2016-01-31 15:45+0000\n"
+"Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
+"Language-Team: Serbian <gnom@prevod.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-01-05 05:15+0000\n"
-"X-Generator: Launchpad (build 17876)\n"
+"X-Launchpad-Export-Date: 2016-02-02 05:28+0000\n"
+"X-Generator: Launchpad (build 17908)\n"
+"Language: sr\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
-msgstr "Глупаво једноставна."
+msgstr "Шашаво једноставно."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"Планк би требао да буде најпростији док на планети. Циљ је да пружи само оно "
-"што док треба и апсолутно ништа више."
+"Планк би требао да буде најједноставнији док на планети. Његов циљ је да "
+"пружи само оно што док треба да пружи и апсолутно ништа више."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -37,154 +37,159 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"То је, уствари, библиотека која се може проширити како би се направили други "
+"лучки програми са више напредних функција. Стога, Планк је полазна "
+"технологија за Доки (почевши од издања 3.0.0) и циљ му је да обезбеди све "
+"кључне функције, док их Доки проширује како би додао китњастије ствари као "
+"што су справице, сликари, прозорчићи подешавања, итд."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "Тема:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "Положај:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "Лево"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "Десно"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "Горе"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "Доле"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "Поравнање:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "Испуњено"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "На почетак"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "На крај"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "По средини"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "На главном екрану:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr ""
+msgstr "Помак у процентима од средишта до ивице екрана."
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr ""
+msgstr "Поравнање иконице:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "Величина иконице:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr ""
+msgstr "Увеличање иконице:"
 
-#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:91
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:98
 msgid "Appearance"
-msgstr ""
+msgstr "Изглед"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr ""
+msgstr "Паметно скривање"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr ""
+msgstr "Самостално скривање"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr ""
+msgstr "Избегавај увећан прозор"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr ""
+msgstr "Избегавање прозора"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr ""
+msgstr "Избегавај радни прозор"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr ""
+msgstr "Сакриј док"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr ""
+msgstr "Кашњење скривања:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgstr "Време у милисекундама пре скривања дока"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "Кашњење откривања:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "Време у милисекундама пре откривања дока"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr ""
+msgstr "Приказивање притиском:"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
-msgstr ""
+msgstr "Управљање ставкама"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr ""
+msgstr "Прикажи откачене:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr ""
+msgstr "Ограничи на радни простор:"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr ""
+msgstr "Закључај иконице:"
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Automatic Pinning:"
-msgstr ""
+msgstr "Самостално прикачињање:"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Show Item for Dock:"
-msgstr ""
+msgstr "Прикажи ставку за док:"
 
-#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:92
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:99
 msgid "Behaviour"
-msgstr ""
+msgstr "Понашање"
 
-#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:93
+#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:100
 msgid "Docklets"
-msgstr ""
+msgstr "Справице"
 
-#: ../lib/DragManager.vala:470 ../lib/Items/PlaceholderDockItem.vala:51
+#: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
-msgstr "Довуците мишем да би сте додали на док"
+msgstr "Довуците мишем да додате на док"
 
 #: ../lib/Factories/AbstractMain.vala:388 ../src/Main.vala:75
 msgid "translator-credits"
@@ -192,16 +197,17 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Rico Tzschichholz https://launchpad.net/~ricotz\n"
 "  Иван Благојевић https://launchpad.net/~ivanblago\n"
+"  Мирослав Николић https://launchpad.net/~lipek\n"
 "  Никола Радовановић https://launchpad.net/~nikoola"
 
 #: ../lib/Items/ApplicationDockItem.vala:450
 #: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:352
 msgid "_Keep in Dock"
-msgstr "_Задржи на полици"
+msgstr "Задржи на _полици"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close All"
-msgstr "_Затвори све"
+msgstr "Затвори _све"
 
 #: ../lib/Items/ApplicationDockItem.vala:458
 msgid "_Close"
@@ -210,11 +216,11 @@ msgstr "_Затвори"
 #: ../lib/Items/ApplicationDockItem.vala:530
 #, c-format
 msgid "Drop to open with %s"
-msgstr "Убаците да отворите са %s"
+msgstr "Превуците мишем да отворите програмом %s"
 
 #: ../lib/Items/FileDockItem.vala:336
 msgid "_Open in File Browser"
-msgstr "_Отвори у прегледачу датотека"
+msgstr "Отвори у _прегледачу датотека"
 
 #: ../lib/Items/FileDockItem.vala:358
 msgid "_Open"
@@ -226,16 +232,16 @@ msgstr "Отвори _фасциклу која садржи"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr ""
+msgstr "Овде превуците програме или датотеке"
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
-msgstr "Потражи _помоћ на интернету..."
+msgstr "Потражите _помоћ на интернету..."
 
 #: ../lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."
-msgstr "_Преведи ову апликацију"
+msgstr "_Преведите овај програм..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:65
+#: ../lib/Widgets/PreferencesWindow.vala:72
 msgid "Preferences"
 msgstr "Поставке"
