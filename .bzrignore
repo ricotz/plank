@@ -41,6 +41,7 @@ docs/c-doc
 docs/vala-doc
 docs/web-doc
 examples/remote-client
+examples/unity-client
 examples/*.c
 examples/*.stamp
 lib/abi*
