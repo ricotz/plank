@@ -186,11 +186,7 @@ namespace Plank
 			
 			draw_icon_fast (surface);
 			
-#if HAVE_GEE_0_8
 			var icons = new Gee.HashMap<string, string> ();
-#else
-			var icons = new Gee.HashMap<string, string> (str_hash, str_equal);
-#endif
 			var keys = new Gee.ArrayList<string> ();
 			
 			foreach (var file in get_files ()) {
@@ -213,11 +209,7 @@ namespace Plank
 			var icon_height = (int) ((height - 80 * radius / 33.0) / 2.0);
 			var offset = (int) ((width - 2 * icon_width) / 3.0);
 			
-#if HAVE_GEE_0_8
 			keys.sort ();
-#else
-			keys.sort ((CompareFunc) strcmp);
-#endif
 			foreach (var s in keys) {
 				var x = pos % 2;
 				int y = pos / 2;
@@ -277,11 +269,7 @@ namespace Plank
 		{
 			var items = new Gee.ArrayList<Gtk.MenuItem> ();
 		
-#if HAVE_GEE_0_8
 			var menu_items = new Gee.HashMap<string, Gtk.MenuItem> ();
-#else
-			var menu_items = new Gee.HashMap<string, Gtk.MenuItem> (str_hash, str_equal);
-#endif
 			var keys = new Gee.ArrayList<string> ();
 			
 			foreach (var file in get_files ()) {
@@ -313,11 +301,7 @@ namespace Plank
 				keys.add (key);
 			}
 			
-#if HAVE_GEE_0_8
 			keys.sort ();
-#else
-			keys.sort ((CompareFunc) strcmp);
-#endif
 			foreach (var s in keys)
 				items.add (menu_items.get (s));
 			

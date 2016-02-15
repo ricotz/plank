@@ -619,11 +619,7 @@ namespace Plank
 			menu.show.connect (on_menu_show);
 			menu.hide.connect (on_menu_hide);
 			
-#if HAVE_GEE_0_8
 			var iterator = menu_items.bidir_list_iterator ();
-#else
-			var iterator = menu_items.list_iterator ();
-#endif
 			if (controller.prefs.Position == Gtk.PositionType.TOP) {
 				iterator.last ();
 				do {

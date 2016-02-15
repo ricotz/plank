@@ -1003,22 +1003,12 @@ namespace Plank
 			update_background_region (draw_values[items.first ()], draw_values[items.last ()]);
 			
 			// precalculate and cache regions (for the current frame)
-#if HAVE_GEE_0_8
 			draw_values.map_iterator ().foreach ((i, val) => {
 				val.draw_region = get_item_draw_region (val);
 				val.hover_region = get_item_hover_region (val);
 				val.background_region = get_item_background_region (val);
 				return true;
 			});
-#else
-			var draw_values_it = draw_values.map_iterator ();
-			while (draw_values_it.next ()) {
-				var val = draw_values_it.get_value ();
-				val.draw_region = get_item_draw_region (val);
-				val.hover_region = get_item_hover_region (val);
-				val.background_region = get_item_background_region (val);
-			}
-#endif
 		}
 		/**
 		 * The region for drawing a dock item.

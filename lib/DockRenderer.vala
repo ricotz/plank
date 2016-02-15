@@ -321,11 +321,7 @@ namespace Plank
 				transient_items.clear ();
 			}
 			
-#if HAVE_GEE_0_8
 			current_items.sort ((CompareDataFunc) compare_dock_item_position);
-#else
-			current_items.sort ((CompareFunc) compare_dock_item_position);
-#endif
 			
 			// Calculate positions for given ordered list of items
 			position_manager.update_draw_values (current_items,
@@ -745,18 +741,10 @@ namespace Plank
 			if (x_offset == 0.0)
 				return;
 			
-#if HAVE_GEE_0_8
 			draw_values.map_iterator ().foreach ((i, val) => {
 				val.move_right (position, x_offset);
 				return true;
 			});
-#else
-			var draw_values_it = draw_values.map_iterator ();
-			while (draw_values_it.next ()) {
-				var val = draw_values_it.get_value ();
-				val.move_right (position, x_offset);
-			}
-#endif
 		}
 		
 		void draw_item (Cairo.Context cr, DockItem item, PositionManager.DockItemDrawValue draw_value, int64 frame_time)

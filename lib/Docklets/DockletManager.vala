@@ -72,11 +72,7 @@ namespace Plank
 		
 		construct
 		{
-#if HAVE_GEE_0_8
 			docklets = new Gee.HashMap<string, Docklet> ();
-#else
-			docklets = new Gee.HashMap<string, Docklet> (str_hash, str_equal);
-#endif
 		}
 		
 		/**

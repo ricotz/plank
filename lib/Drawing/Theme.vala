@@ -376,11 +376,7 @@ namespace Plank
 		 */
 		public static string[] get_theme_list ()
 		{
-#if HAVE_GEE_0_8
 			var list = new Gee.HashSet<string> ();
-#else
-			var list = new Gee.HashSet<string> (str_hash, str_equal);
-#endif
 			
 			list.add (DEFAULT_NAME);
 			list.add (GTK_THEME_NAME);
@@ -415,11 +411,7 @@ namespace Plank
 			
 			var result = new Gee.ArrayList<string> ();
 			result.add_all (list);
-#if HAVE_GEE_0_8
 			result.sort ();
-#else
-			result.sort ((CompareFunc) strcmp);
-#endif
 			
 			return result.to_array ();
 		}

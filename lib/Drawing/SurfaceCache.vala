@@ -131,13 +131,8 @@ namespace Plank
 		
 		construct
 		{
-#if HAVE_GEE_0_8
 			infos = new Gee.TreeSet<unowned SurfaceInfo> ((CompareDataFunc) SurfaceInfo.compare);
 			cache_map = new Gee.HashMap<SurfaceInfo, Surface> ((Gee.HashDataFunc<SurfaceInfo>) SurfaceInfo.hash);
-#else
-			infos = new Gee.TreeSet<unowned SurfaceInfo> ((CompareFunc) SurfaceInfo.compare);
-			cache_map = new Gee.HashMap<SurfaceInfo, Surface> ((HashFunc<SurfaceInfo>) SurfaceInfo.hash);
-#endif
 			last_info = null;
 			
 			//TODO Adaptive delay depending on the access rate

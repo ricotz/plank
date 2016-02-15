@@ -180,11 +180,8 @@ namespace Docky
 				if (files.size > 0)
 					items.add (new TitledSeparatorMenuItem.no_line (_("Restore Files")));
 				
-#if HAVE_GEE_0_8
 				files.sort ((CompareDataFunc) compare_files);
-#else
-				files.sort ((CompareFunc) compare_files);
-#endif
+				
 				var count = 0;
 				foreach (File _f in files) {
 					var f = _f;

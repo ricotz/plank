@@ -263,11 +263,8 @@ namespace Plank
 		
 		void update_visible_items_recursive (DockContainer container, ref int current_position)
 		{
-#if HAVE_GEE_0_8
 			var iterator = container.VisibleElements.bidir_list_iterator ();
-#else
-			var iterator = container.VisibleElements.list_iterator ();
-#endif
+			
 			// Reverse dock-item-order for RTL environments if dock is placed horizontally
 			if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL && prefs.is_horizontal_dock ()) {
 				iterator.last ();

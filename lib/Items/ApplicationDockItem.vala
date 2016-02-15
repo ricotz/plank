@@ -128,11 +128,7 @@ namespace Plank
 		{
 			supported_mime_types = new Gee.ArrayList<string> ();
 			actions = new Gee.ArrayList<string> ();
-#if HAVE_GEE_0_8
 			actions_map = new Gee.HashMap<string, string> ();
-#else
-			actions_map = new Gee.HashMap<string, string> (str_hash, str_equal);
-#endif
 			
 			load_from_launcher ();
 		}

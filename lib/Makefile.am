@@ -196,7 +196,6 @@ CLEANFILES = \
 	$(nodist_libplank_la_SOURCES) \
 	$(nodist_libplank_internal_la_SOURCES) \
 	build-abi \
-	plank.deps \
 	plank.pc \
 	plank.vapi \
 	plank.h \
@@ -210,7 +209,7 @@ EXTRA_DIST = \
 	$(libplank_internal_la_VALASOURCES) \
 	abicheck.sh \
 	libplank.symbols \
-	plank.deps.in \
+	plank.deps \
 	plank.pc.in \
 	Version.vala.in \
 	$(NULL)
