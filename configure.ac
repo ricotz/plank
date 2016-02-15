@@ -170,12 +170,7 @@ fi
 #   target-glib flag accoringly
 # -----------------------------------------------------------
 
-VALAFLAGS="--target-glib=2.32"
-
-PKG_CHECK_MODULES(GLIB_2_34,
-	[gobject-2.0 >= 2.34 glib-2.0 >= 2.34 gio-2.0 >= 2.34],	[VALAFLAGS="--target-glib=2.34"], []
-)
-
+VALAFLAGS="--target-glib=2.40"
 
 # -----------------------------------------------------------
 # Optional Dependencies
