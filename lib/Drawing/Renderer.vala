@@ -33,9 +33,7 @@ namespace Plank
 		uint timer_id = 0U;
 		ulong widget_realize_handler_id = 0UL;
 		ulong widget_draw_handler_id = 0UL;
-#if HAVE_GTK_3_8
 		bool is_updating = false;
-#endif
 		
 		/**
 		 * Creates a new animation renderer.
@@ -47,9 +45,7 @@ namespace Plank
 		
 		construct
 		{
-#if HAVE_GTK_3_8
 			timer_id = widget.add_tick_callback ((Gtk.TickCallback) draw_timeout);
-#endif
 			widget_realize_handler_id = widget.realize.connect (on_widget_realize);
 			widget_draw_handler_id = widget.draw.connect (on_widget_draw);
 		}
@@ -57,11 +53,7 @@ namespace Plank
 		~Renderer ()
 		{
 			if (timer_id > 0U) {
-#if HAVE_GTK_3_8
 				widget.remove_tick_callback (timer_id);
-#else
-				GLib.Source.remove (timer_id);
-#endif
 				timer_id = 0U;
 			}
 			
@@ -103,17 +95,13 @@ namespace Plank
 		 */
 		protected void force_frame_time_update ()
 		{
-#if HAVE_GTK_3_8
 			unowned Gdk.FrameClock? frame_clock = widget.get_frame_clock ();
 			if (frame_clock != null) {
 				frame_time = frame_clock.get_frame_time ();
 			} else {
-#endif
 				frame_time = GLib.get_monotonic_time ();
-#if HAVE_GTK_3_8
 				critical ("FrameClock not available");
 			}
-#endif
 		}
 		
 		/**
@@ -121,11 +109,7 @@ namespace Plank
 		 */
 		public void animated_draw ()
 		{
-#if HAVE_GTK_3_8
 			if (is_updating || !widget.get_realized ())
-#else
-			if (timer_id > 0U)
-#endif
 				return;
 			
 			force_frame_time_update ();
@@ -134,50 +118,30 @@ namespace Plank
 			widget.queue_draw ();
 			
 			if (animation_needed (frame_time)) {
-#if HAVE_GTK_3_8
 				unowned Gdk.FrameClock? frame_clock = widget.get_frame_clock ();
 				frame_clock.begin_updating ();
 				is_updating = true;
-#else
-				// This roughly means driving animations with 60 fps
-				timer_id = Gdk.threads_add_timeout (16, (SourceFunc) draw_timeout);
-#endif
 			}
 		}
 		
-#if HAVE_GTK_3_8
 		[CCode (instance_pos = -1)]
 		bool draw_timeout (Gtk.Widget widget, Gdk.FrameClock frame_clock)
 		{
 			frame_time = frame_clock.get_frame_time ();
 			initialize_frame (frame_time);
-#else
-		bool draw_timeout ()
-		{
-			force_frame_time_update ();
-#endif
 			widget.queue_draw ();
 			
 			if (animation_needed (frame_time))
 				return true;
 			
-#if HAVE_GTK_3_8
 			frame_clock.end_updating ();
 			is_updating = false;
 			return true;
-#else
-			timer_id = 0U;
-			return false;
-#endif
 		}
 		
 		[CCode (instance_pos = -1)]
 		bool on_widget_draw (Gtk.Widget widget, Cairo.Context cr)
 		{
-#if !HAVE_GTK_3_8
-			force_frame_time_update ();
-			initialize_frame (frame_time);
-#endif
 			draw (cr, frame_time);
 		
 			return Gdk.EVENT_PROPAGATE;

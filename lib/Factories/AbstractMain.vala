@@ -233,12 +233,6 @@ namespace Plank
 			message ("Wnck version: %d.%d.%d", Wnck.Version.MAJOR_VERSION, Wnck.Version.MINOR_VERSION, Wnck.Version.MICRO_VERSION);
 			message ("Cairo version: %s", Cairo.version_string ());
 			message ("Pango version: %s", Pango.version_string ());
-#if HAVE_GTK_3_8
-			message ("+ Gtk+ FrameClock usage enabled");
-#endif
-#if HAVE_GTK_3_10
-			message ("+ Gtk+ CSD support enabled");
-#endif
 #if HAVE_HIDPI
 			message ("+ Cairo/Gtk+ HiDPI support enabled");
 #endif

@@ -108,7 +108,7 @@ fi
 # -----------------------------------------------------------
 # Dependencies
 # -----------------------------------------------------------
-GTK_MIN_VERSION=3.4.0
+GTK_MIN_VERSION=3.10.0
 GLIB_MIN_VERSION=2.40.0
 GDK_PIXBUF_MIN_VERSION=2.26.0
 BAMF_MIN_VERSION=0.2.92
@@ -183,22 +183,6 @@ if test "x$enable_hidpi" = "xyes" ; then
     VALAFLAGS="$VALAFLAGS --define HAVE_HIDPI"
 fi
 AM_CONDITIONAL([HAVE_HIDPI], [test "x$enable_hidpi" = "xyes"])
-
-# Check for FrameClock support of Gtk+
-GTK_PKGS="gtk+-3.0 >= 3.8"
-PKG_CHECK_MODULES(FRAMECLOCK, $GTK_PKGS, [enable_gtk38=yes], [enable_gtk38=no])
-if test "x$enable_gtk38" = "xyes" ; then
-    VALAFLAGS="$VALAFLAGS --define HAVE_GTK_3_8"
-fi
-AM_CONDITIONAL([HAVE_GTK_3_8], [test "x$enable_gtk38" = "xyes"])
-
-# Check for CSD support of Gtk+
-GTK_PKGS="gtk+-3.0 >= 3.10.0"
-PKG_CHECK_MODULES(GTK, $GTK_PKGS, [enable_gtk310=yes], [enable_gtk310=no])
-if test "x$enable_gtk310" = "xyes" ; then
-    VALAFLAGS="$VALAFLAGS --define HAVE_GTK_3_10"
-fi
-AM_CONDITIONAL([HAVE_GTK_3_10], [test "x$enable_gtk310" = "xyes"])
 
 # Check for newer BAMF
 BAMF_PKGS="libbamf3 >= 0.4.0"
