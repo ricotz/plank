@@ -29,20 +29,14 @@ namespace Plank
 		 * The default command-line options for the dock.
 		 */
 		const OptionEntry[] options = {
-			{ "debug", 'd', 0, OptionArg.NONE, ref DEBUG, "Enable debug logging", null },
-			{ "verbose", 'v', 0, OptionArg.NONE, ref VERBOSE, "Enable verbose logging", null },
-			{ "name", 'n', 0, OptionArg.STRING, ref NAME, "The name of this dock", null },
-			{ "preferences", 0, 0, OptionArg.NONE, ref PREFERENCES, "Show the application's preferences dialog", null },
-			{ "version", 'V', 0, OptionArg.NONE, ref VERSION, "Show the application's version", null },
+			{ "debug", 'd', 0, OptionArg.NONE, null, "Enable debug logging", null },
+			{ "verbose", 'v', 0, OptionArg.NONE, null, "Enable verbose logging", null },
+			{ "name", 'n', 0, OptionArg.STRING, null, "The name of this dock", null },
+			{ "preferences", 0, 0, OptionArg.NONE, null, "Show the application's preferences dialog", null },
+			{ "version", 'V', 0, OptionArg.NONE, null, "Show the application's version", null },
 			{ null }
 		};
 
-		static bool DEBUG = false;
-		static bool VERBOSE = false;
-		static bool PREFERENCES = false;
-		static bool VERSION = false;
-		static string NAME = "dock1";
-		
 		static void sig_handler (int sig)
 		{
 			warning ("Caught signal (%d), exiting", sig);
@@ -94,10 +88,6 @@ namespace Plank
 		 */
 		public string app_dbus { get; construct; }
 		/**
-		 * The name of the path containing the dock's preferences.
-		 */
-		public string dock_name { get; protected set; }
-		/**
 		 * The name of this program's icon.
 		 */
 		public string app_icon { get; construct; }
@@ -140,13 +130,28 @@ namespace Plank
 		 */
 		public Gtk.License about_license_type { get; construct set; default = Gtk.License.UNKNOWN; }
 		
+		string dock_name = "";
+		
 		Gtk.AboutDialog? about_dlg;
 		PreferencesWindow? preferences_dlg;
 		DockController? controller;
 		
 		construct
 		{
-			flags = ApplicationFlags.FLAGS_NONE;
+			flags = ApplicationFlags.HANDLES_COMMAND_LINE;
+			
+			// set program name
+#if HAVE_SYS_PRCTL_H
+			prctl (15, exec_name);
+#else
+			setproctitle (exec_name);
+#endif
+			Environment.set_prgname (exec_name);
+			
+			Intl.bindtextdomain (Build.GETTEXT_PACKAGE, Build.DATADIR + "/locale");
+			Intl.bind_textdomain_codeset (Build.GETTEXT_PACKAGE, "UTF-8");
+			
+			add_main_option_entries (options);
 		}
 		
 		/**
@@ -160,61 +165,41 @@ namespace Plank
 		/**
 		 * {@inheritDoc}
 		 */
-		public override bool local_command_line (ref unowned string[] args, out int exit_status)
+		public override int handle_local_options (VariantDict options)
 		{
-			exit_status = 0;
-			
-			// set program name
-#if HAVE_SYS_PRCTL_H
-			prctl (15, exec_name);
-#else
-			setproctitle (exec_name);
-#endif
-			Environment.set_prgname (exec_name);
-			
-			Intl.bindtextdomain (Build.GETTEXT_PACKAGE, Build.DATADIR + "/locale");
-			Intl.bind_textdomain_codeset (Build.GETTEXT_PACKAGE, "UTF-8");
-			
-			var context = new OptionContext (null);
-			context.add_main_entries (options, exec_name);
-			context.add_group (Gtk.get_option_group (false));
-			
-			try {
-				unowned string[] args2 = args;
-				context.parse (ref args2);
-			} catch (OptionError e) {
-				printerr ("%s\n", e.message);
-				exit_status = 1;
-				return true;
-			}
-			
-			if (VERSION) {
+			if (options.contains ("version")) {
 				print ("%s\n", build_version);
-				return true;
+				return 0;
 			}
 			
-			if (VERBOSE)
+			Logger.initialize (program_name);
+			
+			if (options.contains ("verbose"))
 				Logger.DisplayLevel = LogLevel.VERBOSE;
-			else if (DEBUG)
+			else if (options.contains ("debug"))
 				Logger.DisplayLevel = LogLevel.DEBUG;
 			else
 				Logger.DisplayLevel = LogLevel.WARN;
 			
-			dock_name = NAME;
+			if (!options.lookup ("name", "&s", out dock_name))
+				dock_name = "dock1";
 			
 			application_id = "%s.%s".printf (app_dbus, dock_name);
 			
-			try {
-				register ();
-			} catch {
-				exit_status = 1;
-				return true;
-			}
+			return -1;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public override int command_line (ApplicationCommandLine command_line)
+		{
+			var options = command_line.get_options_dict ();
 			
-			if (get_is_registered () && PREFERENCES)
+			if (options.contains ("preferences"))
 				activate_action ("preferences", null);
 			
-			return base.local_command_line (ref args, out exit_status);
+			return 0;
 		}
 		
 		/**
@@ -231,14 +216,12 @@ namespace Plank
 			assert (program_name != null);
 			assert (exec_name != null);
 			assert (app_dbus != null);
-			assert (dock_name != null);
 			
 			base.startup ();
 			
 			if (!Thread.supported ())
 				critical ("Problem initializing thread support.");
 			
-			Logger.initialize (program_name);
 			message ("%s version: %s", program_name, build_version);
 			message ("Kernel version: %s", Posix.utsname ().release);
 			message ("GLib version: %u.%u.%u (%u.%u.%u)",
