@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-01-04 19:57+0000\n"
+"POT-Creation-Date: 2016-02-13 07:52+0000\n"
 "PO-Revision-Date: 2015-12-23 00:40+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-01-05 05:15+0000\n"
-"X-Generator: Launchpad (build 17876)\n"
+"X-Launchpad-Export-Date: 2016-02-14 05:57+0000\n"
+"X-Generator: Launchpad (build 17925)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -108,7 +108,7 @@ msgstr "Pictogramgrootte:"
 msgid "Icon Zoom:"
 msgstr "Pictogram vergroten:"
 
-#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:91
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:98
 msgid "Appearance"
 msgstr "Weergave"
 
@@ -180,15 +180,15 @@ msgstr "Automatisch vastzetten op het dock:"
 msgid "Show Item for Dock:"
 msgstr "Icoon voor dock tonen:"
 
-#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:92
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:99
 msgid "Behaviour"
 msgstr "Gedrag"
 
-#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:93
+#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:100
 msgid "Docklets"
 msgstr "Docklets"
 
-#: ../lib/DragManager.vala:470 ../lib/Items/PlaceholderDockItem.vala:51
+#: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
 msgstr "Laat de muis los om aan het dock toe te voegen"
 
@@ -196,7 +196,7 @@ msgstr "Laat de muis los om aan het dock toe te voegen"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  ChrisofBristol https://launchpad.net/~chrisofbristol\n"
+"  Deleted https://launchpad.net/~old.name\n"
 "  Levi Voorintholt https://launchpad.net/~piratelv\n"
 "  McVries https://launchpad.net/~mcvries\n"
 "  Mitch Dries https://launchpad.net/~mitch-dries\n"
@@ -250,6 +250,6 @@ msgstr "Online _hulp vragen…"
 msgid "_Translate This Application..."
 msgstr "Deze toepassing ver_talen…"
 
-#: ../lib/Widgets/PreferencesWindow.vala:65
+#: ../lib/Widgets/PreferencesWindow.vala:72
 msgid "Preferences"
 msgstr "Voorkeuren"

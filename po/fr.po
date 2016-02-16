@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-01-04 19:57+0000\n"
-"PO-Revision-Date: 2015-12-23 15:40+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2016-02-13 07:52+0000\n"
+"PO-Revision-Date: 2016-02-13 15:33+0000\n"
+"Last-Translator: Charles Monzat <superboa@hotmail.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-01-05 05:15+0000\n"
-"X-Generator: Launchpad (build 17876)\n"
+"X-Launchpad-Export-Date: 2016-02-14 05:57+0000\n"
+"X-Generator: Launchpad (build 17925)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -108,7 +108,7 @@ msgstr "Taille de l'icône :"
 msgid "Icon Zoom:"
 msgstr "Zoom sur icône :"
 
-#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:91
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:98
 msgid "Appearance"
 msgstr "Apparence"
 
@@ -180,17 +180,17 @@ msgstr "Épinglage automatique :"
 msgid "Show Item for Dock:"
 msgstr "Afficher l'icône du dock :"
 
-#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:92
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:99
 msgid "Behaviour"
 msgstr "Comportement"
 
-#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:93
+#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:100
 msgid "Docklets"
 msgstr "Docklets"
 
-#: ../lib/DragManager.vala:470 ../lib/Items/PlaceholderDockItem.vala:51
+#: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
-msgstr "Relâchez pour ajouter au dock"
+msgstr "Relâcher pour ajouter au dock"
 
 #: ../lib/Factories/AbstractMain.vala:388 ../src/Main.vala:75
 msgid "translator-credits"
@@ -236,7 +236,7 @@ msgstr "Relâcher pour ouvrir avec %s"
 
 #: ../lib/Items/FileDockItem.vala:336
 msgid "_Open in File Browser"
-msgstr "_Ouvrir dans le Gestionnaire de Fichiers"
+msgstr "_Ouvrir dans le Gestionnaire de fichiers"
 
 #: ../lib/Items/FileDockItem.vala:358
 msgid "_Open"
@@ -244,11 +244,11 @@ msgstr "_Ouvrir"
 
 #: ../lib/Items/FileDockItem.vala:362
 msgid "Open Containing _Folder"
-msgstr "Ouvrir le _dossier contenant"
+msgstr "Ouvrir le _dossier parent"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr "Déposez ici des applications ou des fichiers"
+msgstr "Déposer ici des applications ou des fichiers"
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
@@ -258,6 +258,6 @@ msgstr "Obtenir de l'_aide en ligne"
 msgid "_Translate This Application..."
 msgstr "_Traduire cette application..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:65
+#: ../lib/Widgets/PreferencesWindow.vala:72
 msgid "Preferences"
 msgstr "Préférences"

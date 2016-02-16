@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-01-04 19:57+0000\n"
+"POT-Creation-Date: 2016-02-13 07:52+0000\n"
 "PO-Revision-Date: 2015-12-23 00:40+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-01-05 05:15+0000\n"
-"X-Generator: Launchpad (build 17876)\n"
+"X-Launchpad-Export-Date: 2016-02-14 05:57+0000\n"
+"X-Generator: Launchpad (build 17925)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -106,7 +106,7 @@ msgstr "Kuvakekoko:"
 msgid "Icon Zoom:"
 msgstr "Kuvakesuurennus:"
 
-#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:91
+#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:98
 msgid "Appearance"
 msgstr "Ulkoasu"
 
@@ -178,15 +178,15 @@ msgstr "Automaattinen kiinnittäminen:"
 msgid "Show Item for Dock:"
 msgstr "Näytettävä kohde telakalle:"
 
-#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:92
+#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:99
 msgid "Behaviour"
 msgstr "Toiminta"
 
-#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:93
+#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:100
 msgid "Docklets"
 msgstr "Telakkasovelmat"
 
-#: ../lib/DragManager.vala:470 ../lib/Items/PlaceholderDockItem.vala:51
+#: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
 msgstr "Tiputa lisätäksesi telakkaan"
 
@@ -239,6 +239,6 @@ msgstr "_Hae apua verkosta..."
 msgid "_Translate This Application..."
 msgstr "Kää_nnä tämä ohjelma..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:65
+#: ../lib/Widgets/PreferencesWindow.vala:72
 msgid "Preferences"
 msgstr "Asetukset"
