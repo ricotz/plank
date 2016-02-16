@@ -134,6 +134,7 @@ libplank_la_vala.stamp build-abi: libplank_internal_la_vala.stamp $(libplank_la_
 		--library plank \
 		--symbols build-abi \
 		--vapi plank.vapi \
+		--gresources $(top_srcdir)/data/plank.gresource.xml \
 		$(filter %.vala %.c,$^)
 	$(AM_V_at)touch $@
 
