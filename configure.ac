@@ -176,8 +176,8 @@ VALAFLAGS="--target-glib=2.40"
 # Optional Dependencies
 # -----------------------------------------------------------
 
-# Check for HiDPI support of Gtk+ and Cairo
-HIDPI_PKGS="gtk+-3.0 >= 3.10.0 cairo >= 1.13"
+# Check for HiDPI support of Cairo
+HIDPI_PKGS="cairo >= 1.13"
 PKG_CHECK_MODULES(HIDPI, $HIDPI_PKGS, [enable_hidpi=yes], [enable_hidpi=no])
 if test "x$enable_hidpi" = "xyes" ; then
     VALAFLAGS="$VALAFLAGS --define HAVE_HIDPI"
