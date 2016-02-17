@@ -407,7 +407,7 @@ namespace Plank.Drawing
 			if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL)
 				x += line_width + line_width / 2.0;
 			else
-				x += icon_size - width - line_width / 2.0;
+				x += icon_size - width - 1.5 * line_width;
 			y += line_width + line_width / 2.0;
 			
 			cr.set_line_width (line_width);
