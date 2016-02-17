@@ -91,6 +91,8 @@ namespace Plank
 		
 		construct
 		{
+			var title = _("Preferences");
+			
 			prefs = controller.prefs;
 			
 			init_dock_tab ();
