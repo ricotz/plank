@@ -931,7 +931,10 @@ namespace Plank
 				//         value. The center is 100%. (1 - offset_percent) == 0,1 distance from center
 				// The .66 value comes from the area under the curve.  Dont ask me to explain it too much because it's too clever for me.
 				
-				offset *= zoom_in_progress / 2.0;
+				if (expand_for_drop)
+					offset *= zoom_in_progress / 2.0;
+				else
+					offset *= zoom_in_percent - 1.0;
 				offset *= 1.0 - offset_percent / 3.0;
 				
 				if (cursor_position > center_position)
