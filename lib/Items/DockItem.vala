@@ -324,11 +324,7 @@ namespace Plank
 				var launcher = other.get_uri ();
 				Logger.verbose ("Launcher file '%s' moved to '%s'", f.get_uri (), launcher);
 				
-				launcher_file_monitor_stop ();
-				Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
-				Prefs.Launcher = launcher;
-				Prefs.notify["Launcher"].connect (handle_launcher_changed);
-				launcher_file_monitor_start ();
+				replace_launcher (launcher);
 				
 				load_from_launcher ();
 				break;
@@ -385,6 +381,18 @@ namespace Plank
 			launcher_file_monitor.changed.disconnect (launcher_file_changed);
 			launcher_file_monitor.cancel ();
 			launcher_file_monitor = null;
+		}
+		
+		void replace_launcher (string launcher)
+		{
+			if (launcher == Prefs.Launcher)
+				return;
+			
+			launcher_file_monitor_stop ();
+			Prefs.notify["Launcher"].disconnect (handle_launcher_changed);
+			Prefs.Launcher = launcher;
+			Prefs.notify["Launcher"].connect (handle_launcher_changed);
+			launcher_file_monitor_start ();
 		}
 		
 		bool schedule_removal_if_needed ()

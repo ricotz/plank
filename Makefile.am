@@ -52,11 +52,11 @@ distclean-local:
 
 run: all
 	GSETTINGS_SCHEMA_DIR=$(abs_top_builddir)/data PLANK_DOCKLET_DIRS=$(abs_top_builddir)/docklets \
-		$(top_builddir)/src/plank -d
+		$(top_builddir)/src/plank -v
 
 run-debug: all
 	GSETTINGS_SCHEMA_DIR=$(abs_top_builddir)/data PLANK_DOCKLET_DIRS=$(abs_top_builddir)/docklets \
-		libtool --mode=execute gdb --args $(top_builddir)/src/plank -d
+		libtool --mode=execute gdb --args $(top_builddir)/src/plank -v
 
 ChangeLog:
 	@echo Creating $@
