@@ -169,7 +169,7 @@ namespace Plank
 			}
 			
 			provider = new DefaultApplicationDockItemProvider (prefs, launchers_folder);
-			provider.add_all (Factory.item_factory.load_items (launchers_folder, prefs.DockItems));
+			provider.add_all (Factory.item_factory.load_elements (launchers_folder, prefs.DockItems));
 			serialize_item_positions (provider);
 			
 			return provider;
@@ -352,7 +352,7 @@ namespace Plank
 			if (provider == null)
 				return;
 			
-			var item_list = provider.get_item_list_string ();
+			var item_list = provider.get_dockitem_filenames ();
 			
 			if (prefs.DockItems != item_list)
 				prefs.DockItems = item_list;

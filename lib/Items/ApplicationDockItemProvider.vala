@@ -177,13 +177,12 @@ namespace Plank
 		}
 		
 		/**
-		 * Serializes the dockitem-filenames
-		 *
-		 * @return a array of string containing all filesnames
+		 * {@inheritDoc}
 		 */
-		public string[] get_item_list_string ()
+		public override string[] get_dockitem_filenames ()
 		{
 			var item_list = new Gee.ArrayList<string> ();
+			
 			foreach (var element in internal_elements) {
 				unowned DockItem? item = (element as DockItem);
 				if (item == null || (item is TransientDockItem))

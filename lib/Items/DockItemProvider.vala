@@ -136,5 +136,27 @@ namespace Plank
 		{
 			remove (item);
 		}
+		
+		/**
+		 * Get ordered array of dockitem-filenames handled by this provider
+		 *
+		 * @return an ordered array of strings containing all basenames
+		 */
+		public virtual string[] get_dockitem_filenames ()
+		{
+			var item_list = new Gee.ArrayList<string> ();
+			
+			foreach (var element in internal_elements) {
+				unowned DockItem? item = (element as DockItem);
+				if (item == null)
+					continue;
+				
+				var dock_item_filename = item.DockItemFilename;
+				if (dock_item_filename.length > 0)
+					item_list.add ((owned) dock_item_filename);
+			}
+			
+			return item_list.to_array ();
+		}
 	}
 }

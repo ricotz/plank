@@ -164,26 +164,36 @@ namespace Plank
 		 * @param ordering a ";;"-separated string to be used to order the loaded DockItems
 		 * @return the new List of DockItems
 		 */
-		public Gee.ArrayList<DockItem> load_items (GLib.File source_dir, string[]? ordering = null)
+		public Gee.ArrayList<DockElement> load_elements (GLib.File source_dir, string[]? ordering = null)
 		{
-			var result = new Gee.ArrayList<DockItem> ();
+			var result = new Gee.ArrayList<DockElement> ();
 			
 			if (!source_dir.query_exists ()) {
 				critical ("Given folder '%s' does not exist.", source_dir.get_path ());
 				return result;
 			}
 
-			debug ("Loading dock items from '%s'", source_dir.get_path ());
+			debug ("Loading dock elements from '%s'", source_dir.get_path ());
+			
+			var elements = new Gee.HashMap<string,DockElement> ();
 			
 			try {
 				var enumerator = source_dir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0);
 				FileInfo info;
 				while ((info = enumerator.next_file ()) != null) {
-					if (info.get_is_hidden () || !info.get_name ().has_suffix (".dockitem"))
+					var filename = info.get_name ();
+					if (info.get_is_hidden () || !filename.has_suffix (".dockitem"))
 						continue;
 					
-					var file = source_dir.get_child (info.get_name ());
+					var file = source_dir.get_child (filename);
 					var element = make_element (file);
+					
+					unowned DockItemProvider? provider = (element as DockItemProvider);
+					if (provider != null) {
+						elements.set (filename, element);
+						continue;
+					}
+					
 					unowned DockItem? item = (element as DockItem);
 					if (item == null)
 						continue;
@@ -197,46 +207,30 @@ namespace Plank
 						warning ("The launcher '%s' in dock item '%s' does not exist. Removing '%s'.", item.Launcher, file.get_path (), item.DockItemFilename);
 						item.delete ();
 					} else {
-						result.add (item);
+						elements.set (filename, element);
 					}
 				}
 			} catch (Error e) {
-				critical ("Error loading dock items from '%s'. (%s)", source_dir.get_path () ?? "", e.message);
+				critical ("Error loading dock elements from '%s'. (%s)", source_dir.get_path () ?? "", e.message);
 			}
 			
-			if (ordering == null)
-				return result;
+			if (ordering != null)
+				foreach (unowned string dockitem in ordering) {
+					DockElement? element;
+					elements.unset (dockitem, out element);
+					if (element != null)
+						result.add (element);
+				}
 			
-			var existing_items = new Gee.ArrayList<DockItem> ();
-			var new_items = new Gee.ArrayList<DockItem> ();
-			
-			foreach (var item in result) {
-				if (item.DockItemFilename in ordering)
-					existing_items.add (item);
-				else
-					new_items.add (item);
-			}
-			
-			result.clear ();
-			
-			// add saved dockitems based on their serialized order
-			foreach (unowned string dockitem in ordering)
-				foreach (var item in existing_items)
-					if (dockitem == item.DockItemFilename) {
-						result.add (item);
-						break;
-					}
-			
-			// add new dockitems
-			foreach (var item in new_items)
-				result.add (item);
+			result.add_all (elements.values);
+			elements.clear ();
 			
 			return result;
 		}
 		
-		unowned DockItem? find_item_for_uri (Gee.ArrayList<DockItem> items, string uri)
+		unowned DockItem? find_item_for_uri (Gee.ArrayList<DockElement> elements, string uri)
 		{
-			foreach (var element in items) {
+			foreach (var element in elements) {
 				unowned DockItem? item = (element as DockItem);
 				if (item != null && item.Launcher == uri)
 					return item;
