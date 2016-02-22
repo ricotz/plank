@@ -24,18 +24,6 @@ namespace Plank
 	 */
 	public class DockPreferences : Plank.Settings
 	{
-		static GLib.Settings create_settings (string schema_id, string? path = null)
-		{
-			//FIXME Only to make it run/work uninstalled from top_builddir
-			Environment.set_variable ("GSETTINGS_SCHEMA_DIR", Environment.get_current_dir () + "/data", false);
-			
-			var schema = GLib.SettingsSchemaSource.get_default ().lookup (schema_id, true);
-			if (schema == null)
-				error ("GSettingsSchema '%s' not found", schema_id);
-			
-			return new GLib.Settings.full (schema, null, path);
-		}
-		
 		public const int MIN_ICON_SIZE = 24;
 		public const int MAX_ICON_SIZE = 128;
 		
