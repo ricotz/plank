@@ -203,11 +203,6 @@ namespace Plank
 				found.App = app;
 		}
 		
-		bool file_is_dockitem (FileInfo info)
-		{
-			return !info.get_is_hidden () && info.get_name ().has_suffix (".dockitem");
-		}
-		
 		protected void delay_items_monitor ()
 		{
 			delay_items_monitor_handle = true;
@@ -264,12 +259,8 @@ namespace Plank
 			if (event != FileMonitorEvent.CREATED)
 				return;
 			
-			try {
-				if (!file_is_dockitem (f.query_info (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0)))
-					return;
-			} catch {
+			if (!file_is_dockitem (f))
 				return;
-			}
 			
 			// bail if an item already manages this dockitem-file
 			foreach (var element in internal_elements) {

@@ -107,6 +107,21 @@ namespace Plank
 		combine_strings (ref result, delimiter, n + i, i - 1);
 	}
 	
+	/**
+	 * Whether the given file looks like a valid .dockitem file
+	 */
+	public inline bool file_is_dockitem (File file)
+	{
+		try {
+			var info = file.query_info (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0);
+			return !info.get_is_hidden () && info.get_name ().has_suffix (".dockitem");
+		} catch (Error e) {
+			warning (e.message);
+		}
+		
+		return false;
+	}
+	
 	public inline double nround (double d, uint n)
 	{
 		double result;
