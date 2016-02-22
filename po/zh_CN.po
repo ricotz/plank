@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-02-13 07:52+0000\n"
-"PO-Revision-Date: 2015-12-23 00:40+0000\n"
+"POT-Creation-Date: 2016-02-21 09:20+0000\n"
+"PO-Revision-Date: 2016-02-17 00:36+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-02-14 05:57+0000\n"
+"X-Launchpad-Export-Date: 2016-02-22 05:40+0000\n"
 "X-Generator: Launchpad (build 17925)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
@@ -102,7 +102,7 @@ msgstr "图标尺寸："
 msgid "Icon Zoom:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:98
+#: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
 msgstr "外观"
 
@@ -174,11 +174,11 @@ msgstr "自动加入收藏："
 msgid "Show Item for Dock:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:99
+#: ../data/ui/preferences.ui.h:35
 msgid "Behaviour"
 msgstr "行为"
 
-#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:100
+#: ../data/ui/preferences.ui.h:36
 msgid "Docklets"
 msgstr "小部件"
 
@@ -186,7 +186,7 @@ msgstr "小部件"
 msgid "Drop to add to dock"
 msgstr "拖动添加到 dock 上"
 
-#: ../lib/Factories/AbstractMain.vala:388 ../src/Main.vala:75
+#: ../lib/Factories/AbstractMain.vala:365 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -197,33 +197,33 @@ msgstr ""
 "  colindemian https://launchpad.net/~colindemian\n"
 "  maomao https://launchpad.net/~fsfjzby"
 
-#: ../lib/Items/ApplicationDockItem.vala:450
-#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:352
+#: ../lib/Items/ApplicationDockItem.vala:446
+#: ../lib/Items/FileDockItem.vala:314 ../lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
 msgstr "固定在 Dock 上(_K)"
 
-#: ../lib/Items/ApplicationDockItem.vala:458
+#: ../lib/Items/ApplicationDockItem.vala:454
 msgid "_Close All"
 msgstr "全部关闭(_C)"
 
-#: ../lib/Items/ApplicationDockItem.vala:458
+#: ../lib/Items/ApplicationDockItem.vala:454
 msgid "_Close"
 msgstr "关闭(_C)"
 
-#: ../lib/Items/ApplicationDockItem.vala:530
+#: ../lib/Items/ApplicationDockItem.vala:526
 #, c-format
 msgid "Drop to open with %s"
 msgstr "拖放以用 %s 打开"
 
-#: ../lib/Items/FileDockItem.vala:336
+#: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
 msgstr "在文件管理器中打开(_O)"
 
-#: ../lib/Items/FileDockItem.vala:358
+#: ../lib/Items/FileDockItem.vala:342
 msgid "_Open"
 msgstr "打开(_O)"
 
-#: ../lib/Items/FileDockItem.vala:362
+#: ../lib/Items/FileDockItem.vala:346
 msgid "Open Containing _Folder"
 msgstr "打开所在的文件夹(_F)"
 
@@ -239,6 +239,6 @@ msgstr "获得在线帮助(_H)..."
 msgid "_Translate This Application..."
 msgstr "翻译该应用程序(_T)..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:72
+#: ../lib/Widgets/PreferencesWindow.vala:94
 msgid "Preferences"
 msgstr "首选项"

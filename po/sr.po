@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-02-13 07:52+0000\n"
-"PO-Revision-Date: 2016-02-07 18:36+0000\n"
+"POT-Creation-Date: 2016-02-21 09:20+0000\n"
+"PO-Revision-Date: 2016-02-17 00:36+0000\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-02-14 05:57+0000\n"
+"X-Launchpad-Export-Date: 2016-02-22 05:40+0000\n"
 "X-Generator: Launchpad (build 17925)\n"
 "Language: sr\n"
 
@@ -107,7 +107,7 @@ msgstr "Величина иконице:"
 msgid "Icon Zoom:"
 msgstr "Увеличање иконице:"
 
-#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:98
+#: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
 msgstr "Изглед"
 
@@ -179,11 +179,11 @@ msgstr "Самостално прикачињање:"
 msgid "Show Item for Dock:"
 msgstr "Прикажи ставку за док:"
 
-#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:99
+#: ../data/ui/preferences.ui.h:35
 msgid "Behaviour"
 msgstr "Понашање"
 
-#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:100
+#: ../data/ui/preferences.ui.h:36
 msgid "Docklets"
 msgstr "Справице"
 
@@ -191,7 +191,7 @@ msgstr "Справице"
 msgid "Drop to add to dock"
 msgstr "Довуците мишем да додате на док"
 
-#: ../lib/Factories/AbstractMain.vala:388 ../src/Main.vala:75
+#: ../lib/Factories/AbstractMain.vala:365 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -200,33 +200,33 @@ msgstr ""
 "  Мирослав Николић https://launchpad.net/~lipek\n"
 "  Никола Радовановић https://launchpad.net/~nikoola"
 
-#: ../lib/Items/ApplicationDockItem.vala:450
-#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:352
+#: ../lib/Items/ApplicationDockItem.vala:446
+#: ../lib/Items/FileDockItem.vala:314 ../lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
 msgstr "Задржи на _полици"
 
-#: ../lib/Items/ApplicationDockItem.vala:458
+#: ../lib/Items/ApplicationDockItem.vala:454
 msgid "_Close All"
 msgstr "Затвори _све"
 
-#: ../lib/Items/ApplicationDockItem.vala:458
+#: ../lib/Items/ApplicationDockItem.vala:454
 msgid "_Close"
 msgstr "_Затвори"
 
-#: ../lib/Items/ApplicationDockItem.vala:530
+#: ../lib/Items/ApplicationDockItem.vala:526
 #, c-format
 msgid "Drop to open with %s"
 msgstr "Превуците мишем да отворите програмом %s"
 
-#: ../lib/Items/FileDockItem.vala:336
+#: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
 msgstr "Отвори у _прегледачу датотека"
 
-#: ../lib/Items/FileDockItem.vala:358
+#: ../lib/Items/FileDockItem.vala:342
 msgid "_Open"
 msgstr "_Отвори"
 
-#: ../lib/Items/FileDockItem.vala:362
+#: ../lib/Items/FileDockItem.vala:346
 msgid "Open Containing _Folder"
 msgstr "Отвори _фасциклу која садржи"
 
@@ -242,6 +242,6 @@ msgstr "Потражите _помоћ на интернету..."
 msgid "_Translate This Application..."
 msgstr "_Преведите овај програм..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:72
+#: ../lib/Widgets/PreferencesWindow.vala:94
 msgid "Preferences"
 msgstr "Поставке"

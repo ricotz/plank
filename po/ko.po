@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-02-13 07:52+0000\n"
-"PO-Revision-Date: 2016-01-25 14:40+0000\n"
+"POT-Creation-Date: 2016-02-21 09:20+0000\n"
+"PO-Revision-Date: 2016-02-17 00:36+0000\n"
 "Last-Translator: Jung-Kyu Park <bagjunggyu@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-02-14 05:57+0000\n"
+"X-Launchpad-Export-Date: 2016-02-22 05:40+0000\n"
 "X-Generator: Launchpad (build 17925)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
@@ -103,7 +103,7 @@ msgstr "아이콘 크기:"
 msgid "Icon Zoom:"
 msgstr "아이콘 줌 효과:"
 
-#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:98
+#: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
 msgstr "모양"
 
@@ -175,11 +175,11 @@ msgstr "아이콘 자동 고정:"
 msgid "Show Item for Dock:"
 msgstr "독(Dock) 아이콘 보이기:"
 
-#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:99
+#: ../data/ui/preferences.ui.h:35
 msgid "Behaviour"
 msgstr "동작"
 
-#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:100
+#: ../data/ui/preferences.ui.h:36
 msgid "Docklets"
 msgstr "도크릿"
 
@@ -187,7 +187,7 @@ msgstr "도크릿"
 msgid "Drop to add to dock"
 msgstr "드래그하여 Dock에 추가"
 
-#: ../lib/Factories/AbstractMain.vala:388 ../src/Main.vala:75
+#: ../lib/Factories/AbstractMain.vala:365 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -201,33 +201,33 @@ msgstr ""
 "  Youngbin Han https://launchpad.net/~sukso96100\n"
 "  cafeinoz https://launchpad.net/~cafeinoz"
 
-#: ../lib/Items/ApplicationDockItem.vala:450
-#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:352
+#: ../lib/Items/ApplicationDockItem.vala:446
+#: ../lib/Items/FileDockItem.vala:314 ../lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
 msgstr "독(Dock) 안에 보관(_K)"
 
-#: ../lib/Items/ApplicationDockItem.vala:458
+#: ../lib/Items/ApplicationDockItem.vala:454
 msgid "_Close All"
 msgstr "모두 닫기 (_C)"
 
-#: ../lib/Items/ApplicationDockItem.vala:458
+#: ../lib/Items/ApplicationDockItem.vala:454
 msgid "_Close"
 msgstr "닫기(_C)"
 
-#: ../lib/Items/ApplicationDockItem.vala:530
+#: ../lib/Items/ApplicationDockItem.vala:526
 #, c-format
 msgid "Drop to open with %s"
 msgstr "%s로 열려면 가져다 놓으세요"
 
-#: ../lib/Items/FileDockItem.vala:336
+#: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
 msgstr "파일 탐색기 안에서 열기 (_O)"
 
-#: ../lib/Items/FileDockItem.vala:358
+#: ../lib/Items/FileDockItem.vala:342
 msgid "_Open"
 msgstr "열기 (_O)"
 
-#: ../lib/Items/FileDockItem.vala:362
+#: ../lib/Items/FileDockItem.vala:346
 msgid "Open Containing _Folder"
 msgstr "들어 있는 폴더 열기 (_F)"
 
@@ -243,6 +243,6 @@ msgstr "온라인으로 도움받기... (_H)"
 msgid "_Translate This Application..."
 msgstr "이 애플리케이션을 번역하기..(_T)"
 
-#: ../lib/Widgets/PreferencesWindow.vala:72
+#: ../lib/Widgets/PreferencesWindow.vala:94
 msgid "Preferences"
 msgstr "기본 설정"

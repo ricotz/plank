@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-02-13 07:52+0000\n"
-"PO-Revision-Date: 2015-12-23 00:40+0000\n"
+"POT-Creation-Date: 2016-02-21 09:20+0000\n"
+"PO-Revision-Date: 2016-02-17 00:36+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-02-14 05:57+0000\n"
+"X-Launchpad-Export-Date: 2016-02-22 05:40+0000\n"
 "X-Generator: Launchpad (build 17925)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
@@ -102,7 +102,7 @@ msgstr "Velikost ikon:"
 msgid "Icon Zoom:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:98
+#: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
 msgstr "Vzhled"
 
@@ -174,11 +174,11 @@ msgstr ""
 msgid "Show Item for Dock:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:99
+#: ../data/ui/preferences.ui.h:35
 msgid "Behaviour"
 msgstr "Chování"
 
-#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:100
+#: ../data/ui/preferences.ui.h:36
 msgid "Docklets"
 msgstr "Doplňky"
 
@@ -186,7 +186,7 @@ msgstr "Doplňky"
 msgid "Drop to add to dock"
 msgstr "Upustit pro přidání do panelu"
 
-#: ../lib/Factories/AbstractMain.vala:388 ../src/Main.vala:75
+#: ../lib/Factories/AbstractMain.vala:365 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -197,33 +197,33 @@ msgstr ""
 "  Tomáš Jakl https://launchpad.net/~tomasjakll\n"
 "  zimmi https://launchpad.net/~zimmicz"
 
-#: ../lib/Items/ApplicationDockItem.vala:450
-#: ../lib/Items/FileDockItem.vala:330 ../lib/Items/FileDockItem.vala:352
+#: ../lib/Items/ApplicationDockItem.vala:446
+#: ../lib/Items/FileDockItem.vala:314 ../lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
 msgstr "_Ponechat v liště"
 
-#: ../lib/Items/ApplicationDockItem.vala:458
+#: ../lib/Items/ApplicationDockItem.vala:454
 msgid "_Close All"
 msgstr "_Zavřít vše"
 
-#: ../lib/Items/ApplicationDockItem.vala:458
+#: ../lib/Items/ApplicationDockItem.vala:454
 msgid "_Close"
 msgstr "_Zavřít"
 
-#: ../lib/Items/ApplicationDockItem.vala:530
+#: ../lib/Items/ApplicationDockItem.vala:526
 #, c-format
 msgid "Drop to open with %s"
 msgstr "Upuštěním otevřít s %s"
 
-#: ../lib/Items/FileDockItem.vala:336
+#: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
 msgstr "Otevřít ve správci souborů"
 
-#: ../lib/Items/FileDockItem.vala:358
+#: ../lib/Items/FileDockItem.vala:342
 msgid "_Open"
 msgstr "_Otevřít"
 
-#: ../lib/Items/FileDockItem.vala:362
+#: ../lib/Items/FileDockItem.vala:346
 msgid "Open Containing _Folder"
 msgstr "Otevřít mateřskou _složku"
 
@@ -239,6 +239,6 @@ msgstr "Pomoc online"
 msgid "_Translate This Application..."
 msgstr "_Přeložit tuto aplikaci..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:72
+#: ../lib/Widgets/PreferencesWindow.vala:94
 msgid "Preferences"
 msgstr "Předvolby"
