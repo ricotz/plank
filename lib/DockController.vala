@@ -88,7 +88,6 @@ namespace Plank
 			items = new Gee.ArrayList<unowned DockItem> ();
 			visible_items = new Gee.ArrayList<unowned DockItem> ();
 			
-			prefs.notify["PinnedOnly"].connect (update_default_provider);
 			prefs.notify["Position"].connect (update_visible_elements);
 			prefs.notify["ShowDockItem"].connect (update_show_dock_item);
 			
@@ -104,7 +103,6 @@ namespace Plank
 		
 		~DockController ()
 		{
-			prefs.notify["PinnedOnly"].disconnect (update_default_provider);
 			prefs.notify["Position"].disconnect (update_visible_elements);
 			prefs.notify["ShowDockItem"].disconnect (update_show_dock_item);
 			
@@ -170,35 +168,11 @@ namespace Plank
 				debug ("done.");
 			}
 			
-			if (prefs.PinnedOnly)
-				provider = new ApplicationDockItemProvider (launchers_folder);
-			else
-				provider = new DefaultApplicationDockItemProvider (prefs, launchers_folder);
-			
+			provider = new DefaultApplicationDockItemProvider (prefs, launchers_folder);
 			provider.add_all (Factory.item_factory.load_items (launchers_folder, prefs.DockItems));
 			serialize_item_positions (provider);
 			
 			return provider;
-		}
-		
-		void update_default_provider ()
-		{
-			// If there is no default-provider we must not try to update it
-			if (default_provider == null)
-				return;
-			
-			var old_default_provider = default_provider;
-			default_provider = create_default_provider ();
-			default_provider.prepare ();
-			replace (default_provider, old_default_provider);
-			old_default_provider.remove_all ();
-			
-			update_items ();
-			
-			// Do a thorough update since we actually dropped all previous items
-			// of the default-provider
-			position_manager.update (renderer.theme);
-			window.update_icon_regions ();
 		}
 		
 		void update_show_dock_item ()

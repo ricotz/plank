@@ -41,6 +41,7 @@ namespace Plank
 		construct
 		{
 			Prefs.notify["CurrentWorkspaceOnly"].connect (handle_setting_changed);
+			Prefs.notify["PinnedOnly"].connect (handle_pinned_only_changed);
 			
 			current_workspace_only = Prefs.CurrentWorkspaceOnly;
 			
@@ -51,6 +52,7 @@ namespace Plank
 		~DefaultApplicationDockItemProvider ()
 		{
 			Prefs.notify["CurrentWorkspaceOnly"].disconnect (handle_setting_changed);
+			Prefs.notify["PinnedOnly"].disconnect (handle_pinned_only_changed);
 			
 			if (current_workspace_only)
 				disconnect_wnck ();
@@ -80,23 +82,8 @@ namespace Plank
 		 */
 		public override void prepare ()
 		{
-			var transient_items = new Gee.ArrayList<DockElement> ();
-			
-			// Match running applications to their available dock-items
-			foreach (var app in Matcher.get_default ().active_launchers ()) {
-				unowned ApplicationDockItem? found = item_for_application (app);
-				if (found != null) {
-					found.App = app;
-					continue;
-				}
-				
-				if (!app.is_user_visible ())
-					continue;
-				
-				transient_items.add (new TransientDockItem.with_application (app));
-			}
-			
-			add_all (transient_items);
+			if (!Prefs.PinnedOnly)
+				add_transient_items ();
 			
 			var favs = new Gee.ArrayList<string> ();
 			
@@ -191,6 +178,47 @@ namespace Plank
 				disconnect_wnck ();
 			
 			update_visible_elements ();
+		}
+		
+		void handle_pinned_only_changed ()
+		{
+			if (Prefs.PinnedOnly)
+				remove_transient_items ();
+			else
+				add_transient_items ();
+		}
+		
+		void add_transient_items ()
+		{
+			var transient_items = new Gee.ArrayList<DockElement> ();
+			
+			// Match running applications to their available dock-items
+			foreach (var app in Matcher.get_default ().active_launchers ()) {
+				unowned ApplicationDockItem? found = item_for_application (app);
+				if (found != null) {
+					found.App = app;
+					continue;
+				}
+				
+				if (!app.is_user_visible ())
+					continue;
+				
+				transient_items.add (new TransientDockItem.with_application (app));
+			}
+			
+			add_all (transient_items);
+		}
+		
+		void remove_transient_items ()
+		{
+			var transient_items = new Gee.ArrayList<DockElement> ();
+			
+			foreach (var element in internal_elements) {
+				if (element is TransientDockItem)
+					transient_items.add (element);
+			}
+			
+			remove_all (transient_items);
 		}
 		
 		protected override void connect_element (DockElement element)
