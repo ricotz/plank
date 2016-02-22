@@ -5,11 +5,26 @@ Note: There is no stability of ABI/API until further notice!
 0.11.0 "..." (201X-XX-XX)
 ===============================================================================
  * Use non-linear transition in/out of the "zoom" state
- * Add internal docklets support (Clippy, Clock, Desktop, Trash) (LP: #731915)
+ * Add docklets support (Clippy, Clock, Desktop, Trash) (LP: #731915)
  * Use GSettings for dock settings (themes and dockitem files remain at their
    location) (LP: #994007)
  * Consolidate public API (breaks old themes and dockitem files, those are
    transitioned accordingly if possible)
+ * Add "CascadeHide" theme option
+ * Don't grab input and abort this drag if DragItem is null (LP: #1517897)
+ * Add runtime support for gtk+ 3.19.1+ (LP: #1523208)
+ * Show descriptive tooltip for external-dnd actions (LP: #1512998)
+ * Update appdata to 0.6+ format
+ * Hide "Keep in Dock" wile LockItems is enabled (LP: #1530963)
+ * Don't apply window-scale-factor twice on foreground-icon-size
+ * Handle bad LauncherAPI clients which have an insane update-rate
+   (LP: #1514201)
+ * Expose API to handle LauncherEntry DBus clients
+ * Expand dock on external-drag without enabled zoom too (LP: #1007058)
+ * Drop support for gee-1.0, having gee-0.8 is mandatory now
+ * Require glib >= 2.40 and gtk+ >= 3.10
+ * Handle file-monitor moved-event where launcher was target (LP: #1522917)
+ * Add "simple and experimental" multi-dock support
  * Update translations
 
 0.10.1 "Bartonschmeer" (2015-10-09)
