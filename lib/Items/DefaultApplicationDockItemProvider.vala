@@ -104,6 +104,9 @@ namespace Plank
 				return;
 			}
 			
+			if (Prefs.PinnedOnly)
+				return;
+			
 			var new_item = new TransientDockItem.with_application (app);
 			
 			add (new_item);
@@ -249,7 +252,7 @@ namespace Plank
 			if (item is ApplicationDockItem)
 				app = ((ApplicationDockItem) item).App;
 			
-			if (app == null || !app.is_running ()) {
+			if (app == null || !app.is_running () || Prefs.PinnedOnly) {
 				remove (item);
 				return;
 			}
