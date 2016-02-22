@@ -25,6 +25,18 @@ namespace Plank
 	 */
 	public abstract class AbstractMain : Gtk.Application
 	{
+		static GLib.Settings create_settings (string schema_id, string? path = null)
+		{
+			//FIXME Only to make it run/work uninstalled from top_builddir
+			Environment.set_variable ("GSETTINGS_SCHEMA_DIR", Environment.get_current_dir () + "/data", false);
+			
+			var schema = GLib.SettingsSchemaSource.get_default ().lookup (schema_id, true);
+			if (schema == null)
+				error ("GSettingsSchema '%s' not found", schema_id);
+			
+			return new GLib.Settings.full (schema, null, path);
+		}
+		
 		/**
 		 * The default command-line options for the dock.
 		 */
@@ -134,11 +146,13 @@ namespace Plank
 		
 		Gtk.AboutDialog? about_dlg;
 		PreferencesWindow? preferences_dlg;
-		DockController? controller;
+		DockController? primary_dock;
+		Gee.ArrayList<DockController> docks;
 		
 		construct
 		{
 			flags = ApplicationFlags.HANDLES_COMMAND_LINE;
+			docks = new Gee.ArrayList<DockController> ();
 			
 			// set program name
 #if HAVE_SYS_PRCTL_H
@@ -181,10 +195,12 @@ namespace Plank
 			else
 				Logger.DisplayLevel = LogLevel.WARN;
 			
-			if (!options.lookup ("name", "&s", out dock_name))
-				dock_name = "dock1";
-			
-			application_id = "%s.%s".printf (app_dbus, dock_name);
+			if (options.lookup ("name", "&s", out dock_name)) {
+				application_id = "%s.%s".printf (app_dbus, dock_name);
+			} else {
+				dock_name = "";
+				application_id = app_dbus;
+			}
 			
 			return -1;
 		}
@@ -259,7 +275,7 @@ namespace Plank
 			DockletManager.get_default ().load_docklets ();
 			
 			initialize ();
-			create_controller ();
+			create_docks ();
 			create_actions ();
 		}
 		
@@ -271,14 +287,66 @@ namespace Plank
 		}
 		
 		/**
-		 * Creates the dock controller.
+		 * Creates the docks.
 		 */
-		protected virtual void create_controller ()
+		protected virtual void create_docks ()
 		{
-			controller = new DockController (dock_name, Paths.AppConfigFolder.get_child (dock_name));
-			controller.initialize ();
+			if (dock_name != null && dock_name != "") {
+				message ("Running with 1 dock ('%s')", dock_name);
+				add_dock (create_dock (dock_name));
+				return;
+			}
 			
-			add_window (controller.window);
+			var settings = create_settings ("net.launchpad.plank");
+			var enabled_docks = settings.get_strv ("enabled-docks");
+			
+			// Allow up to 8 docks
+			if (enabled_docks.length <= 0) {
+				enabled_docks = { "dock1" };
+				settings.set_strv ("enabled-docks", enabled_docks);
+			} else if (enabled_docks.length > 8) {
+				enabled_docks = enabled_docks[0:8];
+				settings.set_strv ("enabled-docks", enabled_docks);
+			}
+			
+			message ("Running with %i docks ('%s')", enabled_docks.length, string.joinv ("', '", enabled_docks));
+			foreach (unowned string dock_name in enabled_docks)
+				add_dock (create_dock (dock_name));
+		}
+		
+		DockController create_dock (string dock_name)
+		{
+			var config_folder = Paths.AppConfigFolder.get_child (dock_name);
+			// Make sure our config-directory exists
+			Paths.ensure_directory_exists (config_folder);
+			
+			var dock = new DockController (dock_name, config_folder);
+			dock.initialize ();
+			
+			return dock;
+		}
+		
+		void add_dock (DockController dock)
+		{
+			// Make sure to populate our primary-dock field
+			if (primary_dock == null
+				|| (primary_dock.prefs.PinnedOnly && !dock.prefs.PinnedOnly))
+				primary_dock = dock;
+			
+			docks.add (dock);
+			add_window (dock.window);
+		}
+		
+		void remove_dock (DockController dock)
+		{
+			if (docks.size == 1)
+				return;
+			
+			remove_window (dock.window);
+			docks.remove (dock);
+			
+			if (primary_dock == dock)
+				primary_dock = docks[0];
 		}
 		
 		/**
@@ -302,7 +370,7 @@ namespace Plank
 			
 			action = new SimpleAction ("preferences", null);
 			action.activate.connect (() => {
-				show_preferences ();
+				show_preferences (primary_dock);
 			});
 			add_action (action);
 			
@@ -342,7 +410,7 @@ namespace Plank
 			about_dlg = new Gtk.AboutDialog ();
 			about_dlg.window_position = Gtk.WindowPosition.CENTER;
 			about_dlg.gravity = Gdk.Gravity.CENTER;
-			about_dlg.set_transient_for (controller.window);
+			about_dlg.set_transient_for (primary_dock.window);
 			
 			about_dlg.set_program_name (exec_name);
 			about_dlg.set_version ("%s\n%s".printf (build_version, build_version_info));
@@ -379,11 +447,14 @@ namespace Plank
 		
 		/**
 		 * Displays the preferences dialog.
+		 *
+		 * @param controller the dock to show preferences for
 		 */
-		void show_preferences ()
-			requires (controller != null)
+		void show_preferences (DockController controller)
 		{
 			if (preferences_dlg != null) {
+				preferences_dlg.controller = controller;
+				preferences_dlg.set_transient_for (controller.window);
 				preferences_dlg.show ();
 				return;
 			}

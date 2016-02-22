@@ -25,6 +25,12 @@
 
 	<schema id="net.launchpad.plank" path="/net/launchpad/plank/">
 		<child name="docks" schema="net.launchpad.plank.dock.settings"/>
+
+		<key name="enabled-docks" type="as">
+			<default>['dock1']</default>
+			<_summary>Array of names of active/enabled docks</_summary>
+			<_description>Contains the names of docks which are created and loaded on start up</_description>
+		</key>
 	</schema>
 
 	<schema id="net.launchpad.plank.dock.settings" gettext-domain="@GETTEXT_PACKAGE@">

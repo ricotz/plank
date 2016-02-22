@@ -169,6 +169,9 @@ namespace Plank
 				return;
 			}
 			
+			if (!object_path.has_suffix (controller.name))
+				object_path = "%s/%s".printf (object_path, controller.name);
+			
 			// Listen for "Ping" signals coming from clients
 			try {
 				dbus_client_ping_signal_id = connection.signal_subscribe (null, Plank.DBUS_CLIENT_INTERFACE_NAME,

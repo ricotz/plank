@@ -28,6 +28,7 @@ namespace Plank
 	 */
 	public class DockController : DockContainer
 	{
+		public string name { get; construct; }
 		public File config_folder { get; construct; }
 		public File launchers_folder { get; private set; }
 		
@@ -75,9 +76,9 @@ namespace Plank
 			// Make sure our config-directory exists
 			Paths.ensure_directory_exists (config_folder);
 			
-			Logger.verbose ("DockController (config_folder = %s)", config_folder.get_path ());
+			debug ("Create dock '%s' (config_folder = %s)", dock_name, config_folder.get_path ());
 			
-			Object (config_folder : config_folder, prefs : new DockPreferences (dock_name));
+			Object (name : dock_name, config_folder : config_folder, prefs : new DockPreferences (dock_name));
 		}
 		
 		construct
