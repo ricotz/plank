@@ -28,8 +28,6 @@ namespace Plank
 		
 		public File LaunchersDir { get; construct; }
 		
-		bool handles_transients;
-		
 		FileMonitor? items_monitor = null;
 		bool delay_items_monitor_handle = false;
 		Gee.ArrayList<GLib.File> queued_files;
@@ -46,8 +44,6 @@ namespace Plank
 		
 		construct
 		{
-			handles_transients = (this is DefaultApplicationDockItemProvider);
-			
 			queued_files = new Gee.ArrayList<GLib.File> ();
 			
 			// Make sure our launchers-directory exists
@@ -391,7 +387,8 @@ namespace Plank
 				return;
 			}
 			
-			if (handles_transients) {
+			unowned DefaultApplicationDockItemProvider? provider = (this as DefaultApplicationDockItemProvider);
+			if (provider != null && !provider.Prefs.PinnedOnly) {
 				// Find a matching desktop-file and create new TransientDockItem for this LauncherEntry
 				var desktop_file = desktop_file_for_application_uri (app_uri);
 				if (desktop_file != null) {
