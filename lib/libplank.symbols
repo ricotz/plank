@@ -599,6 +599,7 @@ plank_settings_apply
 plank_settings_construct
 plank_settings_construct_with_path
 plank_settings_delay
+plank_settings_get_bind_flags
 plank_settings_get_settings
 plank_settings_get_type
 plank_settings_reset_all

@@ -27,6 +27,9 @@ namespace Plank
 		[CCode (notify = false)]
 		public GLib.Settings settings { get; construct; }
 		
+		[CCode (notify = false)]
+		public GLib.SettingsBindFlags bind_flags { get; construct; default = SettingsBindFlags.DEFAULT; }
+		
 		/**
 		 * {@inheritDoc}
 		 */
@@ -75,7 +78,7 @@ namespace Plank
 				
 				Logger.verbose ("Bind '%s%s' to '%s.%s'", settings.path, nick, class_type_name, name);
 				if (type.is_fundamental () || type.is_enum () || type.is_flags () || type == typeof(string[])) {
-					settings.bind (nick, this, name, SettingsBindFlags.DEFAULT);
+					settings.bind (nick, this, name, bind_flags);
 				} else {
 					warning ("Binding of '%s' from type '%s' not supported yet!", name, type.name ());
 				}
