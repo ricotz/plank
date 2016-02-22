@@ -353,43 +353,6 @@ namespace Plank
 			return AnimationType.DARKEN;
 		}
 		
-		static void combine_strings (ref string[] result, string delimiter, int n, int i)
-		{
-			if (i <= 1)
-				return;
-			
-			int pos = n;
-			for (int j = 0; j < i - 1; j++) {
-				pos += (i - j);
-				result[n + j + 1] = "%s%s%s".printf (result[n + j], delimiter, result[pos]);
-			}
-			
-			combine_strings (ref result, delimiter, n + i, i - 1);
-		}
-		
-		/**
-		 * Generates an array containing all combinations of a splitted string parts
-		 * while preserving the given order of them.
-		 */
-		static string[] split_combine_string (string s, string delimiter = " ")
-		{
-			var parts = s.split (delimiter);
-			var count = parts.length;
-			var result = new string[count * (count + 1) / 2];
-			
-			// Initialize array with the elementary parts
-			int pos = 0;
-			for (int i = 0; i < count; i++) {
-				result[pos] = parts[i];
-				pos += (count - i);
-			}
-			
-			// Recursively filling up the result array
-			combine_strings (ref result, delimiter, 0, count);
-			
-			return result;
-		}
-		
 		string shorten_window_name (string window_name)
 		{
 			const string[] WINDOW_NAME_PATTERN = { "%s - (.+)", "(.+) - %s", "%s – (.+)", "(.+) – %s", "%s: (.+)" };
@@ -397,7 +360,7 @@ namespace Plank
 			
 			string[] app_strings = null;
 			foreach (unowned string d in APP_NAME_DELIMITER) {
-				app_strings = split_combine_string (Text, d);
+				app_strings = string_split_combine (Text, d);
 				if (app_strings.length > 1)
 					break;
 			}
