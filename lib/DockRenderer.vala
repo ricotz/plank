@@ -327,8 +327,8 @@ namespace Plank
 			
 			// Calculate positions for given ordered list of items
 			position_manager.update_draw_values (current_items,
-				(PositionManager.DockItemDrawValueFunc) animate_draw_value_for_item,
-				(PositionManager.DrawValuesFunc) post_process_draw_values);
+				(DrawValueFunc) animate_draw_value_for_item,
+				(DrawValuesFunc) post_process_draw_values);
 			
 			background_rect = position_manager.get_background_region ();
 		}
@@ -541,7 +541,7 @@ namespace Plank
 		}
 		
 		[CCode (instance_pos = -1)]
-		void animate_draw_value_for_item (DockItem item, PositionManager.DockItemDrawValue draw_value)
+		void animate_draw_value_for_item (DockItem item, DockItemDrawValue draw_value)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			unowned DockItem hovered_item = controller.window.HoveredItem;
@@ -705,7 +705,7 @@ namespace Plank
 		}
 		
 		[CCode (instance_pos = -1)]
-		void post_process_draw_values (Gee.HashMap<DockElement, PositionManager.DockItemDrawValue?> draw_values)
+		void post_process_draw_values (Gee.HashMap<DockElement, DockItemDrawValue?> draw_values)
 		{
 			if (dynamic_animation_offset == 0.0)
 				return;
@@ -750,7 +750,7 @@ namespace Plank
 			});
 		}
 		
-		void draw_item (Cairo.Context cr, DockItem item, PositionManager.DockItemDrawValue draw_value, int64 frame_time)
+		void draw_item (Cairo.Context cr, DockItem item, DockItemDrawValue draw_value, int64 frame_time)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			var icon_size = (int) draw_value.icon_size * window_scale_factor;
@@ -821,7 +821,7 @@ namespace Plank
 				draw_indicator_state (cr, draw_value.hover_region, item.Indicator, item.State);
 		}
 		
-		void draw_item_shadow (Cairo.Context cr, DockItem item, PositionManager.DockItemDrawValue draw_value)
+		void draw_item_shadow (Cairo.Context cr, DockItem item, DockItemDrawValue draw_value)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
 			var shadow_size = position_manager.IconShadowSize;

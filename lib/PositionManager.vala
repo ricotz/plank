@@ -24,119 +24,6 @@ namespace Plank
 	 */
 	public class PositionManager : GLib.Object
 	{
-		public struct PointD
-		{
-			public double x;
-			public double y;
-		}
-		
-		/**
-		 * Modify the given DrawItemValue
-		 *
-		 * @param item the dock-item
-		 * @param draw_value the dock-item-drawvalue
-		 */
-		public delegate void DockItemDrawValueFunc (DockItem item, DockItemDrawValue draw_value);
-		
-		/**
-		 * Modify the all DrawItemValue of all dock-items
-		 *
-		 * @param draw_values the map of all current dock-items and their draw-values
-		 */
-		public delegate void DrawValuesFunc (Gee.HashMap<DockElement, DockItemDrawValue> draw_values);
-		
-		/**
-		 * Contains all positions and modifications to draw a dock-item on the dock
-		 */
-		public class DockItemDrawValue
-		{
-			public PointD center;
-			public PointD static_center;
-			public double icon_size;
-			
-			public Gdk.Rectangle hover_region;
-			public Gdk.Rectangle draw_region;
-			public Gdk.Rectangle background_region;
-			
-			public double zoom;
-			public double opacity;
-			
-			public double darken;
-			public double lighten;
-			
-			public bool show_indicator;
-			
-			public void move_in (Gtk.PositionType position, double damount)
-			{
-				var amount = (int) damount;
-				
-				switch (position) {
-				default:
-				case Gtk.PositionType.BOTTOM:
-					center.y -= damount;
-					static_center.y -= damount;
-					hover_region.y -= amount;
-					draw_region.y -= amount;
-					break;
-				case Gtk.PositionType.TOP:
-					center.y += damount;
-					static_center.y += damount;
-					hover_region.y += amount;
-					draw_region.y += amount;
-					break;
-				case Gtk.PositionType.LEFT:
-					center.x += damount;
-					static_center.x += damount;
-					hover_region.x += amount;
-					draw_region.x += amount;
-					break;
-				case Gtk.PositionType.RIGHT:
-					center.x -= damount;
-					static_center.x -= damount;
-					hover_region.x -= amount;
-					draw_region.x -= amount;
-					break;
-				}
-			}
-			
-			public void move_right (Gtk.PositionType position, double damount)
-			{
-				var amount = (int) damount;
-				
-				switch (position) {
-				default:
-				case Gtk.PositionType.BOTTOM:
-					center.x += damount;
-					static_center.x += damount;
-					hover_region.x += amount;
-					draw_region.x += amount;
-					background_region.x += amount;
-					break;
-				case Gtk.PositionType.TOP:
-					center.x += damount;
-					static_center.x += damount;
-					hover_region.x += amount;
-					draw_region.x += amount;
-					background_region.x += amount;
-					break;
-				case Gtk.PositionType.LEFT:
-					center.y += damount;
-					static_center.y += damount;
-					hover_region.y += amount;
-					draw_region.y += amount;
-					background_region.y += amount;
-					break;
-				case Gtk.PositionType.RIGHT:
-					center.y += damount;
-					static_center.y += damount;
-					hover_region.y += amount;
-					draw_region.y += amount;
-					background_region.y += amount;
-					break;
-				}
-			}
-		}
-		
 		public DockController controller { private get; construct; }
 		
 		public bool screen_is_composited { get; private set; }
@@ -808,7 +695,7 @@ namespace Plank
 		 * @param func a function which adjusts the draw-value per item
 		 * @param post_func a function which post-processes all draw-values
 		 */
-		public void update_draw_values (Gee.ArrayList<unowned DockItem> items, DockItemDrawValueFunc? func = null,
+		public void update_draw_values (Gee.ArrayList<unowned DockItem> items, DrawValueFunc? func = null,
 			DrawValuesFunc? post_func = null)
 		{
 			unowned DockPreferences prefs = controller.prefs;
