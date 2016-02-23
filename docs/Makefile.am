@@ -47,6 +47,7 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Items/DockContainer.vala \
 	$(top_srcdir)/lib/Items/DockElement.vala \
 	$(top_srcdir)/lib/Items/DockItem.vala \
+	$(top_srcdir)/lib/Items/DockItemDrawValue.vala \
 	$(top_srcdir)/lib/Items/DockItemProvider.vala \
 	$(top_srcdir)/lib/Items/DockItemPreferences.vala \
 	$(top_srcdir)/lib/Items/Enums.vala \
@@ -56,6 +57,7 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Items/TransientDockItem.vala \
 	$(top_srcdir)/lib/Services/Environment.vala \
 	$(top_srcdir)/lib/Services/Logger.vala \
+	$(top_srcdir)/lib/Services/OffSettings.vala \
 	$(top_srcdir)/lib/Services/Paths.vala \
 	$(top_srcdir)/lib/Services/Preferences.vala \
 	$(top_srcdir)/lib/Services/Settings.vala \
