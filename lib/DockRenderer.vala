@@ -67,6 +67,7 @@ namespace Plank
 		int64 last_hovered_changed = 0LL;
 		
 		bool screen_is_composited = false;
+		bool show_notifications = true;
 		uint reset_position_manager_timer_id = 0U;
 		int window_scale_factor = 1;
 		bool is_first_frame = true;
@@ -245,6 +246,7 @@ namespace Plank
 			unowned PositionManager position_manager = controller.position_manager;
 			
 			screen_is_composited = position_manager.screen_is_composited;
+			show_notifications = OffSettings.get_instance ().ShowNotifications;
 			dynamic_animation_offset = 0.0;
 			
 			var fade_opacity = theme.FadeOpacity;
@@ -384,8 +386,9 @@ namespace Plank
 				cr.paint ();
 				cr.restore ();
 				
-				foreach (unowned DockItem item in current_items)
-					draw_urgent_glow (item, cr, frame_time);
+				if (show_notifications)
+					foreach (unowned DockItem item in current_items)
+						draw_urgent_glow (item, cr, frame_time);
 				
 				return;
 			}
@@ -470,7 +473,7 @@ namespace Plank
 			cr.paint ();
 			
 			// draw urgent-glow if dock is completely hidden
-			if (hide_progress == 1.0) {
+			if (show_notifications && hide_progress == 1.0) {
 				foreach (unowned DockItem item in current_items)
 					draw_urgent_glow (item, cr, frame_time);
 			}
@@ -622,7 +625,7 @@ namespace Plank
 				draw_value.darken += 0.6;
 			
 			// bounce icon on urgent state
-			if (screen_is_composited && (item.State & ItemState.URGENT) != 0) {
+			if (screen_is_composited && show_notifications && (item.State & ItemState.URGENT) != 0) {
 				var urgent_duration = theme.UrgentBounceTime * 1000;
 				var urgent_time = int64.max (0LL, frame_time - item.LastUrgent);
 				if (urgent_time < urgent_duration)
@@ -1109,7 +1112,8 @@ namespace Plank
 				return true;
 			if (render_time - item.LastActive <= theme.ActiveTime * 1000)
 				return true;
-			if (render_time - item.LastUrgent <= (hide_progress == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
+			if (show_notifications
+				&& render_time - item.LastUrgent <= (hide_progress == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
 				return true;
 			if (render_time - item.LastMove <= theme.ItemMoveTime * 1000)
 				return true;
