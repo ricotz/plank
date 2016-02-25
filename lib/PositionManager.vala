@@ -161,7 +161,6 @@ namespace Plank
 			screen_is_composited = screen.is_composited ();
 			
 			update (controller.renderer.theme);
-			update_regions ();
  			
 			thaw_notify ();
 		}
