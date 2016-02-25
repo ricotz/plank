@@ -272,6 +272,8 @@ namespace Plank.Factories
 			if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL)
 				message ("+ RTL support enabled");
 			
+			internal_quarks_initialize ();
+			
 			// Make sure we are not doing silly things like trying to run in a wayland-session!
 			if (!(Gdk.Screen.get_default () is Gdk.X11.Screen)) {
 				critical ("Only X11 environments are supported.");
