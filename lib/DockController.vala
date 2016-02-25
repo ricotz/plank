@@ -318,12 +318,9 @@ namespace Plank
 			update_visible_elements ();
 			update_items ();
 			
-			if (prefs.Alignment != Gtk.Align.FILL
-				&& added.size != removed.size) {
+			if (added.size != removed.size)
 				position_manager.update (renderer.theme);
-			} else {
-				position_manager.update_regions ();
-			}
+			
 			window.update_icon_regions ();
 		}
 		
