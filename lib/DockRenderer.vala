@@ -750,6 +750,26 @@ namespace Plank
 			});
 		}
 		
+		inline Surface get_item_surface (DockItem item, int icon_size)
+		{
+			var private_icon_surface = item.get_surface (icon_size, icon_size, item_buffer);
+			if (!screen_is_composited)
+				return private_icon_surface;
+			
+			// FIXME There is probably a nicer way to accomplish this
+			// Check if the underlying cache returned a marked surface and if needed
+			// request another draw with the currently assumed largest required size
+			string? drawing_status;
+			unowned PositionManager position_manager = controller.position_manager;
+			var max_icon_size = position_manager.ZoomIconSize * window_scale_factor;
+			if (icon_size < max_icon_size
+				&& ((drawing_status = private_icon_surface.steal_qdata<string> (quark_surface_stats)) != null
+				&& drawing_status == SURFACE_STATS_DRAWING_TIME_EXCEEDED))
+				item.get_surface (max_icon_size, max_icon_size, item_buffer);
+			
+			return private_icon_surface;
+		}
+		
 		void draw_item (Cairo.Context cr, DockItem item, DockItemDrawValue draw_value, int64 frame_time)
 		{
 			unowned PositionManager position_manager = controller.position_manager;
@@ -760,7 +780,7 @@ namespace Plank
 #if BENCHMARK
 			var start = new DateTime.now_local ();
 #endif
-			var icon_surface = item.get_surface_copy (icon_size, icon_size, item_buffer);
+			var icon_surface = get_item_surface (item, icon_size).copy ();
 			unowned Cairo.Context icon_cr = icon_surface.Context;
 			
 			Surface? icon_overlay_surface = null;

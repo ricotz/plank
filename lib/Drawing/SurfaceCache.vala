@@ -74,6 +74,7 @@ namespace Plank
 	{
 		const int64 MAX_CACHE_AGE = 5 * 60 * 1000 * 1000;
 		const int64 MIN_DRAWING_TIME = 10 * 1000;
+		const int64 INSANE_DRAWING_TIME = 30 * 1000;
 		const int64 ACCESS_REWARD = 500 * 1000;
 		
 		class SurfaceInfo
@@ -115,7 +116,7 @@ namespace Plank
 			}
 		}
 		
-		public SurfaceCacheFlags flags { get; construct; }
+		public SurfaceCacheFlags flags { get; construct set; }
 		
 		Gee.TreeSet<unowned SurfaceInfo> infos;
 		Gee.HashMap<SurfaceInfo, Surface> cache_map;
@@ -187,6 +188,15 @@ namespace Plank
 			
 			var finish_time = GLib.get_monotonic_time ();
 			var time_elapsed = finish_time - access_time;
+			
+			// FIXME There is probably a nicer way to accomplish this
+			// Mark the created surface if drawing-time exceeded our limit and have
+			// an upper drawing-layer (e.g. DockRenderer) handle it
+			if (time_elapsed >= INSANE_DRAWING_TIME && flags == SurfaceCacheFlags.NONE) {
+				warning ("Creating surface took WAY TOO LONG (%lldms), enabled downscaling for this cache!", time_elapsed / 1000);
+				flags = SurfaceCacheFlags.ALLOW_DOWNSCALE;
+				surface.set_qdata<string> (quark_surface_stats, SURFACE_STATS_DRAWING_TIME_EXCEEDED);
+			}
 			
 			current_info = new SurfaceInfo ((uint16) width, (uint16) height, finish_time, time_elapsed);
 			current_info.access_count++;

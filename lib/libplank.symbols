@@ -609,6 +609,7 @@ plank_surface_cache_get_flags
 plank_surface_cache_get_surface
 plank_surface_cache_get_type
 plank_surface_cache_new
+plank_surface_cache_set_flags
 plank_surface_clear
 plank_surface_construct
 plank_surface_construct_with_cairo_surface

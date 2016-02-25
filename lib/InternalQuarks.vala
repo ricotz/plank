@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2015 Rico Tzschichholz
+//  Copyright (C) 2016 Rico Tzschichholz
 //
 //  This file is part of Plank.
 //
@@ -19,18 +19,12 @@
 
 namespace Plank
 {
-	// Collection of constansts which don't have an user-adjustable setting (yet)
+	const string SURFACE_STATS = "plank-quark-surface-stats";
 	
-	// Duration of animations (in ms)
-	public const uint DOCK_ZOOM_DURATION = 200;
-	public const uint ITEM_HOVER_DURATION = 150;
-	public const uint ITEM_INVALID_DURATION = 3000;
-	public const uint ITEM_SCROLL_DURATION = 300;
+	public static Quark quark_surface_stats;
 	
-	public const uint UNITY_UPDATE_THRESHOLD_DURATION = 32;
-	public const uint UNITY_UPDATE_THRESHOLD_FAST_COUNT = 3;
-	
-	public const string DOCKLET_URI_PREFIX = "docklet://";
-	
-	public const string SURFACE_STATS_DRAWING_TIME_EXCEEDED = "drawing-time-exceeded";
+	public static void internal_quarks_initialize ()
+	{
+		quark_surface_stats = quark_from_static_string (SURFACE_STATS);
+	}
 }
