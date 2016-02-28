@@ -65,7 +65,7 @@ namespace Docky
 			
 			//FIXME Add support for more environments besides GNOME
 			var nautilus_settings = create_settings ("org.gnome.nautilus.preferences", "/org/gnome/nautilus/preferences/");
-			if (nautilus_settings != null)
+			if (nautilus_settings != null && ("confirm-trash" in nautilus_settings.list_keys ()))
 				confirm_trash_delete = nautilus_settings.get_boolean ("confirm-trash");
 		}
 		
