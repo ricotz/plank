@@ -56,8 +56,8 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Items/PlankDockItem.vala \
 	$(top_srcdir)/lib/Items/TransientDockItem.vala \
 	$(top_srcdir)/lib/Services/Environment.vala \
+	$(top_srcdir)/lib/Services/EnvironmentSettings.vala \
 	$(top_srcdir)/lib/Services/Logger.vala \
-	$(top_srcdir)/lib/Services/OffSettings.vala \
 	$(top_srcdir)/lib/Services/Paths.vala \
 	$(top_srcdir)/lib/Services/Preferences.vala \
 	$(top_srcdir)/lib/Services/Settings.vala \

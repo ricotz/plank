@@ -246,7 +246,7 @@ namespace Plank
 			unowned PositionManager position_manager = controller.position_manager;
 			
 			screen_is_composited = position_manager.screen_is_composited;
-			show_notifications = OffSettings.get_instance ().ShowNotifications;
+			show_notifications = EnvironmentSettings.get_instance ().ShowNotifications;
 			dynamic_animation_offset = 0.0;
 			
 			var fade_opacity = theme.FadeOpacity;

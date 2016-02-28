@@ -23,14 +23,14 @@ namespace Plank
 	 * Summons settings of the currently running destop-session to use for improving
 	 * integration like appearance and behaviour
 	 */
-	internal class OffSettings : Object
+	internal class EnvironmentSettings : Object
 	{
-		static OffSettings? instance = null;
+		static EnvironmentSettings? instance = null;
 		
-		public static unowned OffSettings? get_instance ()
+		public static unowned EnvironmentSettings? get_instance ()
 		{
 			if (instance == null)
-				instance = new OffSettings ();
+				instance = new EnvironmentSettings ();
 			
 			return instance;
 		}
@@ -44,7 +44,7 @@ namespace Plank
 		
 		DesktopNofications? notifications;
 		
-		OffSettings ()
+		EnvironmentSettings ()
 		{
 			Object ();
 		}
@@ -69,7 +69,7 @@ namespace Plank
 			}
 		}
 		
-		~OffSettings ()
+		~EnvironmentSettings ()
 		{
 			if (notifications != null)
 				notifications.notify.disconnect (notifications_changed);
