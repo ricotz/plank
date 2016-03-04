@@ -359,7 +359,9 @@ namespace Plank
 			
 			controller.hover.hide ();
 			
-			if (HoveredItem == null || controller.drag_manager.InternalDragActive)
+			if (HoveredItem == null
+				|| !controller.prefs.TooltipsEnabled
+				|| controller.drag_manager.InternalDragActive)
 				return;
 			
 			// don't be that demanding this delay is still fast enough

@@ -87,6 +87,9 @@ namespace Plank
 		[Description(nick = "zoom-percent", blurb = "The dock's icon-zoom (in percent).")]
 		public uint ZoomPercent { get; set; }
 		
+		[Description(nick = "tooltips-enabled", blurb = "Whether to show tooltips when items are hovered.")]
+		public bool TooltipsEnabled { get; set; }
+		
 		/**
 		 * {@inheritDoc}
 		 */
