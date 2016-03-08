@@ -418,7 +418,8 @@ namespace Plank
 		
 		inline bool device_supports_pressure (Gdk.Device device)
 		{
-			return (device.input_source == Gdk.InputSource.MOUSE);
+			return (device.input_source == Gdk.InputSource.MOUSE
+				|| device.input_source == Gdk.InputSource.TOUCHPAD);
 		}
 		
 		//
