@@ -73,8 +73,6 @@ namespace Plank
 		[GtkChild]
 		Gtk.Switch sw_lock_items;
 		[GtkChild]
-		Gtk.Switch sw_auto_pinning;
-		[GtkChild]
 		Gtk.Switch sw_pressure_reveal;
 		[GtkChild]
 		Gtk.Switch sw_show_dock_item;
@@ -125,9 +123,6 @@ namespace Plank
 			switch (prop.name) {
 			case "Alignment":
 				cb_alignment.active_id = ((int) prefs.Alignment).to_string ();
-				break;
-			case "AutoPinning":
-				sw_auto_pinning.set_active (prefs.AutoPinning);
 				break;
 			case "CurrentWorkspaceOnly":
 				sw_workspace_only.set_active (prefs.CurrentWorkspaceOnly);
@@ -270,11 +265,6 @@ namespace Plank
 			prefs.LockItems = ((Gtk.Switch) widget).get_active ();
 		}
 		
-		void auto_pinning_toggled (GLib.Object widget, ParamSpec param)
-		{
-			prefs.AutoPinning = ((Gtk.Switch) widget).get_active ();
-		}
-		
 		void pressure_reveal_toggled (GLib.Object widget, ParamSpec param)
 		{
 			prefs.PressureReveal = ((Gtk.Switch) widget).get_active ();
@@ -344,7 +334,6 @@ namespace Plank
 			sw_workspace_only.notify["active"].connect (workspace_only_toggled);
 			sw_show_unpinned.notify["active"].connect (show_unpinned_toggled);
 			sw_lock_items.notify["active"].connect (lock_items_toggled);
-			sw_auto_pinning.notify["active"].connect (auto_pinning_toggled);
 			sw_pressure_reveal.notify["active"].connect (pressure_reveal_toggled);
 			sw_show_dock_item.notify["active"].connect (show_dock_item_toggled);
 			sw_zoom_enabled.notify["active"].connect (zoom_enabled_toggled);
@@ -370,7 +359,6 @@ namespace Plank
 			sw_workspace_only.notify["active"].disconnect (workspace_only_toggled);
 			sw_show_unpinned.notify["active"].disconnect (show_unpinned_toggled);
 			sw_lock_items.notify["active"].disconnect (lock_items_toggled);
-			sw_auto_pinning.notify["active"].disconnect (auto_pinning_toggled);
 			sw_pressure_reveal.notify["active"].disconnect (pressure_reveal_toggled);
 			sw_show_dock_item.notify["active"].disconnect (show_dock_item_toggled);
 			sw_zoom_enabled.notify["active"].disconnect (zoom_enabled_toggled);
@@ -420,7 +408,6 @@ namespace Plank
 			sw_workspace_only.set_active (prefs.CurrentWorkspaceOnly);
 			sw_show_unpinned.set_active (!prefs.PinnedOnly);
 			sw_lock_items.set_active (prefs.LockItems);
-			sw_auto_pinning.set_active (prefs.AutoPinning);
 			sw_pressure_reveal.set_active (prefs.PressureReveal);
 			sw_show_dock_item.set_active (prefs.ShowDockItem);
 			sw_zoom_enabled.set_active (prefs.ZoomEnabled);
