@@ -108,7 +108,7 @@
 			<_description>If true, use pressure-based revealing of the dock if the input device supports it.</_description>
 		</key>
 		<key name="show-dock-item" type="b">
-			<default>true</default>
+			<default>false</default>
 			<_summary>Show the item for the dock itself</_summary>
 			<_description>If true, show the Plank dock item.</_description>
 		</key>
