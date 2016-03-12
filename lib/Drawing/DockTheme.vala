@@ -121,7 +121,7 @@ namespace Plank.Drawing
 			HorizPadding = 0.0;
 			TopPadding = -11.0;
 			BottomPadding = 2.5;
-			ItemPadding = 2.0;
+			ItemPadding = 2.5;
 			IndicatorSize = 5.0;
 			IconShadowSize = 1.0;
 			UrgentBounceHeight = 5.0 / 3.0;
@@ -139,7 +139,7 @@ namespace Plank.Drawing
 			GlowPulseTime = 2000;
 			UrgentHueShift = 150;
 			ItemMoveTime = 450;
-			CascadeHide = false;
+			CascadeHide = true;
 		}
 		
 		/**
