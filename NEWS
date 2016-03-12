@@ -2,7 +2,7 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
-0.11.0 "..." (201X-XX-XX)
+0.11.0 "Eddy" (2016-03-12)
 ===============================================================================
  * Use non-linear transition in/out of the "zoom" state
  * Add docklets support (Clippy, Clock, Desktop, Trash) (LP: #731915)
