@@ -3,9 +3,8 @@ What Is Plank?
 Plank is meant to be the simplest dock on the planet. The goal is to provide
 just what a dock needs and absolutely nothing more. It is, however, a library
 which can be extended to create other dock programs with more advanced features.
-Thus, Plank is the underlying technology for Docky (starting in version 3.0.0)
-and aims to provide all the core features while Docky extends it to add fancier
-things like Docklets, painters, settings dialogs, etc.
+
+(Codenames for releases are currently based on characters of "Ed, Edd n Eddy".)
 
 
 Reporting Bugs
@@ -29,4 +28,17 @@ Visit the Launchpad page: https://launchpad.net/plank
 Help translate: https://translations.launchpad.net/plank
 Answer questions: https://answers.launchpad.net/plank
 
+
+Are there online API documentations?
+
+http://people.ubuntu.com/~ricotz/docs/vala-doc/plank/index.htm
+
+
+Need more information about Vala?
+
+https://wiki.gnome.org/Projects/Vala
+https://wiki.gnome.org/Projects/Vala/Manual
+
+
 Refer to the HACKING file for further instructions.
+
