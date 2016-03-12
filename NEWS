@@ -25,6 +25,12 @@ Note: There is no stability of ABI/API until further notice!
  * Require glib >= 2.40 and gtk+ >= 3.10
  * Handle file-monitor moved-event where launcher was target (LP: #1522917)
  * Add "simple and experimental" multi-dock support
+ * Follow environment's setting whether to show notifications (LP: #1523266)
+ * Force SurfaceCache to allow downscale if drawing-time is insanely high
+   (LP: #1502429)
+ * Add TooltipsEnabled setting (LP: #1553246)
+ * TOUCHPAD devices are able to perform pressure on a barrier too
+ * Some tweaking of the default themes
  * Update translations
 
 0.10.1 "Bartonschmeer" (2015-10-09)
