@@ -64,6 +64,7 @@ namespace Plank
 		public signal void docklet_added (Docklet docklet);
 		
 		Gee.HashMap<string, Docklet> docklets;
+		Regex docklet_filename_regex;
 		
 		DockletManager ()
 		{
@@ -72,6 +73,7 @@ namespace Plank
 		
 		construct
 		{
+			docklet_filename_regex = new Regex ("^libdocklet-.+.so$");
 			docklets = new Gee.HashMap<string, Docklet> ();
 		}
 		
@@ -166,8 +168,10 @@ namespace Plank
 				FileInfo info;
 				
 				while ((info = enumerator.next_file ()) != null) {
-					var file = dir.get_child (info.get_name ());
-					if (info.get_content_type () == "application/x-sharedlib")
+					unowned string name = info.get_name ();
+					var file = dir.get_child (name);
+					if (info.get_content_type () == "application/x-sharedlib"
+						&& docklet_filename_regex.match (name))
 						load_module_from_file (file.get_path ());
 					else if (info.get_file_type () == FileType.DIRECTORY)
 						load_modules_from_dir (file);
