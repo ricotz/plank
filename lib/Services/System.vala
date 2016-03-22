@@ -193,7 +193,7 @@ namespace Plank
 					return;
 				}
 				
-				info = new DesktopAppInfo.from_keyfile (keyfile);
+				info = new DesktopAppInfo.from_filename (launcher);
 			} else {
 				try {
 					info = files.first ().data.query_default_handler ();
