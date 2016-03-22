@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-02-21 09:20+0000\n"
-"PO-Revision-Date: 2016-02-17 00:37+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2016-03-12 18:54+0000\n"
+"PO-Revision-Date: 2016-03-14 20:39+0000\n"
+"Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-02-22 05:40+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-03-15 05:43+0000\n"
+"X-Generator: Launchpad (build 17939)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -26,6 +26,8 @@ msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"Plank yra skirtas būti pačiu paprasčiausiu doku planetoje. Jo tikslas yra "
+"pateikti tai kas reikalinga dokui ir visiškai nieko daugiau."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -35,54 +37,59 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"Kita vertus, jis yra biblioteka, kuri gali būti išplėsta, siekiant sukurti "
+"kitas doko programas su labiau išplėstinėmis ypatybėmis. Štai kodėl Plank "
+"yra esminė Docky (pradedant versijoje 3.0.0) technologija ir siekia pateikti "
+"visas pagrindines ypatybes, tuo tarpu kai Docky išplečia jį ir prideda "
+"tokius dalykus kaip įskiepiai, nustatymų dialogai ir t.t."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "Tema:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "Vieta:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "Kairėje"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "Dešinėje"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "Viršuje"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "Apačioje"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "Lygiavimas:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "Užpildyti"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "Pradžioje"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "Pabaigoje"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "Centre"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "Pirminiame ekrane:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
@@ -90,27 +97,27 @@ msgstr "Poslinkis procentais nuo ekrano krašto vidurio"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Piktogramų Lygiavimas:"
+msgstr "Piktogramų lygiavimas:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "Piktogramų dydis:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr ""
+msgstr "Piktogramų mastelis:"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
-msgstr ""
+msgstr "Išvaizda"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr ""
+msgstr "Išmanusis slėpimas"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr ""
+msgstr "Automatiškai slėpti"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
@@ -118,73 +125,65 @@ msgstr "Vengti atkurto lango"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr ""
+msgstr "Vengti langų"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr ""
+msgstr "Vengti aktyvaus lango"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr ""
+msgstr "Slėpti doką"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr ""
+msgstr "Slėpimo delsa:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgstr "Delsa milisekundėmis, prieš slepiant doką"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "Parodymo delsa:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "Delsa milisekundėmis, prieš rodant doką"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr ""
+msgstr "Parodyti po spaudimo:"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
-msgstr ""
+msgstr "Elementų tvarkymas"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr "Rodyti Neprisegtus:"
+msgstr "Rodyti neprisegtus:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr ""
+msgstr "Apriboti darbo sritimi:"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr "Užrakinti Piktogramas:"
+msgstr "Užrakinti piktogramas:"
 
 #: ../data/ui/preferences.ui.h:33
-msgid "Automatic Pinning:"
-msgstr "Automatinis Prisegimas:"
+msgid "Behaviour"
+msgstr "Elgsena"
 
 #: ../data/ui/preferences.ui.h:34
-msgid "Show Item for Dock:"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:35
-msgid "Behaviour"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:36
 msgid "Docklets"
-msgstr ""
+msgstr "Įskiepiai"
 
 #: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
-msgstr "Paleiskie, kad įdėti į skydelį"
+msgstr "Paleiskite, kad įdėtumėte į skydelį"
 
-#: ../lib/Factories/AbstractMain.vala:365 ../src/Main.vala:75
+#: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -192,27 +191,27 @@ msgstr ""
 "  Moo https://launchpad.net/~mooo\n"
 "  Rico Tzschichholz https://launchpad.net/~ricotz"
 
-#: ../lib/Items/ApplicationDockItem.vala:446
+#: ../lib/Items/ApplicationDockItem.vala:409
 #: ../lib/Items/FileDockItem.vala:314 ../lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
 msgstr "_Laikyti skydelyje"
 
-#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/ApplicationDockItem.vala:417
 msgid "_Close All"
 msgstr "_Užverti visus"
 
-#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/ApplicationDockItem.vala:417
 msgid "_Close"
 msgstr "_Užverti"
 
-#: ../lib/Items/ApplicationDockItem.vala:526
+#: ../lib/Items/ApplicationDockItem.vala:489
 #, c-format
 msgid "Drop to open with %s"
-msgstr "Paleisti kad atverti su %s"
+msgstr "Numeskite, kad atvertumėte su %s"
 
 #: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
-msgstr "Atverti _Failų naršyklėje"
+msgstr "Atverti _failų naršyklėje"
 
 #: ../lib/Items/FileDockItem.vala:342
 msgid "_Open"
@@ -224,7 +223,7 @@ msgstr "Atverti failo ap_lanką"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr ""
+msgstr "Numeskite programas ar failus čia"
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
@@ -234,6 +233,6 @@ msgstr "_Pagalba internete..."
 msgid "_Translate This Application..."
 msgstr "_Versti šią programą..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:94
+#: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
-msgstr "Nustatymai"
+msgstr "Nuostatos"
