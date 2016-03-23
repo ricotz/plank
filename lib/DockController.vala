@@ -322,6 +322,12 @@ namespace Plank
 				position_manager.update (renderer.theme);
 			
 			window.update_icon_regions ();
+			
+			// FIXME Maybe add a dedicated signal
+			if (container != this) {
+				var empty = new Gee.ArrayList<DockElement> ();
+				elements_changed (empty, empty);
+			}
 		}
 		
 		void handle_positions_changed (DockContainer container, Gee.List<unowned DockElement> moved_items)
