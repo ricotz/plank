@@ -14,6 +14,7 @@ namespace Bamf {
 		public bool get_show_menu_stubs ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_supported_mime_types ();
+		public unowned Bamf.Window get_window_for_xid (uint32 xid);
 		public GLib.List<weak Bamf.Window> get_windows ();
 		public GLib.Array<uint32> get_xids ();
 		public signal void desktop_file_updated (string object);
@@ -44,6 +45,7 @@ namespace Bamf {
 		public static Bamf.Matcher get_default ();
 		public GLib.List<weak Bamf.Application> get_running_applications ();
 		public GLib.List<weak Bamf.Tab> get_tabs ();
+		public unowned Bamf.Window get_window_for_xid (uint32 xid);
 		public GLib.List<weak Bamf.Window> get_window_stack_for_monitor (int monitor);
 		public GLib.List<weak Bamf.Window> get_windows ();
 		public GLib.Array<uint32> get_xids_for_application (string desktop_file);
@@ -64,7 +66,7 @@ namespace Bamf {
 		public virtual unowned string get_location ();
 		public virtual uint64 get_xid ();
 		public bool raise ();
-		public void request_preview ([CCode (scope = "async")] owned Bamf.TabPreviewReadyCallback callback);
+		public void request_preview ([CCode (scope = "async")] Bamf.TabPreviewReadyCallback callback);
 		[NoAccessorMethod]
 		public string desktop_id { owned get; }
 		public bool is_foreground_tab { get; }
@@ -83,15 +85,18 @@ namespace Bamf {
 		public virtual string get_name ();
 		[CCode (vfunc_name = "view_type")]
 		public virtual unowned string get_view_type ();
+		public bool has_child (Bamf.View child);
 		public virtual bool is_active ();
 		public bool is_closed ();
 		public virtual bool is_running ();
+		public virtual bool is_starting ();
 		public bool is_sticky ();
 		public virtual bool is_urgent ();
 #if !HAVE_BAMF_0_4
 		[CCode (cname = "bamf_view_user_visible")]
 #endif
 		public virtual bool is_user_visible ();
+		public unowned GLib.List<Bamf.View> peek_children ();
 		[NoWrapper]
 		public virtual void set_path (string path);
 		public virtual void set_sticky (bool value);
@@ -101,6 +106,8 @@ namespace Bamf {
 		public string path { owned get; }
 		[NoAccessorMethod]
 		public bool running { get; }
+		[NoAccessorMethod]
+		public bool starting { get; }
 		[NoAccessorMethod]
 		public bool urgent { get; }
 		[NoAccessorMethod]
@@ -113,6 +120,7 @@ namespace Bamf {
 		public virtual signal void icon_changed (string icon);
 		public virtual signal void name_changed (string old_name, string new_name);
 		public virtual signal void running_changed (bool running);
+		public virtual signal void starting_changed (bool starting);
 		public virtual signal void urgent_changed (bool urgent);
 		public virtual signal void user_visible_changed (bool user_visible);
 	}
