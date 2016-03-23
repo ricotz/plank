@@ -2,6 +2,24 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.10.2 "Bartonschmeer" (2016-03-23)
+===============================================================================
+ * Use non-linear transition in/out of the "zoom" state
+ * Add "CascadeHide" theme option
+ * Don't grab input and abort this drag if DragItem is null (LP: #1517897)
+ * Update appdata to 0.6+ format
+ * Hide "Keep in Dock" wile LockItems is enabled (LP: #1530963)
+ * Don't apply window-scale-factor twice on foreground-icon-size
+ * Handle bad LauncherAPI clients which have an insane update-rate
+   (LP: #1514201)
+ * Expand dock on external-drag without enabled zoom too (LP: #1007058)
+ * Handle file-monitor moved-event where launcher was target (LP: #1522917)
+ * Force SurfaceCache to allow downscale if drawing-time is insanely high
+   (LP: #1502429)
+ * TOUCHPAD devices are able to perform pressure on a barrier too
+ * Some tweaking of the default themes
+ * Update translations
+
 0.10.1 "Bartonschmeer" (2015-10-09)
 ===============================================================================
  * Require valac >= 0.24.0 as actually needed

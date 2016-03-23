@@ -20,10 +20,11 @@
   <url type="bugtracker">https://bugs.launchpad.net/plank</url>
   <url type="faq">https://answers.launchpad.net/plank</url>
   <provides>
-    <library>libplank.so.1</library>
+    <library>libplank.so.0</library>
     <binary>plank</binary>
   </provides>
   <releases>
+    <release version="0.10.2" timestamp="1458730800"/>
     <release version="0.10.1" timestamp="1444388400"/>
     <release version="0.10.0" timestamp="1441623600"/>
     <release version="0.9.1" timestamp="1430564400"/>
