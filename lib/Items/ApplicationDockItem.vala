@@ -234,12 +234,14 @@ namespace Plank
 		
 		void handle_running_changed (bool is_running)
 		{
-			if (is_running) {
-				app_window_added ();
+			if (!is_running) {
+				reset_application_status ();
 				return;
 			}
 			
-			reset_application_status ();
+			update_indicator ();
+			
+			app_window_added ();
 		}
 		
 		public void set_urgent (bool is_urgent)
