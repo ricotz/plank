@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-02-21 09:20+0000\n"
-"PO-Revision-Date: 2016-02-17 00:36+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2016-03-25 09:13+0000\n"
+"PO-Revision-Date: 2016-03-25 12:55+0000\n"
+"Last-Translator: colindemian <dengmengpc@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-02-22 05:40+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-03-26 05:26+0000\n"
+"X-Generator: Launchpad (build 17967)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -100,7 +100,7 @@ msgstr "图标尺寸："
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr ""
+msgstr "图标缩放："
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
@@ -116,15 +116,15 @@ msgstr "自动隐藏"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr "最大化窗口时避开"
+msgstr "避开最大化窗口"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr "窗口闪避"
+msgstr "避开任何窗口"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr ""
+msgstr "避开活动窗口"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
@@ -132,23 +132,23 @@ msgstr "影藏Dock"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr ""
+msgstr "隐藏延迟："
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgstr "以上毫秒后隐藏dock"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "显示延迟："
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "以上毫秒后显示dock"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr ""
+msgstr "压力显示："
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
@@ -167,18 +167,10 @@ msgid "Lock Icons:"
 msgstr "锁定图标："
 
 #: ../data/ui/preferences.ui.h:33
-msgid "Automatic Pinning:"
-msgstr "自动加入收藏："
-
-#: ../data/ui/preferences.ui.h:34
-msgid "Show Item for Dock:"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:35
 msgid "Behaviour"
 msgstr "行为"
 
-#: ../data/ui/preferences.ui.h:36
+#: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
 msgstr "小部件"
 
@@ -186,7 +178,7 @@ msgstr "小部件"
 msgid "Drop to add to dock"
 msgstr "拖动添加到 dock 上"
 
-#: ../lib/Factories/AbstractMain.vala:365 ../src/Main.vala:75
+#: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -197,20 +189,20 @@ msgstr ""
 "  colindemian https://launchpad.net/~colindemian\n"
 "  maomao https://launchpad.net/~fsfjzby"
 
-#: ../lib/Items/ApplicationDockItem.vala:446
+#: ../lib/Items/ApplicationDockItem.vala:411
 #: ../lib/Items/FileDockItem.vala:314 ../lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
 msgstr "固定在 Dock 上(_K)"
 
-#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/ApplicationDockItem.vala:419
 msgid "_Close All"
 msgstr "全部关闭(_C)"
 
-#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/ApplicationDockItem.vala:419
 msgid "_Close"
 msgstr "关闭(_C)"
 
-#: ../lib/Items/ApplicationDockItem.vala:526
+#: ../lib/Items/ApplicationDockItem.vala:491
 #, c-format
 msgid "Drop to open with %s"
 msgstr "拖放以用 %s 打开"
@@ -239,6 +231,6 @@ msgstr "获得在线帮助(_H)..."
 msgid "_Translate This Application..."
 msgstr "翻译该应用程序(_T)..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:94
+#: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
 msgstr "首选项"
