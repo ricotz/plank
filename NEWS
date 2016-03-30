@@ -2,6 +2,14 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.11.1 "Eddy" (2016-03-30)
+===============================================================================
+ * ApplicationDockItem: Use child-* signals of Bamf.View and force
+   indicator-update if running-state changed
+ * Actually emit DockController.elements_changed() to make DBusClient work
+ * DockletManager: Only handle properly named docklet-libraries
+ * Update translations
+
 0.11.0 "Eddy" (2016-03-12)
 ===============================================================================
  * Use non-linear transition in/out of the "zoom" state
