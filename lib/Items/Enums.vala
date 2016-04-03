@@ -135,4 +135,26 @@ namespace Plank
 			}
 		}
 	}
+	/**
+	 * The style of the item indicator.
+	 */
+	public enum ItemIndicatorStyle
+	{
+		/**
+		 * A glowing circle with the default color.
+		 */
+		CIRCLE_GLOW,
+		/**
+		 * A glowing circle with a theme-defined color.
+		 */
+		CIRCLE_COLOR_GLOW,
+		/**
+		 * A filled circle with a theme-defined color.
+		 */
+		CIRCLE,
+		/**
+		 * A line under the icon.
+		 */
+		UNDERLINE
+	}
 }

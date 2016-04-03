@@ -14,3 +14,8 @@ transparentthemedir = $(pkgdatadir)/themes/Transparent
 dist_transparenttheme_DATA = \
 	Transparent/dock.theme \
 	$(NULL)
+
+glowlessthemedir = $(pkgdatadir)/themes/Glowless
+dist_glowlesstheme_DATA = \
+	Glowless/dock.theme \
+	$(NULL)

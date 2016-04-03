@@ -962,15 +962,15 @@ namespace Plank
 				break;
 			}
 			
-			if (indicator == IndicatorState.SINGLE) {
+			if (indicator == IndicatorState.SINGLE || theme.IndicatorStyle == ItemIndicatorStyle.UNDERLINE) {
 				cr.set_source_surface (indicator_surface.Internal, x, y);
 				cr.paint ();
 			} else {
 				var x_offset = 0.0, y_offset = 0.0;
 				if (position_manager.is_horizontal_dock ())
-					x_offset = position_manager.IconSize / 16.0;
+					x_offset = position_manager.IndicatorSize * 0.15;
 				else
-					y_offset = position_manager.IconSize / 16.0;
+					y_offset = position_manager.IndicatorSize * 0.15;
 				
 				cr.set_source_surface (indicator_surface.Internal, x - x_offset, y - y_offset);
 				cr.paint ();
