@@ -44,7 +44,7 @@ namespace Plank
 		public double IndicatorSize { get; set; }
 		
 		[Description(nick = "indicator-style", blurb = "The style of item indicators, styles: circle-glow, circle-color-glow, circle, underline.")]
-		public ItemIndicatorStyle IndicatorStyle { get; set; default = ItemIndicatorStyle.CIRCLE_GLOW; }
+		public IndicatorStyleType IndicatorStyle { get; set; }
 		
 		[Description(nick = "icon-shadow-size", blurb = "The size of the icon-shadow behind every item, in tenths of a percent of IconSize.")]
 		public double IconShadowSize { get; set; }
@@ -127,7 +127,7 @@ namespace Plank
 			BottomPadding = 2.5;
 			ItemPadding = 2.5;
 			IndicatorSize = 5.0;
-			IndicatorStyle = ItemIndicatorStyle.CIRCLE_GLOW;
+			IndicatorStyle = IndicatorStyleType.LEGACY;
 			IconShadowSize = 1.0;
 			UrgentBounceHeight = 5.0 / 3.0;
 			LaunchBounceHeight = 0.625;
@@ -219,80 +219,72 @@ namespace Plank
 		/**
 		 * Creates a surface for an indicator.
 		 *
-		 * @param size the size of the indicator
+		 * @param width the width of the indicator
+		 * @param height the height of the indicator
 		 * @param color the color of the indicator
+		 * @param position the position of the dock
 		 * @param model existing surface to use as basis of new surface
 		 * @return a new surface with the indicator drawn on it
 		 */
-		public Surface create_indicator (int size, Color color, Surface model)
+		public Surface create_indicator (int width, int height, Color color, Gtk.PositionType position, Surface model)
 		{
-			Logger.verbose ("DockTheme.create_indicator (size = %i)", size);
+			// Force square if needed which eases the placement in renderer
+			switch (IndicatorStyle) {
+			case IndicatorStyleType.LINE:
+				if (position == Gtk.PositionType.LEFT
+					|| position == Gtk.PositionType.RIGHT) {
+					var tmp = width;
+					width = height;
+					height = tmp;
+				}
+				break;
+			default:
+				width = height;
+				break;
+			}
 			
-			var surface = new Surface.with_surface (size, size, model);
+			Logger.verbose ("DockTheme.create_indicator (width = %i, height = %i)", width, height);
+			
+			var surface = new Surface.with_surface (width, height, model);
 			surface.clear ();
 			
-			if (size <= 0)
+			if (width <= 0 || height <= 0)
 				return surface;
 			
 			unowned Cairo.Context cr = surface.Context;
 			
 			switch (IndicatorStyle) {
-				case ItemIndicatorStyle.CIRCLE_GLOW:
-					var x = size / 2;
-					var y = x;
-					
-					cr.move_to (x, y);
-					cr.arc (x, y, size / 2, 0, Math.PI * 2);
-					cr.close_path ();
-					
-					var rg = new Cairo.Pattern.radial (x, y, 0, x, y, size / 2);
-					rg.add_color_stop_rgba (0, 1, 1, 1, 1);
-					rg.add_color_stop_rgba (0.1, color.red, color.green, color.blue, 1);
-					rg.add_color_stop_rgba (0.2, color.red, color.green, color.blue, 0.6);
-					rg.add_color_stop_rgba (0.25, color.red, color.green, color.blue, 0.25);
-					rg.add_color_stop_rgba (0.5, color.red, color.green, color.blue, 0.15);
-					rg.add_color_stop_rgba (1.0, color.red, color.green, color.blue, 0.0);
-					
-					cr.set_source (rg);
-					break;
-				case ItemIndicatorStyle.CIRCLE_COLOR_GLOW:
-					var x = size / 2;
-					var y = x;
-					
-					cr.move_to (x, y);
-					cr.arc (x, y, size / 2, 0, Math.PI * 2);
-					cr.close_path ();
-					
-					var rg = new Cairo.Pattern.radial (x, y, 0, x, y, size / 2);
-					rg.add_color_stop_rgba (0, IndicatorColor.red, IndicatorColor.green, IndicatorColor.blue, 1 * IndicatorColor.alpha);
-					rg.add_color_stop_rgba (0.1, IndicatorColor.red, IndicatorColor.green, IndicatorColor.blue, 0.8 * IndicatorColor.alpha);
-					rg.add_color_stop_rgba (0.2, IndicatorColor.red, IndicatorColor.green, IndicatorColor.blue, 0.6 * IndicatorColor.alpha);
-					rg.add_color_stop_rgba (0.25, IndicatorColor.red, IndicatorColor.green, IndicatorColor.blue, 0.25 * IndicatorColor.alpha);
-					rg.add_color_stop_rgba (0.5, IndicatorColor.red, IndicatorColor.green, IndicatorColor.blue, 0.15 * IndicatorColor.alpha);
-					rg.add_color_stop_rgba (1.0, IndicatorColor.red, IndicatorColor.green, IndicatorColor.blue, 0.0 * IndicatorColor.alpha);
-					
-					cr.set_source (rg);
-					break;
-				case ItemIndicatorStyle.CIRCLE:
-					var x = size / 2.0;
-					var y = size / 2.5;
-					
-					cr.move_to (x, y);
-					cr.arc (x, y, size / 10.0, 0, Math.PI * 2);
-					cr.close_path ();
-					cr.set_source_rgba (IndicatorColor.red, IndicatorColor.green, IndicatorColor.blue, IndicatorColor.alpha);
-					break;
-				case ItemIndicatorStyle.UNDERLINE:
-					var x = 0;
-					var y = size / 2;
-					
-					cr.move_to (x, y);
-					cr.rel_line_to (size, 0);
-					cr.rel_line_to (0, size / 8);
-					cr.rel_line_to (-size, 0);
-					cr.rel_line_to (0, -size / 8);
-					cr.set_source_rgba (IndicatorColor.red, IndicatorColor.green, IndicatorColor.blue, IndicatorColor.alpha);
-					break;
+			default:
+			case IndicatorStyleType.LEGACY:
+			case IndicatorStyleType.GLOW:
+				var x = height / 2;
+				var y = x;
+				
+				cr.move_to (x, y);
+				cr.arc (x, y, height / 2, 0, Math.PI * 2);
+				cr.close_path ();
+				
+				var rg = new Cairo.Pattern.radial (x, y, 0, x, y, height / 2);
+				rg.add_color_stop_rgba (0, 1, 1, 1, 1);
+				rg.add_color_stop_rgba (0.1, color.red, color.green, color.blue, 1);
+				rg.add_color_stop_rgba (0.2, color.red, color.green, color.blue, 0.6);
+				rg.add_color_stop_rgba (0.25, color.red, color.green, color.blue, 0.25);
+				rg.add_color_stop_rgba (0.5, color.red, color.green, color.blue, 0.15);
+				rg.add_color_stop_rgba (1.0, color.red, color.green, color.blue, 0.0);
+				
+				cr.set_source (rg);
+				break;
+			case IndicatorStyleType.CIRCLE:
+				var x = height / 2, y = x;
+				cr.move_to (x, y);
+				cr.arc (x, y, height / 2, 0, Math.PI * 2);
+				cr.close_path ();
+				cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
+				break;
+			case IndicatorStyleType.LINE:
+				cr.rectangle (0, 0, width, height);
+				cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
+				break;
 			}
 			
 			cr.fill ();
@@ -410,7 +402,7 @@ namespace Plank
 				gradient.add_color_stop_rgba (1, color.red, color.green, color.blue, 0.6 * opacity);
 				cr.set_source (gradient);
 			} else {
-				cr.set_source_rgba(ActiveItemColor.red, ActiveItemColor.green, ActiveItemColor.blue, ActiveItemColor.alpha);
+				cr.set_source_rgba (color.red, color.green, color.blue, color.alpha * opacity);
 			}
 			
 			cr.fill ();
@@ -638,7 +630,7 @@ namespace Plank
 			
 			case "IndicatorStyle":
 				if (IndicatorStyle < 0 || IndicatorStyle > 3)
-					IndicatorStyle = IndicatorStyle.CIRCLE_GLOW;
+					IndicatorStyle = IndicatorStyleType.LEGACY;
 				break;
 			
 			case "UrgentBounceHeight":

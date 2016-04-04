@@ -55,6 +55,7 @@ plank_doc_files = \
 	$(top_srcdir)/lib/Drawing/DrawingService.vala \
 	$(top_srcdir)/lib/Drawing/DockTheme.vala \
 	$(top_srcdir)/lib/Drawing/Easing.vala \
+	$(top_srcdir)/lib/Drawing/Enums.vala \
 	$(top_srcdir)/lib/Drawing/Renderer.vala \
 	$(top_srcdir)/lib/Drawing/Surface.vala \
 	$(top_srcdir)/lib/Drawing/SurfaceCache.vala \

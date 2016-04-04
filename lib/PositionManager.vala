@@ -357,12 +357,12 @@ namespace Plank
 			var scaled_icon_size = IconSize / 10.0;
 			
 			IconShadowSize = (int) Math.ceil (theme.IconShadowSize * scaled_icon_size);
-			IndicatorSize    = (int) (theme.IndicatorSize    * scaled_icon_size);
-			GlowSize         = (int) (theme.GlowSize         * scaled_icon_size);
-			HorizPadding     = (int) (theme.HorizPadding     * scaled_icon_size);
-			TopPadding       = (int) (theme.TopPadding       * scaled_icon_size);
-			BottomPadding    = (int) (theme.BottomPadding    * scaled_icon_size);
-			ItemPadding      = (int) (theme.ItemPadding      * scaled_icon_size);
+			IndicatorSize = (int) (theme.IndicatorSize * scaled_icon_size);
+			GlowSize      = (int) (theme.GlowSize      * scaled_icon_size);
+			HorizPadding  = (int) (theme.HorizPadding  * scaled_icon_size);
+			TopPadding    = (int) (theme.TopPadding    * scaled_icon_size);
+			BottomPadding = (int) (theme.BottomPadding * scaled_icon_size);
+			ItemPadding   = (int) (theme.ItemPadding   * scaled_icon_size);
 			UrgentBounceHeight = (int) (theme.UrgentBounceHeight * IconSize);
 			LaunchBounceHeight = (int) (theme.LaunchBounceHeight * IconSize);
 			LineWidth     = theme.LineWidth;
