@@ -491,9 +491,9 @@ namespace PlankTests
 		docktheme = new DockTheme ("Test");
 		Color color = { 0.5, 0.4, 0.3, 1.0 };
 		
-		surface2 = docktheme.create_indicator (-1, -1, color, Gtk.PositionType.BOTTOM, surface);
-		surface2 = docktheme.create_indicator (64, 64, color, Gtk.PositionType.RIGHT, surface);
-		surface2 = docktheme.create_indicator (512, 512, color, Gtk.PositionType.TOP, surface);
+		surface2 = docktheme.create_indicator (-1, color, surface);
+		surface2 = docktheme.create_indicator (64, color, surface);
+		surface2 = docktheme.create_indicator (512, color, surface);
 	}
 	
 	void drawing_theme_create_urgent_glow ()

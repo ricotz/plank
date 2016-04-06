@@ -219,29 +219,61 @@ namespace Plank
 		/**
 		 * Creates a surface for an indicator.
 		 *
-		 * @param width the width of the indicator
-		 * @param height the height of the indicator
+		 * @param size the size of the indicator
+		 * @param color the color of the indicator
+		 * @param model existing surface to use as basis of new surface
+		 * @return a new surface with the indicator drawn on it
+		 */
+		public Surface create_indicator (int size, Color color, Surface model)
+		{
+			Logger.verbose ("DockTheme.create_indicator (size = %i)", size);
+			
+			var surface = new Surface.with_surface (size, size, model);
+			surface.clear ();
+			
+			if (size <= 0)
+				return surface;
+			
+			unowned Cairo.Context cr = surface.Context;
+			
+			var x = size / 2;
+			var y = x;
+			
+			cr.move_to (x, y);
+			cr.arc (x, y, size / 2, 0, Math.PI * 2);
+			cr.close_path ();
+			
+			var rg = new Cairo.Pattern.radial (x, y, 0, x, y, size / 2);
+			rg.add_color_stop_rgba (0, 1, 1, 1, 1);
+			rg.add_color_stop_rgba (0.1, color.red, color.green, color.blue, 1);
+			rg.add_color_stop_rgba (0.2, color.red, color.green, color.blue, 0.6);
+			rg.add_color_stop_rgba (0.25, color.red, color.green, color.blue, 0.25);
+			rg.add_color_stop_rgba (0.5, color.red, color.green, color.blue, 0.15);
+			rg.add_color_stop_rgba (1.0, color.red, color.green, color.blue, 0.0);
+			
+			cr.set_source (rg);
+			cr.fill ();
+			
+			return surface;
+		}
+		
+		/**
+		 * Creates a surface for an indicator.
+		 *
+		 * @param indicator_state the state of indicator
+		 * @param item_state the state of item
+		 * @param icon_size the size of icons
 		 * @param color the color of the indicator
 		 * @param position the position of the dock
 		 * @param model existing surface to use as basis of new surface
 		 * @return a new surface with the indicator drawn on it
 		 */
-		public Surface create_indicator (int width, int height, Color color, Gtk.PositionType position, Surface model)
+		public Surface create_indicator_for_state (IndicatorState indicator_state, ItemState item_state, int icon_size,
+			Gtk.PositionType position, Surface model)
 		{
-			// Force square if needed which eases the placement in renderer
-			switch (IndicatorStyle) {
-			case IndicatorStyleType.LINE:
-				if (position == Gtk.PositionType.LEFT
-					|| position == Gtk.PositionType.RIGHT) {
-					var tmp = width;
-					width = height;
-					height = tmp;
-				}
-				break;
-			default:
-				width = height;
-				break;
-			}
+			var width = icon_size;
+			var height = width / 3 + get_bottom_offset ();
+			var size = (int) (IndicatorSize * icon_size / 10.0);
 			
 			Logger.verbose ("DockTheme.create_indicator (width = %i, height = %i)", width, height);
 			
@@ -251,20 +283,37 @@ namespace Plank
 			if (width <= 0 || height <= 0)
 				return surface;
 			
+			Color color;
+			if ((item_state & ItemState.URGENT) != 0) {
+				color = (IndicatorStyle == IndicatorStyleType.LEGACY ? get_styled_color () : IndicatorColor);
+				color.add_hue (UrgentHueShift);
+				color.set_sat (1.0);
+			} else {
+				if (IndicatorStyle == IndicatorStyleType.LEGACY) {
+					color = get_styled_color ();
+					color.set_min_sat (0.4);
+				} else {
+					color = IndicatorColor;
+				}
+			}
+			
 			unowned Cairo.Context cr = surface.Context;
+			cr.save ();
+			
+			//TODO Actually handle indicator_state
 			
 			switch (IndicatorStyle) {
 			default:
 			case IndicatorStyleType.LEGACY:
 			case IndicatorStyleType.GLOW:
-				var x = height / 2;
-				var y = x;
+				var x = width / 2;
+				var y = height - size / 12;
 				
 				cr.move_to (x, y);
 				cr.arc (x, y, height / 2, 0, Math.PI * 2);
 				cr.close_path ();
 				
-				var rg = new Cairo.Pattern.radial (x, y, 0, x, y, height / 2);
+				var rg = new Cairo.Pattern.radial (x, y, 0, x, y, size / 2);
 				rg.add_color_stop_rgba (0, 1, 1, 1, 1);
 				rg.add_color_stop_rgba (0.1, color.red, color.green, color.blue, 1);
 				rg.add_color_stop_rgba (0.2, color.red, color.green, color.blue, 0.6);
@@ -275,19 +324,29 @@ namespace Plank
 				cr.set_source (rg);
 				break;
 			case IndicatorStyleType.CIRCLE:
-				var x = height / 2, y = x;
+				var x = width / 2;
+				var y = height - size / 2;
+				
 				cr.move_to (x, y);
-				cr.arc (x, y, height / 2, 0, Math.PI * 2);
+				cr.arc (x, y, size / 2, 0, Math.PI * 2);
 				cr.close_path ();
+				
 				cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
 				break;
 			case IndicatorStyleType.LINE:
-				cr.rectangle (0, 0, width, height);
+				var x = 0;
+				var y = height - size;
+				
+				cr.rectangle (x, y, width, size);
 				cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
 				break;
 			}
 			
 			cr.fill ();
+			cr.restore ();
+			
+			if (position != Gtk.PositionType.BOTTOM)
+				surface = rotate_for_position ((owned) surface, position);
 			
 			return surface;
 		}
@@ -716,6 +775,56 @@ namespace Plank
 			case "ActiveItemColor":
 				break;
 			}
+		}
+		
+		static Surface rotate_for_position (owned Surface surface, Gtk.PositionType position)
+		{
+			if (position == Gtk.PositionType.BOTTOM)
+				return surface;
+			
+			Surface result;
+			var width = surface.Width;
+			var height = surface.Height;
+			var rotate = 0.0;
+			
+			if (position == Gtk.PositionType.TOP)
+				result = new Surface.with_surface (width, height, surface);
+			else
+				result = new Surface.with_surface (height, width, surface);
+			
+			unowned Cairo.Context cr = result.Context;
+			
+			switch (position) {
+			case Gtk.PositionType.TOP:
+				rotate = Math.PI;
+				break;
+			case Gtk.PositionType.LEFT:
+				rotate = Math.PI_2;
+				break;
+			case Gtk.PositionType.RIGHT:
+				rotate = -Math.PI_2;
+				break;
+			default:
+				assert_not_reached ();
+			}
+			
+			cr.save ();
+			cr.translate (result.Width / 2, result.Height / 2);
+			cr.rotate (rotate);
+			cr.translate (- width / 2, - height / 2);
+			cr.set_source_surface (surface.Internal, 0, 0);
+			cr.paint ();
+			cr.restore ();
+			
+			return result;
+		}
+		
+		Color get_styled_color ()
+		{
+			unowned Gtk.StyleContext context = get_style_context ();
+			var color = (Color) context.get_background_color (context.get_state ());
+			color.set_min_val (90 / (double) uint16.MAX);
+			return color;
 		}
 	}
 }

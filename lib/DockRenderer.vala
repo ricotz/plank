@@ -59,8 +59,8 @@ namespace Plank
 		
 		Surface? background_buffer = null;
 		Gdk.Rectangle background_rect;
-		Surface? indicator_buffer = null;
-		Surface? urgent_indicator_buffer = null;
+		Surface[] indicator_buffer = new Surface[2];
+		Surface[] urgent_indicator_buffer = new Surface[2];
 		Surface? urgent_glow_buffer = null;
 		
 		int64 last_hide = 0LL;
@@ -209,8 +209,10 @@ namespace Plank
 			shadow_buffer = null;
 			
 			background_buffer = null;
-			indicator_buffer = null;
-			urgent_indicator_buffer = null;
+			indicator_buffer[0] = null;
+			indicator_buffer[1] = null;
+			urgent_indicator_buffer[0] = null;
+			urgent_indicator_buffer[1] = null;
 			urgent_glow_buffer = null;
 			
 			animated_draw ();
@@ -924,69 +926,48 @@ namespace Plank
 			return surface;
 		}
 		
-		void draw_indicator_state (Cairo.Context cr, Gdk.Rectangle item_rect, IndicatorState indicator, ItemState item_state)
+		void draw_indicator_state (Cairo.Context cr, Gdk.Rectangle item_rect, IndicatorState indicator_state, ItemState item_state)
 		{
+			if (indicator_state == IndicatorState.NONE)
+				return;
+			
 			unowned PositionManager position_manager = controller.position_manager;
+			var index = indicator_state - 1;
 			
-			if (indicator_buffer == null) {
-				Color indicator_color;
-				if (theme.IndicatorStyle == IndicatorStyleType.LEGACY) {
-					indicator_color = get_styled_color ();
-					indicator_color.set_min_sat (0.4);
-				} else {
-					indicator_color = theme.IndicatorColor;
-				}
-				indicator_buffer = theme.create_indicator (position_manager.IconSize, position_manager.IndicatorSize,
-					indicator_color, position_manager.Position, item_buffer);
+			if (indicator_buffer[index] == null) {
+				indicator_buffer[index] = theme.create_indicator_for_state (indicator_state, ItemState.NORMAL,
+					position_manager.IconSize, position_manager.Position, item_buffer);
 			}
-			if (urgent_indicator_buffer == null) {
-				var urgent_indicator_color = (theme.IndicatorStyle == IndicatorStyleType.LEGACY ? get_styled_color () : theme.IndicatorColor);
-				urgent_indicator_color.add_hue (theme.UrgentHueShift);
-				urgent_indicator_color.set_sat (1.0);
-				urgent_indicator_buffer = theme.create_indicator (position_manager.IconSize, position_manager.IndicatorSize,
-					urgent_indicator_color, position_manager.Position, item_buffer);
+			if (urgent_indicator_buffer[index] == null) {
+				urgent_indicator_buffer[index] = theme.create_indicator_for_state (indicator_state, ItemState.URGENT,
+					position_manager.IconSize, position_manager.Position, item_buffer);
 			}
 			
-			unowned Surface indicator_surface = (item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer : indicator_buffer;
+			unowned Surface indicator_surface = ((item_state & ItemState.URGENT) != 0 ? urgent_indicator_buffer[index] : indicator_buffer[index]);
 			
-			var offset_factor = (theme.IndicatorStyle == IndicatorStyleType.LEGACY ? 0.042 : 0.5);
 			var x = 0.0, y = 0.0;
 			switch (position_manager.Position) {
 			default:
 			case Gtk.PositionType.BOTTOM:
 				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
-				y = item_buffer.Height - indicator_surface.Height / 2.0 - 2.0 * theme.get_bottom_offset () - indicator_surface.Height * offset_factor;
+				y = item_buffer.Height - theme.get_bottom_offset () - indicator_surface.Height;
 				break;
 			case Gtk.PositionType.TOP:
 				x = item_rect.x + item_rect.width / 2.0 - indicator_surface.Width / 2.0;
-				y = - indicator_surface.Height / 2.0 + 2.0 * theme.get_bottom_offset () + indicator_surface.Height * offset_factor;
+				y = theme.get_bottom_offset ();
 				break;
 			case Gtk.PositionType.LEFT:
-				x = - indicator_surface.Width / 2.0 + 2.0 * theme.get_bottom_offset () + indicator_surface.Width * offset_factor;
+				x = theme.get_bottom_offset ();
 				y = item_rect.y + item_rect.height / 2.0 - indicator_surface.Height / 2.0;
 				break;
 			case Gtk.PositionType.RIGHT:
-				x = item_buffer.Width - indicator_surface.Width / 2.0 - 2.0 * theme.get_bottom_offset () - indicator_surface.Width * offset_factor;
+				x = item_buffer.Width - theme.get_bottom_offset () - indicator_surface.Width;
 				y = item_rect.y + item_rect.height / 2.0 - indicator_surface.Height / 2.0;
 				break;
 			}
 			
-			if (indicator == IndicatorState.SINGLE || theme.IndicatorStyle == IndicatorStyleType.LINE) {
-				cr.set_source_surface (indicator_surface.Internal, x, y);
-				cr.paint ();
-			} else {
-				var offset_factor2 = (theme.IndicatorStyle == IndicatorStyleType.LEGACY ? 0.0625 : 0.1);
-				var x_offset = 0.0, y_offset = 0.0;
-				if (position_manager.is_horizontal_dock ())
-					x_offset = position_manager.IconSize * offset_factor2;
-				else
-					y_offset = position_manager.IconSize * offset_factor2;
-				
-				cr.set_source_surface (indicator_surface.Internal, x - x_offset, y - y_offset);
-				cr.paint ();
-				cr.set_source_surface (indicator_surface.Internal, x + x_offset, y + y_offset);
-				cr.paint ();
-			}
+			cr.set_source_surface (indicator_surface.Internal, x, y);
+			cr.paint ();
 		}
 		
 		void draw_urgent_glow (DockItem item, Cairo.Context cr, int64 frame_time)
