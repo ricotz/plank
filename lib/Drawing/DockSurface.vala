@@ -25,6 +25,9 @@ namespace Plank.Drawing
 	 */
 	public class DockSurface : GLib.Object
 	{
+		const int EXP_BLUR_ALPHA_PRECISION = 16;
+		const int EXP_BLUR_PARAM_PRECISION = 7;
+		
 		/**
 		 * The internal {@link Cairo.Surface} backing the dock surface.
 		 */
@@ -270,7 +273,7 @@ namespace Plank.Drawing
 					var asum = 0, rsum = 0, gsum = 0, bsum = 0;
 					
 					uint32 cur_pixel = y * w * channels;
-										
+					
 					asum += radius * pixels[cur_pixel + 0];
 					rsum += radius * pixels[cur_pixel + 1];
 					gsum += radius * pixels[cur_pixel + 2];
@@ -286,7 +289,7 @@ namespace Plank.Drawing
 					}
 					
 					cur_pixel = y * w * channels;
-										
+					
 					for (var x = 0; x < w; x++) {
 						uint32 p1 = (y * w + vmin[x]) * channels;
 						uint32 p2 = (y * w + vmax[x]) * channels;
@@ -360,9 +363,6 @@ namespace Plank.Drawing
 			target_cr.restore ();
 		}
 		
-		const int AlphaPrecision = 16;
-		const int ParamPrecision = 7;
-		
 		/**
 		 * Performs an exponential blur on the surface.
 		 *
@@ -373,7 +373,7 @@ namespace Plank.Drawing
 			if (radius < 1)
 				return;
 			
-			var alpha = (int) ((1 << AlphaPrecision) * (1.0 - Math.exp (-2.3 / (radius + 1.0))));
+			var alpha = (int) ((1 << EXP_BLUR_ALPHA_PRECISION) * (1.0 - Math.exp (-2.3 / (radius + 1.0))));
 			var height = Height;
 			var width = Width;
 			
@@ -413,16 +413,16 @@ namespace Plank.Drawing
 			target_cr.restore ();
 		}
 		
-		void exponential_blur_columns (uint8* pixels, int width, int height, int startCol, int endCol, int startY, int endY, int alpha)
+		static void exponential_blur_columns (uint8* pixels, int width, int height, int startCol, int endCol, int startY, int endY, int alpha)
 		{
 			for (var columnIndex = startCol; columnIndex < endCol; columnIndex++) {
 				// blur columns
 				uint8 *column = pixels + columnIndex * 4;
 				
-				var zA = column[0] << ParamPrecision;
-				var zR = column[1] << ParamPrecision;
-				var zG = column[2] << ParamPrecision;
-				var zB = column[3] << ParamPrecision;
+				var zA = column[0] << EXP_BLUR_PARAM_PRECISION;
+				var zR = column[1] << EXP_BLUR_PARAM_PRECISION;
+				var zG = column[2] << EXP_BLUR_PARAM_PRECISION;
+				var zB = column[3] << EXP_BLUR_PARAM_PRECISION;
 				
 				// Top to Bottom
 				for (var index = width * (startY + 1); index < (endY - 1) * width; index += width)
@@ -434,16 +434,16 @@ namespace Plank.Drawing
 			}
 		}
 		
-		void exponential_blur_rows (uint8* pixels, int width, int height, int startRow, int endRow, int startX, int endX, int alpha)
+		static void exponential_blur_rows (uint8* pixels, int width, int height, int startRow, int endRow, int startX, int endX, int alpha)
 		{
 			for (var rowIndex = startRow; rowIndex < endRow; rowIndex++) {
 				// Get a pointer to our current row
 				uint8* row = pixels + rowIndex * width * 4;
 				
-				var zA = row[startX + 0] << ParamPrecision;
-				var zR = row[startX + 1] << ParamPrecision;
-				var zG = row[startX + 2] << ParamPrecision;
-				var zB = row[startX + 3] << ParamPrecision;
+				var zA = row[startX + 0] << EXP_BLUR_PARAM_PRECISION;
+				var zR = row[startX + 1] << EXP_BLUR_PARAM_PRECISION;
+				var zG = row[startX + 2] << EXP_BLUR_PARAM_PRECISION;
+				var zB = row[startX + 3] << EXP_BLUR_PARAM_PRECISION;
 				
 				// Left to Right
 				for (var index = startX + 1; index < endX; index++)
@@ -457,15 +457,15 @@ namespace Plank.Drawing
 		
 		static inline void exponential_blur_inner (uint8* pixel, ref int zA, ref int zR, ref int zG, ref int zB, int alpha)
 		{
-			zA += (alpha * ((pixel[0] << ParamPrecision) - zA)) >> AlphaPrecision;
-			zR += (alpha * ((pixel[1] << ParamPrecision) - zR)) >> AlphaPrecision;
-			zG += (alpha * ((pixel[2] << ParamPrecision) - zG)) >> AlphaPrecision;
-			zB += (alpha * ((pixel[3] << ParamPrecision) - zB)) >> AlphaPrecision;
+			zA += (alpha * ((pixel[0] << EXP_BLUR_PARAM_PRECISION) - zA)) >> EXP_BLUR_ALPHA_PRECISION;
+			zR += (alpha * ((pixel[1] << EXP_BLUR_PARAM_PRECISION) - zR)) >> EXP_BLUR_ALPHA_PRECISION;
+			zG += (alpha * ((pixel[2] << EXP_BLUR_PARAM_PRECISION) - zG)) >> EXP_BLUR_ALPHA_PRECISION;
+			zB += (alpha * ((pixel[3] << EXP_BLUR_PARAM_PRECISION) - zB)) >> EXP_BLUR_ALPHA_PRECISION;
 			
-			pixel[0] = (uint8) (zA >> ParamPrecision);
-			pixel[1] = (uint8) (zR >> ParamPrecision);
-			pixel[2] = (uint8) (zG >> ParamPrecision);
-			pixel[3] = (uint8) (zB >> ParamPrecision);
+			pixel[0] = (uint8) (zA >> EXP_BLUR_PARAM_PRECISION);
+			pixel[1] = (uint8) (zR >> EXP_BLUR_PARAM_PRECISION);
+			pixel[2] = (uint8) (zG >> EXP_BLUR_PARAM_PRECISION);
+			pixel[3] = (uint8) (zB >> EXP_BLUR_PARAM_PRECISION);
 		}
 		
 		/**
@@ -559,7 +559,8 @@ namespace Plank.Drawing
 			target_cr.restore ();
 		}
 
-		void gaussian_blur_horizontal (double* src, double* dest, double* kernel, int gaussWidth, int width, int height, int startRow, int endRow, int[,] shift)
+		static void gaussian_blur_horizontal (double* src, double* dest, double* kernel, int gaussWidth, int width, int height,
+			int startRow, int endRow, int[,] shift)
 		{
 			uint32 cur_pixel = startRow * width * 4;
 			
@@ -580,7 +581,8 @@ namespace Plank.Drawing
 			}
 		}
 		
-		void gaussian_blur_vertical (double* src, double* dest, double* kernel, int gaussWidth, int width, int height, int startCol, int endCol, int[,] shift)
+		static void gaussian_blur_vertical (double* src, double* dest, double* kernel, int gaussWidth, int width, int height,
+			int startCol, int endCol, int[,] shift)
 		{
 			uint32 cur_pixel = startCol * 4;
 			
@@ -621,7 +623,7 @@ namespace Plank.Drawing
 			
 			// normalize the values
 			var gaussSum = 0.0;
-			foreach (var d in kernel)			
+			foreach (var d in kernel)
 				gaussSum += d;
 			
 			for (var i = 0; i < kernel.length; i++)
