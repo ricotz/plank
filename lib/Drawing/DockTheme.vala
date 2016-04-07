@@ -258,7 +258,7 @@ namespace Plank
 		}
 		
 		/**
-		 * Creates a surface for an indicator.
+		 * Creates a surface of an indicator for the given states.
 		 *
 		 * @param indicator_state the state of indicator
 		 * @param item_state the state of item
@@ -275,12 +275,12 @@ namespace Plank
 			var height = width / 3 + get_bottom_offset ();
 			var size = (int) (IndicatorSize * icon_size / 10.0);
 			
-			Logger.verbose ("DockTheme.create_indicator (width = %i, height = %i)", width, height);
+			Logger.verbose ("DockTheme.create_indicator (width = %i, height = %i, state = [%i,%i])", width, height, indicator_state, item_state);
 			
 			var surface = new Surface.with_surface (width, height, model);
 			surface.clear ();
 			
-			if (width <= 0 || height <= 0)
+			if (width <= 0 || height <= 0 || size <= 0 || indicator_state == IndicatorState.NONE)
 				return surface;
 			
 			Color color;
@@ -300,49 +300,62 @@ namespace Plank
 			unowned Cairo.Context cr = surface.Context;
 			cr.save ();
 			
-			//TODO Actually handle indicator_state
-			
 			switch (IndicatorStyle) {
 			default:
 			case IndicatorStyleType.LEGACY:
 			case IndicatorStyleType.GLOW:
-				var x = width / 2;
-				var y = height - size / 12;
+				var x = (int) (width / 2.0 - (indicator_state - 1) * size / 8.0);
+				var y = (int) (height - size / 12 - get_bottom_offset ());
 				
-				cr.move_to (x, y);
-				cr.arc (x, y, height / 2, 0, Math.PI * 2);
-				cr.close_path ();
-				
-				var rg = new Cairo.Pattern.radial (x, y, 0, x, y, size / 2);
-				rg.add_color_stop_rgba (0, 1, 1, 1, 1);
-				rg.add_color_stop_rgba (0.1, color.red, color.green, color.blue, 1);
-				rg.add_color_stop_rgba (0.2, color.red, color.green, color.blue, 0.6);
-				rg.add_color_stop_rgba (0.25, color.red, color.green, color.blue, 0.25);
-				rg.add_color_stop_rgba (0.5, color.red, color.green, color.blue, 0.15);
-				rg.add_color_stop_rgba (1.0, color.red, color.green, color.blue, 0.0);
-				
-				cr.set_source (rg);
+				for (var i = 0; i < indicator_state; i++) {
+					cr.move_to (x, y);
+					cr.arc (x, y, height / 2, 0, Math.PI * 2);
+					cr.close_path ();
+					
+					var rg = new Cairo.Pattern.radial (x, y, 0, x, y, size / 2);
+					rg.add_color_stop_rgba (0, 1, 1, 1, 1);
+					rg.add_color_stop_rgba (0.1, color.red, color.green, color.blue, 1);
+					rg.add_color_stop_rgba (0.2, color.red, color.green, color.blue, 0.6);
+					rg.add_color_stop_rgba (0.25, color.red, color.green, color.blue, 0.25);
+					rg.add_color_stop_rgba (0.5, color.red, color.green, color.blue, 0.15);
+					rg.add_color_stop_rgba (1.0, color.red, color.green, color.blue, 0.0);
+					
+					cr.set_source (rg);
+					cr.fill ();
+					
+					x += (int) (2.0 * size / 8.0);
+				}
 				break;
 			case IndicatorStyleType.CIRCLE:
-				var x = width / 2;
-				var y = height - size / 2;
+				var x = (int) (width / 2.0 - (indicator_state - 1) * size / 1.666);
+				var y = (int) (height - size / 1.666 - get_bottom_offset ());
 				
-				cr.move_to (x, y);
-				cr.arc (x, y, size / 2, 0, Math.PI * 2);
-				cr.close_path ();
-				
-				cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
+				for (var i = 0; i < indicator_state; i++) {
+					cr.move_to (x, y);
+					cr.arc (x, y, size / 2, 0, Math.PI * 2);
+					cr.close_path ();
+					
+					cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
+					cr.fill ();
+					
+					x += (int) (2.0 * size / 1.666);
+				}
 				break;
 			case IndicatorStyleType.LINE:
 				var x = 0;
-				var y = height - size;
+				var y = height - size - get_bottom_offset ();
 				
-				cr.rectangle (x, y, width, size);
+				if (indicator_state > 1) {
+					cr.rectangle (x, y, (int) (width / 2.0 - size / 3.0), size);
+					cr.rectangle ((int) (width / 2.0 + size / 3.0), y, width, size);
+				} else {
+					cr.rectangle (x, y, width, size);
+				}
 				cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
+				cr.fill ();
 				break;
 			}
 			
-			cr.fill ();
 			cr.restore ();
 			
 			if (position != Gtk.PositionType.BOTTOM)
@@ -809,10 +822,10 @@ namespace Plank
 			}
 			
 			cr.save ();
-			cr.translate (result.Width / 2, result.Height / 2);
+			cr.translate (result.Width / 2.0, result.Height / 2.0);
 			cr.rotate (rotate);
-			cr.translate (- width / 2, - height / 2);
-			cr.set_source_surface (surface.Internal, 0, 0);
+			cr.translate (- width / 2.0, - height / 2.0);
+			cr.set_source_surface (surface.Internal, 0.0, 0.0);
 			cr.paint ();
 			cr.restore ();
 			
