@@ -811,7 +811,7 @@ namespace Plank
 			if ((item.State & ItemState.ACTIVE) == 0)
 				opacity = 1 - opacity;
 			if (opacity > 0) {
-				var color = (theme.ActiveGlow ? item.AverageIconColor : theme.ActiveItemColor);
+				var color = (theme.SelectionStyle == SelectionStyleType.LEGACY ? item.AverageIconColor : theme.SelectionColor);
 				theme.draw_active_glow (item_buffer, background_rect, draw_value.background_region, color, opacity, position);
 			}
 			

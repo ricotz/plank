@@ -41,4 +41,23 @@ namespace Plank
 		 */
 		LINE
 	}
+	
+	/**
+	 * The style of the item indicator.
+	 */
+	public enum SelectionStyleType
+	{
+		/**
+		 * A vertical gradient which is colored based of the item's icon'.
+		 */
+		LEGACY,
+		/**
+		 * A vertical gradient.
+		 */
+		GRADIENT,
+		/**
+		 * A solid color.
+		 */
+		SOLID
+	}
 }

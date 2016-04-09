@@ -40,6 +40,9 @@ namespace Plank
 		[Description(nick = "item-padding", blurb = "The padding between items on the dock, in tenths of a percent of IconSize.")]
 		public double ItemPadding { get; set; }
 		
+		[Description(nick = "indicator-color", blurb = "The color (RGBA) of the indicator.")]
+		public Color IndicatorColor { get; set; }
+		
 		[Description(nick = "indicator-size", blurb = "The size of item indicators, in tenths of a percent of IconSize.")]
 		public double IndicatorSize { get; set; }
 		
@@ -100,14 +103,11 @@ namespace Plank
 		[Description(nick = "badge-color", blurb = "The color (RGBA) of the badge displaying urgent count")]
 		public Color BadgeColor { get; set; }
 
-		[Description(nick = "active-glow", blurb = "Whether an item has an active background glow. If not, active-item-color (RGBA) will be used instead.")]
-		public bool ActiveGlow { get; set; }
+		[Description(nick = "selection-style", blurb = "Whether an item has an active background glow. If not, active-item-color (RGBA) will be used instead.")]
+		public SelectionStyleType SelectionStyle { get; set; }
 		
-		[Description(nick = "indicator-color", blurb = "The color (RGBA) of the indicator.")]
-		public Color IndicatorColor { get; set; }
-		
-		[Description(nick = "active-item-color", blurb = "The color (RGBA) of the active item background.")]
-		public Color ActiveItemColor { get; set; }
+		[Description(nick = "selection-color", blurb = "The color (RGBA) of the active item background.")]
+		public Color SelectionColor { get; set; }
 		
 		public DockTheme (string name)
 		{
@@ -126,6 +126,7 @@ namespace Plank
 			TopPadding = -11.0;
 			BottomPadding = 2.5;
 			ItemPadding = 2.5;
+			IndicatorColor = { 1.0, 1.0, 1.0, 1.0 };
 			IndicatorSize = 5.0;
 			IndicatorStyle = IndicatorStyleType.LEGACY;
 			IconShadowSize = 1.0;
@@ -146,9 +147,8 @@ namespace Plank
 			ItemMoveTime = 450;
 			CascadeHide = true;
 			BadgeColor = { 0.0, 0.0, 0.0, 0.0 };
-			ActiveGlow = true;
-			IndicatorColor = { 255, 255, 255, 1.0 };
-			ActiveItemColor = { 0.0, 0.0, 0.0, 0.0 };
+			SelectionColor = { 0.0, 0.0, 0.0, 1.0 };
+			SelectionStyle = SelectionStyleType.LEGACY;
 		}
 		
 		/**
@@ -271,13 +271,13 @@ namespace Plank
 		public Surface create_indicator_for_state (IndicatorState indicator_state, ItemState item_state, int icon_size,
 			Gtk.PositionType position, Surface model)
 		{
-			var width = icon_size;
-			var height = width / 3 + get_bottom_offset ();
+			double width = icon_size;
+			double height = icon_size / 3.0 + get_bottom_offset ();
 			var size = (int) (IndicatorSize * icon_size / 10.0);
 			
-			Logger.verbose ("DockTheme.create_indicator (width = %i, height = %i, state = [%i,%i])", width, height, indicator_state, item_state);
+			Logger.verbose ("DockTheme.create_indicator (width = %i, height = %i, state = [%i,%i])", (int) width, (int) height, indicator_state, item_state);
 			
-			var surface = new Surface.with_surface (width, height, model);
+			var surface = new Surface.with_surface ((int) width, (int) height, model);
 			surface.clear ();
 			
 			if (width <= 0 || height <= 0 || size <= 0 || indicator_state == IndicatorState.NONE)
@@ -299,15 +299,18 @@ namespace Plank
 			
 			unowned Cairo.Context cr = surface.Context;
 			cr.save ();
+			cr.set_line_width (1.0);
 			
 			switch (IndicatorStyle) {
 			default:
 			case IndicatorStyleType.LEGACY:
 			case IndicatorStyleType.GLOW:
-				var x = (int) (width / 2.0 - (indicator_state - 1) * size / 8.0);
-				var y = (int) (height - size / 12 - get_bottom_offset ());
+				var x = 0.0;
+				var y = Math.round (height - size / 12.0 - get_bottom_offset ());
 				
 				for (var i = 0; i < indicator_state; i++) {
+					x = Math.round (width / 2.0 + (2.0 * i - (indicator_state - 1)) * size / 8.0);
+					
 					cr.move_to (x, y);
 					cr.arc (x, y, height / 2, 0, Math.PI * 2);
 					cr.close_path ();
@@ -322,36 +325,38 @@ namespace Plank
 					
 					cr.set_source (rg);
 					cr.fill ();
-					
-					x += (int) (2.0 * size / 8.0);
 				}
 				break;
 			case IndicatorStyleType.CIRCLE:
-				var x = (int) (width / 2.0 - (indicator_state - 1) * size / 1.666);
-				var y = (int) (height - size / 1.666 - get_bottom_offset ());
+				var x = 0.0;
+				var y = Math.round (height - size / 1.666 - get_bottom_offset ());
 				
 				for (var i = 0; i < indicator_state; i++) {
+					x = Math.round (width / 2.0 + (2.0 * i - (indicator_state - 1)) * size / 1.2);
+					
 					cr.move_to (x, y);
 					cr.arc (x, y, size / 2, 0, Math.PI * 2);
 					cr.close_path ();
 					
 					cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
+					cr.stroke_preserve ();
 					cr.fill ();
-					
-					x += (int) (2.0 * size / 1.666);
 				}
 				break;
 			case IndicatorStyleType.LINE:
-				var x = 0;
-				var y = height - size - get_bottom_offset ();
+				var x = Math.round (icon_size / 10.0);
+				var y = Math.round (height - size - get_bottom_offset () - icon_size / 30.0);
 				
 				if (indicator_state > 1) {
-					cr.rectangle (x, y, (int) (width / 2.0 - size / 3.0), size);
-					cr.rectangle ((int) (width / 2.0 + size / 3.0), y, width, size);
+					width = Math.round (width / 2.0 - 3.0 * icon_size / 20.0);
+					cr.rectangle (x, y, width, size);
+					cr.rectangle (Math.round (9.0 * icon_size / 10.0), y, -width, size);
 				} else {
+					width = Math.round (width - icon_size / 5.0);
 					cr.rectangle (x, y, width, size);
 				}
 				cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
+				cr.stroke_preserve ();
 				cr.fill ();
 				break;
 			}
@@ -469,7 +474,7 @@ namespace Plank
 			
 			cr.rectangle (rect.x, rect.y, rect.width, rect.height);
 			
-			if (ActiveGlow) {
+			if (SelectionStyle == SelectionStyleType.LEGACY) {
 				gradient.add_color_stop_rgba (0, color.red, color.green, color.blue, 0);
 				gradient.add_color_stop_rgba (1, color.red, color.green, color.blue, 0.6 * opacity);
 				cr.set_source (gradient);
@@ -780,12 +785,6 @@ namespace Plank
 				break;
 
 			case "BadgeColor":
-				break;
-			
-			case "IndicatorColor":
-				break;
-			
-			case "ActiveItemColor":
 				break;
 			}
 		}

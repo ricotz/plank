@@ -26,16 +26,12 @@ BottomPadding=1.5
 ItemPadding=2
 #The size of item indicators, in tenths of a percent of IconSize.
 IndicatorSize=5
-#Whether an item has an active background glow. If not, active-item-color (RGBA) will be used instead.
-ActiveGlow=false
 #The size of the icon-shadow behind every item, in tenths of a percent of IconSize.
 IconShadowSize=1
 #The style of item indicators (values 0 - 3), styles: 0 - circle-glow, 1 - circle-color-glow, 2 - circle, 3 - underline.
 IndicatorStyle=2
 #The color (RGBA) of the indicator.
 IndicatorColor=225;;225;;225;;255
-#The color (RGBA) of the active item background.
-ActiveItemColor=0;;0;;0;;0
 #The height (in percent of IconSize) to bounce an icon when the application sets urgent.
 UrgentBounceHeight=1.6666666666666667
 #The height (in percent of IconSize) to bounce an icon when launching an application.
@@ -68,3 +64,7 @@ UrgentHueShift=150
 ItemMoveTime=450
 #Whether background and icons will unhide/hide with different speeds. The top-border of both will leave/hit the screen-edge at the same time.
 CascadeHide=true
+#Whether an item has an active background glow. If not, active-item-color (RGBA) will be used instead.
+SelectionStyle=1
+#The color (RGBA) of the active item background.
+SelectionColor=0;;0;;0;;0
