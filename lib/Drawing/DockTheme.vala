@@ -346,15 +346,9 @@ namespace Plank
 			case IndicatorStyleType.LINE:
 				var x = Math.round (icon_size / 10.0);
 				var y = Math.round (height - size - get_bottom_offset () - icon_size / 30.0);
+				width = Math.round (width - icon_size / 5.0);
 				
-				if (indicator_state > 1) {
-					width = Math.round (width / 2.0 - 3.0 * icon_size / 20.0);
-					cr.rectangle (x, y, width, size);
-					cr.rectangle (Math.round (9.0 * icon_size / 10.0), y, -width, size);
-				} else {
-					width = Math.round (width - icon_size / 5.0);
-					cr.rectangle (x, y, width, size);
-				}
+				cr.rectangle (x, y, width, size);
 				cr.set_source_rgba (color.red, color.green, color.blue, color.alpha);
 				cr.stroke_preserve ();
 				cr.fill ();
