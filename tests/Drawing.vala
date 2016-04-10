@@ -24,6 +24,8 @@ namespace PlankTests
 	public static void register_drawing_tests ()
 	{
 		Test.add_func ("/Drawing/Color/basics", drawing_color);
+		Test.add_func ("/Drawing/Color/HSV", drawing_color_hsv);
+		Test.add_func ("/Drawing/Color/HSL", drawing_color_hsl);
 		
 		Test.add_func ("/Drawing/DrawingService/basics", drawing_drawingservice);
 		Test.add_func ("/Drawing/DrawingService/average_color", drawing_drawingservice_average_color);
@@ -107,6 +109,76 @@ namespace PlankTests
 		
 		color = Color.from_prefs_string ("123;;234;;123;;234");
 		assert (color.to_prefs_string () == "123;;234;;123;;234");
+	}
+	
+	void drawing_color_hsv ()
+	{
+		double derror;
+		
+		// HSV forth and back
+		derror = 0.00000000000001;
+		for (var r = 0.0; r <= 1.0; r += 0.02) { for (var g = 0.0; g <= 1.0; g += 0.02) { for (var b = 0.0; b <= 1.0; b += 0.02) {
+			double h, s, v;
+			Color color = { r, g, b, 1.0 };
+			color.get_hsv (out h, out s, out v);
+			var color2 = Color.from_hsv (h, s, v);
+			
+			assert (Math.fabs (color2.red - color.red) <= derror);
+			assert (Math.fabs (color2.green - color.green) <= derror);
+			assert (Math.fabs (color2.blue - color.blue) <= derror);
+		}}}
+		
+		// HSV back and forth
+		derror = 0.0000000001;
+		for (var h = 0.0; h < 360.0; h += 3.0) { for (var s = 0.0; s <= 1.0; s += 0.02) { for (var v = 0.0; v <= 1.0; v += 0.02) {
+			if ((s > 0.0 && v == 0.0)
+				|| (h > 0.0 && s == 0.0))
+				continue;
+			
+			double h2, s2, v2;
+			var color = Color.from_hsv (h, s, v);
+			Color color2 = { color.red, color.green, color.blue, 1.0 };
+			color2.get_hsv (out h2, out s2, out v2);
+			
+			assert (Math.fabs (h2 - h) <= derror);
+			assert (Math.fabs (s2 - s) <= derror);
+			assert (Math.fabs (v2 - v) <= derror);
+		}}}
+	}
+	
+	void drawing_color_hsl ()
+	{
+		double derror;
+		
+		// HSL forth and back
+		derror = 0.00000000000001;
+		for (var r = 0.0; r <= 1.0; r += 0.02) { for (var g = 0.0; g <= 1.0; g += 0.02) { for (var b = 0.0; b <= 1.0; b += 0.02) {
+			double h, s, l;
+			Color color = { r, g, b, 1.0 };
+			color.get_hsl (out h, out s, out l);
+			var color2 = Color.from_hsl (h, s, l);
+			
+			assert (Math.fabs (color2.red - color.red) < derror);
+			assert (Math.fabs (color2.green - color.green) < derror);
+			assert (Math.fabs (color2.blue - color.blue) < derror);
+		}}}
+		
+		// HSL back and forth
+		derror = 0.0000000001;
+		for (var h = 0.0; h < 360.0; h += 3.0) { for (var s = 0.0; s <= 1.0; s += 0.02) { for (var l = 0.0; l <= 1.0; l += 0.02) {
+			if ((s > 0.0 && l == 0.0)
+				|| (h > 0.0 && s == 0.0))
+				continue;
+			
+			double h2, s2, l2;
+			var color = Color.from_hsl (h, s, l);
+			Color color2 = { color.red, color.green, color.blue, 1.0 };
+			color2.get_hsl (out h2, out s2, out l2);
+			
+			assert (Math.fabs (h2 - h) <= derror);
+			assert (Math.fabs (s2 - s) <= derror);
+			assert (Math.fabs (l2 - l) <= derror);
+		}}}
 	}
 	
 	void drawing_drawingservice ()

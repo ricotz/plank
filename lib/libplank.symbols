@@ -64,13 +64,17 @@ plank_color_darken_by_sat
 plank_color_darken_val
 plank_color_dup
 plank_color_free
+plank_color_from_hsl
+plank_color_from_hsv
 plank_color_from_prefs_string
+plank_color_get_hsl
 plank_color_get_hsv
 plank_color_get_hue
 plank_color_get_sat
 plank_color_get_type
 plank_color_get_val
 plank_color_multiply_sat
+plank_color_set_hsl
 plank_color_set_hsv
 plank_color_set_hue
 plank_color_set_max_sat

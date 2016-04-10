@@ -25,6 +25,38 @@ namespace Plank
 	public struct Color : Gdk.RGBA
 	{
 		/**
+		 * Create new color for the given HSV values while
+		 * h in [0,360), s in [0,1] and v in [0,1]
+		 *
+		 * @param h the hue for the color
+		 * @param s the saturation for the color
+		 * @param v the value for the color
+		 * @return new {@link Color} based on the HSV values
+		 */
+		public static Color from_hsv (double h, double s, double v)
+		{
+			Color result = { 1.0, 1.0, 1.0, 1.0 };
+			result.set_hsv (h, s, v);
+			return result;
+		}
+		
+		/**
+		 * Create new color for the given HSL values while
+		 * h in [0,360), s in [0,1] and l in [0,1]
+		 *
+		 * @param h the hue for the color
+		 * @param s the saturation for the color
+		 * @param l the lightness for the color
+		 * @return new {@link Color} based on the HSL values
+		 */
+		public static Color from_hsl (double h, double s, double l)
+		{
+			Color result = { 1.0, 1.0, 1.0, 1.0 };
+			result.set_hsl (h, s, l);
+			return result;
+		}
+		
+		/**
 		 * Set HSV color values of this color.
 		 */
 		public void set_hsv (double h, double s, double v)
@@ -243,6 +275,22 @@ namespace Plank
 			hsv_to_rgb (h, s, v, out red, out green, out blue);
 		}
 		
+		/**
+		 * Get HSL color values of this color.
+		 */
+		public void get_hsl (out double h, out double s, out double l)
+		{
+			rgb_to_hsl (red, green, blue, out h, out s, out l);
+		}
+		
+		/**
+		 * Set HSL color values of this color.
+		 */
+		public void set_hsl (double h, double s, double v)
+		{
+			hsl_to_rgb (h, s, v, out red, out green, out blue);
+		}
+		
 		static void rgb_to_hsv (double r, double g, double b, out double h, out double s, out double v)
 			requires (r >= 0 && r <= 1)
 			requires (g >= 0 && g <= 1)
@@ -287,7 +335,7 @@ namespace Plank
 		}
 		
 		static void hsv_to_rgb (double h, double s, double v, out double r, out double g, out double b)
-			requires (h >= 0 && h <= 360)
+			requires (h >= 0 && h < 360)
 			requires (s >= 0 && s <= 1)
 			requires (v >= 0 && v <= 1)
 		{
@@ -296,7 +344,7 @@ namespace Plank
 				g = v;
 				b = v;
 			} else {
-				var secNum = (int) Math.floor (h / 60);
+				var secNum = (int) (h / 60);
 				var fracSec = h / 60.0 - secNum;
 
 				var p = v * (1 - s);
@@ -337,6 +385,107 @@ namespace Plank
 				default:
 					assert_not_reached ();
 				}
+			}
+		}
+		
+		static void rgb_to_hsl (double r, double g, double b, out double h, out double s, out double l)
+			requires (r >= 0 && r <= 1)
+			requires (g >= 0 && g <= 1)
+			requires (b >= 0 && b <= 1)
+		{
+			var max = double.max (r, double.max (g, b));
+			if (max == 0.0) {
+				h = 0.0;
+				s = 0.0;
+				l = 0.0;
+				return;
+			}
+			
+			var min = double.min (r, double.min (g, b));
+			l = (min + max) / 2.0;
+			if (l <= 0.0) {
+				h = 0.0;
+				s = 0.0;
+				return;
+			}
+			
+			var delta = max - min;
+			if (delta <= 0.0) {
+				h = 0.0;
+				s = 0.0;
+				return;
+			}
+			
+			s = delta / (l <= 0.5 ? min + max : 2.0 - min - max);
+			
+			var r2 = 60 * (max - r) / delta;
+			var g2 = 60 * (max - g) / delta;
+			var b2 = 60 * (max - b) / delta;
+			
+			if (max == r) {
+				h = (b2 - g2);
+				if (h < 0)
+					h += 360;
+			} else if (max == g) {
+				h = 120 + (r2 - b2);
+			} else {
+				h = 240 + (g2 - r2);
+			}
+		}
+		
+		static void hsl_to_rgb (double h, double s, double l, out double r, out double g, out double b)
+			requires (h >= 0 && h < 360)
+			requires (s >= 0 && s <= 1)
+			requires (l >= 0 && l <= 1)
+		{
+			var v = (l <= 0.5 ? l * (1.0 + s) : l + s - l * s);
+			if (v <= 0.0) {
+				r = l;
+				g = l;
+				b = l;
+				return;
+			}
+			
+			var secNum = (int) (h / 60);
+			var fracSec = h / 30.0 - 2 * secNum;
+			
+			var p = l - (v - l);
+			var q = v - (v - l) * fracSec;
+			var t = l + (v - l) * (fracSec - 1);
+			
+			switch (secNum) {
+			case 0:
+				r = v;
+				g = t;
+				b = p;
+				break;
+			case 1:
+				r = q;
+				g = v;
+				b = p;
+				break;
+			case 2:
+				r = p;
+				g = v;
+				b = t;
+				break;
+			case 3:
+				r = p;
+				g = q;
+				b = v;
+				break;
+			case 4:
+				r = t;
+				g = p;
+				b = v;
+				break;
+			case 5:
+				r = v;
+				g = p;
+				b = q;
+				break;
+			default:
+				assert_not_reached ();
 			}
 		}
 		
