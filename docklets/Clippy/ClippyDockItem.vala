@@ -66,7 +66,7 @@ namespace Docky
 		}
 		
 		[CCode (instance_pos = -1)]
-		void clipboard_text_received (Gtk.Clipboard clipboard, string text)
+		void clipboard_text_received (Gtk.Clipboard clipboard, string? text)
 		{
 			if (text == null || text == "")
 				return;
