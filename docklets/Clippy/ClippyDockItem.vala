@@ -159,8 +159,9 @@ namespace Docky
 			
 			for (var i = clips.size ; i > 0; i--) {
 				var item = create_menu_item (clips.get (i - 1), "edit-cut");
+				var pos = i;
 				item.activate.connect (() => {
-					copy_entry_at (i);
+					copy_entry_at (pos);
 				});
 				items.add (item);
 			}
