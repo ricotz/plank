@@ -1,33 +1,33 @@
-# Bulgarian translation for plank
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Malay translation for plank
+# Copyright (c) 2016 Rosetta Contributors and Canonical Ltd 2016
 # This file is distributed under the same license as the plank package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2016-04-10 16:20+0000\n"
-"PO-Revision-Date: 2016-04-24 08:56+0000\n"
-"Last-Translator: ITPROJECTS <Unknown>\n"
-"Language-Team: Bulgarian <bg@li.org>\n"
+"PO-Revision-Date: 2016-04-27 06:32+0000\n"
+"Last-Translator: abuyop <Unknown>\n"
+"Language-Team: Malay <ms@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-04-25 05:21+0000\n"
+"X-Launchpad-Export-Date: 2016-04-28 05:31+0000\n"
 "X-Generator: Launchpad (build 17995)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
-msgstr "Пределно прост."
+msgstr "Ringkas la sangat."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"Plank е замислен като най-семплият док на планетата. Целта на Plank е да "
-"предостави само и единствено най-необходимото."
+"Plank merupakan dok yang paling ringkas. Matlamat Plank adalah untuk "
+"menyediakan apa yang dok perlukan dan tiada apa-apa penambahan yang lain."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -37,203 +37,195 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
-"Това е основната библиотека, която може да се разширява и да се създават и "
-"други докове с по-разширени възможности. Plank е технологията скрита в Docky "
-"(от версия 3.0.0 насам) и има за да даде всички основни функции, докато "
-"Docky прави всички красоти, като доклети, теми, диалози за настройка и т.н."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr "Тема:"
+msgstr "Tema:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr "Позиция:"
+msgstr "Kedudukan:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr "В ляво"
+msgstr "Kiri"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr "В дясно"
+msgstr "Kanan"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr "Горе"
+msgstr "Atas"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr "Отдолу"
+msgstr "Bawah"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr "Подравняване:"
+msgstr "Jajaran:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr "Запълване"
+msgstr "Isian"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr "Начало"
+msgstr "Mula"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr "Край"
+msgstr "Hujung"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr "В центъра"
+msgstr "Tengah"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "На основния екран:"
+msgstr "Pada Paparan Utama:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr "Изместване в проценти от центъра до ръба на екрана"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Подравняване на иконите:"
+msgstr "Jajaran Ikon:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr "Размер на иконите:"
+msgstr "Saiz Ikon:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr "Увеличение на иконките:"
+msgstr "Zum Ikon:"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
-msgstr "Външен вид"
+msgstr "Penampilan"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr "Интелигентно скриване"
+msgstr "Sembunyi-Pintar"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr "Автоматично скриване"
+msgstr "Sembunyi-Sendiri"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr "Да се избягват максимизирани прозорци"
+msgstr "Elak tetingkap dimaksimumkan"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr "Скриване на прозорец"
+msgstr "Elak Tetingkap"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr "Избягване на активния прозорец"
+msgstr "Elak tetingkap aktif"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr "Скрий дока"
+msgstr "Sembunyi Labuh"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr "Забавяне при скриване:"
+msgstr "Lengah Sembunyi:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr "Забавяне в мс, преди скриване на дока"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr "Забавяне при показване:"
+msgstr "Lengah Nyahsembunyi:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr "Забавяне в милисекунди преди показване на дока"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr "Натиск за показване:"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
-msgstr "Управление на елементите"
+msgstr "Pengurusan Item"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr "Покажи незакачените"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr "Ограничи до работния плот:"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr "Заключи иконите:"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
-msgstr "Поведение"
+msgstr "Kelakuan"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
-msgstr "Доклети"
+msgstr "Docklet"
 
 #: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
-msgstr "Отпуснете за да добавите към док"
+msgstr "Lepas untuk tambah ke labuh"
 
 #: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  ITPROJECTS https://launchpad.net/~itprojects\n"
-"  Pavel Lefterov https://launchpad.net/~lefterovpavel\n"
-"  Rico Tzschichholz https://launchpad.net/~ricotz\n"
-"  Svetoslav Stefanov https://launchpad.net/~svetlisashkov\n"
-"  spacy01 https://launchpad.net/~spacy00001"
+"  abuyop https://launchpad.net/~abuyop"
 
 #: ../lib/Items/ApplicationDockItem.vala:417
 #: ../lib/Items/FileDockItem.vala:314 ../lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
-msgstr "_Запазване в дока"
+msgstr "_Kekal dalam Labuh"
 
 #: ../lib/Items/ApplicationDockItem.vala:425
 msgid "_Close All"
-msgstr "_Затваряне на всички"
+msgstr "_Tutup Semua"
 
 #: ../lib/Items/ApplicationDockItem.vala:425
 msgid "_Close"
-msgstr "Зат_варяне"
+msgstr "_Tutup"
 
 #: ../lib/Items/ApplicationDockItem.vala:497
 #, c-format
 msgid "Drop to open with %s"
-msgstr "Пуснете за отваряне с %s"
+msgstr ""
 
 #: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
-msgstr "Отваряне във _файловия браузър"
+msgstr ""
 
 #: ../lib/Items/FileDockItem.vala:342
 msgid "_Open"
-msgstr "О_тваряне"
+msgstr "_Buka"
 
 #: ../lib/Items/FileDockItem.vala:346
 msgid "Open Containing _Folder"
-msgstr "Отваряне на _съдържаща папка"
+msgstr "Buka _Folder yang Mengandungi"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr "Завлечете проложения или файлове тук"
+msgstr ""
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
-msgstr "Получаване на помо_щ онлайн..."
+msgstr ""
 
 #: ../lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."
-msgstr "_Превеждане на това приложение..."
+msgstr ""
 
 #: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
-msgstr "Предпочитания"
+msgstr "Keutamaan"
