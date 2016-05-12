@@ -119,6 +119,10 @@ namespace Docky
 		
 		void clear ()
 		{
+			// Make sure we own the current clipboard content,
+			// so we are allowed to clear it
+			clipboard.set_text ("", 0);
+			
 			clipboard.clear ();
 			clips.clear ();
 			cur_position = 0;
