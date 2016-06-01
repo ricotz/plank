@@ -29,7 +29,7 @@ namespace Plank
 	[CCode (cheader_filename = "glib.h", cname = "g_quark_from_static_string")]
 	public GLib.Quark quark_from_static_string (string str);
 
-#if VALA_0_26 && !VALA_0_32
+#if !VALA_0_32
 	[CCode (array_length_type = "guint", cheader_filename = "glib-object.h", cname = "g_object_class_list_properties")]
 	public (unowned GLib.ParamSpec)[] g_object_class_list_properties (GLib.ObjectClass oclass);
 #endif

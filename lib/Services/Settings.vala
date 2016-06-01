@@ -54,10 +54,8 @@ namespace Plank
 			
 #if VALA_0_32
 			(unowned ParamSpec)[] properties = get_class ().list_properties ();
-#elif VALA_0_26
-			(unowned ParamSpec)[] properties = g_object_class_list_properties (get_class ());
 #else
-			unowned ParamSpec[] properties = get_class ().list_properties ();
+			(unowned ParamSpec)[] properties = g_object_class_list_properties (get_class ());
 #endif
 			
 			// Bind available gsettings-keys to their class-properties
