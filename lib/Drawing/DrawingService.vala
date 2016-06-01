@@ -264,7 +264,7 @@ namespace Plank
 						var cr = new Cairo.Context (surface);
 						Gdk.cairo_set_source_pixbuf (cr, pbuf, (width - pbuf.width) / 2, (height - pbuf.height) / 2);
 						cr.paint ();
-						cairo_surface_set_device_scale (surface, scale, scale);
+						surface.set_device_scale (scale, scale);
 						break;
 					}
 				}
@@ -298,7 +298,7 @@ namespace Plank
 				var cr = new Cairo.Context (surface);
 				Gdk.cairo_set_source_pixbuf (cr, pbuf, (width - pbuf.width) / 2, (height - pbuf.height) / 2);
 				cr.paint ();
-				cairo_surface_set_device_scale (surface, scale, scale);
+				surface.set_device_scale (scale, scale);
 			}
 			
 			return surface;

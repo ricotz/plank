@@ -182,7 +182,7 @@ namespace Plank
 #endif
 			var drag_surface = new Surface (drag_icon_size, drag_icon_size);
 #if HAVE_HIDPI
-			cairo_surface_set_device_scale (drag_surface.Internal, window_scale_factor, window_scale_factor);
+			drag_surface.Internal.set_device_scale (window_scale_factor, window_scale_factor);
 #endif
 			
 			var item_surface = item.get_surface_copy (drag_icon_size, drag_icon_size, drag_surface);

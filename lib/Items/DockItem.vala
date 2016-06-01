@@ -533,10 +533,10 @@ namespace Plank
 			if (pbuf == null) {
 #if HAVE_HIDPI
 				double x_scale = 1.0, y_scale = 1.0;
-				cairo_surface_get_device_scale (surface.Internal, out x_scale, out y_scale);
+				surface.Internal.get_device_scale (out x_scale, out y_scale);
 				icon = DrawingService.load_icon_for_scale (Icon, surface.Width, surface.Height, (int) double.max (x_scale, y_scale));
 				if (icon != null)
-					cairo_surface_set_device_scale (icon, 1.0, 1.0);
+					icon.set_device_scale (1.0, 1.0);
 #else
 				pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
 #endif

@@ -358,21 +358,21 @@ namespace Plank
 			if (main_buffer == null) {
 				main_buffer = new Surface.with_cairo_surface (win_rect.width, win_rect.height, cr.get_target ());
 #if HAVE_HIDPI
-				cairo_surface_set_device_scale (main_buffer.Internal, window_scale_factor, window_scale_factor);
+				main_buffer.Internal.set_device_scale (window_scale_factor, window_scale_factor);
 #endif
 			}
 			
 			if (item_buffer == null) {
 				item_buffer = new Surface.with_cairo_surface (win_rect.width, win_rect.height, cr.get_target ());
 #if HAVE_HIDPI
-				cairo_surface_set_device_scale (item_buffer.Internal, window_scale_factor, window_scale_factor);
+				item_buffer.Internal.set_device_scale (window_scale_factor, window_scale_factor);
 #endif
 			}
 			
 			if (shadow_buffer == null) {
 				shadow_buffer = new Surface.with_cairo_surface (win_rect.width, win_rect.height, cr.get_target ());
 #if HAVE_HIDPI
-				cairo_surface_set_device_scale (shadow_buffer.Internal, window_scale_factor, window_scale_factor);
+				shadow_buffer.Internal.set_device_scale (window_scale_factor, window_scale_factor);
 #endif
 			}
 			
@@ -396,7 +396,7 @@ namespace Plank
 			if (opacity < 1.0 && fade_buffer == null) {
 				fade_buffer = new Surface.with_cairo_surface (win_rect.width, win_rect.height, cr.get_target ());
 #if HAVE_HIDPI
-				cairo_surface_set_device_scale (fade_buffer.Internal, window_scale_factor, window_scale_factor);
+				fade_buffer.Internal.set_device_scale (window_scale_factor, window_scale_factor);
 #endif
 			}
 			

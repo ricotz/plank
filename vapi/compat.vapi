@@ -19,13 +19,6 @@
 
 namespace Plank
 {
-#if HAVE_HIDPI
-	[CCode (cheader_filename = "cairo.h", cname = "cairo_surface_get_device_scale")]
-	public void cairo_surface_get_device_scale (Cairo.Surface surface, out double x_scale, out double y_scale);
-	[CCode (cheader_filename = "cairo.h", cname = "cairo_surface_set_device_scale")]
-	public void cairo_surface_set_device_scale (Cairo.Surface surface, double x_scale, double y_scale);
-#endif
-
 	[CCode (cheader_filename = "glib.h", cname = "g_quark_from_static_string")]
 	public GLib.Quark quark_from_static_string (string str);
 
