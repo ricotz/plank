@@ -33,4 +33,7 @@ namespace Plank
 	public const string DOCKLET_URI_PREFIX = "docklet://";
 	
 	public const string SURFACE_STATS_DRAWING_TIME_EXCEEDED = "drawing-time-exceeded";
+	
+	public const uint FOLDER_MAX_FILE_COUNT = 192;
+	public const uint LAUNCHER_DIR_MAX_FILE_COUNT = 128;
 }

@@ -176,6 +176,7 @@ namespace Plank
 			debug ("Loading dock elements from '%s'", source_dir.get_path ());
 			
 			var elements = new Gee.HashMap<string,DockElement> ();
+			var count = 0U;
 			
 			try {
 				var enumerator = source_dir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0);
@@ -184,6 +185,11 @@ namespace Plank
 					var filename = info.get_name ();
 					if (info.get_is_hidden () || !filename.has_suffix (".dockitem"))
 						continue;
+					
+					if (count++ >= LAUNCHER_DIR_MAX_FILE_COUNT) {
+						critical ("There are way too many files (%u+) in '%s'.", LAUNCHER_DIR_MAX_FILE_COUNT, source_dir.get_path ());
+						break;
+					}
 					
 					var file = source_dir.get_child (filename);
 					var element = make_element (file);
