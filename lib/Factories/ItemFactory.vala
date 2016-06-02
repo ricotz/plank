@@ -168,12 +168,19 @@ namespace Plank.Factories
 
 			debug ("Loading dock items from '%s'", source_dir.get_path ());
 			
+			var count = 0U;
+			
 			try {
 				var enumerator = source_dir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_IS_HIDDEN, 0);
 				FileInfo info;
 				while ((info = enumerator.next_file ()) != null) {
 					if (info.get_is_hidden () || !info.get_name ().has_suffix (".dockitem"))
 						continue;
+					
+					if (count++ >= LAUNCHER_DIR_MAX_FILE_COUNT) {
+						critical ("There are way too many files (%u+) in '%s'.", LAUNCHER_DIR_MAX_FILE_COUNT, source_dir.get_path ());
+						break;
+					}
 					
 					var file = source_dir.get_child (info.get_name ());
 					var element = make_element (file);

@@ -376,6 +376,7 @@ namespace Plank.Items
 		Gee.ArrayList<File> get_files ()
 		{
 			var files = new Gee.ArrayList<File> ();
+			var count = 0U;
 			
 			try {
 				var enumerator = OwnedFile.enumerate_children (FileAttribute.STANDARD_NAME + ","
@@ -387,6 +388,11 @@ namespace Plank.Items
 				while ((info = enumerator.next_file ()) != null) {
 					if (info.get_is_hidden ())
 						continue;
+					
+					if (count++ >= FOLDER_MAX_FILE_COUNT) {
+						critical ("There are way too many files (%u+) in '%s'.", FOLDER_MAX_FILE_COUNT, OwnedFile.get_path ());
+						break;
+					}
 				
 					files.add (OwnedFile.get_child (info.get_name ()));
 				}
