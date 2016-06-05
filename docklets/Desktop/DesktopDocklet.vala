@@ -40,7 +40,7 @@ namespace Docky
 		
 		public unowned string get_description ()
 		{
-			return "";
+			return _("Show your Desktop.");
 		}
 		
 		public unowned string get_icon ()

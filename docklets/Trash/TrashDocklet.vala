@@ -38,7 +38,7 @@ namespace Docky
 		
 		public unowned string get_description ()
 		{
-			return "";
+			return _("Have a look at your trash!");
 		}
 		
 		public unowned string get_icon ()

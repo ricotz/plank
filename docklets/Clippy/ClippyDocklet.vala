@@ -38,7 +38,7 @@ namespace Docky
 		
 		public unowned string get_description ()
 		{
-			return "";
+			return _("Keep recent clipboard entries.");
 		}
 		
 		public unowned string get_icon ()
