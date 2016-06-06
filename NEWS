@@ -2,6 +2,16 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.11.2 "Eddy" (2016-06-06)
+===============================================================================
+ * Require valac >= 0.26.0 and drop conditionals accordingly
+ * Add support for HSL and some convenience functions
+ * Fill in docklet descriptions
+ * Add and enforce some file-count limits
+ * Need to own clipboard's content before allowed to clear it (LP: #1540081)
+ * Pass correct index in menu-item-callback (LP: #1577745)
+ * Update translations
+
 0.11.1 "Eddy" (2016-03-30)
 ===============================================================================
  * ApplicationDockItem: Use child-* signals of Bamf.View and force
