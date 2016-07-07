@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-05-12 09:10+0000\n"
-"PO-Revision-Date: 2016-05-22 08:38+0000\n"
-"Last-Translator: Maxim Taranov <png2378@gmail.com>\n"
+"POT-Creation-Date: 2016-06-06 05:41+0000\n"
+"PO-Revision-Date: 2016-06-28 21:55+0000\n"
+"Last-Translator: Artem Anufrij <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-05-23 05:42+0000\n"
-"X-Generator: Launchpad (build 18025)\n"
+"X-Launchpad-Export-Date: 2016-06-29 05:28+0000\n"
+"X-Generator: Launchpad (build 18115)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -50,7 +50,7 @@ msgstr "Тема:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr "Позиция:"
+msgstr "Положение:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
@@ -134,7 +134,7 @@ msgstr "Прятаться от активного окна"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr "Скрытие панель"
+msgstr "Скрытие панели"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
@@ -158,11 +158,11 @@ msgstr "Выявление давления:"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
-msgstr "Управление иконками"
+msgstr "Управление элементами"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr "Показать незакреплённые:"
+msgstr "Показывать незакреплённые:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
@@ -170,7 +170,7 @@ msgstr "Ограничить рабочим столом:"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr "Блокировка иконок:"
+msgstr "Заблокировать элементы:"
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"

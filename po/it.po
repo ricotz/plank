@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-02-21 09:20+0000\n"
-"PO-Revision-Date: 2016-02-17 00:36+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2016-06-06 05:41+0000\n"
+"PO-Revision-Date: 2016-07-06 07:37+0000\n"
+"Last-Translator: Fabio Zaramella <FFabio.96.X@Gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-02-22 05:40+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-07-07 05:27+0000\n"
+"X-Generator: Launchpad (build 18115)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -26,9 +26,9 @@ msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"Plank è destinata ad essere la dockbar più semplice del pianeta. L'obiettivo "
-"è quello di fornire proprio quello ciò di cui una dockbar ha bisogno e "
-"assolutamente niente di più."
+"Plank punta ad essere la dockbar più semplice del pianeta. L'obiettivo è "
+"proprio quello di fornire ciò di cui una dockbar ha bisogno e assolutamente "
+"niente di più."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -39,10 +39,10 @@ msgid ""
 "painters, settings dialogs, etc."
 msgstr ""
 "È, tuttavia, una libreria che può essere estesa per creare altri programmi "
-"dock con caratteristiche più avanzate. Così, Plank è la tecnologia di base "
+"dock con caratteristiche più avanzate. Perciò, Plank è la tecnologia di base "
 "per Docky (a partire dalla versione 3.0.0) e mira a fornire tutte le "
-"funzionalità di base, mentre Docky si estende per aggiungere cose più "
-"elaborate come docklets, pittori, impostazioni finestre di dialogo, ecc"
+"funzionalità di base, mentre Docky le estende per aggiungere cose più "
+"elaborate come docklets, pittori, finestre di dialogo con impostazioni, ecc."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
@@ -78,11 +78,11 @@ msgstr "Riempi"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr "Avvio"
+msgstr "Inizio"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr "Termine"
+msgstr "Fine"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
@@ -142,7 +142,7 @@ msgstr "Ritardo nascondimento:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr "Ritardo in ms prima di nascondere la dock"
+msgstr "Ritardo in millisecondi prima di nascondere la dock"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
@@ -150,11 +150,11 @@ msgstr "Ritardo scopri:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr "Ritardo in millisecondi prima di mostrare il dock"
+msgstr "Ritardo in millisecondi prima di mostrare la dock"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr "Rileva a pressione:"
+msgstr "Rivela a pressione:"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
@@ -166,25 +166,17 @@ msgstr "Mostra sbloccato:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr "Limitare ad area di lavoro:"
+msgstr "Limita ad area di lavoro:"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
 msgstr "Blocca icone:"
 
 #: ../data/ui/preferences.ui.h:33
-msgid "Automatic Pinning:"
-msgstr "Ancoraggio automatico:"
-
-#: ../data/ui/preferences.ui.h:34
-msgid "Show Item for Dock:"
-msgstr "Mostra elemento per la Dock:"
-
-#: ../data/ui/preferences.ui.h:35
 msgid "Behaviour"
 msgstr "Comportamento"
 
-#: ../data/ui/preferences.ui.h:36
+#: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
 msgstr "Docklets"
 
@@ -192,7 +184,7 @@ msgstr "Docklets"
 msgid "Drop to add to dock"
 msgstr "Rilascia per aggiungere alla dock"
 
-#: ../lib/Factories/AbstractMain.vala:365 ../src/Main.vala:75
+#: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -211,20 +203,20 @@ msgstr ""
 "  cramejs https://launchpad.net/~cramejs\n"
 "  sddania https://launchpad.net/~sddania"
 
-#: ../lib/Items/ApplicationDockItem.vala:446
-#: ../lib/Items/FileDockItem.vala:314 ../lib/Items/FileDockItem.vala:336
+#: ../lib/Items/ApplicationDockItem.vala:417 ../lib/Items/FileDockItem.vala:314
+#: ../lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
 msgstr "_Mantieni sulla dock"
 
-#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/ApplicationDockItem.vala:425
 msgid "_Close All"
 msgstr "_Chiudi tutti"
 
-#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/ApplicationDockItem.vala:425
 msgid "_Close"
 msgstr "_Chiudi"
 
-#: ../lib/Items/ApplicationDockItem.vala:526
+#: ../lib/Items/ApplicationDockItem.vala:497
 #, c-format
 msgid "Drop to open with %s"
 msgstr "Rilascia per aprire con %s"
@@ -253,6 +245,6 @@ msgstr "_Ottieni aiuto online..."
 msgid "_Translate This Application..."
 msgstr "_Traduci questa applicazione"
 
-#: ../lib/Widgets/PreferencesWindow.vala:94
+#: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
 msgstr "Preferenze"

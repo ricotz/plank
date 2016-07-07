@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-02-21 09:20+0000\n"
-"PO-Revision-Date: 2016-02-17 00:36+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2016-06-06 05:41+0000\n"
+"PO-Revision-Date: 2016-06-14 10:12+0000\n"
+"Last-Translator: Kristjan Vool <tictac7x@gmail.com>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-02-22 05:40+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-06-15 06:06+0000\n"
+"X-Generator: Launchpad (build 18097)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -171,18 +171,10 @@ msgid "Lock Icons:"
 msgstr "Ikoonide lukustamine:"
 
 #: ../data/ui/preferences.ui.h:33
-msgid "Automatic Pinning:"
-msgstr "Automaatne kinnitamine:"
-
-#: ../data/ui/preferences.ui.h:34
-msgid "Show Item for Dock:"
-msgstr "Doki ikooni näitamine:"
-
-#: ../data/ui/preferences.ui.h:35
 msgid "Behaviour"
 msgstr "Käitumine"
 
-#: ../data/ui/preferences.ui.h:36
+#: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
 msgstr "Lisad"
 
@@ -190,7 +182,7 @@ msgstr "Lisad"
 msgid "Drop to add to dock"
 msgstr "Lohista lisamiseks dokile"
 
-#: ../lib/Factories/AbstractMain.vala:365 ../src/Main.vala:75
+#: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -199,23 +191,23 @@ msgstr ""
 "  Mihkel Tõnnov https://launchpad.net/~v6lur\n"
 "  Rico Tzschichholz https://launchpad.net/~ricotz"
 
-#: ../lib/Items/ApplicationDockItem.vala:446
-#: ../lib/Items/FileDockItem.vala:314 ../lib/Items/FileDockItem.vala:336
+#: ../lib/Items/ApplicationDockItem.vala:417 ../lib/Items/FileDockItem.vala:314
+#: ../lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
-msgstr "Hoia _dokil"
+msgstr "Dokil _hoidmine"
 
-#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/ApplicationDockItem.vala:425
 msgid "_Close All"
 msgstr "_Sulge"
 
-#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/ApplicationDockItem.vala:425
 msgid "_Close"
 msgstr "Sul_ge"
 
-#: ../lib/Items/ApplicationDockItem.vala:526
+#: ../lib/Items/ApplicationDockItem.vala:497
 #, c-format
 msgid "Drop to open with %s"
-msgstr ""
+msgstr "Lohista, et avada rakendusega %s"
 
 #: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
@@ -241,6 +233,6 @@ msgstr "Otsi _abi internetist..."
 msgid "_Translate This Application..."
 msgstr "_Aita tõlkida..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:94
+#: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
 msgstr "Eelistused"

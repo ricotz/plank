@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-02-25 14:22+0000\n"
-"PO-Revision-Date: 2016-02-17 00:36+0000\n"
+"POT-Creation-Date: 2016-06-06 05:41+0000\n"
+"PO-Revision-Date: 2016-02-29 05:46+0000\n"
 "Last-Translator: Charles Monzat <superboa@hotmail.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-02-26 04:48+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-06-07 05:25+0000\n"
+"X-Generator: Launchpad (build 18097)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -173,18 +173,10 @@ msgid "Lock Icons:"
 msgstr "Verrouiller les icônes :"
 
 #: ../data/ui/preferences.ui.h:33
-msgid "Automatic Pinning:"
-msgstr "Épinglage automatique :"
-
-#: ../data/ui/preferences.ui.h:34
-msgid "Show Item for Dock:"
-msgstr "Afficher l'icône du dock :"
-
-#: ../data/ui/preferences.ui.h:35
 msgid "Behaviour"
 msgstr "Comportement"
 
-#: ../data/ui/preferences.ui.h:36
+#: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
 msgstr "Docklets"
 
@@ -217,20 +209,20 @@ msgstr ""
 "  benjamin SIENTZOFF https://launchpad.net/~benjamin-sientzoff\n"
 "  houdas.rodolphe https://launchpad.net/~houdas-rodolphe"
 
-#: ../lib/Items/ApplicationDockItem.vala:409
-#: ../lib/Items/FileDockItem.vala:314 ../lib/Items/FileDockItem.vala:336
+#: ../lib/Items/ApplicationDockItem.vala:417 ../lib/Items/FileDockItem.vala:314
+#: ../lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
 msgstr "_Épingler au Dock"
 
-#: ../lib/Items/ApplicationDockItem.vala:417
+#: ../lib/Items/ApplicationDockItem.vala:425
 msgid "_Close All"
 msgstr "_Fermer tout"
 
-#: ../lib/Items/ApplicationDockItem.vala:417
+#: ../lib/Items/ApplicationDockItem.vala:425
 msgid "_Close"
 msgstr "_Fermer"
 
-#: ../lib/Items/ApplicationDockItem.vala:489
+#: ../lib/Items/ApplicationDockItem.vala:497
 #, c-format
 msgid "Drop to open with %s"
 msgstr "Relâcher pour ouvrir avec %s"
@@ -259,6 +251,6 @@ msgstr "Obtenir de l'_aide en ligne"
 msgid "_Translate This Application..."
 msgstr "_Traduire cette application..."
 
-#: ../lib/Widgets/PreferencesWindow.vala:94
+#: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
 msgstr "Préférences"

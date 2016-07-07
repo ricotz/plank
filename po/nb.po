@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-02-21 09:20+0000\n"
+"POT-Creation-Date: 2016-06-06 05:41+0000\n"
 "PO-Revision-Date: 2016-02-17 00:36+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-02-22 05:40+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-06-07 05:25+0000\n"
+"X-Generator: Launchpad (build 18097)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -172,18 +172,10 @@ msgid "Lock Icons:"
 msgstr "Lås ikoner:"
 
 #: ../data/ui/preferences.ui.h:33
-msgid "Automatic Pinning:"
-msgstr "Automatisk liming:"
-
-#: ../data/ui/preferences.ui.h:34
-msgid "Show Item for Dock:"
-msgstr "Vis element for dokken:"
-
-#: ../data/ui/preferences.ui.h:35
 msgid "Behaviour"
 msgstr "Oppførsel"
 
-#: ../data/ui/preferences.ui.h:36
+#: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
 msgstr "Dokkprogrammer"
 
@@ -191,7 +183,7 @@ msgstr "Dokkprogrammer"
 msgid "Drop to add to dock"
 msgstr "Slipp for å legge til en dokk"
 
-#: ../lib/Factories/AbstractMain.vala:365 ../src/Main.vala:75
+#: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -203,20 +195,20 @@ msgstr ""
 "  Tor Inge Røttum https://launchpad.net/~tor-u4\n"
 "  kingu https://launchpad.net/~comradekingu"
 
-#: ../lib/Items/ApplicationDockItem.vala:446
-#: ../lib/Items/FileDockItem.vala:314 ../lib/Items/FileDockItem.vala:336
+#: ../lib/Items/ApplicationDockItem.vala:417 ../lib/Items/FileDockItem.vala:314
+#: ../lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
 msgstr "_Behold i Dokken"
 
-#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/ApplicationDockItem.vala:425
 msgid "_Close All"
 msgstr "_Lukk alle"
 
-#: ../lib/Items/ApplicationDockItem.vala:454
+#: ../lib/Items/ApplicationDockItem.vala:425
 msgid "_Close"
 msgstr "_Lukk"
 
-#: ../lib/Items/ApplicationDockItem.vala:526
+#: ../lib/Items/ApplicationDockItem.vala:497
 #, c-format
 msgid "Drop to open with %s"
 msgstr "Slipp for å åpne med %s"
@@ -245,6 +237,6 @@ msgstr "Få _hjelp på nettet..."
 msgid "_Translate This Application..."
 msgstr "_Oversett denne applikasjonen...."
 
-#: ../lib/Widgets/PreferencesWindow.vala:94
+#: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
 msgstr "Innstillinger"
