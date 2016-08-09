@@ -4,6 +4,8 @@ docklets/Clippy/ClippyDockItem.c
 docklets/Clippy/ClippyDocklet.c
 docklets/Clock/ClockDockItem.c
 docklets/Clock/ClockDocklet.c
+docklets/CPUMonitor/CPUMonitorDockItem.c
+docklets/CPUMonitor/CPUMonitorDocklet.c
 docklets/Desktop/DesktopDockItem.c
 docklets/Desktop/DesktopDocklet.c
 docklets/Trash/TrashDockItem.c

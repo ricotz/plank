@@ -365,6 +365,7 @@ src/Makefile
 docklets/Makefile
 docklets/Clippy/Makefile
 docklets/Clock/Makefile
+docklets/CPUMonitor/Makefile
 docklets/Desktop/Makefile
 docklets/Trash/Makefile
 docs/Makefile
