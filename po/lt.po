@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-06-06 05:41+0000\n"
-"PO-Revision-Date: 2016-03-14 20:39+0000\n"
+"POT-Creation-Date: 2016-07-07 18:48+0000\n"
+"PO-Revision-Date: 2016-08-08 20:36+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-06-07 05:25+0000\n"
-"X-Generator: Launchpad (build 18097)\n"
+"X-Launchpad-Export-Date: 2016-08-09 05:30+0000\n"
+"X-Generator: Launchpad (build 18169)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -26,8 +26,8 @@ msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"Plank yra skirtas būti pačiu paprasčiausiu doku planetoje. Jo tikslas yra "
-"pateikti tai kas reikalinga dokui ir visiškai nieko daugiau."
+"Plank yra skirtas būti pačiu paprasčiausiu skydeliu planetoje. Jo tikslas "
+"yra pateikti tai kas reikalinga skydeliui ir visiškai nieko daugiau."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -38,10 +38,10 @@ msgid ""
 "painters, settings dialogs, etc."
 msgstr ""
 "Kita vertus, jis yra biblioteka, kuri gali būti išplėsta, siekiant sukurti "
-"kitas doko programas su labiau išplėstinėmis ypatybėmis. Štai kodėl Plank "
-"yra esminė Docky (pradedant versijoje 3.0.0) technologija ir siekia pateikti "
-"visas pagrindines ypatybes, tuo tarpu kai Docky išplečia jį ir prideda "
-"tokius dalykus kaip įskiepiai, nustatymų dialogai ir t.t."
+"kitas skydelio programas su labiau išplėstinėmis ypatybėmis. Štai kodėl "
+"Plank yra esminė Docky (pradedant versijoje 3.0.0) technologija ir siekia "
+"pateikti visas pagrindines ypatybes, tuo tarpu kai Docky išplečia jį ir "
+"prideda tokius dalykus kaip įskiepiai, nustatymų dialogai ir t.t."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
@@ -133,7 +133,7 @@ msgstr "Vengti aktyvaus lango"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr "Slėpti doką"
+msgstr "Slėpti skydelį"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
@@ -141,7 +141,7 @@ msgstr "Slėpimo delsa:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr "Delsa milisekundėmis, prieš slepiant doką"
+msgstr "Delsa milisekundėmis, prieš slepiant skydelį"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
@@ -149,7 +149,7 @@ msgstr "Parodymo delsa:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr "Delsa milisekundėmis, prieš rodant doką"
+msgstr "Delsa milisekundėmis, prieš rodant skydelį"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"

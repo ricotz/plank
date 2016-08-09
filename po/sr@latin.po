@@ -7,25 +7,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-06-06 05:41+0000\n"
-"PO-Revision-Date: 2016-02-17 00:36+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2016-07-07 18:48+0000\n"
+"PO-Revision-Date: 2016-08-02 11:50+0000\n"
+"Last-Translator: Igor S. <crni2k8@gmail.com>\n"
 "Language-Team: Serbian Latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-06-07 05:26+0000\n"
-"X-Generator: Launchpad (build 18097)\n"
+"X-Launchpad-Export-Date: 2016-08-03 05:26+0000\n"
+"X-Generator: Launchpad (build 18169)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
-msgstr "Glupavo jednostavna."
+msgstr "Glupavo jenostavan."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"Plank bi trebao da bude najjednostavniji dok na planeti. Njegov cilj je da "
+"pruži samo ono što dok treba da pruži i apsolutno ništa više."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -35,158 +37,164 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"On je, u stvari, biblioteka koja se može proširiti, kako bi se napravili "
+"drugi dok programi sa još naprednijim funkcijama. Stoga, Plank je osnova za "
+"Doki (počevši od verzije 3.0.0) i cilj mu je da pruži sve ključne funkcije, "
+"dok ih Doki proširuje kako bi dodao naprednije stvari kao što su Dokleti, "
+"boje, prozorčići sa podešavanjima, itd."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "Tema:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "Pozicija:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "Levo"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "Desno"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "Gore"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "Dole"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "Poravnanje:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "Ispunjeno"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "Na početak"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "Na kraj"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "Po sredini"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "Na glavnom ekranu:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr ""
+msgstr "Pomak u procentima od sredine do ivice ekrana"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr ""
+msgstr "Poravnanje ikonica:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "Veličina ikonica:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr ""
+msgstr "Uveličanje ikonica:"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
-msgstr ""
+msgstr "Izgled"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr ""
+msgstr "Pametno sakrivanje"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr ""
+msgstr "Samostalno sakrivanje"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr ""
+msgstr "Izbegavaj uvećani prozor"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr ""
+msgstr "Izbegavaj prozor"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr ""
+msgstr "Izbegavaj aktivni prozor"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr ""
+msgstr "Sakrij dok"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr ""
+msgstr "Kašnjenje sakrivanja:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgstr "Kašnjenje u milisekundama pre nego što se dok sakrije"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "Kašnjenje otkrivanja:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "Kašnjenje u milisekundama pre nego što se dok otkrije"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr ""
+msgstr "Prikazivanje pritiskom:"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
-msgstr ""
+msgstr "Upravljanje stavkama"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr ""
+msgstr "Prikaži otkačene:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr ""
+msgstr "Ograniči na radni prostor:"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr ""
+msgstr "Zaključaj ikonice:"
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
-msgstr ""
+msgstr "Ponašanje"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
-msgstr ""
+msgstr "Dokleti"
 
 #: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
-msgstr ""
+msgstr "Privuci da dodaš na dok"
 
 #: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
+"  Igor S. https://launchpad.net/~crni2k8\n"
 "  Rico Tzschichholz https://launchpad.net/~ricotz\n"
 "  Иван Благојевић https://launchpad.net/~ivanblago"
 
 #: ../lib/Items/ApplicationDockItem.vala:417 ../lib/Items/FileDockItem.vala:314
 #: ../lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
-msgstr "_Zadrži u Polici"
+msgstr "_Zadrži na doku"
 
 #: ../lib/Items/ApplicationDockItem.vala:425
 msgid "_Close All"
@@ -199,7 +207,7 @@ msgstr "_Zatvori"
 #: ../lib/Items/ApplicationDockItem.vala:497
 #, c-format
 msgid "Drop to open with %s"
-msgstr ""
+msgstr "Privuci da otvoriš sa %s"
 
 #: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
@@ -215,7 +223,7 @@ msgstr "Otvori _sadržajnu fasciklu"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr ""
+msgstr "Privuci aplikacije ili fajlove ovde"
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
@@ -227,4 +235,4 @@ msgstr "_Prevedi ovu Aplikaciju..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
-msgstr "Postavke"
+msgstr "Podešavanja"
