@@ -16,9 +16,16 @@
       core features while Docky extends it to add fancier things like Docklets, painters, settings dialogs, etc.
     </_p>
   </description>
+  <keywords>
+    <keyword>dock</keyword>
+    <keyword>launch</keyword>
+    <keyword>panel</keyword>
+    <keyword>start</keyword>
+  </keywords>
   <url type="homepage">https://launchpad.net/plank</url>
   <url type="bugtracker">https://bugs.launchpad.net/plank</url>
   <url type="faq">https://answers.launchpad.net/plank</url>
+  <url type="translate">https://translations.launchpad.net/plank</url>
   <provides>
     <library>libplank.so.0</library>
     <binary>plank</binary>
