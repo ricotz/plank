@@ -24,7 +24,7 @@ namespace Docky
 	public class ClippyDockItem : DockletItem
 	{
 		Gtk.Clipboard clipboard;
-		Gee.ArrayList<string> clips = new Gee.ArrayList<string> ();
+		Gee.ArrayList<string> clips;
 		int cur_position = 0;
 		uint timer_id = 0U;
 		
@@ -47,6 +47,7 @@ namespace Docky
 			else
 				clipboard = Gtk.Clipboard.get (Gdk.Atom.intern ("CLIPBOARD", true));
 			
+			clips = new Gee.ArrayList<string> ();
 			timer_id = Gdk.threads_add_timeout (prefs.TimerDelay, (SourceFunc) check_clipboard);
 			
 			updated ();
