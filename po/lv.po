@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-06-06 05:41+0000\n"
-"PO-Revision-Date: 2016-02-17 00:36+0000\n"
+"POT-Creation-Date: 2016-09-14 06:49+0000\n"
+"PO-Revision-Date: 2016-08-21 10:57+0000\n"
 "Last-Translator: Rico Tzschichholz <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-06-07 05:25+0000\n"
-"X-Generator: Launchpad (build 18097)\n"
+"X-Launchpad-Export-Date: 2016-09-15 06:05+0000\n"
+"X-Generator: Launchpad (build 18186)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -26,6 +26,8 @@ msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"Plank ir veidots kā vienkāršākais programmu panelis pasaulē. Mūsu mērķis ir "
+"nodrošināt to, kas panelim ir vajadzīgs un ne vairāk."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -35,10 +37,16 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"Neskatoties uz to, tā ir bibliotēka, kura var tikt papildināta, lai "
+"izveidotu citas paneļu programmas ar sarežģītākām funkcijām. Tāpēc, Plank ir "
+"pamattehnoloģija programmai Docky ( sākot no 3.0.0 versijas) un tās mērķis "
+"ir nodrošināt visas pamatfunkcijas, kamēr Docky paplašina to, lai tam "
+"pievienotu jau sarežģītākas lietas, kā Dockleti, painteri, iestatījumu "
+"dialogus u.c."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "Tēma:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
@@ -62,7 +70,7 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "Novietojums:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
@@ -82,91 +90,91 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr ""
+msgstr "Uz Galvenā Ekrāna:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr ""
+msgstr "Centra nobīde procentos no ekrāna malas"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr ""
+msgstr "Ikonu novietojums:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr ""
+msgstr "Ikonu izmēri:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr ""
+msgstr "Ikonu palielinājums:"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
-msgstr ""
+msgstr "Attēlojums"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr ""
+msgstr "Viedpaslēpšana"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr ""
+msgstr "Automātiskā paslēpšana"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr ""
+msgstr "Izvairīties no pilnekrāna logiem"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr ""
+msgstr "Izvairīšanās no logiem"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr ""
+msgstr "Izvairīties no aktīvā loga"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr ""
+msgstr "Paslēpt paneli"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr ""
+msgstr "Paslēpšanas laiks:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr ""
+msgstr "Laiks milisekundēs, pirms paneļa paslēpšanas"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "Laiks pirms parādīšanās:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "Laiks milisekundēs pirms paneļa parādīšanas"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr ""
+msgstr "Spiediena atklāšana:"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
-msgstr ""
+msgstr "Priekšmetu pārvaldīšana"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr ""
+msgstr "Rādīt nepiespraustos:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr ""
+msgstr "Norobežot uz darbavirsmas:"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr ""
+msgstr "Iesaldēt ikonas:"
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
-msgstr ""
+msgstr "Darbība"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
@@ -174,7 +182,7 @@ msgstr ""
 
 #: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
-msgstr ""
+msgstr "Uzmetiet lai pievienotu dokam"
 
 #: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
@@ -182,6 +190,7 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Kārlis Lukstiņš https://launchpad.net/~karlis-lukstins\n"
 "  Rico Tzschichholz https://launchpad.net/~ricotz\n"
+"  Roberts https://launchpad.net/~rob4iks3\n"
 "  marhis https://launchpad.net/~marhis"
 
 #: ../lib/Items/ApplicationDockItem.vala:417 ../lib/Items/FileDockItem.vala:314
@@ -200,7 +209,7 @@ msgstr "_Aizvērt"
 #: ../lib/Items/ApplicationDockItem.vala:497
 #, c-format
 msgid "Drop to open with %s"
-msgstr ""
+msgstr "Uzmetiet, lai atvērtu ar %s"
 
 #: ../lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
@@ -216,7 +225,7 @@ msgstr "Atvērt saturošo _mapi"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr ""
+msgstr "Nometiet programmas vai failus šeit"
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
