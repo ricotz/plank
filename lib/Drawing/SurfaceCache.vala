@@ -307,6 +307,7 @@ namespace Plank
 			
 			var now = GLib.get_monotonic_time ();
 			var size_before = cache_map.size;
+			var size_current = size_before;
 			
 			var cache_it = cache_map.map_iterator ();
 			while (cache_it.next ()) {
@@ -318,8 +319,12 @@ namespace Plank
 				if (info.drawing_time > MIN_DRAWING_TIME)
 					continue;
 				
+				if (size_current <= 1)
+					break;
+				
 				infos.remove (info);
 				cache_it.unset ();
+				size_current--;
 			}
 			
 			last_info = null;
