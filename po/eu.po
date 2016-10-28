@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-06-06 05:41+0000\n"
-"PO-Revision-Date: 2016-02-17 00:36+0000\n"
-"Last-Translator: Félix Brezo <felixbrezo@gmail.com>\n"
+"POT-Creation-Date: 2016-10-05 19:35+0000\n"
+"PO-Revision-Date: 2016-10-24 21:08+0000\n"
+"Last-Translator: Asier Iturralde Sarasola <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-06-07 05:25+0000\n"
-"X-Generator: Launchpad (build 18097)\n"
+"X-Launchpad-Export-Date: 2016-10-25 05:58+0000\n"
+"X-Generator: Launchpad (build 18246)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
-msgstr "Inozoentzako ere erabilerraza."
+msgstr "Erraza baino errazagoa."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
@@ -37,6 +37,12 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
+"Beraz, zera da, liburutegia zein zabaldu daiteke beste portu programa batzuk "
+"sortzeko eginbide aurreratu gehiagorekin. Honela, Plank azpitik dagoen "
+"teknologia da Docky-rentzat (3.0.0 bertsiotik aurrera) eta Plank honen asmoa "
+"da funtsezko eginbide guztiak eskaintzea. Docky-k, ordea, gauza "
+"txundigarriagoak eskaintzen ditu: Dockletak, pintatzaileak, ezarpen menuak, "
+"etab."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
@@ -48,11 +54,11 @@ msgstr "Tokia:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "Ezkerrean"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr "Eskuina"
+msgstr "Eskuinean"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
@@ -60,7 +66,7 @@ msgstr "Goian"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr "Behean"
+msgstr "Behealdean"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
@@ -108,7 +114,7 @@ msgstr "Itxura"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr ""
+msgstr "Zuhurtziaz ezkutatu"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
@@ -148,31 +154,31 @@ msgstr "ms-tan atzeratu docka erakutsi baino lehen"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr ""
+msgstr "Agertu presioa:"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
-msgstr ""
+msgstr "Elementuen kudeaketa"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr ""
+msgstr "Erakutsi aingura kenduta:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr ""
+msgstr "Mugatu laneko areara"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr ""
+msgstr "Blokeatu ikonoak:"
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
-msgstr ""
+msgstr "Portaera"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
-msgstr ""
+msgstr "Docklet-ak"
 
 #: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
@@ -182,10 +188,12 @@ msgstr "Jaregin atrakera itsasteko"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
+"  Asier Iturralde Sarasola https://launchpad.net/~asier-iturralde\n"
 "  Endika https://launchpad.net/~endikaml\n"
 "  Félix Brezo https://launchpad.net/~febrezo\n"
 "  Ibai Oihanguren Sala https://launchpad.net/~ibai-oihanguren\n"
-"  Rico Tzschichholz https://launchpad.net/~ricotz"
+"  Rico Tzschichholz https://launchpad.net/~ricotz\n"
+"  gorkaazk https://launchpad.net/~gorkaazkarate"
 
 #: ../lib/Items/ApplicationDockItem.vala:417 ../lib/Items/FileDockItem.vala:314
 #: ../lib/Items/FileDockItem.vala:336
@@ -219,7 +227,7 @@ msgstr "Ireki daukan _karpeta"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr ""
+msgstr "Arrastatu aplikazioak edo fitxategiak hona"
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."

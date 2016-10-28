@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-06-06 05:41+0000\n"
-"PO-Revision-Date: 2016-02-17 00:36+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2016-10-05 19:35+0000\n"
+"PO-Revision-Date: 2016-10-25 12:47+0000\n"
+"Last-Translator: Sigvart Brendberg <sigvabrend@gmail.com>\n"
 "Language-Team: Norwegian Nynorsk <nn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-06-07 05:25+0000\n"
-"X-Generator: Launchpad (build 18097)\n"
+"X-Launchpad-Export-Date: 2016-10-26 05:29+0000\n"
+"X-Generator: Launchpad (build 18246)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -26,6 +26,8 @@ msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
+"Plank er meint å vera den enklaste dokken i verda. Målet er å gje akkurat "
+"det ein dokk treng, og ikkje noko meir."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -38,11 +40,11 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr ""
+msgstr "Drakt:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "Plassering:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
@@ -62,7 +64,7 @@ msgstr ""
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr ""
+msgstr "Justering:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
@@ -181,7 +183,8 @@ msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
 "  Martin Myrvold https://launchpad.net/~myrvold-martin\n"
-"  Rico Tzschichholz https://launchpad.net/~ricotz"
+"  Rico Tzschichholz https://launchpad.net/~ricotz\n"
+"  Sigvart Brendberg https://launchpad.net/~sigvabrend"
 
 #: ../lib/Items/ApplicationDockItem.vala:417 ../lib/Items/FileDockItem.vala:314
 #: ../lib/Items/FileDockItem.vala:336
