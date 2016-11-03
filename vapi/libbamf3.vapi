@@ -6,7 +6,11 @@ namespace Bamf {
 	public class Application : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Application ();
+#if VALA_0_32
+		[Version (deprecated = true, deprecated_since = "0.5.0")]
+#else
 		[Deprecated (since = "0.5.0")]
+#endif
 		public bool get_application_menu (out string name, out string object_path);
 		public unowned string get_application_type ();
 		public unowned string get_desktop_file ();
@@ -130,7 +134,7 @@ namespace Bamf {
 		protected Window ();
 		public virtual int get_monitor ();
 		public virtual uint32 get_pid ();
-		public virtual unowned Bamf.Window get_transient ();
+		public virtual unowned Bamf.Window? get_transient ();
 		public virtual string get_utf8_prop (string prop);
 		public virtual Bamf.WindowType get_window_type ();
 		public virtual uint32 get_xid ();
