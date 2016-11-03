@@ -51,6 +51,7 @@ namespace Plank
 	 */
 	public class DockletManager : Object
 	{
+		static Regex docklet_filename_regex = /^libdocklet-.+.so$/;
 		static DockletManager? instance;
 		
 		public static unowned DockletManager get_default ()
@@ -64,7 +65,6 @@ namespace Plank
 		public signal void docklet_added (Docklet docklet);
 		
 		Gee.HashMap<string, Docklet> docklets;
-		Regex docklet_filename_regex;
 		
 		DockletManager ()
 		{
@@ -73,7 +73,6 @@ namespace Plank
 		
 		construct
 		{
-			docklet_filename_regex = new Regex ("^libdocklet-.+.so$");
 			docklets = new Gee.HashMap<string, Docklet> ();
 		}
 		

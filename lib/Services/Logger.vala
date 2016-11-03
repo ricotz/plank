@@ -89,7 +89,7 @@ namespace Plank
 		
 		static string app_domain;
 		static Mutex write_mutex;
-		static Regex? re = null;
+		static Regex message_regex;
 		
 		Logger ()
 		{
@@ -104,17 +104,15 @@ namespace Plank
 		{
 			app_domain = app_name;
 			
-			try {
-				re = new Regex ("""[(]?.*?([^/]*?)(\.2)?\.vala(:\d+)[)]?:\s*(.*)""");
-			} catch { }
+			message_regex = /[(]?.*?([^\/]*?)(\.2)?\.vala(:\d+)[)]?:\s*(.*)/;
 			
 			Log.set_default_handler ((GLib.LogFunc) glib_log_func);
 		}
 		
 		static string format_message (string msg)
 		{
-			if (re != null && re.match (msg)) {
-				var parts = re.split (msg);
+			if (message_regex.match (msg)) {
+				var parts = message_regex.split (msg);
 				return "[%s%s] %s".printf (parts[1], parts[3], parts[4]);
 			}
 			return msg;
