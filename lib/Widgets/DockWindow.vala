@@ -179,8 +179,12 @@ namespace Plank
 				menu.hide ();
 			
 			// Make sure the HoveredItem is still the same since button-pressed
-			if (ClickedItem != null && HoveredItem == ClickedItem && !menu_is_visible ())
+			if (ClickedItem != null && HoveredItem == ClickedItem && !menu_is_visible ()) {
+				// The user made a choice so hide tooltip to avoid obstructing anything
+				controller.hover.hide ();
+				
 				HoveredItem.clicked (PopupButton.from_event_button (event), event.state, event.time);
+			}
 			
 			ClickedItem = null;
 			
@@ -269,6 +273,9 @@ namespace Plank
 			}
 			
 			if (HoveredItem != null) {
+				// The user made a choice so hide tooltip to avoid obstructing anything
+				controller.hover.hide ();
+				
 				HoveredItem.scrolled (event.direction, event.state, event.time);
 				controller.renderer.animated_draw ();
 			}
