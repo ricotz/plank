@@ -139,24 +139,6 @@ namespace Plank
 			return pbuf;
 		}
 		
-		public static uint get_num_windows (Bamf.Application app)
-		{
-			Wnck.Screen.get_default ();
-			Array<uint32>? xids = app.get_xids ();
-			
-			warn_if_fail (xids != null);
-			
-			uint count = 0;
-			
-			for (var i = 0; xids != null && i < xids.length; i++) {
-				unowned Wnck.Window window = Wnck.Window.@get (xids.index (i));
-				if (window != null && window.get_transient () == null)
-					count++;
-			}
-			
-			return count;
-		}
-		
 		public static bool has_maximized_window (Bamf.Application app)
 		{
 			Wnck.Screen.get_default ();

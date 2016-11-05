@@ -289,7 +289,7 @@ namespace Plank
 				return;
 			}
 			
-			var window_count = WindowControl.get_num_windows (App);
+			var window_count = App.get_windows ().length ();
 			
 			if (window_count <= 1) {
 				if (Indicator != IndicatorState.SINGLE)
@@ -321,13 +321,13 @@ namespace Plank
 		{
 			if (!is_window ())
 				if (button == PopupButton.MIDDLE
-					|| (button == PopupButton.LEFT && (App == null || WindowControl.get_num_windows (App) == 0
+					|| (button == PopupButton.LEFT && (App == null || App.get_windows ().length () == 0
 					|| (mod & Gdk.ModifierType.CONTROL_MASK) == Gdk.ModifierType.CONTROL_MASK))) {
 					launch ();
 					return AnimationType.BOUNCE;
 				}
 			
-			if (button == PopupButton.LEFT && App != null && WindowControl.get_num_windows (App) > 0) {
+			if (button == PopupButton.LEFT && App != null && App.get_windows ().length () > 0) {
 				WindowControl.smart_focus (App, event_time);
 				return AnimationType.DARKEN;
 			}
@@ -340,7 +340,7 @@ namespace Plank
 		 */
 		protected override AnimationType on_scrolled (Gdk.ScrollDirection direction, Gdk.ModifierType mod, uint32 event_time)
 		{
-			if (App == null || WindowControl.get_num_windows (App) == 0)
+			if (App == null || App.get_windows ().length () == 0)
 				return AnimationType.NONE;
 			
 			if (GLib.get_monotonic_time () - LastScrolled < ITEM_SCROLL_DURATION * 1000)
