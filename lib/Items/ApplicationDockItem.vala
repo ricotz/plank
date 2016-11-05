@@ -194,15 +194,10 @@ namespace Plank
 		
 		void handle_user_visible_changed (bool user_visible)
 		{
-			if (user_visible) {
+			if (user_visible)
 				app_window_added ();
-				return;
-			}
-			
-			if (this is TransientDockItem)
-				App = null;
-			
-			app_closed ();
+			else
+				app_window_removed ();
 		}
 		
 		void handle_closed ()
