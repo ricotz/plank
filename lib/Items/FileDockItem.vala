@@ -95,7 +95,7 @@ namespace Plank.Items
 				return;
 			}
 			
-			Text = OwnedFile.get_basename () ?? "";
+			Text = get_display_name (OwnedFile);
 			
 			// pop up the dir contents on a left click too
 			if (OwnedFile.query_file_type (0) == FileType.DIRECTORY) {
@@ -196,20 +196,22 @@ namespace Plank.Items
 #endif
 			var keys = new Gee.ArrayList<string> ();
 			
-			foreach (var file in get_files ()) {
+			get_files (OwnedFile).map_iterator ().foreach ((display_name, file) => {
 				string icon, text;
 				var uri = file.get_uri ();
 				if (uri.has_suffix (".desktop")) {
 					ApplicationDockItem.parse_launcher (uri, out icon, out text);
 				} else {
 					icon = DrawingService.get_icon_from_file (file) ?? "";
-					text = file.get_basename () ?? "";
+					text = display_name ?? "";
 				}
 				
 				var key = "%s%s".printf (text, uri);
 				icons.set (key, icon);
 				keys.add (key);
-			}
+
+				return true;
+			});
 			
 			var pos = 0;
 			var icon_width = (int) ((width - 80 * radius / 33.0) / 2.0);
@@ -287,7 +289,7 @@ namespace Plank.Items
 #endif
 			var keys = new Gee.ArrayList<string> ();
 			
-			foreach (var file in get_files ()) {
+			get_files (OwnedFile).map_iterator ().foreach ((display_name, file) => {
 				Gtk.MenuItem item;
 				string icon, text;
 				var uri = file.get_uri ();
@@ -301,7 +303,7 @@ namespace Plank.Items
 					});
 				} else {
 					icon = DrawingService.get_icon_from_file (file) ?? "";
-					text = file.get_basename () ?? "";
+					text = display_name ?? "";
 					text = text.replace ("_", "__");
 					item = create_menu_item (text, icon, true);
 					item.activate.connect (() => {
@@ -314,7 +316,9 @@ namespace Plank.Items
 				var key = "%s%s".printf (text, uri);
 				menu_items.set (key, item);
 				keys.add (key);
-			}
+
+				return true;
+			});
 			
 #if HAVE_GEE_0_8
 			keys.sort ();
@@ -373,13 +377,14 @@ namespace Plank.Items
 			return items;
 		}
 		
-		Gee.ArrayList<File> get_files ()
+		static Gee.HashMap<string,File> get_files (File file)
 		{
-			var files = new Gee.ArrayList<File> ();
+			var files = new Gee.HashMap<string,File> ();
 			var count = 0U;
 			
 			try {
-				var enumerator = OwnedFile.enumerate_children (FileAttribute.STANDARD_NAME + ","
+				var enumerator = file.enumerate_children (FileAttribute.STANDARD_NAME + ","
+					+ FileAttribute.STANDARD_DISPLAY_NAME + ","
 					+ FileAttribute.STANDARD_IS_HIDDEN + ","
 					+ FileAttribute.ACCESS_CAN_READ, 0);
 				
@@ -390,15 +395,28 @@ namespace Plank.Items
 						continue;
 					
 					if (count++ >= FOLDER_MAX_FILE_COUNT) {
-						critical ("There are way too many files (%u+) in '%s'.", FOLDER_MAX_FILE_COUNT, OwnedFile.get_path ());
+						critical ("There are way too many files (%u+) in '%s'.", FOLDER_MAX_FILE_COUNT, file.get_path ());
 						break;
 					}
-				
-					files.add (OwnedFile.get_child (info.get_name ()));
+					
+					unowned string name = info.get_name ();
+					files.set (info.get_display_name () ?? name, file.get_child (name));
 				}
 			} catch { }
 			
 			return files;
+		}
+		
+		static string get_display_name (File file)
+		{
+			try {
+				var info = file.query_info (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_DISPLAY_NAME, 0);
+				return info.get_display_name () ?? info.get_name ();
+			} catch { }
+			
+			debug ("Could not get display-name for '%s'", file.get_path () ?? "");
+			
+			return "Unknown";
 		}
 	}
 }
