@@ -116,7 +116,6 @@ CAIRO_MIN_VERSION=1.10
 
 PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  glib-2.0 >= $GLIB_MIN_VERSION \
-                 gthread-2.0 >= $GLIB_MIN_VERSION \
                  gio-2.0 >= $GLIB_MIN_VERSION \
                  gio-unix-2.0 >= $GLIB_MIN_VERSION \
                  gmodule-2.0 \
@@ -142,7 +141,7 @@ PLANK_CORE_VALA_PKGS="--pkg gio-unix-2.0 \
                       --pkg posix \
                       --pkg x11"
 
-VALAFLAGS_CORE="--thread"
+VALAFLAGS_CORE=""
 
 # Docklets
 DOCKLET_LDFLAGS="-module -avoid-version"
