@@ -111,7 +111,7 @@ namespace Plank
 		
 		static string format_message (string msg)
 		{
-			if (message_regex.match (msg)) {
+			if (message_regex != null && message_regex.match (msg)) {
 				var parts = message_regex.split (msg);
 				return "[%s%s] %s".printf (parts[1], parts[3], parts[4]);
 			}
