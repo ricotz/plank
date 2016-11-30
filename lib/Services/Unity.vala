@@ -161,7 +161,7 @@ namespace Plank
 			acquire_unity_dbus ();
 
 			if (connection != null) {
-				debug ("Initalizing LauncherEntry support");
+				debug ("Initializing LauncherEntry support");
 
 				launcher_entry_dbus_signal_id = connection.signal_subscribe (null, INTERFACE_NAME,
 					null, null, null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_entry_signal);
