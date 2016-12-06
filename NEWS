@@ -2,6 +2,19 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.11.3 "Eddy" (2016-12-06)
+===============================================================================
+ * Add CPUMonitor docklet (LP: #1611504)
+ * Hide tooltips if the user performed action on a dockitem (LP: #1638680)
+ * Use the file's display-name where possible
+ * Trust Bamf with providing us the window-count
+ * Don't over-react on user-visible changes and keep transient items
+ * SurfaceCache: Never clear the cache completely
+ * tests: Fix build with valac 0.35+
+ * Drop references to gthread-2.0
+ * Update appdata
+ * Update translations
+
 0.11.2 "Eddy" (2016-06-06)
 ===============================================================================
  * Require valac >= 0.26.0 and drop conditionals accordingly
