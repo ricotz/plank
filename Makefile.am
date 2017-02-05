@@ -12,11 +12,8 @@ SUBDIRS = \
 	src \
 	tests \
 	examples \
+	docs \
 	$(NULL)
-
-if HAVE_VALADOC
-SUBDIRS += docs
-endif
 
 DISTCHECK_CONFIGURE_FLAGS = \
 	--enable-barriers \

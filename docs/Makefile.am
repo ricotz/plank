@@ -16,6 +16,7 @@ plank.1: $(top_builddir)/src/plank $(srcdir)/plank.h2m
 		--output=$@
 endif
 
+if HAVE_VALADOC
 BUILT_SOURCES = \
 	plank_vala_doc.stamp \
 	$(NULL)
@@ -101,8 +102,6 @@ valadoc_flags_plank = \
 	--vapidir=$(top_builddir)/lib \
 	--vapidir=$(top_srcdir)/vapi \
 	$(NULL)
-
-if HAVE_VALADOC
 
 cdocs: plank_c_doc.stamp
 plank_c_doc.stamp: $(plank_doc_files) $(top_builddir)/lib/plank-internal.vapi Makefile
