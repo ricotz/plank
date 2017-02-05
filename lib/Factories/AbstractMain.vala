@@ -31,8 +31,8 @@ namespace Plank
 		const OptionEntry[] options = {
 			{ "debug", 'd', 0, OptionArg.NONE, null, "Enable debug logging", null },
 			{ "verbose", 'v', 0, OptionArg.NONE, null, "Enable verbose logging", null },
-			{ "name", 'n', 0, OptionArg.STRING, null, "The name of this dock", null },
-			{ "preferences", 0, 0, OptionArg.NONE, null, "Show the application's preferences dialog", null },
+			{ "name", 'n', 0, OptionArg.STRING, null, "The name of this dock. Defaults to \"dock1\".", null },
+			{ "preferences", 0, 0, OptionArg.NONE, null, "Show preferences dialog of the just started or already running instance", null },
 			{ "version", 'V', 0, OptionArg.NONE, null, "Show the application's version", null },
 			{ null }
 		};

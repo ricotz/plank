@@ -28,10 +28,6 @@ CLEANFILES = \
 	net.launchpad.plank.gschema.xml.in \
 	$(NULL)
 
-dist_man_MANS = \
-	plank.1 \
-	$(NULL)
-
 applicationsdir = $(datadir)/applications
 applications_DATA = plank.desktop
 

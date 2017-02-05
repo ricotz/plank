@@ -316,6 +316,9 @@ if test "x$enable_docs" = "xyes" -a "x$have_valadoc" != "xyes"; then
     AC_MSG_ERROR([Doc building requested but valadoc not installed.])
 fi
 
+AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
+AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
+
 
 # -----------------------------------------------------------
 # Test Dependencies
