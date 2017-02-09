@@ -304,8 +304,7 @@ namespace Plank.Items
 				} else {
 					icon = DrawingService.get_icon_from_file (file) ?? "";
 					text = display_name ?? "";
-					text = text.replace ("_", "__");
-					item = create_menu_item (text, icon, true);
+					item = create_literal_menu_item (text, icon);
 					item.activate.connect (() => {
 						Services.System.open (file);
 						ClickedAnimation = Animation.BOUNCE;
