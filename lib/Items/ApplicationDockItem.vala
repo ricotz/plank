@@ -468,9 +468,9 @@ namespace Plank
 					window_name = shorten_window_name (window_name);
 					
 					if (pbuf != null)
-						window_item = create_menu_item_with_pixbuf (window_name, pbuf, true);
+						window_item = create_literal_menu_item_with_pixbuf (window_name, pbuf);
 					else 
-						window_item = create_menu_item (window_name, Icon, true);
+						window_item = create_literal_menu_item (window_name, Icon);
 					
 					if (window.is_active ())
 						window_item.set_sensitive (false);

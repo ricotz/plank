@@ -185,7 +185,7 @@ namespace Docky
 				var count = 0;
 				foreach (File _f in files) {
 					var f = _f;
-					var item = create_menu_item (f.get_basename (), DrawingService.get_icon_from_file (f));
+					var item = create_literal_menu_item (f.get_basename (), DrawingService.get_icon_from_file (f), false);
 					item.activate.connect (() => restore_file (f));
 					items.add (item);
 					

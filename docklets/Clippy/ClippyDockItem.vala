@@ -163,7 +163,7 @@ namespace Docky
 			var items = new Gee.ArrayList<Gtk.MenuItem> ();
 			
 			for (var i = clips.size ; i > 0; i--) {
-				var item = create_menu_item (clips.get (i - 1), "edit-cut");
+				var item = create_literal_menu_item (clips.get (i - 1), "edit-cut");
 				var pos = i;
 				item.activate.connect (() => {
 					copy_entry_at (pos);
