@@ -139,6 +139,7 @@ noinst_LTLIBRARIES = libplank-internal.la
 
 libplank_internal_la_CFLAGS = \
 	$(AM_CFLAGS) \
+	-fPIC \
 	-fvisibility=internal \
 	$(NULL)
 
