@@ -86,7 +86,7 @@ namespace Plank
 		{
 			assert (iter.stamp == stamp);
 			
-			unowned DockletNode node = data.get ((int) iter.user_data);
+			unowned DockletNode node = data.get ((int) pointer_to_uint (iter.user_data));
 			switch (column) {
 			case Column.ID:
 				val = Value (typeof (string));
@@ -121,7 +121,7 @@ namespace Plank
 			}
 			
 			iter = Gtk.TreeIter ();
-			iter.user_data = path.get_indices ()[0].to_pointer ();
+			iter.user_data = ((uint) path.get_indices ()[0]).to_pointer ();
 			iter.stamp = stamp;
 			
 			return true;
@@ -137,7 +137,7 @@ namespace Plank
 			assert (iter.stamp == stamp);
 			
 			Gtk.TreePath path = new Gtk.TreePath ();
-			path.append_index ((int) iter.user_data);
+			path.append_index ((int) pointer_to_uint (iter.user_data));
 			
 			return path;
 		}
@@ -153,7 +153,7 @@ namespace Plank
 		{
 			assert (iter.stamp == stamp);
 			
-			int pos = ((int) iter.user_data) + 1;
+			uint pos = pointer_to_uint (iter.user_data) + 1U;
 			if (pos >= data.length)
 				return false;
 			
@@ -166,7 +166,7 @@ namespace Plank
 		{
 			assert (iter.stamp == stamp);
 			
-			int pos = (int) iter.user_data;
+			uint pos = pointer_to_uint (iter.user_data);
 			if (pos >= 0)
 				return false;
 			
@@ -182,7 +182,7 @@ namespace Plank
 			if (parent == null && n < data.length) {
 				iter = Gtk.TreeIter ();
 				iter.stamp = stamp;
-				iter.user_data = n.to_pointer ();
+				iter.user_data = ((uint) n).to_pointer ();
 				return true;
 			}
 			
