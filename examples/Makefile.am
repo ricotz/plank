@@ -12,7 +12,6 @@ AM_CFLAGS = \
 	$(COVERAGE_CFLAGS) \
 	$(PLANK_CORE_CFLAGS) \
 	-include config.h \
-	-w \
 	-I$(top_builddir)/lib \
 	$(NULL)
 

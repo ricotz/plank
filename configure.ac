@@ -292,6 +292,7 @@ AC_SUBST(PLANK_DOCS_VALAFLAGS)
 
 # Use RUNPATH instead of RPATH if needed
 CFLAGS="$CFLAGS -Wl,--enable-new-dtags"
+CFLAGS="$CFLAGS -Wno-deprecated"
 
 # -----------------------------------------------------------
 # Documentation

@@ -5,7 +5,6 @@ AM_CFLAGS = \
 	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
 	-include config.h \
 	$(PLANK_CORE_CFLAGS) \
-	-w \
 	$(NULL)
 
 AM_VALAFLAGS = \

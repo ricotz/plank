@@ -41,7 +41,7 @@ libdocklet_desktop_la_LDFLAGS = \
 libdocklet_desktop_la_CFLAGS = \
 	$(PLANK_CORE_CFLAGS) \
 	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
-	-include config.h -w \
+	-include config.h \
 	-I$(top_builddir)/lib \
 	$(NULL)
 

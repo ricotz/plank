@@ -36,7 +36,7 @@ libdocklet_clippy_la_LDFLAGS = \
 
 libdocklet_clippy_la_CFLAGS = \
 	$(PLANK_CORE_CFLAGS) \
-	-include config.h -w \
+	-include config.h \
 	-I$(top_builddir)/lib \
 	$(NULL)
 

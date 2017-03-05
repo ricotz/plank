@@ -35,7 +35,7 @@ libdocklet_trash_la_LDFLAGS = \
 
 libdocklet_trash_la_CFLAGS = \
 	$(PLANK_CORE_CFLAGS) \
-	-include config.h -w \
+	-include config.h \
 	-I$(top_builddir)/lib \
 	$(NULL)
 
