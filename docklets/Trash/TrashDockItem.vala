@@ -271,6 +271,9 @@ namespace Docky
 			md.add_button (_("_Cancel"), Gtk.ResponseType.CANCEL);
 			md.add_button (_("Empty _Trash"), Gtk.ResponseType.OK);
 			md.set_default_response (Gtk.ResponseType.OK);
+			md.window_position = Gtk.WindowPosition.CENTER;
+			md.gravity = Gdk.Gravity.CENTER;
+			md.set_transient_for (((Gtk.Application) Application.get_default ()).get_active_window ());
 			
 			md.response.connect ((response_id) => {
 				if (response_id != Gtk.ResponseType.CANCEL)
