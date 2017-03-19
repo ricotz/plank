@@ -1,16 +1,16 @@
-# Latvian translation for plank
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Irish translation for plank
+# Copyright (c) 2017 Rosetta Contributors and Canonical Ltd 2017
 # This file is distributed under the same license as the plank package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2017-03-05 09:21+0000\n"
-"PO-Revision-Date: 2016-10-05 21:29+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
-"Language-Team: Latvian <lv@li.org>\n"
+"PO-Revision-Date: 2017-02-28 07:21+0000\n"
+"Last-Translator: Seán Ó Séaghdha <Unknown>\n"
+"Language-Team: Irish <ga@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,15 +19,15 @@ msgstr ""
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
-msgstr "Muļķīgi vienkārši."
+msgstr "Simplíocht shimplí."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"Plank ir veidots kā vienkāršākais programmu panelis pasaulē. Mūsu mērķis ir "
-"nodrošināt to, kas panelim ir vajadzīgs un ne vairāk."
+"Ceapadh Plank mar an dug is simplí ar an domhan. Is í an sprioc atá againn "
+"ná na riachtanais duga a sholáthar agus sin an méid."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -37,204 +37,201 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
-"Neskatoties uz to, tā ir bibliotēka, kura var tikt papildināta, lai "
-"izveidotu citas paneļu programmas ar sarežģītākām funkcijām. Tāpēc, Plank ir "
-"pamattehnoloģija programmai Docky ( sākot no 3.0.0 versijas) un tās mērķis "
-"ir nodrošināt visas pamatfunkcijas, kamēr Docky paplašina to, lai tam "
-"pievienotu jau sarežģītākas lietas, kā Dockleti, painteri, iestatījumu "
-"dialogus u.c."
+"Ach tá sé ina leabharlann freisin gur féidir é a leathnú chun ríomhchláir "
+"duga eile a chruthú agus gnéithe níos forbartha acu. Mar sin, is é Plank an "
+"bhunteicneolaíocht le haghaidh Docky (ó leagan 3.0.0 amach) agus tá sprioc "
+"ann na gnéithe lárnacha Docky a sholáthar cé go bhfuil na gnéithe sin á "
+"leathnú ag Docky chun rudaí galánta mar dugaíní, péintéirí, dialóga "
+"socruithe, srl. a chur leis."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr "Tēma:"
+msgstr "Téama:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr ""
+msgstr "Suíomh"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr ""
+msgstr "Clé"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr ""
+msgstr "Deas"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr ""
+msgstr "Barr"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr ""
+msgstr "Bun"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr "Novietojums:"
+msgstr "Ailíniú"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "Líon"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "Tús"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "Deireadh"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "Lár"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "Uz Galvenā Ekrāna:"
+msgstr "Ar an bPríomhthaispeáint:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr "Centra nobīde procentos no ekrāna malas"
+msgstr "Seach-chur ó lár imeall an scáileáin mar chéatadán"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Ikonu novietojums:"
+msgstr "Ailíniú Deilbhín:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr "Ikonu izmēri:"
+msgstr "Méid na nDeilbhíní:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr "Ikonu palielinājums:"
+msgstr "Zúmáil na nDeilbhíní:"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
-msgstr "Attēlojums"
+msgstr "Cuma"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr "Viedpaslēpšana"
+msgstr "Glicfholú"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr "Automātiskā paslēpšana"
+msgstr "Uathfholú"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr "Izvairīties no pilnekrāna logiem"
+msgstr "Seachain Fuinneoga Uasmhéadaithe"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr "Izvairīšanās no logiem"
+msgstr "Seachain Fuinneoga"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr "Izvairīties no aktīvā loga"
+msgstr "Seachain Fuinneog Ghníomhach"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr "Paslēpt paneli"
+msgstr "Folú an Duga"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr "Paslēpšanas laiks:"
+msgstr "Moill Folaithe:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr "Laiks milisekundēs, pirms paneļa paslēpšanas"
+msgstr "Moill i milleasoicindí roimh fholú an duga"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr "Laiks pirms parādīšanās:"
+msgstr "Moill Nochta:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr "Laiks milisekundēs pirms paneļa parādīšanas"
+msgstr "Moill i milleasoicindí roimh nochtadh an duga"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr "Spiediena atklāšana:"
+msgstr "Nocht le Brú:"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
-msgstr "Priekšmetu pārvaldīšana"
+msgstr "Bainistiú Míreanna"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr "Rādīt nepiespraustos:"
+msgstr "Taispeáin Míreanna Neamhghreamaithe"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr "Norobežot uz darbavirsmas:"
+msgstr "Srianta don Spás Oibre"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr "Iesaldēt ikonas:"
+msgstr "Glasáil Deilbhíní"
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
-msgstr "Darbība"
+msgstr "Iompraíocht"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
-msgstr ""
+msgstr "Dugaíní"
 
 #: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
-msgstr "Uzmetiet lai pievienotu dokam"
+msgstr "Scaoil chun cur leis an duga"
 
 #: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Kārlis Lukstiņš https://launchpad.net/~karlis-lukstins\n"
-"  Rico Tzschichholz https://launchpad.net/~ricotz\n"
-"  Roberts https://launchpad.net/~rob4iks3\n"
-"  marhis https://launchpad.net/~marhis"
+"  Seán Ó Séaghdha https://launchpad.net/~seanos"
 
 #: ../lib/Items/ApplicationDockItem.vala:412 ../lib/Items/FileDockItem.vala:317
 #: ../lib/Items/FileDockItem.vala:339
 msgid "_Keep in Dock"
-msgstr "At_stāt panelī"
+msgstr "_Coinnigh sa Duga"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close All"
-msgstr "_Aizvērt Visu"
+msgstr "_Dún Gach Rud"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close"
-msgstr "_Aizvērt"
+msgstr "_Dún"
 
 #: ../lib/Items/ApplicationDockItem.vala:492
 #, c-format
 msgid "Drop to open with %s"
-msgstr "Uzmetiet, lai atvērtu ar %s"
+msgstr "Scaoil chun é a oscailt le %s"
 
 #: ../lib/Items/FileDockItem.vala:323
 msgid "_Open in File Browser"
-msgstr "At_vērt failu pārlūkā"
+msgstr "_Oscail sa Bhrabhsálaí Comhad"
 
 #: ../lib/Items/FileDockItem.vala:345
 msgid "_Open"
-msgstr "At_vērt"
+msgstr "_Oscail"
 
 #: ../lib/Items/FileDockItem.vala:349
 msgid "Open Containing _Folder"
-msgstr "Atvērt saturošo _mapi"
+msgstr "Oscail an _Fillteán Coinneála"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr "Nometiet programmas vai failus šeit"
+msgstr "Scaoil ríomhchláir nó comhaid anseo"
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
-msgstr "Meklēt _palīdzību tiešsaitē..."
+msgstr "Faigh _Cabhair Ar Líne..."
 
 #: ../lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."
-msgstr "_Tulkot šo lietotni..."
+msgstr "Déan _Aistriúchán den Chlár seo..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
-msgstr "Iestatījumi"
+msgstr "Sainroghanna"

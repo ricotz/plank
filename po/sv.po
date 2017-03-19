@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-06-06 05:41+0000\n"
-"PO-Revision-Date: 2016-05-12 03:03+0000\n"
-"Last-Translator: Mikael Hagström <pacomiha@gmail.com>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"POT-Creation-Date: 2017-03-05 09:21+0000\n"
+"PO-Revision-Date: 2017-02-10 23:57+0000\n"
+"Last-Translator: Josef Andersson <Unknown>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-06-07 05:25+0000\n"
-"X-Generator: Launchpad (build 18097)\n"
+"X-Launchpad-Export-Date: 2017-03-07 05:43+0000\n"
+"X-Generator: Launchpad (build 18330)\n"
+"Language: sv\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -26,8 +27,8 @@ msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"Plank är menat att vara den enklaste skärmdockan på planeten. Målet är att "
-"erbjuda precis vad en dock behöver och absolut ingenting extra."
+"Plank är menat att vara den enklaste dockan på planeten. Målet är att "
+"erbjuda precis vad en docka behöver och absolut ingenting mer."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -37,11 +38,12 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
-"Det är, trots allt, ett bibliotek vars möjlighet att vidga sig för att skapa "
-"andra panelprogram med mer avancerade funktioner.\r\n"
+"Det är, trots allt, ett bibliotek som kan utökas för att skapa andra "
+"panelprogram med mera avancerade funktioner.\r\n"
 "Plank är den underliggande teknologin för Docky (med start i version 3.0.0) "
-"och siktar på att tillhandahålla alla grundfunktioner medan Docky tillkommer "
-"med lite flashigare effekter som Docklets, painters, settings dialog m.m."
+"och strävar efter att tillhandahålla alla grundfunktioner medan Docky utökar "
+"det med lite elegantare effekter som dockprogram, målare, "
+"inställningsdialoger med mera."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
@@ -77,15 +79,15 @@ msgstr "Fyllning"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "Början"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr "Avsluta"
+msgstr "Slut"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr "Centrerat"
+msgstr "Centrera"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
@@ -93,11 +95,11 @@ msgstr "På huvudskärmen:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr "Förskjutning (i procent) från mitten av skärmkant"
+msgstr "Förskjutning (i procent) från mitten av skärmkanten"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Ikonjustering:"
+msgstr "Ikonplacering:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
@@ -105,7 +107,7 @@ msgstr "Ikonstorlek:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr ""
+msgstr "Ikon-zoom:"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
@@ -113,11 +115,11 @@ msgstr "Utseende"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr "Smart dölj"
+msgstr "Dölj smart"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr "Automatisk dölj"
+msgstr "Dölj automatiskt"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
@@ -129,47 +131,47 @@ msgstr "Undvik fönster"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr ""
+msgstr "Undvik aktivt fönster"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr "Dölj dock"
+msgstr "Dölj docka"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr ""
+msgstr "Dölj fördröjning:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr "Fördröjning (i millisekunder) innan dock döljs"
+msgstr "Fördröjning (i millisekunder) innan dockan döljs"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr ""
+msgstr "Visa fördröjning:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr ""
+msgstr "Fördröjning ms före visning av docka"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr ""
+msgstr "Tryckavslöja:"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
-msgstr ""
+msgstr "Objekthantering"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr ""
+msgstr "Visa ej fästa:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr ""
+msgstr "Begränsa till arbetsyta:"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr ""
+msgstr "Lås ikoner:"
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
@@ -177,11 +179,11 @@ msgstr "Beteende"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
-msgstr ""
+msgstr "Dockprogram"
 
 #: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
-msgstr "Släpp för att lägga till i dockan"
+msgstr "Släpp för att lägga till i docka"
 
 #: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
@@ -190,48 +192,50 @@ msgstr ""
 "  Benjamin Bultman https://launchpad.net/~bultman-ben\n"
 "  Dojan5 https://launchpad.net/~joel-lundborg-gmail\n"
 "  Gustav Ekner https://launchpad.net/~gustav-ekner\n"
+"  Jonatan Nyberg https://launchpad.net/~jony0008\n"
+"  Josef Andersson https://launchpad.net/~northar\n"
 "  Marcus Lundgren https://launchpad.net/~marcus-lundgren\n"
 "  Mikael Hagström https://launchpad.net/~pacomiha\n"
 "  Mikael Nyberg https://launchpad.net/~miknyb\n"
 "  Rico Tzschichholz https://launchpad.net/~ricotz"
 
-#: ../lib/Items/ApplicationDockItem.vala:417 ../lib/Items/FileDockItem.vala:314
-#: ../lib/Items/FileDockItem.vala:336
+#: ../lib/Items/ApplicationDockItem.vala:412 ../lib/Items/FileDockItem.vala:317
+#: ../lib/Items/FileDockItem.vala:339
 msgid "_Keep in Dock"
-msgstr "_Behåll i dockan"
+msgstr "_Behåll i docka"
 
-#: ../lib/Items/ApplicationDockItem.vala:425
+#: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close All"
 msgstr "_Stäng alla"
 
-#: ../lib/Items/ApplicationDockItem.vala:425
+#: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close"
 msgstr "S_täng"
 
-#: ../lib/Items/ApplicationDockItem.vala:497
+#: ../lib/Items/ApplicationDockItem.vala:492
 #, c-format
 msgid "Drop to open with %s"
 msgstr "Släpp för att öppna med %s"
 
-#: ../lib/Items/FileDockItem.vala:320
+#: ../lib/Items/FileDockItem.vala:323
 msgid "_Open in File Browser"
-msgstr "_Öppna i Filhanteraren"
+msgstr "_Öppna i filhanteraren"
 
-#: ../lib/Items/FileDockItem.vala:342
+#: ../lib/Items/FileDockItem.vala:345
 msgid "_Open"
 msgstr "_Öppna"
 
-#: ../lib/Items/FileDockItem.vala:346
+#: ../lib/Items/FileDockItem.vala:349
 msgid "Open Containing _Folder"
 msgstr "Öppna _innehållande mapp"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr ""
+msgstr "Släpp program eller filer här"
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
-msgstr "Få _Hjälp Online..."
+msgstr "Få _hjälp på nätet..."
 
 #: ../lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."

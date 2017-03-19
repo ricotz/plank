@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-06-06 05:41+0000\n"
+"POT-Creation-Date: 2017-03-05 09:21+0000\n"
 "PO-Revision-Date: 2016-02-17 00:36+0000\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-06-07 05:25+0000\n"
-"X-Generator: Launchpad (build 18097)\n"
+"X-Launchpad-Export-Date: 2017-03-07 05:43+0000\n"
+"X-Generator: Launchpad (build 18330)\n"
 "Language: sr\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
@@ -192,33 +192,33 @@ msgstr ""
 "  Мирослав Николић https://launchpad.net/~lipek\n"
 "  Никола Радовановић https://launchpad.net/~nikoola"
 
-#: ../lib/Items/ApplicationDockItem.vala:417 ../lib/Items/FileDockItem.vala:314
-#: ../lib/Items/FileDockItem.vala:336
+#: ../lib/Items/ApplicationDockItem.vala:412 ../lib/Items/FileDockItem.vala:317
+#: ../lib/Items/FileDockItem.vala:339
 msgid "_Keep in Dock"
 msgstr "Задржи на _полици"
 
-#: ../lib/Items/ApplicationDockItem.vala:425
+#: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close All"
 msgstr "Затвори _све"
 
-#: ../lib/Items/ApplicationDockItem.vala:425
+#: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close"
 msgstr "_Затвори"
 
-#: ../lib/Items/ApplicationDockItem.vala:497
+#: ../lib/Items/ApplicationDockItem.vala:492
 #, c-format
 msgid "Drop to open with %s"
 msgstr "Превуците мишем да отворите програмом %s"
 
-#: ../lib/Items/FileDockItem.vala:320
+#: ../lib/Items/FileDockItem.vala:323
 msgid "_Open in File Browser"
 msgstr "Отвори у _прегледачу датотека"
 
-#: ../lib/Items/FileDockItem.vala:342
+#: ../lib/Items/FileDockItem.vala:345
 msgid "_Open"
 msgstr "_Отвори"
 
-#: ../lib/Items/FileDockItem.vala:346
+#: ../lib/Items/FileDockItem.vala:349
 msgid "Open Containing _Folder"
 msgstr "Отвори _фасциклу која садржи"
 
