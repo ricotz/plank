@@ -50,7 +50,7 @@ namespace PlankExamples
 			while (prop_iter.next ("{sv}", out prop_key, out prop_value)) {
 				if (prop_key == "count") {
 					var val = prop_value.get_int64 ();
-					result.append ("count = %lld; ".printf (val));
+					result.append (("count = %" + int64.FORMAT + "; ").printf (val));
 				} else if (prop_key == "count-visible") {
 					var val = prop_value.get_boolean ();
 					result.append ("count-visible = %s; ".printf (val ? "true" : "false"));

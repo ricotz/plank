@@ -193,7 +193,7 @@ namespace Plank
 			// Mark the created surface if drawing-time exceeded our limit and have
 			// an upper drawing-layer (e.g. DockRenderer) handle it
 			if (time_elapsed >= INSANE_DRAWING_TIME && flags == SurfaceCacheFlags.NONE) {
-				warning ("Creating surface took WAY TOO LONG (%lldms), enabled downscaling for this cache!", time_elapsed / 1000);
+				warning ("Creating surface took WAY TOO LONG (%" + int64.FORMAT + "ms), enabled downscaling for this cache!", time_elapsed / 1000);
 				flags = SurfaceCacheFlags.ALLOW_DOWNSCALE;
 				surface.set_qdata<string> (quark_surface_stats, SURFACE_STATS_DRAWING_TIME_EXCEEDED);
 			}

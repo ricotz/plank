@@ -79,7 +79,7 @@ namespace Docky
 			stream = FileStream.open ("/proc/stat", "r");
 			if (stream != null) {
 				ulong user, nice, system, idle, iowait, irq, softirq;
-				stream.scanf ("%*s %llu %llu %llu %llu %llu %llu %llu",
+				stream.scanf ("%*s %lu %lu %lu %lu %lu %lu %lu",
 					out user, out nice, out system, out idle, out iowait, out irq, out softirq);
 				
 				var usage_final = user + nice + system + idle + iowait + irq + softirq;
@@ -99,14 +99,14 @@ namespace Docky
 			stream = FileStream.open ("/proc/meminfo", "r");
 			if (stream != null) {
 				ulong mem_total, mem_free, mem_avail;
-				stream.scanf ("%*s %llu %*s", out mem_total);
-				stream.scanf ("%*s %llu %*s", out mem_free);
-				stream.scanf ("%*s %llu %*s", out mem_avail);
+				stream.scanf ("%*s %lu %*s", out mem_total);
+				stream.scanf ("%*s %lu %*s", out mem_free);
+				stream.scanf ("%*s %lu %*s", out mem_avail);
 				
 				memory_utilization = 1.0 - (mem_avail / (double) mem_total);
 			}
 			
-			Text = ("CPU: %.1f% | Mem: %.1f%").printf (cpu_utilization * 100, memory_utilization * 100);
+			Text = ("CPU: %.1f%% | Mem: %.1f%%").printf (cpu_utilization * 100, memory_utilization * 100);
 			
 			// Redrawing the icon is quite expensive so better restrict updates to significant ones
 			if (Math.fabs (last_cpu_utilization - cpu_utilization) >= CPU_THRESHOLD
