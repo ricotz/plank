@@ -171,7 +171,6 @@ libplank_internal_la_VALASOURCES = \
 	$(NULL)
 
 libplank_internal_la_SOURCES = \
-	glib-compat.c \
 	gtk-compat.c \
 	gtk-compat.h \
 	$(NULL)
