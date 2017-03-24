@@ -170,6 +170,11 @@ fi
 # -----------------------------------------------------------
 
 VALAFLAGS="--target-glib=2.40"
+CFLAGS="$CFLAGS \
+ -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_40 \
+ -DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_40 \
+ -DGDK_VERSION_MIN_REQUIRED=GDK_VERSION_3_10 \
+ -DGDK_VERSION_MAX_ALLOWED=GDK_VERSION_3_10"
 
 # -----------------------------------------------------------
 # Optional Dependencies
@@ -292,7 +297,6 @@ AC_SUBST(PLANK_DOCS_VALAFLAGS)
 
 # Use RUNPATH instead of RPATH if needed
 CFLAGS="$CFLAGS -Wl,--enable-new-dtags"
-CFLAGS="$CFLAGS -Wno-deprecated"
 
 # -----------------------------------------------------------
 # Documentation
