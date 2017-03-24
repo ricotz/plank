@@ -54,7 +54,7 @@ namespace Plank
 	public uint pointer_to_uint (void* p);
 }
 
-[CCode (cheader_filename = "")]
+[CCode (cheader_filename = "gtk-compat.h")]
 namespace PlankCompat
 {
 	// Conditional compat-layer for Gtk+ 3.19.1+
