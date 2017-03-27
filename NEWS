@@ -2,6 +2,20 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.10.3 "Bartonschmeer" (2017-03-27)
+===============================================================================
+ * Fix underscores not being shown in some menu items (LP: #1662968)
+ * Hide tooltips if the user performed action on a dockitem (LP: #1638680)
+ * Use the file's display-name where possible
+ * SurfaceCache: Never clear the cache completely
+ * tests: Fix build with valac 0.35+
+ * Drop references to gthread-2.0
+ * Add and enforce some file-count limits
+ * ApplicationDockItem: Use child-* signals of Bamf.View and force
+   indicator-update if running-state changed
+ * Actually emit DockController.elements_changed() to make DBusClient work
+ * Update appdata
+
 0.10.2 "Bartonschmeer" (2016-03-23)
 ===============================================================================
  * Use non-linear transition in/out of the "zoom" state
