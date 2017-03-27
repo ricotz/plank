@@ -88,7 +88,7 @@ namespace Plank.Items
 			acquire_unity_dbus ();
 			
 			if (connection != null) {
-				debug ("Unity: Initalizing LauncherEntry support");
+				debug ("Unity: Initializing LauncherEntry support");
 				
 				launcher_entry_dbus_signal_id = connection.signal_subscribe (null, "com.canonical.Unity.LauncherEntry",
 					null, null, null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_entry_signal);
