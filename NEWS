@@ -2,6 +2,17 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.11.4 "Eddy" (2017-03-28)
+===============================================================================
+ * Fix underscores not being shown in some menu items (LP: #1662968)
+ * Make window-manager aware that empty-trash dialog is part of plank
+   (LP: #1652653)
+ * Fix build with -Werror=pointer-to-int-cast, -Werror=format,
+   -Werror=implicit-function-declaration
+ * Generate manpage with help2man
+ * Update appdata
+ * Update translations
+
 0.11.3 "Eddy" (2016-12-06)
 ===============================================================================
  * Add CPUMonitor docklet (LP: #1611504)
