@@ -12,7 +12,7 @@ endif
 EXTRA_DIST = \
 	application-default-icon.svg \
 	plank.appdata.xml.in \
-	net.launchpad.plank.gschema.xml.in.in \
+	net.launchpad.plank.gschema.xml.in \
 	plank.desktop.in \
 	plank.gresource.xml \
 	poof.svg \
@@ -25,20 +25,19 @@ CLEANFILES = \
 	$(gsettings_SCHEMAS) \
 	gschemas.compiled \
 	net.launchpad.plank.gschema.valid \
-	net.launchpad.plank.gschema.xml.in \
 	$(NULL)
 
 applicationsdir = $(datadir)/applications
 applications_DATA = plank.desktop
-
-@INTLTOOL_DESKTOP_RULE@
 
 appdatadir = $(datadir)/appdata
 appdata_DATA = plank.appdata.xml
 
 gsettings_SCHEMAS = net.launchpad.plank.gschema.xml
 
-@INTLTOOL_XML_RULE@
+%.gschema.xml: %.gschema.xml.in Makefile
+	$(AM_V_GEN) sed -e 's|@GETTEXT_PACKAGE[@]|$(GETTEXT_PACKAGE)|g' \
+	$< > $@ || rm $@
 
 @GSETTINGS_RULES@
 
@@ -47,3 +46,10 @@ gschemas.compiled: Makefile $(gsettings_SCHEMAS:.xml=.valid)
 
 all-local: gschemas.compiled
 
+%.desktop: %.desktop.in
+	$(AM_V_GEN)$(MSGFMT) --desktop --keyword= --keyword=Name \
+		--keyword=GenericName --keyword=Comment --keyword=Keywords \
+		--template $< -d $(top_srcdir)/po -o $@
+
+%.appdata.xml: %.appdata.xml.in
+	$(AM_V_GEN)$(MSGFMT) --xml --template $< -d $(top_srcdir)/po -o $@

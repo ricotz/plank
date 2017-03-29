@@ -1,5 +1,4 @@
 data/net.launchpad.plank.gschema.xml.in
-data/net.launchpad.plank.gschema.xml.in.in
 docklets/Clippy/ClippyDockItem.c
 docklets/Clippy/ClippyDocklet.c
 docklets/Clock/ClockDockItem.c

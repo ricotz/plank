@@ -57,6 +57,13 @@ AC_PROG_CXX
 AC_PROG_CXX_C_O
 AC_PROG_INSTALL
 
+GETTEXT_PACKAGE=AC_PACKAGE_NAME
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Define the gettext package to be used])
+
+AM_GNU_GETTEXT_VERSION([0.19.6])
+AM_GNU_GETTEXT([external])
+
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
 PKG_PROG_PKG_CONFIG([0.21])
@@ -347,21 +354,11 @@ fi
 
 
 # -----------------------------------------------------------
-# Gettext
-# -----------------------------------------------------------
-GETTEXT_PACKAGE=AC_PACKAGE_NAME
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Define the gettext package to be used])
-IT_PROG_INTLTOOL([0.35.0])
-
-
-# -----------------------------------------------------------
 # Final output
 # -----------------------------------------------------------
 AC_CONFIG_FILES([
 Makefile
 data/Makefile
-data/net.launchpad.plank.gschema.xml.in
 data/apport/Makefile
 data/icons/Makefile
 data/themes/Makefile

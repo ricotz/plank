@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2014 Rico Tzschichholz <ricotz@ubuntu.com> -->
+<!-- Copyright 2016 Rico Tzschichholz <ricotz@ubuntu.com> -->
 <component type="desktop">
   <id>plank.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <name>Plank</name>
-  <_summary>Stupidly simple.</_summary>
+  <summary>Stupidly simple.</summary>
   <description>
-    <_p>
+    <p>
       Plank is meant to be the simplest dock on the planet. The goal is to provide just what a dock needs and
       absolutely nothing more.
-    </_p>
-    <_p>
+    </p>
+    <p>
       It is, however, a library which can be extended to create other dock programs with more advanced features.
       Thus, Plank is the underlying technology for Docky (starting in version 3.0.0) and aims to provide all the
       core features while Docky extends it to add fancier things like Docklets, painters, settings dialogs, etc.
-    </_p>
+    </p>
   </description>
   <keywords>
     <keyword>dock</keyword>

@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR The Plank Developers
+# This file is distributed under the same license as the plank package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-22 15:00+0100\n"
+"Project-Id-Version: plank 0.11.2.1567-dirty\n"
+"Report-Msgid-Bugs-To: https://bugs.launchpad.net/plank\n"
+"POT-Creation-Date: 2016-08-20 09:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,17 +17,21 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
+#: data/plank.appdata.xml.in:6 data/plank.desktop.in:3
+msgid "Plank"
+msgstr ""
+
+#: data/plank.appdata.xml.in:7 data/plank.desktop.in:5
 msgid "Stupidly simple."
 msgstr ""
 
-#: ../data/plank.appdata.xml.in.h:2
+#: data/plank.appdata.xml.in:9
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
 
-#: ../data/plank.appdata.xml.in.h:3
+#: data/plank.appdata.xml.in:13
 msgid ""
 "It is, however, a library which can be extended to create other dock "
 "programs with more advanced features. Thus, Plank is the underlying "
@@ -36,200 +40,204 @@ msgid ""
 "painters, settings dialogs, etc."
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:1
+#: data/plank.appdata.xml.in:63
+msgid "The Plank Developers"
+msgstr ""
+
+#: data/plank.desktop.in:4
+msgid "Dock"
+msgstr ""
+
+#: data/plank.desktop.in:9
+msgid "plank"
+msgstr ""
+
+#: data/ui/preferences.ui:82
 msgid "Theme:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:2
+#: data/ui/preferences.ui:95
 msgid "Position:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:3
+#: data/ui/preferences.ui:122
 msgid "Left"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:4
+#: data/ui/preferences.ui:123
 msgid "Right"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:5
+#: data/ui/preferences.ui:124
 msgid "Top"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:6
+#: data/ui/preferences.ui:125
 msgid "Bottom"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:7
+#: data/ui/preferences.ui:139
 msgid "Alignment:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:8
+#: data/ui/preferences.ui:152
 msgid "Fill"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:9
+#: data/ui/preferences.ui:153 data/ui/preferences.ui:222
 msgid "Start"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:10
+#: data/ui/preferences.ui:154 data/ui/preferences.ui:223
 msgid "End"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:11
+#: data/ui/preferences.ui:155 data/ui/preferences.ui:224
 msgid "Center"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:12
+#: data/ui/preferences.ui:168
 msgid "On Primary Display:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:13
+#: data/ui/preferences.ui:191
 msgid "Offset in percent from the center of the screen-edge"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:14
+#: data/ui/preferences.ui:208
 msgid "Icon Alignment:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:15
+#: data/ui/preferences.ui:238
 msgid "Icon Size:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:16
+#: data/ui/preferences.ui:304
 msgid "Icon Zoom:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:17 ../lib/Widgets/PreferencesWindow.vala:91
+#: data/ui/preferences.ui:328
 msgid "Appearance"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:18
+#: data/ui/preferences.ui:348
 msgid "Intellihide"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:19
+#: data/ui/preferences.ui:349
 msgid "Autohide"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:20
+#: data/ui/preferences.ui:350
 msgid "Dodge maximized window"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:21
+#: data/ui/preferences.ui:351
 msgid "Window Dodge"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:22
+#: data/ui/preferences.ui:352
 msgid "Dodge active window"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:23
+#: data/ui/preferences.ui:378
 msgid "Hide Dock"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:24
+#: data/ui/preferences.ui:394
 msgid "Hide Delay:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:25
+#: data/ui/preferences.ui:405
 msgid "Delay in ms before hiding the dock"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:26
+#: data/ui/preferences.ui:421
 msgid "Unhide Delay:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:27
+#: data/ui/preferences.ui:432
 msgid "Delay in ms before showing the dock"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:28
+#: data/ui/preferences.ui:448
 msgid "Pressure Reveal:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:29
+#: data/ui/preferences.ui:472
 msgid "Item Management"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:30
+#: data/ui/preferences.ui:488
 msgid "Show Unpinned:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:31
+#: data/ui/preferences.ui:512
 msgid "Restrict to Workspace:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:32
+#: data/ui/preferences.ui:537
 msgid "Lock Icons:"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:33
-msgid "Automatic Pinning:"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:34
-msgid "Show Item for Dock:"
-msgstr ""
-
-#: ../data/ui/preferences.ui.h:35 ../lib/Widgets/PreferencesWindow.vala:92
+#: data/ui/preferences.ui:586
 msgid "Behaviour"
 msgstr ""
 
-#: ../data/ui/preferences.ui.h:36 ../lib/Widgets/PreferencesWindow.vala:93
+#: data/ui/preferences.ui:606
 msgid "Docklets"
 msgstr ""
 
-#: ../lib/DragManager.vala:470 ../lib/Items/PlaceholderDockItem.vala:51
+#: lib/DragManager.vala:477 lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
 msgstr ""
 
-#: ../lib/Factories/AbstractMain.vala:388 ../src/Main.vala:75
+#: lib/Factories/AbstractMain.vala:422 src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:450 ../lib/Items/FileDockItem.vala:327
-#: ../lib/Items/FileDockItem.vala:345
+#: lib/Items/ApplicationDockItem.vala:417 lib/Items/FileDockItem.vala:314
+#: lib/Items/FileDockItem.vala:336
 msgid "_Keep in Dock"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:458
+#: lib/Items/ApplicationDockItem.vala:425
 msgid "_Close All"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:458
+#: lib/Items/ApplicationDockItem.vala:425
 msgid "_Close"
 msgstr ""
 
-#: ../lib/Items/ApplicationDockItem.vala:530
+#: lib/Items/ApplicationDockItem.vala:497
 #, c-format
 msgid "Drop to open with %s"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:332
+#: lib/Items/FileDockItem.vala:320
 msgid "_Open in File Browser"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:350
+#: lib/Items/FileDockItem.vala:342
 msgid "_Open"
 msgstr ""
 
-#: ../lib/Items/FileDockItem.vala:354
+#: lib/Items/FileDockItem.vala:346
 msgid "Open Containing _Folder"
 msgstr ""
 
-#: ../lib/Items/PlaceholderDockItem.vala:37
+#: lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
 msgstr ""
 
-#: ../lib/Items/PlankDockItem.vala:73
+#: lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
 msgstr ""
 
-#: ../lib/Items/PlankDockItem.vala:77
+#: lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."
 msgstr ""
 
-#: ../lib/Widgets/PreferencesWindow.vala:65
+#: lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
 msgstr ""
