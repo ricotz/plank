@@ -24,7 +24,7 @@ m4_define([plank_full_version],
 
 # Extend version with bzr revision for non-release builds
 m4_define([plank_version], m4_if(plank_released, [1],
-          [plank_full_version], [m4_esyscmd([build-aux/bzr-version-gen plank_full_version])]))
+          [plank_full_version], [m4_esyscmd([build-aux/git-version-gen --prefix "" --fallback plank_full_version $srcdir/.tarball-version])]))
 m4_define([plank_major_minor_version], plank_major_version.plank_minor_version)
 m4_define([plank_module_version], plank_lt_current)
 

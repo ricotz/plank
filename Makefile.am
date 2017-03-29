@@ -29,7 +29,8 @@ EXTRA_DIST = \
 	COPYRIGHT \
 	HACKING \
 	.version \
-	build-aux/bzr-version-gen \
+	build-aux/git-version-gen \
+	build-aux/gitlog-to-changelog \
 	$(NULL)
 
 BUILT_SOURCES = \
@@ -57,16 +58,16 @@ run-debug: all
 
 ChangeLog:
 	@echo Creating $@
-	@if test -d "$(srcdir)/.bzr"; then \
-		(bzr log --gnu -n1) | fmt --split-only --width=80 > $@.tmp \
+	@if test -d "$(srcdir)/.git"; then \
+		($(srcdir)/build-aux/gitlog-to-changelog --format='%s%n%n%b%n' --no-cluster --strip-tab --strip-cherry-pick) | fmt --split-only --width=80 > $@.tmp \
 		&& mv -f $@.tmp $@ \
 		|| ($(RM) $@.tmp; \
 			echo Failed to generate ChangeLog, your ChangeLog may be outdated >&2; \
-			(test -f $@ || echo bzr is required to generate this file >> $@)); \
+			(test -f $@ || echo git is required to generate this file >> $@)); \
 	else \
 		test -f $@ || \
-		(echo A bzr checkout and bzr is required to generate ChangeLog >&2 && \
-		echo A bzr checkout and bzr is required to generate this file >> $@); \
+		(echo A git checkout and git is required to generate ChangeLog >&2 && \
+		echo A git checkout and git is required to generate this file >> $@); \
 	fi
 
 .PHONY: ChangeLog

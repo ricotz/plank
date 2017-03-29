@@ -20,6 +20,7 @@ test-suite.log
 .deps
 .dirstamp
 .libs
+*.o
 *.lo
 *.la
 *.gcda
