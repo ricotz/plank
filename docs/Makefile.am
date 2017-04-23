@@ -9,7 +9,11 @@ EXTRA_DIST = \
 	$(NULL)
 
 if HAVE_HELP2MAN
-plank.1: $(top_builddir)/src/plank $(srcdir)/plank.h2m
+manpages: plank.1
+	@rm $^
+	$(MAKE) $(AM_MAKEFLAGS) $^
+
+plank.1:
 	$(HELP2MAN) $(top_builddir)/src/plank \
 		--include $(srcdir)/plank.h2m \
 		--libtool --no-info \
