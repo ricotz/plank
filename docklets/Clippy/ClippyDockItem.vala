@@ -26,7 +26,7 @@ namespace Docky
 		Gtk.Clipboard clipboard;
 		Gee.ArrayList<string> clips;
 		int cur_position = 0;
-		uint timer_id = 0U;
+		ulong handler_id = 0U;
 		
 		/**
 		 * {@inheritDoc}
@@ -48,22 +48,21 @@ namespace Docky
 				clipboard = Gtk.Clipboard.get (Gdk.Atom.intern ("CLIPBOARD", true));
 			
 			clips = new Gee.ArrayList<string> ();
-			timer_id = Gdk.threads_add_timeout (prefs.TimerDelay, (SourceFunc) check_clipboard);
+			handler_id = clipboard.owner_change.connect (check_clipboard);
 			
 			updated ();
 		}
 		
 		~ClippyDockItem ()
 		{
-			if (timer_id > 0U)
-				GLib.Source.remove (timer_id);
+			if (handler_id > 0U)
+				clipboard.disconnect (handler_id);
 		}
 		
-		bool check_clipboard ()
+		[CCode (instance_pos = -1)]
+		void check_clipboard (Gtk.Clipboard clipboard, Gdk.Event event)
 		{
 			clipboard.request_text ((Gtk.ClipboardTextReceivedFunc) clipboard_text_received);
-			
-			return true;
 		}
 		
 		[CCode (instance_pos = -1)]

@@ -26,9 +26,6 @@ namespace Docky
 		[Description(nick = "max-entries", blurb = "How many recent clipboard entries to keep.")]
 		public uint MaxEntries { get; set; default = 15; }
 		
-		[Description(nick = "timer-delay", blurb = "How often to poll (in ms) for new clipboard data.")]
-		public uint TimerDelay { get; set; default = 500; }
-		
 		[Description(nick = "track-mouse-selections", blurb = "If it should track the primary (mouse selection) clipboard.")]
 		public bool TrackMouseSelections { get; set; default = false; }
 		
@@ -40,7 +37,6 @@ namespace Docky
 		protected override void reset_properties ()
 		{
 			MaxEntries = 15;
-			TimerDelay = 500;
 			TrackMouseSelections = false;
 		}
 	}
