@@ -136,6 +136,30 @@ namespace Plank
 			
 			return result;
 		}
+
+		public bool get_hover_position (string uri, out int x, out int y, out Gtk.PositionType dock_position)
+		{
+			var items = controller.Items;
+			
+			unowned DockItem? found = null;
+			foreach (unowned DockItem item in items) {
+				if (uri == item.Launcher) {
+					found = item;
+					break;
+				}
+			}
+			
+			if (found == null) {
+				x = y = -1;
+				dock_position = 0;
+				return false;
+			}
+			
+			unowned PositionManager position_manager = controller.position_manager;
+			position_manager.get_hover_position (found, out x, out y);
+			dock_position = position_manager.Position;
+			return true;
+		}
 	}
 	
 	/**

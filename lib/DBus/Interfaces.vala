@@ -71,5 +71,16 @@ namespace Plank
 		 * @return the array of uris
 		 */
 		public abstract string[] get_transient_applications () throws GLib.IOError;
+
+		/**
+		 * Gets the x,y coords with the dock's position to display a hover window for an item.
+		 *
+		 * @param uri an URI
+		 * @param x the resulting x position
+		 * @param y the resulting y position
+		 * @param dock_position the position of the dock
+		 * @return whether it was successfully retrieved
+		 */
+		public abstract bool get_hover_position (string uri, out int x, out int y, out Gtk.PositionType dock_position) throws GLib.IOError;
 	}
 }

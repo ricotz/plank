@@ -307,5 +307,32 @@ namespace Plank
 			
 			return null;
 		}
+
+		/**
+		 * Gets the x,y coords with the dock's position to display a hover window for an item.
+		 *
+		 * @param uri an URI
+		 * @param x the resulting x position
+		 * @param y the resulting y position
+		 * @param dock_position the position of the dock
+		 * @return whether it was successfully retrieved
+		 */
+		public bool get_hover_position (string uri, out int x, out int y, out Gtk.PositionType dock_position)
+		{
+			if (items_proxy == null) {
+				warning ("No proxy connected");
+				x = y = -1;
+				dock_position = 0;
+				return false;
+			}
+			
+			try {
+				return items_proxy.get_hover_position (uri, out x, out y, out dock_position);
+			} catch (IOError e) {
+				warning (e.message);
+			}
+			
+			return false;
+		}
 	}
 }
