@@ -176,7 +176,7 @@ fi
 #   target-glib flag accoringly
 # -----------------------------------------------------------
 
-VALAFLAGS="--target-glib=2.40"
+VALAFLAGS="$VALAFLAGS --target-glib=2.40"
 CFLAGS="$CFLAGS \
  -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_40 \
  -DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_40 \
