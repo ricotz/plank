@@ -57,7 +57,8 @@ namespace Plank
 		EDE = 1 << 9,
 		CINNAMON = 1 << 10,
 		PANTHEON = 1 << 11,
-		OLD = 1 << 12;
+		OLD = 1 << 12,
+		UBUNTU = 1 << 13;
 		
 		static XdgSessionDesktop from_single_string (string s)
 		{
@@ -65,6 +66,9 @@ namespace Plank
 			
 			switch (s.down ()) {
 			case "gnome": result = XdgSessionDesktop.GNOME; break;
+			case "gnome-xorg": result = XdgSessionDesktop.GNOME; break;
+			case "ubuntu": result = XdgSessionDesktop.UBUNTU; break;
+			case "ubuntu-xorg": result = XdgSessionDesktop.UBUNTU; break;
 			case "kde": result = XdgSessionDesktop.KDE; break;
 			case "lxde": result = XdgSessionDesktop.LXDE; break;
 			case "mate": result = XdgSessionDesktop.MATE; break;
