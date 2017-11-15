@@ -87,7 +87,11 @@ namespace Plank
 		/**
 		 * The item is invalid and should be removed.
 		 */
-		INVALID = 1 << 4
+		INVALID = 1 << 4,
+		/**
+		 * The item is currently in the to-be-stacked position.
+		 */
+		STACK = 1 << 5
 	}
 	
 	/**

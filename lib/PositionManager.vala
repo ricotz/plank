@@ -896,6 +896,7 @@ namespace Plank
 				val.draw_region = get_item_draw_region (val);
 				val.hover_region = get_item_hover_region (val);
 				val.background_region = get_item_background_region (val);
+				val.stacking_region = get_item_stacking_region (val);
 				return true;
 			});
 		}
@@ -1015,6 +1016,39 @@ namespace Plank
 				background_region.union (get_item_draw_region (val), out rect);
 			
 			return rect;
+		}
+		
+		/**
+		 * The region for activating stacking of a dock element.
+		 *
+		 * @param hover_rect the item's hover region
+		 * @return the stacking region for the dock item
+		 */
+		Gdk.Rectangle get_item_stacking_region (DockItemDrawValue val)
+		{
+			var hover_rect = val.hover_region;
+			
+			switch (controller.prefs.Position) {
+			default:
+			case Gtk.PositionType.BOTTOM:
+				hover_rect.x += hover_rect.width / 3;
+				hover_rect.width /= 3;
+				break;
+			case Gtk.PositionType.TOP:
+				hover_rect.x += hover_rect.width / 3;
+				hover_rect.width /= 3;
+				break;
+			case Gtk.PositionType.LEFT:
+				hover_rect.y += hover_rect.height / 3;
+				hover_rect.height /= 3;
+				break;
+			case Gtk.PositionType.RIGHT:
+				hover_rect.y += hover_rect.height / 3;
+				hover_rect.height /= 3;
+				break;
+			}
+			
+			return hover_rect;
 		}
 		
 		/**

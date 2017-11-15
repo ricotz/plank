@@ -353,8 +353,6 @@ namespace Plank
 			if (item != null)
 				item.hovered ();
 			
-			HoveredItem = item;
-			
 			// if HoveredItem changed always stop scheduled popup and hide the tooltip
 			if (hover_reposition_timer_id > 0U) {
 				Source.remove (hover_reposition_timer_id);
@@ -366,10 +364,14 @@ namespace Plank
 			
 			controller.hover.hide ();
 			
+			HoveredItem = item;
+			
 			if (HoveredItem == null
 				|| !controller.prefs.TooltipsEnabled
-				|| controller.drag_manager.InternalDragActive)
+				|| controller.drag_manager.InternalDragActive) {
+				ClickedItem = null;
 				return;
+			}
 			
 			// don't be that demanding this delay is still fast enough
 			hover_reposition_timer_id = Gdk.threads_add_timeout (HOVER_DELAY_TIME, () => {

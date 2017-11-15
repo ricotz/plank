@@ -245,6 +245,18 @@ namespace Plank
 			State &= ~ItemState.MOVE;
 		}
 		
+		public void set_stack_state ()
+		{
+			LastStack = GLib.get_monotonic_time ();
+			State |= ItemState.STACK;
+		}
+		
+		public void unset_stack_state ()
+		{
+			LastStack = GLib.get_monotonic_time ();
+			State &= ~ItemState.STACK;
+		}
+		
 		void reset_foreground_buffer ()
 		{
 			foreground_surface = null;

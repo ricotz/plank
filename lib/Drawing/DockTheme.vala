@@ -276,6 +276,42 @@ namespace Plank
 		}
 
 		/**
+		 * Creates a surface for an stacking glow.
+		 *
+		 * @param size the size of the stacking glow
+		 * @param color the color of the stacking glow
+		 * @param model existing surface to use as basis of new surface
+		 * @return a new dock surface with the stacking glow drawn on it
+		 */
+		public Surface create_stacking_glow (int size, Color color, Surface model)
+		{
+			Logger.verbose ("DockTheme.create_stacking_glow (size = %i)", size);
+			
+			var surface = new Surface.with_surface (size, size, model);
+			surface.clear ();
+			
+			if (size <= 0)
+				return surface;
+			
+			unowned Cairo.Context cr = surface.Context;
+			
+			var x = size / 2.0;
+			
+			cr.move_to (x, x);
+			cr.arc (x, x, size / 2, 0, Math.PI * 2);
+			
+			var rg = new Cairo.Pattern.radial (x, x, 0, x, x, size / 2);
+			rg.add_color_stop_rgba (0, color.red, color.green, color.blue, 0.3);
+			rg.add_color_stop_rgba (0.8, color.red, color.green, color.blue, 0.3);
+			rg.add_color_stop_rgba (1.0, color.red, color.green, color.blue, 0.9);
+			
+			cr.set_source (rg);
+			cr.fill ();
+			
+			return surface;
+		}
+
+		/**
 		 * Draws an active glow for an item.
 		 *
 		 * @param surface the surface to draw onto

@@ -71,6 +71,7 @@ namespace Plank
 		bool drag_data_requested = false;
 		uint marker = 0U;
 		uint drag_hover_timer_id = 0U;
+		uint drag_stacking_timer_id = 0U;
 		
 		Gee.ArrayList<string>? drag_data = null;
 		
@@ -295,6 +296,11 @@ namespace Plank
 				drag_hover_timer_id = 0U;
 			}
 			
+			if (drag_stacking_timer_id > 0U) {
+				GLib.Source.remove (drag_stacking_timer_id);
+				drag_stacking_timer_id = 0U;
+			}
+			
 			if (drag_data == null)
 				return true;
 			
@@ -314,6 +320,11 @@ namespace Plank
 		[CCode (instance_pos = -1)]
 		void drag_end (Gtk.Widget w, Gdk.DragContext context)
 		{
+			if (drag_stacking_timer_id > 0U) {
+				GLib.Source.remove (drag_stacking_timer_id);
+				drag_stacking_timer_id = 0U;
+			}
+			
 			unowned HideManager hide_manager = controller.hide_manager;
 			
 			if (drag_item_redraw_handler_id > 0UL) {
@@ -349,11 +360,17 @@ namespace Plank
 					}
 				} else {
 					// Dropped onto another dockitem
-					/* TODO
-					DockItem item = controller.window.HoveredItem;
-					if (item != null && item.CanAcceptDrop (DragItem))
-						item.AcceptDrop (DragItem);
-					*/
+					
+					// End stacking-mode and drop stack-state if it is set
+					unowned DockItem hovered_item = controller.window.HoveredItem;
+					if ((hovered_item.State & ItemState.STACK) != 0) {
+						hovered_item.unset_stack_state ();
+						print ("Stack '%s' onto '%s' requested\n", DragItem.Text, hovered_item.Text);
+						/* TODO
+						if (hovered_item.can_accept_drop (DragItem))
+							hovered_item.accept_drop (DragItem);
+						*/
+					}
 				}
 			}
 			
@@ -381,6 +398,11 @@ namespace Plank
 			if (drag_hover_timer_id > 0U) {
 				GLib.Source.remove (drag_hover_timer_id);
 				drag_hover_timer_id = 0U;
+			}
+			
+			if (drag_stacking_timer_id > 0U) {
+				GLib.Source.remove (drag_stacking_timer_id);
+				drag_stacking_timer_id = 0U;
 			}
 			
 			controller.hide_manager.update_hovered ();
@@ -415,6 +437,10 @@ namespace Plank
 				return;
 			
 			if (!controller.hide_manager.Hovered) {
+				unowned DockItem? hovered_item = controller.window.HoveredItem;
+				if (hovered_item != null && (hovered_item.State & ItemState.STACK) != 0)
+					hovered_item.unset_stack_state ();
+				
 				controller.window.update_hovered (-1, -1);
 				controller.renderer.animated_draw ();
 			}
@@ -483,24 +509,21 @@ namespace Plank
 			
 			controller.renderer.update_local_cursor (x, y);
 			hide_manager.update_hovered_with_coords (x, y);
-			window.update_hovered (x, y);
+			update_hovered (x, y);
 			
 			return true;
 		}
 		
 		void hovered_item_changed ()
 		{
-			unowned DockItem hovered_item = controller.window.HoveredItem;
-			
-			if (InternalDragActive && DragItem != null && hovered_item != null
-				&& DragItem != hovered_item
-				&& DragItem.Container == hovered_item.Container) {
-				DragItem.Container.move_to (DragItem, hovered_item);
-			}
-			
 			if (drag_hover_timer_id > 0U) {
 				GLib.Source.remove (drag_hover_timer_id);
 				drag_hover_timer_id = 0U;
+			}
+			
+			if (drag_stacking_timer_id > 0U) {
+				GLib.Source.remove (drag_stacking_timer_id);
+				drag_stacking_timer_id = 0U;
 			}
 			
 			if (ExternalDragActive && drag_data != null)
@@ -514,6 +537,85 @@ namespace Plank
 				});
 		}
 		
+		/**
+		 * Check for activating stacking and trigger an update of the hovered-item
+		 */
+		void update_hovered (int x, int y)
+		{
+			unowned DockWindow window = controller.window;
+			unowned DockItem? hovered_item = window.HoveredItem;
+			
+			if (DragItem == null || hovered_item == null || hovered_item == DragItem
+				|| DragItem.Container != hovered_item.Container) {
+				window.update_hovered (x, y);
+				return;
+			}
+			
+			unowned PositionManager position_manager = controller.position_manager;
+			Gdk.Rectangle rect;
+			
+			// handle active internal drags special to support stacking of dock-items
+
+			var draw_value = position_manager.get_draw_value_for_item (hovered_item);
+			rect = draw_value.stacking_region;
+			if (y >= rect.y && y < rect.y + rect.height && x >= rect.x && x < rect.x + rect.width) {
+				if ((hovered_item.State & ItemState.STACK) != 0)
+					// nothing changed
+					return;
+			
+				if (hovered_item.Container.can_stack_items (DragItem, hovered_item)) {
+					// schedule enable stacking mode for hovered-item after a small delay
+					if (drag_stacking_timer_id > 0U)
+						return;
+					drag_stacking_timer_id = Timeout.add (350, () => {
+						drag_stacking_timer_id = 0U;
+						if (hovered_item == controller.window.HoveredItem) {
+							hovered_item.set_stack_state ();
+							controller.renderer.animated_draw ();
+						}
+						return false;
+					});
+				} else {
+					DragItem.Container.move_to (DragItem, hovered_item);
+					window.update_hovered (-1, -1);
+				}
+			} else {
+				if (drag_stacking_timer_id > 0U) {
+					GLib.Source.remove (drag_stacking_timer_id);
+					drag_stacking_timer_id = 0U;
+				}
+				
+				rect = draw_value.hover_region;
+				if (y >= rect.y && y < rect.y + rect.height && x >= rect.x && x < rect.x + rect.width) {
+					if (DragItem.Position > hovered_item.Position) {
+						if (controller.prefs.is_horizontal_dock ())
+							rect = { rect.x, rect.y, rect.width / 2, rect.height };
+						else
+							rect = { rect.x, rect.y, rect.width, rect.height / 2 };
+					} else {
+						if (controller.prefs.is_horizontal_dock ())
+							rect = { rect.x + rect.width / 2, rect.y, rect.width / 2, rect.height };
+						else
+							rect = { rect.x, rect.y + rect.height / 2, rect.width, rect.height / 2 };
+					}
+					
+					if (y >= rect.y && y < rect.y + rect.height && x >= rect.x && x < rect.x + rect.width) {
+						DragItem.Container.move_to (DragItem, hovered_item);
+						
+						if ((hovered_item.State & ItemState.STACK) != 0)
+							hovered_item.unset_stack_state ();
+						
+						window.update_hovered (-1, -1);
+					}
+				} else {
+					if ((hovered_item.State & ItemState.STACK) != 0)
+						hovered_item.unset_stack_state ();
+					
+					window.update_hovered (x, y);
+				}
+			}
+		}
+
 		Gdk.Window? best_proxy_window ()
 		{
 			var window_stack = controller.window.get_screen ().get_window_stack ();

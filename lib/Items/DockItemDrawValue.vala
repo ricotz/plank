@@ -52,6 +52,7 @@ namespace Plank
 		public Gdk.Rectangle hover_region;
 		public Gdk.Rectangle draw_region;
 		public Gdk.Rectangle background_region;
+		public Gdk.Rectangle stacking_region;
 		
 		public double zoom;
 		public double opacity;
@@ -60,6 +61,7 @@ namespace Plank
 		public double lighten;
 		
 		public bool show_indicator;
+		public double stacking_indicator_opacity;
 		
 		public void move_in (Gtk.PositionType position, double damount)
 		{
@@ -72,24 +74,28 @@ namespace Plank
 				static_center.y -= damount;
 				hover_region.y -= amount;
 				draw_region.y -= amount;
+				stacking_region.y -= amount;
 				break;
 			case Gtk.PositionType.TOP:
 				center.y += damount;
 				static_center.y += damount;
 				hover_region.y += amount;
 				draw_region.y += amount;
+				stacking_region.y += amount;
 				break;
 			case Gtk.PositionType.LEFT:
 				center.x += damount;
 				static_center.x += damount;
 				hover_region.x += amount;
 				draw_region.x += amount;
+				stacking_region.x += amount;
 				break;
 			case Gtk.PositionType.RIGHT:
 				center.x -= damount;
 				static_center.x -= damount;
 				hover_region.x -= amount;
 				draw_region.x -= amount;
+				stacking_region.x -= amount;
 				break;
 			}
 		}
@@ -106,6 +112,7 @@ namespace Plank
 				hover_region.x += amount;
 				draw_region.x += amount;
 				background_region.x += amount;
+				stacking_region.x += amount;
 				break;
 			case Gtk.PositionType.TOP:
 				center.x += damount;
@@ -113,6 +120,7 @@ namespace Plank
 				hover_region.x += amount;
 				draw_region.x += amount;
 				background_region.x += amount;
+				stacking_region.x += amount;
 				break;
 			case Gtk.PositionType.LEFT:
 				center.y += damount;
@@ -120,6 +128,7 @@ namespace Plank
 				hover_region.y += amount;
 				draw_region.y += amount;
 				background_region.y += amount;
+				stacking_region.y += amount;
 				break;
 			case Gtk.PositionType.RIGHT:
 				center.y += damount;
@@ -127,6 +136,7 @@ namespace Plank
 				hover_region.y += amount;
 				draw_region.y += amount;
 				background_region.y += amount;
+				stacking_region.y += amount;
 				break;
 			}
 		}

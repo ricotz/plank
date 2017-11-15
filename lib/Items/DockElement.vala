@@ -119,6 +119,11 @@ namespace Plank
 		public int64 LastValid { get; protected set; }
 		
 		/**
+		 * The last time the item was about to be stacked.
+		 */
+		public int64 LastStack { get; protected set; }
+		
+		/**
 		 * Called when an item is clicked on.
 		 *
 		 * @param button the button clicked

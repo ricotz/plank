@@ -430,6 +430,32 @@ namespace Plank
 			element.Container = null;
 		}
 		
+		/**
+		 * Returns if the given item can be stacked onto the target item.
+		 *
+		 * @param item the dock item to check
+		 * @param target the dock item to stack onto
+		 * @return if the item can be stacked onto the target item
+		 */
+		public virtual bool can_stack_items (DockItem item, DockItem target)
+		{
+			//TODO implement me
+			return (item.get_type () == target.get_type ());
+		}
+		
+		/**
+		 * Stack the given item onto the target item.
+		 *
+		 * @param item the dock item to check
+		 * @param target the dock item to stack onto
+		 * @return if the item was stacked onto the target item
+		 */
+		public virtual bool stack_items (DockItem item, DockItem target)
+		{
+			//TODO implement me
+			return false;
+		}
+		
 		protected abstract void connect_element (DockElement element);
 		
 		protected abstract void disconnect_element (DockElement element);

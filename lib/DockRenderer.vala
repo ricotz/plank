@@ -60,6 +60,7 @@ namespace Plank
 		Surface? background_buffer = null;
 		Gdk.Rectangle background_rect;
 		Surface? indicator_buffer = null;
+		Surface? stacking_glow_buffer = null;
 		Surface? urgent_indicator_buffer = null;
 		Surface? urgent_glow_buffer = null;
 		
@@ -210,6 +211,7 @@ namespace Plank
 			
 			background_buffer = null;
 			indicator_buffer = null;
+			stacking_glow_buffer = null;
 			urgent_indicator_buffer = null;
 			urgent_glow_buffer = null;
 			
@@ -686,6 +688,30 @@ namespace Plank
 				}
 			}
 			
+			// indicate available stacking possibility 
+			var stacking_time = int64.max (0LL, frame_time - item.LastStack);
+			var stacking_duration = theme.ItemMoveTime * 1000;
+			var stacking_animation_progress = 0.0;
+			if (stacking_time < stacking_duration) {
+				if ((item.State & ItemState.STACK) == 0)
+					stacking_animation_progress = 1 - easing_for_mode (AnimationMode.EASE_IN_QUINT, stacking_time, stacking_duration);
+				else
+					stacking_animation_progress = easing_for_mode (AnimationMode.EASE_OUT_QUINT, stacking_time, stacking_duration);
+			} else {
+				if ((item.State & ItemState.STACK) != 0)
+					stacking_animation_progress = 1.0;
+			}
+			if (stacking_animation_progress > 0) {
+				//var x_change = 0.5 * stacking_animation_progress * (icon_size + position_manager.ItemPadding);
+				//x_change = (item.Position < controller.drag_manager.DragItem.Position ? x_change : -x_change);
+				var y_change = 0.2 * stacking_animation_progress * icon_size;
+				//draw_value.move_right (controller.prefs.Position, x_change);
+				draw_value.move_in (controller.prefs.Position, y_change);
+				draw_value.stacking_indicator_opacity = stacking_animation_progress;
+			} else {
+				draw_value.stacking_indicator_opacity = 0.0;
+			}
+			
 			// animate icon on invalid state
 			if ((item.State & ItemState.INVALID) != 0) {
 				var invalid_duration = ITEM_INVALID_DURATION * 1000;
@@ -813,13 +839,25 @@ namespace Plank
 				icon_cr.set_operator (Cairo.Operator.OVER);
 			}
 			
-			// draw active glow
-			var active_time = int64.max (0LL, frame_time - item.LastActive);
-			var opacity = double.min (1, active_time / (double) (theme.ActiveTime * 1000));
-			if ((item.State & ItemState.ACTIVE) == 0)
-				opacity = 1 - opacity;
-			if (opacity > 0) {
-				theme.draw_active_glow (item_buffer, background_rect, draw_value.background_region, item.AverageIconColor, opacity, position);
+			// indicate available stacking possibility 
+			if (draw_value.stacking_indicator_opacity > 0) {
+				if (stacking_glow_buffer == null
+					|| stacking_glow_buffer.Width != (int) (1.5 * icon_size)) {
+					var stacking_color = get_styled_color ();
+					stacking_color.set_sat (1.0);
+					stacking_glow_buffer = theme.create_stacking_glow ((int) (1.5 * icon_size), stacking_color, item_buffer);
+				}
+				cr.set_source_surface (stacking_glow_buffer.Internal, draw_value.draw_region.x - icon_size / 4, draw_value.draw_region.y - icon_size / 4);
+				cr.paint_with_alpha (draw_value.stacking_indicator_opacity);
+			} else {
+				// draw active glow
+				var active_time = int64.max (0LL, frame_time - item.LastActive);
+				var opacity = double.min (1, active_time / (double) (theme.ActiveTime * 1000));
+				if ((item.State & ItemState.ACTIVE) == 0)
+					opacity = 1 - opacity;
+				if (opacity > 0) {
+					theme.draw_active_glow (item_buffer, background_rect, draw_value.background_region, item.AverageIconColor, opacity, position);
+				}
 			}
 			
 			// draw the icon
@@ -1136,6 +1174,8 @@ namespace Plank
 				&& render_time - item.LastUrgent <= (hide_progress == 1.0 ? theme.GlowTime : theme.UrgentBounceTime) * 1000)
 				return true;
 			if (render_time - item.LastMove <= theme.ItemMoveTime * 1000)
+				return true;
+			if (render_time - item.LastStack <= theme.ItemMoveTime * 1000)
 				return true;
 			if (render_time - item.AddTime <= theme.ItemMoveTime * 1000)
 				return true;
