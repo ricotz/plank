@@ -154,6 +154,12 @@ VALAFLAGS_CORE=""
 DOCKLET_LDFLAGS="-module -avoid-version"
 AC_SUBST([DOCKLET_LDFLAGS])
 
+GNOMEMENU3_PKGS="libgnome-menu-3.0"
+GNOMEMENU3_VALAFLAGS="--pkg libgnome-menu-3.0"
+AC_SUBST(GNOMEMENU3_VALAFLAGS)
+
+PKG_CHECK_MODULES(GNOMEMENU3, $GNOMEMENU3_PKGS)
+
 # -----------------------------------------------------------
 # GLib Resources
 # -----------------------------------------------------------
@@ -363,6 +369,7 @@ lib/plank.pc
 lib/Version.vala
 src/Makefile
 docklets/Makefile
+docklets/Applications/Makefile
 docklets/Clippy/Makefile
 docklets/Clock/Makefile
 docklets/CPUMonitor/Makefile

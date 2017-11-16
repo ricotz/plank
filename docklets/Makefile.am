@@ -1,4 +1,5 @@
 SUBDIRS = \
+	Applications \
 	Clippy \
 	Clock \
 	CPUMonitor \
