@@ -47,6 +47,7 @@ namespace Plank
 		Gee.ArrayList<unowned DockItem> visible_items;
 		Gee.ArrayList<unowned DockItem> items;
 		DockItem? dock_itself_item;
+		uint serialize_item_positions_timer_id = 0U;
 		
 		/**
 		 * List of all items on this dock
@@ -111,6 +112,10 @@ namespace Plank
 			states_changed.disconnect (handle_states_changed);
 			elements_changed.disconnect (handle_elements_changed);
 			
+			if (serialize_item_positions_timer_id > 0U)
+				Source.remove (serialize_item_positions_timer_id);
+			serialize_item_positions ();
+
 			items.clear ();
 			visible_items.clear ();
 		}
@@ -154,7 +159,25 @@ namespace Plank
 			Logger.verbose ("DockController.add_default_provider ()");
 			default_provider = create_default_provider ();
 			
-			add (default_provider);
+			var elements = Factory.item_factory.load_elements (launchers_folder, prefs.DockItems);
+
+			foreach (var element in elements)
+				if (element is DockItem)
+					default_provider.add (element);
+
+			bool has_default_provider = false;
+			foreach (var element in elements) {
+				if (!has_default_provider && element is DockItem) {
+					add (default_provider);
+					has_default_provider = true;
+				} else if (element is DockItemProvider) {
+					add (element);
+				}
+			}
+			if (!has_default_provider)
+				add (default_provider);
+
+			schedule_serialize_item_positions ();
 		}
 		
 		DockItemProvider create_default_provider ()
@@ -170,8 +193,6 @@ namespace Plank
 			}
 			
 			provider = new DefaultApplicationDockItemProvider (prefs, launchers_folder);
-			provider.add_all (Factory.item_factory.load_elements (launchers_folder, prefs.DockItems));
-			serialize_item_positions (provider);
 			
 			return provider;
 		}
@@ -308,9 +329,6 @@ namespace Plank
 		
 		void handle_elements_changed (DockContainer container, Gee.List<DockElement> added, Gee.List<DockElement> removed)
 		{
-			if (container == default_provider)
-				serialize_item_positions (container);
-			
 			// Schedule added/removed items for special animations
 			renderer.animate_items (added);
 			renderer.animate_items (removed);
@@ -323,6 +341,8 @@ namespace Plank
 			
 			window.update_icon_regions ();
 			
+			schedule_serialize_item_positions ();
+
 			// FIXME Maybe add a dedicated signal
 			if (container != this) {
 				var empty = new Gee.ArrayList<DockElement> ();
@@ -332,9 +352,6 @@ namespace Plank
 		
 		void handle_positions_changed (DockContainer container, Gee.List<unowned DockElement> moved_items)
 		{
-			if (container == default_provider)
-				serialize_item_positions (container);
-			
 			update_visible_elements ();
 			
 			foreach (unowned DockElement item in moved_items) {
@@ -343,6 +360,8 @@ namespace Plank
 					window.update_icon_region (app_item);
 			}
 			renderer.animated_draw ();
+
+			schedule_serialize_item_positions ();
 		}
 		
 		void handle_states_changed (DockContainer container)
@@ -350,16 +369,38 @@ namespace Plank
 			renderer.animated_draw ();
 		}
 		
-		void serialize_item_positions (DockContainer container)
+		void schedule_serialize_item_positions ()
 		{
-			unowned ApplicationDockItemProvider? provider = (container as ApplicationDockItemProvider);
-			if (provider == null)
+			if (serialize_item_positions_timer_id > 0U)
 				return;
-			
-			var item_list = provider.get_dockitem_filenames ();
-			
-			if (prefs.DockItems != item_list)
-				prefs.DockItems = item_list;
+
+			serialize_item_positions_timer_id = Gdk.threads_add_timeout (ITEM_SERIALIZATION_DELAY, (SourceFunc) serialize_item_positions);
+		}
+
+		bool serialize_item_positions ()
+		{
+			serialize_item_positions_timer_id = 0U;
+
+			var item_list = new Gee.ArrayList<string> ();
+
+			foreach (var element in internal_elements) {
+				unowned DockItem? item = (element as DockItem);
+				if (item != null) {
+					item_list.add (item.DockItemFilename);
+					continue;
+				}
+				unowned DockItemProvider? provider = (element as DockItemProvider);
+				if (provider != null) {
+					var list = provider.get_dockitem_filenames ();
+					foreach (unowned string s in list)
+						item_list.add (s);
+					continue;
+				}
+			}
+
+			prefs.DockItems = item_list.to_array ();
+
+			return false;
 		}
 	}
 }
