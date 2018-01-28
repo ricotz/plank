@@ -43,6 +43,8 @@ namespace Plank
 		
 		public DockItemProvider? default_provider { get; private set; }
 		
+		public bool PreviewMode { get; set; default = false; }
+
 		DBusManager dbus_manager;
 		Gee.ArrayList<unowned DockItem> visible_items;
 		Gee.ArrayList<unowned DockItem> items;
