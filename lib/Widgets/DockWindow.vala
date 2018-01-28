@@ -19,6 +19,13 @@
 
 namespace Plank
 {
+	[DBus (name = "org.pantheon.gala.plank")]
+	interface GalaPlugin : Object { 
+		public signal void disable_preview_mode ();
+		public abstract bool get_preview_is_hovered ();
+		public abstract bool show_window_preview (string launcher, int x, int y);
+	}
+
 	/**
 	 * The main window for all docks.
 	 */
@@ -54,6 +61,8 @@ namespace Plank
 		 */
 		Gtk.Menu? menu;
 		
+		GalaPlugin? plugin;
+
 		uint hover_reposition_timer_id = 0U;
 		
 		uint long_press_timer_id = 0U;
@@ -91,6 +100,16 @@ namespace Plank
 						Gdk.EventMask.STRUCTURE_MASK);
 			
 			controller.prefs.notify["HideMode"].connect (set_struts);
+
+			try {
+				plugin = Bus.get_proxy_sync (BusType.SESSION, "org.pantheon.gala.plank", "/org/pantheon/gala/plank");
+				plugin.disable_preview_mode.connect (() => {
+					controller.PreviewMode = false;
+					controller.hide_manager.update_hovered_force ();
+				});
+			} catch (Error e) {
+				warning (e.message);
+			}
 		}
 		
 		~DockWindow ()
@@ -214,6 +233,16 @@ namespace Plank
 			if (!menu_is_visible ()) {
 				set_hovered_provider (null);
 				set_hovered (null);
+
+				Timeout.add (500, () => {
+					if (controller.PreviewMode && HoveredItem == null
+						&& plugin != null && !plugin.get_preview_is_hovered ()) {
+						plugin.show_window_preview ("", -1, -1);
+						plugin.disable_preview_mode ();
+					}
+					
+					return false;
+				});
 			} else
 				controller.hover.hide ();
 			
@@ -366,6 +395,21 @@ namespace Plank
 			
 			controller.hover.hide ();
 			
+			if (plugin != null) {
+				if (HoveredItem != null) {
+					int x, y;
+					controller.position_manager.get_hover_position (HoveredItem, out x, out y);
+
+					bool shown = plugin.show_window_preview (HoveredItem.Launcher, x, y);
+					controller.PreviewMode = shown;
+					controller.hide_manager.update_hovered_force ();
+				} else if (!controller.PreviewMode) {
+					bool shown = plugin.show_window_preview ("", -1, -1);
+					controller.PreviewMode = shown;
+					controller.hide_manager.update_hovered_force ();
+				}
+			}
+
 			if (HoveredItem == null
 				|| !controller.prefs.TooltipsEnabled
 				|| controller.drag_manager.InternalDragActive)
@@ -600,6 +644,11 @@ namespace Plank
 				menu = null;
 			}
 			
+			if (plugin != null) {
+				plugin.show_window_preview ("", -1, -1);
+				plugin.disable_preview_mode ();
+			}
+
 			Gee.ArrayList<Gtk.MenuItem>? menu_items = null;
 			Gtk.MenuPositionFunc? position_func = null;
 			var button = PopupButton.from_event_button (event);
