@@ -93,13 +93,13 @@ namespace Plank
 			prefs.notify["Position"].connect (update_visible_elements);
 			prefs.notify["ShowDockItem"].connect (update_show_dock_item);
 			
-			dbus_manager = new DBusManager (this);
-			
 			position_manager = new PositionManager (this);
 			drag_manager = new DragManager (this);
 			hide_manager = new HideManager (this);
 			window = new DockWindow (this);
 			hover = new HoverWindow ();
+
+			dbus_manager = new DBusManager (this);
 			renderer = new DockRenderer (this, window);
 		}
 		

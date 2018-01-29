@@ -50,10 +50,22 @@ namespace Plank
 		 */
 		public bool is_connected {
 			get {
-				return (items_proxy != null);
+				return (items_proxy != null && dock_proxy != null);
 			}
 		}
 		
+		public signal void dock_hovered_item_changed (string uri, int x, int y, Gtk.PositionType dock_position);
+
+		public bool dock_allow_hiding {
+			get {
+				return (dock_proxy != null && dock_proxy.allow_hiding);
+			}
+			set {
+				if (dock_proxy != null)
+					dock_proxy.allow_hiding = value;
+			}
+		}
+
 		DBusConnection? connection = null;
 		string? client_object_path;
 		
@@ -64,6 +76,8 @@ namespace Plank
 		uint dbus_dock_ping_id = 0;
 		uint dbus_name_owner_changed_signal_id = 0;
 		
+		DBusDockIface? dock_proxy = null;
+
 		DBusItemsIface? items_proxy = null;
 		int items_count = int.MIN;
 		string[]? persistent_apps_list = null;
@@ -154,6 +168,8 @@ namespace Plank
 			debug ("Connecting and create proxies for '%s' (%s)", sender_name, object_path);
 			
 			try {
+				dock_proxy = connection.get_proxy_sync<Plank.DBusDockIface> (sender_name, object_path, DBusProxyFlags.NONE);
+				dock_proxy.hovered_item_changed.connect (handle_hovered_item_changed);
 				items_proxy = connection.get_proxy_sync<Plank.DBusItemsIface> (sender_name, object_path, DBusProxyFlags.NONE);
 				items_proxy.changed.connect (invalidate_items_cache);
 				dock_bus_owner = ((DBusProxy) items_proxy).get_name_owner ();
@@ -164,8 +180,9 @@ namespace Plank
 				dock_bus_name = null;
 				dock_object_path = null;
 				
+				dock_proxy = null;
 				items_proxy = null;
-				critical ("Failed to create items proxy for '%s' (%s)", sender_name, object_path);
+				critical ("Failed to create proxies for '%s' (%s)", sender_name, object_path);
 			}
 			
 			proxy_changed ();
@@ -179,10 +196,16 @@ namespace Plank
 			dock_bus_name = null;
 			dock_object_path = null;
 			
+			dock_proxy.hovered_item_changed.disconnect (handle_hovered_item_changed);
+			dock_proxy = null;
 			items_proxy.changed.disconnect (invalidate_items_cache);
 			items_proxy = null;
 		}
 		
+		void handle_hovered_item_changed (string uri, int x, int y, Gtk.PositionType dock_position)
+		{
+			dock_hovered_item_changed (uri, x, y, dock_position);
+		}
 		
 		void invalidate_items_cache ()
 		{

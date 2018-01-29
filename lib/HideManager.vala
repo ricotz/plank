@@ -83,13 +83,23 @@ namespace Plank
 		/**
 		 * If hiding the dock is currently disabled
 		 */
-		public bool Disabled { get; private set; default = false; }
+		public bool Disabled { get {
+				return disabled_internally || disabled_forced;
+			}
+			set {
+				disabled_forced = value;
+				update_hidden ();
+			}
+		}
 		
 		/**
 		 * If the dock is currently hovered by the mouse cursor.
 		 */
 		public bool Hovered { get; private set; default = false; }
 		
+		bool disabled_internally = false;
+		bool disabled_forced = false;
+
 		uint hide_timer_id = 0U;
 		uint unhide_timer_id = 0U;
 		uint prefs_changed_timer_id = 0U;
@@ -233,11 +243,11 @@ namespace Plank
 			}
 			
 			// disable hiding if menu is visible or drags are active
-			var disabled = (window.menu_is_visible () || drag_manager.InternalDragActive || drag_manager.ExternalDragActive);
-			if (Disabled != disabled) {
-				Disabled = disabled;
+			var disabled_internally_update = (window.menu_is_visible () || drag_manager.InternalDragActive || drag_manager.ExternalDragActive);
+			if (Disabled != disabled_internally_update) {
 				update_needed = true;
 			}
+			disabled_internally = disabled_internally_update;
 			
 			if (update_needed)
 				update_hidden ();

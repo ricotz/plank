@@ -27,6 +27,28 @@ namespace Plank
 	/**
 	 * Provide an interface to manage items of the dock
 	 */
+	[DBus (name = "net.launchpad.plank.Dock")]
+	interface DBusDockIface : GLib.Object
+	{
+		/**
+		 * Emmited when hovered item has changed
+		 *
+		 * @param uri an URI if available
+		 * @param x the x position
+		 * @param y the y position
+		 * @param dock_position the position of the dock
+		 */
+		public signal void hovered_item_changed (string uri, int x, int y, Gtk.PositionType dock_position);
+
+		/**
+		 * Whether the dock is allowed to hide itself
+		 */
+		public abstract bool allow_hiding { get; set; }
+	}
+
+	/**
+	 * Provide an interface to manage items of the dock
+	 */
 	[DBus (name = "net.launchpad.plank.Items")]
 	interface DBusItemsIface : GLib.Object
 	{

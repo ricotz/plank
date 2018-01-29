@@ -38,6 +38,7 @@ namespace PlankExamples
 			
 			var client = Plank.DBusClient.get_instance ();
 			client.proxy_changed.connect (handle_proxy_changed);
+			client.dock_hovered_item_changed.connect (handle_hovered_item_changed);
 		}
 		
 		void handle_proxy_changed (DBusClient client)
@@ -54,6 +55,10 @@ namespace PlankExamples
 				print (" + %s\n", s);
 			
 			print ("\n");
+		}
+		
+		void handle_hovered_item_changed (string uri, int x, int y, Gtk.PositionType dock_position) {
+			print ("'%s' at %i,%i (%i)\n", uri, x, y, (int) dock_position);
 		}
 		
 		public static int main (string[] args)

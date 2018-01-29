@@ -20,6 +20,49 @@
 namespace Plank
 {
 	/**
+	 * Provide an interface to manage the dock itself
+	 */
+	class DBusDock : GLib.Object, Plank.DBusDockIface
+	{
+		DockController controller;
+
+		public bool allow_hiding {
+			get {
+				return !controller.hide_manager.Disabled;
+			}
+			set {
+				//TODO Restore if lost client
+				controller.hide_manager.Disabled = !value;
+			}
+		}
+
+		public DBusDock (DockController _controller)
+		{
+			controller = _controller;
+			controller.window.notify["HoveredItem"].connect (handle_hovered_item_changed);
+		}
+
+		~DBusDock ()
+		{
+			controller.window.notify["HoveredItem"].disconnect (handle_hovered_item_changed);
+		}
+
+		void handle_hovered_item_changed ()
+		{
+			//FIXME limit invocation rate
+			unowned PositionManager position_manager = controller.position_manager;
+			unowned DockItem? item = controller.window.HoveredItem;
+			if (item != null) {
+				int x, y;
+				position_manager.get_hover_position (item, out x, out y);
+				hovered_item_changed (item.Launcher, x, y, position_manager.Position);
+			} else {
+				hovered_item_changed ("", -1, -1, position_manager.Position);
+			}
+		}
+	}
+
+	/**
 	 * Provide an interface to manage items of the dock
 	 */
 	class DBusItems : GLib.Object, Plank.DBusItemsIface
@@ -172,6 +215,7 @@ namespace Plank
 		DBusConnection? connection = null;
 		string? dock_object_path;
 		
+		uint dbus_dock_signal_id = 0U;
 		uint dbus_items_signal_id = 0U;
 		uint dbus_client_ping_signal_id = 0U;
 		
@@ -210,6 +254,13 @@ namespace Plank
 			} catch (IOError e) {
 				warning ("Could not register service (%s)", e.message);
 			}
+
+			try {
+				var dbus_dock = new DBusDock (controller);
+				dbus_dock_signal_id = connection.register_object<Plank.DBusDockIface> (object_path, dbus_dock);
+			} catch (IOError e) {
+				warning ("Could not register service (%s)", e.message);
+			}
 			
 			dock_object_path = (owned) object_path;
 			
@@ -224,6 +275,8 @@ namespace Plank
 		~DBusManager ()
 		{
 			if (connection != null) {
+				if (dbus_dock_signal_id > 0U)
+					connection.unregister_object (dbus_dock_signal_id);
 				if (dbus_items_signal_id > 0U)
 					connection.unregister_object (dbus_items_signal_id);
 				if (dbus_client_ping_signal_id > 0U)
