@@ -27,7 +27,7 @@ namespace Docky
 	public const string G_RESOURCE_PATH = "/net/launchpad/plank/docklets/battery";
 	public const string BAT_CAP = "/sys/class/power_supply/BAT0/capacity";
 	public const string BAT_STAT = "/sys/class/power_supply/BAT0/status";
-	public const string BAT_CHARGE = "/sys/class/power_supply/BAT0/charge";
+	public const string BAT_CHARGE = "/sys/class/power_supply/BAT0/charge_now";
 	public const string BAT_ALARM = "/sys/class/power_supply/BAT0/alarm";
 
 	public class BatteryDocklet : Object, Plank.Docklet
