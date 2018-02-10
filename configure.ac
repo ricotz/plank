@@ -363,6 +363,7 @@ lib/plank.pc
 lib/Version.vala
 src/Makefile
 docklets/Makefile
+docklets/Battery/Makefile
 docklets/Clippy/Makefile
 docklets/Clock/Makefile
 docklets/CPUMonitor/Makefile
