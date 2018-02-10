@@ -370,6 +370,7 @@ lib/Version.vala
 src/Makefile
 docklets/Makefile
 docklets/Applications/Makefile
+docklets/Battery/Makefile
 docklets/Clippy/Makefile
 docklets/Clock/Makefile
 docklets/CPUMonitor/Makefile
