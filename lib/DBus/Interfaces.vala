@@ -44,6 +44,11 @@ namespace Plank
 		 * Whether the dock is allowed to hide itself
 		 */
 		public abstract bool allow_hiding { get; set; }
+
+		/**
+		 * Whether the hover window can appear above a dock item
+		 */
+		public abstract bool allow_hover_window { get; set; }
 	}
 
 	/**

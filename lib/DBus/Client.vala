@@ -66,6 +66,16 @@ namespace Plank
 			}
 		}
 
+		public bool dock_allow_hover_window {
+			get {
+				return (dock_proxy != null && dock_proxy.allow_hover_window);
+			}
+			set {
+				if (dock_proxy != null)
+					dock_proxy.allow_hover_window = value;
+			}
+		}
+
 		DBusConnection? connection = null;
 		string? client_object_path;
 		

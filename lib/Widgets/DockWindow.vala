@@ -48,6 +48,11 @@ namespace Plank
 		 * The item which "received" the button-pressed signal (if any).
 		 */
 		unowned DockItem? ClickedItem { get; private set; }
+
+		/**
+		 * Whether the hover window can appear above a dock item
+		 */
+		public bool AllowHoverWindow { get; set; default = true; }
 		
 		/**
 		 * The popup menu for this dock.
@@ -92,6 +97,7 @@ namespace Plank
 						Gdk.EventMask.STRUCTURE_MASK);
 			
 			controller.prefs.notify["HideMode"].connect (set_struts);
+			notify["AllowHoverWindow"].connect (on_allow_hover_window_changed);
 		}
 		
 		~DockWindow ()
@@ -102,6 +108,7 @@ namespace Plank
 			}
 			
 			controller.prefs.notify["HideMode"].disconnect (set_struts);
+			notify["AllowHoverWindow"].disconnect (on_allow_hover_window_changed);
 			
 			if (hover_reposition_timer_id > 0U) {
 				GLib.Source.remove (hover_reposition_timer_id);
@@ -369,7 +376,8 @@ namespace Plank
 			
 			if (HoveredItem == null
 				|| !controller.prefs.TooltipsEnabled
-				|| controller.drag_manager.InternalDragActive)
+				|| controller.drag_manager.InternalDragActive
+				|| !AllowHoverWindow)
 				return;
 			
 			// don't be that demanding this delay is still fast enough
@@ -736,6 +744,12 @@ namespace Plank
 			controller.renderer.animated_draw ();
 		}
 		
+		void on_allow_hover_window_changed ()
+		{
+			if (!AllowHoverWindow)
+				controller.hover.hide ();
+		}
+
 		/**
 		 * Positions the popup menu.
 		 *

@@ -36,15 +36,27 @@ namespace Plank
 			}
 		}
 
+		public bool allow_hover_window {
+			get {
+				return controller.window.AllowHoverWindow;
+			}
+
+			set {
+				controller.window.AllowHoverWindow = value;
+			}
+		}
+
 		public DBusDock (DockController _controller)
 		{
 			controller = _controller;
 			controller.window.notify["HoveredItem"].connect (handle_hovered_item_changed);
+			controller.window.notify["ClickedItem"].connect (handle_clicked_item_changed);
 		}
 
 		~DBusDock ()
 		{
 			controller.window.notify["HoveredItem"].disconnect (handle_hovered_item_changed);
+			controller.window.notify["ClickedItem"].disconnect (handle_clicked_item_changed);
 		}
 
 		void handle_hovered_item_changed ()
@@ -59,6 +71,12 @@ namespace Plank
 			} else {
 				hovered_item_changed ("", -1, -1, position_manager.Position);
 			}
+		}
+
+		void handle_clicked_item_changed ()
+		{
+			unowned PositionManager position_manager = controller.position_manager;
+			hovered_item_changed ("", -1, -1, position_manager.Position);
 		}
 	}
 
