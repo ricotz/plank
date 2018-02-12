@@ -58,7 +58,7 @@ namespace Plank
 
 		public bool dock_allow_hiding {
 			get {
-				return (dock_proxy != null && dock_proxy.allow_hiding);
+				return (dock_proxy == null || dock_proxy.allow_hiding);
 			}
 			set {
 				if (dock_proxy != null)
@@ -68,7 +68,7 @@ namespace Plank
 
 		public bool dock_allow_hover_window {
 			get {
-				return (dock_proxy != null && dock_proxy.allow_hover_window);
+				return (dock_proxy == null || dock_proxy.allow_hover_window);
 			}
 			set {
 				if (dock_proxy != null)

@@ -42,6 +42,7 @@ namespace Plank
 			}
 
 			set {
+				//TODO Restore if lost client
 				controller.window.AllowHoverWindow = value;
 			}
 		}
