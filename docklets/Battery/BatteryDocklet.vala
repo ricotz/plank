@@ -19,12 +19,11 @@
 
 public static void docklet_init (Plank.DockletManager manager)
 {
-	manager.register_docklet(typeof (Docky.BatteryDocklet));
+	manager.register_docklet (typeof (Docky.BatteryDocklet));
 }
 
 namespace Docky
 {
-	public const string G_RESOURCE_PATH = "/net/launchpad/plank/docklets/battery";
 	public const string BAT_DIR = "/sys/class/power_supply/BAT0/";
 	public const string BAT_CAP = BAT_DIR+"capacity";
 	public const string BAT_STAT = BAT_DIR+"status";
@@ -33,34 +32,34 @@ namespace Docky
 
 	public class BatteryDocklet : Object, Plank.Docklet
 	{
-		public unowned string get_id()
+		public unowned string get_id ()
 		{
 			return "battery";
 		}
 
-		public unowned string get_name()
+		public unowned string get_name ()
 		{
 			return _("Battery");
 		}
 
-		public unowned string get_description()
+		public unowned string get_description ()
 		{
 			return _("Displays battery information");
 		}
 
-		public unowned string get_icon()
+		public unowned string get_icon ()
 		{
 			return "battery";
 		}
 
-		public bool is_supported()
+		public bool is_supported ()
 		{
 			return true;
 		}
 
-		public Plank.DockElement make_element(string launcher, GLib.File file)
+		public Plank.DockElement make_element (string launcher, GLib.File file)
 		{
-			return new BatteryDockItem.with_dockitem_file(file);
+			return new BatteryDockItem.with_dockitem_file (file);
 		}
 	}
 }

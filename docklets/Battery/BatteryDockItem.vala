@@ -31,63 +31,63 @@ namespace Docky
 		/**
 		 * {@inheritDoc}
 		 */
-		public BatteryDockItem.with_dockitem_file(GLib.File file)
+		public BatteryDockItem.with_dockitem_file (GLib.File file)
 		{
-			GLib.Object(Prefs: new DockItemPreferences.with_file(file));
+			GLib.Object (Prefs: new DockItemPreferences.with_file (file));
 		}
 
 		construct
 		{
 			Icon = "battery-missing";
 			Text = _("No battery");
-			update_bat();
+			update_bat ();
 
-			battery_mon_id = Gdk.threads_add_timeout(1000, (SourceFunc)update_bat);
+			battery_mon_id = Gdk.threads_add_timeout (1000, (SourceFunc)update_bat);
 		}
 
-		~BatteryDockItem()
+		~BatteryDockItem ()
 		{
 			if (battery_mon_id > 0U)
 			{
-				GLib.Source.remove(battery_mon_id);
+				GLib.Source.remove (battery_mon_id);
 			}
 		}
 
-		int get_capacity() throws GLib.FileError
+		int get_capacity () throws GLib.FileError
 		{
 			string cap;
-			FileUtils.get_contents(BAT_CAP, out cap);
-			return int.parse(cap);
+			FileUtils.get_contents (BAT_CAP, out cap);
+			return int.parse (cap);
 		}
 
-		string get_status() throws GLib.FileError
+		string get_status () throws GLib.FileError
 		{
 			string stat;
-			FileUtils.get_contents(BAT_STAT, out stat);
-			return stat.chomp();
+			FileUtils.get_contents (BAT_STAT, out stat);
+			return stat.chomp ();
 		}
 
-		bool update_bat()
+		bool update_bat ()
 		{
-			string oldIcon=Icon;
 			try
 			{
-				status = get_status();
-				capacity = get_capacity();
-				Text = _(capacity.to_string()+"% "+status);
-				switch ((int)Math.ceil(capacity*0.04))
+				status = get_status ();
+				capacity = get_capacity ();
+				Text = _(capacity.to_string ()+"% "+status);
+				string newIcon="";
+				switch ( (int)Math.ceil (capacity*0.04))
 				{
 					case 4:
-						Icon = "battery-full";
+						newIcon = "battery-full";
 						break;
 					case 3:
-						Icon = "battery-good";
+						newIcon = "battery-good";
 						break;
 					case 2:
-						Icon = "battery-low";
+						newIcon = "battery-low";
 						break;
 					case 1:
-						Icon = "battery-caution";
+						newIcon = "battery-caution";
 						break;
 				}
 
@@ -95,21 +95,18 @@ namespace Docky
 				{
 					case "Full":
 					case "Charging":
-						Icon += "-charging";
+						newIcon += "-charging";
 						break;
 					case "Discharging":
 						break;
 				}
+
+				Icon=newIcon;
 			}
 			catch
 			{
 				Icon = "battery-missing";
 				Text = _("No battery");
-			}
-
-			if (oldIcon!=Icon)
-			{
-				reset_icon_buffer();
 			}
 			return true;
 		}
