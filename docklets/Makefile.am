@@ -1,4 +1,5 @@
 SUBDIRS = \
+	Battery \
 	Applications \
 	Clippy \
 	Clock \
@@ -6,4 +7,3 @@ SUBDIRS = \
 	Desktop \
 	Trash \
 	$(NULL)
-
