@@ -1,5 +1,6 @@
 SUBDIRS = \
 	Battery \
+	Applications \
 	Clippy \
 	Clock \
 	CPUMonitor \
