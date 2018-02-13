@@ -31,9 +31,9 @@ namespace Docky
 		/**
 		 * {@inheritDoc}
 		 */
-		public BatteryDockItem.with_dockitem_file (GLib.File file)
+		public BatteryDockItem.with_dockitem_file(GLib.File file)
 		{
-			GLib.Object (Prefs: new BatteryPreferences.with_file(file));
+			GLib.Object(Prefs: new DockItemPreferences.with_file(file));
 		}
 
 		construct
@@ -42,7 +42,6 @@ namespace Docky
 			Text = _("No battery");
 			update_bat();
 
-			unowned BatteryPreferences prefs = (BatteryPreferences)Prefs;
 			battery_mon_id = Gdk.threads_add_timeout(1000, (SourceFunc)update_bat);
 		}
 
@@ -52,7 +51,6 @@ namespace Docky
 			{
 				GLib.Source.remove(battery_mon_id);
 			}
-			unowned BatteryPreferences prefs = (BatteryPreferences)Prefs;
 		}
 
 		int get_capacity() throws GLib.FileError
@@ -114,20 +112,6 @@ namespace Docky
 				reset_icon_buffer();
 			}
 			return true;
-		}
-
-		void handle_prefs_changed()
-		{
-			unowned BatteryPreferences prefs = (BatteryPreferences)Prefs;
-			reset_icon_buffer();
-		}
-
-		public override Gee.ArrayList<Gtk.MenuItem> get_menu_items()
-		{
-			unowned BatteryPreferences prefs = (BatteryPreferences)Prefs;
-			var items = new Gee.ArrayList<Gtk.MenuItem>();
-			//Add menu items here as needed
-			return items;
 		}
 	}
 }

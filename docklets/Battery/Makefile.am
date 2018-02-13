@@ -3,7 +3,6 @@ include $(top_srcdir)/Makefile.common
 VAPIDIR = $(top_srcdir)/vapi
 
 BUILT_SOURCES = \
-	docky-battery-resources.c \
 	$(NULL)
 
 libdocklet_battery_la_LTLIBRARIES = libdocklet-battery.la
@@ -13,7 +12,6 @@ libdocklet_battery_ladir = $(pkglibdir)/docklets
 libdocklet_battery_la_VALASOURCES = \
 	BatteryDockItem.vala \
 	BatteryDocklet.vala \
-	BatteryPreferences.vala \
 	$(NULL)
 
 nodist_libdocklet_battery_la_SOURCES = \
@@ -45,9 +43,6 @@ libdocklet_battery_la_CFLAGS = \
 	-I$(top_builddir)/lib \
 	$(NULL)
 
-docky-battery-resources.c: $(srcdir)/battery.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir $(srcdir) $(srcdir)/battery.gresource.xml)
-	$(AM_V_GEN) XMLLINT=$(XMLLINT) $(GLIB_COMPILE_RESOURCES) --target $@ --sourcedir $(srcdir) --generate --c-name docky_battery $<
-
 $(libdocklet_battery_la_VALASOURCES:.vala=.c): libdocklet_battery_la_vala.stamp
 
 libdocklet_battery_la_vala.stamp: $(libdocklet_battery_la_VALASOURCES) $(top_builddir)/lib/plank.vapi Makefile
@@ -64,5 +59,4 @@ CLEANFILES = \
 
 EXTRA_DIST = \
 	$(libdocklet_battery_la_VALASOURCES) \
-	battery.gresource.xml \
 	$(NULL)
