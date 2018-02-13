@@ -73,7 +73,7 @@ namespace Docky
 			{
 				status = get_status ();
 				capacity = get_capacity ();
-				Text = _(capacity.to_string ()+"% "+status);
+				Text = capacity.to_string () + "% " + status;
 				string newIcon="";
 				switch ( (int)Math.ceil (capacity*0.04))
 				{
