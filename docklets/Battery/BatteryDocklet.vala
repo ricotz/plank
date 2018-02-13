@@ -25,10 +25,11 @@ public static void docklet_init (Plank.DockletManager manager)
 namespace Docky
 {
 	public const string G_RESOURCE_PATH = "/net/launchpad/plank/docklets/battery";
-	public const string BAT_CAP = "/sys/class/power_supply/BAT0/capacity";
-	public const string BAT_STAT = "/sys/class/power_supply/BAT0/status";
-	public const string BAT_CHARGE = "/sys/class/power_supply/BAT0/charge_now";
-	public const string BAT_ALARM = "/sys/class/power_supply/BAT0/alarm";
+	public const string BAT_DIR = "/sys/class/power_supply/BAT0/";
+	public const string BAT_CAP = BAT_DIR+"capacity";
+	public const string BAT_STAT = BAT_DIR+"status";
+	public const string BAT_CHARGE = BAT_DIR+"charge_now";
+	public const string BAT_ALARM = BAT_DIR+"alarm";
 
 	public class BatteryDocklet : Object, Plank.Docklet
 	{
@@ -44,12 +45,12 @@ namespace Docky
 
 		public unowned string get_description()
 		{
-			return _("Displays charging information");
+			return _("Displays battery information");
 		}
 
 		public unowned string get_icon()
 		{
-			return "application-x-addon";
+			return "battery";
 		}
 
 		public bool is_supported()
