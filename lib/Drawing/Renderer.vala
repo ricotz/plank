@@ -95,13 +95,7 @@ namespace Plank
 		 */
 		protected void force_frame_time_update ()
 		{
-			unowned Gdk.FrameClock? frame_clock = widget.get_frame_clock ();
-			if (frame_clock != null) {
-				frame_time = frame_clock.get_frame_time ();
-			} else {
-				frame_time = GLib.get_monotonic_time ();
-				critical ("FrameClock not available");
-			}
+			frame_time = GLib.get_monotonic_time ();
 		}
 		
 		/**
@@ -127,7 +121,7 @@ namespace Plank
 		[CCode (instance_pos = -1)]
 		bool draw_timeout (Gtk.Widget widget, Gdk.FrameClock frame_clock)
 		{
-			frame_time = frame_clock.get_frame_time ();
+			frame_time = GLib.get_monotonic_time ();
 			initialize_frame (frame_time);
 			widget.queue_draw ();
 			
