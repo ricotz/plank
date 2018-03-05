@@ -184,9 +184,11 @@ namespace Plank
 			update_indicator ();
 
 			// Load existing windows
-			Array<uint32>? xids = App.get_xids ();
-			for (var i = 0; xids != null && i < xids.length; i++) {
-				last_active_by_xid.add (xids.index (i));
+			if (last_active_by_xid != null) {
+				Array<uint32>? xids = App.get_xids ();
+				for (var i = 0; xids != null && i < xids.length; i++) {
+					last_active_by_xid.add (xids.index (i));
+				}
 			}
 		}
 		

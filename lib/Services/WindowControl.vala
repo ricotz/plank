@@ -367,6 +367,24 @@ namespace Plank
 			// If true, then we're done for now
 			if(focus_if_urgent_or_not_in_viewport (windows, event_time)) return;
 
+			// Minimize all windows if this application owns the active window
+			// and our active window list is empty.
+			// Workaround for Gimp. This seems to happen when Gimp is open before Plank
+			if (last_active_by_xid.size == 0) {
+				foreach (unowned Wnck.Window window in windows) {
+					unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
+					if ((window.is_active () && active_workspace != null && window.is_in_viewport (active_workspace))
+						|| window == window.get_screen ().get_active_window ()) {
+						foreach (unowned Wnck.Window w in windows)
+							if (!w.is_minimized () && w.is_in_viewport (active_workspace)) {
+								w.minimize ();
+								Thread.usleep (WINDOW_GROUP_DELAY);
+							}
+						return;
+					}
+				}
+			}
+
 			// Focus the next window if the current app is active
 			// or minimize if active and only one
 			foreach (unowned Wnck.Window window in windows) {
@@ -395,7 +413,9 @@ namespace Plank
 			// Focus the last active window
 			foreach (unowned Wnck.Window window in windows) {
 				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
-				if (active_workspace != null && window.is_in_viewport (active_workspace)) {
+				if (active_workspace != null && window.is_in_viewport (active_workspace)
+						&& last_active_by_xid.size > 0) {
+
 					if (window.is_in_viewport (active_workspace)) {
 						focus_window_by_xid (last_active_by_xid.get (0), event_time);
 						Thread.usleep (WINDOW_GROUP_DELAY);
@@ -403,6 +423,9 @@ namespace Plank
 					return;
 				}
 			}
+
+			// Focus most-top window and all others on its workspace
+			intelligent_focus_off_viewport_window (windows.nth_data (0), windows, event_time);
 		}
 
 		public static void smart_focus (Bamf.Application app, uint32 event_time)
