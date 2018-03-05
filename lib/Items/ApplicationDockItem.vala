@@ -134,7 +134,7 @@ namespace Plank
 			
 			load_from_launcher ();
 
-			last_active_by_xid = new Gee.ArrayList<uint32>();
+			last_active_by_xid = new Gee.ArrayList<uint32> ();
 		}
 		
 		~ApplicationDockItem ()
@@ -186,7 +186,7 @@ namespace Plank
 			// Load existing windows
 			Array<uint32>? xids = App.get_xids ();
 			for (var i = 0; xids != null && i < xids.length; i++) {
-				last_active_by_xid.add(xids.index(i));
+				last_active_by_xid.add (xids.index (i));
 			}
 		}
 		
@@ -206,9 +206,9 @@ namespace Plank
 		
 		void handle_user_visible_changed (bool user_visible)
 		{
-			if (user_visible) 
+			if (user_visible)
 				app_window_added ();
-			else 
+			else
 				app_window_removed ();
 
 			update_window_list (null);
