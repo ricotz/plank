@@ -104,6 +104,8 @@ namespace Plank
 		Gee.ArrayList<string> supported_mime_types;
 		Gee.ArrayList<string> actions;
 		Gee.HashMap<string, string> actions_map;
+
+		Gee.ArrayList<uint32> last_active_by_xid;
 		
 		string? unity_application_uri = null;
 		string? unity_dbusname = null;
@@ -131,6 +133,8 @@ namespace Plank
 			actions_map = new Gee.HashMap<string, string> ();
 			
 			load_from_launcher ();
+
+			last_active_by_xid = new Gee.ArrayList<uint32>();
 		}
 		
 		~ApplicationDockItem ()
@@ -138,6 +142,8 @@ namespace Plank
 			supported_mime_types = null;
 			actions = null;
 			actions_map = null;
+
+			last_active_by_xid = null;
 			
 			App = null;
 #if HAVE_DBUSMENU
@@ -176,6 +182,12 @@ namespace Plank
 			handle_urgent_changed (App.is_urgent ());
 			
 			update_indicator ();
+
+			// Load existing windows
+			Array<uint32>? xids = App.get_xids ();
+			for (var i = 0; xids != null && i < xids.length; i++) {
+				last_active_by_xid.add(xids.index(i));
+			}
 		}
 		
 		public bool is_running ()
@@ -194,10 +206,12 @@ namespace Plank
 		
 		void handle_user_visible_changed (bool user_visible)
 		{
-			if (user_visible)
+			if (user_visible) 
 				app_window_added ();
-			else
+			else 
 				app_window_removed ();
+
+			update_window_list (null);
 		}
 		
 		void handle_closed ()
@@ -237,6 +251,7 @@ namespace Plank
 			update_indicator ();
 			
 			app_window_added ();
+			update_window_list (null);
 		}
 		
 		public void set_urgent (bool is_urgent)
@@ -264,6 +279,7 @@ namespace Plank
 			update_indicator ();
 			
 			app_window_added ();
+			update_window_list (null);
 		}
 		
 		void handle_window_removed (Bamf.View? child)
@@ -274,6 +290,7 @@ namespace Plank
 			update_indicator ();
 			
 			app_window_removed ();
+			update_window_list ((Bamf.Window) child);
 		}
 		
 		void update_indicator ()
@@ -314,6 +331,52 @@ namespace Plank
 			System.get_default ().launch (File.new_for_uri (Prefs.Launcher));
 		}
 		
+		void update_window_list (Bamf.Window? removed)
+		{
+			Array<uint32>? xids = App.get_xids ();
+
+			// Remove any that are gone
+			foreach (uint32 i in last_active_by_xid) {
+				bool gone = true;
+				for (var j = 0; xids != null && j < xids.length; i++) {
+					if (xids.index (j) == i) {
+						gone = false;
+						break;
+					}
+				}
+
+				if (gone) {
+					last_active_by_xid.remove (i);
+				}
+			}
+
+			// If we're given the removed window,
+			// let's remove it explicitly
+			if (removed != null) {
+				// Remove the closed window
+				last_active_by_xid.remove (removed.get_xid ());
+
+				// Bring the last active back
+				if (last_active_by_xid.size > 1) {
+					uint32 last_active = last_active_by_xid.remove_at (last_active_by_xid.size - 1);
+					last_active_by_xid.insert (0, last_active);
+				}
+			}
+
+			// Add new ones at the front
+			for (var i = 0; xids != null && i < xids.length; i++) {
+				if (!last_active_by_xid.contains (xids.index (i))) {
+					last_active_by_xid.insert (0, xids.index (i));
+				}
+			}
+
+			// Debug
+			// stdout.printf ("Updated App: %s \n", Text);
+			// foreach (uint32 i in last_active_by_xid) {
+			// 	stdout.printf ("XIDs: %d \n", (int) i);
+			// }
+		}
+
 		/**
 		 * {@inheritDoc}
 		 */
@@ -328,7 +391,8 @@ namespace Plank
 				}
 			
 			if (button == PopupButton.LEFT && App != null && App.get_windows ().length () > 0) {
-				WindowControl.smart_focus (App, event_time);
+				// WindowControl.smart_focus (App, event_time);
+				WindowControl.last_active_focus (App, event_time, last_active_by_xid);
 				return AnimationType.DARKEN;
 			}
 			

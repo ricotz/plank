@@ -360,33 +360,57 @@ namespace Plank
 			return windows;
 		}
 		
+		public static void last_active_focus (Bamf.Application app, uint32 event_time, Gee.ArrayList<uint32> last_active_by_xid)
+		{
+			var windows = get_ordered_window_stack (app);
+
+			// If true, then we're done for now
+			if(focus_if_urgent_or_not_in_viewport(windows, event_time)) return;
+
+			// Focus the next window if the current app is active
+			// or minimize if active and only one
+			foreach (unowned Wnck.Window window in windows) {
+				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
+				if ((window.is_active () && active_workspace != null && window.is_in_viewport (active_workspace))
+					|| window == window.get_screen ().get_active_window ()) {
+
+					// Move the current active window to the back, focus the next one
+					if (last_active_by_xid.size > 1) {
+						uint32 previous_window = last_active_by_xid.remove_at (0);
+
+						last_active_by_xid.add (previous_window);
+
+						focus_window_by_xid (last_active_by_xid.get(0), event_time);
+						return;
+					}
+
+					// Minimize if we only have one
+					window.minimize ();
+					Thread.usleep (WINDOW_GROUP_DELAY);
+					
+					return;
+				}
+			}
+
+			// Focus the last active window
+			foreach (unowned Wnck.Window window in windows) {
+				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
+				if (active_workspace != null && window.is_in_viewport (active_workspace)) {
+					if (window.is_in_viewport (active_workspace)) {
+						focus_window_by_xid (last_active_by_xid.get(0), event_time);
+						Thread.usleep (WINDOW_GROUP_DELAY);
+					}
+					return;
+				}
+			}
+		}
+
 		public static void smart_focus (Bamf.Application app, uint32 event_time)
 		{
 			var windows = get_ordered_window_stack (app);
 			
-			var not_in_viewport = true;
-			var urgent = false;
-			
-			foreach (unowned Wnck.Window window in windows) {
-				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
-				if (!window.is_skip_tasklist () && active_workspace != null && window.is_in_viewport (active_workspace))
-					not_in_viewport = false;
-				if (window.needs_attention ())
-					urgent = true;
-			}
-			
-			// Focus off-viewport window if it needs attention
-			if (not_in_viewport || urgent) {
-				foreach (unowned Wnck.Window window in windows) {
-					if (urgent && !window.needs_attention ())
-						continue;
-					
-					if (!window.is_skip_tasklist ()) {
-						intelligent_focus_off_viewport_window (window, windows, event_time);
-						return;
-					}
-				}
-			}
+			// If true, then we're done for now
+			if(focus_if_urgent_or_not_in_viewport(windows, event_time)) return;
 			
 			// Unminimize minimized windows if there is one or more
 			foreach (unowned Wnck.Window window in windows) {
@@ -430,6 +454,35 @@ namespace Plank
 			
 			// Focus most-top window and all others on its workspace
 			intelligent_focus_off_viewport_window (windows.nth_data (0), windows, event_time);
+		}
+
+		static bool focus_if_urgent_or_not_in_viewport(GLib.List<unowned Wnck.Window> windows, uint32 event_time)
+		{
+			var not_in_viewport = true;
+			var urgent = false;
+			
+			foreach (unowned Wnck.Window window in windows) {
+				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
+				if (!window.is_skip_tasklist () && active_workspace != null && window.is_in_viewport (active_workspace))
+					not_in_viewport = false;
+				if (window.needs_attention ())
+					urgent = true;
+			}
+			
+			// Focus off-viewport window if it needs attention
+			if (not_in_viewport || urgent) {
+				foreach (unowned Wnck.Window window in windows) {
+					if (urgent && !window.needs_attention ())
+						continue;
+					
+					if (!window.is_skip_tasklist ()) {
+						intelligent_focus_off_viewport_window (window, windows, event_time);
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 		
 		static void intelligent_focus_off_viewport_window (Wnck.Window targetWindow,
