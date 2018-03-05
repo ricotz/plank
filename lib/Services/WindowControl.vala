@@ -365,7 +365,7 @@ namespace Plank
 			var windows = get_ordered_window_stack (app);
 
 			// If true, then we're done for now
-			if(focus_if_urgent_or_not_in_viewport(windows, event_time)) return;
+			if(focus_if_urgent_or_not_in_viewport (windows, event_time)) return;
 
 			// Focus the next window if the current app is active
 			// or minimize if active and only one
@@ -380,7 +380,7 @@ namespace Plank
 
 						last_active_by_xid.add (previous_window);
 
-						focus_window_by_xid (last_active_by_xid.get(0), event_time);
+						focus_window_by_xid (last_active_by_xid.get (0), event_time);
 						return;
 					}
 
@@ -397,7 +397,7 @@ namespace Plank
 				unowned Wnck.Workspace? active_workspace = window.get_screen ().get_active_workspace ();
 				if (active_workspace != null && window.is_in_viewport (active_workspace)) {
 					if (window.is_in_viewport (active_workspace)) {
-						focus_window_by_xid (last_active_by_xid.get(0), event_time);
+						focus_window_by_xid (last_active_by_xid.get (0), event_time);
 						Thread.usleep (WINDOW_GROUP_DELAY);
 					}
 					return;
@@ -410,7 +410,7 @@ namespace Plank
 			var windows = get_ordered_window_stack (app);
 			
 			// If true, then we're done for now
-			if(focus_if_urgent_or_not_in_viewport(windows, event_time)) return;
+			if(focus_if_urgent_or_not_in_viewport (windows, event_time)) return;
 			
 			// Unminimize minimized windows if there is one or more
 			foreach (unowned Wnck.Window window in windows) {
