@@ -23,7 +23,7 @@ namespace Docky
 {
 	[DBus (name = "org.gnome.Nautilus.FileOperations")]
 	interface NautilusFileOperations : Object {
-		public abstract void empty_trash () throws IOError;
+		public abstract void empty_trash () throws DBusError, IOError;
 	}
 	
 	public class TrashDockItem : DockletItem

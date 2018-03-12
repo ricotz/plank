@@ -41,7 +41,7 @@ namespace Plank
 		 * @param uri an URI
 		 * @return whether it was successfully added
 		 */
-		public abstract bool add (string uri) throws GLib.IOError;
+		public abstract bool add (string uri) throws GLib.DBusError, GLib.IOError;
 		
 		/**
 		 * Remove an existing item for the given uri from the dock
@@ -49,28 +49,28 @@ namespace Plank
 		 * @param uri an URI
 		 * @return whether it was successfully removed
 		 */
-		public abstract bool remove (string uri) throws GLib.IOError;
+		public abstract bool remove (string uri) throws GLib.DBusError, GLib.IOError;
 		
 		/**
 		 * Returns the number of currently visible items on the dock
 		 *
 		 * @return the item-count
 		 */
-		public abstract int get_count () throws GLib.IOError;
+		public abstract int get_count () throws GLib.DBusError, GLib.IOError;
 		
 		/**
 		 * Returns an array of uris of the persistent applications on the dock
 		 *
 		 * @return the array of uris
 		 */
-		public abstract string[] get_persistent_applications () throws GLib.IOError;
+		public abstract string[] get_persistent_applications () throws GLib.DBusError, GLib.IOError;
 		
 		/**
 		 * Returns an array of uris of the transient applications on the dock
 		 *
 		 * @return the array of uris
 		 */
-		public abstract string[] get_transient_applications () throws GLib.IOError;
+		public abstract string[] get_transient_applications () throws GLib.DBusError, GLib.IOError;
 
 		/**
 		 * Gets the x,y coords with the dock's position to display a hover window for an item.
@@ -81,6 +81,6 @@ namespace Plank
 		 * @param dock_position the position of the dock
 		 * @return whether it was successfully retrieved
 		 */
-		public abstract bool get_hover_position (string uri, out int x, out int y, out Gtk.PositionType dock_position) throws GLib.IOError;
+		public abstract bool get_hover_position (string uri, out int x, out int y, out Gtk.PositionType dock_position) throws GLib.DBusError, GLib.IOError;
 	}
 }

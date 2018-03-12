@@ -93,7 +93,7 @@ namespace Plank
 				// Listen for "Ping" signals coming from docks
 				dbus_dock_ping_id = connection.signal_subscribe (null, Plank.DBUS_DOCK_INTERFACE_NAME,
 					Plank.DBUS_PING_NAME, null, null, DBusSignalFlags.NONE, (DBusSignalCallback) handle_dock_ping);
-			} catch (IOError e) {
+			} catch (Error e) {
 				warning ("Could not subscribe for dock signal (%s)", e.message);
 			}
 			
@@ -206,7 +206,7 @@ namespace Plank
 			
 			try {
 				return items_proxy.add (uri);
-			} catch (IOError e) {
+			} catch (Error e) {
 				warning (e.message);
 				return false;
 			}
@@ -227,7 +227,7 @@ namespace Plank
 			
 			try {
 				return items_proxy.remove (uri);
-			} catch (IOError e) {
+			} catch (Error e) {
 				warning (e.message);
 				return false;
 			}
@@ -248,7 +248,7 @@ namespace Plank
 			try {
 				if (items_count == int.MIN)
 					items_count = items_proxy.get_count ();
-			} catch (IOError e) {
+			} catch (Error e) {
 				warning (e.message);
 				return -1;
 			}
@@ -275,7 +275,7 @@ namespace Plank
 				if (persistent_apps_list == null)
 					persistent_apps_list = items_proxy.get_persistent_applications ();
 				return persistent_apps_list;
-			} catch (IOError e) {
+			} catch (Error e) {
 				warning (e.message);
 			}
 			
@@ -301,7 +301,7 @@ namespace Plank
 				if (transient_apps_list == null)
 					transient_apps_list = items_proxy.get_transient_applications ();
 				return transient_apps_list;
-			} catch (IOError e) {
+			} catch (Error e) {
 				warning (e.message);
 			}
 			
@@ -328,7 +328,7 @@ namespace Plank
 			
 			try {
 				return items_proxy.get_hover_position (uri, out x, out y, out dock_position);
-			} catch (IOError e) {
+			} catch (Error e) {
 				warning (e.message);
 			}
 			
