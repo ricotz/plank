@@ -182,7 +182,7 @@ namespace Plank
 			
 			for (var i = 0; xids != null && i < xids.length; i++) {
 				unowned Wnck.Window window = Wnck.Window.@get (xids.index (i));
-				if (window == null)
+				if (window == null || window.is_skip_tasklist ())
 					continue;
 				
 				if (!is_virtual) {
