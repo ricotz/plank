@@ -231,7 +231,7 @@ namespace Plank
 				Hovered = hovered;
 				update_needed = true;
 			}
-			
+
 			// disable hiding if menu is visible or drags are active
 			var disabled = (window.menu_is_visible () || drag_manager.InternalDragActive || drag_manager.ExternalDragActive);
 			if (Disabled != disabled) {
@@ -242,6 +242,13 @@ namespace Plank
 			if (update_needed)
 				update_hidden ();
 			
+			thaw_notify ();
+		}
+
+		public void update_hovered_force ()
+		{
+			freeze_notify ();
+			update_hidden ();
 			thaw_notify ();
 		}
 		
@@ -277,12 +284,12 @@ namespace Plank
 		
 		void update_hidden ()
 		{
-			if (Disabled) {
+			if (Disabled || controller.PreviewMode) {
 				if (Hidden)
 					Hidden = false;
 				return;
 			}
-			
+		
 			switch (controller.prefs.HideMode) {
 			default:
 			case HideType.NONE:
