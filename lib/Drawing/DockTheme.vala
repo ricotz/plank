@@ -692,6 +692,11 @@ namespace Plank
 					IndicatorSize = MAX_INDICATOR_SIZE;
 				break;
 			
+			case "IndicatorStyle":
+				if (IndicatorStyle < 0 || IndicatorStyle > 3)
+					IndicatorStyle = IndicatorStyleType.LEGACY;
+				break;
+			
 			case "IconShadowSize":
 				if (IconShadowSize < 0)
 					IconShadowSize = 0;
@@ -699,9 +704,9 @@ namespace Plank
 					IconShadowSize = MAX_ICON_SHADOW_SIZE;
 				break;
 			
-			case "IndicatorStyle":
-				if (IndicatorStyle < 0 || IndicatorStyle > 3)
-					IndicatorStyle = IndicatorStyleType.LEGACY;
+			case "SelectionStyle":
+				if (SelectionStyle < 0 || SelectionStyle > 2)
+					SelectionStyle = SelectionStyleType.LEGACY;
 				break;
 			
 			case "UrgentBounceHeight":
