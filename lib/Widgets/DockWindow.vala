@@ -53,6 +53,7 @@ namespace Plank
 		 * The popup menu for this dock.
 		 */
 		Gtk.Menu? menu;
+		Gee.ArrayList<Gtk.MenuItem>? menu_items;
 		
 		uint hover_reposition_timer_id = 0U;
 		
@@ -600,7 +601,7 @@ namespace Plank
 				menu = null;
 			}
 			
-			Gee.ArrayList<Gtk.MenuItem>? menu_items = null;
+			menu_items = null;
 			Gtk.MenuPositionFunc? position_func = null;
 			var button = PopupButton.from_event_button (event);
 			
@@ -721,6 +722,8 @@ namespace Plank
 				set_hovered_provider (null);
 				set_hovered (null);
 			}
+
+			menu_items = null;
 		}
 		
 		/**
