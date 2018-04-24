@@ -22,6 +22,7 @@ namespace Docky
 	public class ApplicationsDockItem : DockletItem
 	{
 		GMenu.Tree apps_menu;
+		Mutex apps_menu_mutex;
 
 		/**
 		 * {@inheritDoc}
@@ -50,7 +51,9 @@ namespace Docky
 		void update_menu ()
 		{
 			Worker.get_default ().add_task_with_result.begin<void*> (() => {
+				apps_menu_mutex.lock ();
 				apps_menu.load_sync ();
+				apps_menu_mutex.unlock ();
 				return null;
 			}, TaskPriority.HIGH);
 		}
