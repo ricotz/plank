@@ -6,11 +6,7 @@ namespace Bamf {
 	public class Application : Bamf.View {
 		[CCode (has_construct_function = false)]
 		protected Application ();
-#if VALA_0_32
 		[Version (deprecated = true, deprecated_since = "0.5.0")]
-#else
-		[Deprecated (since = "0.5.0")]
-#endif
 		public bool get_application_menu (out string name, out string object_path);
 		public unowned string get_application_type ();
 		public unowned string get_desktop_file ();

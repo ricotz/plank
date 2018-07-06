@@ -22,11 +22,6 @@ namespace Plank
 	[CCode (cheader_filename = "glib.h", cname = "g_quark_from_static_string")]
 	public GLib.Quark quark_from_static_string (string str);
 
-#if !VALA_0_32
-	[CCode (array_length_type = "guint", cheader_filename = "glib-object.h", cname = "g_object_class_list_properties")]
-	public (unowned GLib.ParamSpec)[] g_object_class_list_properties (GLib.ObjectClass oclass);
-#endif
-
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "gdk_window_add_filter", instance_pos = 1.9)]
 	public void gdk_window_add_filter (Gdk.Window? window, Gdk.FilterFunc function);
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "gdk_window_add_filter", instance_pos = 1.9)]

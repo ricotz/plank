@@ -606,11 +606,7 @@ namespace Plank
 		 */
 		public void copy_values_to (DockItem target)
 		{
-#if VALA_0_32
 			(unowned ParamSpec)[] properties = get_class ().list_properties ();
-#else
-			(unowned ParamSpec)[] properties = g_object_class_list_properties (get_class ());
-#endif
 			
 			foreach (unowned ParamSpec prop in properties) {
 				// Skip non-copyable properties to avoid warnings
