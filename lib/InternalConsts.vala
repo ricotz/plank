@@ -24,7 +24,7 @@ namespace Plank
 	// Duration of animations (in ms)
 	public const uint DOCK_ZOOM_DURATION = 200;
 	public const uint ITEM_HOVER_DURATION = 150;
-	public const uint ITEM_INVALID_DURATION = 3000;
+	public const uint ITEM_INVALID_DURATION = 60000;
 	public const uint ITEM_SCROLL_DURATION = 300;
 	
 	public const uint ITEM_SERIALIZATION_DELAY = 3000;
