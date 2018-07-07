@@ -209,9 +209,6 @@ namespace Plank
 			
 			window.notify["HoveredItem"].connect (hovered_item_changed);
 			
-			// Delay persistent write of dock-preference until drag_end ()
-			controller.prefs.delay ();
-			
 			InternalDragActive = true;
 			drag_canceled = false;
 			
@@ -363,9 +360,6 @@ namespace Plank
 			
 			controller.window.notify["HoveredItem"].disconnect (hovered_item_changed);
 
-			// Perform persistent write of dock-preference
-			controller.prefs.apply ();
-			
 			controller.hover.hide ();
 			
 			// Force last redraw for InternalDrag
