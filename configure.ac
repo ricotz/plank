@@ -342,15 +342,15 @@ AC_ARG_ENABLE([headless-tests],
               [enable_headless_tests=$enableval], [enable_headless_tests=no])
 if test "x$enable_headless_tests" != "xno"; then
     AC_PATH_PROG([XVFB_RUN], [xvfb-run], [:])
-    AC_PATH_PROG([DBUS_LAUNCH], [dbus-launch], [:])
+    AC_PATH_PROG([DBUS_RUN_SESSION], [dbus-run-session], [:])
     AS_IF([test "$XVFB_RUN" != :], [have_xvfb_run=yes], [have_xvfb_run=no])
-    AS_IF([test "$DBUS_LAUNCH" != :], [have_dbus_launch=yes], [have_dbus_launch=no])
+    AS_IF([test "$DBUS_RUN_SESSION" != :], [have_dbus_run_session=yes], [have_dbus_run_session=no])
 fi
-AM_CONDITIONAL(HAVE_HEADLESS_TESTS, [test "x$have_xvfb_run" == "xyes" -a "x$have_dbus_launch" == "xyes"])
+AM_CONDITIONAL(HAVE_HEADLESS_TESTS, [test "x$have_xvfb_run" == "xyes" -a "x$have_dbus_run_session" == "xyes"])
 
 if test "x$enable_headless_tests" = "xyes"; then
-  if test "x$have_xvfb_run" != "xyes" -o "x$have_dbus_launch" != "xyes"; then
-    AC_MSG_ERROR([Headless Tests requested but xvfb-run/dbus-launch not installed.])
+  if test "x$have_xvfb_run" != "xyes" -o "x$have_dbus_run_session" != "xyes"; then
+    AC_MSG_ERROR([Headless Tests requested but xvfb-run/dbus-run-session not installed.])
   fi
 fi
 

@@ -93,7 +93,7 @@ EXTRA_DIST = \
 TESTS_ENVIRONMENT = HOME=$(abs_builddir)/home GSETTINGS_SCHEMA_DIR=$(abs_top_builddir)/data PLANK_DOCKLET_DIRS=$(abs_top_builddir)/docklets
 
 if HAVE_HEADLESS_TESTS
-TESTS_ENVIRONMENT += $(XVFB_RUN) --auto-servernum --server-args="-screen 0 1280x1024x24" $(DBUS_LAUNCH)
+TESTS_ENVIRONMENT += $(XVFB_RUN) --auto-servernum --server-args="-screen 0 1280x1024x24" $(DBUS_RUN_SESSION)
 endif
 
 check-local: clean-local
