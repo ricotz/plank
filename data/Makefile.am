@@ -30,7 +30,7 @@ CLEANFILES = \
 applicationsdir = $(datadir)/applications
 applications_DATA = plank.desktop
 
-appdatadir = $(datadir)/appdata
+appdatadir = $(datadir)/metainfo
 appdata_DATA = plank.appdata.xml
 
 gsettings_SCHEMAS = net.launchpad.plank.gschema.xml
