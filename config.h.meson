@@ -1,0 +1,53 @@
+/* Name of package */
+#mesondefine PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#mesondefine PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#mesondefine PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#mesondefine PACKAGE_STRING
+
+/* Define to the suffix of this package */
+#mesondefine PACKAGE_SUFFIX
+
+/* Define to the one symbol short name of this package. */
+#mesondefine PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#mesondefine PACKAGE_URL
+
+/* Define to the version of this package. */
+#mesondefine PACKAGE_VERSION
+
+/* Codename of this release */
+#mesondefine RELEASE_NAME
+
+/* Define to the data directory. */
+#mesondefine DATADIR
+
+/* Define to the data directory of this package. */
+#mesondefine PKGDATADIR
+
+/* Define to the docklets directory of this package. */
+#mesondefine DOCKLETSDIR
+
+/* Version number of package */
+#mesondefine VERSION
+
+/* Version info of package */
+#mesondefine VERSION_INFO
+
+/* Major version of this package */
+#mesondefine VERSION_MAJOR
+
+/* Minor version of this package */
+#mesondefine VERSION_MINOR
+
+/* Mirco version of this package */
+#mesondefine VERSION_MICRO
+
+/* Nano version of this package */
+#mesondefine VERSION_NANO

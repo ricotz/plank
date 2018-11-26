@@ -1,0 +1,17 @@
+option('enable-apport', type: 'boolean', value: true,
+	description: 'Enable installation of Apport support files')
+
+option('enable-benchmark', type: 'boolean', value: false,
+	description: 'Enable output of benchmarking data')
+
+option('enable-barriers', type: 'combo', choices: ['yes', 'no', 'auto'], value: 'auto',
+	description: 'Enable use of barriers')
+
+option('enable-dbusmenu', type: 'combo', choices: ['yes', 'no', 'auto'], value: 'auto',
+	description: 'Enable dynamic quicklist support provided over dbusmenu')
+
+option('enable-docs', type: 'boolean', value: false,
+	description: 'Enable documentation generation')
+
+option('enable-headless-tests', type: 'boolean', value: false,
+	description: 'Enable running tests in headless mode')
