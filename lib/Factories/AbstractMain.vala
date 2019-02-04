@@ -237,9 +237,7 @@ namespace Plank
 			message ("Wnck version: %d.%d.%d", Wnck.Version.MAJOR_VERSION, Wnck.Version.MINOR_VERSION, Wnck.Version.MICRO_VERSION);
 			message ("Cairo version: %s", Cairo.version_string ());
 			message ("Pango version: %s", Pango.version_string ());
-#if HAVE_HIDPI
 			message ("+ Cairo/Gtk+ HiDPI support enabled");
-#endif
 #if HAVE_DBUSMENU
 			message ("+ Dynamic Quicklists support enabled");
 #endif

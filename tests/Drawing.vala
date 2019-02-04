@@ -210,7 +210,6 @@ namespace PlankTests
 		icon2 = DrawingService.load_icon (Plank.G_RESOURCE_PATH + "/img/application-default-icon.svg", 127, 127);
 		assert (pixbuf_equal (icon, icon2));
 		
-#if HAVE_HIDPI
 		Cairo.Surface surface;
 		
 		surface = DrawingService.load_icon_for_scale (TEST_ICON, 256, 256, 1);
@@ -219,7 +218,6 @@ namespace PlankTests
 		assert (surface != null);
 		surface = DrawingService.load_icon_for_scale (Plank.G_RESOURCE_PATH + "/img/application-default-icon.svg", 127, 127, 1);
 		assert (surface != null);
-#endif
 	}
 	
 	void drawing_drawingservice_average_color ()

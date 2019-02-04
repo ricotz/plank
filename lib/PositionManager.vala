@@ -505,9 +505,7 @@ namespace Plank
 		{
 			var cursor_region = static_dock_region;
 			var progress = 1.0 - controller.renderer.hide_progress;
-#if HAVE_HIDPI
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
-#endif
 			
 			// If zoom is enabled extend cursor-region based on current hovered-item
 			if (controller.prefs.ZoomEnabled) {
@@ -1518,9 +1516,7 @@ namespace Plank
 		 */
 		public void get_struts (ref ulong[] struts)
 		{
-#if HAVE_HIDPI
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
-#endif
 			switch (Position) {
 			default:
 			case Gtk.PositionType.BOTTOM:

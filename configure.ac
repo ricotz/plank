@@ -119,7 +119,7 @@ GTK_MIN_VERSION=3.10.0
 GLIB_MIN_VERSION=2.40.0
 GDK_PIXBUF_MIN_VERSION=2.26.0
 BAMF_MIN_VERSION=0.4.0
-CAIRO_MIN_VERSION=1.10
+CAIRO_MIN_VERSION=1.13
 
 PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  glib-2.0 >= $GLIB_MIN_VERSION \
@@ -192,14 +192,6 @@ CFLAGS="$CFLAGS \
 # -----------------------------------------------------------
 # Optional Dependencies
 # -----------------------------------------------------------
-
-# Check for HiDPI support of Cairo
-HIDPI_PKGS="cairo >= 1.13"
-PKG_CHECK_MODULES(HIDPI, $HIDPI_PKGS, [enable_hidpi=yes], [enable_hidpi=no])
-if test "x$enable_hidpi" = "xyes" ; then
-    VALAFLAGS="$VALAFLAGS --define HAVE_HIDPI"
-fi
-AM_CONDITIONAL([HAVE_HIDPI], [test "x$enable_hidpi" = "xyes"])
 
 # Support barrier-supported unhiding using Xinput 2.3
 XFIXES_MIN_VERSION=5.0

@@ -443,16 +443,11 @@ namespace Plank
 			
 			var icon_name = val.get_string ();
 			var icon_size = prefs.IconSize;
-#if HAVE_HIDPI
 			var window_scale_factor = get_window ().get_scale_factor ();
 			icon_size *= window_scale_factor;
 			var surface = DrawingService.load_icon_for_scale (icon_name, icon_size, icon_size, window_scale_factor);
 			surface.set_device_offset (-icon_size / 2.0, -icon_size / 2.0);
 			Gtk.drag_set_icon_surface (context, surface);
-#else
-			var pixbuf = DrawingService.load_icon (icon_name, icon_size, icon_size);
-			Gtk.drag_set_icon_pixbuf (context, pixbuf, icon_size / 2, icon_size / 2);
-#endif
 		}
 		
 		[CCode (instance_pos = -1)]
