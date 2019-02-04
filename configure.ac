@@ -118,7 +118,7 @@ fi
 GTK_MIN_VERSION=3.10.0
 GLIB_MIN_VERSION=2.40.0
 GDK_PIXBUF_MIN_VERSION=2.26.0
-BAMF_MIN_VERSION=0.2.92
+BAMF_MIN_VERSION=0.4.0
 CAIRO_MIN_VERSION=1.10
 
 PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
@@ -200,14 +200,6 @@ if test "x$enable_hidpi" = "xyes" ; then
     VALAFLAGS="$VALAFLAGS --define HAVE_HIDPI"
 fi
 AM_CONDITIONAL([HAVE_HIDPI], [test "x$enable_hidpi" = "xyes"])
-
-# Check for newer BAMF
-BAMF_PKGS="libbamf3 >= 0.4.0"
-PKG_CHECK_MODULES(BAMF, $BAMF_PKGS, [enable_bamf_0_4=yes], [enable_bamf_0_4=no])
-if test "x$enable_bamf_0_4" = "xyes" ; then
-    VALAFLAGS="$VALAFLAGS --define HAVE_BAMF_0_4"
-fi
-AM_CONDITIONAL([HAVE_BAMF_0_4], [test "x$enable_bamf_0_4" = "xyes"])
 
 # Support barrier-supported unhiding using Xinput 2.3
 XFIXES_MIN_VERSION=5.0

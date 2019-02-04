@@ -92,9 +92,6 @@ namespace Bamf {
 		public virtual bool is_starting ();
 		public bool is_sticky ();
 		public virtual bool is_urgent ();
-#if !HAVE_BAMF_0_4
-		[CCode (cname = "bamf_view_user_visible")]
-#endif
 		public virtual bool is_user_visible ();
 		public unowned GLib.List<Bamf.View> peek_children ();
 		[NoWrapper]
