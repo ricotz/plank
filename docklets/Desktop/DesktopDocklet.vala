@@ -45,7 +45,7 @@ namespace Docky
 		
 		public unowned string get_icon ()
 		{
-			return "resource://" + Docky.G_RESOURCE_PATH + "/icons/show-desktop.svg";
+			return "show-desktop;;resource://" + Docky.G_RESOURCE_PATH + "/icons/show-desktop.svg";
 		}
 		
 		public bool is_supported ()

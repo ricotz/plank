@@ -33,7 +33,7 @@ namespace Docky
 		
 		construct
 		{
-			Icon = "resource://" + Docky.G_RESOURCE_PATH + "/icons/show-desktop.svg";
+			Icon = "show-desktop;;resource://" + Docky.G_RESOURCE_PATH + "/icons/show-desktop.svg";
 			Text = _("Show Desktop");
 		}
 		
