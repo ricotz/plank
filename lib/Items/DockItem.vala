@@ -133,7 +133,7 @@ namespace Plank
 		/**
 		 * Creates a new dock item.
 		 */
-		public DockItem ()
+		protected DockItem ()
 		{
 			GLib.Object (Prefs: new DockItemPreferences ());
 		}

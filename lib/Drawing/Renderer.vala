@@ -38,7 +38,7 @@ namespace Plank
 		/**
 		 * Creates a new animation renderer.
 		 */
-		public Renderer (Gtk.Widget widget)
+		protected Renderer (Gtk.Widget widget)
 		{
 			Object (widget : widget);
 		}

@@ -33,7 +33,7 @@ namespace Plank
 		/**
 		 * {@inheritDoc}
 		 */
-		public Settings (string schema)
+		protected Settings (string schema)
 		{
 			Object (settings: new GLib.Settings (schema));
 		}
@@ -41,7 +41,7 @@ namespace Plank
 		/**
 		 * {@inheritDoc}
 		 */
-		public Settings.with_path (string schema, string path)
+		protected Settings.with_path (string schema, string path)
 		{
 			Object (settings: new GLib.Settings.with_path (schema, path));
 		}
