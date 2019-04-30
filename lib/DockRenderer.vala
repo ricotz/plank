@@ -867,8 +867,11 @@ namespace Plank
 			var surface = new Surface.with_surface (width, height, model);
 			
 			var icon_size = int.min (width, height);
-			var urgent_color = get_styled_color ();
-			urgent_color.add_hue (theme.UrgentHueShift);
+			var urgent_color = theme.BadgeColor;
+			if (urgent_color.equal ({0.0, 0.0, 0.0, 0.0})) {
+				urgent_color = get_styled_color ();
+				urgent_color.add_hue (theme.UrgentHueShift);
+			}
 			
 			// draw item's count
 			if (item.CountVisible)
