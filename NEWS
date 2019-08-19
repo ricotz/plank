@@ -2,6 +2,10 @@ Plank: Stupidly simple.
 
 Note: There is no stability of ABI/API until further notice!
 
+0.11.89 "Nazz" (2019-08-19)
+===============================================================================
+ * Various adjustments/fixes and preparations for 0.12.0
+
 0.11.4 "Eddy" (2017-03-28)
 ===============================================================================
  * Fix underscores not being shown in some menu items (LP: #1662968)
