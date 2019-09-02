@@ -51,17 +51,17 @@ namespace Docky
     private uint timer_id = 0U;
 
     /**
-		 * {@inheritDoc}
-		 */
+     *{@inheritDoc}
+     */
     public BatteryUPowerDockItem.with_dockitem_file (GLib.File file)
-		{
-			GLib.Object (Prefs: new DockItemPreferences.with_file (file));
-		}
+    {
+      GLib.Object (Prefs: new DockItemPreferences.with_file (file));
+    }
 
     construct
-		{
-			Icon = "battery-missing";
-			Text = _("No battery");
+    {
+      Icon = "battery-missing";
+      Text = _("No battery");
 
       try {
         upower = Bus.get_proxy_sync(BusType.SYSTEM, UPowerName, UPowerPath);
@@ -76,13 +76,13 @@ namespace Docky
         warning("Cannot initialize battery docklet: %s", e.message);
         power_device = null;
       }
-		}
+    }
 
     ~BatteryUPowerDockItem()
     {
       if (timer_id > 0U) {
-				GLib.Source.remove (timer_id);
-			}
+        GLib.Source.remove (timer_id);
+      }
     }
 
     public static bool is_supported
