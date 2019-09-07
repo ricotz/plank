@@ -74,6 +74,7 @@ namespace Docky
       }
       catch (Error e) {
         warning("Cannot initialize battery docklet: %s", e.message);
+				upower = null;
         power_device = null;
       }
     }
@@ -82,6 +83,10 @@ namespace Docky
     {
       if (timer_id > 0U) {
         GLib.Source.remove (timer_id);
+      }
+      if(upower != null) {
+  			upower.device_added.disconnect(on_device_changed);
+  			upower.device_removed.disconnect(on_device_changed);
       }
     }
 
@@ -94,7 +99,9 @@ namespace Docky
 
     private void on_device_changed(GLib.ObjectPath obj)
     {
-      power_device = get_display_device(upower);
+			if(upower != null) {
+      	power_device = get_display_device(upower);
+			}
     }
 
     private IUPowerDevice get_display_device(IUPower power)
