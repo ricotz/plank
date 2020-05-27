@@ -23,6 +23,7 @@ namespace Docky
 	{
 		GMenu.Tree apps_menu;
 		Mutex apps_menu_mutex;
+		bool apps_loaded;
 
 		/**
 		 * {@inheritDoc}
@@ -52,7 +53,13 @@ namespace Docky
 		{
 			Worker.get_default ().add_task_with_result.begin<void*> (() => {
 				apps_menu_mutex.lock ();
-				apps_menu.load_sync ();
+				try {
+					apps_menu.load_sync ();
+					apps_loaded = true;
+				} catch (Error e) {
+					warning ("Failed to load applications (%s)", e.message);
+					apps_loaded = false;
+				}
 				apps_menu_mutex.unlock ();
 				return null;
 			}, TaskPriority.HIGH);
@@ -71,6 +78,12 @@ namespace Docky
 		public override Gee.ArrayList<Gtk.MenuItem> get_menu_items ()
 		{
 			var items = new Gee.ArrayList<Gtk.MenuItem> ();
+
+			if (!apps_loaded) {
+				var item = create_menu_item (_("No applications available"), null, false);
+				items.add (item);
+				return items;
+			}
 
 			var iter = apps_menu.get_root_directory ().iter ();
 			GMenu.TreeItemType type;
