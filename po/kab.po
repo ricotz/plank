@@ -1,34 +1,31 @@
-# Portuguese translation for plank
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Kabyle translation for plank
+# Copyright (c) 2018 Rosetta Contributors and Canonical Ltd 2018
 # This file is distributed under the same license as the plank package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2017-03-29 08:30+0000\n"
-"PO-Revision-Date: 2020-05-11 15:34+0000\n"
-"Last-Translator: Sérgio Marques <Unknown>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"PO-Revision-Date: 2019-06-15 11:48+0000\n"
+"Last-Translator: Amaziɣ Agrawliw <Unknown>\n"
+"Language-Team: Kabyle <kab@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2020-05-12 05:52+0000\n"
-"X-Generator: Launchpad (build fbdff7602bd10fb883bf7e2ddcc7fd5a16f60398)\n"
-"Language: pt\n"
+"X-Launchpad-Export-Date: 2019-06-16 05:36+0000\n"
+"X-Generator: Launchpad (build 18981)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
-msgstr "Estupidamente simples."
+msgstr "D aḥerfi maḍi"
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"A Plank foi criada para ser a doca mais simples do planeta. O objetivo é "
-"criar uma doca que apenas faça o essencial."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -38,211 +35,195 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
-"É, no entanto, uma biblioteca que pode ser expandida para criar outras docas "
-"com muitas mais funcionalidades. A Plank é a infraestrutura da aplicação "
-"Docky (a partir da versão 3.0.0) e pretende disponibilizar as "
-"funcionalidades básicas, enquanto que o Docky adiciona muitos mais efeitos "
-"especiais."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr "Tema:"
+msgstr "Asentel:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr "Posição:"
+msgstr "Ideg"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr "Esquerda"
+msgstr "Azelmaḍ"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr "Direita"
+msgstr "Ayeffus"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr "Cima"
+msgstr "Asawen"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr "Baixo"
+msgstr "Ddaw"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr "Alinhamento:"
+msgstr "Areyyec"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr "Preencher"
+msgstr "Ččaṛ"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr "Início"
+msgstr "Bdu"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr "Fim"
+msgstr "Tagara"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr "Centro"
+msgstr "Talemmast"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "No ecrã principal:"
+msgstr "Deg Uskan Amenzu"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr "Deslocação em percentagem a partir do centro da margem do ecrã"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Alinhamento dos ícones:"
+msgstr "Areyyec n tignit"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr "Tamanho dos ícones:"
+msgstr "Tiddi n tignit"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr "Zoom de ícone:"
+msgstr "Semɣeṛ tignit"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
-msgstr "Aparência"
+msgstr "Arwes"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr "Ocultação inteligente"
+msgstr "Tuffra Tamegzut"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr "Ocultar automaticamente"
+msgstr "Ffer s wudem awurman"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr "Desviar da janela maximizada"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr "Desvio de janela"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr "Desviar da janela ativa"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr "Ocultar Doca"
+msgstr "Ffer Dock"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr "Atraso para ocultar:"
+msgstr "Aεeḍḍel n tufra"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr "Atraso em milissegundos antes de ocultar a doca"
+msgstr "Aεeḍḍel s ms send n tuffra n Dock"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr "Atraso para mostrar:"
+msgstr "Aεeḍḍel n useḍheṛ"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr "Atraso em milissegundos antes de mostrar a doca"
+msgstr "Aεeḍḍel s ms send n wesskan n Dock"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr "Revelar com pressão:"
+msgstr "Aseḍheṛ n Tussda"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
-msgstr "Gestão de itens"
+msgstr "Assefrek n Umagrad"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr "Mostrar itens não fixos:"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr "Restringir à área de trabalho:"
+msgstr "Qeyyed ar Tallunt n Leqdic"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr "Bloquear ícones:"
+msgstr "Sewḥel Tignit"
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
-msgstr "Comportamento"
+msgstr ""
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
-msgstr "Mini-aplicações"
+msgstr "Docklets"
 
 #: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
-msgstr "Largue para adicionar à doca"
+msgstr "Serreḥ i wakken ad tarnuḍ ar Dock"
 
 #: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Alex Gutierrez https://launchpad.net/~alex-gusilva\n"
-"  André Carvalho https://launchpad.net/~andrecarvalhopt\n"
-"  André Pinela https://launchpad.net/~sheffzor\n"
-"  Betto Leite da Silva https://launchpad.net/~blsic\n"
-"  Daniel https://launchpad.net/~moonwalkerpt\n"
-"  Diogo Lavareda https://launchpad.net/~diogolavareda\n"
-"  Hugo Carvalho https://launchpad.net/~hugok79\n"
-"  Rico Tzschichholz https://launchpad.net/~ricotz\n"
-"  Sérgio Marques https://launchpad.net/~sergio+marques\n"
-"  Vitor Pires https://launchpad.net/~vpmail\n"
-"  asensio https://launchpad.net/~asensio\n"
-"  yEdubart https://launchpad.net/~vps1992"
+"  Amaziɣ Agrawliw https://launchpad.net/~mldamazigh15"
 
 #: ../lib/Items/ApplicationDockItem.vala:412 ../lib/Items/FileDockItem.vala:317
 #: ../lib/Items/FileDockItem.vala:339
 msgid "_Keep in Dock"
-msgstr "_Manter na Doca"
+msgstr "_Eǧǧ-it deg Dock"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close All"
-msgstr "Fe_char tudo"
+msgstr "_Mdel akk ayen yellan"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close"
-msgstr "Fe_char"
+msgstr "_Mdel"
 
 #: ../lib/Items/ApplicationDockItem.vala:492
 #, c-format
 msgid "Drop to open with %s"
-msgstr "Arraste para abrir com %s"
+msgstr "Serreḥ i wakken ad teldiḍ akkʷed %s"
 
 #: ../lib/Items/FileDockItem.vala:323
 msgid "_Open in File Browser"
-msgstr "_Abrir no gestor de ficheiros"
+msgstr "_Ldi deg Iminig n Ufaylu"
 
 #: ../lib/Items/FileDockItem.vala:345
 msgid "_Open"
-msgstr "_Abrir"
+msgstr "_Ldi"
 
 #: ../lib/Items/FileDockItem.vala:349
 msgid "Open Containing _Folder"
-msgstr "Abrir pasta _respetiva"
+msgstr "Ldi Afaylu _Agbur"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr "Largue as aplicações ou ficheiros aqui"
+msgstr "Serreḥ i yesnasen neɣ ifuyla dagi"
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
-msgstr "Obter _ajuda na web..."
+msgstr "Awi-d_tallalt deg umnaḍ"
 
 #: ../lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."
-msgstr "_Traduzir esta aplicação..."
+msgstr "_Suqel Asnas Agi"
 
 #: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
-msgstr "Preferências"
+msgstr "Iγewwaren"

@@ -1,34 +1,34 @@
-# Portuguese translation for plank
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Belarusian translation for plank
+# Copyright (c) 2018 Rosetta Contributors and Canonical Ltd 2018
 # This file is distributed under the same license as the plank package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2017-03-29 08:30+0000\n"
-"PO-Revision-Date: 2020-05-11 15:34+0000\n"
-"Last-Translator: Sérgio Marques <Unknown>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"PO-Revision-Date: 2020-04-17 09:22+0000\n"
+"Last-Translator: Zmicer Turok <Unknown>\n"
+"Language-Team: Belarusian <be@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2020-05-12 05:52+0000\n"
-"X-Generator: Launchpad (build fbdff7602bd10fb883bf7e2ddcc7fd5a16f60398)\n"
-"Language: pt\n"
+"X-Launchpad-Export-Date: 2020-04-18 05:56+0000\n"
+"X-Generator: Launchpad (build 2e26c9bbd21cdca248baaea29aeffb920afcc32a)\n"
+"Language: be\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
-msgstr "Estupidamente simples."
+msgstr "Вельмі простая."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"A Plank foi criada para ser a doca mais simples do planeta. O objetivo é "
-"criar uma doca que apenas faça o essencial."
+"Plank — самая простая док-панэль на планеце. Мэта праекта — толькі панэль і "
+"больш нічога."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -38,211 +38,201 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
-"É, no entanto, uma biblioteca que pode ser expandida para criar outras docas "
-"com muitas mais funcionalidades. A Plank é a infraestrutura da aplicação "
-"Docky (a partir da versão 3.0.0) e pretende disponibilizar as "
-"funcionalidades básicas, enquanto que o Docky adiciona muitos mais efeitos "
-"especiais."
+"Аднак, гэта бібліятэка, якую можна выкарыстаць для стварэння іншых панэляў з "
+"больш разнастайнымі функцыямі. Такім чынам, Plank з’яўляецца асноўнай "
+"тэхналогіяй Docky (пачынаючы з версіі 3.0.0), мэтаю якой з’яўляецца "
+"забеспячэнне асноўных функцый,  а Docky пашырае яе і дадае такія элементы, "
+"як доклеты,  афарбоўку, дыялогі налад і іншае."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr "Tema:"
+msgstr "Тэма:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr "Posição:"
+msgstr "Пазіцыя:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr "Esquerda"
+msgstr "Злева"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr "Direita"
+msgstr "Справа"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr "Cima"
+msgstr "Уверсе"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr "Baixo"
+msgstr "Унізе"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr "Alinhamento:"
+msgstr "Выраўноўванне"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr "Preencher"
+msgstr "Запоўніць"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr "Início"
+msgstr "У пачатку"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr "Fim"
+msgstr "У канцы"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr "Centro"
+msgstr "Па цэнтры"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "No ecrã principal:"
+msgstr "На галоўным экране:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr "Deslocação em percentagem a partir do centro da margem do ecrã"
+msgstr "Зрух ад цэнтру экрана ў адсотках"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Alinhamento dos ícones:"
+msgstr "Выраўноўванне значкоў"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr "Tamanho dos ícones:"
+msgstr "Памер значкоў:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr "Zoom de ícone:"
+msgstr "Павелічэнне значкоў:"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
-msgstr "Aparência"
+msgstr "Выгляд"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr "Ocultação inteligente"
+msgstr "Разумнае хаванне"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr "Ocultar automaticamente"
+msgstr "Аўтахаванне"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr "Desviar da janela maximizada"
+msgstr "Хаваць пры разгорнутых вокнах"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr "Desvio de janela"
+msgstr "Хаванне за вокны"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr "Desviar da janela ativa"
+msgstr "Хаваць пры актыўных вокнах"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr "Ocultar Doca"
+msgstr "Хаванне панэлі"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr "Atraso para ocultar:"
+msgstr "Затрымка хавання:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr "Atraso em milissegundos antes de ocultar a doca"
+msgstr "Затрымка хавання панэлі ў мілісекундах"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr "Atraso para mostrar:"
+msgstr "Затрымка паказу:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr "Atraso em milissegundos antes de mostrar a doca"
+msgstr "Затрымка паказу панэлі ў мілісекундах"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr "Revelar com pressão:"
+msgstr "Выяўленне ціску:"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
-msgstr "Gestão de itens"
+msgstr "Кіраванне элементамі"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr "Mostrar itens não fixos:"
+msgstr "Паказваць незамацаваныя:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr "Restringir à área de trabalho:"
+msgstr "Абмежаваць працоўнай прасторай:"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr "Bloquear ícones:"
+msgstr "Заблакаваць значкі:"
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
-msgstr "Comportamento"
+msgstr "Паводзіны"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
-msgstr "Mini-aplicações"
+msgstr "Доклеты"
 
 #: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
-msgstr "Largue para adicionar à doca"
+msgstr "Перацягніце, каб дадаць на панэль"
 
 #: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Alex Gutierrez https://launchpad.net/~alex-gusilva\n"
-"  André Carvalho https://launchpad.net/~andrecarvalhopt\n"
-"  André Pinela https://launchpad.net/~sheffzor\n"
-"  Betto Leite da Silva https://launchpad.net/~blsic\n"
-"  Daniel https://launchpad.net/~moonwalkerpt\n"
-"  Diogo Lavareda https://launchpad.net/~diogolavareda\n"
-"  Hugo Carvalho https://launchpad.net/~hugok79\n"
-"  Rico Tzschichholz https://launchpad.net/~ricotz\n"
-"  Sérgio Marques https://launchpad.net/~sergio+marques\n"
-"  Vitor Pires https://launchpad.net/~vpmail\n"
-"  asensio https://launchpad.net/~asensio\n"
-"  yEdubart https://launchpad.net/~vps1992"
+"  Zmicer Turok https://launchpad.net/~antikruk\n"
+"  Zmicer Turok https://launchpad.net/~zmicerturok"
 
 #: ../lib/Items/ApplicationDockItem.vala:412 ../lib/Items/FileDockItem.vala:317
 #: ../lib/Items/FileDockItem.vala:339
 msgid "_Keep in Dock"
-msgstr "_Manter na Doca"
+msgstr "_Прымацаваць да панэлі"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close All"
-msgstr "Fe_char tudo"
+msgstr "_Закрыць усё"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close"
-msgstr "Fe_char"
+msgstr "_Закрыць"
 
 #: ../lib/Items/ApplicationDockItem.vala:492
 #, c-format
 msgid "Drop to open with %s"
-msgstr "Arraste para abrir com %s"
+msgstr "Адпусціце, каб адкрыць у %s"
 
 #: ../lib/Items/FileDockItem.vala:323
 msgid "_Open in File Browser"
-msgstr "_Abrir no gestor de ficheiros"
+msgstr "_Адкрыць у кіраўніку файлаў"
 
 #: ../lib/Items/FileDockItem.vala:345
 msgid "_Open"
-msgstr "_Abrir"
+msgstr "_Адкрыць"
 
 #: ../lib/Items/FileDockItem.vala:349
 msgid "Open Containing _Folder"
-msgstr "Abrir pasta _respetiva"
+msgstr "Адкрыць у _каталозе"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr "Largue as aplicações ou ficheiros aqui"
+msgstr "Перацягніце сюды праграмы альбо файлы"
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
-msgstr "Obter _ajuda na web..."
+msgstr "Знайсці дапамогу ў _сеціве..."
 
 #: ../lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."
-msgstr "_Traduzir esta aplicação..."
+msgstr "_Перакласці гэтую праграму..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
-msgstr "Preferências"
+msgstr "Налады"
