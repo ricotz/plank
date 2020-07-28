@@ -11,6 +11,7 @@ libdocklet_clock_la_LTLIBRARIES = libdocklet-clock.la
 libdocklet_clock_ladir = $(pkglibdir)/docklets
 
 libdocklet_clock_la_VALASOURCES = \
+	ClockDockCalendar.vala \
 	ClockDockItem.vala \
 	ClockDocklet.vala \
 	ClockPreferences.vala \

@@ -29,6 +29,7 @@ namespace Docky
 		uint timer_id = 0U;
 		int minute;
 		string current_theme;
+        ClockDockCalendar calendar;
 		
 		/**
 		 * {@inheritDoc}
@@ -88,6 +89,27 @@ namespace Docky
 			
 			reset_icon_buffer ();
 		}
+
+		protected override AnimationType on_clicked (PopupButton button, Gdk.ModifierType mod, uint32 event_time)
+        {
+            int x, y, width, height;
+            if(calendar == null) {
+                calendar = new ClockDockCalendar (this);
+                calendar.get_position(out x, out y);
+                calendar.get_size(out width, out height);
+                calendar.move(x, y - 300);
+                calendar.destroy.connect(
+                    () => {
+                        calendar = null;
+                        Gtk.main_quit();
+                    }
+                );
+                calendar.show_all ();
+            } else {
+                calendar.present_with_time(event_time);
+            }
+            return AnimationType.NONE;
+        }
 		
 		protected override void draw_icon (Surface surface)
 		{
