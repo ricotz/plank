@@ -94,7 +94,7 @@ namespace Docky
         {
             int x, y;
             if(calendar == null) {
-                calendar = new ClockDockCalendar (this);
+                calendar = new ClockDockCalendar ();
                 calendar.get_position(out x, out y);
                 calendar.move(x, y - 300);
                 calendar.destroy.connect(

@@ -3,7 +3,7 @@ using Plank;
 namespace Docky
 {
     public class ClockDockCalendar : Gtk.Window {
-        public ClockDockCalendar (ClockDockItem parent) {
+        public ClockDockCalendar () {
             this.title = "Plank Clock Calendar";
             this.border_width = 5;
             this.set_default_size (300, 50);
