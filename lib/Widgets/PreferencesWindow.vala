@@ -30,55 +30,55 @@ namespace Plank
 		DockPreferences prefs;
 		
 		[GtkChild]
-		Gtk.ComboBoxText cb_theme;
+		unowned Gtk.ComboBoxText cb_theme;
 		[GtkChild]
-		Gtk.ComboBoxText cb_hidemode;
+		unowned Gtk.ComboBoxText cb_hidemode;
 		[GtkChild]
-		Gtk.ComboBoxText cb_display_plug;
+		unowned Gtk.ComboBoxText cb_display_plug;
 		[GtkChild]
-		Gtk.ComboBoxText cb_position;
+		unowned Gtk.ComboBoxText cb_position;
 		[GtkChild]
-		Gtk.ComboBoxText cb_alignment;
+		unowned Gtk.ComboBoxText cb_alignment;
 		[GtkChild]
-		Gtk.ComboBoxText cb_items_alignment;
+		unowned Gtk.ComboBoxText cb_items_alignment;
 		
 		[GtkChild]
-		Gtk.SpinButton sp_hide_delay;
+		unowned Gtk.SpinButton sp_hide_delay;
 		[GtkChild]
-		Gtk.SpinButton sp_unhide_delay;
+		unowned Gtk.SpinButton sp_unhide_delay;
 		[GtkChild]
-		Gtk.Scale s_offset;
+		unowned Gtk.Scale s_offset;
 		[GtkChild]
-		Gtk.Scale s_zoom_percent;
+		unowned Gtk.Scale s_zoom_percent;
 		
 		[GtkChild]
-		Gtk.Adjustment adj_hide_delay;
+		unowned Gtk.Adjustment adj_hide_delay;
 		[GtkChild]
-		Gtk.Adjustment adj_unhide_delay;
+		unowned Gtk.Adjustment adj_unhide_delay;
 		[GtkChild]
-		Gtk.Adjustment adj_iconsize;
+		unowned Gtk.Adjustment adj_iconsize;
 		[GtkChild]
-		Gtk.Adjustment adj_offset;
+		unowned Gtk.Adjustment adj_offset;
 		[GtkChild]
-		Gtk.Adjustment adj_zoom_percent;
+		unowned Gtk.Adjustment adj_zoom_percent;
 		
 		[GtkChild]
-		Gtk.Switch sw_hide;
+		unowned Gtk.Switch sw_hide;
 		[GtkChild]
-		Gtk.Switch sw_primary_display;
+		unowned Gtk.Switch sw_primary_display;
 		[GtkChild]
-		Gtk.Switch sw_workspace_only;
+		unowned Gtk.Switch sw_workspace_only;
 		[GtkChild]
-		Gtk.Switch sw_show_unpinned;
+		unowned Gtk.Switch sw_show_unpinned;
 		[GtkChild]
-		Gtk.Switch sw_lock_items;
+		unowned Gtk.Switch sw_lock_items;
 		[GtkChild]
-		Gtk.Switch sw_pressure_reveal;
+		unowned Gtk.Switch sw_pressure_reveal;
 		[GtkChild]
-		Gtk.Switch sw_zoom_enabled;
+		unowned Gtk.Switch sw_zoom_enabled;
 		
 		[GtkChild]
-		Gtk.IconView view_docklets;
+		unowned Gtk.IconView view_docklets;
 		
 		public PreferencesWindow (DockController controller)
 		{
