@@ -65,7 +65,7 @@ namespace Plank
 			screen.composited_changed.connect (screen_composited_changed);
 			
 			// NOTE don't call update_monitor_geo to avoid a double-call of dockwindow.set_size on startup
-			screen.get_monitor_geometry (find_monitor_number (screen, controller.prefs.Monitor), out monitor_geo);
+			monitor_geo = screen.get_monitor_workarea (find_monitor_number (screen, controller.prefs.Monitor));
 			
 			screen_is_composited = screen.is_composited ();
 		}
@@ -134,7 +134,7 @@ namespace Plank
 		{
 			var old_monitor_geo = monitor_geo;
 			
-			screen.get_monitor_geometry (find_monitor_number (screen, controller.prefs.Monitor), out monitor_geo);
+			var monitor_geo = screen.get_monitor_workarea (find_monitor_number (screen, controller.prefs.Monitor));
 			
 			// No need to do anything if nothing has actually changed
 			if (old_monitor_geo.x == monitor_geo.x
