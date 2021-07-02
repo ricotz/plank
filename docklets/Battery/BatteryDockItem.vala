@@ -38,20 +38,27 @@ namespace Docky
 		 */
 		public BatteryDockItem.with_dockitem_file (GLib.File file)
 		{
-			GLib.Object (Prefs: new DockItemPreferences.with_file (file));
+			GLib.Object (Prefs: new BatteryPreferences.with_file (file));
 		}
 
 		construct
 		{
 			Icon = "battery-missing";
 			Text = _("No battery");
-			update ();
+
+			unowned BatteryPreferences prefs = (BatteryPreferences) Prefs;
+			prefs.notify["BatteryName"].connect(handle_prefs_changed);
+
+			handle_prefs_changed();
 
 			timer_id = Gdk.threads_add_timeout (60 * 1000, (SourceFunc) update);
 		}
 
 		~BatteryDockItem ()
 		{
+			unowned BatteryPreferences prefs = (BatteryPreferences) Prefs;
+			prefs.notify["BatteryName"].disconnect(handle_prefs_changed);
+
 			if (timer_id > 0U) {
 				GLib.Source.remove (timer_id);
 			}
@@ -120,13 +127,20 @@ namespace Docky
 				}
 
 				Icon = new_icon;
-				Text = "%i%%".printf (capacity);
+				Text = "%s - %i%%".printf (current_battery, capacity);
 			} catch {
 				Icon = "battery-missing";
 				Text = _("No battery");
 			}
 
 			return true;
+		}
+
+		void handle_prefs_changed ()
+		{
+			unowned BatteryPreferences prefs = (BatteryPreferences) Prefs;
+			current_battery = (prefs.BatteryName);
+			update();
 		}
 	}
 }

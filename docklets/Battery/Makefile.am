@@ -12,6 +12,7 @@ libdocklet_battery_ladir = $(pkglibdir)/docklets
 libdocklet_battery_la_VALASOURCES = \
 	BatteryDockItem.vala \
 	BatteryDocklet.vala \
+	BatteryPreferences.vala \
 	$(NULL)
 
 nodist_libdocklet_battery_la_SOURCES = \
