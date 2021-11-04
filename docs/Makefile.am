@@ -25,16 +25,8 @@ BUILT_SOURCES = \
 	plank_vala_doc.stamp \
 	$(NULL)
 
-common_doc_files = \
-	*.css \
-	*.devhelp2 \
-	*.html \
-	*.png \
-	$(NULL)
-
 doc_DATA = \
-	$(addprefix vala-doc/plank/,$(common_doc_files) index.htm *.js) \
-	vala-doc/plank/img/*.png \
+	vala-doc/plank/* \
 	$(NULL)
 
 plank_doc_files = \
