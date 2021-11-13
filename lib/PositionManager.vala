@@ -1212,7 +1212,7 @@ namespace Plank
 				break;
 			case Gtk.PositionType.TOP:
 				x = rect.x + (rect.width - glow_size) / 2;
-				y = - glow_size / 2;
+				y = DockHeight - glow_size / 2;
 				break;
 			case Gtk.PositionType.LEFT:
 				y = rect.y + (rect.height - glow_size) / 2;
