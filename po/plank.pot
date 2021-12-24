@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: plank 0.11.2.1567-dirty\n"
+"Project-Id-Version: plank 0.11.89.15-ee38-dirty\n"
 "Report-Msgid-Bugs-To: https://bugs.launchpad.net/plank\n"
-"POT-Creation-Date: 2016-08-20 09:32+0200\n"
+"POT-Creation-Date: 2023-12-14 15:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: data/plank.appdata.xml.in:6 data/plank.desktop.in:3
 msgid "Plank"
@@ -40,16 +41,12 @@ msgid ""
 "painters, settings dialogs, etc."
 msgstr ""
 
-#: data/plank.appdata.xml.in:63
+#: data/plank.appdata.xml.in:66
 msgid "The Plank Developers"
 msgstr ""
 
 #: data/plank.desktop.in:4
 msgid "Dock"
-msgstr ""
-
-#: data/plank.desktop.in:9
-msgid "plank"
 msgstr ""
 
 #: data/ui/preferences.ui:82
@@ -188,41 +185,166 @@ msgstr ""
 msgid "Docklets"
 msgstr ""
 
-#: lib/DragManager.vala:477 lib/Items/PlaceholderDockItem.vala:51
+#: docklets/Applications/ApplicationsDockItem.vala:39
+#: docklets/Applications/ApplicationsDocklet.vala:34
+msgid "Applications"
+msgstr ""
+
+#: docklets/Applications/ApplicationsDockItem.vala:83
+msgid "No applications available"
+msgstr ""
+
+#: docklets/Battery/BatteryDockItem.vala:47
+#: docklets/Battery/BatteryDockItem.vala:126
+msgid "No battery"
+msgstr ""
+
+#: docklets/Battery/BatteryDocklet.vala:36
+msgid "Battery"
+msgstr ""
+
+#: docklets/Battery/BatteryDocklet.vala:41
+msgid "Displays battery information"
+msgstr ""
+
+#: docklets/Clippy/ClippyDockItem.vala:89
+msgid "Clipboard is currently empty."
+msgstr ""
+
+#: docklets/Clippy/ClippyDockItem.vala:174
+msgid "_Clear"
+msgstr ""
+
+#: docklets/Clippy/ClippyDocklet.vala:36
+msgid "Clippy"
+msgstr ""
+
+#: docklets/Clippy/ClippyDocklet.vala:41
+msgid "Keep recent clipboard entries."
+msgstr ""
+
+#: docklets/Clock/ClockDockItem.vala:254
+msgid "Di_gital Clock"
+msgstr ""
+
+#: docklets/Clock/ClockDockItem.vala:261
+msgid "24-Hour _Clock"
+msgstr ""
+
+#: docklets/Clock/ClockDockItem.vala:268
+msgid "Show _Date"
+msgstr ""
+
+#: docklets/Clock/ClockDocklet.vala:38
+msgid "Clock"
+msgstr ""
+
+#: docklets/Clock/ClockDocklet.vala:43
+msgid "What time is it?"
+msgstr ""
+
+#: docklets/CPUMonitor/CPUMonitorDocklet.vala:36
+msgid "CPU Monitor"
+msgstr ""
+
+#: docklets/CPUMonitor/CPUMonitorDocklet.vala:41
+msgid "Keep an eye on that CPU. And when it gets out of line..."
+msgstr ""
+
+#: docklets/Desktop/DesktopDockItem.vala:37
+msgid "Show Desktop"
+msgstr ""
+
+#: docklets/Desktop/DesktopDocklet.vala:38
+msgid "Desktop"
+msgstr ""
+
+#: docklets/Desktop/DesktopDocklet.vala:43
+msgid "Show your Desktop."
+msgstr ""
+
+#: docklets/Trash/TrashDockItem.vala:92
+msgid "No items in Trash"
+msgstr ""
+
+#: docklets/Trash/TrashDockItem.vala:94
+#, c-format
+msgid "%u item in Trash"
+msgid_plural "%u items in Trash"
+msgstr[0] ""
+msgstr[1] ""
+
+#: docklets/Trash/TrashDockItem.vala:122
+msgid "Drop to move to Trash"
+msgstr ""
+
+#: docklets/Trash/TrashDockItem.vala:181
+msgid "Restore Files"
+msgstr ""
+
+#: docklets/Trash/TrashDockItem.vala:202
+msgid "_Open Trash"
+msgstr ""
+
+#: docklets/Trash/TrashDockItem.vala:206 docklets/Trash/TrashDockItem.vala:272
+msgid "Empty _Trash"
+msgstr ""
+
+#: docklets/Trash/TrashDockItem.vala:269
+msgid "Empty all items from Trash?"
+msgstr ""
+
+#: docklets/Trash/TrashDockItem.vala:270
+msgid "All items in the Trash will be permanently deleted."
+msgstr ""
+
+#: docklets/Trash/TrashDockItem.vala:271
+msgid "_Cancel"
+msgstr ""
+
+#: docklets/Trash/TrashDocklet.vala:36
+msgid "Trash"
+msgstr ""
+
+#: docklets/Trash/TrashDocklet.vala:41
+msgid "Have a look at your trash!"
+msgstr ""
+
+#: lib/DragManager.vala:465 lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
 msgstr ""
 
-#: lib/Factories/AbstractMain.vala:422 src/Main.vala:75
+#: lib/Factories/AbstractMain.vala:420 src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 
-#: lib/Items/ApplicationDockItem.vala:417 lib/Items/FileDockItem.vala:314
-#: lib/Items/FileDockItem.vala:336
+#: lib/Items/ApplicationDockItem.vala:412 lib/Items/FileDockItem.vala:315
+#: lib/Items/FileDockItem.vala:337
 msgid "_Keep in Dock"
 msgstr ""
 
-#: lib/Items/ApplicationDockItem.vala:425
+#: lib/Items/ApplicationDockItem.vala:420
 msgid "_Close All"
 msgstr ""
 
-#: lib/Items/ApplicationDockItem.vala:425
+#: lib/Items/ApplicationDockItem.vala:420
 msgid "_Close"
 msgstr ""
 
-#: lib/Items/ApplicationDockItem.vala:497
+#: lib/Items/ApplicationDockItem.vala:492
 #, c-format
 msgid "Drop to open with %s"
 msgstr ""
 
-#: lib/Items/FileDockItem.vala:320
+#: lib/Items/FileDockItem.vala:321
 msgid "_Open in File Browser"
 msgstr ""
 
-#: lib/Items/FileDockItem.vala:342
+#: lib/Items/FileDockItem.vala:343
 msgid "_Open"
 msgstr ""
 
-#: lib/Items/FileDockItem.vala:346
+#: lib/Items/FileDockItem.vala:347
 msgid "Open Containing _Folder"
 msgstr ""
 
