@@ -133,7 +133,7 @@ namespace Plank
 		/**
 		 * Creates a new dock item.
 		 */
-		public DockItem ()
+		protected DockItem ()
 		{
 			GLib.Object (Prefs: new DockItemPreferences ());
 		}
@@ -318,17 +318,8 @@ namespace Plank
 				
 				load_from_launcher ();
 				break;
-			case FileMonitorEvent.MOVED:
-				if (other == null)
-					break;
-				var launcher = other.get_uri ();
-				Logger.verbose ("Launcher file '%s' moved to '%s'", f.get_uri (), launcher);
-				
-				replace_launcher (launcher);
-				
-				load_from_launcher ();
-				break;
 			case FileMonitorEvent.DELETED:
+			case FileMonitorEvent.MOVED_OUT:
 				debug ("Launcher file '%s' deleted, item is invalid now", f.get_uri ());
 				
 				launcher_exists = false;
@@ -338,7 +329,32 @@ namespace Plank
 				schedule_removal_if_needed ();
 				break;
 			case FileMonitorEvent.CREATED:
+			case FileMonitorEvent.MOVED_IN:
 				debug ("Launcher file '%s' created, item is valid again", f.get_uri ());
+				
+				launcher_exists = true;
+				State &= ~ItemState.INVALID;
+				
+				stop_removal ();
+				break;
+			case FileMonitorEvent.RENAMED:
+				if (other == null)
+					break;
+				
+				var launcher = other.get_uri ();
+				
+				// Rename of launcher file to new name
+				if (launcher_exists) {
+					Logger.verbose ("Launcher file '%s' moved to '%s'", f.get_uri (), launcher);
+					
+					replace_launcher (launcher);
+					
+					load_from_launcher ();
+					break;
+				}
+				
+				// Rename of temporary file to launcher name
+				debug ("Launcher file '%s' created from rename of '%s', item is valid again", launcher, f.get_uri ());
 				
 				launcher_exists = true;
 				State &= ~ItemState.INVALID;
@@ -366,7 +382,7 @@ namespace Plank
 			try {
 				var launcher_file = File.new_for_uri (launcher);
 				launcher_exists = launcher_file.query_exists ();
-				launcher_file_monitor = launcher_file.monitor_file (FileMonitorFlags.SEND_MOVED);
+				launcher_file_monitor = launcher_file.monitor_file (FileMonitorFlags.WATCH_MOVES);
 				launcher_file_monitor.changed.connect (launcher_file_changed);
 			} catch {
 				warning ("Unable to watch the launcher file '%s'", launcher);
@@ -531,15 +547,11 @@ namespace Plank
 			Cairo.Surface? icon = null;
 			Gdk.Pixbuf? pbuf = ForcePixbuf;
 			if (pbuf == null) {
-#if HAVE_HIDPI
 				double x_scale = 1.0, y_scale = 1.0;
 				surface.Internal.get_device_scale (out x_scale, out y_scale);
 				icon = DrawingService.load_icon_for_scale (Icon, surface.Width, surface.Height, (int) double.max (x_scale, y_scale));
 				if (icon != null)
 					icon.set_device_scale (1.0, 1.0);
-#else
-				pbuf = DrawingService.load_icon (Icon, surface.Width, surface.Height);
-#endif
 			} else {
 				pbuf = DrawingService.ar_scale (pbuf, surface.Width, surface.Height);
 			}

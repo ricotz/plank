@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2017-03-24 17:21+0000\n"
-"PO-Revision-Date: 2016-02-29 05:46+0000\n"
-"Last-Translator: Charles Monzat <superboa@hotmail.fr>\n"
+"POT-Creation-Date: 2017-03-29 08:30+0000\n"
+"PO-Revision-Date: 2020-05-21 18:49+0000\n"
+"Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-03-27 17:40+0000\n"
-"X-Generator: Launchpad (build 18334)\n"
+"X-Launchpad-Export-Date: 2020-05-22 06:34+0000\n"
+"X-Generator: Launchpad (build 1f7bc749b40714a4cc10f5e4d787118a78037035)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -74,7 +74,7 @@ msgstr "Alignement :"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr "Remplissage"
+msgstr "Remplir"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
@@ -142,7 +142,7 @@ msgstr "Délai avant masquage :"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr "Délai en ms précédant le masquage du dock"
+msgstr "Délai en ms avant masquage du dock"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
@@ -150,7 +150,7 @@ msgstr "Délai avant apparition :"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr "Délai en ms avant d'afficher le dock"
+msgstr "Délai en ms avant affichage du dock"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"

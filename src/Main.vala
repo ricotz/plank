@@ -60,7 +60,7 @@ namespace Plank
 				program_name : "Plank",
 				exec_name : "plank",
 			
-				app_copyright : "2011-2017",
+				app_copyright : "2011-2021",
 				app_dbus : "net.launchpad.plank",
 				app_icon : "plank",
 				app_launcher : "plank.desktop",

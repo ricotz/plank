@@ -61,8 +61,10 @@ GETTEXT_PACKAGE=AC_PACKAGE_NAME
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Define the gettext package to be used])
 
-AM_GNU_GETTEXT_VERSION([0.19.6])
 AM_GNU_GETTEXT([external])
+# FIXME: Remove AM_GNU_GETTEXT_VERSION once autoreconf supports REQUIRE_VERSION
+AM_GNU_GETTEXT_VERSION([0.19.6])
+AM_GNU_GETTEXT_REQUIRE_VERSION([0.19.6])
 
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
@@ -116,10 +118,10 @@ fi
 # Dependencies
 # -----------------------------------------------------------
 GTK_MIN_VERSION=3.10.0
-GLIB_MIN_VERSION=2.40.0
+GLIB_MIN_VERSION=2.48.0
 GDK_PIXBUF_MIN_VERSION=2.26.0
-BAMF_MIN_VERSION=0.2.92
-CAIRO_MIN_VERSION=1.10
+BAMF_MIN_VERSION=0.4.0
+CAIRO_MIN_VERSION=1.13
 
 PLANK_CORE_PKGS="gobject-2.0 >= $GLIB_MIN_VERSION \
                  glib-2.0 >= $GLIB_MIN_VERSION \
@@ -182,32 +184,16 @@ fi
 #   target-glib flag accoringly
 # -----------------------------------------------------------
 
-VALAFLAGS="$VALAFLAGS --target-glib=2.40"
+VALAFLAGS="$VALAFLAGS --target-glib=2.48"
 CFLAGS="$CFLAGS \
- -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_40 \
- -DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_40 \
+ -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_48 \
+ -DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_48 \
  -DGDK_VERSION_MIN_REQUIRED=GDK_VERSION_3_10 \
  -DGDK_VERSION_MAX_ALLOWED=GDK_VERSION_3_10"
 
 # -----------------------------------------------------------
 # Optional Dependencies
 # -----------------------------------------------------------
-
-# Check for HiDPI support of Cairo
-HIDPI_PKGS="cairo >= 1.13"
-PKG_CHECK_MODULES(HIDPI, $HIDPI_PKGS, [enable_hidpi=yes], [enable_hidpi=no])
-if test "x$enable_hidpi" = "xyes" ; then
-    VALAFLAGS="$VALAFLAGS --define HAVE_HIDPI"
-fi
-AM_CONDITIONAL([HAVE_HIDPI], [test "x$enable_hidpi" = "xyes"])
-
-# Check for newer BAMF
-BAMF_PKGS="libbamf3 >= 0.4.0"
-PKG_CHECK_MODULES(BAMF, $BAMF_PKGS, [enable_bamf_0_4=yes], [enable_bamf_0_4=no])
-if test "x$enable_bamf_0_4" = "xyes" ; then
-    VALAFLAGS="$VALAFLAGS --define HAVE_BAMF_0_4"
-fi
-AM_CONDITIONAL([HAVE_BAMF_0_4], [test "x$enable_bamf_0_4" = "xyes"])
 
 # Support barrier-supported unhiding using Xinput 2.3
 XFIXES_MIN_VERSION=5.0
@@ -342,15 +328,15 @@ AC_ARG_ENABLE([headless-tests],
               [enable_headless_tests=$enableval], [enable_headless_tests=no])
 if test "x$enable_headless_tests" != "xno"; then
     AC_PATH_PROG([XVFB_RUN], [xvfb-run], [:])
-    AC_PATH_PROG([DBUS_LAUNCH], [dbus-launch], [:])
+    AC_PATH_PROG([DBUS_RUN_SESSION], [dbus-run-session], [:])
     AS_IF([test "$XVFB_RUN" != :], [have_xvfb_run=yes], [have_xvfb_run=no])
-    AS_IF([test "$DBUS_LAUNCH" != :], [have_dbus_launch=yes], [have_dbus_launch=no])
+    AS_IF([test "$DBUS_RUN_SESSION" != :], [have_dbus_run_session=yes], [have_dbus_run_session=no])
 fi
-AM_CONDITIONAL(HAVE_HEADLESS_TESTS, [test "x$have_xvfb_run" == "xyes" -a "x$have_dbus_launch" == "xyes"])
+AM_CONDITIONAL(HAVE_HEADLESS_TESTS, [test "x$have_xvfb_run" == "xyes" -a "x$have_dbus_run_session" == "xyes"])
 
 if test "x$enable_headless_tests" = "xyes"; then
-  if test "x$have_xvfb_run" != "xyes" -o "x$have_dbus_launch" != "xyes"; then
-    AC_MSG_ERROR([Headless Tests requested but xvfb-run/dbus-launch not installed.])
+  if test "x$have_xvfb_run" != "xyes" -o "x$have_dbus_run_session" != "xyes"; then
+    AC_MSG_ERROR([Headless Tests requested but xvfb-run/dbus-run-session not installed.])
   fi
 fi
 
@@ -370,6 +356,7 @@ lib/Version.vala
 src/Makefile
 docklets/Makefile
 docklets/Applications/Makefile
+docklets/Battery/Makefile
 docklets/Clippy/Makefile
 docklets/Clock/Makefile
 docklets/CPUMonitor/Makefile

@@ -76,7 +76,7 @@ namespace Plank
 		/**
 		 * Creates a new container for dock elements.
 		 */
-		public DockContainer ()
+		protected DockContainer ()
 		{
 			Object ();
 		}

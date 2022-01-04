@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2017-03-24 17:21+0000\n"
-"PO-Revision-Date: 2017-03-24 18:41+0000\n"
-"Last-Translator: night1ynx <night1ynxd@gmail.com>\n"
+"POT-Creation-Date: 2017-03-29 08:30+0000\n"
+"PO-Revision-Date: 2018-02-24 14:34+0000\n"
+"Last-Translator: Shushi Kurose <md81bird@hitaki.net>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-03-27 17:40+0000\n"
-"X-Generator: Launchpad (build 18334)\n"
+"X-Launchpad-Export-Date: 2018-02-25 05:24+0000\n"
+"X-Generator: Launchpad (build 18561)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -25,7 +25,7 @@ msgstr "超シンプル"
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
-msgstr "\"Plank\"は地球上で最もシンプルなドックです。他に必要とする物が無いドック提供することが目標です。"
+msgstr "\"Plank\"は地球上で最もシンプルなドックです。他に必要とする物が無いドックを提供することが目標です。"
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -62,27 +62,27 @@ msgstr "下部"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr "寄せ方:"
+msgstr "配置:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr ""
+msgstr "全幅"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr ""
+msgstr "上/左寄せ"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr ""
+msgstr "下/右寄せ"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr ""
+msgstr "中央"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "プライマリディスプレイ上:"
+msgstr "プライマリディスプレイに表示:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
@@ -98,7 +98,7 @@ msgstr "アイコンサイズ:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr "アイコンを拡大:"
+msgstr "アイコンの拡大:"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
@@ -114,11 +114,11 @@ msgstr "自動的に隠す"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr "ウィンドウが最大化されたら隠す"
+msgstr "最大化されたウィンドウの上に表示しない"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr "ウィンドウ回避"
+msgstr "ウィンドウの上に表示しない"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
@@ -130,7 +130,7 @@ msgstr "ドックを隠す"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr "隠れるまでの時間:"
+msgstr "隠すまでの時間:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
@@ -154,11 +154,11 @@ msgstr "アイテム管理"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr "固定してないソフトを表示する:"
+msgstr "固定していないアイテムも表示:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr "ワークスペースを制限する:"
+msgstr "現在のワークスペースのみ表示:"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
@@ -181,9 +181,12 @@ msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
 "  Haruki Ota https://launchpad.net/~ootaharuki99-5\n"
+"  Rentaro YOSHIDUMI https://launchpad.net/~cmplstofb\n"
 "  Rico Tzschichholz https://launchpad.net/~ricotz\n"
+"  Ryo Nakano https://launchpad.net/~ryonakano-deactivatedaccount\n"
 "  Shota Shimazu https://launchpad.net/~hornet-live-mf\n"
 "  Shota Shimazu https://launchpad.net/~xylophone-project\n"
+"  Shushi Kurose https://launchpad.net/~kuromabo\n"
 "  Takefumi Nagata https://launchpad.net/~rago1975\n"
 "  night1ynx https://launchpad.net/~night1ynx\n"
 "  smp https://launchpad.net/~cheat-hc0-ms"
@@ -195,7 +198,7 @@ msgstr "ドックに追加(_K)"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close All"
-msgstr "全て閉じる(_C)"
+msgstr "すべて閉じる(_C)"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close"
@@ -208,7 +211,7 @@ msgstr "ドロップして %s で開く"
 
 #: ../lib/Items/FileDockItem.vala:323
 msgid "_Open in File Browser"
-msgstr "ファイルブラウザで開く(_O)"
+msgstr "ファイルブラウザーで開く(_O)"
 
 #: ../lib/Items/FileDockItem.vala:345
 msgid "_Open"
@@ -228,7 +231,7 @@ msgstr "オンラインでヘルプを表示(_H)..."
 
 #: ../lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."
-msgstr "このアプリケーションを翻訳する...(_T)"
+msgstr "このアプリケーションを翻訳する(_T)..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"

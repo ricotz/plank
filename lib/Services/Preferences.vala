@@ -65,7 +65,7 @@ namespace Plank
 		/**
 		 * Creates a new preferences object with no backing file.
 		 */
-		public Preferences ()
+		protected Preferences ()
 		{
 		}
 		
@@ -151,7 +151,7 @@ namespace Plank
 		 *
 		 * @param file the {@link GLib.File} of the backing file for this preferences
 		 */
-		public Preferences.with_file (GLib.File file)
+		protected Preferences.with_file (GLib.File file)
 		{
 			init_from_file (file);
 		}
@@ -161,7 +161,7 @@ namespace Plank
 		 *
 		 * @param filename of the backing file for this preferences
 		 */
-		public Preferences.with_filename (string filename)
+		protected Preferences.with_filename (string filename)
 		{
 			init_from_file (Paths.AppConfigFolder.get_child (filename));
 		}

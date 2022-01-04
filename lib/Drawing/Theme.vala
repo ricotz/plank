@@ -82,12 +82,12 @@ namespace Plank
 		File? theme_folder;
 		Gtk.StyleContext style_context;
 		
-		public Theme ()
+		protected Theme ()
 		{
 			theme_folder = get_theme_folder (DEFAULT_NAME);
 		}
 		
-		public Theme.with_name (string name)
+		protected Theme.with_name (string name)
 		{
 			theme_folder = get_theme_folder (name);
 		}

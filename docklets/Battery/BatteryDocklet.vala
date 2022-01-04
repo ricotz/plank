@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2015 Rico Tzschichholz
+//  Copyright (C) 2018 Faissal Bensefia
 //
 //  This file is part of Plank.
 //
@@ -19,43 +19,41 @@
 
 public static void docklet_init (Plank.DockletManager manager)
 {
-	manager.register_docklet (typeof (Docky.DesktopDocklet));
+	manager.register_docklet (typeof (Docky.BatteryDocklet));
 }
 
 namespace Docky
 {
-	public const string G_RESOURCE_PATH = "/net/launchpad/plank/docklets/desktop";
-	
-	public class DesktopDocklet : Object, Plank.Docklet
+	public class BatteryDocklet : Object, Plank.Docklet
 	{
 		public unowned string get_id ()
 		{
-			return "desktop";
+			return "battery";
 		}
-		
+
 		public unowned string get_name ()
 		{
-			return _("Desktop");
+			return _("Battery");
 		}
-		
+
 		public unowned string get_description ()
 		{
-			return _("Show your Desktop.");
+			return _("Displays battery information");
 		}
-		
+
 		public unowned string get_icon ()
 		{
-			return "show-desktop;;resource://" + Docky.G_RESOURCE_PATH + "/icons/show-desktop.svg";
+			return "battery";
 		}
-		
+
 		public bool is_supported ()
 		{
 			return true;
 		}
-		
+
 		public Plank.DockElement make_element (string launcher, GLib.File file)
 		{
-			return new DesktopDockItem.with_dockitem_file (file);
+			return new BatteryDockItem.with_dockitem_file (file);
 		}
 	}
 }

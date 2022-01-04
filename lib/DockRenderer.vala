@@ -344,9 +344,7 @@ namespace Plank
 				return;
 			}
 			
-#if HAVE_HIDPI
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
-#endif
 			// take the previous frame values into account to decide if we
 			// can bail a full draw to not miss a finishing animation-frame
 			var no_full_draw_needed = (!is_first_frame && hide_progress == 1.0 && opacity == 1.0);
@@ -357,23 +355,17 @@ namespace Plank
 			
 			if (main_buffer == null) {
 				main_buffer = new Surface.with_cairo_surface (win_rect.width, win_rect.height, cr.get_target ());
-#if HAVE_HIDPI
 				main_buffer.Internal.set_device_scale (window_scale_factor, window_scale_factor);
-#endif
 			}
 			
 			if (item_buffer == null) {
 				item_buffer = new Surface.with_cairo_surface (win_rect.width, win_rect.height, cr.get_target ());
-#if HAVE_HIDPI
 				item_buffer.Internal.set_device_scale (window_scale_factor, window_scale_factor);
-#endif
 			}
 			
 			if (shadow_buffer == null) {
 				shadow_buffer = new Surface.with_cairo_surface (win_rect.width, win_rect.height, cr.get_target ());
-#if HAVE_HIDPI
 				shadow_buffer.Internal.set_device_scale (window_scale_factor, window_scale_factor);
-#endif
 			}
 			
 			// if the dock is completely hidden and not transparently drawn
@@ -395,9 +387,7 @@ namespace Plank
 
 			if (opacity < 1.0 && fade_buffer == null) {
 				fade_buffer = new Surface.with_cairo_surface (win_rect.width, win_rect.height, cr.get_target ());
-#if HAVE_HIDPI
 				fade_buffer.Internal.set_device_scale (window_scale_factor, window_scale_factor);
-#endif
 			}
 			
 #if BENCHMARK
@@ -877,8 +867,11 @@ namespace Plank
 			var surface = new Surface.with_surface (width, height, model);
 			
 			var icon_size = int.min (width, height);
-			var urgent_color = get_styled_color ();
-			urgent_color.add_hue (theme.UrgentHueShift);
+			var urgent_color = theme.BadgeColor;
+			if (urgent_color.equal ({0.0, 0.0, 0.0, 0.0})) {
+				urgent_color = get_styled_color ();
+				urgent_color.add_hue (theme.UrgentHueShift);
+			}
 			
 			// draw item's count
 			if (item.CountVisible)

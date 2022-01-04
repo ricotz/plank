@@ -238,7 +238,6 @@ namespace Plank
 			return pbuf;
 		}
 		
-#if HAVE_HIDPI
 		/**
 		 * Loads an icon based on names and the given width/height
 		 *
@@ -331,7 +330,6 @@ namespace Plank
 			
 			return surface;
 		}
-#endif
 		
 		/**
 		 * Scales a {@link Gdk.Pixbuf}, maintaining the original aspect ratio.

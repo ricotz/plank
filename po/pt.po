@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2017-03-24 17:21+0000\n"
-"PO-Revision-Date: 2017-03-24 18:56+0000\n"
-"Last-Translator: Daniel <Unknown>\n"
+"POT-Creation-Date: 2017-03-29 08:30+0000\n"
+"PO-Revision-Date: 2020-05-11 15:34+0000\n"
+"Last-Translator: Sérgio Marques <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-03-27 17:40+0000\n"
-"X-Generator: Launchpad (build 18334)\n"
+"X-Launchpad-Export-Date: 2020-05-12 05:52+0000\n"
+"X-Generator: Launchpad (build fbdff7602bd10fb883bf7e2ddcc7fd5a16f60398)\n"
+"Language: pt\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -26,8 +27,8 @@ msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"O Plank foi criado para ser a barra mais simples do planeta. O objetivo é "
-"criar uma barra que apenas faça o essencial."
+"A Plank foi criada para ser a doca mais simples do planeta. O objetivo é "
+"criar uma doca que apenas faça o essencial."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -37,9 +38,9 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
-"É, no entanto, uma biblioteca que pode ser expandida para criar outras "
-"barras com muitas mais funcionalidades. O Plank é a infraestrutura da "
-"aplicação Docky (a partir da versão 3.0.0) e pretende disponibilizar as "
+"É, no entanto, uma biblioteca que pode ser expandida para criar outras docas "
+"com muitas mais funcionalidades. A Plank é a infraestrutura da aplicação "
+"Docky (a partir da versão 3.0.0) e pretende disponibilizar as "
 "funcionalidades básicas, enquanto que o Docky adiciona muitos mais efeitos "
 "especiais."
 
@@ -77,11 +78,11 @@ msgstr "Preencher"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr "INICIAR"
+msgstr "Início"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr "Fím"
+msgstr "Fim"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
@@ -89,11 +90,11 @@ msgstr "Centro"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "No ecrã primário:"
+msgstr "No ecrã principal:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr "Deslocação a partir do centro do margem do ecrã (em percentagem)"
+msgstr "Deslocação em percentagem a partir do centro da margem do ecrã"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
@@ -133,7 +134,7 @@ msgstr "Desviar da janela ativa"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr "Ocultar barra"
+msgstr "Ocultar Doca"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
@@ -141,7 +142,7 @@ msgstr "Atraso para ocultar:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr "Atraso, em milissegundos, antes de ocultar a barra"
+msgstr "Atraso em milissegundos antes de ocultar a doca"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
@@ -149,7 +150,7 @@ msgstr "Atraso para mostrar:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr "Atraso, em milissegundos, antes de mostrar a barra"
+msgstr "Atraso em milissegundos antes de mostrar a doca"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
@@ -177,7 +178,7 @@ msgstr "Comportamento"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
-msgstr ""
+msgstr "Mini-aplicações"
 
 #: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
@@ -189,9 +190,11 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Alex Gutierrez https://launchpad.net/~alex-gusilva\n"
 "  André Carvalho https://launchpad.net/~andrecarvalhopt\n"
+"  André Pinela https://launchpad.net/~sheffzor\n"
 "  Betto Leite da Silva https://launchpad.net/~blsic\n"
 "  Daniel https://launchpad.net/~moonwalkerpt\n"
 "  Diogo Lavareda https://launchpad.net/~diogolavareda\n"
+"  Hugo Carvalho https://launchpad.net/~hugok79\n"
 "  Rico Tzschichholz https://launchpad.net/~ricotz\n"
 "  Sérgio Marques https://launchpad.net/~sergio+marques\n"
 "  Vitor Pires https://launchpad.net/~vpmail\n"
@@ -201,7 +204,7 @@ msgstr ""
 #: ../lib/Items/ApplicationDockItem.vala:412 ../lib/Items/FileDockItem.vala:317
 #: ../lib/Items/FileDockItem.vala:339
 msgid "_Keep in Dock"
-msgstr "_Manter na barra"
+msgstr "_Manter na Doca"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close All"
@@ -209,7 +212,7 @@ msgstr "Fe_char tudo"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close"
-msgstr "_Fechar"
+msgstr "Fe_char"
 
 #: ../lib/Items/ApplicationDockItem.vala:492
 #, c-format
@@ -218,11 +221,11 @@ msgstr "Arraste para abrir com %s"
 
 #: ../lib/Items/FileDockItem.vala:323
 msgid "_Open in File Browser"
-msgstr "Abrir n_o gestor de ficheiros"
+msgstr "_Abrir no gestor de ficheiros"
 
 #: ../lib/Items/FileDockItem.vala:345
 msgid "_Open"
-msgstr "A_brir"
+msgstr "_Abrir"
 
 #: ../lib/Items/FileDockItem.vala:349
 msgid "Open Containing _Folder"
@@ -234,7 +237,7 @@ msgstr "Largue as aplicações ou ficheiros aqui"
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
-msgstr "Obter ajuda na _web"
+msgstr "Obter _ajuda na web..."
 
 #: ../lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."

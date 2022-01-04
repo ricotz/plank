@@ -171,19 +171,13 @@ namespace Plank
 				return;
 			}
 
-#if HAVE_HIDPI
 			window_scale_factor = controller.window.get_window ().get_scale_factor ();
-#endif
 			var drag_icon_size = (int) (1.2 * controller.position_manager.ZoomIconSize);
 			if (drag_icon_size % 2 == 1)
 				drag_icon_size++;
-#if HAVE_HIDPI
 			drag_icon_size *= window_scale_factor;
-#endif
 			var drag_surface = new Surface (drag_icon_size, drag_icon_size);
-#if HAVE_HIDPI
 			drag_surface.Internal.set_device_scale (window_scale_factor, window_scale_factor);
-#endif
 			
 			var item_surface = item.get_surface_copy (drag_icon_size, drag_icon_size, drag_surface);
 			unowned Cairo.Context cr = drag_surface.Context;

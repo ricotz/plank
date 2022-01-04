@@ -94,6 +94,9 @@ namespace Plank
 		[Description(nick = "cascade-hide", blurb = "Whether background and icons will unhide/hide with different speeds. The top-border of both will leave/hit the screen-edge at the same time.")]
 		public bool CascadeHide { get; set; }
 		
+		[Description(nick = "badge-color", blurb = "The color (RGBA) of the badge displaying urgent count")]
+		public Color BadgeColor { get; set; }
+
 		public DockTheme (string name)
 		{
 			base.with_name (name);
@@ -129,6 +132,7 @@ namespace Plank
 			UrgentHueShift = 150;
 			ItemMoveTime = 450;
 			CascadeHide = true;
+			BadgeColor = { 0.0, 0.0, 0.0, 0.0 };
 		}
 		
 		/**
@@ -640,6 +644,9 @@ namespace Plank
 					UrgentHueShift = -180;
 				else if (UrgentHueShift > 180)
 					UrgentHueShift = 180;
+				break;
+
+			case "BadgeColor":
 				break;
 			}
 		}

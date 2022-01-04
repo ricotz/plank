@@ -1,33 +1,35 @@
-# Finnish translation for plank
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Danish translation for plank
+# Copyright (c) 2017 Rosetta Contributors and Canonical Ltd 2017
 # This file is distributed under the same license as the plank package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# scootergrisen, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2017-03-29 08:30+0000\n"
-"PO-Revision-Date: 2016-02-17 00:36+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"PO-Revision-Date: 2019-01-17 02:37+0000\n"
+"Last-Translator: scootergrisen <scootergrisen@gmail.com>\n"
+"Language-Team: Danish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-04-05 06:33+0000\n"
-"X-Generator: Launchpad (build 18335)\n"
+"X-Launchpad-Export-Date: 2019-01-18 05:39+0000\n"
+"X-Generator: Launchpad (build 18856)\n"
+"X-Language: da_DK\n"
+"X-Source-Language: C\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
-msgstr "Todella yksinkertainen."
+msgstr "Super simpel."
 
 #: ../data/plank.appdata.xml.in.h:2
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
 msgstr ""
-"Plankin on tarkoitus olla maailman yksinkertaisin telakka. Sen tavoite on "
-"tarjota vain telakan tarvitsemat asiat, ei mitään muuta."
+"Plank er tænkt til at være den simpleste dok på planeten. Målet er at levere "
+"lige præcist hvad en dok behøver og intet andet."
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -37,200 +39,200 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
-"Se on kuitenkin samalla kirjasto, jota voi laajentaa samalla luoden muita "
-"telakkasovelluksia lisäominaisuuksilla. Plank toimii myös Docky-telakan "
-"pohjana versiosta 3.0.0 alkaen. Tavoite on tarjota telakan ydintoiminnot, "
-"jolloin Docky voi laajentaa ominaisuuksia omin lisäosin."
+"Det er dog et bibliotek som kan udvides for at oprette andre dok-programmer "
+"med mere avancerede funktioner. Plank er således den underliggende teknologi "
+"for Docky (fra version 3.0.0) og går efter at levere alle kerne-"
+"funktionerne, mens Docky udvider Plank med henblik på tilføjelse af smarte "
+"ting såsom dokletter, malere, indstillingsdialoger osv."
 
 #: ../data/ui/preferences.ui.h:1
 msgid "Theme:"
-msgstr "Teema:"
+msgstr "Tema:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr "Sijainti:"
+msgstr "Placering:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr "Vasemmalla"
+msgstr "Venstre"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr "Oikealla"
+msgstr "Højre"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr "Ylhäällä"
+msgstr "Øverst"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr "Alhaalla"
+msgstr "Nederst"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
-msgstr "Tasaus:"
+msgstr "Justering:"
 
 #: ../data/ui/preferences.ui.h:8
 msgid "Fill"
-msgstr "Täyttö"
+msgstr "Udfyld"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr "Alku"
+msgstr "Begyndelsen"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr "Loppu"
+msgstr "Slutningen"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr "Keskellä"
+msgstr "Midten"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "Ensisijaisella näytöllä:"
+msgstr "På primær skærm:"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr "Siirtymä prosenteissa näytön näytön reunan keskiosasta"
+msgstr "Forskydning i procent fra midten af skærmens kant"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Kuvakkeiden kohdistus:"
+msgstr "Justering af ikoner:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
-msgstr "Kuvakekoko:"
+msgstr "Ikonstørrelse:"
 
 #: ../data/ui/preferences.ui.h:16
 msgid "Icon Zoom:"
-msgstr "Kuvakesuurennus:"
+msgstr "Ikonzoom:"
 
 #: ../data/ui/preferences.ui.h:17
 msgid "Appearance"
-msgstr "Ulkoasu"
+msgstr "Udseende"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr "Piilota aktiivisen ikkunan edestä"
+msgstr "Intelligent skjul"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr "Piilota automaattisesti"
+msgstr "Automatisk skjul"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr "Väistä suurennettuja ikkunoita"
+msgstr "Undvig maksimeret vindue"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
-msgstr "Väistä ikkunoita"
+msgstr "Undvigelse af vindue"
 
 #: ../data/ui/preferences.ui.h:22
 msgid "Dodge active window"
-msgstr "Väistä aktiivista ikkunaa"
+msgstr "Undvig aktivt vindue"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr "Piilota telakka"
+msgstr "Skjul dok"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr "Piilotuksen viive:"
+msgstr "Ventetid før skjul:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr "Viive millisekunneissa, ennen kuin telakka piilotetaan"
+msgstr "Ventetid i ms inden dokken skjules"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr "Piilotuksen poistamisen viive:"
+msgstr "Ventetid for visning:"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr "Viive millisekunneissa ennen telakan näyttämistä"
+msgstr "Ventetid i ms inden dokken vises"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr "Paljastusherkkyys:"
+msgstr "Fremvis ved tryk:"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
-msgstr "Kohteiden hallinta"
+msgstr "Elementhåndtering"
 
 #: ../data/ui/preferences.ui.h:30
 msgid "Show Unpinned:"
-msgstr "Näytä kiinnittämättömät:"
+msgstr "Vis ikke-fastgjorte:"
 
 #: ../data/ui/preferences.ui.h:31
 msgid "Restrict to Workspace:"
-msgstr "Rajoita työtilaan:"
+msgstr "Begræns til arbejdsområde:"
 
 #: ../data/ui/preferences.ui.h:32
 msgid "Lock Icons:"
-msgstr "Lukitse kuvakkeet:"
+msgstr "Lås ikoner:"
 
 #: ../data/ui/preferences.ui.h:33
 msgid "Behaviour"
-msgstr "Toiminta"
+msgstr "Adfærd"
 
 #: ../data/ui/preferences.ui.h:34
 msgid "Docklets"
-msgstr "Telakkasovelmat"
+msgstr "Dokletter"
 
 #: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
-msgstr "Tiputa lisätäksesi telakkaan"
+msgstr "Slip for at tilføje til dok"
 
 #: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Jiri Grönroos https://launchpad.net/~jiri-gronroos\n"
-"  Rico Tzschichholz https://launchpad.net/~ricotz"
+"  scootergrisen https://launchpad.net/~scootergrisen"
 
 #: ../lib/Items/ApplicationDockItem.vala:412 ../lib/Items/FileDockItem.vala:317
 #: ../lib/Items/FileDockItem.vala:339
 msgid "_Keep in Dock"
-msgstr "Pi_dä käynnistimessä"
+msgstr "_Behold i dok"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close All"
-msgstr "Sulje kai_kki"
+msgstr "_Luk alle"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close"
-msgstr "_Sulje"
+msgstr "_Luk"
 
 #: ../lib/Items/ApplicationDockItem.vala:492
 #, c-format
 msgid "Drop to open with %s"
-msgstr "Pudota avataksesi sovelluksella %s"
+msgstr "Slip for at åbne med %s"
 
 #: ../lib/Items/FileDockItem.vala:323
 msgid "_Open in File Browser"
-msgstr "A_vaa tiedostonhallinnassa"
+msgstr "_Åbn i filhåndtering"
 
 #: ../lib/Items/FileDockItem.vala:345
 msgid "_Open"
-msgstr "_Avaa"
+msgstr "_Åbn"
 
 #: ../lib/Items/FileDockItem.vala:349
 msgid "Open Containing _Folder"
-msgstr "Näy_tä kansiossa"
+msgstr "Åbn indeholdende _mappe"
 
 #: ../lib/Items/PlaceholderDockItem.vala:37
 msgid "Drop applications or files here"
-msgstr "Pudota sovellukset tai tiedostot tähän"
+msgstr "Slip programmer eller filer her"
 
 #: ../lib/Items/PlankDockItem.vala:73
 msgid "Get _Help Online..."
-msgstr "_Hae apua verkosta..."
+msgstr "Få _hjælp online..."
 
 #: ../lib/Items/PlankDockItem.vala:77
 msgid "_Translate This Application..."
-msgstr "Kää_nnä tämä ohjelma..."
+msgstr "_Oversæt dette program..."
 
 #: ../lib/Widgets/PreferencesWindow.vala:90
 msgid "Preferences"
-msgstr "Asetukset"
+msgstr "Præferencer"

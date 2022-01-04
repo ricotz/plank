@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plank\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2017-03-24 17:21+0000\n"
-"PO-Revision-Date: 2016-02-17 00:36+0000\n"
-"Last-Translator: Rico Tzschichholz <Unknown>\n"
+"POT-Creation-Date: 2017-03-29 08:30+0000\n"
+"PO-Revision-Date: 2019-04-12 20:19+0000\n"
+"Last-Translator: Özgür BASKIN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-03-27 17:40+0000\n"
-"X-Generator: Launchpad (build 18334)\n"
+"X-Launchpad-Export-Date: 2019-04-13 05:45+0000\n"
+"X-Generator: Launchpad (build 18920)\n"
 
 #: ../data/plank.appdata.xml.in.h:1 ../data/plank.desktop.in.h:1
 msgid "Stupidly simple."
@@ -49,23 +49,23 @@ msgstr "Tema:"
 
 #: ../data/ui/preferences.ui.h:2
 msgid "Position:"
-msgstr "Yer :"
+msgstr "Konum:"
 
 #: ../data/ui/preferences.ui.h:3
 msgid "Left"
-msgstr "Sol"
+msgstr "Solda"
 
 #: ../data/ui/preferences.ui.h:4
 msgid "Right"
-msgstr "Sağ"
+msgstr "Sağda"
 
 #: ../data/ui/preferences.ui.h:5
 msgid "Top"
-msgstr "Üst"
+msgstr "Üstte"
 
 #: ../data/ui/preferences.ui.h:6
 msgid "Bottom"
-msgstr "Alt"
+msgstr "Altta"
 
 #: ../data/ui/preferences.ui.h:7
 msgid "Alignment:"
@@ -77,27 +77,27 @@ msgstr "Doldur"
 
 #: ../data/ui/preferences.ui.h:9
 msgid "Start"
-msgstr "Başla"
+msgstr "Başında"
 
 #: ../data/ui/preferences.ui.h:10
 msgid "End"
-msgstr "Bitir"
+msgstr "Sonunda"
 
 #: ../data/ui/preferences.ui.h:11
 msgid "Center"
-msgstr "Orta"
+msgstr "Ortala"
 
 #: ../data/ui/preferences.ui.h:12
 msgid "On Primary Display:"
-msgstr "Ana Ekranda:"
+msgstr "Ana Ekranda"
 
 #: ../data/ui/preferences.ui.h:13
 msgid "Offset in percent from the center of the screen-edge"
-msgstr "Ekran merkezine olan uzaklık"
+msgstr "El ile hizala"
 
 #: ../data/ui/preferences.ui.h:14
 msgid "Icon Alignment:"
-msgstr "Simge Hizası:"
+msgstr "Simge Hizalama:"
 
 #: ../data/ui/preferences.ui.h:15
 msgid "Icon Size:"
@@ -113,15 +113,15 @@ msgstr "Görünüm"
 
 #: ../data/ui/preferences.ui.h:18
 msgid "Intellihide"
-msgstr "Akıllı Gizlenme"
+msgstr "Akıllı gizle"
 
 #: ../data/ui/preferences.ui.h:19
 msgid "Autohide"
-msgstr "Otomatik Gizlenme"
+msgstr "Otomatik gizle"
 
 #: ../data/ui/preferences.ui.h:20
 msgid "Dodge maximized window"
-msgstr "Büyütülmüş pencerede yana çekil"
+msgstr "Ekranı kaplamış pencerede gizle"
 
 #: ../data/ui/preferences.ui.h:21
 msgid "Window Dodge"
@@ -137,23 +137,23 @@ msgstr "Dock'u Gizle"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
-msgstr "Gizlenme Süresi:"
+msgstr "Gizleme Gecikmesi:"
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr "Gizlenme öncesi gecikme süresi"
+msgstr "Dock'u gizlemeden önce geçecek süre (ms)"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
-msgstr "Gizlenme Gecikmesi:"
+msgstr "Gösterme Gecikmesi"
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr "Dock'un gösteriminden önceki milisaniye gecikmesi"
+msgstr "Dock'u göstermeden önce geçecek süre (ms)"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
-msgstr "Zorla Gösterme:"
+msgstr "Hassasiyeti Azalt"
 
 #: ../data/ui/preferences.ui.h:29
 msgid "Item Management"
@@ -197,7 +197,8 @@ msgstr ""
 "  Rico Tzschichholz https://launchpad.net/~ricotz\n"
 "  empax https://launchpad.net/~uniteam01\n"
 "  mumi https://launchpad.net/~mkocadere\n"
-"  sakir.mehmetoglu https://launchpad.net/~sakir-mehmetoglu-a"
+"  sakir.mehmetoglu https://launchpad.net/~sakir-mehmetoglu-a\n"
+"  Özgür BASKIN https://launchpad.net/~ozgur-baskin"
 
 #: ../lib/Items/ApplicationDockItem.vala:412 ../lib/Items/FileDockItem.vala:317
 #: ../lib/Items/FileDockItem.vala:339
@@ -215,7 +216,7 @@ msgstr "_Kapat"
 #: ../lib/Items/ApplicationDockItem.vala:492
 #, c-format
 msgid "Drop to open with %s"
-msgstr "%s ile açmak için bırakın"
+msgstr "%s ile açmak için üzerine bırakın"
 
 #: ../lib/Items/FileDockItem.vala:323
 msgid "_Open in File Browser"

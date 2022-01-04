@@ -145,9 +145,7 @@ namespace Plank
 			var height = surface.Height;
 			var radius = 3 + 6 * height / (128 - 48);
 			double x_scale = 1.0, y_scale = 1.0;
-#if HAVE_HIDPI
 			surface.Internal.get_device_scale (out x_scale, out y_scale);
-#endif
 			var line_width_half = 0.5 * (int) double.max (x_scale, y_scale);
 			
 			cr.move_to (radius, line_width_half);
