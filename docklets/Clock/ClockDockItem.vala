@@ -116,7 +116,7 @@ namespace Docky
 			
 			var now = new DateTime.now_local ();
 			if (prefs.ShowMilitary)
-				Text = now.format ("%a, %b %d %H:%M");
+				Text = now.format ("%F %T %A");
 			else
 				Text = now.format ("%a, %b %d %I:%M %p");
 			
@@ -140,10 +140,10 @@ namespace Docky
 			unowned Cairo.Context cr = surface.Context;
 			
 			// useful sizes
-			int timeSize = surface.Height / 4;
-			int dateSize = surface.Height / 5;
+			int timeSize = surface.Height / 3;
+			int dateSize = surface.Height / 4;
 			int ampmSize = surface.Height / 5;
-			int spacing = timeSize / 2;
+			int spacing = timeSize / 4;
 			int center = surface.Height / 2;
 			
 			layout.set_width ((int) (surface.Width * Pango.SCALE));
@@ -159,12 +159,11 @@ namespace Docky
 			Pango.Rectangle ink_rect, logical_rect;
 			layout.get_pixel_extents (out ink_rect, out logical_rect);
 			
-			int timeYOffset = prefs.ShowMilitary ? timeSize : timeSize / 2;
 			int timeXOffset = (surface.Width - ink_rect.width) / 2;
 			if (prefs.ShowDate)
-				cr.move_to (timeXOffset, timeYOffset);
+				cr.move_to (timeXOffset, timeSize / 2 - timeSize / 4);
 			else
-				cr.move_to (timeXOffset, timeYOffset + timeSize / 2);
+				cr.move_to (timeXOffset, timeSize - timeSize / 5);
 			
 			Pango.cairo_layout_path (cr, layout);
 			cr.set_line_width (3);
