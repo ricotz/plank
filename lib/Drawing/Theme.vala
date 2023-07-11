@@ -383,7 +383,8 @@ namespace Plank
 			
 			// Look in user's themes-folder
 			try {
-				var enumerator = Paths.AppThemeFolder.enumerate_children ("standard::name,standard::type",
+				var enumerator = Paths.AppThemeFolder.enumerate_children (FileAttribute.STANDARD_NAME + ","
+					+ FileAttribute.STANDARD_TYPE + "," + FileAttribute.STANDARD_IS_HIDDEN,
 					GLib.FileQueryInfoFlags.NONE);
 				FileInfo info;
 				while ((info = enumerator.next_file ()) != null) {
@@ -397,7 +398,8 @@ namespace Plank
 			
 			// Look in system's themes-folder
 			try {
-				var enumerator = Paths.ThemeFolder.enumerate_children ("standard::name,standard::type",
+				var enumerator = Paths.ThemeFolder.enumerate_children (FileAttribute.STANDARD_NAME + ","
+					+ FileAttribute.STANDARD_TYPE + "," + FileAttribute.STANDARD_IS_HIDDEN,
 					GLib.FileQueryInfoFlags.NONE);
 				FileInfo info;
 				while ((info = enumerator.next_file ()) != null) {
