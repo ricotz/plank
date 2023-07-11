@@ -52,9 +52,9 @@ namespace Plank
 		
 		public static void initialize ()
 		{
-			unowned Wnck.Screen screen = Wnck.Screen.get_default ();
-			
 			Wnck.set_client_type (Wnck.ClientType.PAGER);
+			
+			unowned Wnck.Screen screen = Wnck.Screen.get_default ();
 			
 			// Make sure internal window-list of Wnck is most up to date
 			Gdk.error_trap_push ();
