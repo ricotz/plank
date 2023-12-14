@@ -45,6 +45,7 @@ namespace Plank
 	[Flags]
 	public enum XdgSessionDesktop
 	{
+		UNKNOWN = 0,
 		GNOME = 1 << 0,
 		KDE = 1 << 1,
 		LXDE = 1 << 2,
@@ -57,8 +58,10 @@ namespace Plank
 		EDE = 1 << 9,
 		CINNAMON = 1 << 10,
 		PANTHEON = 1 << 11,
-		OLD = 1 << 12,
-		UBUNTU = 1 << 13;
+		DDE = 1 << 12,
+		ENDLESS = 1 << 13,
+		OLD = 1 << 24,
+		UBUNTU = 1 << 25;
 		
 		static XdgSessionDesktop from_single_string (string s)
 		{
@@ -67,10 +70,13 @@ namespace Plank
 			switch (s.down ()) {
 			case "gnome": result = XdgSessionDesktop.GNOME; break;
 			case "gnome-xorg": result = XdgSessionDesktop.GNOME; break;
+			case "gnome-classic": result = XdgSessionDesktop.GNOME; break;
+			case "gnome-flashback": result = XdgSessionDesktop.GNOME; break;
 			case "ubuntu": result = XdgSessionDesktop.UBUNTU; break;
 			case "ubuntu-xorg": result = XdgSessionDesktop.UBUNTU; break;
 			case "kde": result = XdgSessionDesktop.KDE; break;
 			case "lxde": result = XdgSessionDesktop.LXDE; break;
+			case "lxqt": result = XdgSessionDesktop.LXDE; break;
 			case "mate": result = XdgSessionDesktop.MATE; break;
 			case "razor": result = XdgSessionDesktop.RAZOR; break;
 			case "rox": result = XdgSessionDesktop.ROX; break;
@@ -80,8 +86,10 @@ namespace Plank
 			case "ede": result = XdgSessionDesktop.EDE; break;
 			case "cinnamon": result = XdgSessionDesktop.CINNAMON; break;
 			case "pantheon": result = XdgSessionDesktop.PANTHEON; break;
+			case "dde": result = XdgSessionDesktop.DDE; break;
+			case "endless": result = XdgSessionDesktop.ENDLESS; break;
 			case "old": result = XdgSessionDesktop.OLD; break;
-			default: result = 0; break;
+			default: result = XdgSessionDesktop.UNKNOWN; break;
 			}
 			
 			return result;
