@@ -83,7 +83,7 @@ namespace Plank
 			}
 			
 			unowned Pango.FontDescription font_desc = style.font_desc;
-			font_desc.set_absolute_size ((int) (h * Pango.SCALE * Pango.Scale.LARGE));
+			font_desc.set_absolute_size ((int) (h * Pango.SCALE * Pango.Scale.XX_SMALL));
 			font_desc.set_weight (Pango.Weight.BOLD);
 			
 			var layout = new Pango.Layout (Gdk.pango_context_get ());
