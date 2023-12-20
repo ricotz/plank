@@ -76,7 +76,11 @@ namespace Plank
 		{
 			unowned Gdk.Screen screen = get_screen ();
 			Gdk.Rectangle monitor;
-			screen.get_monitor_geometry (screen.get_monitor_at_point (x, y), out monitor);
+			if (environment_is_session_desktop (XdgSessionDesktop.GNOME | XdgSessionDesktop.UBUNTU)) {
+				screen.get_monitor_geometry (screen.get_monitor_at_point (x, y), out monitor);
+			} else {
+				monitor = screen.get_monitor_workarea (screen.get_monitor_at_point (x, y));
+			}
 			
 			// realize and show the window early to have current allocation-dimensions
 			// this is also needed for being able to move override-redirect windows
