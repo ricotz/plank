@@ -53,7 +53,12 @@ namespace Docky
 
 		public Plank.DockElement make_element (string launcher, GLib.File file)
 		{
-			return new BatteryDockItem.with_dockitem_file (file);
+			if(BatteryUPowerDockItem.is_supported) {
+				return new BatteryUPowerDockItem.with_dockitem_file (file);
+			}
+			else {
+				return new BatteryDockItem.with_dockitem_file (file);
+			}
 		}
 	}
 }
