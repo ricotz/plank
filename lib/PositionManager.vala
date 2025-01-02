@@ -65,7 +65,7 @@ namespace Plank
 			screen.composited_changed.connect (screen_composited_changed);
 			
 			// NOTE don't call update_monitor_geo to avoid a double-call of dockwindow.set_size on startup
-			if (environment_is_session_desktop (XdgSessionDesktop.GNOME | XdgSessionDesktop.UBUNTU)) {
+			if (environment_is_session_desktop (XdgSessionDesktop.GNOME | XdgSessionDesktop.UBUNTU | XdgSessionDesktop.MATE)) {
 				screen.get_monitor_geometry (find_monitor_number (screen, controller.prefs.Monitor), out monitor_geo);
 			} else {
 				monitor_geo = screen.get_monitor_workarea (find_monitor_number (screen, controller.prefs.Monitor));
@@ -137,10 +137,14 @@ namespace Plank
 		void screen_changed (Gdk.Screen screen)
 		{
 			var old_monitor_geo = monitor_geo;
+
+			Logger.verbose ("screen_changed()");
 			
-			if (environment_is_session_desktop (XdgSessionDesktop.GNOME | XdgSessionDesktop.UBUNTU)) {
+			if (environment_is_session_desktop (XdgSessionDesktop.GNOME | XdgSessionDesktop.UBUNTU | XdgSessionDesktop.MATE)) {
+				Logger.verbose ("Gnome, Ubuntu or Mate.");
 				screen.get_monitor_geometry (find_monitor_number (screen, controller.prefs.Monitor), out monitor_geo);
 			} else {
+				Logger.verbose ("Another XdgSessionDesktop env.");
 				monitor_geo = screen.get_monitor_workarea (find_monitor_number (screen, controller.prefs.Monitor));
 			}
 			
