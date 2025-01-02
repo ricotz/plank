@@ -154,7 +154,7 @@ namespace Plank
 	
 	public static bool environment_is_session_desktop (XdgSessionDesktop type)
 	{
-		return (type in session_desktop);
+		return (type & session_desktop) > 0;
 	}
 	
 	public static bool environment_is_session_type (XdgSessionType type)

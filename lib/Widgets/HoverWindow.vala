@@ -76,7 +76,7 @@ namespace Plank
 		{
 			unowned Gdk.Screen screen = get_screen ();
 			Gdk.Rectangle monitor;
-			if (environment_is_session_desktop (XdgSessionDesktop.GNOME | XdgSessionDesktop.UBUNTU)) {
+			if (environment_is_session_desktop (XdgSessionDesktop.GNOME | XdgSessionDesktop.UBUNTU | XdgSessionDesktop.MATE)) {
 				screen.get_monitor_geometry (screen.get_monitor_at_point (x, y), out monitor);
 			} else {
 				monitor = screen.get_monitor_workarea (screen.get_monitor_at_point (x, y));
