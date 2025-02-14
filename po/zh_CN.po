@@ -25,7 +25,7 @@ msgstr "简单得无语。"
 msgid ""
 "Plank is meant to be the simplest dock on the planet. The goal is to provide "
 "just what a dock needs and absolutely nothing more."
-msgstr "Plank绝对是地球上最简洁的Dock。宗旨是拒绝华而不实、只提供一个Dock该有的功能。"
+msgstr "Plank绝对是地球上最简洁的程序坞。宗旨是拒绝华而不实、只提供一个程序坞该有的功能。"
 
 #: ../data/plank.appdata.xml.in.h:3
 msgid ""
@@ -35,7 +35,7 @@ msgid ""
 "core features while Docky extends it to add fancier things like Docklets, "
 "painters, settings dialogs, etc."
 msgstr ""
-"与此同时，它也是一个可以扩展创建更多特性的Dock程序库。因此，Plank实际上是Docky(从版本3.0.0开始)的底层技术，为Docky提供了所有核心"
+"与此同时，它也是一个可以扩展创建更多特性的程序坞程序库。因此，Plank实际上是Docky(从版本3.0.0开始)的底层技术，为Docky提供了所有核心"
 "的功能。Docky在其基础上扩展了更多酷炫特性如Docklet、画笔、设置对话框等。"
 
 #: ../data/ui/preferences.ui.h:1
@@ -128,7 +128,7 @@ msgstr "避开活动窗口"
 
 #: ../data/ui/preferences.ui.h:23
 msgid "Hide Dock"
-msgstr "影藏Dock"
+msgstr "隐藏程序坞"
 
 #: ../data/ui/preferences.ui.h:24
 msgid "Hide Delay:"
@@ -136,7 +136,7 @@ msgstr "隐藏延迟："
 
 #: ../data/ui/preferences.ui.h:25
 msgid "Delay in ms before hiding the dock"
-msgstr "以上毫秒后隐藏dock"
+msgstr "以上毫秒后隐藏程序坞"
 
 #: ../data/ui/preferences.ui.h:26
 msgid "Unhide Delay:"
@@ -144,7 +144,7 @@ msgstr "显示延迟："
 
 #: ../data/ui/preferences.ui.h:27
 msgid "Delay in ms before showing the dock"
-msgstr "以上毫秒后显示dock"
+msgstr "以上毫秒后显示程序坞"
 
 #: ../data/ui/preferences.ui.h:28
 msgid "Pressure Reveal:"
@@ -176,7 +176,7 @@ msgstr "小部件"
 
 #: ../lib/DragManager.vala:477 ../lib/Items/PlaceholderDockItem.vala:51
 msgid "Drop to add to dock"
-msgstr "拖动添加到 dock 上"
+msgstr "拖动到程序坞上"
 
 #: ../lib/Factories/AbstractMain.vala:422 ../src/Main.vala:75
 msgid "translator-credits"
@@ -193,7 +193,7 @@ msgstr ""
 #: ../lib/Items/ApplicationDockItem.vala:412 ../lib/Items/FileDockItem.vala:317
 #: ../lib/Items/FileDockItem.vala:339
 msgid "_Keep in Dock"
-msgstr "固定在 Dock 上(_K)"
+msgstr "固定在程序坞上(_K)"
 
 #: ../lib/Items/ApplicationDockItem.vala:420
 msgid "_Close All"
@@ -206,7 +206,7 @@ msgstr "关闭(_C)"
 #: ../lib/Items/ApplicationDockItem.vala:492
 #, c-format
 msgid "Drop to open with %s"
-msgstr "拖放以用 %s 打开"
+msgstr "拖放在此用 %s 打开"
 
 #: ../lib/Items/FileDockItem.vala:323
 msgid "_Open in File Browser"
